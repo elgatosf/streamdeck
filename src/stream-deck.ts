@@ -1,19 +1,17 @@
-import { RegistrationParameters } from "./registration-parameters";
+import { RegistrationParameters } from "./registration";
 
 class StreamDeck {
-  constructor(
-    private readonly params = new RegistrationParameters(process.argv)
-  ) {
-    // todo: connect.
-  }
+	constructor(private readonly params = new RegistrationParameters(process.argv)) {
+		// todo: connect.
+	}
 
-  public get info() {
-    return this.params.info;
-  }
+	public get info() {
+		return this.params.info;
+	}
 
-  public get pluginUUID() {
-    return this.params.pluginUUID;
-  }
+	public get pluginUUID() {
+		return this.params.pluginUUID;
+	}
 }
 
 export default new StreamDeck();
