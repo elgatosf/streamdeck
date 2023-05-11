@@ -1,0 +1,29 @@
+{
+  "name": "@elgato/stream-deck",
+  "version": "0.1.0",
+  "description": "The official Node.js SDK for creating Stream Deck plugins",
+  "main": "lib/index.js",
+  "scripts": {
+    "build": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/elgatosf/streamdeck-node-sdk.git"
+  },
+  "keywords": [
+    "stream-deck",
+    "node",
+    "sdk",
+    "plugins"
+  ],
+  "author": "Elgato",
+  "bugs": {
+    "url": "https://github.com/elgatosf/streamdeck-node-sdk/issues"
+  },
+  "homepage": "https://github.com/elgatosf/streamdeck-node-sdk#readme",
+  "devDependencies": {
+    "@tsconfig/node20": "^1.0.0",
+    "@types/node": "^20.1.2",
+    "typescript": "^5.0.4"
+  }
+}
