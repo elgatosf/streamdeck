@@ -1,0 +1,5 @@
+{
+	/** Prefer tabs over spaces for accessibility */
+	"editor.insertSpaces": false,
+	"editor.detectIndentation": false
+}

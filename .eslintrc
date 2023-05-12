@@ -17,7 +17,7 @@
 	"root": true,
 	"rules": {
 		"indent": [
-			"error",
+			"warn",
 			"tab",
 			{
 				"SwitchCase": 1

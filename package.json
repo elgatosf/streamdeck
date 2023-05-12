@@ -5,7 +5,7 @@
 	"main": "lib/index.js",
 	"scripts": {
 		"build": "tsc",
-		"lint": "eslint . --ext .ts",
+		"lint": "eslint . --ext .ts --max-warnings 0",
 		"lint-format": "prettier --config .prettierrc \"./src/**/*.ts\" --write"
 	},
 	"repository": {
