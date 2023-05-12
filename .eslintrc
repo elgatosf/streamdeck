@@ -37,7 +37,7 @@
 					"TSEnumMember",
 					{
 						"context": "TSPropertySignature",
-						"minLineCount": 2
+						"minLineCount": 2 // Ignore inline.
 					},
 					"TSTypeAliasDeclaration"
 				]
