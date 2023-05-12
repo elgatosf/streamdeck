@@ -8,3 +8,9 @@ export enum DeviceType {
 	CorsairVoyager = 6,
 	StreamDeckPlus = 7
 }
+
+export enum Target {
+	HardwareAndSoftware = 0,
+	Hardware = 1,
+	Software = 2
+}

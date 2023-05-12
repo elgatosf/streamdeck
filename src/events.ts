@@ -1,3 +1,7 @@
+export type StreamDeckEvent<T> = {
+	event: T;
+};
+
 type Contextual = {
 	context: string;
 };

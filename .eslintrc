@@ -35,10 +35,7 @@
 					"MethodDefinition",
 					"TSEnumDeclaration",
 					"TSEnumMember",
-					{
-						"context": "TSPropertySignature",
-						"minLineCount": 2 // Ignore inline.
-					},
+					"TSPropertySignature",
 					"TSTypeAliasDeclaration"
 				]
 			}
