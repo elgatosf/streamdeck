@@ -1,20 +1,23 @@
 import { EventEmitter } from "node:events";
 import WebSocket from "ws";
 
-import { EventsReceived, StreamDeckEvent } from "./events";
+import { InboundEvents, OutboundEvents, StreamDeckEvent } from "./events";
+import { PromiseCompletionSource } from "./promises";
 import { RegistrationParameters } from "./registration";
-
-let resolveConnection: (value: StreamDeck) => void;
-const connection = new Promise<StreamDeck>((resolve) => (resolveConnection = resolve));
 
 /**
  * The main bridge between the plugin and the Stream Deck, providing methods for listening to events emitted from the Stream Deck, and sending messages back.
  */
 export class StreamDeck {
 	/**
-	 * Underlying connection between the plugin and the Stream Deck.
+	 * Connection between the plugin and the Stream Deck in the form of a promise; once connected to the Stream Deck and the plugin has been registered, the promised is resolved and the connection becomes available.
 	 */
-	private readonly connection: WebSocket;
+	private readonly connection = new PromiseCompletionSource<WebSocket>();
+
+	/**
+	 * Web socket connection used by this instance to establish the connection with the Stream Deck.
+	 */
+	private readonly ws: WebSocket;
 
 	/**
 	 * Event emitter used to propagate events from the Stream Deck to the plugin.
@@ -26,15 +29,16 @@ export class StreamDeck {
 	 * @param params Registration parameters used to establish a connection with the Stream Deck; these are automatically supplied as part of the command line arguments when the plugin is ran by the Stream Deck.
 	 */
 	constructor(private readonly params = new RegistrationParameters(process.argv)) {
-		this.connection = new WebSocket(`ws://localhost:${params.port}`);
-		this.connection.onmessage = this.propagateMessage.bind(this);
-		this.connection.onopen = () => {
+		this.ws = new WebSocket(`ws://localhost:${params.port}`);
+		this.ws.onmessage = this.propagateMessage.bind(this);
+		this.ws.onopen = () => {
 			JSON.stringify({
 				event: params.event,
 				uuid: params.pluginUUID
 			});
 
-			resolveConnection(this);
+			// Web socket established a connection with the Stream Deck and the plugin was registered.
+			this.connection.setResult(this.ws);
 		};
 	}
 
@@ -59,14 +63,26 @@ export class StreamDeck {
 	 * @param event Event to listen for.
 	 * @param listener Callback invoked when Stream Deck emits the event.
 	 */
-	public on<TEvent extends EventsReceived["event"], TEventArgs = Extract<EventsReceived, StreamDeckEvent<TEvent>>>(event: TEvent, listener: (data: TEventArgs) => void) {
+	public on<TEvent extends InboundEvents["event"], TEventArgs = Extract<InboundEvents, StreamDeckEvent<TEvent>>>(event: TEvent, listener: (data: TEventArgs) => void) {
 		this.eventEmitter.addListener(event, listener);
 	}
 
-	//public setSettings(context: string, settings: unknown);
+	/**
+	 * Sets the settings associated with an instance of an action, as identified by the context. An instance of an action represents a button, dial, pedal, etc.
+	 * @param context Unique identifier of the action instance whose settings will be updated.
+	 * @param settings Settings to associate with the action instance.
+	 * @returns Promise resolved when the settings are sent to Stream Deck.
+	 */
+	public setSettings(context: string, settings: unknown): Promise<void> {
+		return this.send("setSettings", {
+			context,
+			payload: settings
+		});
+	}
+
 	//public getSettings?<T = unknown>(context: string): Promise<T>;
 	//public setGlobalSettings?(settings: unknown): void;
-	//public getGlobalSettings?<T = unknown>(): Promise<T>;
+	//public getGlobalSettings<T = unknown>(): Promise<DidReceiveGlobalSettings<T>> {
 	//public openUrl?(url: string): void;
 	//public logMessage?(message: string): void;
 	//public setTitle(context: string, title: string, target: Target = Target.HardwareAndSoftware, state: 0 | 1 | null = null);
@@ -91,6 +107,21 @@ export class StreamDeck {
 			}
 		}
 	}
+
+	/**
+	 * Sends the messages to the Stream Deck, once the connection has been established and the plugin registered.
+	 * @param event Event name where the message will be sent.
+	 * @param message Message to send.
+	 */
+	private async send(event: OutboundEvents, message: object): Promise<void> {
+		const connection = await this.connection.promise;
+		connection.send(
+			JSON.stringify({
+				event,
+				...message
+			})
+		);
+	}
 }
 
-export default await connection;
+export default new StreamDeck();

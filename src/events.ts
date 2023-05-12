@@ -27,4 +27,5 @@ export type DidReceiveSettings<TSettings = unknown> = Contextual & {
 	};
 };
 
-export type EventsReceived = DidReceiveGlobalSettings | DidReceiveSettings;
+export type InboundEvents = DidReceiveGlobalSettings | DidReceiveSettings;
+export type OutboundEvents = "setSettings";
