@@ -3,6 +3,8 @@
 		"eslint:recommended",
 		"plugin:@typescript-eslint/eslint-recommended",
 		"plugin:@typescript-eslint/recommended",
+		"plugin:jsdoc/recommended",
+		"plugin:jsdoc/recommended-typescript",
 		"prettier"
 	],
 	"ignorePatterns": [
@@ -11,8 +13,9 @@
 	],
 	"parser": "@typescript-eslint/parser",
 	"plugins": [
-		"@typescript-eslint",
-		"prettier"
+		"jsdoc",
+		"prettier",
+		"@typescript-eslint"
 	],
 	"root": true,
 	"rules": {
@@ -21,6 +24,32 @@
 			"tab",
 			{
 				"SwitchCase": 1
+			}
+		],
+		"jsdoc/require-jsdoc": [
+			"warn",
+			{
+				"contexts": [
+					"ClassDeclaration",
+					"PropertyDefinition",
+					"MethodDefinition",
+					"TSEnumDeclaration",
+					"TSEnumMember",
+					{
+						"context": "TSPropertySignature",
+						"minLineCount": 2
+					},
+					"TSTypeAliasDeclaration"
+				]
+			}
+		],
+		"@typescript-eslint/explicit-member-accessibility": [
+			"error",
+			{
+				"accessibility": "explicit",
+				"overrides": {
+					"constructors": "no-public"
+				}
 			}
 		]
 	}
