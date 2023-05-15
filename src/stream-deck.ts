@@ -2,7 +2,7 @@ import { EventEmitter } from "node:events";
 import WebSocket from "ws";
 
 import { Target } from "./enums";
-import { DidReceiveGlobalSettings, DidReceiveSettings, InboundEvents, OutboundEvents, StreamDeckEvent } from "./events";
+import { DidReceiveGlobalSettingsEvent, DidReceiveSettingsEvent, InboundEvents, OutboundEvents, StreamDeckEvent } from "./events";
 import { PromiseCompletionSource } from "./promises";
 import { RegistrationParameters } from "./registration";
 
@@ -94,9 +94,9 @@ export class StreamDeck {
 		});
 	}
 
-	public async getSettings<T = unknown>(context: string): Promise<DidReceiveSettings<T>> {
-		const settings = new PromiseCompletionSource<DidReceiveSettings<T>>();
-		this.once("didReceiveSettings", (data: DidReceiveSettings<T>) => settings.setResult(data));
+	public async getSettings<T = unknown>(context: string): Promise<DidReceiveSettingsEvent<T>> {
+		const settings = new PromiseCompletionSource<DidReceiveSettingsEvent<T>>();
+		this.once("didReceiveSettings", (data: DidReceiveSettingsEvent<T>) => settings.setResult(data));
 
 		await this.send("getSettings", {
 			context
@@ -112,9 +112,9 @@ export class StreamDeck {
 		});
 	}
 
-	public async getGlobalSettings<T = unknown>(): Promise<DidReceiveGlobalSettings<T>> {
-		const settings = new PromiseCompletionSource<DidReceiveGlobalSettings<T>>();
-		this.once("didReceiveGlobalSettings", (data: DidReceiveGlobalSettings<T>) => settings.setResult(data));
+	public async getGlobalSettings<T = unknown>(): Promise<DidReceiveGlobalSettingsEvent<T>> {
+		const settings = new PromiseCompletionSource<DidReceiveGlobalSettingsEvent<T>>();
+		this.once("didReceiveGlobalSettings", (data: DidReceiveGlobalSettingsEvent<T>) => settings.setResult(data));
 
 		await this.send("getGlobalSettings", {
 			context: this.pluginUUID
