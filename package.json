@@ -1,8 +1,9 @@
 {
-	"name": "@elgato/stream-deck",
+	"name": "@elgato/streamdeck",
 	"version": "0.1.0",
 	"description": "The official Node.js SDK for creating Stream Deck plugins",
-	"main": "lib/index.js",
+	"main": "./lib/index.js",
+	"types": "./lib/index.d.ts",
 	"scripts": {
 		"build": "tsc",
 		"lint": "eslint . --ext .ts --max-warnings 0",

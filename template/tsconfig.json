@@ -2,10 +2,10 @@
 	"extends": "@tsconfig/node20/tsconfig.json",
 	"compilerOptions": {
 		"declaration": true,
-		"outDir": "./lib/"
+		"outDir": "./dist/"
 	},
 	"include": [
-		"./src/index.ts"
+		"./src/plugin.ts"
 	],
 	"exclude": [
 		"./node_modules"
