@@ -28,4 +28,19 @@ export type DidReceiveSettings<TSettings = unknown> = Contextual & {
 };
 
 export type InboundEvents = DidReceiveGlobalSettings | DidReceiveSettings;
-export type OutboundEvents = "setSettings";
+export type OutboundEvents =
+	| "getGlobalSettings"
+	| "getSettings"
+	| "logMessage"
+	| "openUrl"
+	| "sendToPropertyInspector"
+	| "setGlobalSettings"
+	| "setFeedback"
+	| "setFeedbackLayout"
+	| "setImage"
+	| "setSettings"
+	| "setState"
+	| "setTitle"
+	| "showAlert"
+	| "showOk"
+	| "switchToProfile";

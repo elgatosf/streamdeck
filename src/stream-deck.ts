@@ -1,7 +1,8 @@
 import { EventEmitter } from "node:events";
 import WebSocket from "ws";
 
-import { InboundEvents, OutboundEvents, StreamDeckEvent } from "./events";
+import { Target } from "./enums";
+import { DidReceiveGlobalSettings, DidReceiveSettings, InboundEvents, OutboundEvents, StreamDeckEvent } from "./events";
 import { PromiseCompletionSource } from "./promises";
 import { RegistrationParameters } from "./registration";
 
@@ -59,19 +60,32 @@ export class StreamDeck {
 	}
 
 	/**
-	 * Registers a listener to be invoked when Stream Deck emits an event, e.g. "willAppear" when an action becomes visible, "deviceDidDisconnect" when a device is connected to user's machine, etc.
-	 * @param event Event to listen for.
+	 * Adds the `listener` function to be invoked when Stream Deck emits the event named `eventName`, e.g. "willAppear" when an action becomes visible, "deviceDidDisconnect" when a device is connected to user's machine, etc.
+	 * @param eventName Event to listen for.
 	 * @param listener Callback invoked when Stream Deck emits the event.
+	 * @returns This instance for chaining.
 	 */
-	public on<TEvent extends InboundEvents["event"], TEventArgs = Extract<InboundEvents, StreamDeckEvent<TEvent>>>(event: TEvent, listener: (data: TEventArgs) => void) {
-		this.eventEmitter.addListener(event, listener);
+	public on<TEvent extends InboundEvents["event"], TEventArgs = Extract<InboundEvents, StreamDeckEvent<TEvent>>>(eventName: TEvent, listener: (data: TEventArgs) => void): this {
+		this.eventEmitter.on(eventName, listener);
+		return this;
 	}
 
 	/**
-	 * Sets the settings associated with an instance of an action, as identified by the context. An instance of an action represents a button, dial, pedal, etc.
+	 * Adds a **one-time** `listener` function to be invoked when Stream Deck emits the event named `eventName`. The next time `eventName` is triggered, this listener is removed and then invoked.
+	 * @param eventName Event to listen for.
+	 * @param listener Callback invoked when Stream Deck emits the event.
+	 * @returns This instance for chaining.
+	 */
+	public once<TEvent extends InboundEvents["event"], TEventArgs = Extract<InboundEvents, StreamDeckEvent<TEvent>>>(eventName: TEvent, listener: (data: TEventArgs) => void): this {
+		this.eventEmitter.once(eventName, listener);
+		return this;
+	}
+
+	/**
+	 * Sets the `settings` associated with an instance of an action, as identified by the `context`. An instance of an action represents a button, dial, pedal, etc.
 	 * @param context Unique identifier of the action instance whose settings will be updated.
 	 * @param settings Settings to associate with the action instance.
-	 * @returns Promise resolved when the settings are sent to Stream Deck.
+	 * @returns Promise resolved when the `settings` are sent to Stream Deck.
 	 */
 	public setSettings(context: string, settings: unknown): Promise<void> {
 		return this.send("setSettings", {
@@ -80,20 +94,126 @@ export class StreamDeck {
 		});
 	}
 
-	//public getSettings?<T = unknown>(context: string): Promise<T>;
-	//public setGlobalSettings?(settings: unknown): void;
-	//public getGlobalSettings<T = unknown>(): Promise<DidReceiveGlobalSettings<T>> {
-	//public openUrl?(url: string): void;
-	//public logMessage?(message: string): void;
-	//public setTitle(context: string, title: string, target: Target = Target.HardwareAndSoftware, state: 0 | 1 | null = null);
-	//public setImage(context: string, image: string, target: Target = Target.HardwareAndSoftware, state: 0 | 1 | null = null);
-	//public setFeedback(context: string, feedback: unknown);
-	//public setFeedbackLayout(context: string, layout: string);
-	//public showAlert(context: string);
-	//public showOk(context: string);
-	//public setState(context: string, state: 0 | 1 | null = null);
-	//public switchToProfile(profileName: string);
-	//public sendToPropertyInspector(context: string, payload: unknown);
+	public async getSettings<T = unknown>(context: string): Promise<DidReceiveSettings<T>> {
+		const settings = new PromiseCompletionSource<DidReceiveSettings<T>>();
+		this.once("didReceiveSettings", (data: DidReceiveSettings<T>) => settings.setResult(data));
+
+		await this.send("getSettings", {
+			context
+		});
+
+		return settings.promise;
+	}
+
+	public setGlobalSettings(settings: unknown): Promise<void> {
+		return this.send("setGlobalSettings", {
+			context: this.pluginUUID,
+			payload: settings
+		});
+	}
+
+	public async getGlobalSettings<T = unknown>(): Promise<DidReceiveGlobalSettings<T>> {
+		const settings = new PromiseCompletionSource<DidReceiveGlobalSettings<T>>();
+		this.once("didReceiveGlobalSettings", (data: DidReceiveGlobalSettings<T>) => settings.setResult(data));
+
+		await this.send("getGlobalSettings", {
+			context: this.pluginUUID
+		});
+
+		return settings.promise;
+	}
+
+	public openUrl(url: string): Promise<void> {
+		return this.send("openUrl", {
+			payload: {
+				url
+			}
+		});
+	}
+
+	public logMessage(message: string): Promise<void> {
+		return this.send("logMessage", {
+			payload: {
+				message
+			}
+		});
+	}
+
+	public setTitle(context: string, title: string, target: Target = Target.HardwareAndSoftware, state: 0 | 1 | null = null): Promise<void> {
+		return this.send("setTitle", {
+			context,
+			payload: {
+				title,
+				target,
+				state
+			}
+		});
+	}
+
+	public setImage(context: string, image: string, target: Target = Target.HardwareAndSoftware, state: 0 | 1 | null = null): Promise<void> {
+		return this.send("setImage", {
+			context,
+			payload: {
+				image,
+				target,
+				state
+			}
+		});
+	}
+
+	// TODO: strongly type `feedback`.
+	public setFeedback(context: string, feedback: unknown): Promise<void> {
+		return this.send("setFeedback", {
+			context,
+			payload: feedback
+		});
+	}
+
+	// TODO: strongly type `layout`?.
+	public setFeedbackLayout(context: string, layout: string): Promise<void> {
+		return this.send("setFeedbackLayout", {
+			context,
+			payload: {
+				layout
+			}
+		});
+	}
+
+	public showAlert(context: string): Promise<void> {
+		return this.send("showAlert", {
+			context
+		});
+	}
+
+	public showOk(context: string): Promise<void> {
+		return this.send("showOk", {
+			context
+		});
+	}
+
+	public setState(context: string, state: 0 | 1 | null = null): Promise<void> {
+		return this.send("setState", {
+			context,
+			payload: {
+				state
+			}
+		});
+	}
+	public switchToProfile(profile: string): Promise<void> {
+		return this.send("switchToProfile", {
+			context: this.pluginUUID,
+			payload: {
+				profile
+			}
+		});
+	}
+
+	public sendToPropertyInspector(context: string, payload: unknown): Promise<void> {
+		return this.send("sendToPropertyInspector", {
+			context,
+			payload
+		});
+	}
 
 	/**
 	 * Propagates the event emitted by the Stream Deck's web socket connection, to the event emitter used by the plugin.
