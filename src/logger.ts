@@ -21,9 +21,9 @@ export class Logger {
 	private readonly pluginName = path.basename(process.cwd());
 
 	/**
-	 * Minimum log level used to determine which log messages should be written.
+	 * Minimum log level used to determine which log messages can be written; default is `INFO`, or `DEBUG` whilst a debugger can be attached.
 	 */
-	private logLevel = process.execArgv.includes("--inspect") ? LogLevel.DEBUG : LogLevel.INFO;
+	private logLevel = this.canDebuggerBeAttached() ? LogLevel.DEBUG : LogLevel.INFO;
 
 	/**
 	 * Initializes a new logger.
@@ -58,11 +58,42 @@ export class Logger {
 	}
 
 	/**
+	 * Write a trace log `message`.
+	 * @param message Message to write to the log.
+	 */
+	public trace(message: string) {
+		this.log(LogLevel.TRACE, message);
+	}
+
+	/**
 	 * Writes a warning log `message`.
 	 * @param message Message to write to the log.
 	 */
 	public warn(message: string) {
 		this.log(LogLevel.WARN, message);
+	}
+
+	/**
+	 * Sets the minimum log level used to determine which log message can be written; default is `INFO`, or `DEBUG` whilst a debugger can be attached.
+	 *
+	 * **Note:** `LogLevel` can only be set to `TRACE` or `DEBUG` whilst the plugin is in debug mode. Debug mode can be enabled by setting `Nodejs.Inspect` to `true` within the "manifest.json" file.
+	 * @param value Minimum log level.
+	 */
+	public setLogLevel(value: LogLevel) {
+		if ((value === LogLevel.DEBUG || value === LogLevel.TRACE) && !this.canDebuggerBeAttached()) {
+			this.warn(`Log level cannot be set to ${LogLevel[value]} whilst not in debug mode.`); // todo: Add a link to enabling `developer_mode`.
+			return;
+		}
+
+		this.logLevel = value;
+	}
+
+	/**
+	 * Gets a value indicating whether the current process is being executed with the `--inspect` flag, allowing for a debugger to be attached.
+	 * @returns `true` when the application is running with the `--inspect` flag; otherwise `false`.
+	 */
+	private canDebuggerBeAttached(): boolean {
+		return process.execArgv.includes("--inspect");
 	}
 
 	/**
@@ -123,7 +154,7 @@ export class Logger {
 /**
  * Levels of logging.
  */
-enum LogLevel {
+export enum LogLevel {
 	/**
 	 * Error message used to indicate an error was thrown, or something critically went wrong.
 	 */
@@ -140,9 +171,14 @@ enum LogLevel {
 	INFO = 2,
 
 	/**
-	 * Debug message used to detail low-level information useful for profiling the applications runtime.
+	 * Debug message used to detail information useful for profiling the applications runtime.
 	 */
-	DEBUG = 3
+	DEBUG = 3,
+
+	/**
+	 * Trace message used to monitor low-level information such as method calls, communication between the Stream Deck, etc..
+	 */
+	TRACE = 4
 }
 
 /**

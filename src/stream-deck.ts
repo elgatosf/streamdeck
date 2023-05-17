@@ -58,6 +58,14 @@ export class StreamDeck {
 	}
 
 	/**
+	 * Gets the logger used by this instance, used to log messages independently of a Stream Deck connection.
+	 * @returns The logger.
+	 */
+	public get logger() {
+		return logger;
+	}
+
+	/**
 	 * Gets the plugin's unique identifier supplied by Stream Deck. The identifier is transmitted as part of specific messages sent to Stream Deck, e.g. "setGlobalSettings", "getGlobalSettings", and "switchToProfile".
 	 * @returns This plugin's unique identifier.
 	 */
@@ -229,6 +237,7 @@ export class StreamDeck {
 		if (typeof event.data === "string") {
 			const message = JSON.parse(event.data);
 			if (message.event) {
+				logger.trace(event.data);
 				this.eventEmitter.emit(message.event, message);
 			}
 		}
@@ -237,16 +246,17 @@ export class StreamDeck {
 	/**
 	 * Sends the messages to the Stream Deck, once the connection has been established and the plugin registered.
 	 * @param event Event name where the message will be sent.
-	 * @param message Message to send.
+	 * @param data Data to send to Stream Deck.
 	 */
-	private async send(event: OutboundEvents, message: object): Promise<void> {
+	private async send(event: OutboundEvents, data: object): Promise<void> {
 		const connection = await this.connection.promise;
-		connection.send(
-			JSON.stringify({
-				event,
-				...message
-			})
-		);
+		const message = JSON.stringify({
+			event,
+			...data
+		});
+
+		logger.trace(message);
+		connection.send(message);
 	}
 }
 
