@@ -3,6 +3,7 @@ import WebSocket from "ws";
 
 import { Target } from "./enums";
 import { DidReceiveGlobalSettingsEvent, DidReceiveSettingsEvent, InboundEvents, OutboundEvents, StreamDeckEvent } from "./events";
+import logger from "./logger";
 import { PromiseCompletionSource } from "./promises";
 import { RegistrationParameters } from "./registration";
 
@@ -30,16 +31,21 @@ export class StreamDeck {
 	 * @param params Registration parameters used to establish a connection with the Stream Deck; these are automatically supplied as part of the command line arguments when the plugin is ran by the Stream Deck.
 	 */
 	constructor(private readonly params = new RegistrationParameters(process.argv)) {
+		logger.debug("Initializing plugin.");
+
 		this.ws = new WebSocket(`ws://localhost:${params.port}`);
 		this.ws.onmessage = this.propagateMessage.bind(this);
 		this.ws.onopen = () => {
-			JSON.stringify({
-				event: params.event,
-				uuid: params.pluginUUID
-			});
+			this.ws.send(
+				JSON.stringify({
+					event: params.registerEvent,
+					uuid: params.pluginUUID
+				})
+			);
 
 			// Web socket established a connection with the Stream Deck and the plugin was registered.
 			this.connection.setResult(this.ws);
+			logger.debug("Plugin connected to Stream Deck.");
 		};
 	}
 
@@ -53,7 +59,7 @@ export class StreamDeck {
 
 	/**
 	 * Gets the plugin's unique identifier supplied by Stream Deck. The identifier is transmitted as part of specific messages sent to Stream Deck, e.g. "setGlobalSettings", "getGlobalSettings", and "switchToProfile".
-	 * @returns This plugin's unique identifer.
+	 * @returns This plugin's unique identifier.
 	 */
 	public get pluginUUID() {
 		return this.params.pluginUUID;
@@ -220,10 +226,10 @@ export class StreamDeck {
 	 * @param event Event message received from the Stream Deck.
 	 */
 	private propagateMessage(event: WebSocket.MessageEvent) {
-		if (typeof event === "string") {
-			const message = JSON.parse(event);
+		if (typeof event.data === "string") {
+			const message = JSON.parse(event.data);
 			if (message.event) {
-				this.eventEmitter.emit(message.event);
+				this.eventEmitter.emit(message.event, message);
 			}
 		}
 	}
@@ -244,4 +250,17 @@ export class StreamDeck {
 	}
 }
 
-export default new StreamDeck();
+/**
+ * Initializes the singleton instance of `StreamDeck`.
+ * @returns `StreamDeck` instance, capable of communicating with the Stream Deck.
+ */
+const init = (): StreamDeck => {
+	try {
+		return new StreamDeck();
+	} catch (e) {
+		logger.error(e as string);
+		process.exit(1);
+	}
+};
+
+export default init();
