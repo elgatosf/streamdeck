@@ -2,7 +2,8 @@
 	"extends": "@tsconfig/node20/tsconfig.json",
 	"compilerOptions": {
 		"declaration": true,
-		"outDir": "./lib/"
+		"outDir": "./lib/",
+		"sourceMap": true
 	},
 	"include": [
 		"./src/index.ts"
