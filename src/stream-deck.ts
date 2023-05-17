@@ -260,17 +260,4 @@ export class StreamDeck {
 	}
 }
 
-/**
- * Initializes the singleton instance of `StreamDeck`.
- * @returns `StreamDeck` instance, capable of communicating with the Stream Deck.
- */
-const init = (): StreamDeck => {
-	try {
-		return new StreamDeck();
-	} catch (e) {
-		logger.error(e as string);
-		process.exit(1);
-	}
-};
-
-export default init();
+export default new StreamDeck();

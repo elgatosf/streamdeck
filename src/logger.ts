@@ -1,4 +1,4 @@
-import fs, { WriteStream } from "node:fs";
+import fs from "node:fs";
 import path from "node:path";
 
 /**
@@ -11,14 +11,19 @@ export class Logger {
 	private readonly logsDir = path.join(process.cwd(), "logs");
 
 	/**
-	 * File stream responsible for writing to the active log file.
+	 * File descriptor that references the active log file being written to.
 	 */
-	private readonly logStream: WriteStream;
+	private readonly logFileDescriptor: number;
 
 	/**
 	 * Name of the current plugin; used to generate log file names.
 	 */
 	private readonly pluginName = path.basename(process.cwd());
+
+	/**
+	 * Determines whether this instance is disposed; when `true`, log messages will not be written to the internal `WriteStream`.
+	 */
+	private _isDisposed = false;
 
 	/**
 	 * Minimum log level used to determine which log messages can be written; default is `INFO`, or `DEBUG` whilst a debugger can be attached.
@@ -30,47 +35,60 @@ export class Logger {
 	 */
 	constructor() {
 		this.prepareLogsDir();
-		this.logStream = fs.createWriteStream(this.getLogFilePath(0), { flags: "a+" });
+		this.logFileDescriptor = fs.openSync(this.getLogFilePath(0), "a+");
+	}
+
+	/**
+	 * Disposes the logger, releasing all managed resources.
+	 */
+	public dispose() {
+		this._isDisposed = true;
+		fs.closeSync(this.logFileDescriptor);
 	}
 
 	/**
 	 * Writes a debug log `message`.
 	 * @param message Message to write to the log.
+	 * @param error Optional error to log with the `message`.
 	 */
-	public debug(message: string) {
-		this.log(LogLevel.DEBUG, message);
+	public debug(message: string, error?: Error | unknown) {
+		this.log(LogLevel.DEBUG, message, error);
 	}
 
 	/**
 	 * Writes a warning log `error`.
 	 * @param message Message to write to the log.
+	 * @param error Optional error to log with the `message`.
 	 */
-	public error(message: string) {
-		this.log(LogLevel.ERROR, message);
+	public error(message: string, error?: Error | unknown) {
+		this.log(LogLevel.ERROR, message, error);
 	}
 
 	/**
 	 * Writes an info log `message`.
 	 * @param message Message to write to the log.
+	 * @param error Optional error to log with the `message`.
 	 */
-	public info(message: string) {
-		this.log(LogLevel.INFO, message);
+	public info(message: string, error?: Error | unknown) {
+		this.log(LogLevel.INFO, message, error);
 	}
 
 	/**
 	 * Write a trace log `message`.
 	 * @param message Message to write to the log.
+	 * @param error Optional error to log with the `message`.
 	 */
-	public trace(message: string) {
-		this.log(LogLevel.TRACE, message);
+	public trace(message: string, error?: Error | unknown) {
+		this.log(LogLevel.TRACE, message, error);
 	}
 
 	/**
 	 * Writes a warning log `message`.
 	 * @param message Message to write to the log.
+	 * @param error Optional error to log with the `message`.
 	 */
-	public warn(message: string) {
-		this.log(LogLevel.WARN, message);
+	public warn(message: string, error?: Error | unknown) {
+		this.log(LogLevel.WARN, message, error);
 	}
 
 	/**
@@ -100,15 +118,28 @@ export class Logger {
 	 * Writes a log `message` with the specified `logLevel`.
 	 * @param logLevel Log level of the message, printed as part of the overall log message.
 	 * @param message Message to write to the log.
+	 * @param error Optional error to log with the `message`.
 	 */
-	private log(logLevel: LogLevel, message: string): void {
+	private log(logLevel: LogLevel, message: string, error?: Error | unknown): void {
+		if (this._isDisposed) {
+			return;
+		}
+
 		if (logLevel <= this.logLevel) {
 			const date = new Date()
 				.toISOString()
 				.replace(/T/, " ")
 				.replace(/\.\d+Z/, "");
 
-			this.logStream.write(`${date} ${LogLevel[logLevel]} ${message}\n`);
+			fs.writeSync(this.logFileDescriptor, `${date} ${LogLevel[logLevel]} ${message}\n`);
+
+			if (error !== undefined) {
+				if (error instanceof Error && error.stack) {
+					fs.writeSync(this.logFileDescriptor, `${error.stack}\n`);
+				} else {
+					fs.writeSync(this.logFileDescriptor, `${error}`);
+				}
+			}
 		}
 	}
 
@@ -186,4 +217,11 @@ export enum LogLevel {
  * This instance is used when calling `streamDeck.logMessage(message)` to reduce communication between the plugin and the Stream Deck.
  * Log files can be found in the plugin's directory, under the "/logs" folder, and are truncated to the 10 most recent logs.
  */
-export default new Logger();
+const logger = new Logger();
+
+process.once("uncaughtException", (err) => {
+	logger.error("Process encountered uncaught exception", err);
+	logger.dispose();
+});
+
+export default logger;

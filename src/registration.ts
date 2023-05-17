@@ -2,7 +2,7 @@ import { DeviceType } from "./enums";
 import logger from "./logger";
 
 /**
- * Registration information supplied by the Stream Deck when lauching the plugin, that enables the plugin to establish a secure connection with the Stream Deck.
+ * Registration information supplied by the Stream Deck when launching the plugin, that enables the plugin to establish a secure connection with the Stream Deck.
  */
 export class RegistrationParameters {
 	/**
