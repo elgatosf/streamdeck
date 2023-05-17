@@ -1,4 +1,5 @@
 import { DeviceType } from "./enums";
+import logger from "./logger";
 
 /**
  * Registration information supplied by the Stream Deck when lauching the plugin, that enables the plugin to establish a secure connection with the Stream Deck.
@@ -17,7 +18,7 @@ export class RegistrationParameters {
 	/**
 	 * Name of the event used as part of the registration procedure when a connection with the Stream Deck is being established.
 	 */
-	public readonly event!: string;
+	public readonly registerEvent!: string;
 
 	/**
 	 * Object containing information about the Stream Deck, this plugin, the user's operating system, user's Stream Deck devices, etc.
@@ -29,10 +30,6 @@ export class RegistrationParameters {
 	 * @param args Command line arguments supplied by Stream Deck when launching this plugin, used to parse the required registration parameters.
 	 */
 	constructor(args: string[]) {
-		if (args.length !== 8) {
-			throw new Error(`Failed to parse registration information: The supplied number of arguments is invalid, expected 8 but was ${args.length}.`);
-		}
-
 		for (let i = 0; i < args.length - 1; i++) {
 			const param = args[i];
 			const value = args[++i];
@@ -44,24 +41,48 @@ export class RegistrationParameters {
 			switch (param) {
 				case "-port":
 					this.port = value;
+					logger.debug(`port=${value}`);
 					break;
 
 				case "-pluginUUID":
 					this.pluginUUID = value;
+					logger.debug(`pluginUUID=${value}`);
 					break;
 
 				case "-registerEvent":
-					this.event = value;
+					this.registerEvent = value;
+					logger.debug(`registerEvent=${value}`);
 					break;
 
 				case "-info":
 					this.info = JSON.parse(value);
+					logger.debug(`info=${value}`);
 					break;
 
 				default:
 					i--;
 					break;
 			}
+		}
+
+		if (this.port === undefined) {
+			logger.info("no port");
+			throw new Error("Unable to establish a connection with Stream Deck: The required command line argument [-port] was not specified by Stream Deck when lauching the plugin.");
+		}
+
+		if (this.pluginUUID === undefined) {
+			logger.info("no plugin UUID");
+			throw new Error("Unable to establish a connection with Stream Deck: The required command line argument [-pluginUUID] was not specified by Stream Deck when lauching the plugin.");
+		}
+
+		if (this.registerEvent === undefined) {
+			logger.info("no register event");
+			throw new Error("Unable to establish a connection with Stream Deck: The required command line argument [-registerEvent] was not specified by Stream Deck when lauching the plugin.");
+		}
+
+		if (this.info === undefined) {
+			logger.info("no info");
+			throw new Error("Unable to establish a connection with Stream Deck: The required command line argument [-info] was not specified by Stream Deck when lauching the plugin.");
 		}
 	}
 }
