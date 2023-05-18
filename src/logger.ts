@@ -11,19 +11,14 @@ export class Logger {
 	private readonly logsDir = path.join(process.cwd(), "logs");
 
 	/**
-	 * File descriptor that references the active log file being written to.
+	 * Path to the current log file.
 	 */
-	private readonly logFileDescriptor: number;
+	private readonly logPath;
 
 	/**
 	 * Name of the current plugin; used to generate log file names.
 	 */
 	private readonly pluginName = path.basename(process.cwd());
-
-	/**
-	 * Determines whether this instance is disposed; when `true`, log messages will not be written to the internal `WriteStream`.
-	 */
-	private _isDisposed = false;
 
 	/**
 	 * Minimum log level used to determine which log messages can be written; default is `INFO`, or `DEBUG` whilst a debugger can be attached.
@@ -34,16 +29,8 @@ export class Logger {
 	 * Initializes a new logger.
 	 */
 	constructor() {
-		this.prepareLogsDir();
-		this.logFileDescriptor = fs.openSync(this.getLogFilePath(0), "a+");
-	}
-
-	/**
-	 * Disposes the logger, releasing all managed resources.
-	 */
-	public dispose() {
-		this._isDisposed = true;
-		fs.closeSync(this.logFileDescriptor);
+		this.logPath = this.getLogPath();
+		this.truncateLogs();
 	}
 
 	/**
@@ -121,32 +108,33 @@ export class Logger {
 	 * @param error Optional error to log with the `message`.
 	 */
 	private log(logLevel: LogLevel, message: string, error?: Error | unknown): void {
-		if (this._isDisposed) {
-			return;
-		}
-
 		if (logLevel <= this.logLevel) {
 			const date = new Date()
 				.toISOString()
 				.replace(/T/, " ")
 				.replace(/\.\d+Z/, "");
 
-			fs.writeSync(this.logFileDescriptor, `${date} ${LogLevel[logLevel]} ${message}\n`);
+			const fd = fs.openSync(this.logPath, "a");
 
-			if (error !== undefined) {
-				if (error instanceof Error && error.stack) {
-					fs.writeSync(this.logFileDescriptor, `${error.stack}\n`);
-				} else {
-					fs.writeSync(this.logFileDescriptor, `${error}`);
+			try {
+				fs.writeSync(fd, `${date} ${LogLevel[logLevel]} ${message}\n`);
+				if (error !== undefined) {
+					if (error instanceof Error && error.stack) {
+						fs.writeSync(fd, `${error.stack}\n`);
+					} else {
+						fs.writeSync(fd, `${error}`);
+					}
 				}
+			} finally {
+				fs.closeSync(fd);
 			}
 		}
 	}
 
 	/**
-	 * Prepares the logs directory ready for a new log file to be created. The logs directory is created, excess log files are removed (older than 9), and all indexes of remaining log files are incremented.
+	 * Truncates existing logs, ensuring there are only 10 log files at any given time, with the oldest being removed. The index of remaining files is increment to allow for a new log file to be created.
 	 */
-	private prepareLogsDir(): void {
+	private truncateLogs(): void {
 		// When the logs directory is new, all we need to do is create it.
 		if (!fs.existsSync(this.logsDir)) {
 			fs.mkdirSync(this.logsDir);
@@ -167,7 +155,7 @@ export class Logger {
 				fs.rmSync(logPath);
 			} else {
 				// Increment remaining log files, ready for a new log file.
-				fs.renameSync(logPath, this.getLogFilePath(i + 1));
+				fs.renameSync(logPath, this.getLogPath(i + 1));
 			}
 		}
 	}
@@ -177,7 +165,7 @@ export class Logger {
 	 * @param index Index of the log file.
 	 * @returns Full file path to the log file.
 	 */
-	private getLogFilePath(index: number): string {
+	private getLogPath(index = 0): string {
 		return path.join(this.logsDir, `${this.pluginName}.00${index}.log`);
 	}
 }
@@ -219,9 +207,6 @@ export enum LogLevel {
  */
 const logger = new Logger();
 
-process.once("uncaughtException", (err) => {
-	logger.error("Process encountered uncaught exception", err);
-	logger.dispose();
-});
+process.once("uncaughtException", (err) => logger.error("Process encountered uncaught exception", err));
 
 export default logger;
