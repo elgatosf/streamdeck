@@ -77,6 +77,11 @@ export class StreamDeck {
 	/**
 	 * Gets the global settings associated with the plugin. Use in conjunction with {@link StreamDeck.setGlobalSettings}.
 	 * @returns Promise containing the plugin's global settings.
+	 * @example
+	 * (async function() {
+	 *   const globalSettings = await streamDeck.getGlobalSettings();
+	 *   myOtherService.setApiKey(globalSettings.payload.settings.apiKey);
+	 * })();
 	 */
 	public async getGlobalSettings<T = unknown>(): Promise<DidReceiveGlobalSettingsEvent<T>> {
 		const settings = new PromiseCompletionSource<DidReceiveGlobalSettingsEvent<T>>();
@@ -93,6 +98,14 @@ export class StreamDeck {
 	 * Gets the settings associated with an instance of an action, as identified by the `context`. An instance of an action represents a button, dial, pedal, etc. Use in conjunction with {@link StreamDeck.setSettings}.
 	 * @param context Unique identifier of the action instance whose settings are being requested.
 	 * @returns Promise containing the action instance's settings.
+	 * @example
+	 * streamDeck.on("willAppear", async data => {
+	 *   // Get the settings of another action.
+	 *   const otherSettings = await streamDeck.getSettings(myOtherActionContext);
+	 *
+	 *   // Display the information from that action, on the action that is appearing.
+	 *   streamDeck.setTitle(data.context, otherSettings.payload.settings.myCustomMessage);
+	 * });
 	 */
 	public async getSettings<T = unknown>(context: string): Promise<DidReceiveSettingsEvent<T>> {
 		const settings = new PromiseCompletionSource<DidReceiveSettingsEvent<T>>();
@@ -114,6 +127,18 @@ export class StreamDeck {
 	 * @param eventName Event to listen for.
 	 * @param listener Callback invoked when Stream Deck emits the event.
 	 * @returns This instance for chaining.
+	 * @example
+	 * streamDeck.on("willAppear", data => {
+	 *   // Emitted when an action appears; data contains information about the action.
+	 * });
+	 * @example
+	 * streamDeck.on("dialRotate", data => {
+	 *   // Emitted when a Stream Deck+ dial is rotated; data contains information about the action.
+	 * });
+	 * @example
+	 * streamDeck.on("sendToPlugin", data => {
+	 *   // Emitted when the property inspector sends a message to the plugin; data contains the information.
+	 * });
 	 */
 	public on<TEvent extends InboundEvents["event"], TEventArgs = Extract<InboundEvents, StreamDeckEvent<TEvent>>>(eventName: TEvent, listener: (data: TEventArgs) => void): this {
 		this.eventEmitter.on(eventName, listener);
@@ -125,6 +150,18 @@ export class StreamDeck {
 	 * @param eventName Event to listen for.
 	 * @param listener Callback invoked when Stream Deck emits the event.
 	 * @returns This instance for chaining.
+	 * @example
+	 * streamDeck.once("willAppear", data => {
+	 *   // Emitted when an action appears; data contains information about the action.
+	 * });
+	 * @example
+	 * streamDeck.once("dialRotate", data => {
+	 *   // Emitted when a Stream Deck+ dial is rotated; data contains information about the action.
+	 * });
+	 * @example
+	 * streamDeck.once("sendToPlugin", data => {
+	 *   // Emitted when the property inspector sends a message to the plugin; data contains the information.
+	 * });
 	 */
 	public once<TEvent extends InboundEvents["event"], TEventArgs = Extract<InboundEvents, StreamDeckEvent<TEvent>>>(eventName: TEvent, listener: (data: TEventArgs) => void): this {
 		this.eventEmitter.once(eventName, listener);
@@ -132,14 +169,65 @@ export class StreamDeck {
 	}
 
 	/**
+	 * Opens the specified `url` in the user's default browser.
+	 * @param url URL to open.
+	 * @returns Promise resolved when the request to open the `url` has been sent to Stream Deck.
+	 * @example
+	 * streamDeck.openUrl("https://elgato.com");
+	 */
+	public openUrl(url: string): Promise<void> {
+		return this.send("openUrl", {
+			payload: {
+				url
+			}
+		});
+	}
+
+	/**
 	 * Sets the global `settings` associated the plugin. **Note**, these settings are only available to this plugin, and should be used to persist information securely. Use in conjunction with {@link StreamDeck.getGlobalSettings}.
 	 * @param settings Settings to save.
 	 * @returns Promise resolved when the global `settings` are sent to Stream Deck.
+	 * @example
+	 * streamDeck.setGlobalSettings({
+	 *   apiKey,
+	 *   connectedDate: new Date()
+	 * })
 	 */
 	public setGlobalSettings(settings: unknown): Promise<void> {
 		return this.send("setGlobalSettings", {
 			context: this.pluginUUID,
 			payload: settings
+		});
+	}
+
+	/**
+	 * Sets the `image` displayed for an instance of an action, as identified by the `context`.
+	 * @param context Unique identifier of the action instance whose image will be updated.
+	 * @param image Image to display; this can be either a path to a local file within the plugin's folder, or a base64 encoded `string`. When `image` is `undefined`, the image from the manifest is used.
+	 * @param target Specifies which aspects of the Stream Deck should be updated, hardware, software, or both.
+	 * @param state Action state the request applies to; when no state is supplied, the image is set for both states. **Note**, only applies to multi-state actions.
+	 * @returns Promise resolved when the request to set the `image` has been sent to Stream Deck.
+	 * @example
+	 * // Set the image from a local path when a specific action appears.
+	 * streamDeck.on("willAppear", data => {
+	 *   if (data.action === "com.elgato.plugin.myAction") {
+	 *     streamDeck.setImage(data.context, "imgs/Logo.png");
+	 *   }
+	 * });
+	 * @example
+	 * // Set the image, but only on the hardware device, from a base64 encoded string when a key is pressed down.
+	 * streamDeck.on("keyDown", data => {
+	 *   streamDeck.setImage(data.context, "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MHB0IiBoZWlnaHQ9…", Target.Hardware);
+	 * });
+	 */
+	public setImage(context: string, image: string, target: Target = Target.HardwareAndSoftware, state: 0 | 1 | null = null): Promise<void> {
+		return this.send("setImage", {
+			context,
+			payload: {
+				image,
+				target,
+				state
+			}
 		});
 	}
 
@@ -156,14 +244,7 @@ export class StreamDeck {
 		});
 	}
 
-	public openUrl(url: string): Promise<void> {
-		return this.send("openUrl", {
-			payload: {
-				url
-			}
-		});
-	}
-
+	// TODO: Should we include this, or continue to expose the `StreamDeck.logger`?
 	public logMessage(message: string): Promise<void> {
 		return this.send("logMessage", {
 			payload: {
@@ -172,22 +253,24 @@ export class StreamDeck {
 		});
 	}
 
-	public setTitle(context: string, title: string, target: Target = Target.HardwareAndSoftware, state: 0 | 1 | null = null): Promise<void> {
+	/**
+	 * Sets the `title` displayed for an instance of an action, as identified by the `context`. Often used in conjunction with `"titleParametersDidChange"` event.
+	 * @param context Unique identifier of the action instance whose title will be updated.
+	 * @param title Title to display; when no title is specified, the title will reset to the title set by the user.
+	 * @param target Specifies which aspects of the Stream Deck should be updated, hardware, software, or both.
+	 * @param state Action state the request applies to; when no state is supplied, the title is set for both states. **Note**, only applies to multi-state actions.
+	 * @returns Promise resolved when the request to set the `title` has been sent to Stream Deck.
+	 * @example
+	 * // Set the title to "Hello world" when the action appears.
+	 * streamDeck.on("willAppear", data => {
+	 *   streamDeck.setTitle(data.context, "Hello world");
+	 * });
+	 */
+	public setTitle(context: string, title?: string, target?: Target, state?: 0 | 1): Promise<void> {
 		return this.send("setTitle", {
 			context,
 			payload: {
 				title,
-				target,
-				state
-			}
-		});
-	}
-
-	public setImage(context: string, image: string, target: Target = Target.HardwareAndSoftware, state: 0 | 1 | null = null): Promise<void> {
-		return this.send("setImage", {
-			context,
-			payload: {
-				image,
 				target,
 				state
 			}
