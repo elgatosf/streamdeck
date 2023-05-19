@@ -6,9 +6,9 @@ import logger from "./logger";
  */
 export class RegistrationParameters {
 	/**
-	 * Port used by the web socket responsible for communicating messages between the plugin and the Stream Deck.
+	 * Object containing information about the Stream Deck, this plugin, the user's operating system, user's Stream Deck devices, etc.
 	 */
-	public readonly port!: string;
+	public readonly info!: RegistrationInfo;
 
 	/**
 	 * Unique identifier assigned to the plugin by Stream Deck; this value is used in conjunction with specific commands used to identify the source of the request, e.g. "getGlobalSettings".
@@ -16,14 +16,14 @@ export class RegistrationParameters {
 	public readonly pluginUUID!: string;
 
 	/**
+	 * Port used by the web socket responsible for communicating messages between the plugin and the Stream Deck.
+	 */
+	public readonly port!: string;
+
+	/**
 	 * Name of the event used as part of the registration procedure when a connection with the Stream Deck is being established.
 	 */
 	public readonly registerEvent!: string;
-
-	/**
-	 * Object containing information about the Stream Deck, this plugin, the user's operating system, user's Stream Deck devices, etc.
-	 */
-	public readonly info!: RegistrationInfo;
 
 	/**
 	 * Initializes a new instance of the registration parameters, from the supplied command line arguments arguments.
@@ -67,22 +67,22 @@ export class RegistrationParameters {
 
 		if (this.port === undefined) {
 			logger.info("no port");
-			throw new Error("Unable to establish a connection with Stream Deck: The required command line argument [-port] was not specified by Stream Deck when lauching the plugin.");
+			throw new Error("Unable to establish a connection with Stream Deck: The required command line argument [-port] was not specified by Stream Deck when launching the plugin.");
 		}
 
 		if (this.pluginUUID === undefined) {
 			logger.info("no plugin UUID");
-			throw new Error("Unable to establish a connection with Stream Deck: The required command line argument [-pluginUUID] was not specified by Stream Deck when lauching the plugin.");
+			throw new Error("Unable to establish a connection with Stream Deck: The required command line argument [-pluginUUID] was not specified by Stream Deck when launching the plugin.");
 		}
 
 		if (this.registerEvent === undefined) {
 			logger.info("no register event");
-			throw new Error("Unable to establish a connection with Stream Deck: The required command line argument [-registerEvent] was not specified by Stream Deck when lauching the plugin.");
+			throw new Error("Unable to establish a connection with Stream Deck: The required command line argument [-registerEvent] was not specified by Stream Deck when launching the plugin.");
 		}
 
 		if (this.info === undefined) {
 			logger.info("no info");
-			throw new Error("Unable to establish a connection with Stream Deck: The required command line argument [-info] was not specified by Stream Deck when lauching the plugin.");
+			throw new Error("Unable to establish a connection with Stream Deck: The required command line argument [-info] was not specified by Stream Deck when launching the plugin.");
 		}
 	}
 }
@@ -91,35 +91,120 @@ export class RegistrationParameters {
  * Object containing information about the Stream Deck application, the plugin, the user's operating system, user's Stream Deck devices, etc.
  */
 export type RegistrationInfo = {
+	/**
+	 * Stream Deck application specific information.
+	 */
 	application: {
+		/**
+		 * Font being used by the Stream Deck application.
+		 */
 		font: string;
-		language: "en" | "fr" | "de" | "es" | "ja" | "zh_CN";
+
+		/**
+		 * Users preferred language; this is used by the Stream Deck application for localization.
+		 */
+		language: "de" | "en" | "es" | "fr" | "ja" | "zh_CN";
+
+		/**
+		 * Operating system.
+		 */
 		platform: "mac" | "windows";
+
+		/**
+		 * Operating system version, e.g. "10" for Windows 10.
+		 */
 		platformVersion: string;
+
+		/**
+		 * Stream Deck application version.
+		 */
 		version: string;
 	};
-	plugin: {
-		uuid: string;
-		version: string;
-	};
-	devicePixelRatio: number;
+
+	/**
+	 * Collection of preferred colors used by the Stream Deck.
+	 */
 	colors: {
+		/**
+		 * Color that denotes the background of a button that is being moused over.
+		 */
+		buttonMouseOverBackgroundColor: string;
+
+		/**
+		 * Color that denotes the background of a pressed button.
+		 */
 		buttonPressedBackgroundColor: string;
+
+		/**
+		 * Color that denotes the border of a press button.
+		 */
 		buttonPressedBorderColor: string;
+
+		/**
+		 * Color that denotes the text of a pressed button.
+		 */
 		buttonPressedTextColor: string;
-		disabledColor: string;
+
+		/**
+		 * Color of highlighted text.
+		 */
 		highlightColor: string;
-		mouseDownColor: string;
 	};
+
+	/**
+	 * Pixel ratio, used to identify if the Stream Deck application is running on a high DPI screen.
+	 */
+	devicePixelRatio: number;
+
+	/**
+	 * Devices associated with the Stream Deck application; this may include devices that are not currently connected. Use `"deviceDidConnect"` event to determine which devices are active.
+	 */
 	devices: [
 		{
+			/**
+			 * Unique identifier of the device.
+			 */
 			id: string;
+
+			/**
+			 * Name of the device, set by the user.
+			 */
 			name: string;
+
+			/**
+			 * Layout size of the device.
+			 */
 			size: {
+				/**
+				 * Number of columns associated with the device, e.g. 5 for Stream Deck, 8 for Stream Deck XL, etc.
+				 */
 				columns: number;
+
+				/**
+				 * Number of rows associated with the device, e.g. 3 for Stream Deck, 4 for Stream Deck XL, etc.
+				 */
 				rows: number;
 			};
+
+			/**
+			 * Type of the device, e.g. Stream Deck+, Stream Deck XL, etc.
+			 */
 			type: DeviceType;
 		}
 	];
+
+	/**
+	 * Information about the plugin.
+	 */
+	plugin: {
+		/**
+		 * Unique identifier of the plugin, as defined by the plugin.
+		 */
+		uuid: string;
+
+		/**
+		 * Version of the plugin.
+		 */
+		version: string;
+	};
 };
