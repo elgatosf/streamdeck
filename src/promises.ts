@@ -8,14 +8,14 @@ export class PromiseCompletionSource<T> {
 	private readonly _promise: Promise<T>;
 
 	/**
-	 * Delegate used to resolve the promise.
-	 */
-	private _resolve?: (value: T | PromiseLike<T>) => void;
-
-	/**
 	 * Delegate used to reject the promise.
 	 */
 	private _reject?: (reason?: unknown) => void;
+
+	/**
+	 * Delegate used to resolve the promise.
+	 */
+	private _resolve?: (value: PromiseLike<T> | T) => void;
 
 	/**
 	 * Wraps an underlying Promise{T}, exposing the resolve and reject delegates as methods, allowing for it to be awaited, resolved, or rejected externally.
@@ -36,22 +36,22 @@ export class PromiseCompletionSource<T> {
 	}
 
 	/**
-	 * Sets the result of the underlying promise, allowing any awaited calls to continue invocation.
-	 * @param value The value to resolve the promise with.
-	 */
-	public setResult(value: T | PromiseLike<T>): void {
-		if (this._resolve) {
-			this._resolve(value);
-		}
-	}
-
-	/**
 	 * Rejects the promise, causing any awaited calls to throw.
 	 * @param reason The reason for rejecting the promise.
 	 */
 	public setException(reason?: unknown): void {
 		if (this._reject) {
 			this._reject(reason);
+		}
+	}
+
+	/**
+	 * Sets the result of the underlying promise, allowing any awaited calls to continue invocation.
+	 * @param value The value to resolve the promise with.
+	 */
+	public setResult(value: PromiseLike<T> | T): void {
+		if (this._resolve) {
+			this._resolve(value);
 		}
 	}
 }
