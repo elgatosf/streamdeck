@@ -171,7 +171,7 @@ export class StreamDeck {
 	/**
 	 * Opens the specified `url` in the user's default browser.
 	 * @param url URL to open.
-	 * @returns Promise resolved when the request to open the `url` has been sent to Stream Deck.
+	 * @returns `Promise` resolved when the request to open the `url` has been sent to Stream Deck.
 	 * @example
 	 * streamDeck.openUrl("https://elgato.com");
 	 */
@@ -184,9 +184,97 @@ export class StreamDeck {
 	}
 
 	/**
-	 * Sets the global `settings` associated the plugin. **Note**, these settings are only available to this plugin, and should be used to persist information securely. Use in conjunction with {@link StreamDeck.getGlobalSettings}.
+	 * Sends the `payload` to the current property inspector associated with an instance of an action, as identified by the `context`. The plugin can also receive information from the property inspector
+	 * via the `"sendToPlugin"` event, allowing for bi-directional communication. **Note**, the `payload` is only received by the property inspector when it is associated with the specified `context`.
+	 * @param context Unique identifier of the action instance whose property inspector will receive the `payload`.
+	 * @param payload Payload to send to the property inspector.
+	 * @returns `Promise` resolved when the request to send the `payload` to the property inspector has been sent to Stream Deck.
+	 */
+	public sendToPropertyInspector(context: string, payload: unknown): Promise<void> {
+		return this.send("sendToPropertyInspector", {
+			context,
+			payload
+		});
+	}
+
+	/**
+	 * Sets the feedback of a layout associated with an action instance, as identified by the `context`, allowing for visual items to be updated. Layouts are defined in the manifest, or
+	 * dynamically via {@link StreamDeck.setFeedbackLayout}. Layouts are a powerful way to provide dynamic information to users; when updating feedback, the `feedback` object should contain
+	 * properties that correlate with the items `key`, as defined in the layout's JSON file. Property values can be an `object`, used to update multiple properties of a layout item, or a `number`
+	 * or `string` to update the `value` of the layout item.
+	 * `number` or `string` may be provided to update the `value` associated with the layout item.
+	 * @param context Unique identifier of the action instance whose feedback will be updated.
+	 * @param feedback Object containing information about the feedback used to update the current layout of an action instance.
+	 * @returns `Promise` resolved when the request to set the `feedback` has been sent to Stream Deck.
+	 * @example
+	 * // Feedback object that will set the value of the bar item to 10, for the layout item that has the key "progress" in the bespoke layout's JSON definition.
+	 * const feedback = {
+	 *   progress: 10
+	 * };
+	 * @example
+	 * // Feedback object that will set the value of the pixmap item to "img/Logo.png" and make it visible, for the layout item that has the key "img" in the bespoke layout's JSON definition.
+	 * const feedback = {
+	 *   img: {
+	 *     value: "img/Logo.png",
+	 *     enabled: true
+	 *   }
+	 * };
+	 * @example
+	 * // Change the feedback when a dial rotates.
+	 * streamDeck.on("dialRotate", async data => {
+	 *   // Get the current settings, and update the `count` based on the direction of the rotation.
+	 *   const { payload: { settings }} = await streamDeck.getSettings(data.context);
+	 *   settings.count += data.payload.ticks;
+	 *   await streamDeck.setSettings(settings);
+	 *
+	 *   // Update the layout based on the current count.
+	 *   // In this example, "progress" is a "bar", and "image" is a "pixmap", defined in the layout JSON file.
+	 *   streamDeck.setFeedback({
+	 *     progress: settings.count,
+	 *     image: {
+	 *       enabled: settings.count >= 50 // Show the image in the layout when the count is greater than or equal to 50
+	 *     }
+	 *   })
+	 * });
+	 */
+	public setFeedback(context: string, feedback: FeedbackPayload): Promise<void> {
+		return this.send("setFeedback", {
+			context,
+			payload: feedback
+		});
+	}
+
+	/**
+	 * Sets the layout associated with an action instance, as identified by the `context`. The layout must be either a built-in layout identifier, or path to a local layout JSON file within the plugin's folder.
+	 * Use in conjunction with {@link StreamDeck.setFeedback} to update the layouts current settings once it has been changed.
+	 * @param context Unique identifier of the action instance whose layout will be updated.
+	 * @param layout New layout being assigned to the action instance.
+	 * @returns `Promise` resolved when the new layout has been sent to Stream Deck.
+	 * @example
+	 * streamDeck.on("dialDown", data => {
+	 *   // Set the layout to the built-in $B1 on dial down.
+	 *   streamDeck.setFeedbackLayout(data.context, "$X1");
+	 * });
+	 * @example
+	 * streamDeck.on("dialDown", data => {
+	 *   // Set the layout to the custom layout, defined in the local file, on dial down.
+	 *   streamDeck.setFeedbackLayout(data.context, "layouts/MyCustomLayout.json");
+	 * });
+	 */
+	public setFeedbackLayout(context: string, layout: string): Promise<void> {
+		return this.send("setFeedbackLayout", {
+			context,
+			payload: {
+				layout
+			}
+		});
+	}
+
+	/**
+	 * Sets the global `settings` associated the plugin. **Note**, these settings are only available to this plugin, and should be used to persist information securely.
+	 * Use conjunction with {@link StreamDeck.getGlobalSettings}.
 	 * @param settings Settings to save.
-	 * @returns Promise resolved when the global `settings` are sent to Stream Deck.
+	 * @returns `Promise` resolved when the global `settings` are sent to Stream Deck.
 	 * @example
 	 * streamDeck.setGlobalSettings({
 	 *   apiKey,
@@ -203,10 +291,10 @@ export class StreamDeck {
 	/**
 	 * Sets the `image` displayed for an instance of an action, as identified by the `context`.
 	 * @param context Unique identifier of the action instance whose image will be updated.
-	 * @param image Image to display; this can be either a path to a local file within the plugin's folder, or a base64 encoded `string`. When `image` is `undefined`, the image from the manifest is used.
+	 * @param image Image to display; this can be either a path to a local file within the plugin's folder, a base64 encoded `string` with the mime type declared (e.g. PNG, JPEG, etc.), or an SVG `string`. When `image` is `undefined`, the image from the manifest is used.
 	 * @param target Specifies which aspects of the Stream Deck should be updated, hardware, software, or both.
 	 * @param state Action state the request applies to; when no state is supplied, the image is set for both states. **Note**, only applies to multi-state actions.
-	 * @returns Promise resolved when the request to set the `image` has been sent to Stream Deck.
+	 * @returns `Promise` resolved when the request to set the `image` has been sent to Stream Deck.
 	 * @example
 	 * // Set the image from a local path when a specific action appears.
 	 * streamDeck.on("willAppear", data => {
@@ -232,10 +320,11 @@ export class StreamDeck {
 	}
 
 	/**
-	 * Sets the `settings` associated with an instance of an action, as identified by the `context`. An instance of an action represents a button, dial, pedal, etc. Use in conjunction with {@link StreamDeck.getSettings}.
+	 * Sets the `settings` associated with an instance of an action, as identified by the `context`. An instance of an action represents a button, dial, pedal, etc.
+	 * Use in conjunction with {@link StreamDeck.getSettings}.
 	 * @param context Unique identifier of the action instance whose settings will be updated.
 	 * @param settings Settings to associate with the action instance.
-	 * @returns Promise resolved when the `settings` are sent to Stream Deck.
+	 * @returns `Promise` resolved when the `settings` are sent to Stream Deck.
 	 */
 	public setSettings(context: string, settings: unknown): Promise<void> {
 		return this.send("setSettings", {
@@ -244,11 +333,21 @@ export class StreamDeck {
 		});
 	}
 
-	// TODO: Should we include this, or continue to expose the `StreamDeck.logger`?
-	public logMessage(message: string): Promise<void> {
-		return this.send("logMessage", {
+	/**
+	 * Sets the current state of an action instance; this only applies to actions that have multiple states defined within the manifest.json file.
+	 * @param context Unique identifier of the action instance who state will be set.
+	 * @param state State to set; this be either 0, or 1.
+	 * @returns `Promise` resolved when the request to set the state of an action instance has been sent to Stream Deck.
+	 * @example
+	 * audioService.on("deviceEnabledStateChanged", device => {
+	 *   streamDeck.setState(context, device.isEnabled ? 1 : 0);
+	 * });
+	 */
+	public setState(context: string, state: 0 | 1): Promise<void> {
+		return this.send("setState", {
+			context,
 			payload: {
-				message
+				state
 			}
 		});
 	}
@@ -259,7 +358,7 @@ export class StreamDeck {
 	 * @param title Title to display; when no title is specified, the title will reset to the title set by the user.
 	 * @param target Specifies which aspects of the Stream Deck should be updated, hardware, software, or both.
 	 * @param state Action state the request applies to; when no state is supplied, the title is set for both states. **Note**, only applies to multi-state actions.
-	 * @returns Promise resolved when the request to set the `title` has been sent to Stream Deck.
+	 * @returns `Promise` resolved when the request to set the `title` has been sent to Stream Deck.
 	 * @example
 	 * // Set the title to "Hello world" when the action appears.
 	 * streamDeck.on("willAppear", data => {
@@ -277,55 +376,59 @@ export class StreamDeck {
 		});
 	}
 
-	public setFeedback(context: string, feedback: FeedbackPayload): Promise<void> {
-		return this.send("setFeedback", {
-			context,
-			payload: feedback
-		});
-	}
-
-	public setFeedbackLayout(context: string, layout: string): Promise<void> {
-		return this.send("setFeedbackLayout", {
-			context,
-			payload: {
-				layout
-			}
-		});
-	}
-
+	/**
+	 * Temporarily shows an alert (i.e. warning), in the form of an exclamation mark in a yellow triangle, on an action, as identified by the `context`. Used to provide visual feedback when an action failed.
+	 * Use in conjunction with {@link StreamDeck.logger} to log errors.
+	 * @param context Unique identifier of the action instance where the warning will be shown.
+	 * @returns `Promise` resolved when the request to show an alert has been sent to Stream Deck.
+	 * @example
+	 * streamDeck.on("keyDown", async data => {
+	 *   try {
+	 *     myOtherService.doSomethingThatWillBreak();
+	 *   } catch(e) {
+	 *     // Log the error, and show an alert to the user.
+	 *     streamDeck.logger.error("My service failed", e);
+	 *     await streamDeck.showAlert(data.context);
+	 *   }
+	 * })
+	 */
 	public showAlert(context: string): Promise<void> {
 		return this.send("showAlert", {
 			context
 		});
 	}
 
+	/**
+	 * Temporarily shows an "OK" (i.e. success), in the form of a check-mark in a green circle, on an action, as identified by the `context`. Used to provide visual feedback when an action successfully executed.
+	 * @param context Unique identifier of the action instance where the "OK" will be shown.
+	 * @returns `Promise` resolved when the request to show an "OK" has been sent to Stream Deck.
+	 * @example
+	 * streamDeck.on("keyDown", async data => {
+	 *   // Show success check-mark after executing something.
+	 *   myService.doSomething();
+	 *   await streamDeck.showOk(data.context);
+	 * })
+	 */
 	public showOk(context: string): Promise<void> {
 		return this.send("showOk", {
 			context
 		});
 	}
 
-	public setState(context: string, state: 0 | 1 | null = null): Promise<void> {
-		return this.send("setState", {
-			context,
-			payload: {
-				state
-			}
-		});
-	}
-	public switchToProfile(profile: string): Promise<void> {
+	/**
+	 * Requests the Stream Deck switches the current profile of the specified `device`, to the profile defined by `profile`. **Note**, plugins can only switch to profiles included as part of the plugin, and
+	 * defined within their manifest.json. Plugins cannot switch to custom profiles created by users.
+	 * @param profile Name of the profile to switch to. The name must be identical to the one provided in the manifest.json file.
+	 * @param device Unique identifier of the device where the profile should be set.
+	 * @returns `Promise` resolved when the request to switch the `profile` has been sent to Stream Deck.
+	 */
+	public switchToProfile(profile: string, device: string): Promise<void> {
 		return this.send("switchToProfile", {
 			context: this.pluginUUID,
+			device,
 			payload: {
 				profile
 			}
-		});
-	}
-
-	public sendToPropertyInspector(context: string, payload: unknown): Promise<void> {
-		return this.send("sendToPropertyInspector", {
-			context,
-			payload
 		});
 	}
 
@@ -347,6 +450,7 @@ export class StreamDeck {
 	 * Sends the messages to the Stream Deck, once the connection has been established and the plugin registered.
 	 * @param event Event name where the message will be sent.
 	 * @param data Data to send to Stream Deck.
+	 * @returns `Promise` resolved when the request is sent to Stream Deck.
 	 */
 	private async send(event: OutboundEvents, data: object): Promise<void> {
 		const connection = await this.connection.promise;

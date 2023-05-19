@@ -103,7 +103,7 @@ type LayoutItem = {
  */
 export type Pixmap = LayoutItem & {
 	/**
-	 * Image to render; this can be either a path to a local file within the plugin's folder, or a base64 encoded `string`.
+	 * Image to render; this can be either a path to a local file within the plugin's folder, a base64 encoded `string` with the mime type declared (e.g. PNG, JPEG, etc.), or an SVG `string`.
 	 * @example
 	 * // Given an "Logo.png" file exists within a sub-directory of the plugin named "imgs".
 	 * "imgs/Logo.png"
