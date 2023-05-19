@@ -3,6 +3,7 @@ import WebSocket from "ws";
 
 import { Target } from "./enums";
 import { DidReceiveGlobalSettingsEvent, DidReceiveSettingsEvent, InboundEvents, OutboundEvents, StreamDeckEvent } from "./events";
+import { FeedbackPayload } from "./layouts";
 import logger from "./logger";
 import { PromiseCompletionSource } from "./promises";
 import { RegistrationParameters } from "./registration";
@@ -17,14 +18,14 @@ export class StreamDeck {
 	private readonly connection = new PromiseCompletionSource<WebSocket>();
 
 	/**
-	 * Web socket connection used by this instance to establish the connection with the Stream Deck.
-	 */
-	private readonly ws: WebSocket;
-
-	/**
 	 * Event emitter used to propagate events from the Stream Deck to the plugin.
 	 */
 	private readonly eventEmitter = new EventEmitter();
+
+	/**
+	 * Web socket connection used by this instance to establish the connection with the Stream Deck.
+	 */
+	private readonly ws: WebSocket;
 
 	/**
 	 * Initializes a new instance of the Stream Deck class, used to transmit messages between the Stream Deck and the plugin.
@@ -74,6 +75,41 @@ export class StreamDeck {
 	}
 
 	/**
+	 * Gets the global settings associated with the plugin. Use in conjunction with {@link StreamDeck.setGlobalSettings}.
+	 * @returns Promise containing the plugin's global settings.
+	 */
+	public async getGlobalSettings<T = unknown>(): Promise<DidReceiveGlobalSettingsEvent<T>> {
+		const settings = new PromiseCompletionSource<DidReceiveGlobalSettingsEvent<T>>();
+		this.once("didReceiveGlobalSettings", (data: DidReceiveGlobalSettingsEvent<T>) => settings.setResult(data));
+
+		await this.send("getGlobalSettings", {
+			context: this.pluginUUID
+		});
+
+		return settings.promise;
+	}
+
+	/**
+	 * Gets the settings associated with an instance of an action, as identified by the `context`. An instance of an action represents a button, dial, pedal, etc. Use in conjunction with {@link StreamDeck.setSettings}.
+	 * @param context Unique identifier of the action instance whose settings are being requested.
+	 * @returns Promise containing the action instance's settings.
+	 */
+	public async getSettings<T = unknown>(context: string): Promise<DidReceiveSettingsEvent<T>> {
+		const settings = new PromiseCompletionSource<DidReceiveSettingsEvent<T>>();
+		this.once("didReceiveSettings", (data: DidReceiveSettingsEvent<T>) => {
+			if (data.context == context) {
+				settings.setResult(data);
+			}
+		});
+
+		await this.send("getSettings", {
+			context
+		});
+
+		return settings.promise;
+	}
+
+	/**
 	 * Adds the `listener` function to be invoked when Stream Deck emits the event named `eventName`, e.g. "willAppear" when an action becomes visible, "deviceDidDisconnect" when a device is connected to user's machine, etc.
 	 * @param eventName Event to listen for.
 	 * @param listener Callback invoked when Stream Deck emits the event.
@@ -96,7 +132,19 @@ export class StreamDeck {
 	}
 
 	/**
-	 * Sets the `settings` associated with an instance of an action, as identified by the `context`. An instance of an action represents a button, dial, pedal, etc.
+	 * Sets the global `settings` associated the plugin. **Note**, these settings are only available to this plugin, and should be used to persist information securely. Use in conjunction with {@link StreamDeck.getGlobalSettings}.
+	 * @param settings Settings to save.
+	 * @returns Promise resolved when the global `settings` are sent to Stream Deck.
+	 */
+	public setGlobalSettings(settings: unknown): Promise<void> {
+		return this.send("setGlobalSettings", {
+			context: this.pluginUUID,
+			payload: settings
+		});
+	}
+
+	/**
+	 * Sets the `settings` associated with an instance of an action, as identified by the `context`. An instance of an action represents a button, dial, pedal, etc. Use in conjunction with {@link StreamDeck.getSettings}.
 	 * @param context Unique identifier of the action instance whose settings will be updated.
 	 * @param settings Settings to associate with the action instance.
 	 * @returns Promise resolved when the `settings` are sent to Stream Deck.
@@ -106,35 +154,6 @@ export class StreamDeck {
 			context,
 			payload: settings
 		});
-	}
-
-	public async getSettings<T = unknown>(context: string): Promise<DidReceiveSettingsEvent<T>> {
-		const settings = new PromiseCompletionSource<DidReceiveSettingsEvent<T>>();
-		this.once("didReceiveSettings", (data: DidReceiveSettingsEvent<T>) => settings.setResult(data));
-
-		await this.send("getSettings", {
-			context
-		});
-
-		return settings.promise;
-	}
-
-	public setGlobalSettings(settings: unknown): Promise<void> {
-		return this.send("setGlobalSettings", {
-			context: this.pluginUUID,
-			payload: settings
-		});
-	}
-
-	public async getGlobalSettings<T = unknown>(): Promise<DidReceiveGlobalSettingsEvent<T>> {
-		const settings = new PromiseCompletionSource<DidReceiveGlobalSettingsEvent<T>>();
-		this.once("didReceiveGlobalSettings", (data: DidReceiveGlobalSettingsEvent<T>) => settings.setResult(data));
-
-		await this.send("getGlobalSettings", {
-			context: this.pluginUUID
-		});
-
-		return settings.promise;
 	}
 
 	public openUrl(url: string): Promise<void> {
@@ -175,15 +194,13 @@ export class StreamDeck {
 		});
 	}
 
-	// TODO: strongly type `feedback`.
-	public setFeedback(context: string, feedback: unknown): Promise<void> {
+	public setFeedback(context: string, feedback: FeedbackPayload): Promise<void> {
 		return this.send("setFeedback", {
 			context,
 			payload: feedback
 		});
 	}
 
-	// TODO: strongly type `layout`?.
 	public setFeedbackLayout(context: string, layout: string): Promise<void> {
 		return this.send("setFeedbackLayout", {
 			context,
