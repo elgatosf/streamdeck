@@ -88,8 +88,8 @@ export type KeyDownEvent<TSetting = unknown> = {
 		coordinates: Coordinates;
 		isInMultiAction: boolean;
 		settings: TSetting;
-		state: State;
-		userDesiredState: State;
+		state?: State;
+		userDesiredState?: State;
 	};
 };
 
@@ -102,8 +102,8 @@ export type KeyUpEvent<TSetting = unknown> = {
 		coordinates: Coordinates;
 		isInMultiAction: boolean;
 		settings: TSetting;
-		state: State;
-		userDesiredState: State;
+		state?: State;
+		userDesiredState?: State;
 	};
 };
 
@@ -116,7 +116,7 @@ export type WillAppearEvent<TSetting = unknown> = {
 		coordinates: Coordinates;
 		isInMultiAction: boolean;
 		settings: TSetting;
-		state: State;
+		state?: State;
 	};
 };
 
@@ -129,7 +129,7 @@ export type WillDisappearEvent<TSetting = unknown> = {
 		coordinates: Coordinates;
 		isInMultiAction: false;
 		settings: TSetting;
-		state: State;
+		state?: State;
 	};
 };
 
@@ -141,7 +141,7 @@ export type TitleParametersDidChangeEvent<TSetting = unknown> = {
 	payload: {
 		coordinates: Coordinates;
 		settings: TSetting;
-		state: State;
+		state?: State;
 		title: string;
 		titleParameters: {
 			fontFamily: string;
