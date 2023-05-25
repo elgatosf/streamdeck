@@ -1,8 +1,8 @@
 {
 	"extends": "@tsconfig/node20/tsconfig.json",
 	"compilerOptions": {
-		"declaration": true,
-		"outDir": "./dist/"
+		"outDir": "./plugin/build",
+		"sourceMap": true
 	},
 	"include": [
 		"./src/plugin.ts"

@@ -1,0 +1,46 @@
+{
+	"Name": "Counter",
+	"Version": "0.1.0",
+	"Author": "Elgato",
+	"Actions": [
+		{
+			"Name": "Counter",
+			"UUID": "com.elgato.nodejs.counter",
+			"Icon": "imgs/counter/icon",
+			"Tooltip": "Displays a count, which increments by 1 on each press.",
+			"Controllers": [
+				"Keypad"
+			],
+			"States": [
+				{
+					"FontSize": "18",
+					"Image": "imgs/counter/image",
+					"TitleAlignment": "middle"
+				}
+			]
+		}
+	],
+	"Category": "Nodejs Example",
+	"CategoryIcon": "imgs/plugin/category-icon",
+	"CodePath": "build/plugin.js",
+	"Description": "An example plugin demonstrating Node.js",
+	"Icon": "imgs/plugin/icon",
+	"SDKVersion": 2,
+	"Software": {
+		"MinimumVersion": "6.3"
+	},
+	"OS": [
+		{
+			"Platform": "mac",
+			"MinimumVersion": "10.11"
+		},
+		{
+			"Platform": "windows",
+			"MinimumVersion": "10"
+		}
+	],
+	"Nodejs": {
+		"Version": "20",
+		"Inspect": true
+	}
+}

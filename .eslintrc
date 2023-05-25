@@ -9,7 +9,8 @@
 	],
 	"ignorePatterns": [
 		"node_modules/",
-		"lib/"
+		"lib/",
+		"template/"
 	],
 	"parser": "@typescript-eslint/parser",
 	"plugins": [
