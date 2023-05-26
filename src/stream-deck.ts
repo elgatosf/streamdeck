@@ -109,12 +109,14 @@ export class StreamDeck {
 	 */
 	public async getSettings<T = unknown>(context: string): Promise<DidReceiveSettingsEvent<T>> {
 		const settings = new PromiseCompletionSource<DidReceiveSettingsEvent<T>>();
-		this.once("didReceiveSettings", (data: DidReceiveSettingsEvent<T>) => {
+		const callback = (data: DidReceiveSettingsEvent<T>) => {
 			if (data.context == context) {
 				settings.setResult(data);
+				this.removeListener("didReceiveSettings", callback);
 			}
-		});
+		};
 
+		this.on("didReceiveSettings", callback);
 		await this.send("getSettings", {
 			context
 		});
@@ -181,6 +183,42 @@ export class StreamDeck {
 				url
 			}
 		});
+	}
+
+	/**
+	 * Removes all listeners registered against the `eventName`; when `eventName` is `undefined`, all listeners are removed. Inverse of {@link StreamDeck.on}.
+	 * @param eventName Name of the event whose listeners should be removed; when `undefined`, listeners from all events are removed.
+	 * @returns This instance for chaining.
+	 * @example
+	 * streamDeck.on("willAppear", data => console.log('Callback 1'));
+	 * streamDeck.on("willAppear", data => console.log('Callback 2'))
+	 * // ...
+	 * streamDeck.removeAllListeners("willAppear");
+	 * @example
+	 * streamDeck.on("willAppear", data => console.log(`Action ${data.action} is appearing!`));
+	 * streamDeck.on("willDisappear", data => console.log(`Action ${data.action} is disappearing!`))
+	 * // ...
+	 * streamDeck.removeAllListeners();
+	 */
+	public removeAllListeners<TEvent extends InboundEvents["event"]>(eventName?: TEvent): this {
+		this.eventEmitter.removeAllListeners(eventName);
+		return this;
+	}
+
+	/**
+	 * Removes the specified `listener` registered against the `eventName`. Inverse of {@link StreamDeck.on}.
+	 * @param eventName Name of the event the listener is being removed from.
+	 * @param listener Callback to remove.
+	 * @returns This instance for chaining.
+	 * @example
+	 * const callback = (data) => console.log(`Action ${data.action} is appearing!`)
+	 * streamDeck.on("willAppear", callback);
+	 * // ...
+	 * streamDeck.removeListener("willAppear", callback);
+	 */
+	public removeListener<TEvent extends InboundEvents["event"], TEventArgs = Extract<InboundEvents, StreamDeckEvent<TEvent>>>(eventName: TEvent, listener: (data: TEventArgs) => void): this {
+		this.eventEmitter.removeListener(eventName, listener);
+		return this;
 	}
 
 	/**
