@@ -40,7 +40,7 @@
 		}
 	],
 	"Nodejs": {
-		"Version": "16",
+		"Version": "20",
 		"Debug": "enabled"
 	}
 }
