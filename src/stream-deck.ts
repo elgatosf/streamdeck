@@ -2,16 +2,31 @@ import { EventEmitter } from "node:events";
 import WebSocket from "ws";
 
 import { Target } from "./enums";
-import { DidReceiveGlobalSettingsEvent, DidReceiveSettingsEvent, InboundEvents, OutboundEvents, StreamDeckEvent } from "./events";
+import { DeviceDidConnectEvent, DidReceiveGlobalSettingsEvent, DidReceiveSettingsEvent, InboundEvents, OutboundEvents, StreamDeckEvent } from "./events";
 import { FeedbackPayload } from "./layouts";
 import logger from "./logger";
 import { PromiseCompletionSource } from "./promises";
 import { RegistrationParameters } from "./registration";
 
 /**
+ * Stream Deck device information.
+ */
+type ConnectedDevice = DeviceDidConnectEvent["deviceInfo"] & {
+	/**
+	 * Unique identifier of the device which can be used when sending requests to the Stream Deck, e.g. {@link StreamDeck.switchToProfile}.
+	 */
+	id: string;
+};
+
+/**
  * The main bridge between the plugin and the Stream Deck, providing methods for listening to events emitted from the Stream Deck, and sending messages back.
  */
 export class StreamDeck {
+	/**
+	 * List of connected Stream Deck devices.
+	 */
+	private _connectedDevices: ConnectedDevice[] = [];
+
 	/**
 	 * Connection between the plugin and the Stream Deck in the form of a promise; once connected to the Stream Deck and the plugin has been registered, the promised is resolved and the connection becomes available.
 	 */
@@ -34,6 +49,16 @@ export class StreamDeck {
 	constructor(private readonly params = new RegistrationParameters(process.argv)) {
 		logger.debug("Initializing plugin.");
 
+		// Track connected devices.
+		this.on("deviceDidConnect", ({ device: id, deviceInfo }) => {
+			this._connectedDevices.push({ id, ...deviceInfo });
+		});
+
+		this.on("deviceDidDisconnect", ({ device: id }) => {
+			this._connectedDevices = this._connectedDevices.filter((device) => device.id !== id);
+		});
+
+		// Establish the underlying connection.
 		this.ws = new WebSocket(`ws://localhost:${params.port}`);
 		this.ws.onmessage = this.propagateMessage.bind(this);
 		this.ws.onopen = () => {
@@ -48,6 +73,14 @@ export class StreamDeck {
 			this.connection.setResult(this.ws);
 			logger.debug("Plugin connected to Stream Deck.");
 		};
+	}
+
+	/**
+	 * Gets an array of Stream Deck devices that are currently connected and accessible to the plugin.
+	 * @returns Array of connected Stream Deck devices.
+	 */
+	public get devices(): ReadonlyArray<ConnectedDevice> {
+		return this._connectedDevices;
 	}
 
 	/**
