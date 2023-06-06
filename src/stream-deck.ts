@@ -414,7 +414,7 @@ export class StreamDeck {
 	 *   streamDeck.setState(context, device.isEnabled ? 1 : 0);
 	 * });
 	 */
-	public setState(context: string, state: 0 | 1): Promise<void> {
+	public setState(context: string, state: number): Promise<void> {
 		return this.send("setState", {
 			context,
 			payload: {
