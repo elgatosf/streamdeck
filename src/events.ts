@@ -175,7 +175,7 @@ export type ApplicationDidLaunchEvent = {
 	};
 };
 
-export type applicationDidTerminateEvent = {
+export type ApplicationDidTerminateEvent = {
 	event: "applicationDidTerminate";
 	payload: {
 		application: string;
@@ -220,26 +220,26 @@ type Size = {
 /**
  * Events sent to the plugin, from the Stream Deck.
  */
-export type InboundEvents =
-	| DidReceiveGlobalSettingsEvent
-	| DidReceiveSettingsEvent
-	| KeyDownEvent
-	| KeyUpEvent
-	| TouchTapEvent
-	| DialDownEvent
-	| DialUpEvent
-	| DialRotateEvent
-	| WillAppearEvent
-	| WillDisappearEvent
-	| TitleParametersDidChangeEvent
+export type InboundEvents<TSettings = unknown> =
+	| ApplicationDidLaunchEvent
+	| ApplicationDidTerminateEvent
 	| DeviceDidConnectEvent
 	| DeviceDidDisconnectEvent
-	| ApplicationDidLaunchEvent
-	| applicationDidTerminateEvent
-	| SystemDidWakeUpEvent
+	| DialDownEvent<TSettings>
+	| DialRotateEvent<TSettings>
+	| DialUpEvent<TSettings>
+	| DidReceiveGlobalSettingsEvent
+	| DidReceiveSettingsEvent<TSettings>
+	| KeyDownEvent<TSettings>
+	| KeyUpEvent<TSettings>
 	| PropertyInspectorDidAppearEvent
 	| PropertyInspectorDidDisappearEvent
-	| SendToPluginEvent;
+	| SendToPluginEvent<TSettings>
+	| SystemDidWakeUpEvent
+	| TitleParametersDidChangeEvent<TSettings>
+	| TouchTapEvent<TSettings>
+	| WillAppearEvent<TSettings>
+	| WillDisappearEvent<TSettings>;
 
 /**
  * Events sent from the plugin, to the Stream Deck.
