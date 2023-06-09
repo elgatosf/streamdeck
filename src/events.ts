@@ -1,6 +1,12 @@
 import { DeviceType } from "./enums";
 
+/**
+ * Represents an event that is emitted from, or sent to, the Stream Deck.
+ */
 export type StreamDeckEvent<TEvent> = {
+	/**
+	 * Name of the event used to identify what occurred, or what is being requested.
+	 */
 	event: TEvent;
 };
 
@@ -8,10 +14,32 @@ export type StreamDeckEvent<TEvent> = {
  * Occurs when the plugin receives settings, for a specific action instance, from the Stream Deck.
  */
 export type DidReceiveSettingsEvent<TSettings = unknown> = {
+	/**
+	 * Unique identifier of the action, as defined within the plugin's manifest, i.e. the action's UUID.
+	 * @example
+	 * "com.elgato.wavelink.mute"
+	 */
 	action: string;
-	event: "didReceiveSettings";
+
+	/**
+	 * Identifies the instance of an action that caused the event, i.e. the specific key or dial. This identifier can be used to provide feedback to the Stream Deck, persist and
+	 * request settings associated with the action instance, etc.
+	 * @example
+	 * // Shows a temporary "OK" tick on the button that caused the event
+	 * streamDeck.showOk(ev.context);
+	 */
 	context: string;
+
+	/**
+	 * Unique identifier of the Stream Deck device that this event is associated with.
+	 */
 	device: string;
+
+	/**
+	 * Name of the event that occurred; in the context of this event, this is always "didReceiveSettings".
+	 */
+	event: "didReceiveSettings";
+
 	payload: {
 		settings: TSettings;
 		coordinates: Coordinates;
@@ -23,6 +51,9 @@ export type DidReceiveSettingsEvent<TSettings = unknown> = {
  * Occurs when the plugin receives the global settings from the Stream Deck.
  */
 export type DidReceiveGlobalSettingsEvent<TSettings = unknown> = {
+	/**
+	 * Name of the event that occurred; in the context of this event, this is always "didReceiveGlobalSettings".
+	 */
 	event: "didReceiveGlobalSettings";
 	payload: {
 		settings: TSettings;
@@ -30,10 +61,32 @@ export type DidReceiveGlobalSettingsEvent<TSettings = unknown> = {
 };
 
 export type TouchTapEvent<TSetting = unknown> = {
+	/**
+	 * Unique identifier of the action, as defined within the plugin's manifest, i.e. the action's UUID.
+	 * @example
+	 * "com.elgato.wavelink.mute"
+	 */
 	action: string;
-	event: "touchTap";
+
+	/**
+	 * Identifies the instance of an action that caused the event, i.e. the specific key or dial. This identifier can be used to provide feedback to the Stream Deck, persist and
+	 * request settings associated with the action instance, etc.
+	 * @example
+	 * // Shows a temporary "OK" tick on the button that caused the event
+	 * streamDeck.showOk(ev.context);
+	 */
 	context: string;
+
+	/**
+	 * Unique identifier of the Stream Deck device that this event is associated with.
+	 */
 	device: string;
+
+	/**
+	 * Name of the event that occurred; in the context of this event, this is always "touchTap".
+	 */
+	event: "touchTap";
+
 	payload: {
 		coordinates: Coordinates;
 		hold: boolean;
@@ -43,35 +96,102 @@ export type TouchTapEvent<TSetting = unknown> = {
 };
 
 export type DialDownEvent<TSetting = unknown> = {
+	/**
+	 * Unique identifier of the action, as defined within the plugin's manifest, i.e. the action's UUID.
+	 * @example
+	 * "com.elgato.wavelink.mute"
+	 */
 	action: string;
-	event: "dialDown";
+
+	/**
+	 * Identifies the instance of an action that caused the event, i.e. the specific key or dial. This identifier can be used to provide feedback to the Stream Deck, persist and
+	 * request settings associated with the action instance, etc.
+	 * @example
+	 * // Shows a temporary "OK" tick on the button that caused the event
+	 * streamDeck.showOk(ev.context);
+	 */
 	context: string;
+
+	/**
+	 * Unique identifier of the Stream Deck device that this event is associated with.
+	 */
 	device: string;
+
+	/**
+	 * Name of the event that occurred; in the context of this event, this is always "dialDown".
+	 */
+	event: "dialDown";
+
 	payload: {
-		controller: "Encoder";
+		controller: Extract<Controller, "Encoder">;
 		coordinates: Coordinates;
 		settings: TSetting;
 	};
 };
 
 export type DialUpEvent<TSetting = unknown> = {
+	/**
+	 * Unique identifier of the action, as defined within the plugin's manifest, i.e. the action's UUID.
+	 * @example
+	 * "com.elgato.wavelink.mute"
+	 */
 	action: string;
-	event: "dialUp";
+
+	/**
+	 * Identifies the instance of an action that caused the event, i.e. the specific key or dial. This identifier can be used to provide feedback to the Stream Deck, persist and
+	 * request settings associated with the action instance, etc.
+	 * @example
+	 * // Shows a temporary "OK" tick on the button that caused the event
+	 * streamDeck.showOk(ev.context);
+	 */
 	context: string;
+
+	/**
+	 * Unique identifier of the Stream Deck device that this event is associated with.
+	 */
 	device: string;
+
+	/**
+	 * Name of the event that occurred; in the context of this event, this is always "dialUp".
+	 */
+	event: "dialUp";
+
 	payload: {
-		controller: "Encoder";
+		controller: Extract<Controller, "Encoder">;
 		coordinates: Coordinates;
 		settings: TSetting;
 	};
 };
 
 export type DialRotateEvent<TSetting = unknown> = {
+	/**
+	 * Unique identifier of the action, as defined within the plugin's manifest, i.e. the action's UUID.
+	 * @example
+	 * "com.elgato.wavelink.mute"
+	 */
 	action: string;
-	event: "dialRotate";
+
+	/**
+	 * Identifies the instance of an action that caused the event, i.e. the specific key or dial. This identifier can be used to provide feedback to the Stream Deck, persist and
+	 * request settings associated with the action instance, etc.
+	 * @example
+	 * // Shows a temporary "OK" tick on the button that caused the event
+	 * streamDeck.showOk(ev.context);
+	 */
 	context: string;
+
+	/**
+	 * Unique identifier of the Stream Deck device that this event is associated with.
+	 */
 	device: string;
+
+	/**
+	 * Name of the event that occurred; in the context of this event, this is always "dialRotate".
+	 */
+	event: "dialRotate";
+
 	payload: {
+		controller: Extract<Controller, "Encoder">;
 		coordinates: Coordinates;
 		pressed: boolean;
 		settings: TSetting;
@@ -80,10 +200,32 @@ export type DialRotateEvent<TSetting = unknown> = {
 };
 
 export type KeyDownEvent<TSetting = unknown> = {
+	/**
+	 * Unique identifier of the action, as defined within the plugin's manifest, i.e. the action's UUID.
+	 * @example
+	 * "com.elgato.wavelink.mute"
+	 */
 	action: string;
-	event: "keyDown";
+
+	/**
+	 * Identifies the instance of an action that caused the event, i.e. the specific key or dial. This identifier can be used to provide feedback to the Stream Deck, persist and
+	 * request settings associated with the action instance, etc.
+	 * @example
+	 * // Shows a temporary "OK" tick on the button that caused the event
+	 * streamDeck.showOk(ev.context);
+	 */
 	context: string;
+
+	/**
+	 * Unique identifier of the Stream Deck device that this event is associated with.
+	 */
 	device: string;
+
+	/**
+	 * Name of the event that occurred; in the context of this event, this is always "keyDown".
+	 */
+	event: "keyDown";
+
 	payload: {
 		coordinates: Coordinates;
 		isInMultiAction: boolean;
@@ -94,10 +236,32 @@ export type KeyDownEvent<TSetting = unknown> = {
 };
 
 export type KeyUpEvent<TSetting = unknown> = {
+	/**
+	 * Unique identifier of the action, as defined within the plugin's manifest, i.e. the action's UUID.
+	 * @example
+	 * "com.elgato.wavelink.mute"
+	 */
 	action: string;
-	event: "keyUp";
+
+	/**
+	 * Identifies the instance of an action that caused the event, i.e. the specific key or dial. This identifier can be used to provide feedback to the Stream Deck, persist and
+	 * request settings associated with the action instance, etc.
+	 * @example
+	 * // Shows a temporary "OK" tick on the button that caused the event
+	 * streamDeck.showOk(ev.context);
+	 */
 	context: string;
+
+	/**
+	 * Unique identifier of the Stream Deck device that this event is associated with.
+	 */
 	device: string;
+
+	/**
+	 * Name of the event that occurred; in the context of this event, this is always "keyUp".
+	 */
+	event: "keyUp";
+
 	payload: {
 		coordinates: Coordinates;
 		isInMultiAction: boolean;
@@ -108,11 +272,34 @@ export type KeyUpEvent<TSetting = unknown> = {
 };
 
 export type WillAppearEvent<TSetting = unknown> = {
+	/**
+	 * Unique identifier of the action, as defined within the plugin's manifest, i.e. the action's UUID.
+	 * @example
+	 * "com.elgato.wavelink.mute"
+	 */
 	action: string;
-	event: "willAppear";
+
+	/**
+	 * Identifies the instance of an action that caused the event, i.e. the specific key or dial. This identifier can be used to provide feedback to the Stream Deck, persist and
+	 * request settings associated with the action instance, etc.
+	 * @example
+	 * // Shows a temporary "OK" tick on the button that caused the event
+	 * streamDeck.showOk(ev.context);
+	 */
 	context: string;
+
+	/**
+	 * Unique identifier of the Stream Deck device that this event is associated with.
+	 */
 	device: string;
+
+	/**
+	 * Name of the event that occurred; in the context of this event, this is always "willAppear".
+	 */
+	event: "willAppear";
+
 	payload: {
+		controller: Controller;
 		coordinates: Coordinates;
 		isInMultiAction: boolean;
 		settings: TSetting;
@@ -121,11 +308,34 @@ export type WillAppearEvent<TSetting = unknown> = {
 };
 
 export type WillDisappearEvent<TSetting = unknown> = {
+	/**
+	 * Unique identifier of the action, as defined within the plugin's manifest, i.e. the action's UUID.
+	 * @example
+	 * "com.elgato.wavelink.mute"
+	 */
 	action: string;
-	event: "willDisappear";
+
+	/**
+	 * Identifies the instance of an action that caused the event, i.e. the specific key or dial. This identifier can be used to provide feedback to the Stream Deck, persist and
+	 * request settings associated with the action instance, etc.
+	 * @example
+	 * // Shows a temporary "OK" tick on the button that caused the event
+	 * streamDeck.showOk(ev.context);
+	 */
 	context: string;
+
+	/**
+	 * Unique identifier of the Stream Deck device that this event is associated with.
+	 */
 	device: string;
+
+	/**
+	 * Name of the event that occurred; in the context of this event, this is always "willDisappear".
+	 */
+	event: "willDisappear";
+
 	payload: {
+		controller: Controller;
 		coordinates: Coordinates;
 		isInMultiAction: false;
 		settings: TSetting;
@@ -134,10 +344,32 @@ export type WillDisappearEvent<TSetting = unknown> = {
 };
 
 export type TitleParametersDidChangeEvent<TSetting = unknown> = {
+	/**
+	 * Unique identifier of the action, as defined within the plugin's manifest, i.e. the action's UUID.
+	 * @example
+	 * "com.elgato.wavelink.mute"
+	 */
 	action: string;
-	event: "titleParametersDidChange";
+
+	/**
+	 * Identifies the instance of an action that caused the event, i.e. the specific key or dial. This identifier can be used to provide feedback to the Stream Deck, persist and
+	 * request settings associated with the action instance, etc.
+	 * @example
+	 * // Shows a temporary "OK" tick on the button that caused the event
+	 * streamDeck.showOk(ev.context);
+	 */
 	context: string;
+
+	/**
+	 * Unique identifier of the Stream Deck device that this event is associated with.
+	 */
 	device: string;
+
+	/**
+	 * Name of the event that occurred; in the context of this event, this is always "titleParametersDidChange".
+	 */
+	event: "titleParametersDidChange";
+
 	payload: {
 		coordinates: Coordinates;
 		settings: TSetting;
@@ -146,74 +378,206 @@ export type TitleParametersDidChangeEvent<TSetting = unknown> = {
 		titleParameters: {
 			fontFamily: string;
 			fontSize: number;
-			fontStyle: string; // ???
+			fontStyle: "" | "Bold" | "Bold Italic" | "Italic" | "Regular";
 			fontUnderline: boolean;
 			showTitle: boolean;
 			titleAlignment: "bottom" | "middle" | "top";
-			titleColor: string;
+			titleColor: string; // this is a hex value.
 		};
 	};
 };
+
 export type DeviceDidConnectEvent = {
-	event: "deviceDidConnect";
+	/**
+	 * Unique identifier of the Stream Deck device that this event is associated with.
+	 */
 	device: string;
+
+	/**
+	 * Information about the newly connected device.
+	 */
 	deviceInfo: {
+		/**
+		 * Name of the device, as specified by the user in the Stream Deck application.
+		 */
 		name: string;
+
+		/**
+		 * Number of action slots available to the device. NB. The size denotes keys only.
+		 */
 		size: Size;
+
+		/**
+		 * Type of the device that was connected, e.g. Stream Deck+, Stream Deck Pedal, etc. See {@link DeviceType}.
+		 */
 		type: DeviceType;
 	};
+
+	/**
+	 * Name of the event that occurred; in the context of this event, this is always "deviceDidConnect".
+	 */
+	event: "deviceDidConnect";
 };
+
 export type DeviceDidDisconnectEvent = {
-	event: "deviceDidDisconnect";
+	/**
+	 * Unique identifier of the Stream Deck device that this event is associated with.
+	 */
 	device: string;
+
+	/**
+	 * Name of the event that occurred; in the context of this event, this is always "deviceDidDisconnect".
+	 */
+	event: "deviceDidDisconnect";
 };
 
 export type ApplicationDidLaunchEvent = {
+	/**
+	 * Name of the event that occurred; in the context of this event, this is always "applicationDidLaunch".
+	 */
 	event: "applicationDidLaunch";
+
 	payload: {
 		application: string;
 	};
 };
 
 export type ApplicationDidTerminateEvent = {
+	/**
+	 * Name of the event that occurred; in the context of this event, this is always "applicationDidTerminate".
+	 */
 	event: "applicationDidTerminate";
+
 	payload: {
 		application: string;
 	};
 };
 export type SystemDidWakeUpEvent = {
+	/**
+	 * Name of the event that occurred; in the context of this event, this is always "systemDidWakeUp".
+	 */
 	event: "systemDidWakeUp";
 };
 
 export type PropertyInspectorDidAppearEvent = {
+	/**
+	 * Unique identifier of the action, as defined within the plugin's manifest, i.e. the action's UUID.
+	 * @example
+	 * "com.elgato.wavelink.mute"
+	 */
 	action: string;
-	event: "propertyInspectorDidAppear";
+
+	/**
+	 * Identifies the instance of an action that caused the event, i.e. the specific key or dial. This identifier can be used to provide feedback to the Stream Deck, persist and
+	 * request settings associated with the action instance, etc.
+	 * @example
+	 * // Shows a temporary "OK" tick on the button that caused the event
+	 * streamDeck.showOk(ev.context);
+	 */
 	context: string;
+
+	/**
+	 * Unique identifier of the Stream Deck device that this event is associated with.
+	 */
 	device: string;
+
+	/**
+	 * Name of the event that occurred; in the context of this event, this is always "propertyInspectorDidAppear".
+	 */
+	event: "propertyInspectorDidAppear";
 };
 
 export type PropertyInspectorDidDisappearEvent = {
+	/**
+	 * Unique identifier of the action, as defined within the plugin's manifest, i.e. the action's UUID.
+	 * @example
+	 * "com.elgato.wavelink.mute"
+	 */
 	action: string;
-	event: "propertyInspectorDidDisappear";
+
+	/**
+	 * Identifies the instance of an action that caused the event, i.e. the specific key or dial. This identifier can be used to provide feedback to the Stream Deck, persist and
+	 * request settings associated with the action instance, etc.
+	 * @example
+	 * // Shows a temporary "OK" tick on the button that caused the event
+	 * streamDeck.showOk(ev.context);
+	 */
 	context: string;
+
+	/**
+	 * Unique identifier of the Stream Deck device that this event is associated with.
+	 */
 	device: string;
+
+	/**
+	 * Name of the event that occurred; in the context of this event, this is always "propertyInspectorDidDisappear".
+	 */
+	event: "propertyInspectorDidDisappear";
 };
 
 export type SendToPluginEvent<TPayload = unknown> = {
+	/**
+	 * Unique identifier of the action, as defined within the plugin's manifest, i.e. the action's UUID.
+	 * @example
+	 * "com.elgato.wavelink.mute"
+	 */
 	action: string;
-	event: "sendToPlugin";
+
+	/**
+	 * Identifies the instance of an action that caused the event, i.e. the specific key or dial. This identifier can be used to provide feedback to the Stream Deck, persist and
+	 * request settings associated with the action instance, etc.
+	 * @example
+	 * // Shows a temporary "OK" tick on the button that caused the event
+	 * streamDeck.showOk(ev.context);
+	 */
 	context: string;
+
+	/**
+	 * Name of the event that occurred; in the context of this event, this is always "sendToPlugin".
+	 */
+	event: "sendToPlugin";
+
 	payload: TPayload;
 };
 
-type State = 0 | 1;
+/**
+ * Controller types that are available as part of Stream Deck devices.
+ */
+type Controller = "Encoder" | "Keypad";
+
+/**
+ * Coordinates that identify the location of an action.
+ */
 type Coordinates = {
+	/**
+	 * Column the action instance is located in, indexed from 0.
+	 */
 	column: number;
+
+	/**
+	 * Row the action instance is located on, indexed from 0. *NB* When the device is {@link DeviceType.StreamDeckPlus} the row can be 0 for keys (`Keypad`), and will _always_ be 0
+	 * for dials (`Encoder`); to differentiate between actions types, cross-check the value of `controller` found on {@link WillAppearEvent.payload}.
+	 */
 	row: number;
 };
 
+/**
+ * Possible states an action can be in. This only applies to actions that have multiple states defined in the plugin's manifest.json file.
+ */
+type State = 0 | 1;
+
+/**
+ * Size of the Stream Deck device.
+ */
 type Size = {
+	/**
+	 * Number of columns available on the Stream Deck device.
+	 */
 	columns: number;
+
+	/**
+	 * Number of rows available on the Stream Deck device.
+	 */
 	rows: number;
 };
 
@@ -250,9 +614,9 @@ export type OutboundEvents =
 	| "logMessage"
 	| "openUrl"
 	| "sendToPropertyInspector"
-	| "setGlobalSettings"
 	| "setFeedback"
 	| "setFeedbackLayout"
+	| "setGlobalSettings"
 	| "setImage"
 	| "setSettings"
 	| "setState"
