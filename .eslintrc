@@ -1,4 +1,8 @@
 {
+	"env": {
+		"node": true,
+		"browser": false
+	},
 	"extends": [
 		"eslint:recommended",
 		"plugin:@typescript-eslint/eslint-recommended",
