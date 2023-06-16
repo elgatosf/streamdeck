@@ -5,6 +5,11 @@
 		"Manifest": {
 			"type": "object",
 			"properties": {
+				"$schema": {
+					"type": "string",
+					"description": "JSON schema responsible for describing the manifest's data format and validation.",
+					"markdownDescription": "JSON schema responsible for describing the manifest's data format and validation."
+				},
 				"Actions": {
 					"type": "array",
 					"items": {
@@ -28,12 +33,18 @@
 							},
 							"DisableAutomaticStates": {
 								"type": "boolean",
-								"description": "Determines whether the state of the action should automatically toggle when two states are defined. Default is `false`.",
-								"markdownDescription": "Determines whether the state of the action should automatically toggle when two states are defined. Default is `false`."
+								"description": "Determines whether the state of the action should automatically toggle when two states are defined. Default is `false`.\n\n**Examples**\n- `false`.   1. State: ONE   2. Action activated (e.g. press).   3. State: TWO   4. Action activated.   5. State: ONE\n- `true`.   1. State: ONE   2. Action activated (e.g. press).   3. State: ONE **<-- Does not change**.   4. Action activated.   5. State: ONE",
+								"examples": [
+									false
+								],
+								"markdownDescription": "Determines whether the state of the action should automatically toggle when two states are defined. Default is `false`.\n\n**Examples**\n- `false`.   1. State: ONE   2. Action activated (e.g. press).   3. State: TWO   4. Action activated.   5. State: ONE\n- `true`.   1. State: ONE   2. Action activated (e.g. press).   3. State: ONE **<-- Does not change**.   4. Action activated.   5. State: ONE"
 							},
 							"DisableCaching": {
 								"type": "boolean",
 								"description": "Determines whether Stream Deck should cache images associated with the plugin, and its actions. Default is `false`.",
+								"examples": [
+									false
+								],
 								"markdownDescription": "Determines whether Stream Deck should cache images associated with the plugin, and its actions. Default is `false`."
 							},
 							"Encoder": {
@@ -46,13 +57,9 @@
 									},
 									"StackColor": {
 										"type": "string",
-										"description": "Background color to display in the Stream Deck application when the action is part of a dial stack, and is the current action. Represented as a hexadecimal value.",
-										"examples": [
-											"#d60270",
-											"#1f1f1f",
-											"#0038a8"
-										],
-										"markdownDescription": "Background color to display in the Stream Deck application when the action is part of a dial stack, and is the current action. Represented as a hexadecimal value."
+										"description": "Background color to display in the Stream Deck application when the action is part of a dial stack, and is the current action. Represented as a hexadecimal value.\n\n**Examples:**\n- #d60270\n- #1f1f1\n- #0038a8",
+										"pattern": "^#(?:[0-9a-fA-F]{3}){1,2}$",
+										"markdownDescription": "Background color to display in the Stream Deck application when the action is part of a dial stack, and is the current action. Represented as a hexadecimal value.\n\n**Examples:**\n- #d60270\n- #1f1f1\n- #0038a8"
 									},
 									"TriggerDescription": {
 										"type": "object",
@@ -79,22 +86,27 @@
 											}
 										},
 										"additionalProperties": false,
-										"description": "Descriptions that define the interaction of the action when it is associated with a dial / touchscreen on the Stream Deck+. This information is shown to the user.",
-										"markdownDescription": "Descriptions that define the interaction of the action when it is associated with a dial / touchscreen on the Stream Deck+. This information is shown to the user."
+										"description": "Descriptions that define the interaction of the action when it is associated with a dial / touchscreen on the Stream Deck+. This information is shown to the user.\n\n**Examples:**\n- \"Adjust volume\"\n- \"Play / Pause\"",
+										"markdownDescription": "Descriptions that define the interaction of the action when it is associated with a dial / touchscreen on the Stream Deck+. This information is shown to the user.\n\n**Examples:**\n- \"Adjust volume\"\n- \"Play / Pause\""
 									},
 									"background": {
 										"type": "string",
-										"description": "Path to the image that will be displayed on the touchscreen behind the action's layout. **NB** This can be overridden by the user in the Stream Deck application. TODO: Define style guide.",
-										"markdownDescription": "Path to the image that will be displayed on the touchscreen behind the action's layout. **NB** This can be overridden by the user in the Stream Deck application. TODO: Define style guide."
+										"description": "Path to the image that will be displayed on the touchscreen behind the action's layout. **NB.** This can be overridden by the user in the Stream Deck application. TODO: Define style guide.",
+										"markdownDescription": "Path to the image that will be displayed on the touchscreen behind the action's layout. **NB.** This can be overridden by the user in the Stream Deck application. TODO: Define style guide."
 									},
 									"layout": {
 										"type": "string",
-										"description": "Name of a predefined layout, or the path to a JSON file that details a custom layout and its components, to be rendered on the action's touchscreen canvas. The layout's component's values can be updated dynamically via `streamDeck.setFeedback`, and the layout can be changed entirely via `streamDeck.setFeedbackLayout`.\n- $X1, layout with the title at the top and the icon beneath it in the center.\n- $A0, layout with the title at the top and a full-width image canvas beneath it in the center.\n- $A1, layout with the title at the top, the icon on the left, and text value on the right.\n- $B1, layout with the title at the top, the icon on the left, and a text value on the right with a progress bar beneath it.\n- $B2, layout with the title at the top, the icon on the left, and a text value on the right with a gradient progress bar beneath it.\n- $C1, layout with the title at the top, and two rows that display an icon on the left and progress bar on the right (i.e. a double progress bar layout).",
+										"description": "Name of a pre-defined layout, or the path to a JSON file that details a custom layout and its components, to be rendered on the action's touchscreen canvas.\n\n**Pre-defined Layouts:**\n- `$X1`, layout with the title at the top and the icon beneath it in the center.\n- `$A0`, layout with the title at the top and a full-width image canvas beneath it in the center.\n- `$A1`, layout with the title at the top, the icon on the left, and text value on the right.\n- `$B1`, layout with the title at the top, the icon on the left, and a text value on the right with a progress bar beneath it.\n- `$B2`, layout with the title at the top, the icon on the left, and a text value on the right with a gradient progress bar beneath it.\n- `$C1`, layout with the title at the top, and two rows that display an icon on the left and progress bar on the right (i.e. a double progress bar layout).\n\n**Usage:**\n- Change the current layout.\n\n`streamDeck.setFeedbackLayout(context, layout)`\n\n- Update the current layout's values, e.g. title text.\n\n`streamDeck.setFeedback(context, feedback)`",
 										"examples": [
+											"$X1",
+											"$A0",
+											"$A1",
+											"$B1",
+											"$B2",
 											"$C1",
 											"Layouts/MyCustomLayout.json"
 										],
-										"markdownDescription": "Name of a predefined layout, or the path to a JSON file that details a custom layout and its components, to be rendered on the action's touchscreen canvas. The layout's component's values can be updated dynamically via `streamDeck.setFeedback`, and the layout can be changed entirely via `streamDeck.setFeedbackLayout`.\n- $X1, layout with the title at the top and the icon beneath it in the center.\n- $A0, layout with the title at the top and a full-width image canvas beneath it in the center.\n- $A1, layout with the title at the top, the icon on the left, and text value on the right.\n- $B1, layout with the title at the top, the icon on the left, and a text value on the right with a progress bar beneath it.\n- $B2, layout with the title at the top, the icon on the left, and a text value on the right with a gradient progress bar beneath it.\n- $C1, layout with the title at the top, and two rows that display an icon on the left and progress bar on the right (i.e. a double progress bar layout)."
+										"markdownDescription": "Name of a pre-defined layout, or the path to a JSON file that details a custom layout and its components, to be rendered on the action's touchscreen canvas.\n\n**Pre-defined Layouts:**\n- `$X1`, layout with the title at the top and the icon beneath it in the center.\n- `$A0`, layout with the title at the top and a full-width image canvas beneath it in the center.\n- `$A1`, layout with the title at the top, the icon on the left, and text value on the right.\n- `$B1`, layout with the title at the top, the icon on the left, and a text value on the right with a progress bar beneath it.\n- `$B2`, layout with the title at the top, the icon on the left, and a text value on the right with a gradient progress bar beneath it.\n- `$C1`, layout with the title at the top, and two rows that display an icon on the left and progress bar on the right (i.e. a double progress bar layout).\n\n**Usage:**\n- Change the current layout.\n\n`streamDeck.setFeedbackLayout(context, layout)`\n\n- Update the current layout's values, e.g. title text.\n\n`streamDeck.setFeedback(context, feedback)`"
 									}
 								},
 								"additionalProperties": false,
@@ -103,11 +115,8 @@
 							},
 							"Icon": {
 								"type": "string",
-								"description": "Path to the image, with the file extension omitted, that will be displayed next to the action in the Stream Deck application's action list. The image must adhere to the following style guidelines.\n- Be in .PNG or .SVG format.\n- Be provided in two sizes, 20x20 px and 40x40 px (@2x).\n- Be monochromatic, with foreground color of #EFEFEF and a transparent background.",
-								"examples": [
-									"assets/counter"
-								],
-								"markdownDescription": "Path to the image, with the file extension omitted, that will be displayed next to the action in the Stream Deck application's action list. The image must adhere to the following style guidelines.\n- Be in .PNG or .SVG format.\n- Be provided in two sizes, 20x20 px and 40x40 px (@2x).\n- Be monochromatic, with foreground color of #EFEFEF and a transparent background."
+								"description": "Path to the image, with the file extension omitted, that will be displayed next to the action in the Stream Deck application's action list. The image must adhere to the following style guidelines.\n- Be in .PNG or .SVG format.\n- Be provided in two sizes, 20x20 px and 40x40 px (@2x).\n- Be monochromatic, with foreground color of #EFEFEF and a transparent background.\n\n**Examples:**\n- assets/counter\n- imgs/actions/mute",
+								"markdownDescription": "Path to the image, with the file extension omitted, that will be displayed next to the action in the Stream Deck application's action list. The image must adhere to the following style guidelines.\n- Be in .PNG or .SVG format.\n- Be provided in two sizes, 20x20 px and 40x40 px (@2x).\n- Be monochromatic, with foreground color of #EFEFEF and a transparent background.\n\n**Examples:**\n- assets/counter\n- imgs/actions/mute"
 							},
 							"Name": {
 								"type": "string",
@@ -116,13 +125,8 @@
 							},
 							"PropertyInspectorPath": {
 								"type": "string",
-								"description": "Optional path to the HTML file that represents the property inspector for this action; this is displayed to the user in the Stream Deck application when they add the action, allowing them to configure the action's settings. The plugin can send messages to the property inspector using `streamDeck.sendToPropertyInspector(context payload)`, and receive messages from the property inspector using `streamDeck.on(\"sendToPlugin\", (data) => ...`. When undefined, the manifest's top-level `PropertyInspectorPath` is used, otherwise none. **NB** Path should be relative to the root of the plugin's folder, with no leading slash.",
-								"examples": [
-									"PropertyInspectors/ToggleMute.html",
-									"Actions/Counter/Icon.bmp",
-									"Layouts/MyCustomLayout.json"
-								],
-								"markdownDescription": "Optional path to the HTML file that represents the property inspector for this action; this is displayed to the user in the Stream Deck application when they add the action, allowing them to configure the action's settings. The plugin can send messages to the property inspector using `streamDeck.sendToPropertyInspector(context payload)`, and receive messages from the property inspector using `streamDeck.on(\"sendToPlugin\", (data) => ...`. When undefined, the manifest's top-level `PropertyInspectorPath` is used, otherwise none. **NB** Path should be relative to the root of the plugin's folder, with no leading slash."
+								"description": "Optional path to the HTML file that represents the property inspector for this action; this is displayed to the user in the Stream Deck application when they add the action, allowing them to configure the action's settings. When `undefined`, the manifest's top-level `PropertyInspectorPath` is used, otherwise none. **NB.** Path should be relative to the root of the plugin's folder, with no leading slash.\n\n**Usage:**\n- Send messages **to** the property inspector.\n\n`streamDeck.sendToPropertyInspector(context, payload)`\n\n- Receive messages **from** the property inspector.\n\n`streamDeck.on(\"sendToPlugin\", data => ...)`",
+								"markdownDescription": "Optional path to the HTML file that represents the property inspector for this action; this is displayed to the user in the Stream Deck application when they add the action, allowing them to configure the action's settings. When `undefined`, the manifest's top-level `PropertyInspectorPath` is used, otherwise none. **NB.** Path should be relative to the root of the plugin's folder, with no leading slash.\n\n**Usage:**\n- Send messages **to** the property inspector.\n\n`streamDeck.sendToPropertyInspector(context, payload)`\n\n- Receive messages **from** the property inspector.\n\n`streamDeck.on(\"sendToPlugin\", data => ...)`"
 							},
 							"States": {
 								"type": "array",
@@ -131,13 +135,13 @@
 									"properties": {
 										"FontFamily": {
 											"type": "string",
-											"description": "Default font-family to be used when rendering the title of this state. **NB** This can be overridden by the user in the Stream Deck application.",
-											"markdownDescription": "Default font-family to be used when rendering the title of this state. **NB** This can be overridden by the user in the Stream Deck application."
+											"description": "Default font-family to be used when rendering the title of this state. **NB.** This can be overridden by the user in the Stream Deck application.",
+											"markdownDescription": "Default font-family to be used when rendering the title of this state. **NB.** This can be overridden by the user in the Stream Deck application."
 										},
 										"FontSize": {
 											"type": "number",
-											"description": "Default font-size to be used when rendering the title of this state. **NB** This can be overridden by the user in the Stream Deck application.",
-											"markdownDescription": "Default font-size to be used when rendering the title of this state. **NB** This can be overridden by the user in the Stream Deck application."
+											"description": "Default font-size to be used when rendering the title of this state. **NB.** This can be overridden by the user in the Stream Deck application.",
+											"markdownDescription": "Default font-size to be used when rendering the title of this state. **NB.** This can be overridden by the user in the Stream Deck application."
 										},
 										"FontStyle": {
 											"type": "string",
@@ -148,29 +152,23 @@
 												"Italic",
 												"Regular"
 											],
-											"description": "Default font-style to be used when rendering the title of this state. **NB** This can be overridden by the user in the Stream Deck application.",
-											"markdownDescription": "Default font-style to be used when rendering the title of this state. **NB** This can be overridden by the user in the Stream Deck application."
+											"description": "Default font-style to be used when rendering the title of this state. **NB.** This can be overridden by the user in the Stream Deck application.",
+											"markdownDescription": "Default font-style to be used when rendering the title of this state. **NB.** This can be overridden by the user in the Stream Deck application."
 										},
 										"FontUnderline": {
 											"type": "boolean",
-											"description": "Determines whether the title associated with this state is underlined by default. **NB** This can be overridden by the user in the Stream Deck application.",
-											"markdownDescription": "Determines whether the title associated with this state is underlined by default. **NB** This can be overridden by the user in the Stream Deck application."
+											"description": "Determines whether the title associated with this state is underlined by default. **NB.** This can be overridden by the user in the Stream Deck application.",
+											"markdownDescription": "Determines whether the title associated with this state is underlined by default. **NB.** This can be overridden by the user in the Stream Deck application."
 										},
 										"Image": {
 											"type": "string",
-											"description": "Path to the image, with the file extension omitted, that will be displayed on the Stream Deck when this action's state is active. The image must adhere to the following style guidelines.\n- Be in .PNG or .SVG format.\n- Be provided in two sizes, 72x72 px and 144x144 px (@2x).\n\n**NB** This can be overridden by the user in the Stream Deck application.",
-											"examples": [
-												"assets/counter-key"
-											],
-											"markdownDescription": "Path to the image, with the file extension omitted, that will be displayed on the Stream Deck when this action's state is active. The image must adhere to the following style guidelines.\n- Be in .PNG or .SVG format.\n- Be provided in two sizes, 72x72 px and 144x144 px (@2x).\n\n**NB** This can be overridden by the user in the Stream Deck application."
+											"description": "Path to the image, with the file extension omitted, that will be displayed on the Stream Deck when this action's state is active. The image must adhere to the following style guidelines.\n- Be in .PNG or .SVG format.\n- Be provided in two sizes, 72x72 px and 144x144 px (@2x).\n\n**NB.** This can be overridden by the user in the Stream Deck application.\n\n**Examples:**\n- assets/counter-key\n- assets/icons/mute",
+											"markdownDescription": "Path to the image, with the file extension omitted, that will be displayed on the Stream Deck when this action's state is active. The image must adhere to the following style guidelines.\n- Be in .PNG or .SVG format.\n- Be provided in two sizes, 72x72 px and 144x144 px (@2x).\n\n**NB.** This can be overridden by the user in the Stream Deck application.\n\n**Examples:**\n- assets/counter-key\n- assets/icons/mute"
 										},
 										"MultiActionImage": {
 											"type": "string",
-											"description": "Path to the image, with the file extension omitted, that will be displayed when the action is being viewed as part of a multi-action. The image must adhere to the following style guidelines.\n- Be in .PNG or .SVG format.\n- Be provided in two sizes, 72x72 px and 144x144 px (@2x).\n\n**NB** This can be overridden by the user in the Stream Deck application.",
-											"examples": [
-												"assets/counter-key"
-											],
-											"markdownDescription": "Path to the image, with the file extension omitted, that will be displayed when the action is being viewed as part of a multi-action. The image must adhere to the following style guidelines.\n- Be in .PNG or .SVG format.\n- Be provided in two sizes, 72x72 px and 144x144 px (@2x).\n\n**NB** This can be overridden by the user in the Stream Deck application."
+											"description": "Path to the image, with the file extension omitted, that will be displayed when the action is being viewed as part of a multi-action. The image must adhere to the following style guidelines.\n- Be in .PNG or .SVG format.\n- Be provided in two sizes, 72x72 px and 144x144 px (@2x).\n\n**NB.** This can be overridden by the user in the Stream Deck application.\n\n**Examples:**\n- assets/counter-key\n- assets/icons/mute",
+											"markdownDescription": "Path to the image, with the file extension omitted, that will be displayed when the action is being viewed as part of a multi-action. The image must adhere to the following style guidelines.\n- Be in .PNG or .SVG format.\n- Be provided in two sizes, 72x72 px and 144x144 px (@2x).\n\n**NB.** This can be overridden by the user in the Stream Deck application.\n\n**Examples:**\n- assets/counter-key\n- assets/icons/mute"
 										},
 										"Name": {
 											"type": "string",
@@ -179,13 +177,13 @@
 										},
 										"ShowTitle": {
 											"type": "boolean",
-											"description": "Determines whether the title should be shown. **NB** This can be overridden by the user in the Stream Deck application.",
-											"markdownDescription": "Determines whether the title should be shown. **NB** This can be overridden by the user in the Stream Deck application."
+											"description": "Determines whether the title should be shown. **NB.** This can be overridden by the user in the Stream Deck application.",
+											"markdownDescription": "Determines whether the title should be shown. **NB.** This can be overridden by the user in the Stream Deck application."
 										},
 										"Title": {
 											"type": "string",
-											"description": "Default title to be shown when the action is added to the Stream Deck.",
-											"markdownDescription": "Default title to be shown when the action is added to the Stream Deck."
+											"description": "Default title to be shown when the action is added to the Stream Deck.\n\n**Usage:**\n- Set action's title.\n\n`streamDeck.setTitle(context, title, state, target)`",
+											"markdownDescription": "Default title to be shown when the action is added to the Stream Deck.\n\n**Usage:**\n- Set action's title.\n\n`streamDeck.setTitle(context, title, state, target)`"
 										},
 										"TitleAlignment": {
 											"type": "string",
@@ -194,18 +192,14 @@
 												"middle",
 												"top"
 											],
-											"description": "Default title alignment to be used when rendering the title of this state. **NB** This can be overridden by the user in the Stream Deck application.",
-											"markdownDescription": "Default title alignment to be used when rendering the title of this state. **NB** This can be overridden by the user in the Stream Deck application."
+											"description": "Default title alignment to be used when rendering the title of this state. **NB.** This can be overridden by the user in the Stream Deck application.",
+											"markdownDescription": "Default title alignment to be used when rendering the title of this state. **NB.** This can be overridden by the user in the Stream Deck application."
 										},
 										"TitleColor": {
 											"type": "string",
-											"description": "Default title color to be used when rendering the title of this state, represented a hexadecimal value. **NB** This can be overridden by the user in the Stream Deck application.",
-											"examples": [
-												"#5bcefa",
-												"#f5a9b8",
-												"#fffff"
-											],
-											"markdownDescription": "Default title color to be used when rendering the title of this state, represented a hexadecimal value. **NB** This can be overridden by the user in the Stream Deck application."
+											"description": "Default title color to be used when rendering the title of this state, represented a hexadecimal value. **NB.** This can be overridden by the user in the Stream Deck application.\n\n**Examples:**\n- #5bcefa\n- #f5a9b8\n- #FFFFFF",
+											"pattern": "^#(?:[0-9a-fA-F]{3}){1,2}$",
+											"markdownDescription": "Default title color to be used when rendering the title of this state, represented a hexadecimal value. **NB.** This can be overridden by the user in the Stream Deck application.\n\n**Examples:**\n- #5bcefa\n- #f5a9b8\n- #FFFFFF"
 										}
 									},
 									"required": [
@@ -217,8 +211,8 @@
 								},
 								"minItems": 1,
 								"maxItems": 2,
-								"description": "States the action can be in. When two states are defined the action will act as a toggle, with users being able to select their preferred iconography for each state.\n**NB** Automatic toggling of the state on action activation can be disabled by setting `DisableAutomaticStates` to `true`; the state can still be set from the plugin via `streamDeck.setState(context, state)`.",
-								"markdownDescription": "States the action can be in. When two states are defined the action will act as a toggle, with users being able to select their preferred iconography for each state.\n**NB** Automatic toggling of the state on action activation can be disabled by setting `DisableAutomaticStates` to `true`; the state can still be set from the plugin via `streamDeck.setState(context, state)`."
+								"description": "States the action can be in. When two states are defined the action will act as a toggle, with users being able to select their preferred iconography for each state.\n**NB.** Automatic toggling of the state on action activation can be disabled by setting `DisableAutomaticStates` to `true`.\n\n**Usage:**\n- Change the state of an action.\n\n`streamDeck.setState(context, state)`",
+								"markdownDescription": "States the action can be in. When two states are defined the action will act as a toggle, with users being able to select their preferred iconography for each state.\n**NB.** Automatic toggling of the state on action activation can be disabled by setting `DisableAutomaticStates` to `true`.\n\n**Usage:**\n- Change the state of an action.\n\n`streamDeck.setState(context, state)`"
 							},
 							"SupportedInMultiActions": {
 								"type": "boolean",
@@ -232,18 +226,13 @@
 							},
 							"UUID": {
 								"type": "string",
-								"description": "Unique identifier that identifies the action, represented in reverse-DNS format. This value is supplied by Stream Deck when events are emitted that relate to the action enabling you to identify the source of the event. **NB** This must be unique, and should be prefixed with the plugin's UUID.",
-								"examples": [
-									"com.elgato.wavelink.toggle-mute",
-									"com.elgato.discord.join-voice",
-									"tv.twitch.studio.go-live"
-								],
-								"markdownDescription": "Unique identifier that identifies the action, represented in reverse-DNS format. This value is supplied by Stream Deck when events are emitted that relate to the action enabling you to identify the source of the event. **NB** This must be unique, and should be prefixed with the plugin's UUID."
+								"description": "Unique identifier that identifies the action, represented in reverse-DNS format. This value is supplied by Stream Deck when events are emitted that relate to the action enabling you to identify the source of the event. **NB.** This must be unique, and should be prefixed with the plugin's UUID.\n\n**Examples:**\n- com.elgato.wavelink.toggle-mute\n- com.elgato.discord.join-voice\n- tv.twitch.studio.go-live",
+								"markdownDescription": "Unique identifier that identifies the action, represented in reverse-DNS format. This value is supplied by Stream Deck when events are emitted that relate to the action enabling you to identify the source of the event. **NB.** This must be unique, and should be prefixed with the plugin's UUID.\n\n**Examples:**\n- com.elgato.wavelink.toggle-mute\n- com.elgato.discord.join-voice\n- tv.twitch.studio.go-live"
 							},
 							"UserTitleEnabled": {
 								"type": "boolean",
-								"description": "Determines whether the title field is available to the user when viewing the action's property inspector. Setting this to `False` will disable the user from specifying a title, thus allowing the plugin to have exclusive access via `streamDeck.setTitle(context, title, state, target)`. Default is `true`, i.e. the title field is enabled.",
-								"markdownDescription": "Determines whether the title field is available to the user when viewing the action's property inspector. Setting this to `False` will disable the user from specifying a title, thus allowing the plugin to have exclusive access via `streamDeck.setTitle(context, title, state, target)`. Default is `true`, i.e. the title field is enabled."
+								"description": "Determines whether the title field is available to the user when viewing the action's property inspector. Setting this to `False` will disable the user from specifying a title, thus allowing the plugin to have exclusive access via `streamDeck.setTitle(context, title, state, target)`. Default is `true`, i.e. the title field is enabled.\n\n**Usage:**\n- Set action's title.\n\n`streamDeck.setTitle(context, title, state, target)`",
+								"markdownDescription": "Determines whether the title field is available to the user when viewing the action's property inspector. Setting this to `False` will disable the user from specifying a title, thus allowing the plugin to have exclusive access via `streamDeck.setTitle(context, title, state, target)`. Default is `true`, i.e. the title field is enabled.\n\n**Usage:**\n- Set action's title.\n\n`streamDeck.setTitle(context, title, state, target)`"
 							},
 							"VisibleInActionsList": {
 								"type": "boolean",
@@ -263,86 +252,55 @@
 					"markdownDescription": "Collection of actions provided by the plugin, and all of their information; this can include actions that are available to user's via the actions list, and actions that are hidden to the user but available to pre-defined profiles distributed with the plugin (`Manifest.Actions.VisibleInActionsList`)."
 				},
 				"ApplicationsToMonitor": {
-					"type": "array",
-					"items": {
-						"type": "object",
-						"properties": {
-							"mac": {
-								"type": "array",
-								"items": {
-									"type": "string"
-								},
-								"description": "Collection of applications to monitor on macOS.",
-								"examples": [
-									[
-										"com.apple.mail"
-									]
-								],
-								"markdownDescription": "Collection of applications to monitor on macOS."
+					"type": "object",
+					"properties": {
+						"mac": {
+							"type": "array",
+							"items": {
+								"type": "string"
 							},
-							"windows": {
-								"type": "string",
-								"description": "Collection of applications to monitor on Windows.",
-								"examples": [
-									[
-										"Notepad.exe"
-									]
-								],
-								"markdownDescription": "Collection of applications to monitor on Windows."
-							}
+							"description": "Collection of applications to monitor on macOS.\n\n**Examples:**\n- com.apple.mail",
+							"markdownDescription": "Collection of applications to monitor on macOS.\n\n**Examples:**\n- com.apple.mail"
 						},
-						"additionalProperties": false
+						"windows": {
+							"type": "string",
+							"description": "Collection of applications to monitor on Windows.\n\n**Examples:**\n- Notepad.exe",
+							"markdownDescription": "Collection of applications to monitor on Windows.\n\n**Examples:**\n- Notepad.exe"
+						}
 					},
-					"description": "Applications to monitor on Mac and Windows; upon a monitored application being launched or terminated, Stream Deck will notify the plugin.",
-					"markdownDescription": "Applications to monitor on Mac and Windows; upon a monitored application being launched or terminated, Stream Deck will notify the plugin."
+					"additionalProperties": false,
+					"description": "Applications to monitor on Mac and Windows; upon a monitored application being launched or terminated, Stream Deck will notify the plugin.\n\n**Usage:**\n- Monitor when an application **launches**.\n\n`streamDeck.on(\"applicationDidLaunch\", listener)`\n\n- Monitor when an application **terminates**.\n\n`streamDeck.on(\"applicationDidTerminate\", listener)`",
+					"markdownDescription": "Applications to monitor on Mac and Windows; upon a monitored application being launched or terminated, Stream Deck will notify the plugin.\n\n**Usage:**\n- Monitor when an application **launches**.\n\n`streamDeck.on(\"applicationDidLaunch\", listener)`\n\n- Monitor when an application **terminates**.\n\n`streamDeck.on(\"applicationDidTerminate\", listener)`"
 				},
 				"Author": {
 					"type": "string",
-					"description": "Author's name that will be displayed on the plugin's product page on the Marketplace.",
-					"examples": [
-						"Elgato"
-					],
-					"markdownDescription": "Author's name that will be displayed on the plugin's product page on the Marketplace."
+					"description": "Author's name that will be displayed on the plugin's product page on the Marketplace, e.g. \"Elgato\".",
+					"markdownDescription": "Author's name that will be displayed on the plugin's product page on the Marketplace, e.g. \"Elgato\"."
 				},
 				"Category": {
 					"type": "string",
-					"description": "Defines the actions list group, providing a natural grouping of the plugin's actions with the Stream Deck application's action list. **NB** This should be distinctive and synonymous with your plugin, and it is therefore recommended that this be the same value as the plugin's `Name` field. When undefined, the actions will be available under the \"Custom\" group.",
-					"markdownDescription": "Defines the actions list group, providing a natural grouping of the plugin's actions with the Stream Deck application's action list. **NB** This should be distinctive and synonymous with your plugin, and it is therefore recommended that this be the same value as the plugin's `Name` field. When undefined, the actions will be available under the \"Custom\" group."
+					"description": "Defines the actions list group, providing a natural grouping of the plugin's actions with the Stream Deck application's action list. **NB.** This should be distinctive and synonymous with your plugin, and it is therefore recommended that this be the same value as the plugin's `Name` field. When `undefined`, the actions will be available under the \"Custom\" group.",
+					"markdownDescription": "Defines the actions list group, providing a natural grouping of the plugin's actions with the Stream Deck application's action list. **NB.** This should be distinctive and synonymous with your plugin, and it is therefore recommended that this be the same value as the plugin's `Name` field. When `undefined`, the actions will be available under the \"Custom\" group."
 				},
 				"CategoryIcon": {
 					"type": "string",
-					"description": "Path to the image, with the file extension omitted, that will be displayed next to the action list group within the Stream Deck application. The icon should accurately represent the plugin, and enable users to quickly identify the plugin. The icon must adhere to the following style guidelines.\n- Be in .PNG or .SVG format.\n- Be provided in two sizes, 28x28 px and 56x56 px (@2x).\n- Be monochromatic, with foreground color of #DFDFDF and a transparent background.",
-					"examples": [
-						"assets/category-icon"
-					],
-					"markdownDescription": "Path to the image, with the file extension omitted, that will be displayed next to the action list group within the Stream Deck application. The icon should accurately represent the plugin, and enable users to quickly identify the plugin. The icon must adhere to the following style guidelines.\n- Be in .PNG or .SVG format.\n- Be provided in two sizes, 28x28 px and 56x56 px (@2x).\n- Be monochromatic, with foreground color of #DFDFDF and a transparent background."
+					"description": "Path to the image, with the file extension omitted, that will be displayed next to the action list group within the Stream Deck application. The icon should accurately represent the plugin, and enable users to quickly identify the plugin. The icon must adhere to the following style guidelines.\n- Be in .PNG or .SVG format.\n- Be provided in two sizes, 28x28 px and 56x56 px (@2x).\n- Be monochromatic, with foreground color of #DFDFDF and a transparent background.\n\n**Examples**:\n- assets/category-icon",
+					"markdownDescription": "Path to the image, with the file extension omitted, that will be displayed next to the action list group within the Stream Deck application. The icon should accurately represent the plugin, and enable users to quickly identify the plugin. The icon must adhere to the following style guidelines.\n- Be in .PNG or .SVG format.\n- Be provided in two sizes, 28x28 px and 56x56 px (@2x).\n- Be monochromatic, with foreground color of #DFDFDF and a transparent background.\n\n**Examples**:\n- assets/category-icon"
 				},
 				"CodePath": {
 					"type": "string",
-					"description": "Path to the plugin's main entry point; this is executed when the Stream Deck application starts the plugin.",
-					"examples": [
-						"plugin.js",
-						"build/MyPlugin.exe"
-					],
-					"markdownDescription": "Path to the plugin's main entry point; this is executed when the Stream Deck application starts the plugin."
+					"description": "Path to the plugin's main entry point; this is executed when the Stream Deck application starts the plugin.\n\n**Examples**:\n- index.js\n- Counter\n- Counter.exe",
+					"markdownDescription": "Path to the plugin's main entry point; this is executed when the Stream Deck application starts the plugin.\n\n**Examples**:\n- index.js\n- Counter\n- Counter.exe"
 				},
 				"CodePathMac": {
 					"type": "string",
-					"description": "Path to the plugin's entry point specific to macOS; this is executed when the Stream Deck application starts the plugin on macOS.",
-					"examples": [
-						"plugin.js",
-						"build/MyPlugin.exe"
-					],
-					"markdownDescription": "Path to the plugin's entry point specific to macOS; this is executed when the Stream Deck application starts the plugin on macOS."
+					"description": "Path to the plugin's entry point specific to macOS; this is executed when the Stream Deck application starts the plugin on macOS.\n\n**Examples**:\n- index.js\n- Counter ```",
+					"markdownDescription": "Path to the plugin's entry point specific to macOS; this is executed when the Stream Deck application starts the plugin on macOS.\n\n**Examples**:\n- index.js\n- Counter ```"
 				},
 				"CodePathWin": {
 					"type": "string",
-					"description": "Path to the plugin's entry point specific to Windows; this is executed when the Stream Deck application starts the plugin on Windows.",
-					"examples": [
-						"plugin.js",
-						"build/MyPlugin"
-					],
-					"markdownDescription": "Path to the plugin's entry point specific to Windows; this is executed when the Stream Deck application starts the plugin on Windows."
+					"description": "Path to the plugin's entry point specific to Windows; this is executed when the Stream Deck application starts the plugin on Windows.\n\nExamples:\n- index.js\n- Counter.exe",
+					"markdownDescription": "Path to the plugin's entry point specific to Windows; this is executed when the Stream Deck application starts the plugin on Windows.\n\nExamples:\n- index.js\n- Counter.exe"
 				},
 				"DefaultWindowSize": {
 					"type": "array",
@@ -352,6 +310,12 @@
 					"minItems": 2,
 					"maxItems": 2,
 					"description": "Size of a window (`[width, height]`) opened when calling `window.open()` from the property inspector. Default value is `[500, 650]`.",
+					"examples": [
+						[
+							500,
+							650
+						]
+					],
 					"markdownDescription": "Size of a window (`[width, height]`) opened when calling `window.open()` from the property inspector. Default value is `[500, 650]`."
 				},
 				"Description": {
@@ -361,21 +325,13 @@
 				},
 				"Icon": {
 					"type": "string",
-					"description": "Path to the image, with the file extension omitted, that will be displayed on the Marketplace. The icon should accurately represent the plugin, stand out, and enable users to quickly identify the plugin. The icon must adhere to the following style guidelines.\n- Be in .PNG or .SVG format.\n- Be provided in two sizes, 288x288 px and 512x512 px (@2x).",
-					"examples": [
-						"assets/category-icon"
-					],
-					"markdownDescription": "Path to the image, with the file extension omitted, that will be displayed on the Marketplace. The icon should accurately represent the plugin, stand out, and enable users to quickly identify the plugin. The icon must adhere to the following style guidelines.\n- Be in .PNG or .SVG format.\n- Be provided in two sizes, 288x288 px and 512x512 px (@2x)."
+					"description": "Path to the image, with the file extension omitted, that will be displayed on the Marketplace. The icon should accurately represent the plugin, stand out, and enable users to quickly identify the plugin. The icon must adhere to the following style guidelines.\n- Be in .PNG or .SVG format.\n- Be provided in two sizes, 288x288 px and 512x512 px (@2x).\n\n**Examples**: assets/plugin-icon",
+					"markdownDescription": "Path to the image, with the file extension omitted, that will be displayed on the Marketplace. The icon should accurately represent the plugin, stand out, and enable users to quickly identify the plugin. The icon must adhere to the following style guidelines.\n- Be in .PNG or .SVG format.\n- Be provided in two sizes, 288x288 px and 512x512 px (@2x).\n\n**Examples**: assets/plugin-icon"
 				},
 				"Name": {
 					"type": "string",
-					"description": "Name of the plugin.",
-					"examples": [
-						"Wave Link",
-						"Camera Hub",
-						"Control Center"
-					],
-					"markdownDescription": "Name of the plugin."
+					"description": "Name of the plugin, e.g. \"Wave Link\", \"Camera Hub\", \"Control Center\", etc.",
+					"markdownDescription": "Name of the plugin, e.g. \"Wave Link\", \"Camera Hub\", \"Control Center\", etc."
 				},
 				"OS": {
 					"type": "array",
@@ -407,8 +363,8 @@
 					},
 					"minItems": 1,
 					"maxItems": 2,
-					"description": "Collection of operating systems, and their minimum require versions, that the plugin supports.",
-					"markdownDescription": "Collection of operating systems, and their minimum require versions, that the plugin supports."
+					"description": "Collection of operating systems, and their minimum required versions, that the plugin supports.",
+					"markdownDescription": "Collection of operating systems, and their minimum required versions, that the plugin supports."
 				},
 				"Profiles": {
 					"type": "array",
@@ -427,11 +383,8 @@
 							},
 							"Name": {
 								"type": "string",
-								"description": "Path to the `.streamDeckProfile`, with the file extension omitted, that contains the profiles layout and action settings.",
-								"examples": [
-									"profiles/SuperCool"
-								],
-								"markdownDescription": "Path to the `.streamDeckProfile`, with the file extension omitted, that contains the profiles layout and action settings."
+								"description": "Path to the `.streamDeckProfile`, with the file extension omitted, that contains the profiles layout and action settings.\n\n**Examples:**\n- assets/main-profile\n- profiles/super-cool-profile",
+								"markdownDescription": "Path to the `.streamDeckProfile`, with the file extension omitted, that contains the profiles layout and action settings.\n\n**Examples:**\n- assets/main-profile\n- profiles/super-cool-profile"
 							},
 							"Readonly": {
 								"type": "boolean",
@@ -445,24 +398,20 @@
 						],
 						"additionalProperties": false
 					},
-					"description": "Collection of pre-defined profiles that are distributed with this plugin. Upon installation of the plugin, the user will be prompted to install the profiles. Once installed, the plugin can switch any of the pre-defined plugins via `streamDeck.switchToProfile(name, device)`.",
-					"markdownDescription": "Collection of pre-defined profiles that are distributed with this plugin. Upon installation of the plugin, the user will be prompted to install the profiles. Once installed, the plugin can switch any of the pre-defined plugins via `streamDeck.switchToProfile(name, device)`."
+					"description": "Collection of pre-defined profiles that are distributed with this plugin. Upon installation of the plugin, the user will be prompted to install the profiles. Once installed, the plugin can switch any of the pre-defined profiles. **NB.** It is not yet possible to switch to a user-defined profile.\n\n**Usage:**\n- Switch to a pre-defined plugin profile.\n\n`streamDeck.switchToProfile(name, device)`",
+					"markdownDescription": "Collection of pre-defined profiles that are distributed with this plugin. Upon installation of the plugin, the user will be prompted to install the profiles. Once installed, the plugin can switch any of the pre-defined profiles. **NB.** It is not yet possible to switch to a user-defined profile.\n\n**Usage:**\n- Switch to a pre-defined plugin profile.\n\n`streamDeck.switchToProfile(name, device)`"
 				},
 				"PropertyInspectorPath": {
 					"type": "string",
-					"description": "Optional path to the HTML file that represents the property inspector for all actions; this is displayed to the user in the Stream Deck application when they add an action, allowing them to configure the action's settings. The plugin can send messages to the property inspector using `streamDeck.sendToPropertyInspector(context payload)`, and receive messages from the property inspector using `streamDeck.on(\"sendToPlugin\", (data) => ...`. **NB** Path should be relative to the root of the plugin's folder, with no leading slash.",
-					"examples": [
-						"PropertyInspectors/ToggleMute.html",
-						"Actions/Counter/Icon.bmp",
-						"Layouts/MyCustomLayout.json"
-					],
-					"markdownDescription": "Optional path to the HTML file that represents the property inspector for all actions; this is displayed to the user in the Stream Deck application when they add an action, allowing them to configure the action's settings. The plugin can send messages to the property inspector using `streamDeck.sendToPropertyInspector(context payload)`, and receive messages from the property inspector using `streamDeck.on(\"sendToPlugin\", (data) => ...`. **NB** Path should be relative to the root of the plugin's folder, with no leading slash."
+					"description": "Optional path to the HTML file that represents the property inspector for all actions; this is displayed to the user in the Stream Deck application when they add an action, allowing them to configure the action's settings. **NB.** Path should be relative to the root of the plugin's folder, with no leading slash.\n\n**Usage:**\n- Send messages **to** the property inspector.\n\n`streamDeck.sendToPropertyInspector(context, payload)`\n\n- Receive messages **from** the property inspector.\n\n`streamDeck.on(\"sendToPlugin\", data => ...)`",
+					"pattern": "(?i)^(?!\\/).+\\.html$",
+					"markdownDescription": "Optional path to the HTML file that represents the property inspector for all actions; this is displayed to the user in the Stream Deck application when they add an action, allowing them to configure the action's settings. **NB.** Path should be relative to the root of the plugin's folder, with no leading slash.\n\n**Usage:**\n- Send messages **to** the property inspector.\n\n`streamDeck.sendToPropertyInspector(context, payload)`\n\n- Receive messages **from** the property inspector.\n\n`streamDeck.on(\"sendToPlugin\", data => ...)`"
 				},
 				"SDKVersion": {
 					"type": "number",
 					"const": 2,
-					"description": "Preferred SDK version; this should _currently_ always be `2`.",
-					"markdownDescription": "Preferred SDK version; this should _currently_ always be `2`."
+					"description": "Preferred SDK version; this should _currently_ always be 2.",
+					"markdownDescription": "Preferred SDK version; this should _currently_ always be 2."
 				},
 				"Software": {
 					"type": "object",
@@ -482,23 +431,21 @@
 				},
 				"URL": {
 					"type": "string",
-					"description": "Link to the plugin's website.",
-					"markdownDescription": "Link to the plugin's website."
+					"description": "Link to the plugin's website.\n\n**Examples**:\n- https://elgato.com",
+					"markdownDescription": "Link to the plugin's website.\n\n**Examples**:\n- https://elgato.com"
 				},
 				"UUID": {
 					"type": "string",
-					"description": "Unique identifier used to identify the plugin, represented in reverse-DNS format.",
-					"examples": [
-						"com.elgato.wavelink",
-						"com.elgato.discord",
-						"tv.twitch.studio"
-					],
-					"markdownDescription": "Unique identifier used to identify the plugin, represented in reverse-DNS format."
+					"description": "Unique identifier used to identify the plugin, represented in reverse-DNS format.\n\nExamples:\n- com.elgato.wave-link\n- com.philips.hue\n- tv.twitch.studio",
+					"markdownDescription": "Unique identifier used to identify the plugin, represented in reverse-DNS format.\n\nExamples:\n- com.elgato.wave-link\n- com.philips.hue\n- tv.twitch.studio"
 				},
 				"Version": {
 					"type": "string",
-					"description": "Version of the plugin, represented as a  {@link  https://semver.org semantic version } . **NB** pre-release values are not currently supported",
-					"markdownDescription": "Version of the plugin, represented as a  {@link  https://semver.org semantic version } . **NB** pre-release values are not currently supported"
+					"description": "Version of the plugin, represented as a  {@link  https://semver.org semantic version } . **NB.** pre-release values are not currently supported.\n\n**Examples:**\n- 1.0.3 ✅\n- 0.0.99 ✅\n- 2.1.9-beta1 ❌",
+					"examples": [
+						"1.0.0"
+					],
+					"markdownDescription": "Version of the plugin, represented as a  {@link  https://semver.org semantic version } . **NB.** pre-release values are not currently supported.\n\n**Examples:**\n- 1.0.3 ✅\n- 0.0.99 ✅\n- 2.1.9-beta1 ❌"
 				}
 			},
 			"required": [
