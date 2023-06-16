@@ -96,7 +96,7 @@
 									},
 									"layout": {
 										"type": "string",
-										"description": "Name of a pre-defined layout, or the path to a JSON file that details a custom layout and its components, to be rendered on the action's touchscreen canvas.\n\n**Pre-defined Layouts:**\n- `$X1`, layout with the title at the top and the icon beneath it in the center.\n- `$A0`, layout with the title at the top and a full-width image canvas beneath it in the center.\n- `$A1`, layout with the title at the top, the icon on the left, and text value on the right.\n- `$B1`, layout with the title at the top, the icon on the left, and a text value on the right with a progress bar beneath it.\n- `$B2`, layout with the title at the top, the icon on the left, and a text value on the right with a gradient progress bar beneath it.\n- `$C1`, layout with the title at the top, and two rows that display an icon on the left and progress bar on the right (i.e. a double progress bar layout).\n\n**Usage:**\n- Change the current layout.\n\n`streamDeck.setFeedbackLayout(context, layout)`\n\n- Update the current layout's values, e.g. title text.\n\n`streamDeck.setFeedback(context, feedback)`",
+										"description": "Name of a pre-defined layout, or the path to a JSON file that details a custom layout and its components, to be rendered on the action's touchscreen canvas.\n\n**Pre-defined Layouts:**\n- `$X1`, layout with the title at the top and the icon beneath it in the center.\n- `$A0`, layout with the title at the top and a full-width image canvas beneath it in the center.\n- `$A1`, layout with the title at the top, the icon on the left, and text value on the right.\n- `$B1`, layout with the title at the top, the icon on the left, and a text value on the right with a progress bar beneath it.\n- `$B2`, layout with the title at the top, the icon on the left, and a text value on the right with a gradient progress bar beneath it.\n- `$C1`, layout with the title at the top, and two rows that display an icon on the left and progress bar on the right (i.e. a double progress bar layout).\n\n**Related:**\n- Change the current layout.\n\n`streamDeck.setFeedbackLayout(context, layout)`\n\n- Update the current layout's values, e.g. title text.\n\n`streamDeck.setFeedback(context, feedback)`",
 										"examples": [
 											"$X1",
 											"$A0",
@@ -106,7 +106,7 @@
 											"$C1",
 											"Layouts/MyCustomLayout.json"
 										],
-										"markdownDescription": "Name of a pre-defined layout, or the path to a JSON file that details a custom layout and its components, to be rendered on the action's touchscreen canvas.\n\n**Pre-defined Layouts:**\n- `$X1`, layout with the title at the top and the icon beneath it in the center.\n- `$A0`, layout with the title at the top and a full-width image canvas beneath it in the center.\n- `$A1`, layout with the title at the top, the icon on the left, and text value on the right.\n- `$B1`, layout with the title at the top, the icon on the left, and a text value on the right with a progress bar beneath it.\n- `$B2`, layout with the title at the top, the icon on the left, and a text value on the right with a gradient progress bar beneath it.\n- `$C1`, layout with the title at the top, and two rows that display an icon on the left and progress bar on the right (i.e. a double progress bar layout).\n\n**Usage:**\n- Change the current layout.\n\n`streamDeck.setFeedbackLayout(context, layout)`\n\n- Update the current layout's values, e.g. title text.\n\n`streamDeck.setFeedback(context, feedback)`"
+										"markdownDescription": "Name of a pre-defined layout, or the path to a JSON file that details a custom layout and its components, to be rendered on the action's touchscreen canvas.\n\n**Pre-defined Layouts:**\n- `$X1`, layout with the title at the top and the icon beneath it in the center.\n- `$A0`, layout with the title at the top and a full-width image canvas beneath it in the center.\n- `$A1`, layout with the title at the top, the icon on the left, and text value on the right.\n- `$B1`, layout with the title at the top, the icon on the left, and a text value on the right with a progress bar beneath it.\n- `$B2`, layout with the title at the top, the icon on the left, and a text value on the right with a gradient progress bar beneath it.\n- `$C1`, layout with the title at the top, and two rows that display an icon on the left and progress bar on the right (i.e. a double progress bar layout).\n\n**Related:**\n- Change the current layout.\n\n`streamDeck.setFeedbackLayout(context, layout)`\n\n- Update the current layout's values, e.g. title text.\n\n`streamDeck.setFeedback(context, feedback)`"
 									}
 								},
 								"additionalProperties": false,
@@ -125,8 +125,8 @@
 							},
 							"PropertyInspectorPath": {
 								"type": "string",
-								"description": "Optional path to the HTML file that represents the property inspector for this action; this is displayed to the user in the Stream Deck application when they add the action, allowing them to configure the action's settings. When `undefined`, the manifest's top-level `PropertyInspectorPath` is used, otherwise none. **NB.** Path should be relative to the root of the plugin's folder, with no leading slash.\n\n**Usage:**\n- Send messages **to** the property inspector.\n\n`streamDeck.sendToPropertyInspector(context, payload)`\n\n- Receive messages **from** the property inspector.\n\n`streamDeck.on(\"sendToPlugin\", data => ...)`",
-								"markdownDescription": "Optional path to the HTML file that represents the property inspector for this action; this is displayed to the user in the Stream Deck application when they add the action, allowing them to configure the action's settings. When `undefined`, the manifest's top-level `PropertyInspectorPath` is used, otherwise none. **NB.** Path should be relative to the root of the plugin's folder, with no leading slash.\n\n**Usage:**\n- Send messages **to** the property inspector.\n\n`streamDeck.sendToPropertyInspector(context, payload)`\n\n- Receive messages **from** the property inspector.\n\n`streamDeck.on(\"sendToPlugin\", data => ...)`"
+								"description": "Optional path to the HTML file that represents the property inspector for this action; this is displayed to the user in the Stream Deck application when they add the action, allowing them to configure the action's settings. When `undefined`, the manifest's top-level `PropertyInspectorPath` is used, otherwise none. **NB.** Path should be relative to the root of the plugin's folder, with no leading slash.\n\n**Related:**\n- Send messages **to** the property inspector.\n\n`streamDeck.sendToPropertyInspector(context, payload)`\n\n- Receive messages **from** the property inspector.\n\n`streamDeck.on(\"sendToPlugin\", data => ...)`",
+								"markdownDescription": "Optional path to the HTML file that represents the property inspector for this action; this is displayed to the user in the Stream Deck application when they add the action, allowing them to configure the action's settings. When `undefined`, the manifest's top-level `PropertyInspectorPath` is used, otherwise none. **NB.** Path should be relative to the root of the plugin's folder, with no leading slash.\n\n**Related:**\n- Send messages **to** the property inspector.\n\n`streamDeck.sendToPropertyInspector(context, payload)`\n\n- Receive messages **from** the property inspector.\n\n`streamDeck.on(\"sendToPlugin\", data => ...)`"
 							},
 							"States": {
 								"type": "array",
@@ -182,8 +182,8 @@
 										},
 										"Title": {
 											"type": "string",
-											"description": "Default title to be shown when the action is added to the Stream Deck.\n\n**Usage:**\n- Set action's title.\n\n`streamDeck.setTitle(context, title, state, target)`",
-											"markdownDescription": "Default title to be shown when the action is added to the Stream Deck.\n\n**Usage:**\n- Set action's title.\n\n`streamDeck.setTitle(context, title, state, target)`"
+											"description": "Default title to be shown when the action is added to the Stream Deck.\n\n**Related:**\n- Set action's title.\n\n`streamDeck.setTitle(context, title, state, target)`",
+											"markdownDescription": "Default title to be shown when the action is added to the Stream Deck.\n\n**Related:**\n- Set action's title.\n\n`streamDeck.setTitle(context, title, state, target)`"
 										},
 										"TitleAlignment": {
 											"type": "string",
@@ -211,8 +211,8 @@
 								},
 								"minItems": 1,
 								"maxItems": 2,
-								"description": "States the action can be in. When two states are defined the action will act as a toggle, with users being able to select their preferred iconography for each state.\n**NB.** Automatic toggling of the state on action activation can be disabled by setting `DisableAutomaticStates` to `true`.\n\n**Usage:**\n- Change the state of an action.\n\n`streamDeck.setState(context, state)`",
-								"markdownDescription": "States the action can be in. When two states are defined the action will act as a toggle, with users being able to select their preferred iconography for each state.\n**NB.** Automatic toggling of the state on action activation can be disabled by setting `DisableAutomaticStates` to `true`.\n\n**Usage:**\n- Change the state of an action.\n\n`streamDeck.setState(context, state)`"
+								"description": "States the action can be in. When two states are defined the action will act as a toggle, with users being able to select their preferred iconography for each state.\n**NB.** Automatic toggling of the state on action activation can be disabled by setting `DisableAutomaticStates` to `true`.\n\n**Related:**\n- Change the state of an action.\n\n`streamDeck.setState(context, state)`",
+								"markdownDescription": "States the action can be in. When two states are defined the action will act as a toggle, with users being able to select their preferred iconography for each state.\n**NB.** Automatic toggling of the state on action activation can be disabled by setting `DisableAutomaticStates` to `true`.\n\n**Related:**\n- Change the state of an action.\n\n`streamDeck.setState(context, state)`"
 							},
 							"SupportedInMultiActions": {
 								"type": "boolean",
@@ -231,8 +231,8 @@
 							},
 							"UserTitleEnabled": {
 								"type": "boolean",
-								"description": "Determines whether the title field is available to the user when viewing the action's property inspector. Setting this to `False` will disable the user from specifying a title, thus allowing the plugin to have exclusive access via `streamDeck.setTitle(context, title, state, target)`. Default is `true`, i.e. the title field is enabled.\n\n**Usage:**\n- Set action's title.\n\n`streamDeck.setTitle(context, title, state, target)`",
-								"markdownDescription": "Determines whether the title field is available to the user when viewing the action's property inspector. Setting this to `False` will disable the user from specifying a title, thus allowing the plugin to have exclusive access via `streamDeck.setTitle(context, title, state, target)`. Default is `true`, i.e. the title field is enabled.\n\n**Usage:**\n- Set action's title.\n\n`streamDeck.setTitle(context, title, state, target)`"
+								"description": "Determines whether the title field is available to the user when viewing the action's property inspector. Setting this to `False` will disable the user from specifying a title, thus allowing the plugin to have exclusive access via `streamDeck.setTitle(context, title, state, target)`. Default is `true`, i.e. the title field is enabled.\n\n**Related:**\n- Set action's title.\n\n`streamDeck.setTitle(context, title, state, target)`",
+								"markdownDescription": "Determines whether the title field is available to the user when viewing the action's property inspector. Setting this to `False` will disable the user from specifying a title, thus allowing the plugin to have exclusive access via `streamDeck.setTitle(context, title, state, target)`. Default is `true`, i.e. the title field is enabled.\n\n**Related:**\n- Set action's title.\n\n`streamDeck.setTitle(context, title, state, target)`"
 							},
 							"VisibleInActionsList": {
 								"type": "boolean",
@@ -269,8 +269,8 @@
 						}
 					},
 					"additionalProperties": false,
-					"description": "Applications to monitor on Mac and Windows; upon a monitored application being launched or terminated, Stream Deck will notify the plugin.\n\n**Usage:**\n- Monitor when an application **launches**.\n\n`streamDeck.on(\"applicationDidLaunch\", listener)`\n\n- Monitor when an application **terminates**.\n\n`streamDeck.on(\"applicationDidTerminate\", listener)`",
-					"markdownDescription": "Applications to monitor on Mac and Windows; upon a monitored application being launched or terminated, Stream Deck will notify the plugin.\n\n**Usage:**\n- Monitor when an application **launches**.\n\n`streamDeck.on(\"applicationDidLaunch\", listener)`\n\n- Monitor when an application **terminates**.\n\n`streamDeck.on(\"applicationDidTerminate\", listener)`"
+					"description": "Applications to monitor on Mac and Windows; upon a monitored application being launched or terminated, Stream Deck will notify the plugin.\n\n**Related:**\n- Monitor when an application **launches**.\n\n`streamDeck.on(\"applicationDidLaunch\", listener)`\n\n- Monitor when an application **terminates**.\n\n`streamDeck.on(\"applicationDidTerminate\", listener)`",
+					"markdownDescription": "Applications to monitor on Mac and Windows; upon a monitored application being launched or terminated, Stream Deck will notify the plugin.\n\n**Related:**\n- Monitor when an application **launches**.\n\n`streamDeck.on(\"applicationDidLaunch\", listener)`\n\n- Monitor when an application **terminates**.\n\n`streamDeck.on(\"applicationDidTerminate\", listener)`"
 				},
 				"Author": {
 					"type": "string",
@@ -398,14 +398,14 @@
 						],
 						"additionalProperties": false
 					},
-					"description": "Collection of pre-defined profiles that are distributed with this plugin. Upon installation of the plugin, the user will be prompted to install the profiles. Once installed, the plugin can switch any of the pre-defined profiles. **NB.** It is not yet possible to switch to a user-defined profile.\n\n**Usage:**\n- Switch to a pre-defined plugin profile.\n\n`streamDeck.switchToProfile(name, device)`",
-					"markdownDescription": "Collection of pre-defined profiles that are distributed with this plugin. Upon installation of the plugin, the user will be prompted to install the profiles. Once installed, the plugin can switch any of the pre-defined profiles. **NB.** It is not yet possible to switch to a user-defined profile.\n\n**Usage:**\n- Switch to a pre-defined plugin profile.\n\n`streamDeck.switchToProfile(name, device)`"
+					"description": "Collection of pre-defined profiles that are distributed with this plugin. Upon installation of the plugin, the user will be prompted to install the profiles. Once installed, the plugin can switch any of the pre-defined profiles. **NB.** It is not yet possible to switch to a user-defined profile.\n\n**Related:**\n- Switch to a pre-defined plugin profile.\n\n`streamDeck.switchToProfile(name, device)`",
+					"markdownDescription": "Collection of pre-defined profiles that are distributed with this plugin. Upon installation of the plugin, the user will be prompted to install the profiles. Once installed, the plugin can switch any of the pre-defined profiles. **NB.** It is not yet possible to switch to a user-defined profile.\n\n**Related:**\n- Switch to a pre-defined plugin profile.\n\n`streamDeck.switchToProfile(name, device)`"
 				},
 				"PropertyInspectorPath": {
 					"type": "string",
-					"description": "Optional path to the HTML file that represents the property inspector for all actions; this is displayed to the user in the Stream Deck application when they add an action, allowing them to configure the action's settings. **NB.** Path should be relative to the root of the plugin's folder, with no leading slash.\n\n**Usage:**\n- Send messages **to** the property inspector.\n\n`streamDeck.sendToPropertyInspector(context, payload)`\n\n- Receive messages **from** the property inspector.\n\n`streamDeck.on(\"sendToPlugin\", data => ...)`",
+					"description": "Optional path to the HTML file that represents the property inspector for all actions; this is displayed to the user in the Stream Deck application when they add an action, allowing them to configure the action's settings. **NB.** Path should be relative to the root of the plugin's folder, with no leading slash.\n\n**Related:**\n- Send messages **to** the property inspector.\n\n`streamDeck.sendToPropertyInspector(context, payload)`\n\n- Receive messages **from** the property inspector.\n\n`streamDeck.on(\"sendToPlugin\", data => ...)`",
 					"pattern": "(?i)^(?!\\/).+\\.html$",
-					"markdownDescription": "Optional path to the HTML file that represents the property inspector for all actions; this is displayed to the user in the Stream Deck application when they add an action, allowing them to configure the action's settings. **NB.** Path should be relative to the root of the plugin's folder, with no leading slash.\n\n**Usage:**\n- Send messages **to** the property inspector.\n\n`streamDeck.sendToPropertyInspector(context, payload)`\n\n- Receive messages **from** the property inspector.\n\n`streamDeck.on(\"sendToPlugin\", data => ...)`"
+					"markdownDescription": "Optional path to the HTML file that represents the property inspector for all actions; this is displayed to the user in the Stream Deck application when they add an action, allowing them to configure the action's settings. **NB.** Path should be relative to the root of the plugin's folder, with no leading slash.\n\n**Related:**\n- Send messages **to** the property inspector.\n\n`streamDeck.sendToPropertyInspector(context, payload)`\n\n- Receive messages **from** the property inspector.\n\n`streamDeck.on(\"sendToPlugin\", data => ...)`"
 				},
 				"SDKVersion": {
 					"type": "number",

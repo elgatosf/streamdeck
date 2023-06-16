@@ -117,7 +117,7 @@ export type Manifest = {
 			 * - `$B2`, layout with the title at the top, the icon on the left, and a text value on the right with a gradient progress bar beneath it.
 			 * - `$C1`, layout with the title at the top, and two rows that display an icon on the left and progress bar on the right (i.e. a double progress bar layout).
 			 *
-			 * **Usage:**
+			 * **Related:**
 			 * - Change the current layout.
 			 *
 			 * `streamDeck.setFeedbackLayout(context, layout)`
@@ -166,7 +166,7 @@ export type Manifest = {
 		 * action, allowing them to configure the action's settings. When `undefined`, the manifest's top-level `PropertyInspectorPath` is used, otherwise none. **NB.** Path should be
 		 * relative to the root of the plugin's folder, with no leading slash.
 		 *
-		 * **Usage:**
+		 * **Related:**
 		 * - Send messages **to** the property inspector.
 		 *
 		 * `streamDeck.sendToPropertyInspector(context, payload)`
@@ -181,7 +181,7 @@ export type Manifest = {
 		 * States the action can be in. When two states are defined the action will act as a toggle, with users being able to select their preferred iconography for each state.
 		 * **NB.** Automatic toggling of the state on action activation can be disabled by setting `DisableAutomaticStates` to `true`.
 		 *
-		 * **Usage:**
+		 * **Related:**
 		 * - Change the state of an action.
 		 *
 		 * `streamDeck.setState(context, state)`
@@ -213,7 +213,7 @@ export type Manifest = {
 		 * Determines whether the title field is available to the user when viewing the action's property inspector. Setting this to `False` will disable the user from specifying a
 		 * title, thus allowing the plugin to have exclusive access via `streamDeck.setTitle(context, title, state, target)`. Default is `true`, i.e. the title field is enabled.
 		 *
-		 * **Usage:**
+		 * **Related:**
 		 * - Set action's title.
 		 *
 		 * `streamDeck.setTitle(context, title, state, target)`
@@ -230,7 +230,7 @@ export type Manifest = {
 	/**
 	 * Applications to monitor on Mac and Windows; upon a monitored application being launched or terminated, Stream Deck will notify the plugin.
 	 *
-	 * **Usage:**
+	 * **Related:**
 	 * - Monitor when an application **launches**.
 	 *
 	 * `streamDeck.on("applicationDidLaunch", listener)`
@@ -347,7 +347,7 @@ export type Manifest = {
 	 * Collection of pre-defined profiles that are distributed with this plugin. Upon installation of the plugin, the user will be prompted to install the profiles. Once installed,
 	 * the plugin can switch any of the pre-defined profiles. **NB.** It is not yet possible to switch to a user-defined profile.
 	 *
-	 * **Usage:**
+	 * **Related:**
 	 * - Switch to a pre-defined plugin profile.
 	 *
 	 * `streamDeck.switchToProfile(name, device)`
@@ -382,7 +382,7 @@ export type Manifest = {
 	 * Optional path to the HTML file that represents the property inspector for all actions; this is displayed to the user in the Stream Deck application when they add an action,
 	 * allowing them to configure the action's settings. **NB.** Path should be relative to the root of the plugin's folder, with no leading slash.
 	 *
-	 * **Usage:**
+	 * **Related:**
 	 * - Send messages **to** the property inspector.
 	 *
 	 * `streamDeck.sendToPropertyInspector(context, payload)`
@@ -533,7 +533,7 @@ type State = {
 	/**
 	 * Default title to be shown when the action is added to the Stream Deck.
 	 *
-	 * **Usage:**
+	 * **Related:**
 	 * - Set action's title.
 	 *
 	 * `streamDeck.setTitle(context, title, state, target)`
