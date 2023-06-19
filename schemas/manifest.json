@@ -52,9 +52,9 @@
 								"properties": {
 									"Icon": {
 										"type": "string",
-										"description": "Path to the image, with the **file extension omitted**, that will be displayed in the Stream Deck application in the circular canvas that represents the dial of the action. TODO: Define style guide.",
+										"description": "Path to the image, with the **file extension omitted**, that will be displayed in the Stream Deck application in the circular canvas that represents the dial of the action. The image must fulfill the following style guidelines.\n- Be in .PNG or .SVG format.\n- Be provided in two sizes, 72x72 px and 144x144 px (@2x).\n\n**NB.** This can be overridden by the user in the Stream Deck application.\n\n**Examples:**\n- assets/actions/mute/encoder-icon\n- imgs/join-voice-chat-encoder",
 										"pattern": "^(?!\\/).+(?<!\\.([Pp][Nn][Gg]|[Ss][Vv][Gg]))$",
-										"markdownDescription": "Path to the image, with the **file extension omitted**, that will be displayed in the Stream Deck application in the circular canvas that represents the dial of the action. TODO: Define style guide."
+										"markdownDescription": "Path to the image, with the **file extension omitted**, that will be displayed in the Stream Deck application in the circular canvas that represents the dial of the action. The image must fulfill the following style guidelines.\n- Be in .PNG or .SVG format.\n- Be provided in two sizes, 72x72 px and 144x144 px (@2x).\n\n**NB.** This can be overridden by the user in the Stream Deck application.\n\n**Examples:**\n- assets/actions/mute/encoder-icon\n- imgs/join-voice-chat-encoder"
 									},
 									"StackColor": {
 										"type": "string",
@@ -92,9 +92,9 @@
 									},
 									"background": {
 										"type": "string",
-										"description": "Path to the image that will be displayed on the touchscreen behind the action's layout. **NB.** This can be overridden by the user in the Stream Deck application. TODO: Define style guide.",
+										"description": "Path to the image, with the **file extension omitted**, that will be displayed on the touchscreen behind the action's layout. The image must fulfill the following style guidelines.\n- Be in .PNG or .SVG format.\n- Be provided in two sizes, 200x100 px and 400x200 px (@2x).\n\n**NB.** This can be overridden by the user in the Stream Deck application\n\n**Examples:**\n- assets/backgrounds/main\n- imgs/bright-blue-bg",
 										"pattern": "^(?!\\/).+(?<!\\.([Pp][Nn][Gg]|[Ss][Vv][Gg]))$",
-										"markdownDescription": "Path to the image that will be displayed on the touchscreen behind the action's layout. **NB.** This can be overridden by the user in the Stream Deck application. TODO: Define style guide."
+										"markdownDescription": "Path to the image, with the **file extension omitted**, that will be displayed on the touchscreen behind the action's layout. The image must fulfill the following style guidelines.\n- Be in .PNG or .SVG format.\n- Be provided in two sizes, 200x100 px and 400x200 px (@2x).\n\n**NB.** This can be overridden by the user in the Stream Deck application\n\n**Examples:**\n- assets/backgrounds/main\n- imgs/bright-blue-bg"
 									},
 									"layout": {
 										"type": "string",
