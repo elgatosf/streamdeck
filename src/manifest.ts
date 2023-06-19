@@ -117,28 +117,22 @@ export type Manifest = {
 			 * - `$B2`, layout with the title at the top, the icon on the left, and a text value on the right with a gradient progress bar beneath it.
 			 * - `$C1`, layout with the title at the top, and two rows that display an icon on the left and progress bar on the right (i.e. a double progress bar layout).
 			 *
+			 * **Examples:**
+			 * - $A1
+			 * - layouts/my-custom-layout.json
+			 *
 			 * **Related:**
-			 * - Change the current layout.
+			 * - Change the current layout of an action instance.
 			 *
 			 * `streamDeck.setFeedbackLayout(context, layout)`
 			 *
-			 * - Update the current layout's values, e.g. title text.
+			 * - Update an action instance's current layout values, e.g. title text.
 			 *
 			 * `streamDeck.setFeedback(context, feedback)`
-			 * @example
-			 * "$X1"
-			 * @example
-			 * "$A0"
-			 * @example
-			 * "$A1"
-			 * @example
-			 * "$B1"
-			 * @example
-			 * "$B2"
-			 * @example
-			 * "$C1"
-			 * @example
-			 * "Layouts/MyCustomLayout.json"
+			 * @examples
+			 * [ "$X1", "$A0", "$A1", "$B1", "$B2", "$C1" ]
+			 * @pattern
+			 * (^(\$[AB][12])|(\$[XC]1))$|(^(?!\/).+\.[Jj][Ss][Oo][Nn]$)
 			 */
 			layout?: FilePath<"json"> | "$A0" | "$A1" | "$B1" | "$B2" | "$C1" | "$X1";
 		};
