@@ -166,6 +166,10 @@ export type Manifest = {
 		 * action, allowing them to configure the action's settings. When `undefined`, the manifest's top-level `PropertyInspectorPath` is used, otherwise none. **NB.** Path should be
 		 * relative to the root of the plugin's folder, with no leading slash.
 		 *
+		 * **Examples:**
+		 * - mute.html
+		 * - actions/join-voice-chat/settings.html
+		 *
 		 * **Related:**
 		 * - Send messages **to** the property inspector.
 		 *
@@ -175,7 +179,7 @@ export type Manifest = {
 		 *
 		 * `streamDeck.on("sendToPlugin", data => ...)`
 		 */
-		PropertyInspectorPath?: FilePath<"html">;
+		PropertyInspectorPath?: HtmlFilePath;
 
 		/**
 		 * States the action can be in. When two states are defined the action will act as a toggle, with users being able to select their preferred iconography for each state.
@@ -382,6 +386,10 @@ export type Manifest = {
 	 * Optional path to the HTML file that represents the property inspector for all actions; this is displayed to the user in the Stream Deck application when they add an action,
 	 * allowing them to configure the action's settings. **NB.** Path should be relative to the root of the plugin's folder, with no leading slash.
 	 *
+	 *  **Examples:**
+	 * - mute.html
+	 * - actions/join-voice-chat/settings.html
+	 *
 	 * **Related:**
 	 * - Send messages **to** the property inspector.
 	 *
@@ -390,10 +398,8 @@ export type Manifest = {
 	 * - Receive messages **from** the property inspector.
 	 *
 	 * `streamDeck.on("sendToPlugin", data => ...)`
-	 * @pattern
-	 * (?i)^(?!\/).+\.html$
 	 */
-	PropertyInspectorPath?: FilePath<"html">;
+	PropertyInspectorPath?: HtmlFilePath;
 
 	/**
 	 * Preferred SDK version; this should _currently_ always be 2.
@@ -446,6 +452,13 @@ export type Manifest = {
  * pedal on the Stream Deck Pedal, whereas an **Encoder** refers to a dial / touchscreen on the Stream Deck+.
  */
 type Controller = "Encoder" | "Keypad";
+
+/**
+ * File path that represents an HTML file relative to the plugin's manifest.
+ * @pattern
+ * ^(?!\/).+\.[Hh][Tt][Mm][Ll]?$
+ */
+type HtmlFilePath = FilePath<"htm" | "html">;
 
 /**
  * File path, relative to the manifest's location.
