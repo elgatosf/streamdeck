@@ -54,10 +54,10 @@ export type Manifest = {
 		 */
 		Encoder?: {
 			/**
-			 * Path to the image, with the file extension omitted, that will be displayed in the Stream Deck application in the circular canvas that represents the dial of the action.
+			 * Path to the image, with the **file extension omitted**, that will be displayed in the Stream Deck application in the circular canvas that represents the dial of the action.
 			 * TODO: Define style guide.
 			 */
-			Icon?: string;
+			Icon?: ImageFilePathWithoutExtension;
 
 			/**
 			 * Background color to display in the Stream Deck application when the action is part of a dial stack, and is the current action. Represented as a hexadecimal value.
@@ -104,7 +104,7 @@ export type Manifest = {
 			 * Path to the image that will be displayed on the touchscreen behind the action's layout. **NB.** This can be overridden by the user in the Stream Deck application.
 			 * TODO: Define style guide.
 			 */
-			background?: string;
+			background?: ImageFilePathWithoutExtension;
 
 			/**
 			 * Name of a pre-defined layout, or the path to a JSON file that details a custom layout and its components, to be rendered on the action's touchscreen canvas.
@@ -138,7 +138,7 @@ export type Manifest = {
 		};
 
 		/**
-		 * Path to the image, with the file extension omitted, that will be displayed next to the action in the Stream Deck application's action list. The image must adhere to the
+		 * Path to the image, with the **file extension omitted**, that will be displayed next to the action in the Stream Deck application's action list. The image must adhere to the
 		 * following style guidelines.
 		 * - Be in .PNG or .SVG format.
 		 * - Be provided in two sizes, 20x20 px and 40x40 px (@2x).
@@ -148,7 +148,7 @@ export type Manifest = {
 		 * - assets/counter
 		 * - imgs/actions/mute
 		 */
-		Icon: string;
+		Icon: ImageFilePathWithoutExtension;
 
 		/**
 		 * Name of the action; this is displayed to the user in the actions list, and is used throughout the Stream Deck application to visually identify the action.
@@ -268,7 +268,7 @@ export type Manifest = {
 	Category?: string;
 
 	/**
-	 * Path to the image, with the file extension omitted, that will be displayed next to the action list group within the Stream Deck application. The icon should accurately represent
+	 * Path to the image, with the **file extension omitted**, that will be displayed next to the action list group within the Stream Deck application. The icon should accurately represent
 	 * the plugin, and enable users to quickly identify the plugin. The icon must adhere to the following style guidelines.
 	 * - Be in .PNG or .SVG format.
 	 * - Be provided in two sizes, 28x28 px and 56x56 px (@2x).
@@ -276,8 +276,9 @@ export type Manifest = {
 	 *
 	 * **Examples**:
 	 * - assets/category-icon
+	 * - imgs/category
 	 */
-	CategoryIcon?: string;
+	CategoryIcon?: ImageFilePathWithoutExtension;
 
 	/**
 	 * Path to the plugin's main entry point; this is executed when the Stream Deck application starts the plugin.
@@ -321,15 +322,16 @@ export type Manifest = {
 	Description: string;
 
 	/**
-	 * Path to the image, with the file extension omitted, that will be displayed on the Marketplace. The icon should accurately represent the plugin, stand out, and enable users to
+	 * Path to the image, with the **file extension omitted**, that will be displayed on the Marketplace. The icon should accurately represent the plugin, stand out, and enable users to
 	 * quickly identify the plugin. The icon must adhere to the following style guidelines.
 	 * - Be in .PNG or .SVG format.
 	 * - Be provided in two sizes, 288x288 px and 512x512 px (@2x).
 	 *
 	 * **Examples**:
 	 * assets/plugin-icon
+	 * imgs/plugin
 	 */
-	Icon: string;
+	Icon: ImageFilePathWithoutExtension;
 
 	/**
 	 * Name of the plugin, e.g. "Wave Link", "Camera Hub", "Control Center", etc.
@@ -362,7 +364,7 @@ export type Manifest = {
 		DontAutoSwitchWhenInstalled?: boolean;
 
 		/**
-		 * Path to the `.streamDeckProfile`, with the file extension omitted, that contains the profiles layout and action settings.
+		 * Path to the `.streamDeckProfile`, with the **file extension omitted**, that contains the profiles layout and action settings.
 		 *
 		 * **Examples:**
 		 * - assets/main-profile
@@ -415,6 +417,7 @@ export type Manifest = {
 	 *
 	 * **Examples**:
 	 * - https://elgato.com
+	 * - https://corsair.com
 	 */
 	URL?: string;
 
@@ -453,6 +456,13 @@ type Controller = "Encoder" | "Keypad";
  * ^(?!\/).+\.[Hh][Tt][Mm][Ll]?$
  */
 type HtmlFilePath = FilePath<"htm" | "html">;
+
+/**
+ * File path that represents an image file relative to the plugin's manifest.
+ * @pattern
+ * ^(?!\/).+(?<!\.([Pp][Nn][Gg]|[Ss][Vv][Gg]))$
+ */
+type ImageFilePathWithoutExtension = string;
 
 /**
  * File path, relative to the manifest's location.
@@ -499,7 +509,7 @@ type State = {
 	FontUnderline?: boolean;
 
 	/**
-	 * Path to the image, with the file extension omitted, that will be displayed on the Stream Deck when this action's state is active. The image must adhere to the following style
+	 * Path to the image, with the **file extension omitted**, that will be displayed on the Stream Deck when this action's state is active. The image must adhere to the following style
 	 * guidelines.
 	 * - Be in .PNG or .SVG format.
 	 * - Be provided in two sizes, 72x72 px and 144x144 px (@2x).
@@ -510,10 +520,10 @@ type State = {
 	 * - assets/counter-key
 	 * - assets/icons/mute
 	 */
-	Image: string;
+	Image: ImageFilePathWithoutExtension;
 
 	/**
-	 * Path to the image, with the file extension omitted, that will be displayed when the action is being viewed as part of a multi-action. The image must adhere to the following
+	 * Path to the image, with the **file extension omitted**, that will be displayed when the action is being viewed as part of a multi-action. The image must adhere to the following
 	 * style guidelines.
 	 * - Be in .PNG or .SVG format.
 	 * - Be provided in two sizes, 72x72 px and 144x144 px (@2x).
@@ -524,7 +534,7 @@ type State = {
 	 * - assets/counter-key
 	 * - assets/icons/mute
 	 */
-	MultiActionImage?: string;
+	MultiActionImage?: ImageFilePathWithoutExtension;
 
 	/**
 	 * Name of the state; when multiple states are defined this value is shown to the user when the action is being added to a multi-action. The user is then able to specify which
