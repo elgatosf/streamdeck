@@ -108,26 +108,6 @@ export class StreamDeckConnection {
 	}
 
 	/**
-	 * Removes all listeners registered against the `eventName`; when `eventName` is `undefined`, all listeners are removed. Inverse of {@link StreamDeckConnection.on}.
-	 * @param eventName Name of the event whose listeners should be removed; when `undefined`, listeners from all events are removed.
-	 * @returns This instance for chaining.
-	 * @example
-	 * streamDeck.on("willAppear", data => console.log('Callback 1'));
-	 * streamDeck.on("willAppear", data => console.log('Callback 2'))
-	 * // ...
-	 * streamDeck.removeAllListeners("willAppear");
-	 * @example
-	 * streamDeck.on("willAppear", data => console.log(`Action ${data.action} is appearing!`));
-	 * streamDeck.on("willDisappear", data => console.log(`Action ${data.action} is disappearing!`))
-	 * // ...
-	 * streamDeck.removeAllListeners();
-	 */
-	public removeAllListeners<TEvent extends InboundEvents["event"]>(eventName?: TEvent): this {
-		this.eventEmitter.removeAllListeners(eventName);
-		return this;
-	}
-
-	/**
 	 * Removes the specified `listener` registered against the `eventName`. Inverse of {@link StreamDeckConnection.on}.
 	 * @param eventName Name of the event the listener is being removed from.
 	 * @param listener Callback to remove.
