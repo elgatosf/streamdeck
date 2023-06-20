@@ -269,7 +269,10 @@
 							"markdownDescription": "Collection of applications to monitor on macOS.\n\n**Examples:**\n- com.apple.mail"
 						},
 						"windows": {
-							"type": "string",
+							"type": "array",
+							"items": {
+								"type": "string"
+							},
 							"description": "Collection of applications to monitor on Windows.\n\n**Examples:**\n- Notepad.exe",
 							"markdownDescription": "Collection of applications to monitor on Windows.\n\n**Examples:**\n- Notepad.exe"
 						}

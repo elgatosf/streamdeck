@@ -268,7 +268,7 @@ export type Manifest = {
 		 * **Examples:**
 		 * - Notepad.exe
 		 */
-		windows?: string;
+		windows?: string[];
 	};
 
 	/**
