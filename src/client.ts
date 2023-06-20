@@ -1,94 +1,26 @@
-import { EventEmitter } from "node:events";
-import WebSocket from "ws";
-
+import { StreamDeckConnection } from "./connection";
 import { Target } from "./enums";
-import { DeviceDidConnectEvent, DidReceiveGlobalSettingsEvent, DidReceiveSettingsEvent, InboundEvents, OutboundEvents, StreamDeckEvent } from "./events";
+import { DidReceiveGlobalSettingsEvent, DidReceiveSettingsEvent } from "./events";
 import { FeedbackPayload } from "./layouts";
 import logger from "./logger";
 import { PromiseCompletionSource } from "./promises";
-import { RegistrationParameters } from "./registration";
 
 /**
- * Stream Deck device information.
+ * Provides the main bridge between the plugin and the Stream Deck allowing the plugin to send requests and receive events, e.g. when the user presses an action.
  */
-type ConnectedDevice = DeviceDidConnectEvent["deviceInfo"] & {
+export class StreamDeckClient {
 	/**
-	 * Unique identifier of the device which can be used when sending requests to the Stream Deck, e.g. {@link StreamDeck.switchToProfile}.
+	 * Initializes a new instance of the `StreamDeckClient`.
+	 * @param connection Underlying connection with the Stream Deck.
 	 */
-	id: string;
-};
-
-/**
- * The main bridge between the plugin and the Stream Deck, providing methods for listening to events emitted from the Stream Deck, and sending messages back.
- */
-export class StreamDeck {
-	/**
-	 * List of connected Stream Deck devices.
-	 */
-	private _connectedDevices: ConnectedDevice[] = [];
-
-	/**
-	 * Connection between the plugin and the Stream Deck in the form of a promise; once connected to the Stream Deck and the plugin has been registered, the promised is resolved and the connection becomes available.
-	 */
-	private readonly connection = new PromiseCompletionSource<WebSocket>();
-
-	/**
-	 * Event emitter used to propagate events from the Stream Deck to the plugin.
-	 */
-	private readonly eventEmitter = new EventEmitter();
-
-	/**
-	 * Web socket connection used by this instance to establish the connection with the Stream Deck.
-	 */
-	private readonly ws: WebSocket;
-
-	/**
-	 * Initializes a new instance of the Stream Deck class, used to transmit messages between the Stream Deck and the plugin.
-	 * @param params Registration parameters used to establish a connection with the Stream Deck; these are automatically supplied as part of the command line arguments when the plugin is ran by the Stream Deck.
-	 */
-	constructor(private readonly params = new RegistrationParameters(process.argv)) {
-		logger.debug("Initializing plugin.");
-
-		// Track connected devices.
-		this.on("deviceDidConnect", ({ device: id, deviceInfo }) => {
-			this._connectedDevices.push({ id, ...deviceInfo });
-		});
-
-		this.on("deviceDidDisconnect", ({ device: id }) => {
-			this._connectedDevices = this._connectedDevices.filter((device) => device.id !== id);
-		});
-
-		// Establish the underlying connection.
-		this.ws = new WebSocket(`ws://localhost:${params.port}`);
-		this.ws.onmessage = this.propagateMessage.bind(this);
-		this.ws.onopen = () => {
-			this.ws.send(
-				JSON.stringify({
-					event: params.registerEvent,
-					uuid: params.pluginUUID
-				})
-			);
-
-			// Web socket established a connection with the Stream Deck and the plugin was registered.
-			this.connection.setResult(this.ws);
-			logger.debug("Plugin connected to Stream Deck.");
-		};
-	}
-
-	/**
-	 * Gets an array of Stream Deck devices that are currently connected and accessible to the plugin.
-	 * @returns Array of connected Stream Deck devices.
-	 */
-	public get devices(): ReadonlyArray<ConnectedDevice> {
-		return this._connectedDevices;
-	}
+	constructor(public readonly connection: StreamDeckConnection) {}
 
 	/**
 	 * Gets the information supplied by Stream Deck during the initial registration procedure of the plugin.
 	 * @returns Information about the user's operating system, plugin version, connected devices, etc.
 	 */
 	public get info() {
-		return this.params.info;
+		return this.connection.params.info;
 	}
 
 	/**
@@ -104,11 +36,11 @@ export class StreamDeck {
 	 * @returns This plugin's unique identifier.
 	 */
 	public get pluginUUID() {
-		return this.params.pluginUUID;
+		return this.connection.params.pluginUUID;
 	}
 
 	/**
-	 * Gets the global settings associated with the plugin. Use in conjunction with {@link StreamDeck.setGlobalSettings}.
+	 * Gets the global settings associated with the plugin. Use in conjunction with {@link StreamDeckClient.setGlobalSettings}.
 	 * @returns Promise containing the plugin's global settings.
 	 * @example
 	 * (async function() {
@@ -118,9 +50,9 @@ export class StreamDeck {
 	 */
 	public async getGlobalSettings<T = unknown>(): Promise<DidReceiveGlobalSettingsEvent<T>> {
 		const settings = new PromiseCompletionSource<DidReceiveGlobalSettingsEvent<T>>();
-		this.once("didReceiveGlobalSettings", (data: DidReceiveGlobalSettingsEvent<T>) => settings.setResult(data));
+		this.connection.once("didReceiveGlobalSettings", (data: DidReceiveGlobalSettingsEvent<T>) => settings.setResult(data));
 
-		await this.send("getGlobalSettings", {
+		await this.connection.send("getGlobalSettings", {
 			context: this.pluginUUID
 		});
 
@@ -128,7 +60,7 @@ export class StreamDeck {
 	}
 
 	/**
-	 * Gets the settings associated with an instance of an action, as identified by the `context`. An instance of an action represents a button, dial, pedal, etc. Use in conjunction with {@link StreamDeck.setSettings}.
+	 * Gets the settings associated with an instance of an action, as identified by the `context`. An instance of an action represents a button, dial, pedal, etc. Use in conjunction with {@link StreamDeckClient.setSettings}.
 	 * @param context Unique identifier of the action instance whose settings are being requested.
 	 * @returns Promise containing the action instance's settings.
 	 * @example
@@ -145,62 +77,16 @@ export class StreamDeck {
 		const callback = (data: DidReceiveSettingsEvent<T>) => {
 			if (data.context == context) {
 				settings.setResult(data);
-				this.removeListener("didReceiveSettings", callback);
+				this.connection.removeListener("didReceiveSettings", callback);
 			}
 		};
 
-		this.on("didReceiveSettings", callback);
-		await this.send("getSettings", {
+		this.connection.on("didReceiveSettings", callback);
+		await this.connection.send("getSettings", {
 			context
 		});
 
 		return settings.promise;
-	}
-
-	/**
-	 * Adds the `listener` function to be invoked when Stream Deck emits the event named `eventName`, e.g. "willAppear" when an action becomes visible, "deviceDidDisconnect" when a device is connected to user's machine, etc.
-	 * @param eventName Event to listen for.
-	 * @param listener Callback invoked when Stream Deck emits the event.
-	 * @returns This instance for chaining.
-	 * @example
-	 * streamDeck.on("willAppear", data => {
-	 *   // Emitted when an action appears; data contains information about the action.
-	 * });
-	 * @example
-	 * streamDeck.on("dialRotate", data => {
-	 *   // Emitted when a Stream Deck+ dial is rotated; data contains information about the action.
-	 * });
-	 * @example
-	 * streamDeck.on("sendToPlugin", data => {
-	 *   // Emitted when the property inspector sends a message to the plugin; data contains the information.
-	 * });
-	 */
-	public on<TEvent extends InboundEvents["event"], TEventArgs = Extract<InboundEvents, StreamDeckEvent<TEvent>>>(eventName: TEvent, listener: (data: TEventArgs) => void): this {
-		this.eventEmitter.on(eventName, listener);
-		return this;
-	}
-
-	/**
-	 * Adds a **one-time** `listener` function to be invoked when Stream Deck emits the event named `eventName`. The next time `eventName` is triggered, this listener is removed and then invoked.
-	 * @param eventName Event to listen for.
-	 * @param listener Callback invoked when Stream Deck emits the event.
-	 * @returns This instance for chaining.
-	 * @example
-	 * streamDeck.once("willAppear", data => {
-	 *   // Emitted when an action appears; data contains information about the action.
-	 * });
-	 * @example
-	 * streamDeck.once("dialRotate", data => {
-	 *   // Emitted when a Stream Deck+ dial is rotated; data contains information about the action.
-	 * });
-	 * @example
-	 * streamDeck.once("sendToPlugin", data => {
-	 *   // Emitted when the property inspector sends a message to the plugin; data contains the information.
-	 * });
-	 */
-	public once<TEvent extends InboundEvents["event"], TEventArgs = Extract<InboundEvents, StreamDeckEvent<TEvent>>>(eventName: TEvent, listener: (data: TEventArgs) => void): this {
-		this.eventEmitter.once(eventName, listener);
-		return this;
 	}
 
 	/**
@@ -211,47 +97,11 @@ export class StreamDeck {
 	 * streamDeck.openUrl("https://elgato.com");
 	 */
 	public openUrl(url: string): Promise<void> {
-		return this.send("openUrl", {
+		return this.connection.send("openUrl", {
 			payload: {
 				url
 			}
 		});
-	}
-
-	/**
-	 * Removes all listeners registered against the `eventName`; when `eventName` is `undefined`, all listeners are removed. Inverse of {@link StreamDeck.on}.
-	 * @param eventName Name of the event whose listeners should be removed; when `undefined`, listeners from all events are removed.
-	 * @returns This instance for chaining.
-	 * @example
-	 * streamDeck.on("willAppear", data => console.log('Callback 1'));
-	 * streamDeck.on("willAppear", data => console.log('Callback 2'))
-	 * // ...
-	 * streamDeck.removeAllListeners("willAppear");
-	 * @example
-	 * streamDeck.on("willAppear", data => console.log(`Action ${data.action} is appearing!`));
-	 * streamDeck.on("willDisappear", data => console.log(`Action ${data.action} is disappearing!`))
-	 * // ...
-	 * streamDeck.removeAllListeners();
-	 */
-	public removeAllListeners<TEvent extends InboundEvents["event"]>(eventName?: TEvent): this {
-		this.eventEmitter.removeAllListeners(eventName);
-		return this;
-	}
-
-	/**
-	 * Removes the specified `listener` registered against the `eventName`. Inverse of {@link StreamDeck.on}.
-	 * @param eventName Name of the event the listener is being removed from.
-	 * @param listener Callback to remove.
-	 * @returns This instance for chaining.
-	 * @example
-	 * const callback = (data) => console.log(`Action ${data.action} is appearing!`)
-	 * streamDeck.on("willAppear", callback);
-	 * // ...
-	 * streamDeck.removeListener("willAppear", callback);
-	 */
-	public removeListener<TEvent extends InboundEvents["event"], TEventArgs = Extract<InboundEvents, StreamDeckEvent<TEvent>>>(eventName: TEvent, listener: (data: TEventArgs) => void): this {
-		this.eventEmitter.removeListener(eventName, listener);
-		return this;
 	}
 
 	/**
@@ -262,7 +112,7 @@ export class StreamDeck {
 	 * @returns `Promise` resolved when the request to send the `payload` to the property inspector has been sent to Stream Deck.
 	 */
 	public sendToPropertyInspector(context: string, payload: unknown): Promise<void> {
-		return this.send("sendToPropertyInspector", {
+		return this.connection.send("sendToPropertyInspector", {
 			context,
 			payload
 		});
@@ -270,7 +120,7 @@ export class StreamDeck {
 
 	/**
 	 * Sets the feedback of a layout associated with an action instance, as identified by the `context`, allowing for visual items to be updated. Layouts are defined in the manifest, or
-	 * dynamically via {@link StreamDeck.setFeedbackLayout}. Layouts are a powerful way to provide dynamic information to users; when updating feedback, the `feedback` object should contain
+	 * dynamically via {@link StreamDeckClient.setFeedbackLayout}. Layouts are a powerful way to provide dynamic information to users; when updating feedback, the `feedback` object should contain
 	 * properties that correlate with the items `key`, as defined in the layout's JSON file. Property values can be an `object`, used to update multiple properties of a layout item, or a `number`
 	 * or `string` to update the `value` of the layout item.
 	 * `number` or `string` may be provided to update the `value` associated with the layout item.
@@ -309,7 +159,8 @@ export class StreamDeck {
 	 * });
 	 */
 	public setFeedback(context: string, feedback: FeedbackPayload): Promise<void> {
-		return this.send("setFeedback", {
+		// TODO: Should we rename this to "updateLayout"?
+		return this.connection.send("setFeedback", {
 			context,
 			payload: feedback
 		});
@@ -317,7 +168,7 @@ export class StreamDeck {
 
 	/**
 	 * Sets the layout associated with an action instance, as identified by the `context`. The layout must be either a built-in layout identifier, or path to a local layout JSON file within the plugin's folder.
-	 * Use in conjunction with {@link StreamDeck.setFeedback} to update the layouts current settings once it has been changed.
+	 * Use in conjunction with {@link StreamDeckClient.setFeedback} to update the layouts current settings once it has been changed.
 	 * @param context Unique identifier of the action instance whose layout will be updated.
 	 * @param layout New layout being assigned to the action instance.
 	 * @returns `Promise` resolved when the new layout has been sent to Stream Deck.
@@ -333,7 +184,8 @@ export class StreamDeck {
 	 * });
 	 */
 	public setFeedbackLayout(context: string, layout: string): Promise<void> {
-		return this.send("setFeedbackLayout", {
+		// TODO: Should we rename this to simply be "setLayout"?
+		return this.connection.send("setFeedbackLayout", {
 			context,
 			payload: {
 				layout
@@ -343,7 +195,7 @@ export class StreamDeck {
 
 	/**
 	 * Sets the global `settings` associated the plugin. **Note**, these settings are only available to this plugin, and should be used to persist information securely.
-	 * Use conjunction with {@link StreamDeck.getGlobalSettings}.
+	 * Use conjunction with {@link StreamDeckClient.getGlobalSettings}.
 	 * @param settings Settings to save.
 	 * @returns `Promise` resolved when the global `settings` are sent to Stream Deck.
 	 * @example
@@ -353,7 +205,7 @@ export class StreamDeck {
 	 * })
 	 */
 	public setGlobalSettings(settings: unknown): Promise<void> {
-		return this.send("setGlobalSettings", {
+		return this.connection.send("setGlobalSettings", {
 			context: this.pluginUUID,
 			payload: settings
 		});
@@ -380,7 +232,7 @@ export class StreamDeck {
 	 * });
 	 */
 	public setImage(context: string, image: string, target: Target = Target.HardwareAndSoftware, state: 0 | 1 | null = null): Promise<void> {
-		return this.send("setImage", {
+		return this.connection.send("setImage", {
 			context,
 			payload: {
 				image,
@@ -392,13 +244,13 @@ export class StreamDeck {
 
 	/**
 	 * Sets the `settings` associated with an instance of an action, as identified by the `context`. An instance of an action represents a button, dial, pedal, etc.
-	 * Use in conjunction with {@link StreamDeck.getSettings}.
+	 * Use in conjunction with {@link StreamDeckClient.getSettings}.
 	 * @param context Unique identifier of the action instance whose settings will be updated.
 	 * @param settings Settings to associate with the action instance.
 	 * @returns `Promise` resolved when the `settings` are sent to Stream Deck.
 	 */
 	public setSettings(context: string, settings: unknown): Promise<void> {
-		return this.send("setSettings", {
+		return this.connection.send("setSettings", {
 			context,
 			payload: settings
 		});
@@ -415,7 +267,7 @@ export class StreamDeck {
 	 * });
 	 */
 	public setState(context: string, state: number): Promise<void> {
-		return this.send("setState", {
+		return this.connection.send("setState", {
 			context,
 			payload: {
 				state
@@ -427,8 +279,8 @@ export class StreamDeck {
 	 * Sets the `title` displayed for an instance of an action, as identified by the `context`. Often used in conjunction with `"titleParametersDidChange"` event.
 	 * @param context Unique identifier of the action instance whose title will be updated.
 	 * @param title Title to display; when no title is specified, the title will reset to the title set by the user.
-	 * @param target Specifies which aspects of the Stream Deck should be updated, hardware, software, or both.
 	 * @param state Action state the request applies to; when no state is supplied, the title is set for both states. **Note**, only applies to multi-state actions.
+	 * @param target Specifies which aspects of the Stream Deck should be updated, hardware, software, or both.
 	 * @returns `Promise` resolved when the request to set the `title` has been sent to Stream Deck.
 	 * @example
 	 * // Set the title to "Hello world" when the action appears.
@@ -436,20 +288,20 @@ export class StreamDeck {
 	 *   streamDeck.setTitle(data.context, "Hello world");
 	 * });
 	 */
-	public setTitle(context: string, title?: string, target?: Target, state?: 0 | 1): Promise<void> {
-		return this.send("setTitle", {
+	public setTitle(context: string, title?: string, state?: 0 | 1, target?: Target): Promise<void> {
+		return this.connection.send("setTitle", {
 			context,
 			payload: {
 				title,
-				target,
-				state
+				state,
+				target
 			}
 		});
 	}
 
 	/**
 	 * Temporarily shows an alert (i.e. warning), in the form of an exclamation mark in a yellow triangle, on an action, as identified by the `context`. Used to provide visual feedback when an action failed.
-	 * Use in conjunction with {@link StreamDeck.logger} to log errors.
+	 * Use in conjunction with {@link StreamDeckClient.logger} to log errors.
 	 * @param context Unique identifier of the action instance where the warning will be shown.
 	 * @returns `Promise` resolved when the request to show an alert has been sent to Stream Deck.
 	 * @example
@@ -464,7 +316,7 @@ export class StreamDeck {
 	 * })
 	 */
 	public showAlert(context: string): Promise<void> {
-		return this.send("showAlert", {
+		return this.connection.send("showAlert", {
 			context
 		});
 	}
@@ -481,7 +333,7 @@ export class StreamDeck {
 	 * })
 	 */
 	public showOk(context: string): Promise<void> {
-		return this.send("showOk", {
+		return this.connection.send("showOk", {
 			context
 		});
 	}
@@ -494,7 +346,7 @@ export class StreamDeck {
 	 * @returns `Promise` resolved when the request to switch the `profile` has been sent to Stream Deck.
 	 */
 	public switchToProfile(profile: string, device: string): Promise<void> {
-		return this.send("switchToProfile", {
+		return this.connection.send("switchToProfile", {
 			context: this.pluginUUID,
 			device,
 			payload: {
@@ -502,37 +354,4 @@ export class StreamDeck {
 			}
 		});
 	}
-
-	/**
-	 * Propagates the event emitted by the Stream Deck's web socket connection, to the event emitter used by the plugin.
-	 * @param event Event message received from the Stream Deck.
-	 */
-	private propagateMessage(event: WebSocket.MessageEvent) {
-		if (typeof event.data === "string") {
-			const message = JSON.parse(event.data);
-			if (message.event) {
-				logger.trace(event.data);
-				this.eventEmitter.emit(message.event, message);
-			}
-		}
-	}
-
-	/**
-	 * Sends the messages to the Stream Deck, once the connection has been established and the plugin registered.
-	 * @param event Event name where the message will be sent.
-	 * @param data Data to send to Stream Deck.
-	 * @returns `Promise` resolved when the request is sent to Stream Deck.
-	 */
-	private async send(event: OutboundEvents, data: object): Promise<void> {
-		const connection = await this.connection.promise;
-		const message = JSON.stringify({
-			event,
-			...data
-		});
-
-		logger.trace(message);
-		connection.send(message);
-	}
 }
-
-export default new StreamDeck();
