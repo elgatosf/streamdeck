@@ -1,10 +1,10 @@
 import { EventEmitter } from "node:events";
 import WebSocket from "ws";
 
+import logger from "../logger";
+import { PromiseCompletionSource } from "../promises";
+import { RegistrationParameters } from "../registration";
 import { InboundEvents, OutboundEvents, StreamDeckEvent } from "./events";
-import logger from "./logger";
-import { PromiseCompletionSource } from "./promises";
-import { RegistrationParameters } from "./registration";
 
 /**
  * Provides a connection between the plugin and the Stream Deck allowing for messages to be sent and received.
@@ -78,7 +78,7 @@ export class StreamDeckConnection {
 	 *   // Emitted when the property inspector sends a message to the plugin; data contains the information.
 	 * });
 	 */
-	public on<TEvent extends InboundEvents["event"], TEventArgs = Extract<InboundEvents, StreamDeckEvent<TEvent>>>(eventName: TEvent, listener: (data: TEventArgs) => void): this {
+	public on<TEvent extends InboundEvents["event"], TEventArgs extends Extract<InboundEvents, StreamDeckEvent<TEvent>>>(eventName: TEvent, listener: (data: TEventArgs) => void): this {
 		this.eventEmitter.on(eventName, listener);
 		return this;
 	}
@@ -102,7 +102,7 @@ export class StreamDeckConnection {
 	 *   // Emitted when the property inspector sends a message to the plugin; data contains the information.
 	 * });
 	 */
-	public once<TEvent extends InboundEvents["event"], TEventArgs = Extract<InboundEvents, StreamDeckEvent<TEvent>>>(eventName: TEvent, listener: (data: TEventArgs) => void): this {
+	public once<TEvent extends InboundEvents["event"], TEventArgs extends Extract<InboundEvents, StreamDeckEvent<TEvent>>>(eventName: TEvent, listener: (data: TEventArgs) => void): this {
 		this.eventEmitter.once(eventName, listener);
 		return this;
 	}
@@ -118,7 +118,7 @@ export class StreamDeckConnection {
 	 * // ...
 	 * streamDeck.removeListener("willAppear", callback);
 	 */
-	public removeListener<TEvent extends InboundEvents["event"], TEventArgs = Extract<InboundEvents, StreamDeckEvent<TEvent>>>(eventName: TEvent, listener: (data: TEventArgs) => void): this {
+	public removeListener<TEvent extends InboundEvents["event"], TEventArgs extends Extract<InboundEvents, StreamDeckEvent<TEvent>>>(eventName: TEvent, listener: (data: TEventArgs) => void): this {
 		this.eventEmitter.removeListener(eventName, listener);
 		return this;
 	}
