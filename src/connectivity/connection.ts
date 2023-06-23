@@ -42,7 +42,7 @@ export class StreamDeckConnection {
 			return;
 		}
 
-		logger.debug("Connecting to Stream Deck.");
+		logger.logDebug("Connecting to Stream Deck.");
 		this.ws = new WebSocket(`ws://localhost:${this.registrationParameters.port}`);
 		this.ws.onmessage = this.propagateMessage.bind(this);
 		this.ws.onopen = () => {
@@ -56,7 +56,7 @@ export class StreamDeckConnection {
 
 				// Web socket established a connection with the Stream Deck and the plugin was registered.
 				this.connection.setResult(this.ws);
-				logger.debug("Successfully connected to Stream Deck.");
+				logger.logDebug("Successfully connected to Stream Deck.");
 			}
 		};
 	}
@@ -109,7 +109,7 @@ export class StreamDeckConnection {
 			...data
 		});
 
-		logger.trace(message);
+		logger.logTrace(message);
 		connection.send(message);
 	}
 
@@ -121,7 +121,7 @@ export class StreamDeckConnection {
 		if (typeof event.data === "string") {
 			const message = JSON.parse(event.data);
 			if (message.event) {
-				logger.trace(event.data);
+				logger.logTrace(event.data);
 				this.eventEmitter.emit(message.event, message);
 			}
 		}
