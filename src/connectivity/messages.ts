@@ -5,7 +5,7 @@ export type Message<T> = {
 	/**
 	 * Name of the event used to identify what occurred, or what is being requested.
 	 */
-	event: T;
+	readonly event: T;
 };
 
 /**
@@ -15,18 +15,18 @@ export type ActionMessage<T> = Message<T> & {
 	/**
 	 * Unique identifier of the action as defined within the plugin's manifest (`Actions[].UUID`) e.g. "com.elgato.wavelink.mute".
 	 */
-	action: string;
+	readonly action: string;
 
 	/**
 	 * Identifies the instance of an action that caused the message, i.e. the specific key or dial. This identifier can be used to provide feedback to the Stream Deck, persist and
 	 * request settings associated with the action instance, etc.
 	 */
-	context: string;
+	readonly context: string;
 
 	/**
 	 * Unique identifier of the Stream Deck device that this message is associated with.
 	 */
-	device: string;
+	readonly device: string;
 };
 
 /**
@@ -36,7 +36,7 @@ export type ActionMessageWithPayload<T, TPayload> = ActionMessage<T> & {
 	/**
 	 * Additional information about the action and event that occurred, if applicable.
 	 */
-	payload: TPayload;
+	readonly payload: TPayload;
 };
 
 /**
@@ -45,8 +45,8 @@ export type ActionMessageWithPayload<T, TPayload> = ActionMessage<T> & {
 export type DidReceiveSettings<TSettings = unknown> = ActionMessageWithPayload<
 	"didReceiveSettings",
 	{
-		coordinates: Coordinates;
-		isInMultiAction: boolean;
+		readonly coordinates: Coordinates;
+		readonly isInMultiAction: boolean;
 		settings: TSettings;
 	}
 >;
@@ -54,12 +54,8 @@ export type DidReceiveSettings<TSettings = unknown> = ActionMessageWithPayload<
 /**
  * Occurs when the plugin receives the global settings from the Stream Deck.
  */
-export type DidReceiveGlobalSettings<TSettings = unknown> = {
-	/**
-	 * Name of the event that occurred; in the context of this event, this is always "didReceiveGlobalSettings".
-	 */
-	event: "didReceiveGlobalSettings";
-	payload: {
+export type DidReceiveGlobalSettings<TSettings = unknown> = Message<"didReceiveGlobalSettings"> & {
+	readonly payload: {
 		settings: TSettings;
 	};
 };
@@ -67,19 +63,19 @@ export type DidReceiveGlobalSettings<TSettings = unknown> = {
 export type TouchTap<TSetting = unknown> = ActionMessageWithPayload<
 	"touchTap",
 	{
-		coordinates: Coordinates;
-		hold: boolean;
-		settings: TSetting;
-		tapPos: [number, number];
+		readonly coordinates: Coordinates;
+		readonly hold: boolean;
+		readonly settings: TSetting;
+		readonly tapPos: [number, number];
 	}
 >;
 
 export type DialDown<TSetting = unknown> = ActionMessageWithPayload<
 	"dialDown",
 	{
-		controller: Extract<Controller, "Encoder">;
-		coordinates: Coordinates;
-		settings: TSetting;
+		readonly controller: Extract<Controller, "Encoder">;
+		readonly coordinates: Coordinates;
+		readonly settings: TSetting;
 	}
 >;
 
@@ -88,22 +84,22 @@ export type DialUp<TSetting = unknown> = ActionMessageWithPayload<"dialUp", Dial
 export type DialRotate<TSetting = unknown> = ActionMessageWithPayload<
 	"dialRotate",
 	{
-		controller: Extract<Controller, "Encoder">;
-		coordinates: Coordinates;
-		pressed: boolean;
-		settings: TSetting;
-		ticks: number;
+		readonly controller: Extract<Controller, "Encoder">;
+		readonly coordinates: Coordinates;
+		readonly pressed: boolean;
+		readonly settings: TSetting;
+		readonly ticks: number;
 	}
 >;
 
 export type KeyDown<TSetting = unknown> = ActionMessageWithPayload<
 	"keyDown",
 	{
-		coordinates: Coordinates;
-		isInMultiAction: boolean;
-		settings: TSetting;
-		state?: State;
-		userDesiredState?: State;
+		readonly coordinates: Coordinates;
+		readonly isInMultiAction: boolean;
+		readonly settings: TSetting;
+		readonly state?: State;
+		readonly userDesiredState?: State;
 	}
 >;
 
@@ -117,11 +113,11 @@ export type KeyUp<TSetting = unknown> = ActionMessageWithPayload<"keyUp", KeyDow
 export type WillAppear<TSetting = unknown> = ActionMessageWithPayload<
 	"willAppear",
 	{
-		controller: Controller;
-		coordinates: Coordinates;
-		isInMultiAction: boolean;
-		settings: TSetting;
-		state?: State;
+		readonly controller: Controller;
+		readonly coordinates: Coordinates;
+		readonly isInMultiAction: boolean;
+		readonly settings: TSetting;
+		readonly state?: State;
 	}
 >;
 
@@ -134,94 +130,54 @@ export type WillDisappear<TSetting = unknown> = ActionMessageWithPayload<"willDi
 export type TitleParametersDidChange<TSetting = unknown> = ActionMessageWithPayload<
 	"titleParametersDidChange",
 	{
-		coordinates: Coordinates;
-		settings: TSetting;
-		state?: State;
-		title: string;
-		titleParameters: {
-			fontFamily: string;
-			fontSize: number;
-			fontStyle: "" | "Bold Italic" | "Bold" | "Italic" | "Regular";
-			fontUnderline: boolean;
-			showTitle: boolean;
-			titleAlignment: "bottom" | "middle" | "top";
-			titleColor: string; // this is a hex value.
+		readonly coordinates: Coordinates;
+		readonly settings: TSetting;
+		readonly state?: State;
+		readonly title: string;
+		readonly titleParameters: {
+			readonly fontFamily: string;
+			readonly fontSize: number;
+			readonly fontStyle: "" | "Bold Italic" | "Bold" | "Italic" | "Regular";
+			readonly fontUnderline: boolean;
+			readonly showTitle: boolean;
+			readonly titleAlignment: "bottom" | "middle" | "top";
+			readonly titleColor: string; // this is a hex value.
 		};
 	}
 >;
 
-export type DeviceDidConnect = {
+export type DeviceDidConnect = Message<"deviceDidConnect"> & {
 	/**
 	 * Unique identifier of the Stream Deck device that this message is associated with.
 	 */
-	device: string;
+	readonly device: string;
 
 	/**
 	 * Information about the newly connected device.
 	 */
-	deviceInfo: {
-		/**
-		 * Name of the device, as specified by the user in the Stream Deck application.
-		 */
-		name: string;
-
-		/**
-		 * Number of action slots available to the device. NB. The size denotes keys only.
-		 */
-		size: Size;
-
-		/**
-		 * Type of the device that was connected, e.g. Stream Deck+, Stream Deck Pedal, etc. See {@link DeviceType}.
-		 */
-		type: DeviceType;
-	};
-
-	/**
-	 * Name of the event that occurred; in the context of this event, this is always "deviceDidConnect".
-	 */
-	event: "deviceDidConnect";
+	readonly deviceInfo: DeviceInfo;
 };
 
-export type DeviceDidDisconnect = {
+export type DeviceDidDisconnect = Message<"deviceDidDisconnect"> & {
 	/**
 	 * Unique identifier of the Stream Deck device that this message is associated with.
 	 */
-	device: string;
-
-	/**
-	 * Name of the event that occurred; in the context of this event, this is always "deviceDidDisconnect".
-	 */
-	event: "deviceDidDisconnect";
+	readonly device: string;
 };
 
-export type ApplicationDidLaunch = {
-	/**
-	 * Name of the event that occurred; in the context of this event, this is always "applicationDidLaunch".
-	 */
-	event: "applicationDidLaunch";
-
-	payload: {
-		application: string;
+export type ApplicationDidLaunch = Message<"applicationDidLaunch"> & {
+	readonly payload: {
+		readonly application: string;
 	};
 };
 
-export type ApplicationDidTerminate = {
-	/**
-	 * Name of the event that occurred; in the context of this event, this is always "applicationDidTerminate".
-	 */
-	event: "applicationDidTerminate";
-
-	payload: {
-		application: string;
+export type ApplicationDidTerminate = Message<"applicationDidTerminate"> & {
+	readonly payload: {
+		readonly application: string;
 	};
 };
 
-export type SystemDidWakeUp = {
-	/**
-	 * Name of the event that occurred; in the context of this event, this is always "systemDidWakeUp".
-	 */
-	event: "systemDidWakeUp";
-};
+export type SystemDidWakeUp = Message<"systemDidWakeUp">;
 
 /**
  * Occurs when the property inspector appears, i.e. the user selects the action in the Stream Deck application.
@@ -240,7 +196,7 @@ export type SendToPlugin<TPayload extends object = object> = Omit<ActionMessage<
 	/**
 	 * Payload sent to the plugin from the property inspector.
 	 */
-	payload: TPayload;
+	readonly payload: TPayload;
 };
 
 /**
@@ -255,13 +211,33 @@ export type Coordinates = {
 	/**
 	 * Column the action instance is located in, indexed from 0.
 	 */
-	column: number;
+	readonly column: number;
 
 	/**
 	 * Row the action instance is located on, indexed from 0. *NB* When the device is {@link DeviceType.StreamDeckPlus} the row can be 0 for keys (`Keypad`), and will _always_ be 0
 	 * for dials (`Encoder`); to differentiate between actions types, cross-check the value of `controller` found on {@link WillAppear.payload}.
 	 */
-	row: number;
+	readonly row: number;
+};
+
+/**
+ * Provides information for a device.
+ */
+export type DeviceInfo = {
+	/**
+	 * Name of the device, as specified by the user in the Stream Deck application.
+	 */
+	readonly name: string;
+
+	/**
+	 * Number of action slots available to the device. NB. The size denotes keys only.
+	 */
+	readonly size: Size;
+
+	/**
+	 * Type of the device that was connected, e.g. Stream Deck+, Stream Deck Pedal, etc. See {@link DeviceType}.
+	 */
+	readonly type: DeviceType;
 };
 
 /**
@@ -276,12 +252,12 @@ export type Size = {
 	/**
 	 * Number of columns available on the Stream Deck device.
 	 */
-	columns: number;
+	readonly columns: number;
 
 	/**
 	 * Number of rows available on the Stream Deck device.
 	 */
-	rows: number;
+	readonly rows: number;
 };
 
 /**

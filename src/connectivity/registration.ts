@@ -1,5 +1,5 @@
-import { DeviceType } from "./connectivity/messages";
-import logger from "./logger";
+import logger from "../logger";
+import { DeviceType } from "./messages";
 
 /**
  * Registration information supplied by the Stream Deck when launching the plugin, that enables the plugin to establish a secure connection with the Stream Deck.
@@ -94,117 +94,117 @@ export type RegistrationInfo = {
 	/**
 	 * Stream Deck application specific information.
 	 */
-	application: {
+	readonly application: {
 		/**
 		 * Font being used by the Stream Deck application.
 		 */
-		font: string;
+		readonly font: string;
 
 		/**
 		 * Users preferred language; this is used by the Stream Deck application for localization.
 		 */
-		language: "de" | "en" | "es" | "fr" | "ja" | "zh_CN";
+		readonly language: "de" | "en" | "es" | "fr" | "ja" | "zh_CN";
 
 		/**
 		 * Operating system.
 		 */
-		platform: "mac" | "windows";
+		readonly platform: "mac" | "windows";
 
 		/**
 		 * Operating system version, e.g. "10" for Windows 10.
 		 */
-		platformVersion: string;
+		readonly platformVersion: string;
 
 		/**
 		 * Stream Deck application version.
 		 */
-		version: string;
+		readonly version: string;
 	};
 
 	/**
 	 * Collection of preferred colors used by the Stream Deck.
 	 */
-	colors: {
+	readonly colors: {
 		/**
 		 * Color that denotes the background of a button that is being moused over.
 		 */
-		buttonMouseOverBackgroundColor: string;
+		readonly buttonMouseOverBackgroundColor: string;
 
 		/**
 		 * Color that denotes the background of a pressed button.
 		 */
-		buttonPressedBackgroundColor: string;
+		readonly buttonPressedBackgroundColor: string;
 
 		/**
 		 * Color that denotes the border of a press button.
 		 */
-		buttonPressedBorderColor: string;
+		readonly buttonPressedBorderColor: string;
 
 		/**
 		 * Color that denotes the text of a pressed button.
 		 */
-		buttonPressedTextColor: string;
+		readonly buttonPressedTextColor: string;
 
 		/**
 		 * Color of highlighted text.
 		 */
-		highlightColor: string;
+		readonly highlightColor: string;
 	};
 
 	/**
 	 * Pixel ratio, used to identify if the Stream Deck application is running on a high DPI screen.
 	 */
-	devicePixelRatio: number;
+	readonly devicePixelRatio: number;
 
 	/**
 	 * Devices associated with the Stream Deck application; this may include devices that are not currently connected. Use `"deviceDidConnect"` event to determine which devices are active.
 	 */
-	devices: [
+	readonly devices: [
 		{
 			/**
 			 * Unique identifier of the device.
 			 */
-			id: string;
+			readonly id: string;
 
 			/**
 			 * Name of the device, set by the user.
 			 */
-			name: string;
+			readonly name: string;
 
 			/**
 			 * Layout size of the device.
 			 */
-			size: {
+			readonly size: {
 				/**
 				 * Number of columns associated with the device, e.g. 5 for Stream Deck, 8 for Stream Deck XL, etc.
 				 */
-				columns: number;
+				readonly columns: number;
 
 				/**
 				 * Number of rows associated with the device, e.g. 3 for Stream Deck, 4 for Stream Deck XL, etc.
 				 */
-				rows: number;
+				readonly rows: number;
 			};
 
 			/**
 			 * Type of the device, e.g. Stream Deck+, Stream Deck XL, etc.
 			 */
-			type: DeviceType;
+			readonly type: DeviceType;
 		}
 	];
 
 	/**
 	 * Information about the plugin.
 	 */
-	plugin: {
+	readonly plugin: {
 		/**
 		 * Unique identifier of the plugin, as defined by the plugin.
 		 */
-		uuid: string;
+		readonly uuid: string;
 
 		/**
 		 * Version of the plugin.
 		 */
-		version: string;
+		readonly version: string;
 	};
 };

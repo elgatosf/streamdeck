@@ -3,8 +3,8 @@ import WebSocket from "ws";
 
 import logger from "../logger";
 import { PromiseCompletionSource } from "../promises";
-import { RegistrationParameters } from "../registration";
 import { InboundMessages, Message, OutboundMessages } from "./messages";
+import { RegistrationParameters } from "./registration";
 
 /**
  * Provides a connection between the plugin and the Stream Deck allowing for messages to be sent and received.
