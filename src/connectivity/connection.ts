@@ -65,18 +65,6 @@ export class StreamDeckConnection {
 	 * @param eventName Event to listen for.
 	 * @param listener Callback invoked when Stream Deck emits the event.
 	 * @returns This instance for chaining.
-	 * @example
-	 * streamDeck.on("willAppear", data => {
-	 *   // Emitted when an action appears; data contains information about the action.
-	 * });
-	 * @example
-	 * streamDeck.on("dialRotate", data => {
-	 *   // Emitted when a Stream Deck+ dial is rotated; data contains information about the action.
-	 * });
-	 * @example
-	 * streamDeck.on("sendToPlugin", data => {
-	 *   // Emitted when the property inspector sends a message to the plugin; data contains the information.
-	 * });
 	 */
 	public on<TEvent extends InboundEvents["event"], TEventArgs extends Extract<InboundEvents, StreamDeckEvent<TEvent>>>(eventName: TEvent, listener: (data: TEventArgs) => void): this {
 		this.eventEmitter.on(eventName, listener);
@@ -89,18 +77,6 @@ export class StreamDeckConnection {
 	 * @param eventName Event to listen for.
 	 * @param listener Callback invoked when Stream Deck emits the event.
 	 * @returns This instance for chaining.
-	 * @example
-	 * streamDeck.once("willAppear", data => {
-	 *   // Emitted when an action appears; data contains information about the action.
-	 * });
-	 * @example
-	 * streamDeck.once("dialRotate", data => {
-	 *   // Emitted when a Stream Deck+ dial is rotated; data contains information about the action.
-	 * });
-	 * @example
-	 * streamDeck.once("sendToPlugin", data => {
-	 *   // Emitted when the property inspector sends a message to the plugin; data contains the information.
-	 * });
 	 */
 	public once<TEvent extends InboundEvents["event"], TEventArgs extends Extract<InboundEvents, StreamDeckEvent<TEvent>>>(eventName: TEvent, listener: (data: TEventArgs) => void): this {
 		this.eventEmitter.once(eventName, listener);
@@ -112,11 +88,6 @@ export class StreamDeckConnection {
 	 * @param eventName Name of the event the listener is being removed from.
 	 * @param listener Callback to remove.
 	 * @returns This instance for chaining.
-	 * @example
-	 * const callback = (data) => console.log(`Action ${data.action} is appearing!`)
-	 * streamDeck.on("willAppear", callback);
-	 * // ...
-	 * streamDeck.removeListener("willAppear", callback);
 	 */
 	public removeListener<TEvent extends InboundEvents["event"], TEventArgs extends Extract<InboundEvents, StreamDeckEvent<TEvent>>>(eventName: TEvent, listener: (data: TEventArgs) => void): this {
 		this.eventEmitter.removeListener(eventName, listener);
