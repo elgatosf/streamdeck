@@ -20,7 +20,8 @@
 	"plugins": [
 		"jsdoc",
 		"prettier",
-		"@typescript-eslint"
+		"@typescript-eslint",
+		"import"
 	],
 	"root": true,
 	"rules": {
@@ -30,6 +31,9 @@
 			{
 				"SwitchCase": 1
 			}
+		],
+		"import/no-default-export": [
+			"error"
 		],
 		"jsdoc/require-jsdoc": [
 			"warn",

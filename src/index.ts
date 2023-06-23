@@ -5,7 +5,7 @@ import { getDevices } from "./devices";
 
 export { DeviceType } from "./connectivity/messages";
 export { Target } from "./controllers";
-export { LogLevel, default as logger } from "./logger";
+export { LogLevel, logger } from "./logging";
 export * from "./manifest";
 export { client, devices, info };
 

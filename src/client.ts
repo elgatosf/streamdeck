@@ -4,7 +4,6 @@ import { ActionController, Target } from "./controllers";
 import { Device } from "./devices";
 import { ActionEvent, ActionWithoutPayloadEvent, ApplicationEvent, DeviceEvent, SendToPluginEvent, SettingsEvent } from "./events";
 import { FeedbackPayload } from "./layouts";
-import logger from "./logger";
 import { Manifest } from "./manifest";
 import { PromiseCompletionSource } from "./promises";
 
@@ -18,14 +17,6 @@ export class StreamDeckClient implements ActionController {
 	 * @param devices Device collection responsible for tracking devices.
 	 */
 	constructor(public readonly connection: StreamDeckConnection, private readonly devices: ReadonlyMap<string, Device>) {}
-
-	/**
-	 * Gets the logger used by this instance, used to log messages independently of a Stream Deck connection.
-	 * @returns The logger.
-	 */
-	public get logger() {
-		return logger;
-	}
 
 	/**
 	 * Gets the global settings associated with the plugin. Use in conjunction with {@link StreamDeckClient.setGlobalSettings}.

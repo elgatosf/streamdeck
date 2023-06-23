@@ -6,7 +6,7 @@ import { isDebugMode } from "./utils";
 /**
  * File logger, capable of writing log messages and truncating previous log files.
  */
-export class Logger {
+class Logger {
 	/**
 	 * Maximum size per log file (50MiB); when this limit is reached, the logs are truncated and re-indexed.
 	 */
@@ -50,7 +50,7 @@ export class Logger {
 	 * @param message Message to write to the log.
 	 * @param error Optional error to log with the `message`.
 	 */
-	public debug(message: string, error?: Error | unknown) {
+	public logDebug(message: string, error?: Error | unknown) {
 		this.log(LogLevel.DEBUG, message, error);
 	}
 
@@ -59,7 +59,7 @@ export class Logger {
 	 * @param message Message to write to the log.
 	 * @param error Optional error to log with the `message`.
 	 */
-	public error(message: string, error?: Error | unknown) {
+	public logError(message: string, error?: Error | unknown) {
 		this.log(LogLevel.ERROR, message, error);
 	}
 
@@ -68,8 +68,26 @@ export class Logger {
 	 * @param message Message to write to the log.
 	 * @param error Optional error to log with the `message`.
 	 */
-	public info(message: string, error?: Error | unknown) {
+	public logInfo(message: string, error?: Error | unknown) {
 		this.log(LogLevel.INFO, message, error);
+	}
+
+	/**
+	 * Write a trace log `message`.
+	 * @param message Message to write to the log.
+	 * @param error Optional error to log with the `message`.
+	 */
+	public logTrace(message: string, error?: Error | unknown) {
+		this.log(LogLevel.TRACE, message, error);
+	}
+
+	/**
+	 * Writes a warning log `message`.
+	 * @param message Message to write to the log.
+	 * @param error Optional error to log with the `message`.
+	 */
+	public logWarn(message: string, error?: Error | unknown) {
+		this.log(LogLevel.WARN, message, error);
 	}
 
 	/**
@@ -80,29 +98,11 @@ export class Logger {
 	 */
 	public setLogLevel(value: LogLevel) {
 		if ((value === LogLevel.DEBUG || value === LogLevel.TRACE) && !isDebugMode) {
-			this.warn(`Log level cannot be set to ${LogLevel[value]} whilst not in debug mode.`); // TODO: Add a link to enabling `developer_mode`.
+			this.logWarn(`Log level cannot be set to ${LogLevel[value]} whilst not in debug mode.`);
 			return;
 		}
 
 		this.logLevel = value;
-	}
-
-	/**
-	 * Write a trace log `message`.
-	 * @param message Message to write to the log.
-	 * @param error Optional error to log with the `message`.
-	 */
-	public trace(message: string, error?: Error | unknown) {
-		this.log(LogLevel.TRACE, message, error);
-	}
-
-	/**
-	 * Writes a warning log `message`.
-	 * @param message Message to write to the log.
-	 * @param error Optional error to log with the `message`.
-	 */
-	public warn(message: string, error?: Error | unknown) {
-		this.log(LogLevel.WARN, message, error);
 	}
 
 	/**
@@ -215,8 +215,6 @@ export enum LogLevel {
  * This instance is used when calling `streamDeck.logMessage(message)` to reduce communication between the plugin and the Stream Deck.
  * Log files can be found in the plugin's directory, under the "/logs" folder, and are truncated to the 10 most recent logs.
  */
-const logger = new Logger();
+export const logger = new Logger();
 
-process.once("uncaughtException", (err) => logger.error("Process encountered uncaught exception", err));
-
-export default logger;
+process.once("uncaughtException", (err) => logger.logError("Process encountered uncaught exception", err));

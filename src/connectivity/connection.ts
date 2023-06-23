@@ -1,7 +1,7 @@
 import { EventEmitter } from "node:events";
 import WebSocket from "ws";
 
-import logger from "../logger";
+import { logger } from "../logging";
 import { PromiseCompletionSource } from "../promises";
 import { InboundMessages, Message, OutboundMessages } from "./messages";
 import { RegistrationParameters } from "./registration";
