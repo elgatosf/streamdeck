@@ -24,23 +24,65 @@ export type ActionController = {
 	sendToPropertyInspector(context: string, payload: unknown): Promise<void>;
 
 	/**
-	 * Sets the feedback of a layout associated with an action instance, as identified by the `context`, allowing for visual items to be updated. Layouts are defined in the manifest,
-	 * or dynamically via {@link ActionController.setFeedbackLayout}. Layouts are a powerful way to provide dynamic information to users; when updating feedback, the `feedback` object
-	 * should contain properties that correlate with the items `key`, as defined in the layout's JSON file. Property values can be an `object`, used to update multiple properties of
-	 * a layout item, or a `number` or `string` to update the `value` of the layout item.
-	 * `number` or `string` may be provided to update the `value` associated with the layout item.
+	 * Sets the feedback of a layout associated with an action instance allowing for visual items to be updated. Layouts are a powerful way to provide dynamic information to users,
+	 * and can be assigned in the manifest, or dynamically via {@link ActionController.setFeedbackLayout}.
+	 *
+	 * The `feedback` payload defines which items within the layout should be updated, and are identified by their property name (defined as the `key` in the layout's definition).
+	 * The values can either by a complete new definition, a `string` for layout item types of `text` and `pixmap`, or a `number` for layout item types of `bar` and `gbar`.
+	 *
+	 * For example, given the following custom layout definition saved relatively to the plugin at "layouts/MyCustomLayout.json".
+	 * ```
+	 * {
+	 *   "id": "MyCustomLayout",
+	 *   "items": [{
+	 *     "key": "text_item", // <-- Key used to identify which item is being updated.
+	 *     "type": "text",
+	 *     "rect": [16, 10, 136, 24],
+	 *     "alignment": "left",
+	 *     "value": "Some default value"
+	 *   }]
+	 * }
+	 * ```
+	 *
+	 * And the layout assigned to an action within the manifest.
+	 * ```
+	 * {
+	 *   "Actions": [{
+	 *     "Encoder": {
+	 *       "Layout": "layouts/MyCustomLayout.json"
+	 *     }
+	 *   }]
+	 * }
+	 * ```
+	 *
+	 * The layout item's text can be updated dynamically via.
+	 * ```
+	 * client.setFeedback(ctx, {
+	 *  // "text_item" matches a "key" within the layout's JSON file.
+	 *   text_item: "Some new value"
+	 * })
+	 * ```
+	 *
+	 * Alternatively, more information can be updated.
+	 * ```
+	 * client.setFeedback(ctx, {
+	 *   text_item: { // <-- "text_item" matches a "key" within the layout's JSON file.
+	 *     value: "Some new value",
+	 *     alignment: "center"
+	 *   }
+	 * });
+	 * ```
 	 * @param context Unique identifier of the action instance whose feedback will be updated.
-	 * @param feedback Object containing information about the feedback used to update the current layout of an action instance.
+	 * @param feedback Object containing information about the layout items to be updated.
 	 * @returns `Promise` resolved when the request to set the `feedback` has been sent to Stream Deck.
 	 */
 	setFeedback(context: string, feedback: FeedbackPayload): Promise<void>;
 
 	/**
 	 * Sets the layout associated with an action instance, as identified by the `context`. The layout must be either a built-in layout identifier, or path to a local layout JSON file
-	 * within the plugin's folder.
-	 * Use in conjunction with {@link ActionController.setFeedback} to update the layouts current settings once it has been changed.
+	 * within the plugin's folder. Use in conjunction with {@link ActionController.setFeedback} to update the layouts current settings once it has been changed.
 	 * @param context Unique identifier of the action instance whose layout will be updated.
-	 * @param layout New layout being assigned to the action instance.
+	 * @param layout Name of a pre-defined layout, or relative path to a custom one.
 	 * @returns `Promise` resolved when the new layout has been sent to Stream Deck.
 	 */
 	setFeedbackLayout(context: string, layout: string): Promise<void>;
@@ -132,12 +174,55 @@ export class ContextualizedActionController {
 	}
 
 	/**
-	 * Sets the feedback of a layout associated with an action instance, as identified by the `context`, allowing for visual items to be updated. Layouts are defined in the manifest,
-	 * or dynamically via {@link ContextualizedActionController.setFeedbackLayout}. Layouts are a powerful way to provide dynamic information to users; when updating feedback, the `feedback` object
-	 * should contain properties that correlate with the items `key`, as defined in the layout's JSON file. Property values can be an `object`, used to update multiple properties of
-	 * a layout item, or a `number` or `string` to update the `value` of the layout item.
-	 * `number` or `string` may be provided to update the `value` associated with the layout item.
-	 * @param feedback Object containing information about the feedback used to update the current layout of an action instance.
+	 * Sets the feedback of a layout associated with an action instance allowing for visual items to be updated. Layouts are a powerful way to provide dynamic information to users,
+	 * and can be assigned in the manifest, or dynamically via {@link ContextualizedActionController.setFeedbackLayout}.
+	 *
+	 * The `feedback` payload defines which items within the layout should be updated, and are identified by their property name (defined as the `key` in the layout's definition).
+	 * The values can either by a complete new definition, a `string` for layout item types of `text` and `pixmap`, or a `number` for layout item types of `bar` and `gbar`.
+	 *
+	 * For example, given the following custom layout definition saved relatively to the plugin at "layouts/MyCustomLayout.json".
+	 * ```
+	 * {
+	 *   "id": "MyCustomLayout",
+	 *   "items": [{
+	 *     "key": "text_item", // <-- Key used to identify which item is being updated.
+	 *     "type": "text",
+	 *     "rect": [16, 10, 136, 24],
+	 *     "alignment": "left",
+	 *     "value": "Some default value"
+	 *   }]
+	 * }
+	 * ```
+	 *
+	 * And the layout assigned to an action within the manifest.
+	 * ```
+	 * {
+	 *   "Actions": [{
+	 *     "Encoder": {
+	 *       "Layout": "layouts/MyCustomLayout.json"
+	 *     }
+	 *   }]
+	 * }
+	 * ```
+	 *
+	 * The layout item's text can be updated dynamically via.
+	 * ```
+	 * client.setFeedback(ctx, {
+	 *  // "text_item" matches a "key" within the layout's JSON file.
+	 *   text_item: "Some new value"
+	 * })
+	 * ```
+	 *
+	 * Alternatively, more information can be updated.
+	 * ```
+	 * client.setFeedback(ctx, {
+	 *   text_item: { // <-- "text_item" matches a "key" within the layout's JSON file.
+	 *     value: "Some new value",
+	 *     alignment: "center"
+	 *   }
+	 * });
+	 * ```
+	 * @param feedback Object containing information about the layout items to be updated.
 	 * @returns `Promise` resolved when the request to set the `feedback` has been sent to Stream Deck.
 	 */
 	public setFeedback(feedback: FeedbackPayload): Promise<void> {
@@ -148,7 +233,7 @@ export class ContextualizedActionController {
 	 * Sets the layout associated with an action instance, as identified by the `context`. The layout must be either a built-in layout identifier, or path to a local layout JSON file
 	 * within the plugin's folder.
 	 * Use in conjunction with {@link ContextualizedActionController.setFeedback} to update the layouts current settings once it has been changed.
-	 * @param layout New layout being assigned to the action instance.
+	 * @param layout Name of a pre-defined layout, or relative path to a custom one.
 	 * @returns `Promise` resolved when the new layout has been sent to Stream Deck.
 	 */
 	public setFeedbackLayout(layout: string): Promise<void> {

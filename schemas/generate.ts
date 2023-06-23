@@ -10,6 +10,7 @@ const generator = createGenerator({
 });
 
 generateAndWriteSchema("Manifest");
+generateAndWriteSchema("Layout");
 
 /**
  * Generates the JSON schema for the specified TypeScript `type`, and writes it locally to `{type}.json`.
