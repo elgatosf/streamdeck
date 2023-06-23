@@ -1,5 +1,6 @@
 import { StreamDeckConnection } from "./connectivity/connection";
 import * as messages from "./connectivity/messages";
+import { State } from "./connectivity/messages";
 import { ActionController, Target } from "./controllers";
 import { Device } from "./devices";
 import { ActionEvent, ActionWithoutPayloadEvent, ApplicationEvent, DeviceEvent, SendToPluginEvent, SettingsEvent } from "./events";
@@ -22,8 +23,8 @@ export class StreamDeckClient implements ActionController {
 	 * Gets the global settings associated with the plugin. Use in conjunction with {@link StreamDeckClient.setGlobalSettings}.
 	 * @returns Promise containing the plugin's global settings.
 	 */
-	public async getGlobalSettings<T = unknown>(): Promise<T> {
-		const settings = new PromiseCompletionSource<T>();
+	public async getGlobalSettings<T = unknown>(): Promise<Partial<T>> {
+		const settings = new PromiseCompletionSource<Partial<T>>();
 		this.connection.once("didReceiveGlobalSettings", (msg: messages.DidReceiveGlobalSettings<T>) => settings.setResult(msg.payload.settings));
 
 		await this.connection.send("getGlobalSettings", {
@@ -34,8 +35,8 @@ export class StreamDeckClient implements ActionController {
 	}
 
 	/** @inheritdoc */
-	public async getSettings<T = unknown>(context: string): Promise<T> {
-		const settings = new PromiseCompletionSource<T>();
+	public async getSettings<T = unknown>(context: string): Promise<Partial<T>> {
+		const settings = new PromiseCompletionSource<Partial<T>>();
 		const callback = (msg: messages.DidReceiveSettings<T>) => {
 			if (msg.context == context) {
 				settings.setResult(msg.payload.settings);
@@ -52,7 +53,8 @@ export class StreamDeckClient implements ActionController {
 	}
 
 	/**
-	 * Occurs when an action becomes visible on the Stream Deck device.
+	 * Occurs when an action appears on the Stream Deck due to the user navigating to another page, profile, folder, etc. This also occurs during startup if the action is on the "front
+	 * page". An action refers to _all_ types of actions, e.g. keys, dials,
 	 * @param listener Function to be invoked when the event occurs.
 	 */
 	public onActionWillAppear<TSettings = unknown>(listener: (ev: ActionEvent<messages.WillAppear<TSettings>>) => void): void {
@@ -60,7 +62,8 @@ export class StreamDeckClient implements ActionController {
 	}
 
 	/**
-	 * Occurs when an action is no longer visible on the Stream Deck device.
+	 * Occurs when an action disappears from the Stream Deck due to the user navigating to another page, profile, folder, etc. An action refers to _all_ types of actions, e.g. keys,
+	 * dials, touchscreens, pedals, etc.
 	 * @param listener Function to be invoked when the event occurs.
 	 */
 	public onActionWillDisappear<TSettings = unknown>(listener: (ev: ActionEvent<messages.WillDisappear<TSettings>>) => void): void {
@@ -68,7 +71,7 @@ export class StreamDeckClient implements ActionController {
 	}
 
 	/**
-	 * Occurs when a monitored application launched. Monitored applications can be defined in the `manifest.json` file via the {@link Manifest.ApplicationsToMonitor} property.
+	 * Occurs when a monitored application is launched. Monitored applications can be defined in the `manifest.json` file via the {@link Manifest.ApplicationsToMonitor} property.
 	 * Also see {@link StreamDeckClient.onApplicationDidTerminate}.
 	 * @param listener Function to be invoked when the event occurs.
 	 */
@@ -120,7 +123,7 @@ export class StreamDeckClient implements ActionController {
 	}
 
 	/**
-	 * Occurs when the user presses a dial (Stream Deck+). **NB** For key actions see {@link StreamDeckClient.onKeyDown}.
+	 * Occurs when the user presses a dial (Stream Deck+). **NB** For other action types see {@link StreamDeckClient.onKeyDown}. Also see {@link StreamDeckClient.onDialUp}.
 	 * @param listener Function to be invoked when the event occurs.
 	 */
 	public onDialDown<TSettings = unknown>(listener: (ev: ActionEvent<messages.DialDown<TSettings>>) => void): void {
@@ -136,7 +139,7 @@ export class StreamDeckClient implements ActionController {
 	}
 
 	/**
-	 * Occurs when the user releases a pressed dial (Stream Deck+). **NB** For key actions see {@link StreamDeckClient.onKeyUp}.
+	 * Occurs when the user releases a pressed dial (Stream Deck+). **NB** For other action types see {@link StreamDeckClient.onKeyUp}. Also see {@link StreamDeckClient.onDialDown}.
 	 * @param listener Function to be invoked when the event occurs.
 	 */
 	public onDialUp<TSettings = unknown>(listener: (ev: ActionEvent<messages.DialUp<TSettings>>) => void): void {
@@ -160,7 +163,7 @@ export class StreamDeckClient implements ActionController {
 	}
 
 	/**
-	 * Occurs when the user presses a action down. **NB** For dials / touchscreens see {@link StreamDeckClient.onDialDown}.
+	 * Occurs when the user presses a action down. **NB** For dials / touchscreens see {@link StreamDeckClient.onDialDown}. Also see {@link StreamDeckClient.onKeyUp}.
 	 * @param listener Function to be invoked when the event occurs.
 	 */
 	public onKeyDown<TSettings = unknown>(listener: (ev: ActionEvent<messages.KeyDown<TSettings>>) => void): void {
@@ -168,7 +171,7 @@ export class StreamDeckClient implements ActionController {
 	}
 
 	/**
-	 * Occurs when the user releases a pressed action. **NB** For dials / touchscreens see {@link StreamDeckClient.onDialUp}.
+	 * Occurs when the user releases a pressed action. **NB** For dials / touchscreens see {@link StreamDeckClient.onDialUp}. Also see {@link StreamDeckClient.onKeyDown}.
 	 * @param listener Function to be invoked when the event occurs.
 	 */
 	public onKeyUp<TSettings = unknown>(listener: (ev: ActionEvent<messages.KeyUp<TSettings>>) => void): void {
@@ -176,7 +179,7 @@ export class StreamDeckClient implements ActionController {
 	}
 
 	/**
-	 * Occurs when the property inspector associated with the action becomes visible; occurs when the user selects the action in the Stream Deck application. Also see {@link StreamDeckClient.onPropertyInspectorDidDisappear}.
+	 * Occurs when the property inspector associated with the action becomes visible, i.e. the user selected an action in the Stream Deck application. Also see {@link StreamDeckClient.onPropertyInspectorDidDisappear}.
 	 * @param listener Function to be invoked when the event occurs.
 	 */
 	public onPropertyInspectorDidAppear(listener: (ev: ActionWithoutPayloadEvent<messages.PropertyInspectorDidAppear>) => void): void {
@@ -184,7 +187,7 @@ export class StreamDeckClient implements ActionController {
 	}
 
 	/**
-	 * Occurs when the property inspector associated with the action becomes visible; occurs when the user unselects the action in the Stream Deck application. Also see {@link StreamDeckClient.onPropertyInspectorDidAppear}.
+	 * Occurs when the property inspector associated with the action becomes invisible, i.e. the user unselected the action in the Stream Deck application. Also see {@link StreamDeckClient.onPropertyInspectorDidAppear}.
 	 * @param listener Function to be invoked when the event occurs.
 	 */
 	public onPropertyInspectorDidDisappear(listener: (ev: ActionWithoutPayloadEvent<messages.PropertyInspectorDidDisappear>) => void): void {
@@ -208,7 +211,7 @@ export class StreamDeckClient implements ActionController {
 	}
 
 	/**
-	 * Occurs when the user updates the title's settings in the Stream Deck application.
+	 * Occurs when the user updates an action's title settings in the Stream Deck application. Also see {@link StreamDeckClient.setTitle}.
 	 * @param listener Function to be invoked when the event occurs.
 	 */
 	public onTitleParametersDidChange<TSettings = unknown>(listener: (ev: ActionEvent<messages.TitleParametersDidChange<TSettings>>) => void): void {
@@ -283,7 +286,7 @@ export class StreamDeckClient implements ActionController {
 	}
 
 	/** @inheritdoc */
-	public setImage(context: string, image: string, state: 0 | 1 | undefined = undefined, target: Target = Target.HardwareAndSoftware): Promise<void> {
+	public setImage(context: string, image: string, state: State | undefined = undefined, target: Target = Target.HardwareAndSoftware): Promise<void> {
 		return this.connection.send("setImage", {
 			context,
 			payload: {
@@ -303,7 +306,7 @@ export class StreamDeckClient implements ActionController {
 	}
 
 	/** @inheritdoc */
-	public setState(context: string, state: number): Promise<void> {
+	public setState(context: string, state: State): Promise<void> {
 		return this.connection.send("setState", {
 			context,
 			payload: {
@@ -313,7 +316,7 @@ export class StreamDeckClient implements ActionController {
 	}
 
 	/** @inheritdoc */
-	public setTitle(context: string, title?: string, state?: 0 | 1, target?: Target): Promise<void> {
+	public setTitle(context: string, title?: string, state: State | undefined = undefined, target: Target = Target.HardwareAndSoftware): Promise<void> {
 		return this.connection.send("setTitle", {
 			context,
 			payload: {

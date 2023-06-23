@@ -1,3 +1,4 @@
+import { State } from "./connectivity/messages";
 import { FeedbackPayload } from "./layouts";
 
 /**
@@ -10,7 +11,7 @@ export type ActionController = {
 	 * @param context Unique identifier of the action instance whose settings are being requested.
 	 * @returns Promise containing the action instance's settings.
 	 */
-	getSettings<T = unknown>(context: string): Promise<T>;
+	getSettings<T = unknown>(context: string): Promise<Partial<T>>;
 
 	/**
 	 * Sends the `payload` to the current property inspector associated with an instance of an action, as identified by the `context`. The plugin can also receive information from
@@ -53,7 +54,7 @@ export type ActionController = {
 	 * @param target Specifies which aspects of the Stream Deck should be updated, hardware, software, or both.
 	 * @returns `Promise` resolved when the request to set the `image` has been sent to Stream Deck.
 	 */
-	setImage(context: string, image: string, state?: 0 | 1, target?: Target): Promise<void>;
+	setImage(context: string, image: string, state?: State, target?: Target): Promise<void>;
 
 	/**
 	 * Sets the `settings` associated with an instance of an action, as identified by the `context`. An instance of an action represents a button, dial, pedal, etc.
@@ -70,7 +71,7 @@ export type ActionController = {
 	 * @param state State to set; this be either 0, or 1.
 	 * @returns `Promise` resolved when the request to set the state of an action instance has been sent to Stream Deck.
 	 */
-	setState(context: string, state: number): Promise<void>;
+	setState(context: string, state: State): Promise<void>;
 
 	/**
 	 * Sets the `title` displayed for an instance of an action, as identified by the `context`. Often used in conjunction with `"titleParametersDidChange"` event.
@@ -80,7 +81,7 @@ export type ActionController = {
 	 * @param target Specifies which aspects of the Stream Deck should be updated, hardware, software, or both.
 	 * @returns `Promise` resolved when the request to set the `title` has been sent to Stream Deck.
 	 */
-	setTitle(context: string, title?: string, state?: 0 | 1, target?: Target): Promise<void>;
+	setTitle(context: string, title?: string, state?: State, target?: Target): Promise<void>;
 
 	/**
 	 * Temporarily shows an alert (i.e. warning), in the form of an exclamation mark in a yellow triangle, on an action, as identified by the `context`. Used to provide visual feedback
@@ -115,7 +116,7 @@ export class ContextualizedActionController {
 	 * with {@link ContextualizedActionController.setSettings}.
 	 * @returns Promise containing the action instance's settings.
 	 */
-	public getSettings<T = unknown>(): Promise<T> {
+	public getSettings<T = unknown>(): Promise<Partial<T>> {
 		return this.controller.getSettings<T>(this.context);
 	}
 
@@ -162,7 +163,7 @@ export class ContextualizedActionController {
 	 * @param target Specifies which aspects of the Stream Deck should be updated, hardware, software, or both.
 	 * @returns `Promise` resolved when the request to set the `image` has been sent to Stream Deck.
 	 */
-	public setImage(image: string, state: 0 | 1 | undefined = undefined, target: Target = Target.HardwareAndSoftware): Promise<void> {
+	public setImage(image: string, state: State | undefined = undefined, target: Target = Target.HardwareAndSoftware): Promise<void> {
 		return this.controller.setImage(this.context, image, state, target);
 	}
 
@@ -181,7 +182,7 @@ export class ContextualizedActionController {
 	 * @param state State to set; this be either 0, or 1.
 	 * @returns `Promise` resolved when the request to set the state of an action instance has been sent to Stream Deck.
 	 */
-	public setState(state: number): Promise<void> {
+	public setState(state: State): Promise<void> {
 		return this.controller.setState(this.context, state);
 	}
 
@@ -192,7 +193,7 @@ export class ContextualizedActionController {
 	 * @param target Specifies which aspects of the Stream Deck should be updated, hardware, software, or both.
 	 * @returns `Promise` resolved when the request to set the `title` has been sent to Stream Deck.
 	 */
-	public setTitle(title?: string, state?: 0 | 1, target?: Target): Promise<void> {
+	public setTitle(title?: string, state: State | undefined = undefined, target: Target = Target.HardwareAndSoftware): Promise<void> {
 		return this.controller.setTitle(this.context, title, state, target);
 	}
 

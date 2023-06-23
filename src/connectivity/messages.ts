@@ -1,17 +1,17 @@
 /**
  * Represents an event that is emitted from, or sent to, the Stream Deck.
  */
-export type Message<T> = {
+export type Message<TEvent> = {
 	/**
 	 * Name of the event used to identify what occurred, or what is being requested.
 	 */
-	readonly event: T;
+	readonly event: TEvent;
 };
 
 /**
  * Provides information for a message relating to an action, e.g. `willAppear`, `keyDown`, etc.
  */
-export type ActionMessage<T> = Message<T> & {
+export type ActionMessage<TEvent> = Message<TEvent> & {
 	/**
 	 * Unique identifier of the action as defined within the plugin's manifest (`Actions[].UUID`) e.g. "com.elgato.wavelink.mute".
 	 */
@@ -32,22 +32,34 @@ export type ActionMessage<T> = Message<T> & {
 /**
  * Provides information for a message relating to an action, e.g. `willAppear`, `keyDown`, etc.
  */
-export type ActionMessageWithPayload<T, TPayload> = ActionMessage<T> & {
+export type ActionMessageWithPayload<TEvent, TSettings, TPayload> = ActionMessage<TEvent> & {
 	/**
-	 * Additional information about the action and event that occurred, if applicable.
+	 * Additional information about the action and event that occurred.
 	 */
-	readonly payload: TPayload;
+	readonly payload: TPayload & {
+		/**
+		 * Coordinates that identify the location of the action.
+		 */
+		readonly coordinates: Coordinates;
+
+		/**
+		 * Settings associated with the action instance.
+		 */
+		readonly settings: Partial<TSettings>;
+	};
 };
 
 /**
- * Occurs when the plugin receives settings, for a specific action instance, from the Stream Deck.
+ * Occurs when the settings associated with an action instance are requested, or when the the settings were updated by the property inspector.
  */
 export type DidReceiveSettings<TSettings = unknown> = ActionMessageWithPayload<
 	"didReceiveSettings",
+	TSettings,
 	{
-		readonly coordinates: Coordinates;
+		/**
+		 * Determines whether the action is part of a multi-action.
+		 */
 		readonly isInMultiAction: boolean;
-		settings: TSettings;
 	}
 >;
 
@@ -55,68 +67,134 @@ export type DidReceiveSettings<TSettings = unknown> = ActionMessageWithPayload<
  * Occurs when the plugin receives the global settings from the Stream Deck.
  */
 export type DidReceiveGlobalSettings<TSettings = unknown> = Message<"didReceiveGlobalSettings"> & {
+	/**
+	 * Additional information about the event that occurred.
+	 */
 	readonly payload: {
-		settings: TSettings;
+		/**
+		 * Global settings associated with this plugin.
+		 */
+		readonly settings: Partial<TSettings>;
 	};
 };
 
-export type TouchTap<TSetting = unknown> = ActionMessageWithPayload<
+/**
+ * Occurs when the user taps the touchscreen (Stream Deck+).
+ */
+export type TouchTap<TSettings = unknown> = ActionMessageWithPayload<
 	"touchTap",
+	TSettings,
 	{
-		readonly coordinates: Coordinates;
+		/**
+		 * Determines whether the tap was considered "held".
+		 */
 		readonly hold: boolean;
-		readonly settings: TSetting;
-		readonly tapPos: [number, number];
+
+		/**
+		 * Coordinates of where the touchscreen tap occurred, relative to the canvas of the action.
+		 */
+		readonly tapPos: [x: number, y: number];
 	}
 >;
 
-export type DialDown<TSetting = unknown> = ActionMessageWithPayload<
+/**
+ * Occurs when the user presses a dial (Stream Deck+). **NB** For other action types see {@link KeyDown}. Also see {@link DialUp}.
+ */
+export type DialDown<TSettings = unknown> = ActionMessageWithPayload<
 	"dialDown",
+	TSettings,
 	{
+		/**
+		 * Defines the controller type the action is applicable to. **Keypad** refers to a standard action on a Stream Deck device, e.g. 1 of the 15 buttons on the Stream Deck MK.2,
+		 * or a pedal on the Stream Deck Pedal, etc., whereas an **Encoder** refers to a dial / touchscreen on the Stream Deck+.
+		 */
 		readonly controller: Extract<Controller, "Encoder">;
-		readonly coordinates: Coordinates;
-		readonly settings: TSetting;
 	}
 >;
 
-export type DialUp<TSetting = unknown> = ActionMessageWithPayload<"dialUp", DialDown<TSetting>["payload"]>;
+/**
+ * Occurs when the user releases a pressed dial (Stream Deck+). **NB** For other action types see {@link KeyUp}. Also see {@link DialDown}.
+ */
+export type DialUp<TSettings = unknown> = ActionMessageWithPayload<"dialUp", TSettings, DialDown<TSettings>["payload"]>;
 
-export type DialRotate<TSetting = unknown> = ActionMessageWithPayload<
+/**
+ * Occurs when the user rotates a dial (Stream Deck+).
+ */
+export type DialRotate<TSettings = unknown> = ActionMessageWithPayload<
 	"dialRotate",
+	TSettings,
 	{
+		/**
+		 * Defines the controller type the action is applicable to. **Keypad** refers to a standard action on a Stream Deck device, e.g. 1 of the 15 buttons on the Stream Deck MK.2,
+		 * or a pedal on the Stream Deck Pedal, etc., whereas an **Encoder** refers to a dial / touchscreen on the Stream Deck+.
+		 */
 		readonly controller: Extract<Controller, "Encoder">;
-		readonly coordinates: Coordinates;
+
+		/**
+		 * Determines whether the dial was pressed whilst the rotation occurred.
+		 */
 		readonly pressed: boolean;
-		readonly settings: TSetting;
+
+		/**
+		 * Number of ticks the dial was rotated; this can be a positive (clockwise) or negative (counter-clockwise) number.
+		 */
 		readonly ticks: number;
 	}
 >;
 
-export type KeyDown<TSetting = unknown> = ActionMessageWithPayload<
+/**
+ * Occurs when the user presses a action down. **NB** For dials / touchscreens see {@link DialDown}. Also see {@link KeyUp}.
+ */
+export type KeyDown<TSettings = unknown> = ActionMessageWithPayload<
 	"keyDown",
+	TSettings,
 	{
-		readonly coordinates: Coordinates;
+		/**
+		 * Determines whether the action is part of a multi-action.
+		 */
 		readonly isInMultiAction: boolean;
-		readonly settings: TSetting;
+
+		/**
+		 * Current state of the action; only applicable to actions that have multiple states defined within the `manifest.json` file.
+		 */
 		readonly state?: State;
+
+		/**
+		 * Desired state as specified by the user; only applicable to actions that have multiple states defined within the `manifest.json` file, and when this action instance is
+		 * part of a multi-action.
+		 */
 		readonly userDesiredState?: State;
 	}
 >;
 
-export type KeyUp<TSetting = unknown> = ActionMessageWithPayload<"keyUp", KeyDown<TSetting>["payload"]>;
+/**
+ * Occurs when the user releases a pressed action. **NB** For dials / touchscreens see {@link DialUp}. Also see {@link KeyDown}.
+ */
+export type KeyUp<TSettings = unknown> = ActionMessageWithPayload<"keyUp", TSettings, KeyDown<TSettings>["payload"]>;
 
 /**
  * Occurs when an action appears on the Stream Deck due to the user navigating to another page, profile, folder, etc. This also occurs during startup if the action is on the "front
  * page". An action refers to _all_ types of actions, e.g. keys, dials,
  * touchscreens, pedals, etc.
  */
-export type WillAppear<TSetting = unknown> = ActionMessageWithPayload<
+export type WillAppear<TSettings = unknown> = ActionMessageWithPayload<
 	"willAppear",
+	TSettings,
 	{
+		/**
+		 * Defines the controller type the action is applicable to. **Keypad** refers to a standard action on a Stream Deck device, e.g. 1 of the 15 buttons on the Stream Deck MK.2,
+		 * or a pedal on the Stream Deck Pedal, etc., whereas an **Encoder** refers to a dial / touchscreen on the Stream Deck+.
+		 */
 		readonly controller: Controller;
-		readonly coordinates: Coordinates;
+
+		/**
+		 * Determines whether the action is part of a multi-action.
+		 */
 		readonly isInMultiAction: boolean;
-		readonly settings: TSetting;
+
+		/**
+		 * Current state of the action; only applicable to actions that have multiple states defined within the `manifest.json` file.
+		 */
 		readonly state?: State;
 	}
 >;
@@ -125,27 +203,70 @@ export type WillAppear<TSetting = unknown> = ActionMessageWithPayload<
  * Occurs when an action disappears from the Stream Deck due to the user navigating to another page, profile, folder, etc. An action refers to _all_ types of actions, e.g. keys, dials,
  * touchscreens, pedals, etc.
  */
-export type WillDisappear<TSetting = unknown> = ActionMessageWithPayload<"willDisappear", WillAppear<TSetting>["payload"]>;
+export type WillDisappear<TSettings = unknown> = ActionMessageWithPayload<"willDisappear", TSettings, WillAppear<TSettings>["payload"]>;
 
-export type TitleParametersDidChange<TSetting = unknown> = ActionMessageWithPayload<
+/**
+ * Occurs when the user updates an action's title settings in the Stream Deck application.
+ */
+export type TitleParametersDidChange<TSettings = unknown> = ActionMessageWithPayload<
 	"titleParametersDidChange",
+	TSettings,
 	{
-		readonly coordinates: Coordinates;
-		readonly settings: TSetting;
+		/**
+		 * Current state of the action; only applicable to actions that have multiple states defined within the `manifest.json` file.
+		 */
 		readonly state?: State;
+
+		/**
+		 * Title of the action, as specified by the user or dynamically by the plugin.
+		 */
 		readonly title: string;
+
+		/**
+		 * Defines aesthetic properties that determine how the title should be rendered.
+		 */
 		readonly titleParameters: {
+			/**
+			 * Font-family the title will be rendered with.
+			 */
 			readonly fontFamily: string;
+
+			/**
+			 * Font-size the title will be rendered in.
+			 */
 			readonly fontSize: number;
+
+			/**
+			 * Typography of the title.
+			 */
 			readonly fontStyle: "" | "Bold Italic" | "Bold" | "Italic" | "Regular";
+
+			/**
+			 * Determines whether the font should be underlined.
+			 */
 			readonly fontUnderline: boolean;
+
+			/**
+			 * Determines whether the user has opted to show, or hide the title for this action instance.
+			 */
 			readonly showTitle: boolean;
+
+			/**
+			 * Alignment of the title.
+			 */
 			readonly titleAlignment: "bottom" | "middle" | "top";
-			readonly titleColor: string; // this is a hex value.
+
+			/**
+			 * Color of the title, represented as a hexadecimal value.
+			 */
+			readonly titleColor: string;
 		};
 	}
 >;
 
+/**
+ * Occurs when a Stream Deck device is connected. Also see {@link DeviceDidDisconnect}.
+ */
 export type DeviceDidConnect = Message<"deviceDidConnect"> & {
 	/**
 	 * Unique identifier of the Stream Deck device that this message is associated with.
@@ -158,6 +279,9 @@ export type DeviceDidConnect = Message<"deviceDidConnect"> & {
 	readonly deviceInfo: DeviceInfo;
 };
 
+/**
+ * Occurs when a Stream Deck device is disconnected. Also see {@link DeviceDidConnect}.
+ */
 export type DeviceDidDisconnect = Message<"deviceDidDisconnect"> & {
 	/**
 	 * Unique identifier of the Stream Deck device that this message is associated with.
@@ -165,32 +289,50 @@ export type DeviceDidDisconnect = Message<"deviceDidDisconnect"> & {
 	readonly device: string;
 };
 
-export type ApplicationDidLaunch = Message<"applicationDidLaunch"> & {
+/**
+ * Provides information about a monitored application. See {@link ApplicationDidLaunch} and {@link ApplicationDidTerminate}.
+ */
+type ApplicationMessage<TEvent> = Message<TEvent> & {
+	/**
+	 * Payload containing information about the application that triggered the event.
+	 */
 	readonly payload: {
+		/**
+		 * Name of the application that triggered the event.
+		 */
 		readonly application: string;
 	};
 };
 
-export type ApplicationDidTerminate = Message<"applicationDidTerminate"> & {
-	readonly payload: {
-		readonly application: string;
-	};
-};
+/**
+ * Occurs when a monitored application is launched. Monitored applications can be defined in the `manifest.json` file via the `Manifest.ApplicationsToMonitor` property. Also see
+ * {@link ApplicationDidTerminate}.
+ */
+export type ApplicationDidLaunch = ApplicationMessage<"applicationDidLaunch">;
 
+/**
+ * Occurs when a monitored application terminates. Monitored applications can be defined in the `manifest.json` file via the `Manifest.ApplicationsToMonitor` property. Also see
+ * {@link ApplicationDidLaunch}.
+ */
+export type ApplicationDidTerminate = ApplicationMessage<"applicationDidTerminate">;
+
+/**
+ * Occurs when the computer wakes up.
+ */
 export type SystemDidWakeUp = Message<"systemDidWakeUp">;
 
 /**
- * Occurs when the property inspector appears, i.e. the user selects the action in the Stream Deck application.
+ * Occurs when the property inspector associated with the action becomes visible, i.e. the user selected an action in the Stream Deck application. Also see {@link PropertyInspectorDidDisappear}.
  */
 export type PropertyInspectorDidAppear = ActionMessage<"propertyInspectorDidAppear">;
 
 /**
- * Occurs when the property inspector disappears, i.e. the user unselects the action in the Stream Deck application.
+ * Occurs when the property inspector associated with the action becomes invisible, i.e. the user unselected the action in the Stream Deck application. Also see {@link PropertyInspectorDidAppear}.
  */
 export type PropertyInspectorDidDisappear = ActionMessage<"propertyInspectorDidDisappear">;
 
 /**
- * Occurs when the property inspector sends a message to the plugin.
+ * Occurs when a message was sent to the plugin _from_ the property inspector.
  */
 export type SendToPlugin<TPayload extends object = object> = Omit<ActionMessage<"sendToPlugin">, "device"> & {
 	/**
@@ -200,7 +342,8 @@ export type SendToPlugin<TPayload extends object = object> = Omit<ActionMessage<
 };
 
 /**
- * Controller types that are available as part of Stream Deck devices.
+ * Defines the controller type the action is applicable to. **Keypad** refers to a standard action on a Stream Deck device, e.g. 1 of the 15 buttons on the Stream Deck MK.2, or a pedal
+ * on the Stream Deck Pedal, etc., whereas an **Encoder** refers to a dial / touchscreen on the Stream Deck+.
  */
 export type Controller = "Encoder" | "Keypad";
 

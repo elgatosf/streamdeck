@@ -18,28 +18,26 @@ class ActionEventSource extends ContextualizedActionController {
 
 /**
  * Provides information for an event received from Stream Deck.
- * @template T Type of the event.
  */
-export class Event<T extends messages.Message<unknown>> {
+export class Event<TMessage extends messages.Message<unknown>> {
 	/**
 	 * Event that occurred.
 	 */
-	public readonly type: T["event"];
+	public readonly type: TMessage["event"];
 
 	/**
 	 * Initializes a new instance of the `Event<T>` class.
 	 * @param source Source of the event, i.e. the original message from Stream Deck.
 	 */
-	constructor(source: T) {
+	constructor(source: TMessage) {
 		this.type = source.event;
 	}
 }
 
 /**
  * Provides information for an event that was associated with an action, that did not contain a payload.
- * @template T Type of the event.
  */
-export class ActionWithoutPayloadEvent<T extends messages.ActionMessage<unknown>> extends Event<T> {
+export class ActionWithoutPayloadEvent<TMessage extends messages.ActionMessage<unknown>> extends Event<TMessage> {
 	/**
 	 * The action that raised the event.
 	 */
@@ -55,7 +53,7 @@ export class ActionWithoutPayloadEvent<T extends messages.ActionMessage<unknown>
 	 * @param controller Controller capable of updating the action.
 	 * @param source Source of the event, i.e. the original message from Stream Deck.
 	 */
-	constructor(controller: ActionController, source: T) {
+	constructor(controller: ActionController, source: TMessage) {
 		super(source);
 
 		this.action = new ActionEventSource(controller, source.action, source.context);
@@ -65,20 +63,19 @@ export class ActionWithoutPayloadEvent<T extends messages.ActionMessage<unknown>
 
 /**
  * Provides information for an event that was associated with an action.
- * @template T Type of the event.
  */
-export class ActionEvent<T extends messages.ActionMessageWithPayload<unknown, ExtractPayload<T>>> extends ActionWithoutPayloadEvent<T> {
+export class ActionEvent<TMessage extends messages.ActionMessageWithPayload<unknown, unknown, ExtractPayload<TMessage>>> extends ActionWithoutPayloadEvent<TMessage> {
 	/**
 	 * Provides additional information about the event that occurred, e.g. how many `ticks` the dial was rotated, the current `state` of the action, etc.
 	 */
-	public readonly payload: ExtractPayload<T>;
+	public readonly payload: ExtractPayload<TMessage>;
 
 	/**
 	 * Initializes a new instance of the `ActionEvent<T>` class.
 	 * @param controller Controller capable of updating the action.
 	 * @param source Source of the event, i.e. the original message from Stream Deck.
 	 */
-	constructor(controller: ActionController, source: T) {
+	constructor(controller: ActionController, source: TMessage) {
 		super(controller, source);
 		this.payload = source.payload;
 	}
@@ -86,9 +83,8 @@ export class ActionEvent<T extends messages.ActionMessageWithPayload<unknown, Ex
 
 /**
  * Provides information for an event associated with a monitor application, i.e. when it launches, it terminates.
- * @template T Type of the event.
  */
-export class ApplicationEvent<T extends messages.ApplicationDidLaunch | messages.ApplicationDidTerminate> extends Event<T> {
+export class ApplicationEvent<TMessage extends messages.ApplicationDidLaunch | messages.ApplicationDidTerminate> extends Event<TMessage> {
 	/**
 	 * Monitored application that was launched/terminated.
 	 */
@@ -98,32 +94,28 @@ export class ApplicationEvent<T extends messages.ApplicationDidLaunch | messages
 	 * Initializes a new instance of the `ApplicationEvent<T>` class.
 	 * @param source Source of the event, i.e. the original message from Stream Deck.
 	 */
-	constructor(source: T) {
+	constructor(source: TMessage) {
 		super(source);
 		this.application = source.payload.application;
 	}
 }
 
 /**
-/**
  * Provides information for an event associated with a device.
- * @template T Type of the event.
- * @template TDevice Type of the device information.
  */
-export class DeviceEvent<T extends messages.DeviceDidConnect | messages.DeviceDidDisconnect, TDevice> extends Event<T> {
+export class DeviceEvent<TMessage extends messages.DeviceDidConnect | messages.DeviceDidDisconnect, TDevice> extends Event<TMessage> {
 	/**
 	 * Initializes a new instance of the `DeviceEvent<T>` class.
 	 * @param source Source of the event, i.e. the original message from Stream Deck.
 	 * @param device Device that event is associated with.
 	 */
-	constructor(source: T, public readonly device: TDevice) {
+	constructor(source: TMessage, public readonly device: TDevice) {
 		super(source);
 	}
 }
 
 /**
  * Provides information for an event that was associated with a payload message received from the property inspector.
- * @template TPayload Type of the payload send to the plugin from the property inspector.
  */
 export class SendToPluginEvent<TPayload extends object> extends Event<messages.SendToPlugin<TPayload>> {
 	/**
@@ -136,8 +128,9 @@ export class SendToPluginEvent<TPayload extends object> extends Event<messages.S
 	 */
 	public payload: TPayload;
 
-	/***
+	/**
 	 * Initializes a new instance of the `PropertyInspectorMessageEvent<TPayload>` class.
+	 * @param controller Controller capable of updating the action.
 	 * @param source Source of the event, i.e. the original message from Stream Deck.
 	 */
 	constructor(controller: ActionController, source: messages.SendToPlugin<TPayload>) {
@@ -151,7 +144,15 @@ export class SendToPluginEvent<TPayload extends object> extends Event<messages.S
  * Provides information for an event trigger when receiving the global settings.
  */
 export class SettingsEvent<TSettings = unknown> extends Event<messages.DidReceiveGlobalSettings<TSettings>> {
-	public readonly settings: TSettings;
+	/**
+	 * Settings associated with the event.
+	 */
+	public readonly settings: Partial<TSettings>;
+
+	/**
+	 * Initializes a new instance of the `SettingsEvent<TSettings>` class.
+	 * @param source Source of the event, i.e. the original message from Stream Deck.
+	 */
 	constructor(source: messages.DidReceiveGlobalSettings<TSettings>) {
 		super(source);
 		this.settings = source.payload.settings;
