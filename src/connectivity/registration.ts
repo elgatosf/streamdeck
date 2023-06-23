@@ -1,5 +1,5 @@
 import logger from "../logger";
-import { DeviceType } from "./messages";
+import { DeviceInfo } from "./messages";
 
 /**
  * Registration information supplied by the Stream Deck when launching the plugin, that enables the plugin to establish a secure connection with the Stream Deck.
@@ -160,36 +160,11 @@ export type RegistrationInfo = {
 	 * Devices associated with the Stream Deck application; this may include devices that are not currently connected. Use `"deviceDidConnect"` event to determine which devices are active.
 	 */
 	readonly devices: [
-		{
+		DeviceInfo & {
 			/**
-			 * Unique identifier of the device.
+			 * Unique identifier of the Stream Deck device.
 			 */
 			readonly id: string;
-
-			/**
-			 * Name of the device, set by the user.
-			 */
-			readonly name: string;
-
-			/**
-			 * Layout size of the device.
-			 */
-			readonly size: {
-				/**
-				 * Number of columns associated with the device, e.g. 5 for Stream Deck, 8 for Stream Deck XL, etc.
-				 */
-				readonly columns: number;
-
-				/**
-				 * Number of rows associated with the device, e.g. 3 for Stream Deck, 4 for Stream Deck XL, etc.
-				 */
-				readonly rows: number;
-			};
-
-			/**
-			 * Type of the device, e.g. Stream Deck+, Stream Deck XL, etc.
-			 */
-			readonly type: DeviceType;
 		}
 	];
 

@@ -1,5 +1,8 @@
-import { FeedbackPayload } from "../layouts";
+import { FeedbackPayload } from "./layouts";
 
+/**
+ * Provides methods for controlling and updating Stream Deck actions, e.g. {@link ActionController.getSettings} {@link ActionController.setImage}, {@link ActionController.setTitle}, etc.
+ */
 export type ActionController = {
 	/**
 	 * Gets the settings associated with an instance of an action, as identified by the `context`. An instance of an action represents a button, dial, pedal, etc. Use in conjunction

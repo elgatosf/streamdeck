@@ -1,49 +1,40 @@
-import { DeviceInfo, StreamDeckConnection } from "./connectivity";
+import { StreamDeckConnection } from "./connectivity/connection";
+import { DeviceInfo } from "./connectivity/messages";
 
 /**
- * Provides tracking of connected / disconnected Stream Deck devices.
+ * Gets a map of Stream Deck devices that are tracked against the specified `connection`.
+ * @param connection Underlying connection that provides information into the registration parameters, and tracking of the connection status of devices.
+ * @returns Map of Stream Deck devices.
  */
-export class DeviceCollection {
-	/**
-	 * Devices that have been connected to the Stream Deck application.
-	 */
-	private readonly devices = new Map<string, Device>();
+export function getDevices(connection: StreamDeckConnection): ReadonlyMap<string, Device> {
+	const devices = new Map<string, Device>();
 
-	/**
-	 * Initializes a new instance of the `DeviceCollection` class.
-	 * @param connection Connection used to determine when a device connects or disconnects.
-	 */
-	constructor(connection: StreamDeckConnection) {
-		connection.on("deviceDidConnect", (ev) => {
-			this.devices.set(ev.device, {
-				id: ev.device,
-				isConnected: true,
-				...ev.deviceInfo
-			});
+	// Add the devices based on the registration parameters.
+	connection.registrationParameters.info.devices.forEach((dev) => {
+		devices.set(dev.id, {
+			...dev,
+			isConnected: false
 		});
+	});
 
-		connection.on("deviceDidDisconnect", (ev) => {
-			const device = this.devices.get(ev.device);
-			if (device !== undefined) {
-				device.isConnected = false;
-			}
+	// Set newly connected devices.
+	connection.on("deviceDidConnect", (ev) => {
+		devices.set(ev.device, {
+			id: ev.device,
+			isConnected: true,
+			...ev.deviceInfo
 		});
-	}
+	});
 
-	/**
-	 * Gets the device for the specified `id`. **NB** Device information is cached per session; when a device is connected it's information is stored locally enabling for that information
-	 * to be retrieved later, even if disconnected. However, if the device has not connected during this session, the devices information will not be available.
-	 * @param id Device identifier whose device should be selected.
-	 * @returns Device information currently available based on previously connected devices.
-	 */
-	public getDevice(id: string): Device {
-		return (
-			this.devices.get(id) || {
-				id,
-				isConnected: false
-			}
-		);
-	}
+	// Updated disconnected devices.
+	connection.on("deviceDidDisconnect", (ev) => {
+		const device = devices.get(ev.device);
+		if (device !== undefined) {
+			device.isConnected = false;
+		}
+	});
+
+	return devices;
 }
 
 /**

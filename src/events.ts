@@ -1,5 +1,5 @@
+import * as messages from "./connectivity/messages";
 import { ActionController, ContextualizedActionController } from "./controllers";
-import * as messages from "./messages";
 
 /**
  * An action associated with an event raised by Stream Deck.

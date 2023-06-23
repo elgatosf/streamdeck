@@ -11,7 +11,8 @@ import { RegistrationParameters } from "./registration";
  */
 export class StreamDeckConnection {
 	/**
-	 * Connection between the plugin and the Stream Deck in the form of a promise; once connected to the Stream Deck and the plugin has been registered, the promised is resolved and the connection becomes available.
+	 * Connection between the plugin and the Stream Deck in the form of a promise; once connected to the Stream Deck and the plugin has been registered, the promised is resolved and
+	 * the connection becomes available.
 	 */
 	private readonly connection = new PromiseCompletionSource<WebSocket>();
 
@@ -27,9 +28,10 @@ export class StreamDeckConnection {
 
 	/**
 	 * Initializes a new instance of the `StreamDeckConnection` class.
-	 * @param params Registration parameters used to establish a connection with the Stream Deck; these are automatically supplied as part of the command line arguments when the plugin is ran by the Stream Deck.
+	 * @param registrationParameters Registration parameters used to establish a connection with the Stream Deck; these are automatically supplied as part of the command line arguments
+	 * when the plugin is ran by the Stream Deck.
 	 */
-	constructor(public readonly params = new RegistrationParameters(process.argv)) {}
+	constructor(public readonly registrationParameters = new RegistrationParameters(process.argv)) {}
 
 	/**
 	 * Establishes a connection with the Stream Deck, allowing for the plugin to send and receive messages.
@@ -41,14 +43,14 @@ export class StreamDeckConnection {
 		}
 
 		logger.debug("Connecting to Stream Deck.");
-		this.ws = new WebSocket(`ws://localhost:${this.params.port}`);
+		this.ws = new WebSocket(`ws://localhost:${this.registrationParameters.port}`);
 		this.ws.onmessage = this.propagateMessage.bind(this);
 		this.ws.onopen = () => {
 			if (this.ws) {
 				this.ws.send(
 					JSON.stringify({
-						event: this.params.registerEvent,
-						uuid: this.params.pluginUUID
+						event: this.registrationParameters.registerEvent,
+						uuid: this.registrationParameters.pluginUUID
 					})
 				);
 

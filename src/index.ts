@@ -1,13 +1,29 @@
-import * as connectivity from "./connectivity";
-import { DeviceCollection } from "./devices";
+import { StreamDeckClient } from "./client";
+import { StreamDeckConnection } from "./connectivity/connection";
+import { RegistrationInfo } from "./connectivity/registration";
+import { getDevices } from "./devices";
 
-export { DeviceType, Target } from "./connectivity";
+export { DeviceType } from "./connectivity/messages";
+export { Target } from "./controllers";
 export { LogLevel, default as logger } from "./logger";
 export * from "./manifest";
-export { client };
+export { client, devices, info };
 
-const connection = new connectivity.StreamDeckConnection();
-const devices = new DeviceCollection(connection);
-const client = new connectivity.StreamDeckClient(connection, devices);
+const connection = new StreamDeckConnection();
+
+/**
+ * Information about the plugin, and the Stream Deck application.
+ */
+const info = connection.registrationParameters.info as Omit<RegistrationInfo, "devices">;
+
+/**
+ * Collection of Stream Deck devices.
+ */
+const devices = getDevices(connection);
+
+/**
+ * Main communication entry-point between the plugin, and the Stream Deck.
+ */
+const client = new StreamDeckClient(connection, devices);
 
 connection.connect();

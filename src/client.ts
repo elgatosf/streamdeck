@@ -1,12 +1,12 @@
-import { Device, DeviceCollection } from "../devices";
-import { FeedbackPayload } from "../layouts";
-import logger from "../logger";
-import { Manifest } from "../manifest";
-import { PromiseCompletionSource } from "../promises";
-import { StreamDeckConnection } from "./connection";
+import { StreamDeckConnection } from "./connectivity/connection";
+import * as messages from "./connectivity/messages";
 import { ActionController, Target } from "./controllers";
+import { Device } from "./devices";
 import { ActionEvent, ActionWithoutPayloadEvent, ApplicationEvent, DeviceEvent, SendToPluginEvent, SettingsEvent } from "./events";
-import * as messages from "./messages";
+import { FeedbackPayload } from "./layouts";
+import logger from "./logger";
+import { Manifest } from "./manifest";
+import { PromiseCompletionSource } from "./promises";
 
 /**
  * Provides the main bridge between the plugin and the Stream Deck allowing the plugin to send requests and receive events, e.g. when the user presses an action.
@@ -17,15 +17,7 @@ export class StreamDeckClient implements ActionController {
 	 * @param connection Underlying connection with the Stream Deck.
 	 * @param devices Device collection responsible for tracking devices.
 	 */
-	constructor(public readonly connection: StreamDeckConnection, private readonly devices: DeviceCollection) {}
-
-	/**
-	 * Gets the information supplied by Stream Deck during the initial registration procedure of the plugin.
-	 * @returns Information about the user's operating system, plugin version, connected devices, etc.
-	 */
-	public get info() {
-		return this.connection.params.info;
-	}
+	constructor(public readonly connection: StreamDeckConnection, private readonly devices: ReadonlyMap<string, Device>) {}
 
 	/**
 	 * Gets the logger used by this instance, used to log messages independently of a Stream Deck connection.
@@ -33,14 +25,6 @@ export class StreamDeckClient implements ActionController {
 	 */
 	public get logger() {
 		return logger;
-	}
-
-	/**
-	 * Gets the plugin's unique identifier supplied by Stream Deck. The identifier is transmitted as part of specific messages sent to Stream Deck, e.g. "setGlobalSettings", "getGlobalSettings", and "switchToProfile".
-	 * @returns This plugin's unique identifier.
-	 */
-	public get pluginUUID() {
-		return this.connection.params.pluginUUID;
 	}
 
 	/**
@@ -52,7 +36,7 @@ export class StreamDeckClient implements ActionController {
 		this.connection.once("didReceiveGlobalSettings", (msg: messages.DidReceiveGlobalSettings<T>) => settings.setResult(msg.payload.settings));
 
 		await this.connection.send("getGlobalSettings", {
-			context: this.pluginUUID
+			context: this.connection.registrationParameters.pluginUUID
 		});
 
 		return settings.promise;
@@ -135,7 +119,7 @@ export class StreamDeckClient implements ActionController {
 			listener(
 				new DeviceEvent(
 					ev,
-					this.devices.getDevice(ev.device) || {
+					this.devices.get(ev.device) || {
 						id: ev.device,
 						isConnected: false
 					}
@@ -302,7 +286,7 @@ export class StreamDeckClient implements ActionController {
 	 */
 	public setGlobalSettings(settings: unknown): Promise<void> {
 		return this.connection.send("setGlobalSettings", {
-			context: this.pluginUUID,
+			context: this.connection.registrationParameters.pluginUUID,
 			payload: settings
 		});
 	}
@@ -372,7 +356,7 @@ export class StreamDeckClient implements ActionController {
 	 */
 	public switchToProfile(profile: string, device: string): Promise<void> {
 		return this.connection.send("switchToProfile", {
-			context: this.pluginUUID,
+			context: this.connection.registrationParameters.pluginUUID,
 			device,
 			payload: {
 				profile
