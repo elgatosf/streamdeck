@@ -1,4 +1,4 @@
-import { DeviceType } from "./connectivity/events";
+import { DeviceType } from "./connectivity/messages";
 import logger from "./logger";
 
 /**

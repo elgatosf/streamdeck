@@ -4,7 +4,7 @@ import WebSocket from "ws";
 import logger from "../logger";
 import { PromiseCompletionSource } from "../promises";
 import { RegistrationParameters } from "../registration";
-import { InboundEvents, OutboundEvents, StreamDeckEvent } from "./events";
+import { InboundMessages, Message, OutboundMessages } from "./messages";
 
 /**
  * Provides a connection between the plugin and the Stream Deck allowing for messages to be sent and received.
@@ -66,7 +66,7 @@ export class StreamDeckConnection {
 	 * @param listener Callback invoked when Stream Deck emits the event.
 	 * @returns This instance for chaining.
 	 */
-	public on<TEvent extends InboundEvents["event"], TEventArgs extends Extract<InboundEvents, StreamDeckEvent<TEvent>>>(eventName: TEvent, listener: (data: TEventArgs) => void): this {
+	public on<TEvent extends InboundMessages["event"], TEventArgs extends Extract<InboundMessages, Message<TEvent>>>(eventName: TEvent, listener: (data: TEventArgs) => void): this {
 		this.eventEmitter.on(eventName, listener);
 		return this;
 	}
@@ -78,7 +78,7 @@ export class StreamDeckConnection {
 	 * @param listener Callback invoked when Stream Deck emits the event.
 	 * @returns This instance for chaining.
 	 */
-	public once<TEvent extends InboundEvents["event"], TEventArgs extends Extract<InboundEvents, StreamDeckEvent<TEvent>>>(eventName: TEvent, listener: (data: TEventArgs) => void): this {
+	public once<TEvent extends InboundMessages["event"], TEventArgs extends Extract<InboundMessages, Message<TEvent>>>(eventName: TEvent, listener: (data: TEventArgs) => void): this {
 		this.eventEmitter.once(eventName, listener);
 		return this;
 	}
@@ -89,7 +89,7 @@ export class StreamDeckConnection {
 	 * @param listener Callback to remove.
 	 * @returns This instance for chaining.
 	 */
-	public removeListener<TEvent extends InboundEvents["event"], TEventArgs extends Extract<InboundEvents, StreamDeckEvent<TEvent>>>(eventName: TEvent, listener: (data: TEventArgs) => void): this {
+	public removeListener<TEvent extends InboundMessages["event"], TEventArgs extends Extract<InboundMessages, Message<TEvent>>>(eventName: TEvent, listener: (data: TEventArgs) => void): this {
 		this.eventEmitter.removeListener(eventName, listener);
 		return this;
 	}
@@ -100,7 +100,7 @@ export class StreamDeckConnection {
 	 * @param data Data to send to Stream Deck.
 	 * @returns `Promise` resolved when the request is sent to Stream Deck.
 	 */
-	public async send(event: OutboundEvents, data: object): Promise<void> {
+	public async send(event: OutboundMessages, data: object): Promise<void> {
 		const connection = await this.connection.promise;
 		const message = JSON.stringify({
 			event,
