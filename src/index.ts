@@ -1,14 +1,11 @@
-import { StreamDeckClient } from "./client";
-import { StreamDeckConnection } from "./connection";
+import * as connectivity from "./connectivity";
 
-export * from "./client";
-export * from "./enums";
-export * from "./events";
+export { DeviceType, Target } from "./connectivity";
 export { LogLevel, default as logger } from "./logger";
 export * from "./manifest";
-export * from "./registration";
 export { client };
 
-const connection = new StreamDeckConnection();
-const client = new StreamDeckClient(connection);
+const connection = new connectivity.StreamDeckConnection();
+const client = new connectivity.StreamDeckClient(connection);
+
 connection.connect();

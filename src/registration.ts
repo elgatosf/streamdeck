@@ -1,4 +1,4 @@
-import { DeviceType } from "./enums";
+import { DeviceType } from "./connectivity/events";
 import logger from "./logger";
 
 /**

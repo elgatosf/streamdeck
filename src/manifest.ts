@@ -1,5 +1,5 @@
 /* eslint-disable jsdoc/check-tag-names */
-import { DeviceType } from "./enums";
+import { DeviceType } from "./connectivity/events";
 
 /**
  * Defines the plugin and available actions, and all information associated with them, including the plugin's entry point, all iconography, action default behavior, etc.

@@ -45,9 +45,9 @@ export type StreamDeckActionEventWithPayload<TEvent, TPayload> = StreamDeckActio
 export type DidReceiveSettingsEvent<TSettings = unknown> = StreamDeckActionEventWithPayload<
 	"didReceiveSettings",
 	{
-		settings: TSettings;
 		coordinates: Coordinates;
 		isInMultiAction: boolean;
+		settings: TSettings;
 	}
 >;
 
@@ -141,7 +141,7 @@ export type TitleParametersDidChangeEvent<TSetting = unknown> = StreamDeckAction
 		titleParameters: {
 			fontFamily: string;
 			fontSize: number;
-			fontStyle: "" | "Bold" | "Bold Italic" | "Italic" | "Regular";
+			fontStyle: "" | "Bold Italic" | "Bold" | "Italic" | "Regular";
 			fontUnderline: boolean;
 			showTitle: boolean;
 			titleAlignment: "bottom" | "middle" | "top";
