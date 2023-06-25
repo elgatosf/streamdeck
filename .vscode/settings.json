@@ -1,5 +1,11 @@
 {
 	/** Prefer tabs over spaces for accessibility */
 	"editor.insertSpaces": false,
-	"editor.detectIndentation": false
+	"editor.detectIndentation": false,
+	/* Explorer */
+	"explorer.fileNesting.enabled": true,
+	"explorer.fileNesting.patterns": {
+		".editorconfig": ".eslintrc, .prettierrc",
+		"package.json": "package-lock.json, yarn.lock, pnpm-lock.yaml"
+	}
 }
