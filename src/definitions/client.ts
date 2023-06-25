@@ -104,7 +104,7 @@ export type StreamDeckClient = {
 	onPropertyInspectorDidDisappear(listener: (ev: ActionWithoutPayloadEvent<messages.PropertyInspectorDidDisappear>) => void): void;
 
 	/**
-	 * Occurs when a message was sent to the plugin _from_ the property inspector. The plugin can also send messages _to_ the property inspector using `streamDeck.sendToPlugin(context, payload)`.
+	 * Occurs when a message was sent to the plugin _from_ the property inspector. The plugin can also send messages _to_ the property inspector using {@link StreamDeckClient.sendToPropertyInspector}.
 	 * @param listener Function to be invoked when the event occurs.
 	 */
 	onSendToPlugin<TPayload extends object>(listener: (ev: SendToPluginEvent<TPayload>) => void): void;
