@@ -1,17 +1,16 @@
 import { StreamDeckConnection } from "./connectivity/connection";
 import * as messages from "./connectivity/messages";
 import { State } from "./connectivity/messages";
-import { ActionController, Target } from "./controllers";
+import { StreamDeckClient as IStreamDeckClient, Target } from "./definitions/client";
 import { Device } from "./devices";
 import { ActionEvent, ActionWithoutPayloadEvent, ApplicationEvent, DeviceEvent, SendToPluginEvent, SettingsEvent } from "./events";
 import { FeedbackPayload } from "./layouts";
-import { Manifest } from "./manifest";
 import { PromiseCompletionSource } from "./promises";
 
 /**
  * Provides the main bridge between the plugin and the Stream Deck allowing the plugin to send requests and receive events, e.g. when the user presses an action.
  */
-export class StreamDeckClient implements ActionController {
+export class StreamDeckClient implements IStreamDeckClient {
 	/**
 	 * Initializes a new instance of the `StreamDeckClient`.
 	 * @param connection Underlying connection with the Stream Deck.
@@ -19,10 +18,7 @@ export class StreamDeckClient implements ActionController {
 	 */
 	constructor(public readonly connection: StreamDeckConnection, private readonly devices: ReadonlyMap<string, Device>) {}
 
-	/**
-	 * Gets the global settings associated with the plugin. Use in conjunction with {@link StreamDeckClient.setGlobalSettings}.
-	 * @returns Promise containing the plugin's global settings.
-	 */
+	/** @inheritdoc */
 	public async getGlobalSettings<T = unknown>(): Promise<Partial<T>> {
 		const settings = new PromiseCompletionSource<Partial<T>>();
 		this.connection.once("didReceiveGlobalSettings", (msg: messages.DidReceiveGlobalSettings<T>) => settings.setResult(msg.payload.settings));
@@ -52,46 +48,27 @@ export class StreamDeckClient implements ActionController {
 		return settings.promise;
 	}
 
-	/**
-	 * Occurs when an action appears on the Stream Deck due to the user navigating to another page, profile, folder, etc. This also occurs during startup if the action is on the "front
-	 * page". An action refers to _all_ types of actions, e.g. keys, dials,
-	 * @param listener Function to be invoked when the event occurs.
-	 */
+	/** @inheritdoc */
 	public onActionWillAppear<TSettings = unknown>(listener: (ev: ActionEvent<messages.WillAppear<TSettings>>) => void): void {
 		this.connection.on("willAppear", (ev: messages.WillAppear<TSettings>) => listener(new ActionEvent(this, ev)));
 	}
 
-	/**
-	 * Occurs when an action disappears from the Stream Deck due to the user navigating to another page, profile, folder, etc. An action refers to _all_ types of actions, e.g. keys,
-	 * dials, touchscreens, pedals, etc.
-	 * @param listener Function to be invoked when the event occurs.
-	 */
+	/** @inheritdoc */
 	public onActionWillDisappear<TSettings = unknown>(listener: (ev: ActionEvent<messages.WillDisappear<TSettings>>) => void): void {
 		this.connection.on("willDisappear", (ev: messages.WillDisappear<TSettings>) => listener(new ActionEvent(this, ev)));
 	}
 
-	/**
-	 * Occurs when a monitored application is launched. Monitored applications can be defined in the `manifest.json` file via the {@link Manifest.ApplicationsToMonitor} property.
-	 * Also see {@link StreamDeckClient.onApplicationDidTerminate}.
-	 * @param listener Function to be invoked when the event occurs.
-	 */
+	/** @inheritdoc */
 	public onApplicationDidLaunch(listener: (ev: ApplicationEvent<messages.ApplicationDidLaunch>) => void): void {
 		this.connection.on("applicationDidLaunch", (ev) => listener(new ApplicationEvent(ev)));
 	}
 
-	/**
-	 * Occurs when a monitored application terminates. Monitored applications can be defined in the `manifest.json` file via the {@link Manifest.ApplicationsToMonitor} property.
-	 * Also see {@link StreamDeckClient.onApplicationDidLaunch}.
-	 * @param listener Function to be invoked when the event occurs.
-	 */
+	/** @inheritdoc */
 	public onApplicationDidTerminate(listener: (ev: ApplicationEvent<messages.ApplicationDidTerminate>) => void): void {
 		this.connection.on("applicationDidTerminate", (ev) => listener(new ApplicationEvent(ev)));
 	}
 
-	/**
-	 * Occurs when a Stream Deck device is connected. Also see {@link StreamDeckClient.onDeviceDidConnect}.
-	 * @param listener Function to be invoked when the event occurs.
-	 */
+	/** @inheritdoc */
 	public onDeviceDidConnect(listener: (ev: DeviceEvent<messages.DeviceDidConnect, Required<Device>>) => void): void {
 		this.connection.on("deviceDidConnect", (ev) =>
 			listener(
@@ -104,10 +81,7 @@ export class StreamDeckClient implements ActionController {
 		);
 	}
 
-	/**
-	 * Occurs when a Stream Deck device is disconnected. Also see {@link StreamDeckClient.onDeviceDidDisconnect}.
-	 * @param listener Function to be invoked when the event occurs.
-	 */
+	/** @inheritdoc */
 	public onDeviceDidDisconnect(listener: (ev: DeviceEvent<messages.DeviceDidDisconnect, Device>) => void): void {
 		this.connection.on("deviceDidDisconnect", (ev) =>
 			listener(
@@ -122,115 +96,72 @@ export class StreamDeckClient implements ActionController {
 		);
 	}
 
-	/**
-	 * Occurs when the user presses a dial (Stream Deck+). **NB** For other action types see {@link StreamDeckClient.onKeyDown}. Also see {@link StreamDeckClient.onDialUp}.
-	 * @param listener Function to be invoked when the event occurs.
-	 */
+	/** @inheritdoc */
 	public onDialDown<TSettings = unknown>(listener: (ev: ActionEvent<messages.DialDown<TSettings>>) => void): void {
 		this.connection.on("dialDown", (ev: messages.DialDown<TSettings>) => listener(new ActionEvent(this, ev)));
 	}
 
-	/**
-	 * Occurs when the user rotates a dial (Stream Deck+).
-	 * @param listener Function to be invoked when the event occurs.
-	 */
+	/** @inheritdoc */
 	public onDialRotate<TSettings = unknown>(listener: (ev: ActionEvent<messages.DialRotate<TSettings>>) => void): void {
 		this.connection.on("dialRotate", (ev: messages.DialRotate<TSettings>) => listener(new ActionEvent(this, ev)));
 	}
 
-	/**
-	 * Occurs when the user releases a pressed dial (Stream Deck+). **NB** For other action types see {@link StreamDeckClient.onKeyUp}. Also see {@link StreamDeckClient.onDialDown}.
-	 * @param listener Function to be invoked when the event occurs.
-	 */
+	/** @inheritdoc */
 	public onDialUp<TSettings = unknown>(listener: (ev: ActionEvent<messages.DialUp<TSettings>>) => void): void {
 		this.connection.on("dialUp", (ev: messages.DialUp<TSettings>) => listener(new ActionEvent(this, ev)));
 	}
 
-	/**
-	 * Occurs when the global settings are requested using {@link StreamDeckClient.getGlobalSettings}, or when the the global settings were updated by the property inspector.
-	 * @param listener Function to be invoked when the event occurs.
-	 */
+	/** @inheritdoc */
 	public onDidReceiveGlobalSettings<TSettings = unknown>(listener: (ev: SettingsEvent<TSettings>) => void): void {
 		this.connection.on("didReceiveGlobalSettings", (ev: messages.DidReceiveGlobalSettings<TSettings>) => listener(new SettingsEvent(ev)));
 	}
 
-	/**
-	 * Occurs when the settings associated with an action instance are requested using {@link StreamDeckClient.getSettings}, or when the the settings were updated by the property inspector.
-	 * @param listener Function to be invoked when the event occurs.
-	 */
+	/** @inheritdoc */
 	public onDidReceiveSettings<TSettings = unknown>(listener: (ev: ActionEvent<messages.DidReceiveSettings<TSettings>>) => void): void {
 		this.connection.on("didReceiveSettings", (ev: messages.DidReceiveSettings<TSettings>) => listener(new ActionEvent(this, ev)));
 	}
 
-	/**
-	 * Occurs when the user presses a action down. **NB** For dials / touchscreens see {@link StreamDeckClient.onDialDown}. Also see {@link StreamDeckClient.onKeyUp}.
-	 * @param listener Function to be invoked when the event occurs.
-	 */
+	/** @inheritdoc */
 	public onKeyDown<TSettings = unknown>(listener: (ev: ActionEvent<messages.KeyDown<TSettings>>) => void): void {
 		this.connection.on("keyDown", (ev: messages.KeyDown<TSettings>) => listener(new ActionEvent(this, ev)));
 	}
 
-	/**
-	 * Occurs when the user releases a pressed action. **NB** For dials / touchscreens see {@link StreamDeckClient.onDialUp}. Also see {@link StreamDeckClient.onKeyDown}.
-	 * @param listener Function to be invoked when the event occurs.
-	 */
+	/** @inheritdoc */
 	public onKeyUp<TSettings = unknown>(listener: (ev: ActionEvent<messages.KeyUp<TSettings>>) => void): void {
 		this.connection.on("keyUp", (ev: messages.KeyUp<TSettings>) => listener(new ActionEvent(this, ev)));
 	}
 
-	/**
-	 * Occurs when the property inspector associated with the action becomes visible, i.e. the user selected an action in the Stream Deck application. Also see {@link StreamDeckClient.onPropertyInspectorDidDisappear}.
-	 * @param listener Function to be invoked when the event occurs.
-	 */
+	/** @inheritdoc */
 	public onPropertyInspectorDidAppear(listener: (ev: ActionWithoutPayloadEvent<messages.PropertyInspectorDidAppear>) => void): void {
 		this.connection.on("propertyInspectorDidAppear", (ev: messages.PropertyInspectorDidAppear) => listener(new ActionWithoutPayloadEvent(this, ev)));
 	}
 
-	/**
-	 * Occurs when the property inspector associated with the action becomes invisible, i.e. the user unselected the action in the Stream Deck application. Also see {@link StreamDeckClient.onPropertyInspectorDidAppear}.
-	 * @param listener Function to be invoked when the event occurs.
-	 */
+	/** @inheritdoc */
 	public onPropertyInspectorDidDisappear(listener: (ev: ActionWithoutPayloadEvent<messages.PropertyInspectorDidDisappear>) => void): void {
 		this.connection.on("propertyInspectorDidDisappear", (ev: messages.PropertyInspectorDidDisappear) => listener(new ActionWithoutPayloadEvent(this, ev)));
 	}
 
-	/**
-	 * Occurs when a message was sent to the plugin _from_ the property inspector. The plugin can also send messages _to_ the property inspector using `streamDeck.sendToPlugin(context, payload)`.
-	 * @param listener Function to be invoked when the event occurs.
-	 */
+	/** @inheritdoc */
 	public onSendToPlugin<TPayload extends object>(listener: (ev: SendToPluginEvent<TPayload>) => void): void {
 		this.connection.on("sendToPlugin", (ev: messages.SendToPlugin<TPayload>) => listener(new SendToPluginEvent(this, ev)));
 	}
 
-	/**
-	 * Occurs when the computer wakes up.
-	 * @param listener Function to be invoked when the event occurs.
-	 */
+	/** @inheritdoc */
 	public onSystemDidWakeUp(listener: () => void) {
 		this.connection.on("systemDidWakeUp", () => listener());
 	}
 
-	/**
-	 * Occurs when the user updates an action's title settings in the Stream Deck application. Also see {@link StreamDeckClient.setTitle}.
-	 * @param listener Function to be invoked when the event occurs.
-	 */
+	/** @inheritdoc */
 	public onTitleParametersDidChange<TSettings = unknown>(listener: (ev: ActionEvent<messages.TitleParametersDidChange<TSettings>>) => void): void {
 		this.connection.on("titleParametersDidChange", (ev: messages.TitleParametersDidChange<TSettings>) => listener(new ActionEvent(this, ev)));
 	}
 
-	/**
-	 * Occurs when the user taps the touchscreen (Stream Deck+).
-	 * @param listener Function to be invoked when the event occurs.
-	 */
+	/** @inheritdoc */
 	public onTouchTap<TSettings = unknown>(listener: (ev: ActionEvent<messages.TouchTap<TSettings>>) => void): void {
 		this.connection.on("touchTap", (ev: messages.TouchTap<TSettings>) => listener(new ActionEvent(this, ev)));
 	}
 
-	/**
-	 * Opens the specified `url` in the user's default browser.
-	 * @param url URL to open.
-	 * @returns `Promise` resolved when the request to open the `url` has been sent to Stream Deck.
-	 */
+	/** @inheritdoc */
 	public openUrl(url: string): Promise<void> {
 		return this.connection.send("openUrl", {
 			payload: {
@@ -267,17 +198,7 @@ export class StreamDeckClient implements ActionController {
 		});
 	}
 
-	/**
-	 * Sets the global `settings` associated the plugin. **Note**, these settings are only available to this plugin, and should be used to persist information securely.
-	 * Use conjunction with {@link StreamDeckClient.getGlobalSettings}.
-	 * @param settings Settings to save.
-	 * @returns `Promise` resolved when the global `settings` are sent to Stream Deck.
-	 * @example
-	 * streamDeck.setGlobalSettings({
-	 *   apiKey,
-	 *   connectedDate: new Date()
-	 * })
-	 */
+	/** @inheritdoc */
 	public setGlobalSettings(settings: unknown): Promise<void> {
 		return this.connection.send("setGlobalSettings", {
 			context: this.connection.registrationParameters.pluginUUID,
@@ -341,13 +262,7 @@ export class StreamDeckClient implements ActionController {
 		});
 	}
 
-	/**
-	 * Requests the Stream Deck switches the current profile of the specified `device`, to the profile defined by `profile`. **Note**, plugins can only switch to profiles included as part of the plugin, and
-	 * defined within their manifest.json. Plugins cannot switch to custom profiles created by users.
-	 * @param profile Name of the profile to switch to. The name must be identical to the one provided in the manifest.json file.
-	 * @param device Unique identifier of the device where the profile should be set.
-	 * @returns `Promise` resolved when the request to switch the `profile` has been sent to Stream Deck.
-	 */
+	/** @inheritdoc */
 	public switchToProfile(profile: string, device: string): Promise<void> {
 		return this.connection.send("switchToProfile", {
 			context: this.connection.registrationParameters.pluginUUID,

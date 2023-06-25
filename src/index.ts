@@ -3,11 +3,12 @@ import { StreamDeckConnection } from "./connectivity/connection";
 import { RegistrationInfo } from "./connectivity/registration";
 import { getDevices } from "./devices";
 
-export { DeviceType } from "./connectivity/messages";
-export { Target } from "./controllers";
+export { DeviceType, State } from "./connectivity/messages";
+export { Target } from "./definitions/client";
 export { LogLevel, logger } from "./logging";
 export * from "./manifest";
-export { client, devices, info };
+export { SingletonAction } from "./routing";
+export { client, devices, info, router };
 
 const connection = new StreamDeckConnection();
 

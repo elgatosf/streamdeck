@@ -1,20 +1,6 @@
+import { Action } from "./actions";
 import * as messages from "./connectivity/messages";
-import { ActionController, ContextualizedActionController } from "./controllers";
-
-/**
- * An action associated with an event raised by Stream Deck.
- */
-class ActionEventSource extends ContextualizedActionController {
-	/**
-	 * Initializes a new instance of the `ActionEventSource` class.
-	 * @param controller Controller capable of updating the action.
-	 * @param manifestId Unique identifier of the action as defined within the plugin's manifest (`Actions[].UUID`).
-	 * @param context Unique identifier of the instance of the action; this can be used to update the action on the Stream Deck, e.g. its title, settings, etc.
-	 */
-	constructor(controller: ActionController, public readonly manifestId: string, public readonly context: string) {
-		super(controller, context);
-	}
-}
+import { StreamDeckClient } from "./definitions/client";
 
 /**
  * Provides information for an event received from Stream Deck.
@@ -41,7 +27,7 @@ export class ActionWithoutPayloadEvent<TMessage extends messages.ActionMessage<u
 	/**
 	 * The action that raised the event.
 	 */
-	public readonly action: ActionEventSource;
+	public readonly action: Action;
 
 	/**
 	 * Device identifier the action is associated with.
@@ -50,13 +36,13 @@ export class ActionWithoutPayloadEvent<TMessage extends messages.ActionMessage<u
 
 	/**
 	 * Initializes a new instance of the `ActionWithoutPayloadEvent<T>` class.
-	 * @param controller Controller capable of updating the action.
+	 * @param client The Stream Deck client that raised the event.
 	 * @param source Source of the event, i.e. the original message from Stream Deck.
 	 */
-	constructor(controller: ActionController, source: TMessage) {
+	constructor(client: StreamDeckClient, source: TMessage) {
 		super(source);
 
-		this.action = new ActionEventSource(controller, source.action, source.context);
+		this.action = new Action(client, source.action, source.context);
 		this.deviceId = source.device;
 	}
 }
@@ -72,11 +58,11 @@ export class ActionEvent<TMessage extends messages.ActionMessageWithPayload<unkn
 
 	/**
 	 * Initializes a new instance of the `ActionEvent<T>` class.
-	 * @param controller Controller capable of updating the action.
+	 * @param client The Stream Deck client that raised the event.
 	 * @param source Source of the event, i.e. the original message from Stream Deck.
 	 */
-	constructor(controller: ActionController, source: TMessage) {
-		super(controller, source);
+	constructor(client: StreamDeckClient, source: TMessage) {
+		super(client, source);
 		this.payload = source.payload;
 	}
 }
@@ -121,7 +107,7 @@ export class SendToPluginEvent<TPayload extends object> extends Event<messages.S
 	/**
 	 * The action that raised the event.
 	 */
-	public readonly action: ActionEventSource;
+	public readonly action: Action;
 
 	/**
 	 * Payload sent from the property inspector.
@@ -130,12 +116,12 @@ export class SendToPluginEvent<TPayload extends object> extends Event<messages.S
 
 	/**
 	 * Initializes a new instance of the `PropertyInspectorMessageEvent<TPayload>` class.
-	 * @param controller Controller capable of updating the action.
+	 * @param client The Stream Deck client that raised the event.
 	 * @param source Source of the event, i.e. the original message from Stream Deck.
 	 */
-	constructor(controller: ActionController, source: messages.SendToPlugin<TPayload>) {
+	constructor(client: StreamDeckClient, source: messages.SendToPlugin<TPayload>) {
 		super(source);
-		this.action = new ActionEventSource(controller, source.action, source.context);
+		this.action = new Action(client, source.action, source.context);
 		this.payload = source.payload;
 	}
 }
