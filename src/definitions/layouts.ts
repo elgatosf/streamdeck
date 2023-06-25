@@ -239,11 +239,6 @@ export enum BarSubType {
 }
 
 /**
- * Payload object, used in conjunction with `setLayout`, that enables updating items within a layout.
- */
-export type FeedbackPayload = Record<string, Partial<Bar> | Partial<GBar> | Partial<Pixmap> | Partial<Text> | number | string>;
-
-/**
  * Array defining the items coordinates and size.
  */
 type Rect = [x: X, y: Y, width: Width, height: Height];

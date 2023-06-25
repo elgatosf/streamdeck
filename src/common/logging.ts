@@ -205,15 +205,13 @@ export enum LogLevel {
 	DEBUG = 3,
 
 	/**
-	 * Trace message used to monitor low-level information such as method calls, communication between the Stream Deck, etc..
+	 * Trace message used to monitor low-level information such as method calls, performance tracking, etc.
 	 */
 	TRACE = 4
 }
 
 /**
- * Logger capable of writing messages to a local log file, without relying on a connection with Stream Deck.
- * This instance is used when calling `streamDeck.logMessage(message)` to reduce communication between the plugin and the Stream Deck.
- * Log files can be found in the plugin's directory, under the "/logs" folder, and are truncated to the 10 most recent logs.
+ * Local file logger; logs can be found within the plugins directory under the "./logs" folder. Log files are re-indexed at 50MiB, with the 10 most recent log files being retained.
  */
 export const logger = new Logger();
 

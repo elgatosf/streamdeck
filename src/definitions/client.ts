@@ -2,8 +2,8 @@ import * as messages from "../connectivity/messages";
 import { State } from "../connectivity/messages";
 import { Device } from "../devices";
 import { ActionEvent, ActionWithoutPayloadEvent, ApplicationEvent, DeviceEvent, SendToPluginEvent, SettingsEvent } from "../events";
-import { FeedbackPayload } from "../layouts";
-import { Manifest } from "../manifest";
+import { Bar, GBar, Pixmap, Text } from "./layouts";
+import { Manifest } from "./manifest";
 
 /**
  * Provides the main bridge between the plugin and the Stream Deck allowing the plugin to send requests and receive events, e.g. when the user presses an action.
@@ -298,6 +298,11 @@ export type StreamDeckClient = {
 	 */
 	switchToProfile(profile: string, device: string): Promise<void>;
 };
+
+/**
+ * Payload object, used in conjunction with `setLayout`, that enables updating items within a layout.
+ */
+export type FeedbackPayload = Record<string, Partial<Bar> | Partial<GBar> | Partial<Pixmap> | Partial<Text> | number | string>;
 
 /**
  * Defines the target of a request, i.e. whether the request should update the Stream Deck hardware, Stream Deck software (application), or both, when calling `setImage` and `setState`.
