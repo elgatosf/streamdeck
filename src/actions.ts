@@ -6,7 +6,7 @@ import { FeedbackPayload, StreamDeckClient, Target } from "./definitions/client"
  */
 export class Action {
 	/**
-	 * Initializes a new instance of the `Action` class.
+	 * Initializes a new instance of the {@see Action} class.
 	 * @param client The Stream Deck client.
 	 * @param manifestId Unique identifier of the action as defined within the plugin's manifest (`Actions[].UUID`).
 	 * @param id Unique identifier of the instance of the action; this can be used to update the action on the Stream Deck, e.g. its title, settings, etc.

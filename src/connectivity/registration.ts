@@ -26,7 +26,7 @@ export class RegistrationParameters {
 	public readonly registerEvent!: string;
 
 	/**
-	 * Initializes a new instance of the registration parameters, from the supplied command line arguments arguments.
+	 * Initializes a new instance of the {@link RegistrationParameters} class.
 	 * @param args Command line arguments supplied by Stream Deck when launching this plugin, used to parse the required registration parameters.
 	 */
 	constructor(args: string[]) {

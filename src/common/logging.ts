@@ -38,7 +38,7 @@ class Logger {
 	private readonly pluginName = path.basename(process.cwd());
 
 	/**
-	 * Initializes a new logger.
+	 * Initializes a new instance of the {@link Logger} class.
 	 */
 	constructor() {
 		this.logPath = this.getLogPath();

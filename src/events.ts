@@ -12,7 +12,7 @@ export class Event<TMessage extends messages.Message<unknown>> {
 	public readonly type: TMessage["event"];
 
 	/**
-	 * Initializes a new instance of the `Event<T>` class.
+	 * Initializes a new instance of the {@link Event} class.
 	 * @param source Source of the event, i.e. the original message from Stream Deck.
 	 */
 	constructor(source: TMessage) {
@@ -35,7 +35,7 @@ export class ActionWithoutPayloadEvent<TMessage extends messages.ActionMessage<u
 	public readonly deviceId: string;
 
 	/**
-	 * Initializes a new instance of the `ActionWithoutPayloadEvent<T>` class.
+	 * Initializes a new instance of the {@link ActionWithoutPayloadEvent} class.
 	 * @param client The Stream Deck client that raised the event.
 	 * @param source Source of the event, i.e. the original message from Stream Deck.
 	 */
@@ -57,7 +57,7 @@ export class ActionEvent<TMessage extends messages.ActionMessageWithPayload<unkn
 	public readonly payload: ExtractPayload<TMessage>;
 
 	/**
-	 * Initializes a new instance of the `ActionEvent<T>` class.
+	 * Initializes a new instance of the {@link ActionEvent} class.
 	 * @param client The Stream Deck client that raised the event.
 	 * @param source Source of the event, i.e. the original message from Stream Deck.
 	 */
@@ -77,7 +77,7 @@ export class ApplicationEvent<TMessage extends messages.ApplicationDidLaunch | m
 	public readonly application: string;
 
 	/**
-	 * Initializes a new instance of the `ApplicationEvent<T>` class.
+	 * Initializes a new instance of the {@link ApplicationEvent} class.
 	 * @param source Source of the event, i.e. the original message from Stream Deck.
 	 */
 	constructor(source: TMessage) {
@@ -91,7 +91,7 @@ export class ApplicationEvent<TMessage extends messages.ApplicationDidLaunch | m
  */
 export class DeviceEvent<TMessage extends messages.DeviceDidConnect | messages.DeviceDidDisconnect, TDevice> extends Event<TMessage> {
 	/**
-	 * Initializes a new instance of the `DeviceEvent<T>` class.
+	 * Initializes a new instance of the {@link DeviceEvent} class.
 	 * @param source Source of the event, i.e. the original message from Stream Deck.
 	 * @param device Device that event is associated with.
 	 */
@@ -115,7 +115,7 @@ export class SendToPluginEvent<TPayload extends object> extends Event<messages.S
 	public payload: TPayload;
 
 	/**
-	 * Initializes a new instance of the `PropertyInspectorMessageEvent<TPayload>` class.
+	 * Initializes a new instance of the {@link PropertyInspectorMessageEvent} class.
 	 * @param client The Stream Deck client that raised the event.
 	 * @param source Source of the event, i.e. the original message from Stream Deck.
 	 */
@@ -136,7 +136,7 @@ export class SettingsEvent<TSettings = unknown> extends Event<messages.DidReceiv
 	public readonly settings: Partial<TSettings>;
 
 	/**
-	 * Initializes a new instance of the `SettingsEvent<TSettings>` class.
+	 * Initializes a new instance of the {@link SettingsEvent} class.
 	 * @param source Source of the event, i.e. the original message from Stream Deck.
 	 */
 	constructor(source: messages.DidReceiveGlobalSettings<TSettings>) {

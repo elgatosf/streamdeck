@@ -11,7 +11,7 @@ import { ActionEvent, ActionWithoutPayloadEvent, ApplicationEvent, DeviceEvent, 
  */
 export class StreamDeckClient implements IStreamDeckClient {
 	/**
-	 * Initializes a new instance of the `StreamDeckClient`.
+	 * Initializes a new instance of the {@link StreamDeckClient} class.
 	 * @param connection Underlying connection with the Stream Deck.
 	 * @param devices Device collection responsible for tracking devices.
 	 */

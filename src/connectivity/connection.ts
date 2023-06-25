@@ -27,7 +27,7 @@ export class StreamDeckConnection {
 	private ws?: WebSocket;
 
 	/**
-	 * Initializes a new instance of the `StreamDeckConnection` class.
+	 * Initializes a new instance of the {@link StreamDeckConnection} class.
 	 * @param registrationParameters Registration parameters used to establish a connection with the Stream Deck; these are automatically supplied as part of the command line arguments
 	 * when the plugin is ran by the Stream Deck.
 	 */
