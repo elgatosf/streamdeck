@@ -48,16 +48,6 @@ export class StreamDeckClient implements IStreamDeckClient {
 	}
 
 	/** @inheritdoc */
-	public onActionWillAppear<TSettings = unknown>(listener: (ev: ActionEvent<messages.WillAppear<TSettings>>) => void): void {
-		this.connection.on("willAppear", (ev: messages.WillAppear<TSettings>) => listener(new ActionEvent(this, ev)));
-	}
-
-	/** @inheritdoc */
-	public onActionWillDisappear<TSettings = unknown>(listener: (ev: ActionEvent<messages.WillDisappear<TSettings>>) => void): void {
-		this.connection.on("willDisappear", (ev: messages.WillDisappear<TSettings>) => listener(new ActionEvent(this, ev)));
-	}
-
-	/** @inheritdoc */
 	public onApplicationDidLaunch(listener: (ev: ApplicationEvent<messages.ApplicationDidLaunch>) => void): void {
 		this.connection.on("applicationDidLaunch", (ev) => listener(new ApplicationEvent(ev)));
 	}
@@ -158,6 +148,16 @@ export class StreamDeckClient implements IStreamDeckClient {
 	/** @inheritdoc */
 	public onTouchTap<TSettings = unknown>(listener: (ev: ActionEvent<messages.TouchTap<TSettings>>) => void): void {
 		this.connection.on("touchTap", (ev: messages.TouchTap<TSettings>) => listener(new ActionEvent(this, ev)));
+	}
+
+	/** @inheritdoc */
+	public onWillAppear<TSettings = unknown>(listener: (ev: ActionEvent<messages.WillAppear<TSettings>>) => void): void {
+		this.connection.on("willAppear", (ev: messages.WillAppear<TSettings>) => listener(new ActionEvent(this, ev)));
+	}
+
+	/** @inheritdoc */
+	public onWillDisappear<TSettings = unknown>(listener: (ev: ActionEvent<messages.WillDisappear<TSettings>>) => void): void {
+		this.connection.on("willDisappear", (ev: messages.WillDisappear<TSettings>) => listener(new ActionEvent(this, ev)));
 	}
 
 	/** @inheritdoc */

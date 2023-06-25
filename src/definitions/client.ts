@@ -24,20 +24,6 @@ export type StreamDeckClient = {
 	getSettings<T = unknown>(context: string): Promise<Partial<T>>;
 
 	/**
-	 * Occurs when an action appears on the Stream Deck due to the user navigating to another page, profile, folder, etc. This also occurs during startup if the action is on the "front
-	 * page". An action refers to _all_ types of actions, e.g. keys, dials,
-	 * @param listener Function to be invoked when the event occurs.
-	 */
-	onActionWillAppear<TSettings = unknown>(listener: (ev: ActionEvent<messages.WillAppear<TSettings>>) => void): void;
-
-	/**
-	 * Occurs when an action disappears from the Stream Deck due to the user navigating to another page, profile, folder, etc. An action refers to _all_ types of actions, e.g. keys,
-	 * dials, touchscreens, pedals, etc.
-	 * @param listener Function to be invoked when the event occurs.
-	 */
-	onActionWillDisappear<TSettings = unknown>(listener: (ev: ActionEvent<messages.WillDisappear<TSettings>>) => void): void;
-
-	/**
 	 * Occurs when a monitored application is launched. Monitored applications can be defined in the `manifest.json` file via the {@link Manifest.ApplicationsToMonitor} property.
 	 * Also see {@link StreamDeckClient.onApplicationDidTerminate}.
 	 * @param listener Function to be invoked when the event occurs.
@@ -140,6 +126,20 @@ export type StreamDeckClient = {
 	 * @param listener Function to be invoked when the event occurs.
 	 */
 	onTouchTap<TSettings = unknown>(listener: (ev: ActionEvent<messages.TouchTap<TSettings>>) => void): void;
+
+	/**
+	 * Occurs when an action appears on the Stream Deck due to the user navigating to another page, profile, folder, etc. This also occurs during startup if the action is on the "front
+	 * page". An action refers to _all_ types of actions, e.g. keys, dials,
+	 * @param listener Function to be invoked when the event occurs.
+	 */
+	onWillAppear<TSettings = unknown>(listener: (ev: ActionEvent<messages.WillAppear<TSettings>>) => void): void;
+
+	/**
+	 * Occurs when an action disappears from the Stream Deck due to the user navigating to another page, profile, folder, etc. An action refers to _all_ types of actions, e.g. keys,
+	 * dials, touchscreens, pedals, etc.
+	 * @param listener Function to be invoked when the event occurs.
+	 */
+	onWillDisappear<TSettings = unknown>(listener: (ev: ActionEvent<messages.WillDisappear<TSettings>>) => void): void;
 
 	/**
 	 * Opens the specified `url` in the user's default browser.
