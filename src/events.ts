@@ -115,7 +115,7 @@ export class SendToPluginEvent<TPayload extends object> extends Event<messages.S
 	public payload: TPayload;
 
 	/**
-	 * Initializes a new instance of the {@link PropertyInspectorMessageEvent} class.
+	 * Initializes a new instance of the {@link SendToPluginEvent} class.
 	 * @param client The Stream Deck client that raised the event.
 	 * @param source Source of the event, i.e. the original message from Stream Deck.
 	 */
