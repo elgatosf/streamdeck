@@ -6,6 +6,6 @@
 	"explorer.fileNesting.enabled": true,
 	"explorer.fileNesting.patterns": {
 		".editorconfig": ".eslintrc, .prettierrc",
-		"package.json": "package-lock.json, yarn.lock, pnpm-lock.yaml"
+		"package.json": "package-lock.json, yarn.lock, pnpm-lock.yaml, .npmrc"
 	}
 }
