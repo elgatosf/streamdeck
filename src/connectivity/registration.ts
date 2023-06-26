@@ -88,6 +88,16 @@ export class RegistrationParameters {
 }
 
 /**
+ * Languages supported by Stream Deck.
+ */
+export const supportedLanguages = ["de", "en", "es", "fr", "ja", "zh_CN"] as const;
+
+/**
+ * Language supported by Stream Deck
+ */
+export type Language = (typeof supportedLanguages)[number];
+
+/**
  * Object containing information about the Stream Deck application, the plugin, the user's operating system, user's Stream Deck devices, etc.
  */
 export type RegistrationInfo = {
@@ -103,7 +113,7 @@ export type RegistrationInfo = {
 		/**
 		 * Users preferred language; this is used by the Stream Deck application for localization.
 		 */
-		readonly language: "de" | "en" | "es" | "fr" | "ja" | "zh_CN";
+		readonly language: Language;
 
 		/**
 		 * Operating system.

@@ -6,7 +6,7 @@ import { isDebugMode } from "./utils";
 /**
  * File logger, capable of writing log messages and truncating previous log files.
  */
-class Logger {
+export class Logger {
 	/**
 	 * Maximum size per log file (50MiB); when this limit is reached, the logs are truncated and re-indexed.
 	 */
