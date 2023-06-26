@@ -6,7 +6,7 @@
 	"types": "./dist/index.d.ts",
 	"scripts": {
 		"build": "tsc",
-		"watch": "nodemon ./src/index.ts",
+		"watch": "nodemon --watch \"src/**\" --ext \"ts\" --exec \"tsc\"",
 		"lint": "eslint . --ext .ts --max-warnings 0",
 		"lint-format": "prettier --config .prettierrc \"./src/**/*.ts\" --write",
 		"generate-schemas": "ts-node ./schemas/generate.ts"
