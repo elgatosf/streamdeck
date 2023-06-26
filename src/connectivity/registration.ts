@@ -66,22 +66,22 @@ export class RegistrationParameters {
 		}
 
 		if (this.port === undefined) {
-			logger.logError("no port");
+			logger.logError('Command line argument "-port" was not specified.');
 			throw new Error("Unable to establish a connection with Stream Deck: The required command line argument [-port] was not specified by Stream Deck when launching the plugin.");
 		}
 
 		if (this.pluginUUID === undefined) {
-			logger.logError("no plugin UUID");
+			logger.logError('Command line argument "-pluginUUID" was not specified.');
 			throw new Error("Unable to establish a connection with Stream Deck: The required command line argument [-pluginUUID] was not specified by Stream Deck when launching the plugin.");
 		}
 
 		if (this.registerEvent === undefined) {
-			logger.logError("no register event");
+			logger.logError('Command line argument "-registerEvent" was not specified.');
 			throw new Error("Unable to establish a connection with Stream Deck: The required command line argument [-registerEvent] was not specified by Stream Deck when launching the plugin.");
 		}
 
 		if (this.info === undefined) {
-			logger.logError("no info");
+			logger.logError('Command line argument "-info" was not specified.');
 			throw new Error("Unable to establish a connection with Stream Deck: The required command line argument [-info] was not specified by Stream Deck when launching the plugin.");
 		}
 	}
