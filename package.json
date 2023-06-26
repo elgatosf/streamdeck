@@ -10,7 +10,8 @@
 		"lint": "eslint . --ext .ts --max-warnings 0",
 		"lint-format": "prettier --config .prettierrc \"./src/**/*.ts\" --write",
 		"generate-schemas": "ts-node ./schemas/generate.ts",
-		"test": "jest"
+		"test": "jest",
+		"test:coverage": "jest --coverage"
 	},
 	"repository": {
 		"type": "git",

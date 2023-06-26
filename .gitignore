@@ -1,5 +1,8 @@
 # Node.js
 node_modules/
 
+# Tests
+coverage/
+
 # Build output
 dist/
