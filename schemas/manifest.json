@@ -304,8 +304,8 @@
 				},
 				"CodePathMac": {
 					"type": "string",
-					"description": "Path to the plugin's entry point specific to macOS; this is executed when the Stream Deck application starts the plugin on macOS.\n\n**Examples**:\n- index.js\n- Counter ```",
-					"markdownDescription": "Path to the plugin's entry point specific to macOS; this is executed when the Stream Deck application starts the plugin on macOS.\n\n**Examples**:\n- index.js\n- Counter ```"
+					"description": "Path to the plugin's entry point specific to macOS; this is executed when the Stream Deck application starts the plugin on macOS.\n\n**Examples**:\n- index.js\n- Counter",
+					"markdownDescription": "Path to the plugin's entry point specific to macOS; this is executed when the Stream Deck application starts the plugin on macOS.\n\n**Examples**:\n- index.js\n- Counter"
 				},
 				"CodePathWin": {
 					"type": "string",
@@ -343,6 +343,37 @@
 					"type": "string",
 					"description": "Name of the plugin, e.g. \"Wave Link\", \"Camera Hub\", \"Control Center\", etc.",
 					"markdownDescription": "Name of the plugin, e.g. \"Wave Link\", \"Camera Hub\", \"Control Center\", etc."
+				},
+				"Nodejs": {
+					"type": "object",
+					"properties": {
+						"Debug": {
+							"type": "string",
+							"description": "Command-line arguments supplied to the plugin when run in debug mode. Optionally, the pre-defined values `\"enabled\"` and `\"break\"` run the plugin with a debugger enabled with [`--inspect`](https://nodejs.org/api/cli.html#--inspecthostport) and [`--inspect-brk`](https://nodejs.org/api/cli.html#--inspect-brkhostport) respectively. **NB.** `\"enabled\"` and `\"break\"` will automatically be assigned an available `PORT` by Stream Deck.  Alternatively, if you wish to debug on a pre-defined port, this value can be a set of [command-line arguments](https://nodejs.org/api/cli.html).\n\n**Examples:**\n- `\"enabled\"` results in `--inspect=127.0.0.1:{PORT}`\n- `\"break\"` results in `--inspect-brk=127.0.0.1:{PORT}`\n- `\"--inspect=127.0.0.1:12345\"` runs a local debugger on port `12345`.",
+							"examples": [
+								"enabled",
+								"break"
+							],
+							"markdownDescription": "Command-line arguments supplied to the plugin when run in debug mode. Optionally, the pre-defined values `\"enabled\"` and `\"break\"` run the plugin with a debugger enabled with [`--inspect`](https://nodejs.org/api/cli.html#--inspecthostport) and [`--inspect-brk`](https://nodejs.org/api/cli.html#--inspect-brkhostport) respectively. **NB.** `\"enabled\"` and `\"break\"` will automatically be assigned an available `PORT` by Stream Deck.  Alternatively, if you wish to debug on a pre-defined port, this value can be a set of [command-line arguments](https://nodejs.org/api/cli.html).\n\n**Examples:**\n- `\"enabled\"` results in `--inspect=127.0.0.1:{PORT}`\n- `\"break\"` results in `--inspect-brk=127.0.0.1:{PORT}`\n- `\"--inspect=127.0.0.1:12345\"` runs a local debugger on port `12345`."
+						},
+						"GenerateProfilerOutput": {
+							"type": "boolean",
+							"description": "Determines whether to generate a profiler output for the plugin; [read more](https://nodejs.org/en/docs/guides/simple-profiling).",
+							"markdownDescription": "Determines whether to generate a profiler output for the plugin; [read more](https://nodejs.org/en/docs/guides/simple-profiling)."
+						},
+						"Version": {
+							"type": "string",
+							"const": "20",
+							"description": "Version of Node.js to use; currently version `\"20\"` is supported.",
+							"markdownDescription": "Version of Node.js to use; currently version `\"20\"` is supported."
+						}
+					},
+					"required": [
+						"Version"
+					],
+					"additionalProperties": false,
+					"description": "Configuration options for Node.js based plugins. **NB.** All Node.js plugins are executed with the following command-line arguments [`--no-addons`](https://nodejs.org/api/cli.html#--no-addons), [`--enable-source-maps`](https://nodejs.org/api/cli.html#--enable-source-maps), and [`--no-global-search-paths`](https://nodejs.org/api/cli.html#--no-global-search-paths).",
+					"markdownDescription": "Configuration options for Node.js based plugins. **NB.** All Node.js plugins are executed with the following command-line arguments [`--no-addons`](https://nodejs.org/api/cli.html#--no-addons), [`--enable-source-maps`](https://nodejs.org/api/cli.html#--enable-source-maps), and [`--no-global-search-paths`](https://nodejs.org/api/cli.html#--no-global-search-paths)."
 				},
 				"OS": {
 					"type": "array",
@@ -466,6 +497,7 @@
 				"Description",
 				"Icon",
 				"Name",
+				"Nodejs",
 				"OS",
 				"Profiles",
 				"SDKVersion",

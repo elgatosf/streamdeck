@@ -312,7 +312,6 @@ export type Manifest = {
 	 * **Examples**:
 	 * - index.js
 	 * - Counter
-	 * ```
 	 */
 	CodePathMac?: string;
 
@@ -353,6 +352,39 @@ export type Manifest = {
 	 * Name of the plugin, e.g. "Wave Link", "Camera Hub", "Control Center", etc.
 	 */
 	Name: string;
+
+	/**
+	 * Configuration options for Node.js based plugins. **NB.** All Node.js plugins are executed with the following command-line arguments [`--no-addons`](https://nodejs.org/api/cli.html#--no-addons),
+	 * [`--enable-source-maps`](https://nodejs.org/api/cli.html#--enable-source-maps), and [`--no-global-search-paths`](https://nodejs.org/api/cli.html#--no-global-search-paths).
+	 */
+	Nodejs: {
+		/**
+		 * Command-line arguments supplied to the plugin when run in debug mode. Optionally, the pre-defined values `"enabled"` and `"break"` run the plugin with a debugger enabled
+		 * with [`--inspect`](https://nodejs.org/api/cli.html#--inspecthostport) and [`--inspect-brk`](https://nodejs.org/api/cli.html#--inspect-brkhostport) respectively. **NB.**
+		 * `"enabled"` and `"break"` will automatically be assigned an available `PORT` by Stream Deck.  Alternatively, if you wish to debug on a pre-defined port, this value can be
+		 * a set of [command-line arguments](https://nodejs.org/api/cli.html).
+		 *
+		 * **Examples:**
+		 * - `"enabled"` results in `--inspect=127.0.0.1:{PORT}`
+		 * - `"break"` results in `--inspect-brk=127.0.0.1:{PORT}`
+		 * - `"--inspect=127.0.0.1:12345"` runs a local debugger on port `12345`.
+		 * @example
+		 * "enabled"
+		 * @example
+		 * "break"
+		 */
+		Debug?: string;
+
+		/**
+		 * Determines whether to generate a profiler output for the plugin; [read more](https://nodejs.org/en/docs/guides/simple-profiling).
+		 */
+		GenerateProfilerOutput?: boolean;
+
+		/**
+		 * Version of Node.js to use; currently version `"20"` is supported.
+		 */
+		Version: "20";
+	};
 
 	/**
 	 * Collection of operating systems, and their minimum required versions, that the plugin supports.
