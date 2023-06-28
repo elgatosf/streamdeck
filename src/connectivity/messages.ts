@@ -45,7 +45,7 @@ export type ActionMessageWithPayload<TEvent, TSettings, TPayload> = ActionMessag
 		/**
 		 * Settings associated with the action instance.
 		 */
-		readonly settings: Partial<TSettings>;
+		settings: Partial<TSettings>;
 	};
 };
 

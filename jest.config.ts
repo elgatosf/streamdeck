@@ -8,7 +8,8 @@ const config: Config.InitialOptions = {
 	collectCoverageFrom: ["src/**/*.ts", "!<rootDir>/node_modules/"],
 	coverageReporters: ["json-summary", "text"],
 	maxWorkers: 1,
-	verbose: true
+	verbose: true,
+	roots: ["src", "test"]
 };
 
 export default config;

@@ -44,8 +44,8 @@ export class StreamDeckConnection {
 
 		logger.logDebug("Connecting to Stream Deck.");
 		this.ws = new WebSocket(`ws://localhost:${this.registrationParameters.port}`);
-		this.ws.onmessage = this.propagateMessage.bind(this);
-		this.ws.onopen = () => {
+		this.ws.on("message", (data) => this.propagateMessage(data));
+		this.ws.on("open", () => {
 			if (this.ws) {
 				this.ws.send(
 					JSON.stringify({
@@ -58,7 +58,7 @@ export class StreamDeckConnection {
 				this.connection.setResult(this.ws);
 				logger.logDebug("Successfully connected to Stream Deck.");
 			}
-		};
+		});
 	}
 
 	/**
@@ -115,15 +115,17 @@ export class StreamDeckConnection {
 
 	/**
 	 * Propagates the event emitted by the Stream Deck's web socket connection, to the event emitter used by the plugin.
-	 * @param event Event message received from the Stream Deck.
+	 * @param data Event message data received from the Stream Deck.
 	 */
-	private propagateMessage(event: WebSocket.MessageEvent) {
-		if (typeof event.data === "string") {
-			const message = JSON.parse(event.data);
+	private propagateMessage(data: WebSocket.RawData) {
+		try {
+			const message = JSON.parse(data.toString());
 			if (message.event) {
-				logger.logTrace(event.data);
+				logger.logTrace(`${data}`);
 				this.eventEmitter.emit(message.event, message);
 			}
+		} catch (err) {
+			logger.logError(`Failed to parse message from Stream Deck: ${data}`, err);
 		}
 	}
 }

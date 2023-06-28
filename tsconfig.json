@@ -2,7 +2,8 @@
 	"extends": "@tsconfig/node20/tsconfig.json",
 	"include": [
 		"scripts/**/*.ts",
-		"src/**/*.ts"
+		"src/**/*.ts",
+		"test/**/*.ts"
 	],
 	"exclude": [
 		"node_modules"
