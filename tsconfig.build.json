@@ -8,6 +8,7 @@
 	"exclude": [
 		"scripts/**/*.ts",
 		"src/**/__mocks__/**/*.ts",
-		"src/**/*.test.ts"
+		"src/**/*.test.ts",
+		"test"
 	]
 }
