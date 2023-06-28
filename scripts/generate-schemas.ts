@@ -20,7 +20,7 @@ function generateAndWriteSchema(type: string) {
 	const schema = generator.createSchema(type);
 	addMarkdownDescription(schema);
 
-	const outputPath = path.join(__dirname, `${type.toLowerCase()}.json`);
+	const outputPath = path.join(__dirname, "../schemas", `${type.toLowerCase()}.json`);
 	const contents = JSON.stringify(schema, null, "\t");
 
 	fs.writeFile(outputPath, contents, {}, () => {

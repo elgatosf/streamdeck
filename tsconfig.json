@@ -1,16 +1,10 @@
 {
 	"extends": "@tsconfig/node20/tsconfig.json",
-	"compilerOptions": {
-		"declaration": true,
-		"outDir": "./dist/",
-		"sourceMap": true
-	},
 	"include": [
-		"./src/**/*.ts"
+		"scripts/**/*.ts",
+		"src/**/*.ts"
 	],
 	"exclude": [
-		"./node_modules",
-		"**/__mocks__/**/*",
-		"**/*.test.ts"
+		"node_modules"
 	]
 }

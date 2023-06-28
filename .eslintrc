@@ -1,7 +1,6 @@
 {
 	"env": {
-		"node": true,
-		"browser": false
+		"node": true
 	},
 	"extends": [
 		"eslint:recommended",
@@ -10,9 +9,8 @@
 		"prettier"
 	],
 	"ignorePatterns": [
-		"node_modules/",
-		"lib/",
-		"template/"
+		"dist/",
+		"node_modules/"
 	],
 	"parser": "@typescript-eslint/parser",
 	"plugins": [
@@ -29,9 +27,6 @@
 			{
 				"SwitchCase": 1
 			}
-		],
-		"import/no-default-export": [
-			"error"
 		],
 		"jsdoc/require-jsdoc": [
 			"warn",

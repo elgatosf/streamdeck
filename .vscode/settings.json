@@ -5,8 +5,9 @@
 	/* Explorer */
 	"explorer.fileNesting.enabled": true,
 	"explorer.fileNesting.patterns": {
+		"*.ts": "${capture}.test.ts",
 		".editorconfig": ".eslintrc, .prettierrc",
-		"package.json": "package-lock.json, yarn.lock, pnpm-lock.yaml, .npmrc",
-		"*.ts": "${capture}.test.ts"
+		"jest.config.ts": "babel.config.json",
+		"package.json": "package-lock.json, yarn.lock, pnpm-lock.yaml, .npmrc"
 	}
 }

@@ -1,21 +1,21 @@
 {
 	"name": "@elgato/streamdeck",
 	"version": "0.1.0",
-	"description": "The official Node.js SDK for creating Stream Deck plugins",
+	"description": "The official Node.js SDK for creating Stream Deck plugins.",
 	"main": "./dist/index.js",
 	"types": "./dist/index.d.ts",
 	"scripts": {
-		"build": "tsc",
-		"watch": "nodemon --watch \"src/**\" --ext \"ts\" --exec \"tsc\"",
+		"build": "tsc --project tsconfig.build.json",
+		"generate-schemas": "ts-node ./scripts/generate-schemas.ts",
 		"lint": "eslint . --ext .ts --max-warnings 0",
-		"lint-format": "prettier --config .prettierrc \"./src/**/*.ts\" --write",
-		"generate-schemas": "ts-node ./schemas/generate.ts",
 		"test": "jest",
-		"test:coverage": "jest --coverage"
+		"test:coverage": "jest --coverage",
+		"test:watch": "jest --watch",
+		"watch": "nodemon --watch \"src/**\" --ext \"ts\" --exec \"tsc\""
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/elgatosf/streamdeck-node-sdk.git"
+		"url": "git+https://github.com/elgatosf/streamdeck-node.git"
 	},
 	"keywords": [
 		"stream-deck",
@@ -25,9 +25,9 @@
 	],
 	"author": "Elgato",
 	"bugs": {
-		"url": "https://github.com/elgatosf/streamdeck-node-sdk/issues"
+		"url": "https://github.com/elgatosf/streamdeck-node/issues"
 	},
-	"homepage": "https://github.com/elgatosf/streamdeck-node-sdk#readme",
+	"homepage": "https://github.com/elgatosf/streamdeck-node#readme",
 	"devDependencies": {
 		"@babel/core": "^7.22.5",
 		"@babel/preset-env": "^7.22.5",
