@@ -16,8 +16,7 @@
 	"plugins": [
 		"jsdoc",
 		"prettier",
-		"@typescript-eslint",
-		"import"
+		"@typescript-eslint"
 	],
 	"root": true,
 	"rules": {
