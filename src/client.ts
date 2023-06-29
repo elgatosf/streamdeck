@@ -2,9 +2,9 @@ import { PromiseCompletionSource } from "./common/promises";
 import { StreamDeckConnection } from "./connectivity/connection";
 import * as messages from "./connectivity/messages";
 import { State } from "./connectivity/messages";
-import { FeedbackPayload, StreamDeckClient as IStreamDeckClient, Target } from "./definitions/client";
 import { Device } from "./devices";
 import { ActionEvent, ActionWithoutPayloadEvent, ApplicationEvent, DeviceEvent, SendToPluginEvent, SettingsEvent } from "./events";
+import { FeedbackPayload, StreamDeckClient as IStreamDeckClient, Target } from "./types/client";
 
 /**
  * Provides the main bridge between the plugin and the Stream Deck allowing the plugin to send requests and receive events, e.g. when the user presses an action.

@@ -7,11 +7,11 @@ import { Router } from "./routing";
 
 export { LogLevel, logger } from "./common/logging";
 export * from "./connectivity/messages";
-export * from "./definitions/client";
-export * from "./definitions/layouts";
-export * from "./definitions/manifest";
 export * from "./events";
 export { SingletonAction } from "./routing";
+export * from "./types/client";
+export * from "./types/layouts";
+export * from "./types/manifest";
 export { client, devices, i18n, info, router };
 
 const connection = new StreamDeckConnection();

@@ -1,5 +1,5 @@
 import { State } from "./connectivity/messages";
-import { FeedbackPayload, StreamDeckClient, Target } from "./definitions/client";
+import { FeedbackPayload, StreamDeckClient, Target } from "./types/client";
 
 /**
  * Provides a contextualized instance of `Action`, allowing for direct communication with an instance of an action.

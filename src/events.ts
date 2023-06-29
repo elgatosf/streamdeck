@@ -1,6 +1,6 @@
 import { Action } from "./actions";
 import * as messages from "./connectivity/messages";
-import { StreamDeckClient } from "./definitions/client";
+import { StreamDeckClient } from "./types/client";
 
 /**
  * Provides information for an event received from Stream Deck.
