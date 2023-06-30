@@ -1,7 +1,24 @@
-import * as messages from "../connectivity/messages";
 import { State } from "../connectivity/messages";
-import { Device } from "../devices";
-import { ActionEvent, ActionWithoutPayloadEvent, ApplicationEvent, DeviceEvent, SendToPluginEvent, SettingsEvent } from "../events";
+import {
+	ApplicationDidLaunchEvent,
+	ApplicationDidTerminateEvent,
+	DeviceDidConnectEvent,
+	DeviceDidDisconnectEvent,
+	DialDownEvent,
+	DialRotateEvent,
+	DialUpEvent,
+	DidReceiveGlobalSettingsEvent,
+	DidReceiveSettingsEvent,
+	KeyDownEvent,
+	KeyUpEvent,
+	PropertyInspectorDidAppearEvent,
+	PropertyInspectorDidDisappearEvent,
+	SendToPluginEvent,
+	TitleParametersDidChangeEvent,
+	TouchTapEvent,
+	WillAppearEvent,
+	WillDisappearEvent
+} from "../events";
 import { Bar, GBar, Pixmap, Text } from "./layouts";
 import { Manifest } from "./manifest";
 
@@ -28,80 +45,80 @@ export type StreamDeckClient = {
 	 * Also see {@link StreamDeckClient.onApplicationDidTerminate}.
 	 * @param listener Function to be invoked when the event occurs.
 	 */
-	onApplicationDidLaunch(listener: (ev: ApplicationEvent<messages.ApplicationDidLaunch>) => void): void;
+	onApplicationDidLaunch(listener: (ev: ApplicationDidLaunchEvent) => void): void;
 
 	/**
 	 * Occurs when a monitored application terminates. Monitored applications can be defined in the `manifest.json` file via the {@link Manifest.ApplicationsToMonitor} property.
 	 * Also see {@link StreamDeckClient.onApplicationDidLaunch}.
 	 * @param listener Function to be invoked when the event occurs.
 	 */
-	onApplicationDidTerminate(listener: (ev: ApplicationEvent<messages.ApplicationDidTerminate>) => void): void;
+	onApplicationDidTerminate(listener: (ev: ApplicationDidTerminateEvent) => void): void;
 
 	/**
 	 * Occurs when a Stream Deck device is connected. Also see {@link StreamDeckClient.onDeviceDidConnect}.
 	 * @param listener Function to be invoked when the event occurs.
 	 */
-	onDeviceDidConnect(listener: (ev: DeviceEvent<messages.DeviceDidConnect, Required<Device>>) => void): void;
+	onDeviceDidConnect(listener: (ev: DeviceDidConnectEvent) => void): void;
 
 	/**
 	 * Occurs when a Stream Deck device is disconnected. Also see {@link StreamDeckClient.onDeviceDidDisconnect}.
 	 * @param listener Function to be invoked when the event occurs.
 	 */
-	onDeviceDidDisconnect(listener: (ev: DeviceEvent<messages.DeviceDidDisconnect, Device>) => void): void;
+	onDeviceDidDisconnect(listener: (ev: DeviceDidDisconnectEvent) => void): void;
 
 	/**
 	 * Occurs when the user presses a dial (Stream Deck+). **NB** For other action types see {@link StreamDeckClient.onKeyDown}. Also see {@link StreamDeckClient.onDialUp}.
 	 * @param listener Function to be invoked when the event occurs.
 	 */
-	onDialDown<TSettings = unknown>(listener: (ev: ActionEvent<messages.DialDown<TSettings>>) => void): void;
+	onDialDown<TSettings = unknown>(listener: (ev: DialDownEvent<TSettings>) => void): void;
 
 	/**
 	 * Occurs when the user rotates a dial (Stream Deck+).
 	 * @param listener Function to be invoked when the event occurs.
 	 */
-	onDialRotate<TSettings = unknown>(listener: (ev: ActionEvent<messages.DialRotate<TSettings>>) => void): void;
+	onDialRotate<TSettings = unknown>(listener: (ev: DialRotateEvent<TSettings>) => void): void;
 
 	/**
 	 * Occurs when the user releases a pressed dial (Stream Deck+). **NB** For other action types see {@link StreamDeckClient.onKeyUp}. Also see {@link StreamDeckClient.onDialDown}.
 	 * @param listener Function to be invoked when the event occurs.
 	 */
-	onDialUp<TSettings = unknown>(listener: (ev: ActionEvent<messages.DialUp<TSettings>>) => void): void;
+	onDialUp<TSettings = unknown>(listener: (ev: DialUpEvent<TSettings>) => void): void;
 
 	/**
 	 * Occurs when the global settings are requested using {@link StreamDeckClient.getGlobalSettings}, or when the the global settings were updated by the property inspector.
 	 * @param listener Function to be invoked when the event occurs.
 	 */
-	onDidReceiveGlobalSettings<TSettings = unknown>(listener: (ev: SettingsEvent<TSettings>) => void): void;
+	onDidReceiveGlobalSettings<TSettings = unknown>(listener: (ev: DidReceiveGlobalSettingsEvent<TSettings>) => void): void;
 
 	/**
 	 * Occurs when the settings associated with an action instance are requested using {@link StreamDeckClient.getSettings}, or when the the settings were updated by the property inspector.
 	 * @param listener Function to be invoked when the event occurs.
 	 */
-	onDidReceiveSettings<TSettings = unknown>(listener: (ev: ActionEvent<messages.DidReceiveSettings<TSettings>>) => void): void;
+	onDidReceiveSettings<TSettings = unknown>(listener: (ev: DidReceiveSettingsEvent<TSettings>) => void): void;
 
 	/**
 	 * Occurs when the user presses a action down. **NB** For dials / touchscreens see {@link StreamDeckClient.onDialDown}. Also see {@link StreamDeckClient.onKeyUp}.
 	 * @param listener Function to be invoked when the event occurs.
 	 */
-	onKeyDown<TSettings = unknown>(listener: (ev: ActionEvent<messages.KeyDown<TSettings>>) => void): void;
+	onKeyDown<TSettings = unknown>(listener: (ev: KeyDownEvent<TSettings>) => void): void;
 
 	/**
 	 * Occurs when the user releases a pressed action. **NB** For dials / touchscreens see {@link StreamDeckClient.onDialUp}. Also see {@link StreamDeckClient.onKeyDown}.
 	 * @param listener Function to be invoked when the event occurs.
 	 */
-	onKeyUp<TSettings = unknown>(listener: (ev: ActionEvent<messages.KeyUp<TSettings>>) => void): void;
+	onKeyUp<TSettings = unknown>(listener: (ev: KeyUpEvent<TSettings>) => void): void;
 
 	/**
 	 * Occurs when the property inspector associated with the action becomes visible, i.e. the user selected an action in the Stream Deck application. Also see {@link StreamDeckClient.onPropertyInspectorDidDisappear}.
 	 * @param listener Function to be invoked when the event occurs.
 	 */
-	onPropertyInspectorDidAppear(listener: (ev: ActionWithoutPayloadEvent<messages.PropertyInspectorDidAppear>) => void): void;
+	onPropertyInspectorDidAppear(listener: (ev: PropertyInspectorDidAppearEvent) => void): void;
 
 	/**
 	 * Occurs when the property inspector associated with the action becomes invisible, i.e. the user unselected the action in the Stream Deck application. Also see {@link StreamDeckClient.onPropertyInspectorDidAppear}.
 	 * @param listener Function to be invoked when the event occurs.
 	 */
-	onPropertyInspectorDidDisappear(listener: (ev: ActionWithoutPayloadEvent<messages.PropertyInspectorDidDisappear>) => void): void;
+	onPropertyInspectorDidDisappear(listener: (ev: PropertyInspectorDidDisappearEvent) => void): void;
 
 	/**
 	 * Occurs when a message was sent to the plugin _from_ the property inspector. The plugin can also send messages _to_ the property inspector using {@link StreamDeckClient.sendToPropertyInspector}.
@@ -119,27 +136,27 @@ export type StreamDeckClient = {
 	 * Occurs when the user updates an action's title settings in the Stream Deck application. Also see {@link StreamDeckClient.setTitle}.
 	 * @param listener Function to be invoked when the event occurs.
 	 */
-	onTitleParametersDidChange<TSettings = unknown>(listener: (ev: ActionEvent<messages.TitleParametersDidChange<TSettings>>) => void): void;
+	onTitleParametersDidChange<TSettings = unknown>(listener: (ev: TitleParametersDidChangeEvent<TSettings>) => void): void;
 
 	/**
 	 * Occurs when the user taps the touchscreen (Stream Deck+).
 	 * @param listener Function to be invoked when the event occurs.
 	 */
-	onTouchTap<TSettings = unknown>(listener: (ev: ActionEvent<messages.TouchTap<TSettings>>) => void): void;
+	onTouchTap<TSettings = unknown>(listener: (ev: TouchTapEvent<TSettings>) => void): void;
 
 	/**
 	 * Occurs when an action appears on the Stream Deck due to the user navigating to another page, profile, folder, etc. This also occurs during startup if the action is on the "front
 	 * page". An action refers to _all_ types of actions, e.g. keys, dials,
 	 * @param listener Function to be invoked when the event occurs.
 	 */
-	onWillAppear<TSettings = unknown>(listener: (ev: ActionEvent<messages.WillAppear<TSettings>>) => void): void;
+	onWillAppear<TSettings = unknown>(listener: (ev: WillAppearEvent<TSettings>) => void): void;
 
 	/**
 	 * Occurs when an action disappears from the Stream Deck due to the user navigating to another page, profile, folder, etc. An action refers to _all_ types of actions, e.g. keys,
 	 * dials, touchscreens, pedals, etc.
 	 * @param listener Function to be invoked when the event occurs.
 	 */
-	onWillDisappear<TSettings = unknown>(listener: (ev: ActionEvent<messages.WillDisappear<TSettings>>) => void): void;
+	onWillDisappear<TSettings = unknown>(listener: (ev: WillDisappearEvent<TSettings>) => void): void;
 
 	/**
 	 * Opens the specified `url` in the user's default browser.

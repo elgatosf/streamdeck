@@ -1,9 +1,10 @@
 import { Action } from "./actions";
 import * as messages from "./connectivity/messages";
+import { Device } from "./devices";
 import { StreamDeckClient } from "./types/client";
 
 /**
- * Provides information for an event received from Stream Deck.
+ * Provides information for events received from Stream Deck.
  */
 export class Event<TMessage extends messages.Message<unknown>> {
 	/**
@@ -21,7 +22,7 @@ export class Event<TMessage extends messages.Message<unknown>> {
 }
 
 /**
- * Provides information for an event that was associated with an action, that did not contain a payload.
+ * Provides information for events relating to actions.
  */
 export class ActionWithoutPayloadEvent<TMessage extends messages.ActionMessage<unknown>> extends Event<TMessage> {
 	/**
@@ -48,7 +49,7 @@ export class ActionWithoutPayloadEvent<TMessage extends messages.ActionMessage<u
 }
 
 /**
- * Provides information for an event that was associated with an action.
+ * Provides information for events relating to actions.
  */
 export class ActionEvent<TMessage extends messages.ActionMessageWithPayload<unknown, unknown, ExtractPayload<TMessage>>> extends ActionWithoutPayloadEvent<TMessage> {
 	/**
@@ -68,7 +69,7 @@ export class ActionEvent<TMessage extends messages.ActionMessageWithPayload<unkn
 }
 
 /**
- * Provides information for an event associated with a monitor application, i.e. when it launches, it terminates.
+ * Provides information for events relating to {@link messages.applicationDidLaunch} and {@link messages.applicationDidTerminate}.
  */
 export class ApplicationEvent<TMessage extends messages.ApplicationDidLaunch | messages.ApplicationDidTerminate> extends Event<TMessage> {
 	/**
@@ -87,7 +88,7 @@ export class ApplicationEvent<TMessage extends messages.ApplicationDidLaunch | m
 }
 
 /**
- * Provides information for an event associated with a device.
+ * Provides information for events relating to {@link messages.deviceDidConnect} and {@link messages.deviceDidDisconnect}.
  */
 export class DeviceEvent<TMessage extends messages.DeviceDidConnect | messages.DeviceDidDisconnect, TDevice> extends Event<TMessage> {
 	/**
@@ -101,7 +102,7 @@ export class DeviceEvent<TMessage extends messages.DeviceDidConnect | messages.D
 }
 
 /**
- * Provides information for an event that was associated with a payload message received from the property inspector.
+ * Provides event information for {@link messages.sendToPlugin}.
  */
 export class SendToPluginEvent<TPayload extends object> extends Event<messages.SendToPlugin<TPayload>> {
 	/**
@@ -127,16 +128,16 @@ export class SendToPluginEvent<TPayload extends object> extends Event<messages.S
 }
 
 /**
- * Provides information for an event trigger when receiving the global settings.
+ * Provides event information for {@link messages.didReceiveGlobalSettings}.
  */
-export class SettingsEvent<TSettings = unknown> extends Event<messages.DidReceiveGlobalSettings<TSettings>> {
+export class DidReceiveGlobalSettingsEvent<TSettings> extends Event<messages.DidReceiveGlobalSettings<TSettings>> {
 	/**
 	 * Settings associated with the event.
 	 */
 	public readonly settings: Partial<TSettings>;
 
 	/**
-	 * Initializes a new instance of the {@link SettingsEvent} class.
+	 * Initializes a new instance of the {@link DidReceiveGlobalSettingsEvent} class.
 	 * @param source Source of the event, i.e. the original message from Stream Deck.
 	 */
 	constructor(source: messages.DidReceiveGlobalSettings<TSettings>) {
@@ -144,6 +145,86 @@ export class SettingsEvent<TSettings = unknown> extends Event<messages.DidReceiv
 		this.settings = source.payload.settings;
 	}
 }
+
+/**
+ * Event information received from Stream Deck as part of the {@link messages.applicationDidLaunch} event.
+ */
+export type ApplicationDidLaunchEvent = ApplicationEvent<messages.ApplicationDidLaunch>;
+
+/**
+ * Event information received from Stream Deck as part of the {@link messages.ApplicationDidTerminate} event.
+ */
+export type ApplicationDidTerminateEvent = ApplicationEvent<messages.ApplicationDidTerminate>;
+
+/**
+ * Event information received from Stream Deck as part of the {@link messages.DeviceDidConnect} event.
+ */
+export type DeviceDidConnectEvent = DeviceEvent<messages.DeviceDidConnect, Required<Device>>;
+
+/**
+ * Event information received from Stream Deck as part of the {@link messages.DeviceDidDisconnect} event.
+ */
+export type DeviceDidDisconnectEvent = DeviceEvent<messages.DeviceDidDisconnect, Device>;
+
+/**
+ * Event information received from Stream Deck as part of the {@link messages.DialDown} event.
+ */
+export type DialDownEvent<TSettings> = ActionEvent<messages.DialDown<TSettings>>;
+
+/**
+ * Event information received from Stream Deck as part of the {@link messages.DialRotate} event.
+ */
+export type DialRotateEvent<TSettings> = ActionEvent<messages.DialRotate<TSettings>>;
+
+/**
+ * Event information received from Stream Deck as part of the {@link messages.DialUp} event.
+ */
+export type DialUpEvent<TSettings> = ActionEvent<messages.DialUp<TSettings>>;
+
+/**
+ * Event information received from Stream Deck as part of the {@link messages.DidReceiveSettings} event.
+ */
+export type DidReceiveSettingsEvent<TSettings> = ActionEvent<messages.DidReceiveSettings<TSettings>>;
+
+/**
+ * Event information received from Stream Deck as part of the {@link messages.KeyDown} event.
+ */
+export type KeyDownEvent<TSettings> = ActionEvent<messages.KeyDown<TSettings>>;
+
+/**
+ * Event information received from Stream Deck as part of the {@link messages.KeyUp} event.
+ */
+export type KeyUpEvent<TSettings> = ActionEvent<messages.KeyUp<TSettings>>;
+
+/**
+ * Event information received from Stream Deck as part of the {@link messages.PropertyInspectorDidAppear} event.
+ */
+export type PropertyInspectorDidAppearEvent = ActionWithoutPayloadEvent<messages.PropertyInspectorDidAppear>;
+
+/**
+ * Event information received from Stream Deck as part of the {@link messages.PropertyInspectorDidDisappear} event.
+ */
+export type PropertyInspectorDidDisappearEvent = ActionWithoutPayloadEvent<messages.PropertyInspectorDidDisappear>;
+
+/**
+ * Event information received from Stream Deck as part of the {@link messages.TitleParametersDidChange} event.
+ */
+export type TitleParametersDidChangeEvent<TSettings> = ActionEvent<messages.TitleParametersDidChange<TSettings>>;
+
+/**
+ * Event information received from Stream Deck as part of the {@link messages.TouchTap} event.
+ */
+export type TouchTapEvent<TSettings> = ActionEvent<messages.TouchTap<TSettings>>;
+
+/**
+ * Event information received from Stream Deck as part of the {@link messages.WillAppear} event.
+ */
+export type WillAppearEvent<TSettings> = ActionEvent<messages.WillAppear<TSettings>>;
+
+/**
+ * Event information received from Stream Deck as part of the {@link messages.WillDisappear} event.
+ */
+export type WillDisappearEvent<TSettings> = ActionEvent<messages.WillDisappear<TSettings>>;
 
 /**
  * Utility type for extracting the payload type from the specified `T` type.

@@ -3,7 +3,30 @@ import { StreamDeckConnection } from "./connectivity/connection";
 import * as messages from "./connectivity/messages";
 import { State } from "./connectivity/messages";
 import { Device } from "./devices";
-import { ActionEvent, ActionWithoutPayloadEvent, ApplicationEvent, DeviceEvent, SendToPluginEvent, SettingsEvent } from "./events";
+import {
+	ActionEvent,
+	ActionWithoutPayloadEvent,
+	ApplicationDidLaunchEvent,
+	ApplicationDidTerminateEvent,
+	ApplicationEvent,
+	DeviceDidConnectEvent,
+	DeviceDidDisconnectEvent,
+	DeviceEvent,
+	DialDownEvent,
+	DialRotateEvent,
+	DialUpEvent,
+	DidReceiveGlobalSettingsEvent,
+	DidReceiveSettingsEvent,
+	KeyDownEvent,
+	KeyUpEvent,
+	PropertyInspectorDidAppearEvent,
+	PropertyInspectorDidDisappearEvent,
+	SendToPluginEvent,
+	TitleParametersDidChangeEvent,
+	TouchTapEvent,
+	WillAppearEvent,
+	WillDisappearEvent
+} from "./events";
 import { FeedbackPayload, StreamDeckClient as IStreamDeckClient, Target } from "./types/client";
 
 /**
@@ -48,17 +71,17 @@ export class StreamDeckClient implements IStreamDeckClient {
 	}
 
 	/** @inheritdoc */
-	public onApplicationDidLaunch(listener: (ev: ApplicationEvent<messages.ApplicationDidLaunch>) => void): void {
+	public onApplicationDidLaunch(listener: (ev: ApplicationDidLaunchEvent) => void): void {
 		this.connection.on("applicationDidLaunch", (ev) => listener(new ApplicationEvent(ev)));
 	}
 
 	/** @inheritdoc */
-	public onApplicationDidTerminate(listener: (ev: ApplicationEvent<messages.ApplicationDidTerminate>) => void): void {
+	public onApplicationDidTerminate(listener: (ev: ApplicationDidTerminateEvent) => void): void {
 		this.connection.on("applicationDidTerminate", (ev) => listener(new ApplicationEvent(ev)));
 	}
 
 	/** @inheritdoc */
-	public onDeviceDidConnect(listener: (ev: DeviceEvent<messages.DeviceDidConnect, Required<Device>>) => void): void {
+	public onDeviceDidConnect(listener: (ev: DeviceDidConnectEvent) => void): void {
 		this.connection.on("deviceDidConnect", (ev) =>
 			listener(
 				new DeviceEvent(ev, {
@@ -71,7 +94,7 @@ export class StreamDeckClient implements IStreamDeckClient {
 	}
 
 	/** @inheritdoc */
-	public onDeviceDidDisconnect(listener: (ev: DeviceEvent<messages.DeviceDidDisconnect, Device>) => void): void {
+	public onDeviceDidDisconnect(listener: (ev: DeviceDidDisconnectEvent) => void): void {
 		this.connection.on("deviceDidDisconnect", (ev) =>
 			listener(
 				new DeviceEvent(
@@ -86,47 +109,47 @@ export class StreamDeckClient implements IStreamDeckClient {
 	}
 
 	/** @inheritdoc */
-	public onDialDown<TSettings = unknown>(listener: (ev: ActionEvent<messages.DialDown<TSettings>>) => void): void {
+	public onDialDown<TSettings = unknown>(listener: (ev: DialDownEvent<TSettings>) => void): void {
 		this.connection.on("dialDown", (ev: messages.DialDown<TSettings>) => listener(new ActionEvent(this, ev)));
 	}
 
 	/** @inheritdoc */
-	public onDialRotate<TSettings = unknown>(listener: (ev: ActionEvent<messages.DialRotate<TSettings>>) => void): void {
+	public onDialRotate<TSettings = unknown>(listener: (ev: DialRotateEvent<TSettings>) => void): void {
 		this.connection.on("dialRotate", (ev: messages.DialRotate<TSettings>) => listener(new ActionEvent(this, ev)));
 	}
 
 	/** @inheritdoc */
-	public onDialUp<TSettings = unknown>(listener: (ev: ActionEvent<messages.DialUp<TSettings>>) => void): void {
+	public onDialUp<TSettings = unknown>(listener: (ev: DialUpEvent<TSettings>) => void): void {
 		this.connection.on("dialUp", (ev: messages.DialUp<TSettings>) => listener(new ActionEvent(this, ev)));
 	}
 
 	/** @inheritdoc */
-	public onDidReceiveGlobalSettings<TSettings = unknown>(listener: (ev: SettingsEvent<TSettings>) => void): void {
-		this.connection.on("didReceiveGlobalSettings", (ev: messages.DidReceiveGlobalSettings<TSettings>) => listener(new SettingsEvent(ev)));
+	public onDidReceiveGlobalSettings<TSettings = unknown>(listener: (ev: DidReceiveGlobalSettingsEvent<TSettings>) => void): void {
+		this.connection.on("didReceiveGlobalSettings", (ev: messages.DidReceiveGlobalSettings<TSettings>) => listener(new DidReceiveGlobalSettingsEvent(ev)));
 	}
 
 	/** @inheritdoc */
-	public onDidReceiveSettings<TSettings = unknown>(listener: (ev: ActionEvent<messages.DidReceiveSettings<TSettings>>) => void): void {
+	public onDidReceiveSettings<TSettings = unknown>(listener: (ev: DidReceiveSettingsEvent<TSettings>) => void): void {
 		this.connection.on("didReceiveSettings", (ev: messages.DidReceiveSettings<TSettings>) => listener(new ActionEvent(this, ev)));
 	}
 
 	/** @inheritdoc */
-	public onKeyDown<TSettings = unknown>(listener: (ev: ActionEvent<messages.KeyDown<TSettings>>) => void): void {
+	public onKeyDown<TSettings = unknown>(listener: (ev: KeyDownEvent<TSettings>) => void): void {
 		this.connection.on("keyDown", (ev: messages.KeyDown<TSettings>) => listener(new ActionEvent(this, ev)));
 	}
 
 	/** @inheritdoc */
-	public onKeyUp<TSettings = unknown>(listener: (ev: ActionEvent<messages.KeyUp<TSettings>>) => void): void {
+	public onKeyUp<TSettings = unknown>(listener: (ev: KeyUpEvent<TSettings>) => void): void {
 		this.connection.on("keyUp", (ev: messages.KeyUp<TSettings>) => listener(new ActionEvent(this, ev)));
 	}
 
 	/** @inheritdoc */
-	public onPropertyInspectorDidAppear(listener: (ev: ActionWithoutPayloadEvent<messages.PropertyInspectorDidAppear>) => void): void {
+	public onPropertyInspectorDidAppear(listener: (ev: PropertyInspectorDidAppearEvent) => void): void {
 		this.connection.on("propertyInspectorDidAppear", (ev: messages.PropertyInspectorDidAppear) => listener(new ActionWithoutPayloadEvent(this, ev)));
 	}
 
 	/** @inheritdoc */
-	public onPropertyInspectorDidDisappear(listener: (ev: ActionWithoutPayloadEvent<messages.PropertyInspectorDidDisappear>) => void): void {
+	public onPropertyInspectorDidDisappear(listener: (ev: PropertyInspectorDidDisappearEvent) => void): void {
 		this.connection.on("propertyInspectorDidDisappear", (ev: messages.PropertyInspectorDidDisappear) => listener(new ActionWithoutPayloadEvent(this, ev)));
 	}
 
@@ -141,22 +164,22 @@ export class StreamDeckClient implements IStreamDeckClient {
 	}
 
 	/** @inheritdoc */
-	public onTitleParametersDidChange<TSettings = unknown>(listener: (ev: ActionEvent<messages.TitleParametersDidChange<TSettings>>) => void): void {
+	public onTitleParametersDidChange<TSettings = unknown>(listener: (ev: TitleParametersDidChangeEvent<TSettings>) => void): void {
 		this.connection.on("titleParametersDidChange", (ev: messages.TitleParametersDidChange<TSettings>) => listener(new ActionEvent(this, ev)));
 	}
 
 	/** @inheritdoc */
-	public onTouchTap<TSettings = unknown>(listener: (ev: ActionEvent<messages.TouchTap<TSettings>>) => void): void {
+	public onTouchTap<TSettings = unknown>(listener: (ev: TouchTapEvent<TSettings>) => void): void {
 		this.connection.on("touchTap", (ev: messages.TouchTap<TSettings>) => listener(new ActionEvent(this, ev)));
 	}
 
 	/** @inheritdoc */
-	public onWillAppear<TSettings = unknown>(listener: (ev: ActionEvent<messages.WillAppear<TSettings>>) => void): void {
+	public onWillAppear<TSettings = unknown>(listener: (ev: WillAppearEvent<TSettings>) => void): void {
 		this.connection.on("willAppear", (ev: messages.WillAppear<TSettings>) => listener(new ActionEvent(this, ev)));
 	}
 
 	/** @inheritdoc */
-	public onWillDisappear<TSettings = unknown>(listener: (ev: ActionEvent<messages.WillDisappear<TSettings>>) => void): void {
+	public onWillDisappear<TSettings = unknown>(listener: (ev: WillDisappearEvent<TSettings>) => void): void {
 		this.connection.on("willDisappear", (ev: messages.WillDisappear<TSettings>) => listener(new ActionEvent(this, ev)));
 	}
 
