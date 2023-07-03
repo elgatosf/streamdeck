@@ -43,7 +43,7 @@ export class StreamDeckConnection {
 		}
 
 		logger.logDebug("Connecting to Stream Deck.");
-		this.ws = new WebSocket(`ws://localhost:${this.registrationParameters.port}`);
+		this.ws = new WebSocket(`ws://127.0.0.1:${this.registrationParameters.port}`);
 		this.ws.on("message", (data) => this.propagateMessage(data));
 		this.ws.on("open", () => {
 			if (this.ws) {
