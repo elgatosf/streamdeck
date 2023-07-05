@@ -3,16 +3,17 @@ import { StreamDeckConnection } from "./connectivity/connection";
 import { RegistrationInfo } from "./connectivity/registration";
 import { getDevices } from "./devices";
 import { i18nProvider } from "./i18n";
+import { getManifest } from "./manifest";
 import { Router } from "./routing";
 
 export { LogLevel, logger } from "./common/logging";
 export * from "./connectivity/messages";
 export * from "./events";
+export { Manifest } from "./manifest";
 export { SingletonAction } from "./routing";
 export * from "./types/client";
 export * from "./types/layouts";
-export * from "./types/manifest";
-export { client, devices, i18n, info, router };
+export { client, devices, i18n, info, manifest, router };
 
 const connection = new StreamDeckConnection();
 
@@ -32,9 +33,14 @@ const devices = getDevices(connection);
 const client = new StreamDeckClient(connection, devices);
 
 /**
+ * Manifest associated with the plugin.
+ */
+const manifest = getManifest();
+
+/**
  * Provides routing of events received from the Stream Deck, to specific actions.
  */
-const router = new Router(client);
+const router = new Router(client, manifest);
 
 /**
  * Internalization provider for retrieving translations from locally defined resources, see {@link https://docs.elgato.com/sdk/plugins/localization}

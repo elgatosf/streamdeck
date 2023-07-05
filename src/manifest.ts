@@ -1,5 +1,9 @@
 /* eslint-disable jsdoc/check-tag-names */
-import { DeviceType } from "../connectivity/messages";
+import { existsSync, readFileSync } from "node:fs";
+import { join } from "node:path";
+
+import { logger } from "./common/logging";
+import { DeviceType } from "./connectivity/messages";
 
 /**
  * Defines the plugin and available actions, and all information associated with them, including the plugin's entry point, all iconography, action default behavior, etc.
@@ -623,3 +627,26 @@ type State = {
 	 */
 	TitleColor?: string;
 };
+
+/**
+ * Gets the manifest associated with the plugin.
+ * @returns The manifest; otherwise `undefined` if the file was not found or could not be parsed.
+ */
+export function getManifest(): Omit<Manifest, "$schema"> {
+	const path = join(process.cwd(), "manifest.json");
+	if (!existsSync(path)) {
+		throw new Error("Failed to read manifest.json as the file does not exist.");
+	}
+
+	try {
+		return JSON.parse(
+			readFileSync(path, {
+				encoding: "utf-8",
+				flag: "r"
+			}).toString()
+		);
+	} catch (err) {
+		logger.logWarn("Failed to parse manifest.", err);
+		throw err;
+	}
+}

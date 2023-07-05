@@ -1,7 +1,9 @@
 import { Action } from "./actions";
 import { StreamDeckClient } from "./client";
+import { logger } from "./common/logging";
 import * as messages from "./connectivity/messages";
 import { ActionEvent, ActionWithoutPayloadEvent, SendToPluginEvent } from "./events";
+import { Manifest } from "./manifest";
 
 /**
  * Provides routing of {@link StreamDeckClient} events to action classes.
@@ -15,8 +17,9 @@ export class Router {
 	/**
 	 * Initializes a new instance of the {@link Router} class.
 	 * @param client The Stream Deck client.
+	 * @param manifest Manifest associated with the plugin.
 	 */
-	constructor(private readonly client: StreamDeckClient) {}
+	constructor(private readonly client: StreamDeckClient, private readonly manifest: Manifest) {}
 
 	/**
 	 * Routes all action-based events associated with the {@link manifestId} to the specified {@link action}.
@@ -24,7 +27,11 @@ export class Router {
 	 * @param action The action that will receive the events.
 	 */
 	public route<T extends SingletonAction>(manifestId: string, action: T) {
-		this.routes.push(new Route(this.client, manifestId, action));
+		if (this.manifest.Actions.find((a) => a.UUID === manifestId)) {
+			this.routes.push(new Route(this.client, manifestId, action));
+		} else {
+			logger.logWarn(`Failed to route action. The specified action UUID does not exist in the manifest: ${manifestId}`);
+		}
 	}
 }
 
