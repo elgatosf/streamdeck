@@ -209,7 +209,7 @@ export type StreamDeckClient = {
 	 *
 	 * The layout item's text can be updated dynamically via.
 	 * ```
-	 * client.setFeedback(ctx, {
+	 * streamDeck.client.setFeedback(ctx, {
 	 *  // "text_item" matches a "key" within the layout's JSON file.
 	 *   text_item: "Some new value"
 	 * })
@@ -217,7 +217,7 @@ export type StreamDeckClient = {
 	 *
 	 * Alternatively, more information can be updated.
 	 * ```
-	 * client.setFeedback(ctx, {
+	 * streamDeck.client.setFeedback(ctx, {
 	 *   text_item: { // <-- "text_item" matches a "key" within the layout's JSON file.
 	 *     value: "Some new value",
 	 *     alignment: "center"
@@ -245,7 +245,7 @@ export type StreamDeckClient = {
 	 * @param settings Settings to save.
 	 * @returns `Promise` resolved when the global `settings` are sent to Stream Deck.
 	 * @example
-	 * streamDeck.setGlobalSettings({
+	 * streamDeck.client.setGlobalSettings({
 	 *   apiKey,
 	 *   connectedDate: new Date()
 	 * })
