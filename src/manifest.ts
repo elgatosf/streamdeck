@@ -26,21 +26,8 @@ export type Manifest = {
 		Controllers?: [Controller, Controller?];
 
 		/**
-		 * Determines whether the state of the action should automatically toggle when two states are defined. Default is `false`.
-		 *
-		 * **Examples**
-		 * - `false`.
-		 *   1. State: ONE
-		 *   2. Action activated (e.g. press).
-		 *   3. State: TWO
-		 *   4. Action activated.
-		 *   5. State: ONE
-		 * - `true`.
-		 *   1. State: ONE
-		 *   2. Action activated (e.g. press).
-		 *   3. State: ONE **<-- Does not change**.
-		 *   4. Action activated.
-		 *   5. State: ONE
+		 * Determines whether the state of the action should automatically toggle when the user presses the action; only applies to actions that have two states defined. Default is
+		 * `false`.
 		 * @example
 		 * false
 		 */
@@ -141,14 +128,9 @@ export type Manifest = {
 			 * - $A1
 			 * - layouts/my-custom-layout.json
 			 *
-			 * **Related:**
-			 * - Change the current layout of an action instance.
-			 *
-			 * `streamDeck.setFeedbackLayout(context, layout)`
-			 *
-			 * - Update an action instance's current layout values, e.g. title text.
-			 *
-			 * `streamDeck.setFeedback(context, feedback)`
+			 * **Also see:**
+			 * - `streamDeck.client.setFeedback(...)`
+			 * - `streamDeck.client.setFeedbackLayout(...)`
 			 * @examples
 			 * [ "$X1", "$A0", "$A1", "$B1", "$B2", "$C1" ]
 			 * @pattern
@@ -167,6 +149,9 @@ export type Manifest = {
 		 * **Examples:**
 		 * - assets/counter
 		 * - imgs/actions/mute
+		 *
+		 * **Also see:**
+		 * - `streamDeck.client.setImage(...)`
 		 */
 		Icon: ImageFilePathWithoutExtension;
 
@@ -183,26 +168,15 @@ export type Manifest = {
 		 * **Examples:**
 		 * - mute.html
 		 * - actions/join-voice-chat/settings.html
-		 *
-		 * **Related:**
-		 * - Send messages **to** the property inspector.
-		 *
-		 * `streamDeck.sendToPropertyInspector(context, payload)`
-		 *
-		 * - Receive messages **from** the property inspector.
-		 *
-		 * `streamDeck.on("sendToPlugin", data => ...)`
 		 */
 		PropertyInspectorPath?: HtmlFilePath;
 
 		/**
-		 * States the action can be in. When two states are defined the action will act as a toggle, with users being able to select their preferred iconography for each state.
-		 * **NB.** Automatic toggling of the state on action activation can be disabled by setting `DisableAutomaticStates` to `true`.
+		 * States the action can be in. When two states are defined the action will act as a toggle, with users being able to select their preferred iconography for each state. **NB.**
+		 * Automatic toggling of the state on action activation can be disabled by setting `DisableAutomaticStates` to `true`.
 		 *
-		 * **Related:**
-		 * - Change the state of an action.
-		 *
-		 * `streamDeck.setState(context, state)`
+		 * **Also see:**
+		 * - `streamDeck.client.setState(...)`
 		 */
 		States: [State, State?];
 
@@ -228,13 +202,11 @@ export type Manifest = {
 		UUID: string;
 
 		/**
-		 * Determines whether the title field is available to the user when viewing the action's property inspector. Setting this to `False` will disable the user from specifying a
-		 * title, thus allowing the plugin to have exclusive access via `streamDeck.setTitle(context, title, state, target)`. Default is `true`, i.e. the title field is enabled.
+		 * Determines whether the title field is available to the user when viewing the action's property inspector. Setting this to `false` will disable the user from specifying a
+		 * title, thus allowing the plugin to have exclusive access to the title. Default is `true`, i.e. the title field is enabled.
 		 *
-		 * **Related:**
-		 * - Set action's title.
-		 *
-		 * `streamDeck.setTitle(context, title, state, target)`
+		 * **Also see:**
+		 * - `streamDeck.client.setTitle(...)`
 		 */
 		UserTitleEnabled?: boolean;
 
@@ -248,14 +220,9 @@ export type Manifest = {
 	/**
 	 * Applications to monitor on Mac and Windows; upon a monitored application being launched or terminated, Stream Deck will notify the plugin.
 	 *
-	 * **Related:**
-	 * - Monitor when an application **launches**.
-	 *
-	 * `streamDeck.on("applicationDidLaunch", listener)`
-	 *
-	 * - Monitor when an application **terminates**.
-	 *
-	 * `streamDeck.on("applicationDidTerminate", listener)`
+	 * **Also see:**
+	 * - `streamDeck.client.onApplicationDidLaunch(...)`
+	 * - `streamDeck.client.onApplicationDidTerminate(...)`
 	 */
 	ApplicationsToMonitor?: {
 		/**
@@ -313,7 +280,7 @@ export type Manifest = {
 	/**
 	 * Path to the plugin's entry point specific to macOS; this is executed when the Stream Deck application starts the plugin on macOS.
 	 *
-	 * **Examples**:
+	 * **Examples:**
 	 * - index.js
 	 * - Counter
 	 */
@@ -322,7 +289,7 @@ export type Manifest = {
 	/**
 	 * Path to the plugin's entry point specific to Windows; this is executed when the Stream Deck application starts the plugin on Windows.
 	 *
-	 * Examples:
+	 * **Examples:**
 	 * - index.js
 	 * - Counter.exe
 	 */
@@ -399,10 +366,8 @@ export type Manifest = {
 	 * Collection of pre-defined profiles that are distributed with this plugin. Upon installation of the plugin, the user will be prompted to install the profiles. Once installed,
 	 * the plugin can switch any of the pre-defined profiles. **NB.** It is not yet possible to switch to a user-defined profile.
 	 *
-	 * **Related:**
-	 * - Switch to a pre-defined plugin profile.
-	 *
-	 * `streamDeck.switchToProfile(name, device)`
+	 * **Also see:**
+	 * `streamDeck.client.switchToProfile(...)`
 	 */
 	Profiles: {
 		/**
@@ -438,14 +403,9 @@ export type Manifest = {
 	 * - mute.html
 	 * - actions/join-voice-chat/settings.html
 	 *
-	 * **Related:**
-	 * - Send messages **to** the property inspector.
-	 *
-	 * `streamDeck.sendToPropertyInspector(context, payload)`
-	 *
-	 * - Receive messages **from** the property inspector.
-	 *
-	 * `streamDeck.on("sendToPlugin", data => ...)`
+	 * **Also see:**
+	 * - `streamDeck.client.sendToPropertyInspector(...)`
+	 * - `streamDeck.client.onSendToPlugin(...)`
 	 */
 	PropertyInspectorPath?: HtmlFilePath;
 
@@ -476,7 +436,7 @@ export type Manifest = {
 	/**
 	 * Unique identifier used to identify the plugin, represented in reverse-DNS format.
 	 *
-	 * Examples:
+	 * **Examples:**
 	 * - com.elgato.wave-link
 	 * - com.philips.hue
 	 * - tv.twitch.studio
@@ -602,10 +562,8 @@ type State = {
 	/**
 	 * Default title to be shown when the action is added to the Stream Deck.
 	 *
-	 * **Related:**
-	 * - Set action's title.
-	 *
-	 * `streamDeck.setTitle(context, title, state, target)`
+	 * **Also see:**
+	 * - `streamDeck.client.setTitle(...)`
 	 */
 	Title?: string;
 
