@@ -1,6 +1,6 @@
 import WebSocket from "ws";
 
-import { emitFrom } from "../../test/events";
+import { emitFromAll } from "../../test/events";
 import { logger } from "../common/logging";
 import { StreamDeckConnection } from "./connection";
 import { RegistrationParameters } from "./registration";
@@ -16,7 +16,7 @@ const originalArgv = process.argv;
 describe("StreamDeckConnection", () => {
 	const mockedWebSocket = WebSocket as jest.MockedClass<typeof WebSocket>;
 	beforeEach(() => jest.resetAllMocks());
-	afterAll(() => (process.argv = originalArgv));
+	afterEach(() => (process.argv = originalArgv));
 
 	/**
 	 * Asserts the {@link StreamDeckConnection} constructor does not automatically attempt to connect to Stream Deck.
@@ -40,7 +40,7 @@ describe("StreamDeckConnection", () => {
 		connection.connect();
 
 		// Act.
-		emitFrom(mockedWebSocket, "open");
+		emitFromAll(mockedWebSocket, "open");
 
 		// Assert.
 		const [webSocket] = mockedWebSocket.mock.instances;
@@ -64,7 +64,7 @@ describe("StreamDeckConnection", () => {
 		(connection as any).ws = undefined;
 
 		// Act.
-		emitFrom(mockedWebSocket, "open");
+		emitFromAll(mockedWebSocket, "open");
 
 		// Assert.
 		expect(logger.logError).toHaveBeenCalledTimes(1);
@@ -97,9 +97,9 @@ describe("StreamDeckConnection", () => {
 		connection.on("systemDidWakeUp", () => emitCount++);
 
 		// Act.
-		emitFrom(mockedWebSocket, "message", JSON.stringify({ event: "someOtherEvent" }));
-		emitFrom(mockedWebSocket, "message", JSON.stringify({ event: "systemDidWakeUp" }));
-		emitFrom(mockedWebSocket, "message", JSON.stringify({ event: "systemDidWakeUp" }));
+		emitFromAll(mockedWebSocket, "message", JSON.stringify({ event: "someOtherEvent" }));
+		emitFromAll(mockedWebSocket, "message", JSON.stringify({ event: "systemDidWakeUp" }));
+		emitFromAll(mockedWebSocket, "message", JSON.stringify({ event: "systemDidWakeUp" }));
 
 		// Assert.
 		expect(emitCount).toBe(2);
@@ -115,9 +115,9 @@ describe("StreamDeckConnection", () => {
 		connection.once("systemDidWakeUp", () => emitCount++);
 
 		// Act.
-		emitFrom(mockedWebSocket, "message", JSON.stringify({ event: "someOtherEvent" }));
-		emitFrom(mockedWebSocket, "message", JSON.stringify({ event: "systemDidWakeUp" }));
-		emitFrom(mockedWebSocket, "message", JSON.stringify({ event: "systemDidWakeUp" }));
+		emitFromAll(mockedWebSocket, "message", JSON.stringify({ event: "someOtherEvent" }));
+		emitFromAll(mockedWebSocket, "message", JSON.stringify({ event: "systemDidWakeUp" }));
+		emitFromAll(mockedWebSocket, "message", JSON.stringify({ event: "systemDidWakeUp" }));
 
 		// Assert.
 		expect(emitCount).toBe(1);
@@ -134,10 +134,10 @@ describe("StreamDeckConnection", () => {
 
 		// Act.
 		connection.once("systemDidWakeUp", listener);
-		emitFrom(mockedWebSocket, "message", JSON.stringify({ event: "systemDidWakeUp" }));
+		emitFromAll(mockedWebSocket, "message", JSON.stringify({ event: "systemDidWakeUp" }));
 
 		connection.removeListener("systemDidWakeUp", listener);
-		emitFrom(mockedWebSocket, "message", JSON.stringify({ event: "systemDidWakeUp" }));
+		emitFromAll(mockedWebSocket, "message", JSON.stringify({ event: "systemDidWakeUp" }));
 
 		// Assert.
 		expect(emitCount).toBe(1);
@@ -177,7 +177,7 @@ describe("StreamDeckConnection", () => {
 		const msg = JSON.stringify({ name: "Hello world " });
 
 		// Act.
-		emitFrom(mockedWebSocket, "message", msg);
+		emitFromAll(mockedWebSocket, "message", msg);
 
 		// Assert.
 		expect(logger.logWarn).toBeCalledTimes(1);
@@ -192,7 +192,7 @@ describe("StreamDeckConnection", () => {
 		getConnection();
 
 		// Act.
-		emitFrom(mockedWebSocket, "message", "{INVALID_JSON}");
+		emitFromAll(mockedWebSocket, "message", "{INVALID_JSON}");
 
 		// Assert.
 		expect(logger.logError).toBeCalledTimes(1);
@@ -207,7 +207,7 @@ describe("StreamDeckConnection", () => {
 		const connection = new StreamDeckConnection(regParams);
 		connection.connect();
 
-		emitFrom(mockedWebSocket, "open");
+		emitFromAll(mockedWebSocket, "open");
 		return connection;
 	}
 });
