@@ -1,6 +1,6 @@
-import { Action } from "./actions";
-import * as messages from "./connectivity/messages";
-import { Device } from "./devices";
+import * as messages from "../connectivity/messages";
+import { Device } from "../devices";
+import { Action } from "./action";
 import { StreamDeckClient } from "./types/client";
 
 /**

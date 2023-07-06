@@ -1,4 +1,5 @@
-import { State } from "../connectivity/messages";
+import { State } from "../../connectivity/messages";
+import { Manifest } from "../../manifest";
 import {
 	ApplicationDidLaunchEvent,
 	ApplicationDidTerminateEvent,
@@ -19,8 +20,7 @@ import {
 	WillAppearEvent,
 	WillDisappearEvent
 } from "../events";
-import { Manifest } from "../manifest";
-import { Bar, GBar, Pixmap, Text } from "./layouts";
+import { Bar, GBar, Pixmap, Text } from "../layouts";
 
 /**
  * Provides the main bridge between the plugin and the Stream Deck allowing the plugin to send requests and receive events, e.g. when the user presses an action.

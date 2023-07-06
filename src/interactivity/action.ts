@@ -1,4 +1,4 @@
-import { State } from "./connectivity/messages";
+import { State } from "../connectivity/messages";
 import { FeedbackPayload, StreamDeckClient, Target } from "./types/client";
 
 /**

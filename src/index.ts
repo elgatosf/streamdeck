@@ -1,18 +1,18 @@
-import { StreamDeckClient } from "./client";
 import { StreamDeckConnection } from "./connectivity/connection";
 import { RegistrationInfo } from "./connectivity/registration";
 import { getDevices } from "./devices";
 import { i18nProvider } from "./i18n";
+import { StreamDeckClient } from "./interactivity/client";
 import { getManifest } from "./manifest";
-import { Router } from "./routing";
+import { Router } from "./routing/router";
 
 export { LogLevel, logger } from "./common/logging";
 export * from "./connectivity/messages";
-export * from "./events";
+export * from "./interactivity/events";
+export * from "./interactivity/layouts";
+export * from "./interactivity/types/client";
 export { Manifest } from "./manifest";
-export { SingletonAction } from "./routing";
-export * from "./types/client";
-export * from "./types/layouts";
+export { SingletonAction } from "./routing/singleton-action";
 export { client, devices, i18n, info, manifest, router };
 
 const connection = new StreamDeckConnection();

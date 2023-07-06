@@ -1,8 +1,8 @@
-import { PromiseCompletionSource } from "./common/promises";
-import { StreamDeckConnection } from "./connectivity/connection";
-import * as messages from "./connectivity/messages";
-import { State } from "./connectivity/messages";
-import { Device } from "./devices";
+import { PromiseCompletionSource } from "../common/promises";
+import { StreamDeckConnection } from "../connectivity/connection";
+import * as messages from "../connectivity/messages";
+import { State } from "../connectivity/messages";
+import { Device } from "../devices";
 import {
 	ActionEvent,
 	ActionWithoutPayloadEvent,
