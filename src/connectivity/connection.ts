@@ -57,6 +57,8 @@ export class StreamDeckConnection {
 				// Web socket established a connection with the Stream Deck and the plugin was registered.
 				this.connection.setResult(this.ws);
 				logger.logDebug("Successfully connected to Stream Deck.");
+			} else {
+				logger.logError("Failed to connect to Stream Deck: Web Socket connection is undefined.");
 			}
 		});
 	}
@@ -123,9 +125,11 @@ export class StreamDeckConnection {
 			if (message.event) {
 				logger.logTrace(`${data}`);
 				this.eventEmitter.emit(message.event, message);
+			} else {
+				logger.logWarn(`Received unknown message: ${data}`);
 			}
 		} catch (err) {
-			logger.logError(`Failed to parse message from Stream Deck: ${data}`, err);
+			logger.logError(`Failed to parse message: ${data}`, err);
 		}
 	}
 }
