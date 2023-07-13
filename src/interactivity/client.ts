@@ -85,9 +85,8 @@ export class StreamDeckClient implements IStreamDeckClient {
 		this.connection.on("deviceDidConnect", (ev) =>
 			listener(
 				new DeviceEvent(ev, {
-					id: ev.device,
-					isConnected: true,
-					...ev.deviceInfo
+					...ev.deviceInfo,
+					...{ id: ev.device, isConnected: true }
 				})
 			)
 		);
@@ -97,13 +96,10 @@ export class StreamDeckClient implements IStreamDeckClient {
 	public onDeviceDidDisconnect(listener: (ev: DeviceDidDisconnectEvent) => void): void {
 		this.connection.on("deviceDidDisconnect", (ev) =>
 			listener(
-				new DeviceEvent(
-					ev,
-					this.devices.get(ev.device) || {
-						id: ev.device,
-						isConnected: false
-					}
-				)
+				new DeviceEvent(ev, {
+					...this.devices.get(ev.device),
+					...{ id: ev.device, isConnected: false }
+				})
 			)
 		);
 	}
