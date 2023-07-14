@@ -15,6 +15,7 @@ import {
 	PropertyInspectorDidAppearEvent,
 	PropertyInspectorDidDisappearEvent,
 	SendToPluginEvent,
+	SystemDidWakeUpEvent,
 	TitleParametersDidChangeEvent,
 	TouchTapEvent,
 	WillAppearEvent,
@@ -130,7 +131,7 @@ export type StreamDeckClient = {
 	 * Occurs when the computer wakes up.
 	 * @param listener Function to be invoked when the event occurs.
 	 */
-	onSystemDidWakeUp(listener: () => void): void;
+	onSystemDidWakeUp(listener: (ev: SystemDidWakeUpEvent) => void): void;
 
 	/**
 	 * Occurs when the user updates an action's title settings in the Stream Deck application. Also see {@link StreamDeckClient.setTitle}.

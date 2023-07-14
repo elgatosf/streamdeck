@@ -17,11 +17,13 @@ import {
 	DialUpEvent,
 	DidReceiveGlobalSettingsEvent,
 	DidReceiveSettingsEvent,
+	Event,
 	KeyDownEvent,
 	KeyUpEvent,
 	PropertyInspectorDidAppearEvent,
 	PropertyInspectorDidDisappearEvent,
 	SendToPluginEvent,
+	SystemDidWakeUpEvent,
 	TitleParametersDidChangeEvent,
 	TouchTapEvent,
 	WillAppearEvent,
@@ -155,8 +157,8 @@ export class StreamDeckClient implements IStreamDeckClient {
 	}
 
 	/** @inheritdoc */
-	public onSystemDidWakeUp(listener: () => void) {
-		this.connection.on("systemDidWakeUp", () => listener());
+	public onSystemDidWakeUp(listener: (ev: SystemDidWakeUpEvent) => void) {
+		this.connection.on("systemDidWakeUp", (ev) => listener(new Event<messages.SystemDidWakeUp>(ev)));
 	}
 
 	/** @inheritdoc */

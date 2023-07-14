@@ -212,6 +212,11 @@ export type PropertyInspectorDidDisappearEvent = ActionWithoutPayloadEvent<messa
 export type TitleParametersDidChangeEvent<TSettings> = ActionEvent<messages.TitleParametersDidChange<TSettings>>;
 
 /**
+ * Event information receives from Streak Deck as part of the {@link messages.SystemDidWakeUp} event.
+ */
+export type SystemDidWakeUpEvent = Event<messages.SystemDidWakeUp>;
+
+/**
  * Event information received from Stream Deck as part of the {@link messages.TouchTap} event.
  */
 export type TouchTapEvent<TSettings> = ActionEvent<messages.TouchTap<TSettings>>;
