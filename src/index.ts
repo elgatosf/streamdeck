@@ -7,10 +7,9 @@ import { getManifest } from "./manifest";
 import { Router } from "./routing/router";
 
 export { LogLevel, logger } from "./common/logging";
-export * from "./connectivity/messages";
 export * from "./interactivity/events";
 export * from "./interactivity/layouts";
-export * from "./interactivity/types/client";
+export { Target } from "./interactivity/target";
 export { Manifest } from "./manifest";
 export { SingletonAction } from "./routing/singleton-action";
 export { client, devices, i18n, info, manifest, router };
