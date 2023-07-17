@@ -1,5 +1,7 @@
-import { emitFrom } from "../../../test/events";
+import type { EventEmitter } from "node:events";
+
 import * as mocks from "../../connectivity/__mocks__/messages";
+import { StreamDeckConnection } from "../../connectivity/connection";
 import { InboundMessages } from "../../connectivity/messages";
 import { Device } from "../../devices";
 import { Action } from "../action";
@@ -26,31 +28,15 @@ import {
 	WillDisappearEvent
 } from "../events";
 
-const { StreamDeckConnection } = jest.createMockFromModule<typeof import("../../connectivity/connection")>("../../connectivity/connection");
+jest.mock("../../connectivity/connection");
 
 describe("StreamDeckClient", () => {
-	let connection: typeof StreamDeckConnection.prototype;
-
-	beforeEach(() => {
-		connection = new StreamDeckConnection();
-		jest.resetAllMocks();
-	});
-
-	/**
-	 * Emits the specified {@link message} from the connection.
-	 * @param message Message to emit from the connection.
-	 * @returns The {@link message}.
-	 */
-	function emitFromConnection<T extends InboundMessages>(message: T) {
-		emitFrom(connection, message.event, message);
-		return message;
-	}
-
 	/**
 	 * Asserts {@link StreamDeckClient.onApplicationDidLaunch} invokes the listener when the connection emits the `applicationDidLaunch` event.
 	 */
 	it("Receives onApplicationDidLaunch", () => {
 		// Arrange.
+		const connection = new StreamDeckConnection();
 		const client = new StreamDeckClient(connection, new Map<string, Device>());
 		const listener = jest.fn();
 		client.onApplicationDidLaunch(listener);
@@ -58,7 +44,7 @@ describe("StreamDeckClient", () => {
 		// Act.
 		const {
 			payload: { application }
-		} = emitFromConnection(mocks.applicationDidLaunch);
+		} = emit(mocks.applicationDidLaunch).from(connection);
 
 		//Assert.
 		expect(listener).toHaveBeenCalledTimes(1);
@@ -73,6 +59,7 @@ describe("StreamDeckClient", () => {
 	 */
 	it("Receives onApplicationDidTerminate", () => {
 		// Arrange.
+		const connection = new StreamDeckConnection();
 		const client = new StreamDeckClient(connection, new Map<string, Device>());
 		const listener = jest.fn();
 		client.onApplicationDidTerminate(listener);
@@ -80,7 +67,7 @@ describe("StreamDeckClient", () => {
 		// Act.
 		const {
 			payload: { application }
-		} = emitFromConnection(mocks.applicationDidTerminate);
+		} = emit(mocks.applicationDidTerminate).from(connection);
 
 		//Assert.
 		expect(listener).toHaveBeenCalledTimes(1);
@@ -95,12 +82,13 @@ describe("StreamDeckClient", () => {
 	 */
 	it("Receives onDeviceDidConnect", () => {
 		// Arrange.
+		const connection = new StreamDeckConnection();
 		const client = new StreamDeckClient(connection, new Map<string, Device>());
 		const listener = jest.fn();
 		client.onDeviceDidConnect(listener);
 
 		// Act.
-		const { device } = emitFromConnection(mocks.deviceDidConnect);
+		const { device } = emit(mocks.deviceDidConnect).from(connection);
 
 		// Assert.
 		expect(listener).toHaveBeenCalledTimes(1);
@@ -119,12 +107,13 @@ describe("StreamDeckClient", () => {
 	 */
 	it("Receives onDeviceDidDisconnect", () => {
 		// Arrange.
+		const connection = new StreamDeckConnection();
 		const client = new StreamDeckClient(connection, new Map<string, Device>());
 		const listener = jest.fn();
 		client.onDeviceDidDisconnect(listener);
 
 		// Act.
-		const { device } = emitFromConnection(mocks.deviceDidDisconnect);
+		const { device } = emit(mocks.deviceDidDisconnect).from(connection);
 
 		// Assert.
 		expect(listener).toBeCalledTimes(1);
@@ -153,12 +142,13 @@ describe("StreamDeckClient", () => {
 			...mocks.deviceDidConnect.deviceInfo
 		});
 
+		const connection = new StreamDeckConnection();
 		const client = new StreamDeckClient(connection, devices);
 		const listener = jest.fn();
 		client.onDeviceDidDisconnect(listener);
 
 		// Act.
-		const { device } = emitFromConnection(mocks.deviceDidDisconnect);
+		const { device } = emit(mocks.deviceDidDisconnect).from(connection);
 
 		// Assert.
 		expect(listener).toHaveBeenCalledTimes(1);
@@ -177,12 +167,13 @@ describe("StreamDeckClient", () => {
 	 */
 	it("Receives onDialDown", () => {
 		// Arrange.
+		const connection = new StreamDeckConnection();
 		const client = new StreamDeckClient(connection, new Map<string, Device>());
 		const listener = jest.fn();
 		client.onDialDown(listener);
 
 		// Act.
-		const { action, context, device, payload } = emitFromConnection(mocks.dialDown);
+		const { action, context, device, payload } = emit(mocks.dialDown).from(connection);
 
 		// Assert.
 		expect(listener).toHaveBeenCalledTimes(1);
@@ -199,12 +190,13 @@ describe("StreamDeckClient", () => {
 	 */
 	it("Receives onDialRotate", () => {
 		// Arrange.
+		const connection = new StreamDeckConnection();
 		const client = new StreamDeckClient(connection, new Map<string, Device>());
 		const listener = jest.fn();
 		client.onDialRotate(listener);
 
 		// Act.
-		const { action, context, device, payload } = emitFromConnection(mocks.dialRotate);
+		const { action, context, device, payload } = emit(mocks.dialRotate).from(connection);
 
 		// Assert.
 		expect(listener).toHaveBeenCalledTimes(1);
@@ -221,12 +213,13 @@ describe("StreamDeckClient", () => {
 	 */
 	it("Receives onDialUp", () => {
 		// Arrange.
+		const connection = new StreamDeckConnection();
 		const client = new StreamDeckClient(connection, new Map<string, Device>());
 		const listener = jest.fn();
 		client.onDialUp(listener);
 
 		// Act.
-		const { action, context, device, payload } = emitFromConnection(mocks.dialUp);
+		const { action, context, device, payload } = emit(mocks.dialUp).from(connection);
 
 		// Assert.
 		expect(listener).toHaveBeenCalledTimes(1);
@@ -243,6 +236,7 @@ describe("StreamDeckClient", () => {
 	 */
 	it("Receives onDidReceiveGlobalSettings", () => {
 		// Arrange.
+		const connection = new StreamDeckConnection();
 		const client = new StreamDeckClient(connection, new Map<string, Device>());
 		const listener = jest.fn();
 		client.onDidReceiveGlobalSettings(listener);
@@ -250,7 +244,7 @@ describe("StreamDeckClient", () => {
 		// Act.
 		const {
 			payload: { settings }
-		} = emitFromConnection(mocks.didReceiveGlobalSettings);
+		} = emit(mocks.didReceiveGlobalSettings).from(connection);
 
 		// Assert.
 		expect(listener).toHaveBeenCalledTimes(1);
@@ -265,12 +259,13 @@ describe("StreamDeckClient", () => {
 	 */
 	it("Receives onDidReceiveSettings", () => {
 		// Arrange.
+		const connection = new StreamDeckConnection();
 		const client = new StreamDeckClient(connection, new Map<string, Device>());
 		const listener = jest.fn();
 		client.onDidReceiveSettings(listener);
 
 		// Act.
-		const { action, context, device, payload } = emitFromConnection(mocks.didReceiveSettings);
+		const { action, context, device, payload } = emit(mocks.didReceiveSettings).from(connection);
 
 		// Assert.
 		expect(listener).toHaveBeenCalledTimes(1);
@@ -287,12 +282,13 @@ describe("StreamDeckClient", () => {
 	 */
 	it("Receives onKeyDown", () => {
 		// Arrange.
+		const connection = new StreamDeckConnection();
 		const client = new StreamDeckClient(connection, new Map<string, Device>());
 		const listener = jest.fn();
 		client.onKeyDown(listener);
 
 		// Act.
-		const { action, context, device, payload } = emitFromConnection(mocks.keyDown);
+		const { action, context, device, payload } = emit(mocks.keyDown).from(connection);
 
 		// Assert.
 		expect(listener).toHaveBeenCalledTimes(1);
@@ -309,12 +305,13 @@ describe("StreamDeckClient", () => {
 	 */
 	it("Receives onKeyUp", () => {
 		// Arrange.
+		const connection = new StreamDeckConnection();
 		const client = new StreamDeckClient(connection, new Map<string, Device>());
 		const listener = jest.fn();
 		client.onKeyUp(listener);
 
 		// Act.
-		const { action, context, device, payload } = emitFromConnection(mocks.keyUp);
+		const { action, context, device, payload } = emit(mocks.keyUp).from(connection);
 
 		// Assert.
 		expect(listener).toHaveBeenCalledTimes(1);
@@ -331,12 +328,13 @@ describe("StreamDeckClient", () => {
 	 */
 	it("Receives onPropertyInspectorDidAppear", () => {
 		// Arrange.
+		const connection = new StreamDeckConnection();
 		const client = new StreamDeckClient(connection, new Map<string, Device>());
 		const listener = jest.fn();
 		client.onPropertyInspectorDidAppear(listener);
 
 		// Act.
-		const { action, context, device } = emitFromConnection(mocks.propertyInspectorDidAppear);
+		const { action, context, device } = emit(mocks.propertyInspectorDidAppear).from(connection);
 
 		// Assert.
 		expect(listener).toHaveBeenCalledTimes(1);
@@ -352,12 +350,13 @@ describe("StreamDeckClient", () => {
 	 */
 	it("Receives onPropertyInspectorDidDisappear", () => {
 		// Arrange.
+		const connection = new StreamDeckConnection();
 		const client = new StreamDeckClient(connection, new Map<string, Device>());
 		const listener = jest.fn();
 		client.onPropertyInspectorDidDisappear(listener);
 
 		// Act.
-		const { action, context, device } = emitFromConnection(mocks.propertyInspectorDidDisappear);
+		const { action, context, device } = emit(mocks.propertyInspectorDidDisappear).from(connection);
 
 		// Assert.
 		expect(listener).toHaveBeenCalledTimes(1);
@@ -373,12 +372,13 @@ describe("StreamDeckClient", () => {
 	 */
 	it("Receives onSendToPlugin", () => {
 		// Arrange.
+		const connection = new StreamDeckConnection();
 		const client = new StreamDeckClient(connection, new Map<string, Device>());
 		const listener = jest.fn();
 		client.onSendToPlugin(listener);
 
 		// Act.
-		const { action, context, payload } = emitFromConnection(mocks.sendToPlugin);
+		const { action, context, payload } = emit(mocks.sendToPlugin).from(connection);
 
 		// Assert.
 		expect(listener).toHaveBeenCalledTimes(1);
@@ -394,12 +394,13 @@ describe("StreamDeckClient", () => {
 	 */
 	it("Receives onSystemDidWakeUp", () => {
 		// Arrange.
+		const connection = new StreamDeckConnection();
 		const client = new StreamDeckClient(connection, new Map<string, Device>());
 		const listener = jest.fn();
 		client.onSystemDidWakeUp(listener);
 
 		// Act.
-		emitFromConnection(mocks.systemDidWakeUp);
+		emit(mocks.systemDidWakeUp).from(connection);
 
 		// Assert.
 		expect(listener).toHaveBeenCalledTimes(1);
@@ -413,12 +414,13 @@ describe("StreamDeckClient", () => {
 	 */
 	it("Receives onTitleParametersDidChange", () => {
 		// Arrange.
+		const connection = new StreamDeckConnection();
 		const client = new StreamDeckClient(connection, new Map<string, Device>());
 		const listener = jest.fn();
 		client.onTitleParametersDidChange(listener);
 
 		// Act.
-		const { action, context, device, payload } = emitFromConnection(mocks.titleParametersDidChange);
+		const { action, context, device, payload } = emit(mocks.titleParametersDidChange).from(connection);
 
 		// Assert.
 		expect(listener).toHaveBeenCalledTimes(1);
@@ -435,12 +437,13 @@ describe("StreamDeckClient", () => {
 	 */
 	it("Receives onTouchTap", () => {
 		// Arrange.
+		const connection = new StreamDeckConnection();
 		const client = new StreamDeckClient(connection, new Map<string, Device>());
 		const listener = jest.fn();
 		client.onTouchTap(listener);
 
 		// Act.
-		const { action, context, device, payload } = emitFromConnection(mocks.touchTap);
+		const { action, context, device, payload } = emit(mocks.touchTap).from(connection);
 
 		// Assert.
 		expect(listener).toHaveBeenCalledTimes(1);
@@ -457,12 +460,13 @@ describe("StreamDeckClient", () => {
 	 */
 	it("Receives onWillAppear", () => {
 		// Arrange.
+		const connection = new StreamDeckConnection();
 		const client = new StreamDeckClient(connection, new Map<string, Device>());
 		const listener = jest.fn();
 		client.onWillAppear(listener);
 
 		// Act.
-		const { action, context, device, payload } = emitFromConnection(mocks.willAppear);
+		const { action, context, device, payload } = emit(mocks.willAppear).from(connection);
 
 		// Assert.
 		expect(listener).toHaveBeenCalledTimes(1);
@@ -479,12 +483,13 @@ describe("StreamDeckClient", () => {
 	 */
 	it("Receives onWillAppear", () => {
 		// Arrange.
+		const connection = new StreamDeckConnection();
 		const client = new StreamDeckClient(connection, new Map<string, Device>());
 		const listener = jest.fn();
 		client.onWillDisappear(listener);
 
 		// Act.
-		const { action, context, device, payload } = emitFromConnection(mocks.willDisappear);
+		const { action, context, device, payload } = emit(mocks.willDisappear).from(connection);
 
 		// Assert.
 		expect(listener).toHaveBeenCalledTimes(1);
@@ -501,6 +506,7 @@ describe("StreamDeckClient", () => {
 	 */
 	it("Sends sendToPropertyInspector", () => {
 		// Arrange.
+		const connection = new StreamDeckConnection();
 		const client = new StreamDeckClient(connection, new Map<string, Device>());
 
 		// Act.
@@ -518,3 +524,17 @@ describe("StreamDeckClient", () => {
 		});
 	});
 });
+
+/**
+ * Emits the specified {@link message} from a source.
+ * @param message Message to emit from the connection.
+ * @returns Function that can be used to determine the source, before finally emitting the event.
+ */
+function emit<T extends InboundMessages>(message: T) {
+	return {
+		from(source: unknown): T {
+			(source as EventEmitter).emit(message.event, message);
+			return message;
+		}
+	};
+}
