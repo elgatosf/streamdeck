@@ -1,7 +1,7 @@
-import { logger } from "../common/logging";
-import { RegistrationParameters } from "./registration";
+import { logger } from "../../common/logging";
+import { RegistrationParameters } from "../registration";
 
-jest.mock("../common/logging");
+jest.mock("../../common/logging");
 
 // Mock arguments.
 const port = ["-port", "12345"];

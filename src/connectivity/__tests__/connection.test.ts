@@ -1,11 +1,11 @@
 import WebSocket from "ws";
 
-import { emitFromAll } from "../../test/events";
-import { logger } from "../common/logging";
-import { StreamDeckConnection } from "./connection";
-import { RegistrationParameters } from "./registration";
+import { emitFromAll } from "../../../test/events";
+import { logger } from "../../common/logging";
+import { StreamDeckConnection } from "../connection";
+import { RegistrationParameters } from "../registration";
 
-jest.mock("../common/logging");
+jest.mock("../../common/logging");
 jest.mock("ws");
 
 const mockArgv = ["-port", "12345", "-pluginUUID", "abc123", "-registerEvent", "test_event", "-info", `{"plugin":{"uuid":"com.elgato.test","version":"0.1.0"}}`];

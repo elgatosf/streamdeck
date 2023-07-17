@@ -1,9 +1,9 @@
-import { emitFrom } from "../../test/events";
-import * as mocks from "../connectivity/__mocks__/messages";
-import { InboundMessages } from "../connectivity/messages";
-import { Device } from "../devices";
-import { Action } from "./action";
-import { StreamDeckClient } from "./client";
+import { emitFrom } from "../../../test/events";
+import * as mocks from "../../connectivity/__mocks__/messages";
+import { InboundMessages } from "../../connectivity/messages";
+import { Device } from "../../devices";
+import { Action } from "../action";
+import { StreamDeckClient } from "../client";
 import {
 	ApplicationDidLaunchEvent,
 	ApplicationDidTerminateEvent,
@@ -24,9 +24,9 @@ import {
 	TouchTapEvent,
 	WillAppearEvent,
 	WillDisappearEvent
-} from "./events";
+} from "../events";
 
-const { StreamDeckConnection } = jest.createMockFromModule<typeof import("../connectivity/connection")>("../connectivity/connection");
+const { StreamDeckConnection } = jest.createMockFromModule<typeof import("../../connectivity/connection")>("../../connectivity/connection");
 
 describe("StreamDeckClient", () => {
 	let connection: typeof StreamDeckConnection.prototype;
