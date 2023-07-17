@@ -1,4 +1,4 @@
-import type { StreamDeckClient } from "../interactivity/client";
+import { StreamDeckClient } from "../interactivity/client";
 import {
 	DialDownEvent,
 	DialRotateEvent,
