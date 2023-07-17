@@ -4,6 +4,7 @@ import * as messages from "../connectivity/messages";
 import { State } from "../connectivity/messages";
 import { Device } from "../devices";
 import type { Manifest } from "../manifest";
+import type { SingletonAction } from "../routing/singleton-action";
 import {
 	ActionEvent,
 	ActionWithoutPayloadEvent,
@@ -60,7 +61,7 @@ export class StreamDeckClient {
 	}
 
 	/**
-	 * Gets the settings associated with an instance of an action, as identified by the `context`. An instance of an action represents a button, dial, pedal, etc. Use in conjunction
+	 * Gets the settings associated with an instance of an action, as identified by the {@link context}. An instance of an action represents a button, dial, pedal, etc. Use in conjunction
 	 * with {@link StreamDeckClient.setSettings}.
 	 * @param context Unique identifier of the action instance whose settings are being requested.
 	 * @returns Promise containing the action instance's settings.
@@ -83,7 +84,7 @@ export class StreamDeckClient {
 	}
 
 	/**
-	 * Occurs when a monitored application is launched. Monitored applications can be defined in the `manifest.json` file via the {@link Manifest.ApplicationsToMonitor} property.
+	 * Occurs when a monitored application is launched. Monitored applications can be defined in the manifest via the {@link Manifest.ApplicationsToMonitor} property.
 	 * Also see {@link StreamDeckClient.onApplicationDidTerminate}.
 	 * @param listener Function to be invoked when the event occurs.
 	 */
@@ -92,7 +93,7 @@ export class StreamDeckClient {
 	}
 
 	/**
-	 * Occurs when a monitored application terminates. Monitored applications can be defined in the `manifest.json` file via the {@link Manifest.ApplicationsToMonitor} property.
+	 * Occurs when a monitored application terminates. Monitored applications can be defined in the manifest via the {@link Manifest.ApplicationsToMonitor} property.
 	 * Also see {@link StreamDeckClient.onApplicationDidLaunch}.
 	 * @param listener Function to be invoked when the event occurs.
 	 */
@@ -266,12 +267,12 @@ export class StreamDeckClient {
 	}
 
 	/**
-	 * Sends the `payload` to the current property inspector associated with an instance of an action, as identified by the `context`. The plugin can also receive information from
-	 * the property inspector via the `"sendToPlugin"` event, allowing for bi-directional communication. **Note**, the `payload` is only received by the property inspector when it
-	 * is associated with the specified `context`.
-	 * @param context Unique identifier of the action instance whose property inspector will receive the `payload`.
+	 * Sends the {@link payload} to the current property inspector associated with an instance of an action, as identified by the {@link context}. The plugin can also receive information
+	 * from the property inspector via the `"sendToPlugin"` event, allowing for bi-directional communication. **Note**, the {@link payload} is only received by the property inspector
+	 * when it is associated with the specified {@link context}.
+	 * @param context Unique identifier of the action instance whose property inspector will receive the {@link payload}.
 	 * @param payload Payload to send to the property inspector.
-	 * @returns `Promise` resolved when the request to send the `payload` to the property inspector has been sent to Stream Deck.
+	 * @returns `Promise` resolved when the request to send the {@link payload} to the property inspector has been sent to Stream Deck.
 	 */
 	public sendToPropertyInspector(context: string, payload: unknown): Promise<void> {
 		return this.connection.send("sendToPropertyInspector", {
@@ -281,10 +282,10 @@ export class StreamDeckClient {
 	}
 
 	/**
-	 * Sets the feedback of a layout associated with an action instance allowing for visual items to be updated. Layouts are a powerful way to provide dynamic information to users,
-	 * and can be assigned in the manifest, or dynamically via {@link StreamDeckClient.setFeedbackLayout}.
+	 * Sets the {@link feedback} for the layout associated with an action instance allowing for visual items to be updated. Layouts are a powerful way to provide dynamic information
+	 * to users, and can be assigned in the manifest, or dynamically via {@link StreamDeckClient.setFeedbackLayout}.
 	 *
-	 * The `feedback` payload defines which items within the layout should be updated, and are identified by their property name (defined as the `key` in the layout's definition).
+	 * The {@link feedback} payload defines which items within the layout should be updated, and are identified by their property name (defined as the `key` in the layout's definition).
 	 * The values can either by a complete new definition, a `string` for layout item types of `text` and `pixmap`, or a `number` for layout item types of `bar` and `gbar`.
 	 *
 	 * For example, given the following custom layout definition saved relatively to the plugin at "layouts/MyCustomLayout.json".
@@ -359,8 +360,8 @@ export class StreamDeckClient {
 	}
 
 	/**
-	 * Sets the global `settings` associated the plugin. **Note**, these settings are only available to this plugin, and should be used to persist information securely.
-	 * Use conjunction with {@link StreamDeckClient.getGlobalSettings}.
+	 * Sets the global {@link settings} associated the plugin. **Note**, these settings are only available to this plugin, and should be used to persist information securely. Use in
+	 * conjunction with {@link StreamDeckClient.getGlobalSettings}.
 	 * @param settings Settings to save.
 	 * @returns `Promise` resolved when the global `settings` are sent to Stream Deck.
 	 * @example
@@ -377,13 +378,14 @@ export class StreamDeckClient {
 	}
 
 	/**
-	 * Sets the `image` displayed for an instance of an action, as identified by the `context`.
+	 * Sets the {@link image} displayed for an instance of an action, as identified by the {@link context}. **NB** This will be ignored if the user has chosen a custom image within
+	 * the Stream Deck application.
 	 * @param context Unique identifier of the action instance whose image will be updated.
 	 * @param image Image to display; this can be either a path to a local file within the plugin's folder, a base64 encoded `string` with the mime type declared (e.g. PNG, JPEG, etc.),
 	 * or an SVG `string`. When `image` is `undefined`, the image from the manifest is used.
 	 * @param state Action state the request applies to; when no state is supplied, the image is set for both states. **Note**, only applies to multi-state actions.
 	 * @param target Specifies which aspects of the Stream Deck should be updated, hardware, software, or both.
-	 * @returns `Promise` resolved when the request to set the `image` has been sent to Stream Deck.
+	 * @returns `Promise` resolved when the request to set the {@link image} has been sent to Stream Deck.
 	 */
 	public setImage(context: string, image: string, state: State | undefined = undefined, target: Target = Target.HardwareAndSoftware): Promise<void> {
 		return this.connection.send("setImage", {
@@ -397,11 +399,11 @@ export class StreamDeckClient {
 	}
 
 	/**
-	 * Sets the `settings` associated with an instance of an action, as identified by the `context`. An instance of an action represents a button, dial, pedal, etc.
-	 * Use in conjunction with {@link StreamDeckClient.getSettings}.
+	 * Sets the {@link settings} associated with an instance of an action, as identified by the {@link context}. An instance of an action represents a button, dial, pedal, etc. Use
+	 * in conjunction with {@link StreamDeckClient.getSettings}.
 	 * @param context Unique identifier of the action instance whose settings will be updated.
 	 * @param settings Settings to associate with the action instance.
-	 * @returns `Promise` resolved when the `settings` are sent to Stream Deck.
+	 * @returns `Promise` resolved when the {@link settings} are sent to Stream Deck.
 	 */
 	public setSettings(context: string, settings: unknown): Promise<void> {
 		return this.connection.send("setSettings", {
@@ -411,7 +413,7 @@ export class StreamDeckClient {
 	}
 
 	/**
-	 * Sets the current state of an action instance; this only applies to actions that have multiple states defined within the manifest.json file.
+	 * Sets the current state of an action instance; this only applies to actions that have multiple states defined within the manifest.
 	 * @param context Unique identifier of the action instance who state will be set.
 	 * @param state State to set; this be either 0, or 1.
 	 * @returns `Promise` resolved when the request to set the state of an action instance has been sent to Stream Deck.
@@ -426,12 +428,13 @@ export class StreamDeckClient {
 	}
 
 	/**
-	 * Sets the `title` displayed for an instance of an action, as identified by the `context`. Often used in conjunction with `"titleParametersDidChange"` event.
+	 * Sets the {@link title} displayed for an instance of an action, as identified by the {@link context}. Often used in conjunction with {@link StreamDeckClient.onTitleParametersDidChange}
+	 * / {@link SingletonAction.onTitleParametersDidChange} event.
 	 * @param context Unique identifier of the action instance whose title will be updated.
 	 * @param title Title to display; when no title is specified, the title will reset to the title set by the user.
 	 * @param state Action state the request applies to; when no state is supplied, the title is set for both states. **Note**, only applies to multi-state actions.
 	 * @param target Specifies which aspects of the Stream Deck should be updated, hardware, software, or both.
-	 * @returns `Promise` resolved when the request to set the `title` has been sent to Stream Deck.
+	 * @returns `Promise` resolved when the request to set the {@link title} has been sent to Stream Deck.
 	 */
 	public setTitle(context: string, title?: string, state: State | undefined = undefined, target: Target = Target.HardwareAndSoftware): Promise<void> {
 		return this.connection.send("setTitle", {
@@ -445,8 +448,8 @@ export class StreamDeckClient {
 	}
 
 	/**
-	 * Temporarily shows an alert (i.e. warning), in the form of an exclamation mark in a yellow triangle, on an action, as identified by the `context`. Used to provide visual feedback
-	 * when an action failed.
+	 * Temporarily shows an alert (i.e. warning), in the form of an exclamation mark in a yellow triangle, on an action, as identified by the {@link context}. Used to provide visual
+	 * feedback when an action failed.
 	 * @param context Unique identifier of the action instance where the warning will be shown.
 	 * @returns `Promise` resolved when the request to show an alert has been sent to Stream Deck.
 	 */
@@ -457,8 +460,8 @@ export class StreamDeckClient {
 	}
 
 	/**
-	 * Temporarily shows an "OK" (i.e. success), in the form of a check-mark in a green circle, on an action, as identified by the `context`. Used to provide visual feedback when an
-	 * action successfully executed.
+	 * Temporarily shows an "OK" (i.e. success), in the form of a check-mark in a green circle, on an action, as identified by the {@link context}. Used to provide visual feedback
+	 * when an action successfully executed.
 	 * @param context Unique identifier of the action instance where the "OK" will be shown.
 	 * @returns `Promise` resolved when the request to show an "OK" has been sent to Stream Deck.
 	 */
@@ -469,9 +472,9 @@ export class StreamDeckClient {
 	}
 
 	/**
-	 * Requests the Stream Deck switches the current profile of the specified `device`, to the profile defined by `profile`. **Note**, plugins can only switch to profiles included as part of the plugin, and
-	 * defined within their manifest.json. Plugins cannot switch to custom profiles created by users.
-	 * @param profile Name of the profile to switch to. The name must be identical to the one provided in the manifest.json file.
+	 * Requests the Stream Deck switches the current profile of the specified {@link device}, to the {@link profile}. **Note**, plugins can only switch to profiles included as part
+	 * of the plugin, and defined within the manifest. Plugins cannot switch to custom profiles created by users.
+	 * @param profile Name of the profile to switch to. The name must be identical to the one provided in the manifest.
 	 * @param device Unique identifier of the device where the profile should be set.
 	 * @returns `Promise` resolved when the request to switch the `profile` has been sent to Stream Deck.
 	 */

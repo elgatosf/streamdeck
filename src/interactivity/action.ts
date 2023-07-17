@@ -1,5 +1,4 @@
 import { State } from "../connectivity/messages";
-import type { Manifest } from "../manifest";
 import type { SingletonAction } from "../routing/singleton-action";
 import type { StreamDeckClient } from "./client";
 import { FeedbackPayload } from "./layouts";
@@ -12,7 +11,7 @@ export class Action {
 	/**
 	 * Initializes a new instance of the {@see Action} class.
 	 * @param client The Stream Deck client.
-	 * @param manifestId Unique identifier (UUID) of the action as defined within the plugin's manifest {@link Manifest.Actions} collection.
+	 * @param manifestId Unique identifier (UUID) of the action as defined within the plugin's manifest's actions collection.
 	 * @param id Unique identifier of the instance of the action; this can be used to update the action on the Stream Deck, e.g. its title, settings, etc.
 	 */
 	constructor(private readonly client: StreamDeckClient, public readonly manifestId: string, public readonly id: string) {}
@@ -38,7 +37,7 @@ export class Action {
 
 	/**
 	 * Sets the feedback for the current layout associated with this action instance, allowing for the visual items to be updated. Layouts are a powerful way to provide dynamic information
-	 * to users, and can be assigned in the {@link Manifest.Actions} manifest, or dynamically via {@link Action.setFeedbackLayout}.
+	 * to users, and can be assigned in the manifest, or dynamically via {@link Action.setFeedbackLayout}.
 	 *
 	 * The {@link feedback} payload defines which items within the layout will be updated, and are identified by their property name (defined as the `key` in the layout's definition).
 	 * The values can either by a complete new definition, a `string` for layout item types of `text` and `pixmap`, or a `number` for layout item types of `bar` and `gbar`.
@@ -103,7 +102,7 @@ export class Action {
 	}
 
 	/**
-	 * Sets the {@link image} to be display for this action instance. **NB** This image will be ignored if the user has chosen a custom image within the Stream Deck application.
+	 * Sets the {@link image} to be display for this action instance. **NB** This will be ignored if the user has chosen a custom image within the Stream Deck application.
 	 * @param image Image to display; this can be either a path to a local file within the plugin's folder, a base64 encoded `string` with the mime type declared (e.g. PNG, JPEG, etc.),
 	 * or an SVG `string`. When {@link image} is `undefined`, the image from the manifest is used.
 	 * @param state Action state the request applies to; when no state is supplied, the image is set for both states. **NB** Only applies to multi-state actions.
@@ -124,7 +123,7 @@ export class Action {
 	}
 
 	/**
-	 * Sets the current {@link state} of this action instance; only applies to actions that have multiple states defined within the manifest JSON file.
+	 * Sets the current {@link state} of this action instance; only applies to actions that have multiple states defined within the manifest.
 	 * @param state State to set; this be either 0, or 1.
 	 * @returns `Promise` resolved when the request to set the state of an action instance has been sent to Stream Deck.
 	 */
