@@ -9,6 +9,7 @@
 		"*.ts": "${capture}.test.ts",
 		".editorconfig": ".eslintrc, .prettierrc",
 		"jest.config.ts": "babel.config.json",
-		"package.json": "package-lock.json, yarn.lock, pnpm-lock.yaml, .npmrc"
+		"package.json": "package-lock.json, yarn.lock, pnpm-lock.yaml, .npmrc",
+		"README.md": "LICENSE"
 	}
 }
