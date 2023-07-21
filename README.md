@@ -9,7 +9,7 @@
 
 Welcome to the official Node.js SDK for building Stream Deck plugins. Designed to make building with Stream Deck easy, our `@elgato/streamdeck` npm package provides everything you need to connect and communicate with Stream Deck, and lets you focus on the fun stuff.
 
-## 📥 Pre-Requisites
+## 📥 Prerequisites
 
 This Stream Deck SDK utilizes [Node.js](https://nodejs.org/en) and [npm](https://www.npmjs.com/). We highly recommend installing them using a version manager, with our favorites being [nvm](https://github.com/creationix/nvm) and [nvm-windows](nvm-windows). With the version manager installed, you can install Node.js and npm via.
 
@@ -22,11 +22,11 @@ nvm use 20.1.0
 
 ## ✏️ Getting Started
 
-The easiest way to get started is using our creation wizard via the CLI.
+With Node.js and npm installed, the easiest way to get started is using our creation wizard.
 
 ```bash
-$ npm i -g @elgato/cli
-$ streamdeck create
+npm i -g @elgato/cli
+streamdeck create
 ```
 
 <p align="center">
