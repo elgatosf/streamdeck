@@ -13,5 +13,14 @@
 	],
 	"importOrderSeparation": true,
 	"importOrderSortSpecifiers": true,
-	"importOrderCaseInsensitive": true
+	"importOrderCaseInsensitive": true,
+	"overrides": [
+		{
+			"files": "**/*.md",
+			"options": {
+				"useTabs": false,
+				"tabWidth": 4
+			}
+		}
+	]
 }

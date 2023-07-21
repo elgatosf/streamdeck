@@ -33,7 +33,7 @@ import * as streamDeck from "@elgato/streamdeck";
 
 // Show an "OK" icon when an action is pressed.
 streamDeck.client.onKeyDown(({ action }) => {
-	action.showOk();
+    action.showOk();
 });
 ```
 
@@ -78,15 +78,15 @@ The `streamDeck.actions` object provides information about actions currently vis
 import * as streamDeck from "@elgato/streamdeck";
 
 class ToggleOnOff extends streamDeck.SingletonAction {
-	onKeyDown(ev) {
-		// Occurs when key down happens for an action of type "com.elgato.test.toggle-on-off"
-	}
+    onKeyDown(ev) {
+        // Occurs when key down happens for an action of type "com.elgato.test.toggle-on-off"
+    }
 }
 
 class ChangeBrightness extends streamDeck.SingletonAction {
-	onKeyDown(ev) {
-		// Occurs when key down happens for an action of type "com.elgato.test.change-brightness"
-	}
+    onKeyDown(ev) {
+        // Occurs when key down happens for an action of type "com.elgato.test.change-brightness"
+    }
 }
 
 streamDeck.actions.registerAction("com.elgato.test.change-brightness", new ChangeBrightness());
@@ -101,7 +101,7 @@ The `streamDeck.devices` collection contains information about the user's Stream
 import * as streamDeck from "@elgato/streamdeck";
 
 streamDeck.devices.forEach((device) => {
-	// Device information.
+    // Device information.
 });
 ```
 
