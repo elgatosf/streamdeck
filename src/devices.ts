@@ -1,5 +1,5 @@
 import { StreamDeckConnection } from "./connectivity/connection";
-import { DeviceInfo } from "./connectivity/messages";
+import type { DeviceInfo } from "./connectivity/device-info";
 
 /**
  * Gets a map of Stream Deck devices that are tracked against the specified `connection`.

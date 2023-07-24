@@ -1,8 +1,8 @@
 import type { EventEmitter } from "node:events";
 
-import * as mocks from "../../connectivity/__mocks__/messages";
+import * as mockEvents from "../../connectivity/__mocks__/events";
 import { StreamDeckConnection } from "../../connectivity/connection";
-import { InboundMessages } from "../../connectivity/messages";
+import { Event } from "../../connectivity/events";
 import { Device } from "../../devices";
 import { Action } from "../action";
 import { StreamDeckClient } from "../client";
@@ -44,7 +44,7 @@ describe("StreamDeckClient", () => {
 		// Act.
 		const {
 			payload: { application }
-		} = emit(mocks.applicationDidLaunch).from(connection);
+		} = emit(mockEvents.applicationDidLaunch).from(connection);
 
 		//Assert.
 		expect(listener).toHaveBeenCalledTimes(1);
@@ -67,7 +67,7 @@ describe("StreamDeckClient", () => {
 		// Act.
 		const {
 			payload: { application }
-		} = emit(mocks.applicationDidTerminate).from(connection);
+		} = emit(mockEvents.applicationDidTerminate).from(connection);
 
 		//Assert.
 		expect(listener).toHaveBeenCalledTimes(1);
@@ -88,7 +88,7 @@ describe("StreamDeckClient", () => {
 		client.onDeviceDidConnect(listener);
 
 		// Act.
-		const { device } = emit(mocks.deviceDidConnect).from(connection);
+		const { device } = emit(mockEvents.deviceDidConnect).from(connection);
 
 		// Assert.
 		expect(listener).toHaveBeenCalledTimes(1);
@@ -96,9 +96,9 @@ describe("StreamDeckClient", () => {
 			device: {
 				id: device,
 				isConnected: true,
-				...mocks.deviceDidConnect.deviceInfo
+				...mockEvents.deviceDidConnect.deviceInfo
 			},
-			type: mocks.deviceDidConnect.event
+			type: mockEvents.deviceDidConnect.event
 		});
 	});
 
@@ -113,7 +113,7 @@ describe("StreamDeckClient", () => {
 		client.onDeviceDidDisconnect(listener);
 
 		// Act.
-		const { device } = emit(mocks.deviceDidDisconnect).from(connection);
+		const { device } = emit(mockEvents.deviceDidDisconnect).from(connection);
 
 		// Assert.
 		expect(listener).toBeCalledTimes(1);
@@ -136,10 +136,10 @@ describe("StreamDeckClient", () => {
 	it("Receives onDeviceDidDisconnect (Cache)", () => {
 		// Arrange.
 		const devices = new Map<string, Device>();
-		devices.set(mocks.deviceDidDisconnect.device, {
-			id: mocks.deviceDidConnect.device,
+		devices.set(mockEvents.deviceDidDisconnect.device, {
+			id: mockEvents.deviceDidConnect.device,
 			isConnected: true,
-			...mocks.deviceDidConnect.deviceInfo
+			...mockEvents.deviceDidConnect.deviceInfo
 		});
 
 		const connection = new StreamDeckConnection();
@@ -148,7 +148,7 @@ describe("StreamDeckClient", () => {
 		client.onDeviceDidDisconnect(listener);
 
 		// Act.
-		const { device } = emit(mocks.deviceDidDisconnect).from(connection);
+		const { device } = emit(mockEvents.deviceDidDisconnect).from(connection);
 
 		// Assert.
 		expect(listener).toHaveBeenCalledTimes(1);
@@ -156,7 +156,7 @@ describe("StreamDeckClient", () => {
 			device: {
 				id: device,
 				isConnected: false,
-				...mocks.deviceDidConnect.deviceInfo
+				...mockEvents.deviceDidConnect.deviceInfo
 			},
 			type: "deviceDidDisconnect"
 		});
@@ -173,11 +173,11 @@ describe("StreamDeckClient", () => {
 		client.onDialDown(listener);
 
 		// Act.
-		const { action, context, device, payload } = emit(mocks.dialDown).from(connection);
+		const { action, context, device, payload } = emit(mockEvents.dialDown).from(connection);
 
 		// Assert.
 		expect(listener).toHaveBeenCalledTimes(1);
-		expect(listener).toHaveBeenCalledWith<[DialDownEvent<mocks.Settings>]>({
+		expect(listener).toHaveBeenCalledWith<[DialDownEvent<mockEvents.Settings>]>({
 			action: new Action(client, action, context),
 			deviceId: device,
 			payload,
@@ -196,11 +196,11 @@ describe("StreamDeckClient", () => {
 		client.onDialRotate(listener);
 
 		// Act.
-		const { action, context, device, payload } = emit(mocks.dialRotate).from(connection);
+		const { action, context, device, payload } = emit(mockEvents.dialRotate).from(connection);
 
 		// Assert.
 		expect(listener).toHaveBeenCalledTimes(1);
-		expect(listener).toHaveBeenCalledWith<[DialRotateEvent<mocks.Settings>]>({
+		expect(listener).toHaveBeenCalledWith<[DialRotateEvent<mockEvents.Settings>]>({
 			action: new Action(client, action, context),
 			deviceId: device,
 			payload,
@@ -219,11 +219,11 @@ describe("StreamDeckClient", () => {
 		client.onDialUp(listener);
 
 		// Act.
-		const { action, context, device, payload } = emit(mocks.dialUp).from(connection);
+		const { action, context, device, payload } = emit(mockEvents.dialUp).from(connection);
 
 		// Assert.
 		expect(listener).toHaveBeenCalledTimes(1);
-		expect(listener).toHaveBeenCalledWith<[DialUpEvent<mocks.Settings>]>({
+		expect(listener).toHaveBeenCalledWith<[DialUpEvent<mockEvents.Settings>]>({
 			action: new Action(client, action, context),
 			deviceId: device,
 			payload,
@@ -244,11 +244,11 @@ describe("StreamDeckClient", () => {
 		// Act.
 		const {
 			payload: { settings }
-		} = emit(mocks.didReceiveGlobalSettings).from(connection);
+		} = emit(mockEvents.didReceiveGlobalSettings).from(connection);
 
 		// Assert.
 		expect(listener).toHaveBeenCalledTimes(1);
-		expect(listener).toHaveBeenCalledWith<[DidReceiveGlobalSettingsEvent<mocks.Settings>]>({
+		expect(listener).toHaveBeenCalledWith<[DidReceiveGlobalSettingsEvent<mockEvents.Settings>]>({
 			settings,
 			type: "didReceiveGlobalSettings"
 		});
@@ -265,11 +265,11 @@ describe("StreamDeckClient", () => {
 		client.onDidReceiveSettings(listener);
 
 		// Act.
-		const { action, context, device, payload } = emit(mocks.didReceiveSettings).from(connection);
+		const { action, context, device, payload } = emit(mockEvents.didReceiveSettings).from(connection);
 
 		// Assert.
 		expect(listener).toHaveBeenCalledTimes(1);
-		expect(listener).toHaveBeenCalledWith<[DidReceiveSettingsEvent<mocks.Settings>]>({
+		expect(listener).toHaveBeenCalledWith<[DidReceiveSettingsEvent<mockEvents.Settings>]>({
 			action: new Action(client, action, context),
 			deviceId: device,
 			payload,
@@ -288,11 +288,11 @@ describe("StreamDeckClient", () => {
 		client.onKeyDown(listener);
 
 		// Act.
-		const { action, context, device, payload } = emit(mocks.keyDown).from(connection);
+		const { action, context, device, payload } = emit(mockEvents.keyDown).from(connection);
 
 		// Assert.
 		expect(listener).toHaveBeenCalledTimes(1);
-		expect(listener).toHaveBeenCalledWith<[KeyDownEvent<mocks.Settings>]>({
+		expect(listener).toHaveBeenCalledWith<[KeyDownEvent<mockEvents.Settings>]>({
 			action: new Action(client, action, context),
 			deviceId: device,
 			payload,
@@ -311,11 +311,11 @@ describe("StreamDeckClient", () => {
 		client.onKeyUp(listener);
 
 		// Act.
-		const { action, context, device, payload } = emit(mocks.keyUp).from(connection);
+		const { action, context, device, payload } = emit(mockEvents.keyUp).from(connection);
 
 		// Assert.
 		expect(listener).toHaveBeenCalledTimes(1);
-		expect(listener).toHaveBeenCalledWith<[KeyUpEvent<mocks.Settings>]>({
+		expect(listener).toHaveBeenCalledWith<[KeyUpEvent<mockEvents.Settings>]>({
 			action: new Action(client, action, context),
 			deviceId: device,
 			payload,
@@ -334,7 +334,7 @@ describe("StreamDeckClient", () => {
 		client.onPropertyInspectorDidAppear(listener);
 
 		// Act.
-		const { action, context, device } = emit(mocks.propertyInspectorDidAppear).from(connection);
+		const { action, context, device } = emit(mockEvents.propertyInspectorDidAppear).from(connection);
 
 		// Assert.
 		expect(listener).toHaveBeenCalledTimes(1);
@@ -356,7 +356,7 @@ describe("StreamDeckClient", () => {
 		client.onPropertyInspectorDidDisappear(listener);
 
 		// Act.
-		const { action, context, device } = emit(mocks.propertyInspectorDidDisappear).from(connection);
+		const { action, context, device } = emit(mockEvents.propertyInspectorDidDisappear).from(connection);
 
 		// Assert.
 		expect(listener).toHaveBeenCalledTimes(1);
@@ -378,11 +378,11 @@ describe("StreamDeckClient", () => {
 		client.onSendToPlugin(listener);
 
 		// Act.
-		const { action, context, payload } = emit(mocks.sendToPlugin).from(connection);
+		const { action, context, payload } = emit(mockEvents.sendToPlugin).from(connection);
 
 		// Assert.
 		expect(listener).toHaveBeenCalledTimes(1);
-		expect(listener).toHaveBeenCalledWith<[SendToPluginEvent<mocks.Settings>]>({
+		expect(listener).toHaveBeenCalledWith<[SendToPluginEvent<mockEvents.Settings>]>({
 			action: new Action(client, action, context),
 			payload,
 			type: "sendToPlugin"
@@ -400,7 +400,7 @@ describe("StreamDeckClient", () => {
 		client.onSystemDidWakeUp(listener);
 
 		// Act.
-		emit(mocks.systemDidWakeUp).from(connection);
+		emit(mockEvents.systemDidWakeUp).from(connection);
 
 		// Assert.
 		expect(listener).toHaveBeenCalledTimes(1);
@@ -420,11 +420,11 @@ describe("StreamDeckClient", () => {
 		client.onTitleParametersDidChange(listener);
 
 		// Act.
-		const { action, context, device, payload } = emit(mocks.titleParametersDidChange).from(connection);
+		const { action, context, device, payload } = emit(mockEvents.titleParametersDidChange).from(connection);
 
 		// Assert.
 		expect(listener).toHaveBeenCalledTimes(1);
-		expect(listener).toHaveBeenCalledWith<[TitleParametersDidChangeEvent<mocks.Settings>]>({
+		expect(listener).toHaveBeenCalledWith<[TitleParametersDidChangeEvent<mockEvents.Settings>]>({
 			action: new Action(client, action, context),
 			deviceId: device,
 			payload,
@@ -443,11 +443,11 @@ describe("StreamDeckClient", () => {
 		client.onTouchTap(listener);
 
 		// Act.
-		const { action, context, device, payload } = emit(mocks.touchTap).from(connection);
+		const { action, context, device, payload } = emit(mockEvents.touchTap).from(connection);
 
 		// Assert.
 		expect(listener).toHaveBeenCalledTimes(1);
-		expect(listener).toHaveBeenCalledWith<[TouchTapEvent<mocks.Settings>]>({
+		expect(listener).toHaveBeenCalledWith<[TouchTapEvent<mockEvents.Settings>]>({
 			action: new Action(client, action, context),
 			deviceId: device,
 			payload,
@@ -466,11 +466,11 @@ describe("StreamDeckClient", () => {
 		client.onWillAppear(listener);
 
 		// Act.
-		const { action, context, device, payload } = emit(mocks.willAppear).from(connection);
+		const { action, context, device, payload } = emit(mockEvents.willAppear).from(connection);
 
 		// Assert.
 		expect(listener).toHaveBeenCalledTimes(1);
-		expect(listener).toHaveBeenCalledWith<[WillAppearEvent<mocks.Settings>]>({
+		expect(listener).toHaveBeenCalledWith<[WillAppearEvent<mockEvents.Settings>]>({
 			action: new Action(client, action, context),
 			deviceId: device,
 			payload,
@@ -489,11 +489,11 @@ describe("StreamDeckClient", () => {
 		client.onWillDisappear(listener);
 
 		// Act.
-		const { action, context, device, payload } = emit(mocks.willDisappear).from(connection);
+		const { action, context, device, payload } = emit(mockEvents.willDisappear).from(connection);
 
 		// Assert.
 		expect(listener).toHaveBeenCalledTimes(1);
-		expect(listener).toHaveBeenCalledWith<[WillDisappearEvent<mocks.Settings>]>({
+		expect(listener).toHaveBeenCalledWith<[WillDisappearEvent<mockEvents.Settings>]>({
 			action: new Action(client, action, context),
 			deviceId: device,
 			payload,
@@ -530,7 +530,7 @@ describe("StreamDeckClient", () => {
  * @param message Message to emit from the connection.
  * @returns Function that can be used to determine the source, before finally emitting the event.
  */
-function emit<T extends InboundMessages>(message: T) {
+function emit<T extends Event>(message: T) {
 	return {
 		from(source: unknown): T {
 			(source as EventEmitter).emit(message.event, message);

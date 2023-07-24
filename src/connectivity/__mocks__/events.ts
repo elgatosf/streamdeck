@@ -1,5 +1,5 @@
-import * as messages from "../messages";
-import { DeviceType } from "../messages";
+import { DeviceType } from "../device-info";
+import * as messages from "../events";
 
 const action = "com.elgato.test.one";
 const context = "context123";

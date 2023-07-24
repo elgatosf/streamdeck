@@ -1,4 +1,4 @@
-import * as messages from "../connectivity/messages";
+import * as events from "../connectivity/events";
 import { Device } from "../devices";
 import { Action } from "./action";
 import type { StreamDeckClient } from "./client";
@@ -6,17 +6,17 @@ import type { StreamDeckClient } from "./client";
 /**
  * Provides information for events received from Stream Deck.
  */
-export class Event<TMessage extends messages.Message<unknown>> {
+export class Event<T extends events.Event> {
 	/**
 	 * Event that occurred.
 	 */
-	public readonly type: TMessage["event"];
+	public readonly type: T["event"];
 
 	/**
 	 * Initializes a new instance of the {@link Event} class.
 	 * @param source Source of the event, i.e. the original message from Stream Deck.
 	 */
-	constructor(source: TMessage) {
+	constructor(source: T) {
 		this.type = source.event;
 	}
 }
@@ -24,7 +24,7 @@ export class Event<TMessage extends messages.Message<unknown>> {
 /**
  * Provides information for events relating to actions.
  */
-export class ActionWithoutPayloadEvent<TMessage extends messages.ActionMessage<unknown>> extends Event<TMessage> {
+export class ActionWithoutPayloadEvent<T extends events.ActionEvent<unknown> & events.Event> extends Event<T> {
 	/**
 	 * The action that raised the event.
 	 */
@@ -40,7 +40,7 @@ export class ActionWithoutPayloadEvent<TMessage extends messages.ActionMessage<u
 	 * @param client The Stream Deck client that raised the event.
 	 * @param source Source of the event, i.e. the original message from Stream Deck.
 	 */
-	constructor(client: StreamDeckClient, source: TMessage) {
+	constructor(client: StreamDeckClient, source: T) {
 		super(source);
 
 		this.action = new Action(client, source.action, source.context);
@@ -51,27 +51,27 @@ export class ActionWithoutPayloadEvent<TMessage extends messages.ActionMessage<u
 /**
  * Provides information for events relating to actions.
  */
-export class ActionEvent<TMessage extends messages.ActionMessageWithPayload<unknown, unknown, ExtractPayload<TMessage>>> extends ActionWithoutPayloadEvent<TMessage> {
+export class ActionEvent<T extends events.ActionEventWithPayload<unknown, unknown, ExtractPayload<T>> & events.Event> extends ActionWithoutPayloadEvent<T> {
 	/**
 	 * Provides additional information about the event that occurred, e.g. how many `ticks` the dial was rotated, the current `state` of the action, etc.
 	 */
-	public readonly payload: ExtractPayload<TMessage>;
+	public readonly payload: ExtractPayload<T>;
 
 	/**
 	 * Initializes a new instance of the {@link ActionEvent} class.
 	 * @param client The Stream Deck client that raised the event.
 	 * @param source Source of the event, i.e. the original message from Stream Deck.
 	 */
-	constructor(client: StreamDeckClient, source: TMessage) {
+	constructor(client: StreamDeckClient, source: T) {
 		super(client, source);
 		this.payload = source.payload;
 	}
 }
 
 /**
- * Provides information for events relating to {@link messages.applicationDidLaunch} and {@link messages.applicationDidTerminate}.
+ * Provides information for events relating to {@link events.applicationDidLaunch} and {@link events.applicationDidTerminate}.
  */
-export class ApplicationEvent<TMessage extends messages.ApplicationDidLaunch | messages.ApplicationDidTerminate> extends Event<TMessage> {
+export class ApplicationEvent<T extends events.ApplicationDidLaunch | events.ApplicationDidTerminate> extends Event<T> {
 	/**
 	 * Monitored application that was launched/terminated.
 	 */
@@ -81,30 +81,30 @@ export class ApplicationEvent<TMessage extends messages.ApplicationDidLaunch | m
 	 * Initializes a new instance of the {@link ApplicationEvent} class.
 	 * @param source Source of the event, i.e. the original message from Stream Deck.
 	 */
-	constructor(source: TMessage) {
+	constructor(source: T) {
 		super(source);
 		this.application = source.payload.application;
 	}
 }
 
 /**
- * Provides information for events relating to {@link messages.deviceDidConnect} and {@link messages.deviceDidDisconnect}.
+ * Provides information for events relating to {@link events.deviceDidConnect} and {@link events.deviceDidDisconnect}.
  */
-export class DeviceEvent<TMessage extends messages.DeviceDidConnect | messages.DeviceDidDisconnect, TDevice> extends Event<TMessage> {
+export class DeviceEvent<T extends events.DeviceDidConnect | events.DeviceDidDisconnect, TDevice> extends Event<T> {
 	/**
 	 * Initializes a new instance of the {@link DeviceEvent} class.
 	 * @param source Source of the event, i.e. the original message from Stream Deck.
 	 * @param device Device that event is associated with.
 	 */
-	constructor(source: TMessage, public readonly device: TDevice) {
+	constructor(source: T, public readonly device: TDevice) {
 		super(source);
 	}
 }
 
 /**
- * Provides event information for {@link messages.sendToPlugin}.
+ * Provides event information for {@link events.sendToPlugin}.
  */
-export class SendToPluginEvent<TPayload extends object> extends Event<messages.SendToPlugin<TPayload>> {
+export class SendToPluginEvent<TPayload extends object> extends Event<events.SendToPlugin<TPayload>> {
 	/**
 	 * The action that raised the event.
 	 */
@@ -120,7 +120,7 @@ export class SendToPluginEvent<TPayload extends object> extends Event<messages.S
 	 * @param client The Stream Deck client that raised the event.
 	 * @param source Source of the event, i.e. the original message from Stream Deck.
 	 */
-	constructor(client: StreamDeckClient, source: messages.SendToPlugin<TPayload>) {
+	constructor(client: StreamDeckClient, source: events.SendToPlugin<TPayload>) {
 		super(source);
 		this.action = new Action(client, source.action, source.context);
 		this.payload = source.payload;
@@ -128,9 +128,9 @@ export class SendToPluginEvent<TPayload extends object> extends Event<messages.S
 }
 
 /**
- * Provides event information for {@link messages.didReceiveGlobalSettings}.
+ * Provides event information for {@link events.didReceiveGlobalSettings}.
  */
-export class DidReceiveGlobalSettingsEvent<TSettings> extends Event<messages.DidReceiveGlobalSettings<TSettings>> {
+export class DidReceiveGlobalSettingsEvent<TSettings> extends Event<events.DidReceiveGlobalSettings<TSettings>> {
 	/**
 	 * Settings associated with the event.
 	 */
@@ -140,96 +140,96 @@ export class DidReceiveGlobalSettingsEvent<TSettings> extends Event<messages.Did
 	 * Initializes a new instance of the {@link DidReceiveGlobalSettingsEvent} class.
 	 * @param source Source of the event, i.e. the original message from Stream Deck.
 	 */
-	constructor(source: messages.DidReceiveGlobalSettings<TSettings>) {
+	constructor(source: events.DidReceiveGlobalSettings<TSettings>) {
 		super(source);
 		this.settings = source.payload.settings;
 	}
 }
 
 /**
- * Event information received from Stream Deck as part of the {@link messages.applicationDidLaunch} event.
+ * Event information received from Stream Deck as part of the {@link events.applicationDidLaunch} event.
  */
-export type ApplicationDidLaunchEvent = ApplicationEvent<messages.ApplicationDidLaunch>;
+export type ApplicationDidLaunchEvent = ApplicationEvent<events.ApplicationDidLaunch>;
 
 /**
- * Event information received from Stream Deck as part of the {@link messages.ApplicationDidTerminate} event.
+ * Event information received from Stream Deck as part of the {@link events.ApplicationDidTerminate} event.
  */
-export type ApplicationDidTerminateEvent = ApplicationEvent<messages.ApplicationDidTerminate>;
+export type ApplicationDidTerminateEvent = ApplicationEvent<events.ApplicationDidTerminate>;
 
 /**
- * Event information received from Stream Deck as part of the {@link messages.DeviceDidConnect} event.
+ * Event information received from Stream Deck as part of the {@link events.DeviceDidConnect} event.
  */
-export type DeviceDidConnectEvent = DeviceEvent<messages.DeviceDidConnect, Required<Device>>;
+export type DeviceDidConnectEvent = DeviceEvent<events.DeviceDidConnect, Required<Device>>;
 
 /**
- * Event information received from Stream Deck as part of the {@link messages.DeviceDidDisconnect} event.
+ * Event information received from Stream Deck as part of the {@link events.DeviceDidDisconnect} event.
  */
-export type DeviceDidDisconnectEvent = DeviceEvent<messages.DeviceDidDisconnect, Device>;
+export type DeviceDidDisconnectEvent = DeviceEvent<events.DeviceDidDisconnect, Device>;
 
 /**
- * Event information received from Stream Deck as part of the {@link messages.DialDown} event.
+ * Event information received from Stream Deck as part of the {@link events.DialDown} event.
  */
-export type DialDownEvent<TSettings> = ActionEvent<messages.DialDown<TSettings>>;
+export type DialDownEvent<TSettings> = ActionEvent<events.DialDown<TSettings>>;
 
 /**
- * Event information received from Stream Deck as part of the {@link messages.DialRotate} event.
+ * Event information received from Stream Deck as part of the {@link events.DialRotate} event.
  */
-export type DialRotateEvent<TSettings> = ActionEvent<messages.DialRotate<TSettings>>;
+export type DialRotateEvent<TSettings> = ActionEvent<events.DialRotate<TSettings>>;
 
 /**
- * Event information received from Stream Deck as part of the {@link messages.DialUp} event.
+ * Event information received from Stream Deck as part of the {@link events.DialUp} event.
  */
-export type DialUpEvent<TSettings> = ActionEvent<messages.DialUp<TSettings>>;
+export type DialUpEvent<TSettings> = ActionEvent<events.DialUp<TSettings>>;
 
 /**
- * Event information received from Stream Deck as part of the {@link messages.DidReceiveSettings} event.
+ * Event information received from Stream Deck as part of the {@link events.DidReceiveSettings} event.
  */
-export type DidReceiveSettingsEvent<TSettings> = ActionEvent<messages.DidReceiveSettings<TSettings>>;
+export type DidReceiveSettingsEvent<TSettings> = ActionEvent<events.DidReceiveSettings<TSettings>>;
 
 /**
- * Event information received from Stream Deck as part of the {@link messages.KeyDown} event.
+ * Event information received from Stream Deck as part of the {@link events.KeyDown} event.
  */
-export type KeyDownEvent<TSettings> = ActionEvent<messages.KeyDown<TSettings>>;
+export type KeyDownEvent<TSettings> = ActionEvent<events.KeyDown<TSettings>>;
 
 /**
- * Event information received from Stream Deck as part of the {@link messages.KeyUp} event.
+ * Event information received from Stream Deck as part of the {@link events.KeyUp} event.
  */
-export type KeyUpEvent<TSettings> = ActionEvent<messages.KeyUp<TSettings>>;
+export type KeyUpEvent<TSettings> = ActionEvent<events.KeyUp<TSettings>>;
 
 /**
- * Event information received from Stream Deck as part of the {@link messages.PropertyInspectorDidAppear} event.
+ * Event information received from Stream Deck as part of the {@link events.PropertyInspectorDidAppear} event.
  */
-export type PropertyInspectorDidAppearEvent = ActionWithoutPayloadEvent<messages.PropertyInspectorDidAppear>;
+export type PropertyInspectorDidAppearEvent = ActionWithoutPayloadEvent<events.PropertyInspectorDidAppear>;
 
 /**
- * Event information received from Stream Deck as part of the {@link messages.PropertyInspectorDidDisappear} event.
+ * Event information received from Stream Deck as part of the {@link events.PropertyInspectorDidDisappear} event.
  */
-export type PropertyInspectorDidDisappearEvent = ActionWithoutPayloadEvent<messages.PropertyInspectorDidDisappear>;
+export type PropertyInspectorDidDisappearEvent = ActionWithoutPayloadEvent<events.PropertyInspectorDidDisappear>;
 
 /**
- * Event information received from Stream Deck as part of the {@link messages.TitleParametersDidChange} event.
+ * Event information received from Stream Deck as part of the {@link events.TitleParametersDidChange} event.
  */
-export type TitleParametersDidChangeEvent<TSettings> = ActionEvent<messages.TitleParametersDidChange<TSettings>>;
+export type TitleParametersDidChangeEvent<TSettings> = ActionEvent<events.TitleParametersDidChange<TSettings>>;
 
 /**
- * Event information receives from Streak Deck as part of the {@link messages.SystemDidWakeUp} event.
+ * Event information receives from Streak Deck as part of the {@link events.SystemDidWakeUp} event.
  */
-export type SystemDidWakeUpEvent = Event<messages.SystemDidWakeUp>;
+export type SystemDidWakeUpEvent = Event<events.SystemDidWakeUp>;
 
 /**
- * Event information received from Stream Deck as part of the {@link messages.TouchTap} event.
+ * Event information received from Stream Deck as part of the {@link events.TouchTap} event.
  */
-export type TouchTapEvent<TSettings> = ActionEvent<messages.TouchTap<TSettings>>;
+export type TouchTapEvent<TSettings> = ActionEvent<events.TouchTap<TSettings>>;
 
 /**
- * Event information received from Stream Deck as part of the {@link messages.WillAppear} event.
+ * Event information received from Stream Deck as part of the {@link events.WillAppear} event.
  */
-export type WillAppearEvent<TSettings> = ActionEvent<messages.WillAppear<TSettings>>;
+export type WillAppearEvent<TSettings> = ActionEvent<events.WillAppear<TSettings>>;
 
 /**
- * Event information received from Stream Deck as part of the {@link messages.WillDisappear} event.
+ * Event information received from Stream Deck as part of the {@link events.WillDisappear} event.
  */
-export type WillDisappearEvent<TSettings> = ActionEvent<messages.WillDisappear<TSettings>>;
+export type WillDisappearEvent<TSettings> = ActionEvent<events.WillDisappear<TSettings>>;
 
 /**
  * Utility type for extracting the payload type from the specified `T` type.

@@ -1,5 +1,5 @@
 import { logger } from "../common/logging";
-import { DeviceInfo } from "./messages";
+import { DeviceInfo } from "./device-info";
 
 /**
  * Registration information supplied by the Stream Deck when launching the plugin, that enables the plugin to establish a secure connection with the Stream Deck.

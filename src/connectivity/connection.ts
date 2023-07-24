@@ -3,7 +3,7 @@ import WebSocket from "ws";
 
 import { logger } from "../common/logging";
 import { PromiseCompletionSource } from "../common/promises";
-import { InboundMessages, Message, OutboundMessages } from "./messages";
+import { Event, EventIdentifier, OutboundMessages } from "./events";
 import { RegistrationParameters } from "./registration";
 
 /**
@@ -70,7 +70,7 @@ export class StreamDeckConnection {
 	 * @param listener Callback invoked when Stream Deck emits the event.
 	 * @returns This instance for chaining.
 	 */
-	public on<TEvent extends InboundMessages["event"], TEventArgs extends Extract<InboundMessages, Message<TEvent>>>(eventName: TEvent, listener: (data: TEventArgs) => void): this {
+	public on<TEvent extends Event["event"], TEventArgs extends Extract<Event, EventIdentifier<TEvent>>>(eventName: TEvent, listener: (data: TEventArgs) => void): this {
 		this.eventEmitter.on(eventName, listener);
 		return this;
 	}
@@ -82,7 +82,7 @@ export class StreamDeckConnection {
 	 * @param listener Callback invoked when Stream Deck emits the event.
 	 * @returns This instance for chaining.
 	 */
-	public once<TEvent extends InboundMessages["event"], TEventArgs extends Extract<InboundMessages, Message<TEvent>>>(eventName: TEvent, listener: (data: TEventArgs) => void): this {
+	public once<TEvent extends Event["event"], TEventArgs extends Extract<Event, EventIdentifier<TEvent>>>(eventName: TEvent, listener: (data: TEventArgs) => void): this {
 		this.eventEmitter.once(eventName, listener);
 		return this;
 	}
@@ -93,7 +93,7 @@ export class StreamDeckConnection {
 	 * @param listener Callback to remove.
 	 * @returns This instance for chaining.
 	 */
-	public removeListener<TEvent extends InboundMessages["event"], TEventArgs extends Extract<InboundMessages, Message<TEvent>>>(eventName: TEvent, listener: (data: TEventArgs) => void): this {
+	public removeListener<TEvent extends Event["event"], TEventArgs extends Extract<Event, EventIdentifier<TEvent>>>(eventName: TEvent, listener: (data: TEventArgs) => void): this {
 		this.eventEmitter.removeListener(eventName, listener);
 		return this;
 	}

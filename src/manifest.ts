@@ -3,7 +3,7 @@ import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 
 import { logger } from "./common/logging";
-import { DeviceType } from "./connectivity/messages";
+import { DeviceType } from "./connectivity/device-info";
 
 /**
  * Defines the plugin and available actions, and all information associated with them, including the plugin's entry point, all iconography, action default behavior, etc.

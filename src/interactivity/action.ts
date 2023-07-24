@@ -1,4 +1,4 @@
-import { State } from "../connectivity/messages";
+import { State } from "../connectivity/events";
 import type { SingletonAction } from "../routing/singleton-action";
 import type { StreamDeckClient } from "./client";
 import { FeedbackPayload } from "./layouts";

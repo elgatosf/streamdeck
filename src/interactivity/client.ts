@@ -1,7 +1,7 @@
 import { PromiseCompletionSource } from "../common/promises";
 import { StreamDeckConnection } from "../connectivity/connection";
-import * as messages from "../connectivity/messages";
-import { State } from "../connectivity/messages";
+import * as events from "../connectivity/events";
+import { State } from "../connectivity/events";
 import { Device } from "../devices";
 import type { Manifest } from "../manifest";
 import type { SingletonAction } from "../routing/singleton-action";
@@ -51,7 +51,7 @@ export class StreamDeckClient {
 	 */
 	public async getGlobalSettings<T = unknown>(): Promise<Partial<T>> {
 		const settings = new PromiseCompletionSource<Partial<T>>();
-		this.connection.once("didReceiveGlobalSettings", (msg: messages.DidReceiveGlobalSettings<T>) => settings.setResult(msg.payload.settings));
+		this.connection.once("didReceiveGlobalSettings", (ev: events.DidReceiveGlobalSettings<T>) => settings.setResult(ev.payload.settings));
 
 		await this.connection.send("getGlobalSettings", {
 			context: this.connection.registrationParameters.pluginUUID
@@ -68,9 +68,9 @@ export class StreamDeckClient {
 	 */
 	public async getSettings<T = unknown>(context: string): Promise<Partial<T>> {
 		const settings = new PromiseCompletionSource<Partial<T>>();
-		const callback = (msg: messages.DidReceiveSettings<T>) => {
-			if (msg.context == context) {
-				settings.setResult(msg.payload.settings);
+		const callback = (ev: events.DidReceiveSettings<T>) => {
+			if (ev.context == context) {
+				settings.setResult(ev.payload.settings);
 				this.connection.removeListener("didReceiveSettings", callback);
 			}
 		};
@@ -136,7 +136,7 @@ export class StreamDeckClient {
 	 * @param listener Function to be invoked when the event occurs.
 	 */
 	public onDialDown<TSettings = unknown>(listener: (ev: DialDownEvent<TSettings>) => void): void {
-		this.connection.on("dialDown", (ev: messages.DialDown<TSettings>) => listener(new ActionEvent(this, ev)));
+		this.connection.on("dialDown", (ev: events.DialDown<TSettings>) => listener(new ActionEvent(this, ev)));
 	}
 
 	/**
@@ -144,7 +144,7 @@ export class StreamDeckClient {
 	 * @param listener Function to be invoked when the event occurs.
 	 */
 	public onDialRotate<TSettings = unknown>(listener: (ev: DialRotateEvent<TSettings>) => void): void {
-		this.connection.on("dialRotate", (ev: messages.DialRotate<TSettings>) => listener(new ActionEvent(this, ev)));
+		this.connection.on("dialRotate", (ev: events.DialRotate<TSettings>) => listener(new ActionEvent(this, ev)));
 	}
 
 	/**
@@ -152,7 +152,7 @@ export class StreamDeckClient {
 	 * @param listener Function to be invoked when the event occurs.
 	 */
 	public onDialUp<TSettings = unknown>(listener: (ev: DialUpEvent<TSettings>) => void): void {
-		this.connection.on("dialUp", (ev: messages.DialUp<TSettings>) => listener(new ActionEvent(this, ev)));
+		this.connection.on("dialUp", (ev: events.DialUp<TSettings>) => listener(new ActionEvent(this, ev)));
 	}
 
 	/**
@@ -160,7 +160,7 @@ export class StreamDeckClient {
 	 * @param listener Function to be invoked when the event occurs.
 	 */
 	public onDidReceiveGlobalSettings<TSettings = unknown>(listener: (ev: DidReceiveGlobalSettingsEvent<TSettings>) => void): void {
-		this.connection.on("didReceiveGlobalSettings", (ev: messages.DidReceiveGlobalSettings<TSettings>) => listener(new DidReceiveGlobalSettingsEvent(ev)));
+		this.connection.on("didReceiveGlobalSettings", (ev: events.DidReceiveGlobalSettings<TSettings>) => listener(new DidReceiveGlobalSettingsEvent(ev)));
 	}
 
 	/**
@@ -168,7 +168,7 @@ export class StreamDeckClient {
 	 * @param listener Function to be invoked when the event occurs.
 	 */
 	public onDidReceiveSettings<TSettings = unknown>(listener: (ev: DidReceiveSettingsEvent<TSettings>) => void): void {
-		this.connection.on("didReceiveSettings", (ev: messages.DidReceiveSettings<TSettings>) => listener(new ActionEvent(this, ev)));
+		this.connection.on("didReceiveSettings", (ev: events.DidReceiveSettings<TSettings>) => listener(new ActionEvent(this, ev)));
 	}
 
 	/**
@@ -176,7 +176,7 @@ export class StreamDeckClient {
 	 * @param listener Function to be invoked when the event occurs.
 	 */
 	public onKeyDown<TSettings = unknown>(listener: (ev: KeyDownEvent<TSettings>) => void): void {
-		this.connection.on("keyDown", (ev: messages.KeyDown<TSettings>) => listener(new ActionEvent(this, ev)));
+		this.connection.on("keyDown", (ev: events.KeyDown<TSettings>) => listener(new ActionEvent(this, ev)));
 	}
 
 	/**
@@ -184,7 +184,7 @@ export class StreamDeckClient {
 	 * @param listener Function to be invoked when the event occurs.
 	 */
 	public onKeyUp<TSettings = unknown>(listener: (ev: KeyUpEvent<TSettings>) => void): void {
-		this.connection.on("keyUp", (ev: messages.KeyUp<TSettings>) => listener(new ActionEvent(this, ev)));
+		this.connection.on("keyUp", (ev: events.KeyUp<TSettings>) => listener(new ActionEvent(this, ev)));
 	}
 
 	/**
@@ -192,7 +192,7 @@ export class StreamDeckClient {
 	 * @param listener Function to be invoked when the event occurs.
 	 */
 	public onPropertyInspectorDidAppear(listener: (ev: PropertyInspectorDidAppearEvent) => void): void {
-		this.connection.on("propertyInspectorDidAppear", (ev: messages.PropertyInspectorDidAppear) => listener(new ActionWithoutPayloadEvent(this, ev)));
+		this.connection.on("propertyInspectorDidAppear", (ev: events.PropertyInspectorDidAppear) => listener(new ActionWithoutPayloadEvent(this, ev)));
 	}
 
 	/**
@@ -200,7 +200,7 @@ export class StreamDeckClient {
 	 * @param listener Function to be invoked when the event occurs.
 	 */
 	public onPropertyInspectorDidDisappear(listener: (ev: PropertyInspectorDidDisappearEvent) => void): void {
-		this.connection.on("propertyInspectorDidDisappear", (ev: messages.PropertyInspectorDidDisappear) => listener(new ActionWithoutPayloadEvent(this, ev)));
+		this.connection.on("propertyInspectorDidDisappear", (ev: events.PropertyInspectorDidDisappear) => listener(new ActionWithoutPayloadEvent(this, ev)));
 	}
 
 	/**
@@ -208,7 +208,7 @@ export class StreamDeckClient {
 	 * @param listener Function to be invoked when the event occurs.
 	 */
 	public onSendToPlugin<TPayload extends object>(listener: (ev: SendToPluginEvent<TPayload>) => void): void {
-		this.connection.on("sendToPlugin", (ev: messages.SendToPlugin<TPayload>) => listener(new SendToPluginEvent(this, ev)));
+		this.connection.on("sendToPlugin", (ev: events.SendToPlugin<TPayload>) => listener(new SendToPluginEvent(this, ev)));
 	}
 
 	/**
@@ -216,7 +216,7 @@ export class StreamDeckClient {
 	 * @param listener Function to be invoked when the event occurs.
 	 */
 	public onSystemDidWakeUp(listener: (ev: SystemDidWakeUpEvent) => void) {
-		this.connection.on("systemDidWakeUp", (ev) => listener(new Event<messages.SystemDidWakeUp>(ev)));
+		this.connection.on("systemDidWakeUp", (ev) => listener(new Event<events.SystemDidWakeUp>(ev)));
 	}
 
 	/**
@@ -224,7 +224,7 @@ export class StreamDeckClient {
 	 * @param listener Function to be invoked when the event occurs.
 	 */
 	public onTitleParametersDidChange<TSettings = unknown>(listener: (ev: TitleParametersDidChangeEvent<TSettings>) => void): void {
-		this.connection.on("titleParametersDidChange", (ev: messages.TitleParametersDidChange<TSettings>) => listener(new ActionEvent(this, ev)));
+		this.connection.on("titleParametersDidChange", (ev: events.TitleParametersDidChange<TSettings>) => listener(new ActionEvent(this, ev)));
 	}
 
 	/**
@@ -232,7 +232,7 @@ export class StreamDeckClient {
 	 * @param listener Function to be invoked when the event occurs.
 	 */
 	public onTouchTap<TSettings = unknown>(listener: (ev: TouchTapEvent<TSettings>) => void): void {
-		this.connection.on("touchTap", (ev: messages.TouchTap<TSettings>) => listener(new ActionEvent(this, ev)));
+		this.connection.on("touchTap", (ev: events.TouchTap<TSettings>) => listener(new ActionEvent(this, ev)));
 	}
 
 	/**
@@ -241,7 +241,7 @@ export class StreamDeckClient {
 	 * @param listener Function to be invoked when the event occurs.
 	 */
 	public onWillAppear<TSettings = unknown>(listener: (ev: WillAppearEvent<TSettings>) => void): void {
-		this.connection.on("willAppear", (ev: messages.WillAppear<TSettings>) => listener(new ActionEvent(this, ev)));
+		this.connection.on("willAppear", (ev: events.WillAppear<TSettings>) => listener(new ActionEvent(this, ev)));
 	}
 
 	/**
@@ -250,7 +250,7 @@ export class StreamDeckClient {
 	 * @param listener Function to be invoked when the event occurs.
 	 */
 	public onWillDisappear<TSettings = unknown>(listener: (ev: WillDisappearEvent<TSettings>) => void): void {
-		this.connection.on("willDisappear", (ev: messages.WillDisappear<TSettings>) => listener(new ActionEvent(this, ev)));
+		this.connection.on("willDisappear", (ev: events.WillDisappear<TSettings>) => listener(new ActionEvent(this, ev)));
 	}
 
 	/**

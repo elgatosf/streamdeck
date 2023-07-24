@@ -1,7 +1,10 @@
+import type { DeviceInfo } from "./device-info";
+import { DeviceType } from "./device-info";
+
 /**
- * Represents an event that is emitted from, or sent to, the Stream Deck.
+ * Represents an event that is emitted by the Stream Deck.
  */
-export type Message<TEvent> = {
+export type EventIdentifier<TEvent> = {
 	/**
 	 * Name of the event used to identify what occurred, or what is being requested.
 	 */
@@ -9,30 +12,30 @@ export type Message<TEvent> = {
 };
 
 /**
- * Provides information for a message relating to an action, e.g. `willAppear`, `keyDown`, etc.
+ * Provides information for an event relating to an action, e.g. `willAppear`, `keyDown`, etc.
  */
-export type ActionMessage<TEvent> = Message<TEvent> & {
+export type ActionEvent<TEvent> = EventIdentifier<TEvent> & {
 	/**
 	 * Unique identifier of the action as defined within the plugin's manifest (`Actions[].UUID`) e.g. "com.elgato.wavelink.mute".
 	 */
 	readonly action: string;
 
 	/**
-	 * Identifies the instance of an action that caused the message, i.e. the specific key or dial. This identifier can be used to provide feedback to the Stream Deck, persist and
+	 * Identifies the instance of an action that caused the event, i.e. the specific key or dial. This identifier can be used to provide feedback to the Stream Deck, persist and
 	 * request settings associated with the action instance, etc.
 	 */
 	readonly context: string;
 
 	/**
-	 * Unique identifier of the Stream Deck device that this message is associated with.
+	 * Unique identifier of the Stream Deck device that this event is associated with.
 	 */
 	readonly device: string;
 };
 
 /**
- * Provides information for a message relating to an action, e.g. `willAppear`, `keyDown`, etc.
+ * Provides information for an event relating to an action, e.g. `willAppear`, `keyDown`, etc.
  */
-export type ActionMessageWithPayload<TEvent, TSettings, TPayload> = ActionMessage<TEvent> & {
+export type ActionEventWithPayload<TEvent, TSettings, TPayload> = ActionEvent<TEvent> & {
 	/**
 	 * Additional information about the action and event that occurred.
 	 */
@@ -52,7 +55,7 @@ export type ActionMessageWithPayload<TEvent, TSettings, TPayload> = ActionMessag
 /**
  * Occurs when the settings associated with an action instance are requested, or when the the settings were updated by the property inspector.
  */
-export type DidReceiveSettings<TSettings = unknown> = ActionMessageWithPayload<
+export type DidReceiveSettings<TSettings = unknown> = ActionEventWithPayload<
 	"didReceiveSettings",
 	TSettings,
 	{
@@ -66,7 +69,7 @@ export type DidReceiveSettings<TSettings = unknown> = ActionMessageWithPayload<
 /**
  * Occurs when the plugin receives the global settings from the Stream Deck.
  */
-export type DidReceiveGlobalSettings<TSettings = unknown> = Message<"didReceiveGlobalSettings"> & {
+export type DidReceiveGlobalSettings<TSettings = unknown> = EventIdentifier<"didReceiveGlobalSettings"> & {
 	/**
 	 * Additional information about the event that occurred.
 	 */
@@ -81,7 +84,7 @@ export type DidReceiveGlobalSettings<TSettings = unknown> = Message<"didReceiveG
 /**
  * Occurs when the user taps the touchscreen (Stream Deck+).
  */
-export type TouchTap<TSettings = unknown> = ActionMessageWithPayload<
+export type TouchTap<TSettings = unknown> = ActionEventWithPayload<
 	"touchTap",
 	TSettings,
 	{
@@ -100,7 +103,7 @@ export type TouchTap<TSettings = unknown> = ActionMessageWithPayload<
 /**
  * Occurs when the user presses a dial (Stream Deck+). **NB** For other action types see {@link KeyDown}. Also see {@link DialUp}.
  */
-export type DialDown<TSettings = unknown> = ActionMessageWithPayload<
+export type DialDown<TSettings = unknown> = ActionEventWithPayload<
 	"dialDown",
 	TSettings,
 	{
@@ -115,12 +118,12 @@ export type DialDown<TSettings = unknown> = ActionMessageWithPayload<
 /**
  * Occurs when the user releases a pressed dial (Stream Deck+). **NB** For other action types see {@link KeyUp}. Also see {@link DialDown}.
  */
-export type DialUp<TSettings = unknown> = ActionMessageWithPayload<"dialUp", TSettings, DialDown<TSettings>["payload"]>;
+export type DialUp<TSettings = unknown> = ActionEventWithPayload<"dialUp", TSettings, DialDown<TSettings>["payload"]>;
 
 /**
  * Occurs when the user rotates a dial (Stream Deck+).
  */
-export type DialRotate<TSettings = unknown> = ActionMessageWithPayload<
+export type DialRotate<TSettings = unknown> = ActionEventWithPayload<
 	"dialRotate",
 	TSettings,
 	{
@@ -145,7 +148,7 @@ export type DialRotate<TSettings = unknown> = ActionMessageWithPayload<
 /**
  * Occurs when the user presses a action down. **NB** For dials / touchscreens see {@link DialDown}. Also see {@link KeyUp}.
  */
-export type KeyDown<TSettings = unknown> = ActionMessageWithPayload<
+export type KeyDown<TSettings = unknown> = ActionEventWithPayload<
 	"keyDown",
 	TSettings,
 	{
@@ -170,14 +173,14 @@ export type KeyDown<TSettings = unknown> = ActionMessageWithPayload<
 /**
  * Occurs when the user releases a pressed action. **NB** For dials / touchscreens see {@link DialUp}. Also see {@link KeyDown}.
  */
-export type KeyUp<TSettings = unknown> = ActionMessageWithPayload<"keyUp", TSettings, KeyDown<TSettings>["payload"]>;
+export type KeyUp<TSettings = unknown> = ActionEventWithPayload<"keyUp", TSettings, KeyDown<TSettings>["payload"]>;
 
 /**
  * Occurs when an action appears on the Stream Deck due to the user navigating to another page, profile, folder, etc. This also occurs during startup if the action is on the "front
  * page". An action refers to _all_ types of actions, e.g. keys, dials,
  * touchscreens, pedals, etc.
  */
-export type WillAppear<TSettings = unknown> = ActionMessageWithPayload<
+export type WillAppear<TSettings = unknown> = ActionEventWithPayload<
 	"willAppear",
 	TSettings,
 	{
@@ -203,12 +206,12 @@ export type WillAppear<TSettings = unknown> = ActionMessageWithPayload<
  * Occurs when an action disappears from the Stream Deck due to the user navigating to another page, profile, folder, etc. An action refers to _all_ types of actions, e.g. keys, dials,
  * touchscreens, pedals, etc.
  */
-export type WillDisappear<TSettings = unknown> = ActionMessageWithPayload<"willDisappear", TSettings, WillAppear<TSettings>["payload"]>;
+export type WillDisappear<TSettings = unknown> = ActionEventWithPayload<"willDisappear", TSettings, WillAppear<TSettings>["payload"]>;
 
 /**
  * Occurs when the user updates an action's title settings in the Stream Deck application.
  */
-export type TitleParametersDidChange<TSettings = unknown> = ActionMessageWithPayload<
+export type TitleParametersDidChange<TSettings = unknown> = ActionEventWithPayload<
 	"titleParametersDidChange",
 	TSettings,
 	{
@@ -267,9 +270,9 @@ export type TitleParametersDidChange<TSettings = unknown> = ActionMessageWithPay
 /**
  * Occurs when a Stream Deck device is connected. Also see {@link DeviceDidDisconnect}.
  */
-export type DeviceDidConnect = Message<"deviceDidConnect"> & {
+export type DeviceDidConnect = EventIdentifier<"deviceDidConnect"> & {
 	/**
-	 * Unique identifier of the Stream Deck device that this message is associated with.
+	 * Unique identifier of the Stream Deck device that this event is associated with.
 	 */
 	readonly device: string;
 
@@ -282,9 +285,9 @@ export type DeviceDidConnect = Message<"deviceDidConnect"> & {
 /**
  * Occurs when a Stream Deck device is disconnected. Also see {@link DeviceDidConnect}.
  */
-export type DeviceDidDisconnect = Message<"deviceDidDisconnect"> & {
+export type DeviceDidDisconnect = EventIdentifier<"deviceDidDisconnect"> & {
 	/**
-	 * Unique identifier of the Stream Deck device that this message is associated with.
+	 * Unique identifier of the Stream Deck device that this event is associated with.
 	 */
 	readonly device: string;
 };
@@ -292,7 +295,7 @@ export type DeviceDidDisconnect = Message<"deviceDidDisconnect"> & {
 /**
  * Provides information about a monitored application. See {@link ApplicationDidLaunch} and {@link ApplicationDidTerminate}.
  */
-type ApplicationMessage<TEvent> = Message<TEvent> & {
+type ApplicationEvent<TEvent> = EventIdentifier<TEvent> & {
 	/**
 	 * Payload containing information about the application that triggered the event.
 	 */
@@ -308,33 +311,33 @@ type ApplicationMessage<TEvent> = Message<TEvent> & {
  * Occurs when a monitored application is launched. Monitored applications can be defined in the `manifest.json` file via the `Manifest.ApplicationsToMonitor` property. Also see
  * {@link ApplicationDidTerminate}.
  */
-export type ApplicationDidLaunch = ApplicationMessage<"applicationDidLaunch">;
+export type ApplicationDidLaunch = ApplicationEvent<"applicationDidLaunch">;
 
 /**
  * Occurs when a monitored application terminates. Monitored applications can be defined in the `manifest.json` file via the `Manifest.ApplicationsToMonitor` property. Also see
  * {@link ApplicationDidLaunch}.
  */
-export type ApplicationDidTerminate = ApplicationMessage<"applicationDidTerminate">;
+export type ApplicationDidTerminate = ApplicationEvent<"applicationDidTerminate">;
 
 /**
  * Occurs when the computer wakes up.
  */
-export type SystemDidWakeUp = Message<"systemDidWakeUp">;
+export type SystemDidWakeUp = EventIdentifier<"systemDidWakeUp">;
 
 /**
  * Occurs when the property inspector associated with the action becomes visible, i.e. the user selected an action in the Stream Deck application. Also see {@link PropertyInspectorDidDisappear}.
  */
-export type PropertyInspectorDidAppear = ActionMessage<"propertyInspectorDidAppear">;
+export type PropertyInspectorDidAppear = ActionEvent<"propertyInspectorDidAppear">;
 
 /**
  * Occurs when the property inspector associated with the action becomes invisible, i.e. the user unselected the action in the Stream Deck application. Also see {@link PropertyInspectorDidAppear}.
  */
-export type PropertyInspectorDidDisappear = ActionMessage<"propertyInspectorDidDisappear">;
+export type PropertyInspectorDidDisappear = ActionEvent<"propertyInspectorDidDisappear">;
 
 /**
  * Occurs when a message was sent to the plugin _from_ the property inspector.
  */
-export type SendToPlugin<TPayload extends object = object> = Omit<ActionMessage<"sendToPlugin">, "device"> & {
+export type SendToPlugin<TPayload extends object = object> = Omit<ActionEvent<"sendToPlugin">, "device"> & {
 	/**
 	 * Payload sent to the plugin from the property inspector.
 	 */
@@ -364,94 +367,14 @@ export type Coordinates = {
 };
 
 /**
- * Provides information for a device.
- */
-export type DeviceInfo = {
-	/**
-	 * Name of the device, as specified by the user in the Stream Deck application.
-	 */
-	readonly name: string;
-
-	/**
-	 * Number of action slots available to the device. NB. The size denotes keys only.
-	 */
-	readonly size: Size;
-
-	/**
-	 * Type of the device that was connected, e.g. Stream Deck+, Stream Deck Pedal, etc. See {@link DeviceType}.
-	 */
-	readonly type: DeviceType;
-};
-
-/**
  * Possible states an action can be in. This only applies to actions that have multiple states defined in the plugin's manifest.json file.
  */
 export type State = 0 | 1;
 
 /**
- * Size of the Stream Deck device.
+ * Events received by the plugin, from the Stream Deck.
  */
-export type Size = {
-	/**
-	 * Number of columns available on the Stream Deck device.
-	 */
-	readonly columns: number;
-
-	/**
-	 * Number of rows available on the Stream Deck device.
-	 */
-	readonly rows: number;
-};
-
-/**
- * Stream Deck devices.
- */
-export enum DeviceType {
-	/**
-	 * Stream Deck, comprising of 15 buttons in a 5x3 layout.
-	 */
-	StreamDeck = 0,
-
-	/**
-	 * Stream Deck Mini, comprising of 6 buttons in a 3x2 layout.
-	 */
-	StreamDeckMini = 1,
-
-	/**
-	 * Stream Deck XL, comprising of 32 buttons in an 8x4 layout.
-	 */
-	StreamDeckXL = 2,
-
-	/**
-	 * Stream Deck Mobile for iOS and Android.
-	 */
-	StreamDeckMobile = 3,
-
-	/**
-	 * Corsair G Keys, buttons available on selected Corsair keyboards.
-	 */
-	CorsairGKeys = 4,
-
-	/**
-	 * Stream Deck Pedal.
-	 */
-	StreamDeckPedal = 5,
-
-	/**
-	 * Corsair Voyager laptop, comprising 10 buttons in a horizontal line above the keyboard.
-	 */
-	CorsairVoyager = 6,
-
-	/**
-	 * Stream Deck+, comprising of 8 buttons in a 4x2 layout and 4 dials with accompanying touch screen.
-	 */
-	StreamDeckPlus = 7
-}
-
-/**
- * s sent to the plugin, from the Stream Deck.
- */
-export type InboundMessages<TSettings = unknown> =
+export type Event<TSettings = unknown> =
 	| ApplicationDidLaunch
 	| ApplicationDidTerminate
 	| DeviceDidConnect
