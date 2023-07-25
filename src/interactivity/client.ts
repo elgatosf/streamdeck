@@ -1,4 +1,3 @@
-import { PromiseCompletionSource } from "../common/promises";
 import { StreamDeckConnection } from "../connectivity/connection";
 import * as events from "../connectivity/events";
 import { State } from "../connectivity/events";
@@ -49,16 +48,14 @@ export class StreamDeckClient {
 	 * Gets the global settings associated with the plugin. Use in conjunction with {@link StreamDeckClient.setGlobalSettings}.
 	 * @returns Promise containing the plugin's global settings.
 	 */
-	public async getGlobalSettings<T = unknown>(): Promise<Partial<T>> {
-		const settings = new PromiseCompletionSource<Partial<T>>();
-		this.connection.once("didReceiveGlobalSettings", (ev: events.DidReceiveGlobalSettings<T>) => settings.setResult(ev.payload.settings));
-
-		await this.connection.send({
-			event: "getGlobalSettings",
-			context: this.connection.registrationParameters.pluginUUID
+	public getGlobalSettings<T = unknown>(): Promise<Partial<T>> {
+		return new Promise((resolve) => {
+			this.connection.once("didReceiveGlobalSettings", (ev: events.DidReceiveGlobalSettings<T>) => resolve(ev.payload.settings));
+			this.connection.send({
+				event: "getGlobalSettings",
+				context: this.connection.registrationParameters.pluginUUID
+			});
 		});
-
-		return settings.promise;
 	}
 
 	/**
@@ -67,22 +64,21 @@ export class StreamDeckClient {
 	 * @param context Unique identifier of the action instance whose settings are being requested.
 	 * @returns Promise containing the action instance's settings.
 	 */
-	public async getSettings<T = unknown>(context: string): Promise<Partial<T>> {
-		const settings = new PromiseCompletionSource<Partial<T>>();
-		const callback = (ev: events.DidReceiveSettings<T>) => {
-			if (ev.context == context) {
-				settings.setResult(ev.payload.settings);
-				this.connection.removeListener("didReceiveSettings", callback);
-			}
-		};
+	public getSettings<T = unknown>(context: string): Promise<Partial<T>> {
+		return new Promise((resolve) => {
+			const callback = (ev: events.DidReceiveSettings<T>) => {
+				if (ev.context == context) {
+					resolve(ev.payload.settings);
+					this.connection.removeListener("didReceiveSettings", callback);
+				}
+			};
 
-		this.connection.on("didReceiveSettings", callback);
-		await this.connection.send({
-			event: "getSettings",
-			context
+			this.connection.on("didReceiveSettings", callback);
+			this.connection.send({
+				event: "getSettings",
+				context
+			});
 		});
-
-		return settings.promise;
 	}
 
 	/**
