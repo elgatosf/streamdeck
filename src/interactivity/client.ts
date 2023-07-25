@@ -53,7 +53,8 @@ export class StreamDeckClient {
 		const settings = new PromiseCompletionSource<Partial<T>>();
 		this.connection.once("didReceiveGlobalSettings", (ev: events.DidReceiveGlobalSettings<T>) => settings.setResult(ev.payload.settings));
 
-		await this.connection.send("getGlobalSettings", {
+		await this.connection.send({
+			event: "getGlobalSettings",
 			context: this.connection.registrationParameters.pluginUUID
 		});
 
@@ -76,7 +77,8 @@ export class StreamDeckClient {
 		};
 
 		this.connection.on("didReceiveSettings", callback);
-		await this.connection.send("getSettings", {
+		await this.connection.send({
+			event: "getSettings",
 			context
 		});
 
@@ -259,7 +261,8 @@ export class StreamDeckClient {
 	 * @returns `Promise` resolved when the request to open the `url` has been sent to Stream Deck.
 	 */
 	public openUrl(url: string): Promise<void> {
-		return this.connection.send("openUrl", {
+		return this.connection.send({
+			event: "openUrl",
 			payload: {
 				url
 			}
@@ -275,7 +278,8 @@ export class StreamDeckClient {
 	 * @returns `Promise` resolved when the request to send the {@link payload} to the property inspector has been sent to Stream Deck.
 	 */
 	public sendToPropertyInspector(context: string, payload: unknown): Promise<void> {
-		return this.connection.send("sendToPropertyInspector", {
+		return this.connection.send({
+			event: "sendToPropertyInspector",
 			context,
 			payload
 		});
@@ -336,7 +340,8 @@ export class StreamDeckClient {
 	 */
 	public setFeedback(context: string, feedback: FeedbackPayload): Promise<void> {
 		// TODO: Should we rename this to "updateLayout"?
-		return this.connection.send("setFeedback", {
+		return this.connection.send({
+			event: "setFeedback",
 			context,
 			payload: feedback
 		});
@@ -351,7 +356,8 @@ export class StreamDeckClient {
 	 */
 	public setFeedbackLayout(context: string, layout: string): Promise<void> {
 		// TODO: Should we rename this to simply be "setLayout"?
-		return this.connection.send("setFeedbackLayout", {
+		return this.connection.send({
+			event: "setFeedbackLayout",
 			context,
 			payload: {
 				layout
@@ -371,7 +377,8 @@ export class StreamDeckClient {
 	 * })
 	 */
 	public setGlobalSettings(settings: unknown): Promise<void> {
-		return this.connection.send("setGlobalSettings", {
+		return this.connection.send({
+			event: "setGlobalSettings",
 			context: this.connection.registrationParameters.pluginUUID,
 			payload: settings
 		});
@@ -387,13 +394,15 @@ export class StreamDeckClient {
 	 * @param target Specifies which aspects of the Stream Deck should be updated, hardware, software, or both.
 	 * @returns `Promise` resolved when the request to set the {@link image} has been sent to Stream Deck.
 	 */
-	public setImage(context: string, image: string, state: State | undefined = undefined, target: Target = Target.HardwareAndSoftware): Promise<void> {
-		return this.connection.send("setImage", {
+	public setImage(context: string, image?: string, state: State | undefined = undefined, target?: Target | undefined): Promise<void> {
+		// TODO: Ensure we can reset to the manifest image as `image` is not undefinable.
+		return this.connection.send({
+			event: "setImage",
 			context,
 			payload: {
 				image,
-				target,
-				state
+				state,
+				target
 			}
 		});
 	}
@@ -406,7 +415,8 @@ export class StreamDeckClient {
 	 * @returns `Promise` resolved when the {@link settings} are sent to Stream Deck.
 	 */
 	public setSettings(context: string, settings: unknown): Promise<void> {
-		return this.connection.send("setSettings", {
+		return this.connection.send({
+			event: "setSettings",
 			context,
 			payload: settings
 		});
@@ -419,7 +429,8 @@ export class StreamDeckClient {
 	 * @returns `Promise` resolved when the request to set the state of an action instance has been sent to Stream Deck.
 	 */
 	public setState(context: string, state: State): Promise<void> {
-		return this.connection.send("setState", {
+		return this.connection.send({
+			event: "setState",
 			context,
 			payload: {
 				state
@@ -436,13 +447,14 @@ export class StreamDeckClient {
 	 * @param target Specifies which aspects of the Stream Deck should be updated, hardware, software, or both.
 	 * @returns `Promise` resolved when the request to set the {@link title} has been sent to Stream Deck.
 	 */
-	public setTitle(context: string, title?: string, state: State | undefined = undefined, target: Target = Target.HardwareAndSoftware): Promise<void> {
-		return this.connection.send("setTitle", {
+	public setTitle(context: string, title?: string, state: State | undefined = undefined, target?: Target | undefined): Promise<void> {
+		return this.connection.send({
+			event: "setTitle",
 			context,
 			payload: {
-				title,
 				state,
-				target
+				target,
+				title
 			}
 		});
 	}
@@ -454,7 +466,8 @@ export class StreamDeckClient {
 	 * @returns `Promise` resolved when the request to show an alert has been sent to Stream Deck.
 	 */
 	public showAlert(context: string): Promise<void> {
-		return this.connection.send("showAlert", {
+		return this.connection.send({
+			event: "showAlert",
 			context
 		});
 	}
@@ -466,20 +479,22 @@ export class StreamDeckClient {
 	 * @returns `Promise` resolved when the request to show an "OK" has been sent to Stream Deck.
 	 */
 	public showOk(context: string): Promise<void> {
-		return this.connection.send("showOk", {
+		return this.connection.send({
+			event: "showOk",
 			context
 		});
 	}
 
 	/**
-	 * Requests the Stream Deck switches the current profile of the specified {@link device}, to the {@link profile}. **Note**, plugins can only switch to profiles included as part
-	 * of the plugin, and defined within the manifest. Plugins cannot switch to custom profiles created by users.
+	 * Requests the Stream Deck switches the current profile of the specified {@link device}, to the {@link profile}. **NB**, plugins can only switch to profiles included as part
+	 * of the plugin and defined within the manifest, and cannot switch to custom profiles created by users.
 	 * @param profile Name of the profile to switch to. The name must be identical to the one provided in the manifest.
 	 * @param device Unique identifier of the device where the profile should be set.
 	 * @returns `Promise` resolved when the request to switch the `profile` has been sent to Stream Deck.
 	 */
 	public switchToProfile(profile: string, device: string): Promise<void> {
-		return this.connection.send("switchToProfile", {
+		return this.connection.send({
+			event: "switchToProfile",
 			context: this.connection.registrationParameters.pluginUUID,
 			device,
 			payload: {

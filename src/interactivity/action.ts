@@ -109,7 +109,7 @@ export class Action {
 	 * @param target Specifies which aspects of the Stream Deck should be updated, hardware, software, or both.
 	 * @returns `Promise` resolved when the request to set the {@link image} has been sent to Stream Deck.
 	 */
-	public setImage(image: string, state: State | undefined = undefined, target: Target = Target.HardwareAndSoftware): Promise<void> {
+	public setImage(image?: string, state: State | undefined = undefined, target: Target = Target.HardwareAndSoftware): Promise<void> {
 		return this.client.setImage(this.id, image, state, target);
 	}
 

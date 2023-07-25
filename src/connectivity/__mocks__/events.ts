@@ -1,14 +1,14 @@
 import { DeviceType } from "../device-info";
-import * as messages from "../events";
+import type * as events from "../events";
 
 const action = "com.elgato.test.one";
 const context = "context123";
 const device = "device123";
 
 /**
- * Mocked {@link messages.ApplicationDidLaunch} message.
+ * Mocked {@link events.ApplicationDidLaunch} message.
  */
-export const applicationDidLaunch: messages.ApplicationDidLaunch = {
+export const applicationDidLaunch: events.ApplicationDidLaunch = {
 	event: "applicationDidLaunch",
 	payload: {
 		application: "notepad.exe"
@@ -16,9 +16,9 @@ export const applicationDidLaunch: messages.ApplicationDidLaunch = {
 };
 
 /**
- * Mocked {@link messages.applicationDidTerminate} message.
+ * Mocked {@link events.applicationDidTerminate} message.
  */
-export const applicationDidTerminate: messages.ApplicationDidTerminate = {
+export const applicationDidTerminate: events.ApplicationDidTerminate = {
 	event: "applicationDidTerminate",
 	payload: {
 		application: "cmd.exe"
@@ -26,9 +26,9 @@ export const applicationDidTerminate: messages.ApplicationDidTerminate = {
 };
 
 /**
- * Mocked {@link messages.deviceDidConnect} message.
+ * Mocked {@link events.deviceDidConnect} message.
  */
-export const deviceDidConnect: messages.DeviceDidConnect = {
+export const deviceDidConnect: events.DeviceDidConnect = {
 	event: "deviceDidConnect",
 	device,
 	deviceInfo: {
@@ -42,17 +42,17 @@ export const deviceDidConnect: messages.DeviceDidConnect = {
 };
 
 /**
- * Mocked {@link messages.deviceDidDisconnect} message.
+ * Mocked {@link events.deviceDidDisconnect} message.
  */
-export const deviceDidDisconnect: messages.DeviceDidDisconnect = {
+export const deviceDidDisconnect: events.DeviceDidDisconnect = {
 	event: "deviceDidDisconnect",
 	device
 };
 
 /**
- * Mocked {@link messages.dialDown} message.
+ * Mocked {@link events.dialDown} message.
  */
-export const dialDown: messages.DialDown<Settings> = {
+export const dialDown: events.DialDown<Settings> = {
 	event: "dialDown",
 	action,
 	context,
@@ -70,9 +70,9 @@ export const dialDown: messages.DialDown<Settings> = {
 };
 
 /**
- * Mocked {@link messages.dialRotate} message.
+ * Mocked {@link events.dialRotate} message.
  */
-export const dialRotate: messages.DialRotate<Settings> = {
+export const dialRotate: events.DialRotate<Settings> = {
 	event: "dialRotate",
 	action,
 	context,
@@ -92,17 +92,17 @@ export const dialRotate: messages.DialRotate<Settings> = {
 };
 
 /**
- * Mocked {@link messages.dialUp} message.
+ * Mocked {@link events.dialUp} message.
  */
-export const dialUp: messages.DialUp<Settings> = {
+export const dialUp: events.DialUp<Settings> = {
 	...dialDown,
 	event: "dialUp"
 };
 
 /**
- * Mocked {@link messages.didReceiveGlobalSettings} message.
+ * Mocked {@link events.didReceiveGlobalSettings} message.
  */
-export const didReceiveGlobalSettings: messages.DidReceiveGlobalSettings<Settings> = {
+export const didReceiveGlobalSettings: events.DidReceiveGlobalSettings<Settings> = {
 	event: "didReceiveGlobalSettings",
 	payload: {
 		settings: {
@@ -112,9 +112,9 @@ export const didReceiveGlobalSettings: messages.DidReceiveGlobalSettings<Setting
 };
 
 /**
- * Mocked {@link messages.didReceiveSettings} message.
+ * Mocked {@link events.didReceiveSettings} message.
  */
-export const didReceiveSettings: messages.DidReceiveSettings<Settings> = {
+export const didReceiveSettings: events.DidReceiveSettings<Settings> = {
 	action,
 	context,
 	device,
@@ -132,9 +132,9 @@ export const didReceiveSettings: messages.DidReceiveSettings<Settings> = {
 };
 
 /**
- * Mocked {@link messages.keyDown} message.
+ * Mocked {@link events.keyDown} message.
  */
-export const keyDown: messages.KeyDown<Settings> = {
+export const keyDown: events.KeyDown<Settings> = {
 	action,
 	context,
 	device,
@@ -154,17 +154,17 @@ export const keyDown: messages.KeyDown<Settings> = {
 };
 
 /**
- * Mocked {@link messages.keyUp} message.
+ * Mocked {@link events.keyUp} message.
  */
-export const keyUp: messages.KeyUp<Settings> = {
+export const keyUp: events.KeyUp<Settings> = {
 	...keyDown,
 	event: "keyUp"
 };
 
 /**
- * Mocked {@link messages.propertyInspectorDidAppear} message.
+ * Mocked {@link events.propertyInspectorDidAppear} message.
  */
-export const propertyInspectorDidAppear: messages.PropertyInspectorDidAppear = {
+export const propertyInspectorDidAppear: events.PropertyInspectorDidAppear = {
 	action,
 	context,
 	device,
@@ -172,17 +172,17 @@ export const propertyInspectorDidAppear: messages.PropertyInspectorDidAppear = {
 };
 
 /**
- * Mocked {@link messages.propertyInspectorDidDisappear} message.
+ * Mocked {@link events.propertyInspectorDidDisappear} message.
  */
-export const propertyInspectorDidDisappear: messages.PropertyInspectorDidDisappear = {
+export const propertyInspectorDidDisappear: events.PropertyInspectorDidDisappear = {
 	...propertyInspectorDidAppear,
 	event: "propertyInspectorDidDisappear"
 };
 
 /**
- * Mocked {@link messages.sendToPlugin} message.
+ * Mocked {@link events.sendToPlugin} message.
  */
-export const sendToPlugin: messages.SendToPlugin<Settings> = {
+export const sendToPlugin: events.SendToPlugin<Settings> = {
 	action,
 	context,
 	event: "sendToPlugin",
@@ -192,16 +192,16 @@ export const sendToPlugin: messages.SendToPlugin<Settings> = {
 };
 
 /**
- * Mocked {@link messages.systemDidWakeUp} message.
+ * Mocked {@link events.systemDidWakeUp} message.
  */
-export const systemDidWakeUp: messages.SystemDidWakeUp = {
+export const systemDidWakeUp: events.SystemDidWakeUp = {
 	event: "systemDidWakeUp"
 };
 
 /**
- * Mocked {@link messages.titleParametersDidChange} message.
+ * Mocked {@link events.titleParametersDidChange} message.
  */
-export const titleParametersDidChange: messages.TitleParametersDidChange<Settings> = {
+export const titleParametersDidChange: events.TitleParametersDidChange<Settings> = {
 	action,
 	context,
 	device,
@@ -229,9 +229,9 @@ export const titleParametersDidChange: messages.TitleParametersDidChange<Setting
 };
 
 /**
- * Mocked {@link messages.touchTap} message.
+ * Mocked {@link events.touchTap} message.
  */
-export const touchTap: messages.TouchTap<Settings> = {
+export const touchTap: events.TouchTap<Settings> = {
 	action,
 	context,
 	device,
@@ -250,9 +250,9 @@ export const touchTap: messages.TouchTap<Settings> = {
 };
 
 /**
- * Mocked {@link messages.willAppear} message.
+ * Mocked {@link events.willAppear} message.
  */
-export const willAppear: messages.WillAppear<Settings> = {
+export const willAppear: events.WillAppear<Settings> = {
 	action,
 	context,
 	device,
@@ -272,9 +272,9 @@ export const willAppear: messages.WillAppear<Settings> = {
 };
 
 /**
- * Mocked {@link messages.willDisappear} message.
+ * Mocked {@link events.willDisappear} message.
  */
-export const willDisappear: messages.WillDisappear<Settings> = {
+export const willDisappear: events.WillDisappear<Settings> = {
 	...willAppear,
 	event: "willDisappear"
 };

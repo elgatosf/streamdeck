@@ -2,6 +2,7 @@ import WebSocket from "ws";
 
 import { emitFromAll } from "../../../test/events";
 import { logger } from "../../common/logging";
+import { OpenUrl } from "../commands";
 import { StreamDeckConnection } from "../connection";
 import { RegistrationParameters } from "../registration";
 
@@ -149,23 +150,18 @@ describe("StreamDeckConnection", () => {
 	it("Sends to the WebSocket", async () => {
 		// Arrange.
 		const connection = getConnection();
-
-		// Act.
-		await connection.send("openUrl", {
+		const command: OpenUrl = {
+			event: "openUrl",
 			payload: {
 				url: "https://www.elgato.com"
 			}
-		});
+		};
+
+		// Act.
+		await connection.send(command);
 
 		// Assert.
-		expect(mockedWebSocket.mock.instances[0].send).toHaveBeenCalledWith(
-			JSON.stringify({
-				event: "openUrl",
-				payload: {
-					url: "https://www.elgato.com"
-				}
-			})
-		);
+		expect(mockedWebSocket.mock.instances[0].send).toHaveBeenCalledWith(JSON.stringify(command));
 	});
 
 	/**

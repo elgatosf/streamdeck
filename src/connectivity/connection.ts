@@ -3,7 +3,8 @@ import WebSocket from "ws";
 
 import { logger } from "../common/logging";
 import { PromiseCompletionSource } from "../common/promises";
-import { Event, EventIdentifier, OutboundMessages } from "./events";
+import { Command } from "./commands";
+import { Event, EventIdentifier } from "./events";
 import { RegistrationParameters } from "./registration";
 
 /**
@@ -99,17 +100,13 @@ export class StreamDeckConnection {
 	}
 
 	/**
-	 * Sends the messages to the Stream Deck, once the connection has been established and the plugin registered.
-	 * @param event Event name where the message will be sent.
-	 * @param data Data to send to Stream Deck.
-	 * @returns `Promise` resolved when the request is sent to Stream Deck.
+	 * Sends the commands to the Stream Deck, once the connection has been established and the plugin registered.
+	 * @param command Command being sent.
+	 * @returns `Promise` resolved when the command is sent to Stream Deck.
 	 */
-	public async send(event: OutboundMessages, data: object): Promise<void> {
+	public async send(command: Command): Promise<void> {
 		const connection = await this.connection.promise;
-		const message = JSON.stringify({
-			event,
-			...data
-		});
+		const message = JSON.stringify(command);
 
 		logger.logTrace(message);
 		connection.send(message);

@@ -6,7 +6,7 @@ import { DeviceType } from "./device-info";
  */
 export type EventIdentifier<TEvent> = {
 	/**
-	 * Name of the event used to identify what occurred, or what is being requested.
+	 * Name of the event used to identify what occurred.
 	 */
 	readonly event: TEvent;
 };

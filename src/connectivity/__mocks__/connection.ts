@@ -3,14 +3,24 @@ import { EventEmitter } from "node:events";
 import type { StreamDeckConnection as __StreamDeckConnection } from "../connection";
 
 /**
+ * Mock {@link __StreamDeckConnection}.
+ */
+export type MockStreamDeckConnection = __StreamDeckConnection & {
+	__emit(eventName: string, ...args: unknown[]): void;
+};
+
+/**
  * Mocked {@link __StreamDeckConnection}.
  */
 export const StreamDeckConnection = jest.fn().mockImplementation(() => {
 	const emitter = new EventEmitter();
 	return {
 		connect: jest.fn(),
-		emit(eventName: string, ...args: unknown[]) {
+		__emit(eventName: string, ...args: unknown[]) {
 			emitter.emit(eventName, ...args);
+		},
+		registrationParameters: {
+			pluginUUID: "PLUGIN_1"
 		},
 		on(eventName: string, listener: (...args: unknown[]) => void) {
 			emitter.on(eventName, listener);
