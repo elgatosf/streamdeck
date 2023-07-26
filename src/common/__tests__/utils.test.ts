@@ -1,12 +1,12 @@
 import { get } from "../utils";
 
 describe("get", () => {
-	it("Top-level path", () => {
+	it("Gets the value for a top-level path", () => {
 		const obj = { foo: "bar" };
 		expect(get("foo", obj)).toBe("bar");
 	});
 
-	it("Nested path", () => {
+	it("Gets the value for a nested path", () => {
 		const obj = { nested: { number: 13 } };
 		expect(get("nested.number", obj)).toBe(13);
 	});
@@ -72,7 +72,7 @@ describe("isDebugMode", () => {
 		}
 	];
 
-	it.each(cases)("$args is $expected", async ({ args, expected }) => {
+	it.each(cases)("$args returns $expected", async ({ args, expected }) => {
 		const origArgs = process.execArgv;
 		try {
 			process.execArgv = args;
