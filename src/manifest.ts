@@ -604,7 +604,7 @@ export function getManifest(): Omit<Manifest, "$schema"> {
 			}).toString()
 		);
 	} catch (err) {
-		logger.logWarn("Failed to parse manifest.", err);
+		logger.logError("Failed to parse manifest.", err);
 		throw err;
 	}
 }
