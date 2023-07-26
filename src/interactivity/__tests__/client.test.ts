@@ -898,7 +898,6 @@ describe("StreamDeckClient", () => {
  * @returns Function that can be used to determine the source, before finally emitting the event.
  */
 function emit<T extends Event>(message: T) {
-	console.log("emitting", message);
 	return {
 		from(source: unknown): T {
 			(source as MockStreamDeckConnection).__emit(message.event, message);
