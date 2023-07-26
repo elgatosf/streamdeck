@@ -328,7 +328,7 @@ export type Manifest = {
 	 * Configuration options for Node.js based plugins. **NB.** All Node.js plugins are executed with the following command-line arguments [`--no-addons`](https://nodejs.org/api/cli.html#--no-addons),
 	 * [`--enable-source-maps`](https://nodejs.org/api/cli.html#--enable-source-maps), and [`--no-global-search-paths`](https://nodejs.org/api/cli.html#--no-global-search-paths).
 	 */
-	Nodejs: {
+	Nodejs?: {
 		/**
 		 * Command-line arguments supplied to the plugin when run in debug mode. Optionally, the pre-defined values `"enabled"` and `"break"` run the plugin with a debugger enabled
 		 * with [`--inspect`](https://nodejs.org/api/cli.html#--inspecthostport) and [`--inspect-brk`](https://nodejs.org/api/cli.html#--inspect-brkhostport) respectively. **NB.**
@@ -369,7 +369,7 @@ export type Manifest = {
 	 * **Also see:**
 	 * `streamDeck.client.switchToProfile(...)`
 	 */
-	Profiles: {
+	Profiles?: {
 		/**
 		 * Type of device the profile is applicable too, e.g. Stream Deck+, Stream Deck Pedal, etc.
 		 */

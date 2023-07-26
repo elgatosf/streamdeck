@@ -1,6 +1,7 @@
 import { EventEmitter } from "node:events";
 
 import type { StreamDeckConnection as __StreamDeckConnection } from "../connection";
+import { registrationParameters } from "./registration";
 
 /**
  * Mock {@link __StreamDeckConnection}.
@@ -19,9 +20,7 @@ export const StreamDeckConnection = jest.fn().mockImplementation(() => {
 		__emit(eventName: string, ...args: unknown[]) {
 			emitter.emit(eventName, ...args);
 		},
-		registrationParameters: {
-			pluginUUID: "PLUGIN_1"
-		},
+		registrationParameters,
 		on(eventName: string, listener: (...args: unknown[]) => void) {
 			emitter.on(eventName, listener);
 			return this;
