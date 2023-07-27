@@ -42,7 +42,7 @@ export class StreamDeckClient {
 	 * @param connection Underlying connection with the Stream Deck.
 	 * @param devices Device collection responsible for tracking devices.
 	 */
-	constructor(public readonly connection: StreamDeckConnection, private readonly devices: ReadonlyMap<string, Device>) {}
+	constructor(private readonly connection: StreamDeckConnection, private readonly devices: ReadonlyMap<string, Device>) {}
 
 	/**
 	 * Gets the global settings associated with the plugin. Use in conjunction with {@link StreamDeckClient.setGlobalSettings}.
