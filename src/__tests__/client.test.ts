@@ -1,5 +1,7 @@
-import { MockStreamDeckConnection } from "../../connectivity/__mocks__/connection";
-import * as mockEvents from "../../connectivity/__mocks__/events";
+import { Action } from "../actions/action";
+import { StreamDeckClient } from "../client";
+import { MockStreamDeckConnection } from "../connectivity/__mocks__/connection";
+import * as mockEvents from "../connectivity/__mocks__/events";
 import {
 	GetGlobalSettings,
 	GetSettings,
@@ -15,12 +17,11 @@ import {
 	ShowAlert,
 	ShowOk,
 	SwitchToProfile
-} from "../../connectivity/commands";
-import { StreamDeckConnection } from "../../connectivity/connection";
-import { Event } from "../../connectivity/events";
-import { Device } from "../../devices";
-import { Action } from "../action";
-import { StreamDeckClient } from "../client";
+} from "../connectivity/commands";
+import { StreamDeckConnection } from "../connectivity/connection";
+import { Event } from "../connectivity/events";
+import { Target } from "../connectivity/target";
+import { Device } from "../devices";
 import {
 	ApplicationDidLaunchEvent,
 	ApplicationDidTerminateEvent,
@@ -42,9 +43,8 @@ import {
 	WillAppearEvent,
 	WillDisappearEvent
 } from "../events";
-import { Target } from "../target";
 
-jest.mock("../../connectivity/connection");
+jest.mock("../connectivity/connection");
 
 describe("StreamDeckClient", () => {
 	/**

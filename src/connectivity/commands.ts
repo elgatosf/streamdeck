@@ -1,7 +1,7 @@
-import type { FeedbackPayload } from "../interactivity/layouts";
-import { Target } from "../interactivity/target";
 import type { DidReceiveGlobalSettings, DidReceiveSettings } from "./events";
 import { State } from "./events";
+import type { FeedbackPayload } from "./layouts";
+import { Target } from "./target";
 
 /**
  * Command sent to Stream Deck.

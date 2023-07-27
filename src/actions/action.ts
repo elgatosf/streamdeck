@@ -1,8 +1,8 @@
+import type { StreamDeckClient } from "../client";
 import { State } from "../connectivity/events";
-import type { SingletonAction } from "../routing/singleton-action";
-import type { StreamDeckClient } from "./client";
-import { FeedbackPayload } from "./layouts";
-import { Target } from "./target";
+import { FeedbackPayload } from "../connectivity/layouts";
+import { Target } from "../connectivity/target";
+import type { SingletonAction } from "./singleton-action";
 
 /**
  * Provides a contextualized instance of an {@link Action}, allowing for direct communication with the Stream Deck.

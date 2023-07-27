@@ -1,5 +1,5 @@
-import { Action } from "../interactivity/action";
-import { StreamDeckClient } from "../interactivity/client";
+import { StreamDeckClient } from "../client";
+import { Action } from "./action";
 import { SingletonAction } from "./singleton-action";
 
 /**

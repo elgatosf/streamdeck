@@ -1,9 +1,10 @@
-import { StreamDeckConnection } from "../connectivity/connection";
-import * as events from "../connectivity/events";
-import { State } from "../connectivity/events";
-import { Device } from "../devices";
-import type { Manifest } from "../manifest";
-import type { SingletonAction } from "../routing/singleton-action";
+import type { SingletonAction } from "./actions/singleton-action";
+import { StreamDeckConnection } from "./connectivity/connection";
+import * as events from "./connectivity/events";
+import { State } from "./connectivity/events";
+import { FeedbackPayload } from "./connectivity/layouts";
+import { Target } from "./connectivity/target";
+import { Device } from "./devices";
 import {
 	ActionEvent,
 	ActionWithoutPayloadEvent,
@@ -30,8 +31,7 @@ import {
 	WillAppearEvent,
 	WillDisappearEvent
 } from "./events";
-import { FeedbackPayload } from "./layouts";
-import { Target } from "./target";
+import type { Manifest } from "./manifest";
 
 /**
  * Provides the main bridge between the plugin and the Stream Deck allowing the plugin to send requests and receive events, e.g. when the user presses an action.

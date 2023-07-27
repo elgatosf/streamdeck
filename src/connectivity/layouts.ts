@@ -1,5 +1,5 @@
 /* eslint-disable jsdoc/check-tag-names */
-import type { StreamDeckClient } from "./client";
+import type { StreamDeckClient } from "../client";
 
 /**
  * Payload object, used in conjunction with {@link StreamDeckClient.setLayout}, that enables updating items within a layout.

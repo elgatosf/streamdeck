@@ -1,5 +1,5 @@
+import { StreamDeckClient } from "../client";
 import { logger } from "../common/logging";
-import { StreamDeckClient } from "../interactivity/client";
 import { Manifest } from "../manifest";
 import { Route } from "./route";
 import { SingletonAction } from "./singleton-action";

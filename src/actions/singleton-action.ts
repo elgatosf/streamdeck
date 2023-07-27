@@ -1,4 +1,4 @@
-import { StreamDeckClient } from "../interactivity/client";
+import { StreamDeckClient } from "../client";
 import {
 	DialDownEvent,
 	DialRotateEvent,
@@ -13,7 +13,7 @@ import {
 	TouchTapEvent,
 	WillAppearEvent,
 	WillDisappearEvent
-} from "../interactivity/events";
+} from "../events";
 
 /**
  * Provides the main bridge between the plugin and the Stream Deck allowing the plugin to send requests and receive events, e.g. when the user presses an action.
