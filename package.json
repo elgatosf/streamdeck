@@ -8,6 +8,7 @@
 		"build": "tsc --project tsconfig.build.json",
 		"generate-schemas": "ts-node ./scripts/generate-schemas.ts",
 		"lint": "eslint . --ext .ts --max-warnings 0",
+		"lint:fix": "prettier --config .prettierrc src/**/*.ts --write",
 		"test": "jest",
 		"test:coverage": "jest --coverage",
 		"test:watch": "jest --watch",

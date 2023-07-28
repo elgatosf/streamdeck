@@ -34,7 +34,11 @@ export class Route {
 	 * @param event Event to listen for.
 	 * @param listener The listener that will be invoked when the `event` occurs.
 	 */
-	private addEventListener<TEventArgs extends RoutingEvent>(manifestId: string, event: (listener: (ev: TEventArgs) => void) => void, listener: ((ev: TEventArgs) => Promise<void> | void) | undefined) {
+	private addEventListener<TEventArgs extends RoutingEvent>(
+		manifestId: string,
+		event: (listener: (ev: TEventArgs) => void) => void,
+		listener: ((ev: TEventArgs) => Promise<void> | void) | undefined
+	) {
 		const boundedListener = listener?.bind(this.action);
 		if (boundedListener === undefined) {
 			return;
