@@ -24,7 +24,7 @@ export class Event<T extends events.Event> {
 /**
  * Provides information for events relating to actions.
  */
-export class ActionWithoutPayloadEvent<T extends events.ActionEvent<unknown> & events.Event> extends Event<T> {
+export class ActionWithoutPayloadEvent<T extends Extract<events.Event, events.ActionIdentifier & events.DeviceIdentifier>> extends Event<T> {
 	/**
 	 * The action that raised the event.
 	 */
@@ -51,7 +51,7 @@ export class ActionWithoutPayloadEvent<T extends events.ActionEvent<unknown> & e
 /**
  * Provides information for events relating to actions.
  */
-export class ActionEvent<T extends events.ActionEventWithPayload<unknown, unknown, ExtractPayload<T>> & events.Event> extends ActionWithoutPayloadEvent<T> {
+export class ActionEvent<T extends Extract<events.Event, events.ActionIdentifier & events.DeviceIdentifier> & PayloadEvent<T>> extends ActionWithoutPayloadEvent<T> {
 	/**
 	 * Provides additional information about the event that occurred, e.g. how many `ticks` the dial was rotated, the current `state` of the action, etc.
 	 */
@@ -244,3 +244,13 @@ type ExtractPayload<T> = T extends {
 		? TPayload
 		: never
 	: never;
+
+/**
+ * Utility type for determining the payload of an event.
+ */
+type PayloadEvent<T> = {
+	/**
+	 * Payload providing additional information for an event.
+	 */
+	payload: ExtractPayload<T>;
+};
