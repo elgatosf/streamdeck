@@ -12,25 +12,31 @@ export type EventIdentifier<TEvent> = {
 };
 
 /**
- * Provides information for an event relating to an action, e.g. `willAppear`, `keyDown`, etc.
+ * Provide information for a device associated with an event.
  */
-export type ActionEvent<TEvent> = EventIdentifier<TEvent> & {
-	/**
-	 * Unique identifier of the action as defined within the plugin's manifest (`Actions[].UUID`) e.g. "com.elgato.wavelink.mute".
-	 */
-	readonly action: string;
-
-	/**
-	 * Identifies the instance of an action that caused the event, i.e. the specific key or dial. This identifier can be used to provide feedback to the Stream Deck, persist and
-	 * request settings associated with the action instance, etc.
-	 */
-	readonly context: string;
-
+export type DeviceIdentifier = {
 	/**
 	 * Unique identifier of the Stream Deck device that this event is associated with.
 	 */
 	readonly device: string;
 };
+
+/**
+ * Provides information for an event relating to an action, e.g. `willAppear`, `keyDown`, etc.
+ */
+export type ActionEvent<TEvent> = DeviceIdentifier &
+	EventIdentifier<TEvent> & {
+		/**
+		 * Unique identifier of the action as defined within the plugin's manifest (`Actions[].UUID`) e.g. "com.elgato.wavelink.mute".
+		 */
+		readonly action: string;
+
+		/**
+		 * Identifies the instance of an action that caused the event, i.e. the specific key or dial. This identifier can be used to provide feedback to the Stream Deck, persist and
+		 * request settings associated with the action instance, etc.
+		 */
+		readonly context: string;
+	};
 
 /**
  * Provides information for an event relating to an action, e.g. `willAppear`, `keyDown`, etc.
@@ -270,27 +276,18 @@ export type TitleParametersDidChange<TSettings = unknown> = ActionEventWithPaylo
 /**
  * Occurs when a Stream Deck device is connected. Also see {@link DeviceDidDisconnect}.
  */
-export type DeviceDidConnect = EventIdentifier<"deviceDidConnect"> & {
-	/**
-	 * Unique identifier of the Stream Deck device that this event is associated with.
-	 */
-	readonly device: string;
-
-	/**
-	 * Information about the newly connected device.
-	 */
-	readonly deviceInfo: DeviceInfo;
-};
+export type DeviceDidConnect = DeviceIdentifier &
+	EventIdentifier<"deviceDidConnect"> & {
+		/**
+		 * Information about the newly connected device.
+		 */
+		readonly deviceInfo: DeviceInfo;
+	};
 
 /**
  * Occurs when a Stream Deck device is disconnected. Also see {@link DeviceDidConnect}.
  */
-export type DeviceDidDisconnect = EventIdentifier<"deviceDidDisconnect"> & {
-	/**
-	 * Unique identifier of the Stream Deck device that this event is associated with.
-	 */
-	readonly device: string;
-};
+export type DeviceDidDisconnect = DeviceIdentifier & EventIdentifier<"deviceDidDisconnect">;
 
 /**
  * Provides information about a monitored application. See {@link ApplicationDidLaunch} and {@link ApplicationDidTerminate}.
@@ -337,7 +334,7 @@ export type PropertyInspectorDidDisappear = ActionEvent<"propertyInspectorDidDis
 /**
  * Occurs when a message was sent to the plugin _from_ the property inspector.
  */
-export type SendToPlugin<TPayload extends object = object> = Omit<ActionEvent<"sendToPlugin">, "device"> & {
+export type SendToPlugin<TPayload extends object = object> = Omit<ActionEvent<"sendToPlugin">, keyof DeviceIdentifier> & {
 	/**
 	 * Payload sent to the plugin from the property inspector.
 	 */
