@@ -12,7 +12,7 @@ export type EventIdentifier<TEvent> = {
 };
 
 /**
- * Provide information for a device associated with an event.
+ * Provide information that identifies a device associated with an event.
  */
 export type DeviceIdentifier = {
 	/**
@@ -22,46 +22,49 @@ export type DeviceIdentifier = {
 };
 
 /**
- * Provides information for an event relating to an action, e.g. `willAppear`, `keyDown`, etc.
+ * Provide information that identifies an action associated with an event.
  */
-export type ActionEvent<TEvent> = DeviceIdentifier &
-	EventIdentifier<TEvent> & {
-		/**
-		 * Unique identifier of the action as defined within the plugin's manifest (`Actions[].UUID`) e.g. "com.elgato.wavelink.mute".
-		 */
-		readonly action: string;
+export type ActionIdentifier = {
+	/**
+	 * Unique identifier of the action as defined within the plugin's manifest (`Actions[].UUID`) e.g. "com.elgato.wavelink.mute".
+	 */
+	readonly action: string;
 
-		/**
-		 * Identifies the instance of an action that caused the event, i.e. the specific key or dial. This identifier can be used to provide feedback to the Stream Deck, persist and
-		 * request settings associated with the action instance, etc.
-		 */
-		readonly context: string;
-	};
+	/**
+	 * Identifies the instance of an action that caused the event, i.e. the specific key or dial. This identifier can be used to provide feedback to the Stream Deck, persist and
+	 * request settings associated with the action instance, etc.
+	 */
+	readonly context: string;
+};
 
 /**
  * Provides information for an event relating to an action, e.g. `willAppear`, `keyDown`, etc.
  */
-export type ActionEventWithPayload<TEvent, TSettings, TPayload> = ActionEvent<TEvent> & {
-	/**
-	 * Additional information about the action and event that occurred.
-	 */
-	readonly payload: TPayload & {
-		/**
-		 * Coordinates that identify the location of the action.
-		 */
-		readonly coordinates: Coordinates;
+type ActionEvent<TEvent, TSettings = void, TPayload = void> = DeviceIdentifier &
+	EventIdentifier<TEvent> &
+	(TPayload extends void
+		? ActionIdentifier
+		: ActionIdentifier & {
+				/**
+				 * Additional information about the action and event that occurred.
+				 */
+				readonly payload: TPayload & {
+					/**
+					 * Coordinates that identify the location of the action.
+					 */
+					readonly coordinates: Coordinates;
 
-		/**
-		 * Settings associated with the action instance.
-		 */
-		settings: Partial<TSettings>;
-	};
-};
+					/**
+					 * Settings associated with the action instance.
+					 */
+					settings: Partial<TSettings>;
+				};
+		  });
 
 /**
  * Occurs when the settings associated with an action instance are requested, or when the the settings were updated by the property inspector.
  */
-export type DidReceiveSettings<TSettings = unknown> = ActionEventWithPayload<
+export type DidReceiveSettings<TSettings = unknown> = ActionEvent<
 	"didReceiveSettings",
 	TSettings,
 	{
@@ -90,7 +93,7 @@ export type DidReceiveGlobalSettings<TSettings = unknown> = EventIdentifier<"did
 /**
  * Occurs when the user taps the touchscreen (Stream Deck+).
  */
-export type TouchTap<TSettings = unknown> = ActionEventWithPayload<
+export type TouchTap<TSettings = unknown> = ActionEvent<
 	"touchTap",
 	TSettings,
 	{
@@ -109,7 +112,7 @@ export type TouchTap<TSettings = unknown> = ActionEventWithPayload<
 /**
  * Occurs when the user presses a dial (Stream Deck+). **NB** For other action types see {@link KeyDown}. Also see {@link DialUp}.
  */
-export type DialDown<TSettings = unknown> = ActionEventWithPayload<
+export type DialDown<TSettings = unknown> = ActionEvent<
 	"dialDown",
 	TSettings,
 	{
@@ -124,12 +127,12 @@ export type DialDown<TSettings = unknown> = ActionEventWithPayload<
 /**
  * Occurs when the user releases a pressed dial (Stream Deck+). **NB** For other action types see {@link KeyUp}. Also see {@link DialDown}.
  */
-export type DialUp<TSettings = unknown> = ActionEventWithPayload<"dialUp", TSettings, DialDown<TSettings>["payload"]>;
+export type DialUp<TSettings = unknown> = ActionEvent<"dialUp", TSettings, DialDown<TSettings>["payload"]>;
 
 /**
  * Occurs when the user rotates a dial (Stream Deck+).
  */
-export type DialRotate<TSettings = unknown> = ActionEventWithPayload<
+export type DialRotate<TSettings = unknown> = ActionEvent<
 	"dialRotate",
 	TSettings,
 	{
@@ -154,7 +157,7 @@ export type DialRotate<TSettings = unknown> = ActionEventWithPayload<
 /**
  * Occurs when the user presses a action down. **NB** For dials / touchscreens see {@link DialDown}. Also see {@link KeyUp}.
  */
-export type KeyDown<TSettings = unknown> = ActionEventWithPayload<
+export type KeyDown<TSettings = unknown> = ActionEvent<
 	"keyDown",
 	TSettings,
 	{
@@ -179,14 +182,14 @@ export type KeyDown<TSettings = unknown> = ActionEventWithPayload<
 /**
  * Occurs when the user releases a pressed action. **NB** For dials / touchscreens see {@link DialUp}. Also see {@link KeyDown}.
  */
-export type KeyUp<TSettings = unknown> = ActionEventWithPayload<"keyUp", TSettings, KeyDown<TSettings>["payload"]>;
+export type KeyUp<TSettings = unknown> = ActionEvent<"keyUp", TSettings, KeyDown<TSettings>["payload"]>;
 
 /**
  * Occurs when an action appears on the Stream Deck due to the user navigating to another page, profile, folder, etc. This also occurs during startup if the action is on the "front
  * page". An action refers to _all_ types of actions, e.g. keys, dials,
  * touchscreens, pedals, etc.
  */
-export type WillAppear<TSettings = unknown> = ActionEventWithPayload<
+export type WillAppear<TSettings = unknown> = ActionEvent<
 	"willAppear",
 	TSettings,
 	{
@@ -212,12 +215,12 @@ export type WillAppear<TSettings = unknown> = ActionEventWithPayload<
  * Occurs when an action disappears from the Stream Deck due to the user navigating to another page, profile, folder, etc. An action refers to _all_ types of actions, e.g. keys, dials,
  * touchscreens, pedals, etc.
  */
-export type WillDisappear<TSettings = unknown> = ActionEventWithPayload<"willDisappear", TSettings, WillAppear<TSettings>["payload"]>;
+export type WillDisappear<TSettings = unknown> = ActionEvent<"willDisappear", TSettings, WillAppear<TSettings>["payload"]>;
 
 /**
  * Occurs when the user updates an action's title settings in the Stream Deck application.
  */
-export type TitleParametersDidChange<TSettings = unknown> = ActionEventWithPayload<
+export type TitleParametersDidChange<TSettings = unknown> = ActionEvent<
 	"titleParametersDidChange",
 	TSettings,
 	{
@@ -391,23 +394,3 @@ export type Event<TSettings = unknown> =
 	| TouchTap<TSettings>
 	| WillAppear<TSettings>
 	| WillDisappear<TSettings>;
-
-/**
- * s sent from the plugin, to the Stream Deck.
- */
-export type OutboundMessages =
-	| "getGlobalSettings"
-	| "getSettings"
-	| "logMessage"
-	| "openUrl"
-	| "sendToPropertyInspector"
-	| "setFeedback"
-	| "setFeedbackLayout"
-	| "setGlobalSettings"
-	| "setImage"
-	| "setSettings"
-	| "setState"
-	| "setTitle"
-	| "showAlert"
-	| "showOk"
-	| "switchToProfile";
