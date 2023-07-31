@@ -16,7 +16,7 @@ export const applicationDidLaunch: events.ApplicationDidLaunch = {
 };
 
 /**
- * Mocked {@link events.applicationDidTerminate} message.
+ * Mocked {@link events.ApplicationDidTerminate} message.
  */
 export const applicationDidTerminate: events.ApplicationDidTerminate = {
 	event: "applicationDidTerminate",
@@ -26,7 +26,7 @@ export const applicationDidTerminate: events.ApplicationDidTerminate = {
 };
 
 /**
- * Mocked {@link events.deviceDidConnect} message.
+ * Mocked {@link events.DeviceDidConnect} message.
  */
 export const deviceDidConnect: events.DeviceDidConnect = {
 	event: "deviceDidConnect",
@@ -42,7 +42,7 @@ export const deviceDidConnect: events.DeviceDidConnect = {
 };
 
 /**
- * Mocked {@link events.deviceDidDisconnect} message.
+ * Mocked {@link events.DeviceDidConnect} message.
  */
 export const deviceDidDisconnect: events.DeviceDidDisconnect = {
 	event: "deviceDidDisconnect",
@@ -50,7 +50,7 @@ export const deviceDidDisconnect: events.DeviceDidDisconnect = {
 };
 
 /**
- * Mocked {@link events.dialDown} message.
+ * Mocked {@link events.DialDown} message.
  */
 export const dialDown: events.DialDown<Settings> = {
 	event: "dialDown",
@@ -70,7 +70,7 @@ export const dialDown: events.DialDown<Settings> = {
 };
 
 /**
- * Mocked {@link events.dialRotate} message.
+ * Mocked {@link events.DialRotate} message.
  */
 export const dialRotate: events.DialRotate<Settings> = {
 	event: "dialRotate",
@@ -92,7 +92,7 @@ export const dialRotate: events.DialRotate<Settings> = {
 };
 
 /**
- * Mocked {@link events.dialUp} message.
+ * Mocked {@link events.DialUp} message.
  */
 export const dialUp: events.DialUp<Settings> = {
 	...dialDown,
@@ -100,7 +100,7 @@ export const dialUp: events.DialUp<Settings> = {
 };
 
 /**
- * Mocked {@link events.didReceiveGlobalSettings} message.
+ * Mocked {@link events.DidReceiveGlobalSettings} message.
  */
 export const didReceiveGlobalSettings: events.DidReceiveGlobalSettings<Settings> = {
 	event: "didReceiveGlobalSettings",
@@ -112,7 +112,7 @@ export const didReceiveGlobalSettings: events.DidReceiveGlobalSettings<Settings>
 };
 
 /**
- * Mocked {@link events.didReceiveSettings} message.
+ * Mocked {@link events.DidReceiveSettings} message.
  */
 export const didReceiveSettings: events.DidReceiveSettings<Settings> = {
 	action,
@@ -132,7 +132,7 @@ export const didReceiveSettings: events.DidReceiveSettings<Settings> = {
 };
 
 /**
- * Mocked {@link events.keyDown} message.
+ * Mocked {@link events.KeyDown} message.
  */
 export const keyDown: events.KeyDown<Settings> = {
 	action,
@@ -154,7 +154,7 @@ export const keyDown: events.KeyDown<Settings> = {
 };
 
 /**
- * Mocked {@link events.keyUp} message.
+ * Mocked {@link events.KeyUp} message.
  */
 export const keyUp: events.KeyUp<Settings> = {
 	...keyDown,
@@ -162,7 +162,7 @@ export const keyUp: events.KeyUp<Settings> = {
 };
 
 /**
- * Mocked {@link events.propertyInspectorDidAppear} message.
+ * Mocked {@link events.PropertyInspectorDidAppear} message.
  */
 export const propertyInspectorDidAppear: events.PropertyInspectorDidAppear = {
 	action,
@@ -172,7 +172,7 @@ export const propertyInspectorDidAppear: events.PropertyInspectorDidAppear = {
 };
 
 /**
- * Mocked {@link events.propertyInspectorDidDisappear} message.
+ * Mocked {@link events.PropertyInspectorDidDisappear} message.
  */
 export const propertyInspectorDidDisappear: events.PropertyInspectorDidDisappear = {
 	...propertyInspectorDidAppear,
@@ -180,7 +180,7 @@ export const propertyInspectorDidDisappear: events.PropertyInspectorDidDisappear
 };
 
 /**
- * Mocked {@link events.sendToPlugin} message.
+ * Mocked {@link events.SendToPlugin} message.
  */
 export const sendToPlugin: events.SendToPlugin<Settings> = {
 	action,
@@ -192,14 +192,14 @@ export const sendToPlugin: events.SendToPlugin<Settings> = {
 };
 
 /**
- * Mocked {@link events.systemDidWakeUp} message.
+ * Mocked {@link events.SystemDidWakeUp} message.
  */
 export const systemDidWakeUp: events.SystemDidWakeUp = {
 	event: "systemDidWakeUp"
 };
 
 /**
- * Mocked {@link events.titleParametersDidChange} message.
+ * Mocked {@link events.TitleParametersDidChange} message.
  */
 export const titleParametersDidChange: events.TitleParametersDidChange<Settings> = {
 	action,
@@ -229,7 +229,7 @@ export const titleParametersDidChange: events.TitleParametersDidChange<Settings>
 };
 
 /**
- * Mocked {@link events.touchTap} message.
+ * Mocked {@link events.TouchTap} message.
  */
 export const touchTap: events.TouchTap<Settings> = {
 	action,
@@ -250,7 +250,7 @@ export const touchTap: events.TouchTap<Settings> = {
 };
 
 /**
- * Mocked {@link events.willAppear} message.
+ * Mocked {@link events.WillAppear} message.
  */
 export const willAppear: events.WillAppear<Settings> = {
 	action,
@@ -272,7 +272,7 @@ export const willAppear: events.WillAppear<Settings> = {
 };
 
 /**
- * Mocked {@link events.willDisappear} message.
+ * Mocked {@link events.WillDisappear} message.
  */
 export const willDisappear: events.WillDisappear<Settings> = {
 	...willAppear,
