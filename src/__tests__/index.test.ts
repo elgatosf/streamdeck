@@ -1,4 +1,4 @@
-import { Router } from "../actions/router";
+import { ActionsController } from "../actions/actions-controller";
 import { StreamDeckClient } from "../client";
 import { registrationParameters } from "../connectivity/__mocks__/registration";
 import { StreamDeckConnection } from "../connectivity/connection";
@@ -7,7 +7,7 @@ import { i18nProvider } from "../i18n";
 import * as streamDeck from "../index";
 import { getManifest } from "../manifest";
 
-jest.mock("../actions/router");
+jest.mock("../actions/actions-controller");
 jest.mock("../common/logging");
 jest.mock("../connectivity/connection");
 jest.mock("../connectivity/registration");
@@ -51,9 +51,9 @@ describe("Index", () => {
 		expect(mockedI18nProvider.mock.calls[0]).toEqual([registrationParameters.info.application.language]);
 	});
 
-	it("Initializes router", () => {
-		const mockedRouter = Router as jest.MockedClass<typeof Router>;
-		expect(mockedRouter.mock.calls).toHaveLength(1);
-		expect(mockedRouter.mock.calls[0]).toEqual([streamDeck.client, getManifest()]);
+	it("Initializes actions", () => {
+		const mockedActions = ActionsController as jest.MockedClass<typeof ActionsController>;
+		expect(mockedActions.mock.calls).toHaveLength(1);
+		expect(mockedActions.mock.calls[0]).toEqual([streamDeck.client, getManifest()]);
 	});
 });
