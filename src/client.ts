@@ -372,7 +372,7 @@ export class StreamDeckClient {
 	 *   connectedDate: new Date()
 	 * })
 	 */
-	public setGlobalSettings(settings: unknown): Promise<void> {
+	public setGlobalSettings<T>(settings: Settings<T>): Promise<void> {
 		return this.connection.send({
 			event: "setGlobalSettings",
 			context: this.connection.registrationParameters.pluginUUID,
@@ -409,8 +409,12 @@ export class StreamDeckClient {
 	 * @param context Unique identifier of the action instance whose settings will be updated.
 	 * @param settings Settings to associate with the action instance.
 	 * @returns `Promise` resolved when the {@link settings} are sent to Stream Deck.
+	 * @example
+	 * streamDeck.client.setSettings(ctx, {
+	 *   name: "Elgato"
+	 * })
 	 */
-	public setSettings(context: string, settings: unknown): Promise<void> {
+	public setSettings<T>(context: string, settings: Settings<T>): Promise<void> {
 		return this.connection.send({
 			event: "setSettings",
 			context,
@@ -499,3 +503,12 @@ export class StreamDeckClient {
 		});
 	}
 }
+
+/**
+ * Defines the object structure of settings that can be persisted within Stream Deck. Settings are persisted as JSON objects, and can only include primitive types, and objects.
+ */
+export type Settings<T> = {
+	[K in keyof T]: T[K] extends (...args: unknown[]) => unknown ? never : unknown;
+}[keyof T] extends never
+	? never
+	: T;

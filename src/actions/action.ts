@@ -1,4 +1,4 @@
-import type { StreamDeckClient } from "../client";
+import type { Settings, StreamDeckClient } from "../client";
 import { State } from "../connectivity/events";
 import { FeedbackPayload } from "../connectivity/layouts";
 import { Target } from "../connectivity/target";
@@ -117,8 +117,12 @@ export class Action {
 	 * Sets the {@link settings} associated with this action instance. Use in conjunction with {@link Action.getSettings}.
 	 * @param settings Settings to persist.
 	 * @returns `Promise` resolved when the {@link settings} are sent to Stream Deck.
+	 * @example
+	 * action.setSettings({
+	 *   name: "Elgato"
+	 * })
 	 */
-	public setSettings(settings: unknown): Promise<void> {
+	public setSettings<T>(settings: Settings<T>): Promise<void> {
 		return this.client.setSettings(this.id, settings);
 	}
 
