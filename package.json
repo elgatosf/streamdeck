@@ -4,8 +4,13 @@
 	"description": "The official Node.js SDK for creating Stream Deck plugins.",
 	"main": "./dist/index.js",
 	"types": "./dist/index.d.ts",
+	"files": [
+		"dist/**/*.d.ts",
+		"dist/**/*.js",
+		"schemas/**/*.json"
+	],
 	"scripts": {
-		"build": "tsc --project tsconfig.build.json",
+		"build": "rm -rf ./dist/ && tsc --project tsconfig.build.json",
 		"generate-schemas": "ts-node ./scripts/generate-schemas.ts",
 		"lint": "eslint . --ext .ts --max-warnings 0",
 		"lint:fix": "prettier --config .prettierrc src/**/*.ts --write",
@@ -16,19 +21,22 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/elgatosf/streamdeck-node.git"
+		"url": "git+https://github.com/elgatosf/streamdeck.git"
 	},
 	"keywords": [
+		"elgato",
 		"stream-deck",
-		"node",
-		"sdk",
-		"plugins"
+		"plugins",
+		"sdk"
 	],
-	"author": "Elgato",
-	"bugs": {
-		"url": "https://github.com/elgatosf/streamdeck-node/issues"
+	"author": {
+		"name": "Elgato",
+		"url": "https://www.elgato.com"
 	},
-	"homepage": "https://github.com/elgatosf/streamdeck-node#readme",
+	"bugs": {
+		"url": "https://github.com/elgatosf/streamdeck/issues"
+	},
+	"homepage": "https://github.com/elgatosf/streamdeck#readme",
 	"devDependencies": {
 		"@babel/core": "^7.22.5",
 		"@babel/preset-env": "^7.22.5",
