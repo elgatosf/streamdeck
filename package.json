@@ -33,6 +33,7 @@
 		"name": "Elgato",
 		"url": "https://www.elgato.com"
 	},
+	"license": "MIT",
 	"bugs": {
 		"url": "https://github.com/elgatosf/streamdeck/issues"
 	},

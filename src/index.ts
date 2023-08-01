@@ -1,3 +1,9 @@
+/**!
+ * @author Elgato
+ * @module elgato/streamdeck
+ * @license MIT
+ * @copyright Copyright (c) 2023 Corsair Memory Inc.
+ */
 import { ActionsController } from "./actions/actions-controller";
 import { StreamDeckClient } from "./client";
 import { StreamDeckConnection } from "./connectivity/connection";
