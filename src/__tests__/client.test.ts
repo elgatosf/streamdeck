@@ -584,58 +584,58 @@ describe("StreamDeckClient", () => {
 	/**
 	 * Asserts {@link StreamDeckClient.openUrl} sends the command to the underlying {@link StreamDeckConnection}.
 	 */
-	it("Sends openUrl", () => {
+	it("Sends openUrl", async () => {
 		// Arrange.
 		const connection = new StreamDeckConnection();
 		const client = new StreamDeckClient(connection, new Map<string, Device>());
 
 		// Act.
-		client.openUrl("https://www.elgato.com");
+		await client.openUrl("https://www.elgato.com");
 
 		// Assert.
 		expect(connection.send).toHaveBeenCalledTimes(1);
-		expect(connection.send).toHaveBeenCalledWith({
+		expect(connection.send).toHaveBeenCalledWith<[OpenUrl]>({
 			event: "openUrl",
 			payload: {
 				url: "https://www.elgato.com"
 			}
-		} as OpenUrl);
+		});
 	});
 
 	/**
 	 * Assert {@link StreamDeckClient.sendToPropertyInspector} sends the command to the underlying {@link StreamDeckConnection}.
 	 */
-	it("Sends sendToPropertyInspector", () => {
+	it("Sends sendToPropertyInspector", async () => {
 		// Arrange.
 		const connection = new StreamDeckConnection();
 		const client = new StreamDeckClient(connection, new Map<string, Device>());
 
 		// Act.
-		client.sendToPropertyInspector("ABC123", {
+		await client.sendToPropertyInspector("ABC123", {
 			name: "Elgato"
 		});
 
 		// Assert.
 		expect(connection.send).toHaveBeenCalledTimes(1);
-		expect(connection.send).toHaveBeenCalledWith({
+		expect(connection.send).toHaveBeenCalledWith<[SendToPropertyInspector]>({
 			event: "sendToPropertyInspector",
 			context: "ABC123",
 			payload: {
 				name: "Elgato"
 			}
-		} as SendToPropertyInspector);
+		});
 	});
 
 	/**
 	 * Asserts {@link StreamDeckClient.setFeedback} sends the command to the underlying {@link StreamDeckConnection}.
 	 */
-	it("Sends setFeedback", () => {
+	it("Sends setFeedback", async () => {
 		// Arrange.
 		const connection = new StreamDeckConnection();
 		const client = new StreamDeckClient(connection, new Map<string, Device>());
 
 		// Act.
-		client.setFeedback("ABC123", {
+		await client.setFeedback("ABC123", {
 			key1: {
 				value: "Hello"
 			},
@@ -644,7 +644,7 @@ describe("StreamDeckClient", () => {
 
 		// Assert.
 		expect(connection.send).toHaveBeenCalledTimes(1);
-		expect(connection.send).toHaveBeenCalledWith({
+		expect(connection.send).toHaveBeenCalledWith<[SetFeedback]>({
 			event: "setFeedback",
 			context: "ABC123",
 			payload: {
@@ -653,71 +653,71 @@ describe("StreamDeckClient", () => {
 				},
 				key2: 13
 			}
-		} as SetFeedback);
+		});
 	});
 
 	/**
 	 * Asserts {@link StreamDeckClient.setFeedbackLayout} sends the command to the underlying {@link StreamDeckConnection}.
 	 */
-	it("Sends setFeedback", () => {
+	it("Sends setFeedback", async () => {
 		// Arrange.
 		const connection = new StreamDeckConnection();
 		const client = new StreamDeckClient(connection, new Map<string, Device>());
 
 		// Act.
-		client.setFeedbackLayout("ABC123", "./layouts/custom.json");
+		await client.setFeedbackLayout("ABC123", "./layouts/custom.json");
 
 		// Assert.
 		expect(connection.send).toHaveBeenCalledTimes(1);
-		expect(connection.send).toHaveBeenCalledWith({
+		expect(connection.send).toHaveBeenCalledWith<[SetFeedbackLayout]>({
 			event: "setFeedbackLayout",
 			context: "ABC123",
 			payload: {
 				layout: "./layouts/custom.json"
 			}
-		} as SetFeedbackLayout);
+		});
 	});
 
 	/**
 	 * Asserts {@link StreamDeckClient.setGlobalSettings} sends the command to the underlying {@link StreamDeckConnection}.
 	 */
-	it("Sends setGlobalSettings", () => {
+	it("Sends setGlobalSettings", async () => {
 		// Arrange.
 		const connection = new StreamDeckConnection();
 		const client = new StreamDeckClient(connection, new Map<string, Device>());
 
 		// Act.
-		client.setGlobalSettings({
+		await client.setGlobalSettings({
 			name: "Elgato"
 		});
 
 		// Assert.
 		expect(connection.send).toHaveBeenCalledTimes(1);
-		expect(connection.send).toHaveBeenCalledWith({
+		expect(connection.send).toHaveBeenCalledWith<[SetGlobalSettings]>({
 			event: "setGlobalSettings",
 			context: connection.registrationParameters.pluginUUID,
 			payload: {
 				name: "Elgato"
 			}
-		} as SetGlobalSettings);
+		});
 	});
 
 	/**
 	 * Asserts {@link StreamDeckClient.setImage} sends the command to the underlying {@link StreamDeckConnection}.
 	 */
-	it("Sends setImage", () => {
+	it("Sends setImage", async () => {
 		// Arrange.
 		const connection = new StreamDeckConnection();
 		const client = new StreamDeckClient(connection, new Map<string, Device>());
 
 		// Act.
-		client.setImage("ABC123");
-		client.setImage("XYZ789", "./imgs/test.png", 1, Target.Software);
+		await client.setImage("ABC123");
+		await client.setImage("XYZ789", "./imgs/test.png", 1, Target.Software);
 
 		// Assert.
 		expect(connection.send).toHaveBeenCalledTimes(2);
 
-		expect(connection.send).toHaveBeenNthCalledWith(1, {
+		expect(connection.send).toHaveBeenNthCalledWith<[SetImage]>(1, {
 			event: "setImage",
 			context: "ABC123",
 			payload: {
@@ -725,9 +725,9 @@ describe("StreamDeckClient", () => {
 				state: undefined,
 				target: undefined
 			}
-		} as SetImage);
+		});
 
-		expect(connection.send).toHaveBeenNthCalledWith(2, {
+		expect(connection.send).toHaveBeenNthCalledWith<[SetImage]>(2, {
 			event: "setImage",
 			context: "XYZ789",
 			payload: {
@@ -735,79 +735,79 @@ describe("StreamDeckClient", () => {
 				state: 1,
 				target: 2
 			}
-		} as SetImage);
+		});
 	});
 
 	/**
 	 * Asserts {@link StreamDeckClient.setSettings} sends the command to the underlying {@link StreamDeckConnection}.
 	 */
-	it("Sends setSettings", () => {
+	it("Sends setSettings", async () => {
 		// Arrange.
 		const connection = new StreamDeckConnection();
 		const client = new StreamDeckClient(connection, new Map<string, Device>());
 
 		// Act.
-		client.setSettings("ABC123", {
+		await client.setSettings("ABC123", {
 			name: "Elgato"
 		});
 
 		// Assert.
 		expect(connection.send).toHaveBeenCalledTimes(1);
-		expect(connection.send).toHaveBeenCalledWith({
+		expect(connection.send).toHaveBeenCalledWith<[SetSettings]>({
 			event: "setSettings",
 			context: "ABC123",
 			payload: {
 				name: "Elgato"
 			}
-		} as SetSettings);
+		});
 	});
 
 	/**
 	 * Asserts {@link StreamDeckClient.setState} sends the command to the underlying {@link StreamDeckConnection}.
 	 */
-	it("Sends setState", () => {
+	it("Sends setState", async () => {
 		// Arrange.
 		const connection = new StreamDeckConnection();
 		const client = new StreamDeckClient(connection, new Map<string, Device>());
 
 		// Act.
-		client.setState("ABC123", 0);
-		client.setState("XYZ789", 1);
+		await client.setState("ABC123", 0);
+		await client.setState("XYZ789", 1);
 
 		// Assert.
 		expect(connection.send).toHaveBeenCalledTimes(2);
-		expect(connection.send).toHaveBeenNthCalledWith(1, {
+		expect(connection.send).toHaveBeenNthCalledWith<[SetState]>(1, {
 			event: "setState",
 			context: "ABC123",
 			payload: {
 				state: 0
 			}
-		} as SetState);
+		});
 
-		expect(connection.send).toHaveBeenNthCalledWith(2, {
+		expect(connection.send).toHaveBeenNthCalledWith<[SetState]>(2, {
 			event: "setState",
 			context: "XYZ789",
 			payload: {
 				state: 1
 			}
-		} as SetState);
+		});
 	});
 
 	/**
 	 * Asserts {@link StreamDeckClient.setTitle} sends the command to the underlying {@link StreamDeckConnection}.
 	 */
-	it("Sends setTitle", () => {
+	it("Sends setTitle", async () => {
 		// Arrange.
 		const connection = new StreamDeckConnection();
 		const client = new StreamDeckClient(connection, new Map<string, Device>());
 
 		// Act.
-		client.setTitle("ABC123");
-		client.setTitle("XYZ789", "Hello world", 1, Target.Software);
+		await client.setTitle("ABC123");
+		await client.setTitle("XYZ789", "Hello world", 1, Target.Software);
 
 		// Assert.
 		expect(connection.send).toHaveBeenCalledTimes(2);
-		expect(connection.send).toHaveBeenNthCalledWith(1, {
+		expect(connection.send).toHaveBeenNthCalledWith<[SetTitle]>(1, {
 			event: "setTitle",
 			context: "ABC123",
 			payload: {
@@ -815,9 +815,9 @@ describe("StreamDeckClient", () => {
 				target: undefined,
 				title: undefined
 			}
-		} as SetTitle);
+		});
 
-		expect(connection.send).toHaveBeenNthCalledWith(2, {
+		expect(connection.send).toHaveBeenNthCalledWith<[SetTitle]>(2, {
 			event: "setTitle",
 			context: "XYZ789",
 			payload: {
@@ -825,67 +825,67 @@ describe("StreamDeckClient", () => {
 				target: 2,
 				title: "Hello world"
 			}
-		} as SetTitle);
+		});
 	});
 
 	/**
 	 * Asserts {@link StreamDeckClient.showAlert} sends the command to the underlying {@link StreamDeckConnection}.
 	 */
-	it("Sends showAlert", () => {
+	it("Sends showAlert", async () => {
 		// Arrange.
 		const connection = new StreamDeckConnection();
 		const client = new StreamDeckClient(connection, new Map<string, Device>());
 
 		// Act.
-		client.showAlert("ABC123");
+		await client.showAlert("ABC123");
 
 		// Assert.
 		expect(connection.send).toHaveBeenCalledTimes(1);
-		expect(connection.send).toHaveBeenCalledWith({
+		expect(connection.send).toHaveBeenCalledWith<[ShowAlert]>({
 			event: "showAlert",
 			context: "ABC123"
-		} as ShowAlert);
+		});
 	});
 
 	/**
 	 * Asserts {@link StreamDeckClient.showOk} sends the command to the underlying {@link StreamDeckConnection}.
 	 */
-	it("Sends showOk", () => {
+	it("Sends showOk", async () => {
 		// Arrange.
 		const connection = new StreamDeckConnection();
 		const client = new StreamDeckClient(connection, new Map<string, Device>());
 
 		// Act.
-		client.showOk("ABC123");
+		await client.showOk("ABC123");
 
 		// Assert.
 		expect(connection.send).toHaveBeenCalledTimes(1);
-		expect(connection.send).toHaveBeenCalledWith({
+		expect(connection.send).toHaveBeenCalledWith<[ShowOk]>({
 			event: "showOk",
 			context: "ABC123"
-		} as ShowOk);
+		});
 	});
 
 	/**
 	 * Asserts {@link StreamDeckClient.switchToProfile} sends the command to the underlying {@link StreamDeckConnection}.
 	 */
-	it("Sends switchToProfile", () => {
+	it("Sends switchToProfile", async () => {
 		// Arrange.
 		const connection = new StreamDeckConnection();
 		const client = new StreamDeckClient(connection, new Map<string, Device>());
 
 		// Act.
-		client.switchToProfile("Custom Profile", "DEV1");
+		await client.switchToProfile("Custom Profile", "DEV1");
 
 		// Assert.
 		expect(connection.send).toHaveBeenCalledTimes(1);
-		expect(connection.send).toHaveBeenCalledWith({
+		expect(connection.send).toHaveBeenCalledWith<[SwitchToProfile]>({
 			event: "switchToProfile",
 			context: connection.registrationParameters.pluginUUID,
 			device: "DEV1",
 			payload: {
 				profile: "Custom Profile"
 			}
-		} as SwitchToProfile);
+		});
 	});
 });
