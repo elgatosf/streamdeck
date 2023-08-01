@@ -18,7 +18,7 @@ export * from "./connectivity/layouts";
 export { Target } from "./connectivity/target";
 export * from "./events";
 export { Manifest } from "./manifest";
-export { client, devices, i18n, info, manifest, actions as router };
+export { actions, client, devices, i18n, info, manifest };
 
 const connection = new StreamDeckConnection();
 

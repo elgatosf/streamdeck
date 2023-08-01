@@ -1,11 +1,6 @@
-import { ActionsController } from "../actions/actions-controller";
-import { StreamDeckClient } from "../client";
+import type { StreamDeckClient } from "../client";
 import { registrationParameters } from "../connectivity/__mocks__/registration";
-import { StreamDeckConnection } from "../connectivity/connection";
-import { getDevices } from "../devices";
-import { i18nProvider } from "../i18n";
-import * as streamDeck from "../index";
-import { getManifest } from "../manifest";
+import type { StreamDeckConnection } from "../connectivity/connection";
 
 jest.mock("../actions/actions-controller");
 jest.mock("../common/logging");
@@ -17,43 +12,96 @@ jest.mock("../i18n");
 jest.mock("../manifest");
 
 describe("Index", () => {
-	const mockedConnection = StreamDeckConnection as jest.MockedClass<typeof StreamDeckConnection>;
+	let mockedConnection: jest.MockedClass<typeof StreamDeckConnection>;
+	let mockedClient: jest.MockedClass<typeof StreamDeckClient>;
 
-	it("Establishes single connection", () => {
+	beforeEach(async () => {
+		mockedConnection = (await require("../connectivity/connection")).StreamDeckConnection;
+		mockedClient = (await require("../client")).StreamDeckClient;
+	});
+
+	afterEach(async () => {
+		jest.resetModules();
+		jest.clearAllMocks();
+	});
+
+	it("Establishes single connection", async () => {
+		// Arrange, act.
+		await require("../index");
+
+		// Arrange.
 		expect(mockedConnection.mock.calls).toHaveLength(1);
 		expect(mockedConnection.mock.results[0].value.connect).toHaveBeenCalledTimes(1);
 	});
 
-	it("Exports info", () => {
-		expect(streamDeck.info).toBe(mockedConnection.mock.results[0].value.registrationParameters.info);
+	it("Initializes client", async () => {
+		// Arrange, act.
+		const streamDeck = await require("../index");
+
+		// Assert.
+		expect(mockedClient.mock.calls).toHaveLength(1);
+		expect(mockedClient.mock.calls[0]).toEqual([mockedConnection.mock.results[0].value]);
+		expect(streamDeck.client).toEqual(mockedClient.mock.instances[0]);
 	});
 
-	it("Initializes client", () => {
-		const mockedStreamDeckClient = StreamDeckClient as jest.MockedClass<typeof StreamDeckClient>;
-		expect(mockedStreamDeckClient.mock.calls).toHaveLength(1);
-		expect(mockedStreamDeckClient.mock.calls[0]).toEqual([mockedConnection.mock.results[0].value]);
-	});
+	it("Initializes devices", async () => {
+		// Arrange, act.
+		const { getDevices } = await require("../devices");
+		const streamDeck = await require("../index");
 
-	it("Initializes devices", () => {
+		// Assert
 		expect(jest.isMockFunction(getDevices)).toBeTruthy();
 		expect(getDevices).toHaveBeenCalledTimes(1);
 		expect(getDevices).toHaveBeenLastCalledWith(mockedConnection.mock.results[0].value);
+		expect(streamDeck.devices).toEqual(getDevices(mockedConnection.mock.results[0].value));
 	});
 
-	it("Initializes getManifest", () => {
+	it("Exports info", async () => {
+		// Arrange, act.
+		const streamDeck = await require("../index");
+
+		// Assert.
+		expect(streamDeck.info).toStrictEqual(mockedConnection.mock.results[0].value.registrationParameters.info);
+	});
+
+	it("Initializes getManifest", async () => {
+		// Arrange, act.
+		const streamDeck = await require("../index");
+		const { getManifest } = await require("../manifest");
+
+		// Assert.
 		expect(jest.isMockFunction(getManifest)).toBeTruthy();
 		expect(getManifest).toHaveBeenCalledTimes(1);
+		expect(streamDeck.manifest).toEqual(getManifest());
 	});
 
-	it("Initializes i18n", () => {
+	it("Initializes i18n", async () => {
+		// Arrange.
+		const { i18nProvider } = await require("../i18n");
 		const mockedI18nProvider = i18nProvider as jest.MockedClass<typeof i18nProvider>;
+
+		// Act.
+		const streamDeck = await require("../index");
+
+		// Assert.
 		expect(mockedI18nProvider.mock.calls).toHaveLength(1);
 		expect(mockedI18nProvider.mock.calls[0]).toEqual([registrationParameters.info.application.language]);
+		expect(streamDeck.i18n).toEqual(mockedI18nProvider.mock.instances[0]);
 	});
 
-	it("Initializes actions", () => {
+	it("Initializes actions", async () => {
+		// Arrange.
+		const { getManifest } = await require("../manifest");
+
+		const { ActionsController } = await require("../actions/actions-controller");
 		const mockedActions = ActionsController as jest.MockedClass<typeof ActionsController>;
+
+		// Act.
+		const streamDeck = await require("../index");
+
+		// Assert.
 		expect(mockedActions.mock.calls).toHaveLength(1);
 		expect(mockedActions.mock.calls[0]).toEqual([streamDeck.client, getManifest()]);
+		expect(streamDeck.actions).toEqual(mockedActions.mock.instances[0]);
 	});
 });
