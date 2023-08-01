@@ -18,17 +18,20 @@ export function getDevices(connection: StreamDeckConnection): ReadonlyMap<string
 	});
 
 	// Set newly connected devices.
-	connection.on("deviceDidConnect", (ev) => {
-		devices.set(ev.device, {
-			id: ev.device,
-			isConnected: true,
-			...ev.deviceInfo
-		});
+	connection.on("deviceDidConnect", ({ device: id, deviceInfo }) => {
+		devices.set(
+			id,
+			Object.assign<Device | object, Device>(devices.get(id) || {}, {
+				id,
+				isConnected: true,
+				...deviceInfo
+			})
+		);
 	});
 
 	// Updated disconnected devices.
-	connection.on("deviceDidDisconnect", (ev) => {
-		const device = devices.get(ev.device);
+	connection.on("deviceDidDisconnect", ({ device: id }) => {
+		const device = devices.get(id);
 		if (device !== undefined) {
 			device.isConnected = false;
 		}
