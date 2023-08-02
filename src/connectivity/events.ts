@@ -52,7 +52,7 @@ type ActionEvent<TEvent, TSettings = void, TPayload = void> = DeviceIdentifier &
 					/**
 					 * Coordinates that identify the location of the action.
 					 */
-					readonly coordinates: Coordinates;
+					readonly coordinates?: Coordinates;
 
 					/**
 					 * Settings associated with the action instance.
@@ -197,7 +197,7 @@ export type WillAppear<TSettings = unknown> = ActionEvent<
 		 * Defines the controller type the action is applicable to. **Keypad** refers to a standard action on a Stream Deck device, e.g. 1 of the 15 buttons on the Stream Deck MK.2,
 		 * or a pedal on the Stream Deck Pedal, etc., whereas an **Encoder** refers to a dial / touchscreen on the Stream Deck+.
 		 */
-		readonly controller: Controller;
+		readonly controller?: Controller;
 
 		/**
 		 * Determines whether the action is part of a multi-action.
