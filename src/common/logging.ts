@@ -1,4 +1,5 @@
 import fs from "node:fs";
+import { EOL } from "node:os";
 import path from "node:path";
 
 import { isDebugMode } from "./utils";
@@ -132,7 +133,7 @@ export class Logger {
 		};
 
 		try {
-			write(`${new Date().toISOString()} ${LogLevel[logLevel].padEnd(5)} ${message}\n`);
+			write(`${new Date().toISOString()} ${LogLevel[logLevel].padEnd(5)} ${message}${EOL}`);
 			if (error !== undefined) {
 				if (error instanceof Error && error.stack) {
 					write(`${error.stack}\n`);
