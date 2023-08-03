@@ -8,7 +8,7 @@ import { Language, supportedLanguages } from "./connectivity/registration";
 /**
  * Provides locales and translations for internalization.
  */
-export class i18nProvider {
+export class I18nProvider {
 	/**
 	 * Determines whether a log should be written when a resource could not be found.
 	 */
@@ -17,7 +17,7 @@ export class i18nProvider {
 	/**
 	 * Default language to be used when a resource does not exist for the desired language.
 	 */
-	private static readonly defaultLanguage: Language = "en";
+	private static readonly DEFAULT_LANGUAGE: Language = "en";
 
 	/**
 	 * Collection of loaded locales and their translations.
@@ -25,7 +25,7 @@ export class i18nProvider {
 	private readonly locales = new Map<Language, unknown>();
 
 	/**
-	 * Initializes a new instance of the {@link i18nProvider} class.
+	 * Initializes a new instance of the {@link I18nProvider} class.
 	 * @param language The default language to be used when retrieving translations for a given key.
 	 */
 	constructor(private readonly language: Language) {
@@ -42,7 +42,7 @@ export class i18nProvider {
 		const translation = this.translateOrDefault(key, language);
 
 		if (translation === undefined && this.logMissingKey) {
-			logger.logWarn(`"Missing translation: ${key}"`);
+			logger.logWarn(`Missing translation: ${key}`);
 		}
 
 		return translation || "";
@@ -71,13 +71,12 @@ export class i18nProvider {
 	 * Merges the default language (English) with the manifest; when there are duplicate keys, the default language resources will take precedence over the manifest.
 	 */
 	private mergeManifestWithDefault() {
-		const en = this.locales.get(i18nProvider.defaultLanguage);
 		const manifest = this.readFile(path.join(process.cwd(), "manifest.json"));
 
 		if (manifest !== undefined) {
-			this.locales.set(i18nProvider.defaultLanguage, {
+			this.locales.set(I18nProvider.DEFAULT_LANGUAGE, {
 				...manifest,
-				...(en || {})
+				...(this.locales.get(I18nProvider.DEFAULT_LANGUAGE) || {})
 			});
 		}
 	}
@@ -92,7 +91,7 @@ export class i18nProvider {
 			const contents = file.readFileSync(filePath, { flag: "r" })?.toString();
 			return JSON.parse(contents);
 		} catch (err) {
-			logger.logWarn(`Failed to load translations from ${filePath}`, err);
+			logger.logError(`Failed to load translations from ${filePath}`, err);
 		}
 	}
 
@@ -102,13 +101,13 @@ export class i18nProvider {
 	 * @param language Language to retrieve the resource from.
 	 * @returns The resource; otherwise the default language's resource, or `undefined`.
 	 */
-	private translateOrDefault(key: string, language: Language | undefined = this.language): string | undefined {
+	private translateOrDefault(key: string, language: Language = this.language): string | undefined {
 		// When the language and default are the same, only check the language.
-		if (language === i18nProvider.defaultLanguage) {
+		if (language === I18nProvider.DEFAULT_LANGUAGE) {
 			return get(key, this.locales.get(language))?.toString();
 		}
 
 		// Otherwise check the language and default.
-		return get(key, this.locales.get(language))?.toString() || get(key, this.locales.get(i18nProvider.defaultLanguage))?.toString();
+		return get(key, this.locales.get(language))?.toString() || get(key, this.locales.get(I18nProvider.DEFAULT_LANGUAGE))?.toString();
 	}
 }

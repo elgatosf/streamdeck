@@ -9,7 +9,7 @@ import { StreamDeckClient } from "./client";
 import { StreamDeckConnection } from "./connectivity/connection";
 import { RegistrationInfo } from "./connectivity/registration";
 import { getDevices } from "./devices";
-import { i18nProvider } from "./i18n";
+import { I18nProvider } from "./i18n";
 import { getManifest } from "./manifest";
 
 export { SingletonAction } from "./actions/singleton-action";
@@ -50,6 +50,6 @@ const actions = new ActionsController(client, manifest);
 /**
  * Internalization provider for retrieving translations from locally defined resources, see {@link https://docs.elgato.com/sdk/plugins/localization}
  */
-const i18n = new i18nProvider(connection.registrationParameters.info.application.language);
+const i18n = new I18nProvider(connection.registrationParameters.info.application.language);
 
 connection.connect();

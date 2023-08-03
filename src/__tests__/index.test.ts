@@ -77,8 +77,8 @@ describe("Index", () => {
 
 	it("Initializes i18n", async () => {
 		// Arrange.
-		const { i18nProvider } = await require("../i18n");
-		const mockedI18nProvider = i18nProvider as jest.MockedClass<typeof i18nProvider>;
+		const { I18nProvider } = await require("../i18n");
+		const mockedI18nProvider = I18nProvider as jest.MockedClass<typeof I18nProvider>;
 
 		// Act.
 		const streamDeck = await require("../index");
