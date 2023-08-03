@@ -9,7 +9,8 @@ const config: Config.InitialOptions = {
 	coverageReporters: ["json-summary", "text"],
 	maxWorkers: 1,
 	verbose: true,
-	roots: ["src", "test"]
+	roots: ["src", "test"],
+	preset: "ts-jest"
 };
 
 export default config;
