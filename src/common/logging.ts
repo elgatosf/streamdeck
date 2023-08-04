@@ -44,6 +44,8 @@ export class Logger {
 	constructor() {
 		this.logPath = this.getLogPath();
 		this.truncateLogs();
+
+		process.once("uncaughtException", (err) => this.logError("Process encountered uncaught exception", err));
 	}
 
 	/**
@@ -210,10 +212,3 @@ export enum LogLevel {
 	 */
 	TRACE = 4
 }
-
-/**
- * Local file logger; logs can be found within the plugins directory under the "./logs" folder. Log files are re-indexed at 50MiB, with the 10 most recent log files being retained.
- */
-export const logger = new Logger();
-
-process.once("uncaughtException", (err) => logger.logError("Process encountered uncaught exception", err));

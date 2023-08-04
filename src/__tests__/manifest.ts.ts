@@ -2,7 +2,6 @@ import fs from "node:fs";
 import path from "node:path";
 
 import { manifest as mockManifest } from "../__mocks__/manifest";
-import { logger } from "../common/logging";
 import { getManifest } from "../manifest";
 
 jest.mock("../common/logging");
@@ -39,7 +38,5 @@ describe("getManifest", () => {
 
 		// Act, assert.
 		expect(getManifest).toThrowError("Unexpected token '_', \"_\" is not valid JSON");
-		expect(logger.logError).toHaveBeenCalled();
-		expect(logger.logError).toHaveBeenCalledWith("Failed to parse manifest.", expect.any(Error));
 	});
 });

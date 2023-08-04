@@ -1,17 +1,22 @@
+import { Logger } from "../common/logging";
 import { MockStreamDeckConnection } from "../connectivity/__mocks__/connection";
 import { registrationParameters } from "../connectivity/__mocks__/registration";
 import { StreamDeckConnection } from "../connectivity/connection";
 import { DeviceType } from "../connectivity/device-info";
 import { getDevices } from "../devices";
 
+jest.mock("../common/logging");
 jest.mock("../connectivity/connection");
 
 describe("getDevices", () => {
+	let logger: Logger;
+
+	beforeEach(() => (logger = new Logger()));
 	afterEach(() => jest.clearAllMocks());
 
 	it("Adds devices from registration info", () => {
 		// Arrange.
-		const connection = new StreamDeckConnection(registrationParameters) as MockStreamDeckConnection;
+		const connection = new StreamDeckConnection(registrationParameters, logger) as MockStreamDeckConnection;
 
 		// Act.
 		const devices = getDevices(connection);
@@ -29,7 +34,7 @@ describe("getDevices", () => {
 
 	it("Adds device on deviceDidConnect", () => {
 		// Arrange.
-		const connection = new StreamDeckConnection(registrationParameters) as MockStreamDeckConnection;
+		const connection = new StreamDeckConnection(registrationParameters, logger) as MockStreamDeckConnection;
 
 		// Act.
 		const devices = getDevices(connection);
@@ -60,7 +65,7 @@ describe("getDevices", () => {
 
 	it("Updates device on deviceDidConnect", () => {
 		// Arrange.
-		const connection = new StreamDeckConnection(registrationParameters) as MockStreamDeckConnection;
+		const connection = new StreamDeckConnection(registrationParameters, logger) as MockStreamDeckConnection;
 
 		// Act.
 		const devices = getDevices(connection);
@@ -85,7 +90,7 @@ describe("getDevices", () => {
 
 	it("Updates device on deviceDidDisconnect", () => {
 		// Arrange.
-		const connection = new StreamDeckConnection(registrationParameters) as MockStreamDeckConnection;
+		const connection = new StreamDeckConnection(registrationParameters, logger) as MockStreamDeckConnection;
 
 		// Act.
 		const devices = getDevices(connection);
@@ -116,7 +121,7 @@ describe("getDevices", () => {
 
 	it("Ignores unknown devices on deviceDidDisconnect", () => {
 		// Arrange.
-		const connection = new StreamDeckConnection(registrationParameters) as MockStreamDeckConnection;
+		const connection = new StreamDeckConnection(registrationParameters, logger) as MockStreamDeckConnection;
 
 		// Act.
 		const devices = getDevices(connection);

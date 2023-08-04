@@ -2,7 +2,6 @@
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 
-import { logger } from "./common/logging";
 import { DeviceType } from "./connectivity/device-info";
 
 /**
@@ -596,15 +595,10 @@ export function getManifest(): Omit<Manifest, "$schema"> {
 		throw new Error("Failed to read manifest.json as the file does not exist.");
 	}
 
-	try {
-		return JSON.parse(
-			readFileSync(path, {
-				encoding: "utf-8",
-				flag: "r"
-			}).toString()
-		);
-	} catch (err) {
-		logger.logError("Failed to parse manifest.", err);
-		throw err;
-	}
+	return JSON.parse(
+		readFileSync(path, {
+			encoding: "utf-8",
+			flag: "r"
+		}).toString()
+	);
 }

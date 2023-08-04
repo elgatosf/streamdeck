@@ -1,6 +1,8 @@
 import { StreamDeckClient } from "../../client";
+import { Logger } from "../../common/logging";
 import type { MockStreamDeckConnection } from "../../connectivity/__mocks__/connection";
 import * as mockEvents from "../../connectivity/__mocks__/events";
+import { registrationParameters } from "../../connectivity/__mocks__/registration";
 import { GetSettings, SendToPropertyInspector, SetFeedback, SetFeedbackLayout, SetImage, SetSettings, SetState, SetTitle, ShowAlert, ShowOk } from "../../connectivity/commands";
 import { StreamDeckConnection } from "../../connectivity/connection";
 import { DidReceiveGlobalSettings } from "../../connectivity/events";
@@ -8,6 +10,7 @@ import { Target } from "../../connectivity/target";
 import { Device } from "../../devices";
 import { Action } from "../action";
 
+jest.mock("../../common/logging");
 jest.mock("../../connectivity/connection");
 
 describe("Action", () => {
@@ -241,7 +244,7 @@ describe("Action", () => {
 	 * @returns The client and its connection.
 	 */
 	function getClient() {
-		const connection = new StreamDeckConnection() as MockStreamDeckConnection;
+		const connection = new StreamDeckConnection(registrationParameters, new Logger()) as MockStreamDeckConnection;
 		return {
 			connection,
 			client: new StreamDeckClient(connection, new Map<string, Device>())

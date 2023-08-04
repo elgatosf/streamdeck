@@ -1,8 +1,9 @@
 import { manifest as mockManifest } from "../../__mocks__/manifest";
 import { StreamDeckClient } from "../../client";
-import { logger } from "../../common/logging";
+import { Logger } from "../../common/logging";
 import { MockStreamDeckConnection } from "../../connectivity/__mocks__/connection";
 import * as mockEvents from "../../connectivity/__mocks__/events";
+import { registrationParameters } from "../../connectivity/__mocks__/registration";
 import { StreamDeckConnection } from "../../connectivity/connection";
 import { Device } from "../../devices";
 import {
@@ -48,7 +49,7 @@ jest.mock("../singleton-action", () => {
 	};
 });
 
-describe("ActionService", () => {
+describe("ActionsController", () => {
 	const manifest = mockManifest;
 	const manifestId = "com.elgato.action-service.one";
 
@@ -61,12 +62,14 @@ describe("ActionService", () => {
 		}
 	];
 
+	let logger: Logger;
+	beforeEach(() => (logger = new Logger()));
 	afterEach(() => jest.clearAllMocks());
 
 	it("Warns when action does not exist in manifest", () => {
 		// Arrange.
 		const { client } = getClient();
-		const actions = new ActionsController(client, manifest);
+		const actions = new ActionsController(client, manifest, logger);
 
 		// Act.
 		actions.registerAction("com.elgato.action-service.__one", new SingletonAction());
@@ -82,7 +85,7 @@ describe("ActionService", () => {
 		const action = new SingletonAction();
 
 		// Act.
-		const actions = new ActionsController(client, manifest);
+		const actions = new ActionsController(client, manifest, logger);
 		actions.registerAction(manifestId, action);
 
 		const { device, payload, context } = connection.__emit({
@@ -108,7 +111,7 @@ describe("ActionService", () => {
 		const action = new SingletonAction();
 
 		// Act.
-		const actions = new ActionsController(client, manifest);
+		const actions = new ActionsController(client, manifest, logger);
 		actions.registerAction(manifestId, action);
 
 		const { device, payload, context } = connection.__emit({
@@ -135,7 +138,7 @@ describe("ActionService", () => {
 		const action = new SingletonAction();
 
 		// Act.
-		const actions = new ActionsController(client, manifest);
+		const actions = new ActionsController(client, manifest, logger);
 		actions.registerAction(manifestId, action);
 
 		const { device, payload, context } = connection.__emit({
@@ -162,7 +165,7 @@ describe("ActionService", () => {
 		const action = new SingletonAction();
 
 		// Act.
-		const actions = new ActionsController(client, manifest);
+		const actions = new ActionsController(client, manifest, logger);
 		actions.registerAction(manifestId, action);
 
 		const { device, payload, context } = connection.__emit({
@@ -189,7 +192,7 @@ describe("ActionService", () => {
 		const action = new SingletonAction();
 
 		// Act.
-		const actions = new ActionsController(client, manifest);
+		const actions = new ActionsController(client, manifest, logger);
 		actions.registerAction(manifestId, action);
 
 		const { device, payload, context } = connection.__emit({
@@ -216,7 +219,7 @@ describe("ActionService", () => {
 		const action = new SingletonAction();
 
 		// Act.
-		const actions = new ActionsController(client, manifest);
+		const actions = new ActionsController(client, manifest, logger);
 		actions.registerAction(manifestId, action);
 
 		const { device, payload, context } = connection.__emit({
@@ -243,7 +246,7 @@ describe("ActionService", () => {
 		const action = new SingletonAction();
 
 		// Act.
-		const actions = new ActionsController(client, manifest);
+		const actions = new ActionsController(client, manifest, logger);
 		actions.registerAction(manifestId, action);
 
 		const { device, payload, context } = connection.__emit({
@@ -270,7 +273,7 @@ describe("ActionService", () => {
 		const action = new SingletonAction();
 
 		// Act.
-		const actions = new ActionsController(client, manifest);
+		const actions = new ActionsController(client, manifest, logger);
 		actions.registerAction(manifestId, action);
 
 		const { device, context } = connection.__emit({
@@ -296,7 +299,7 @@ describe("ActionService", () => {
 		const action = new SingletonAction();
 
 		// Act.
-		const actions = new ActionsController(client, manifest);
+		const actions = new ActionsController(client, manifest, logger);
 		actions.registerAction(manifestId, action);
 
 		const { device, context } = connection.__emit({
@@ -322,7 +325,7 @@ describe("ActionService", () => {
 		const action = new SingletonAction();
 
 		// Act.
-		const actions = new ActionsController(client, manifest);
+		const actions = new ActionsController(client, manifest, logger);
 		actions.registerAction(manifestId, action);
 
 		const { payload, context } = connection.__emit({
@@ -348,7 +351,7 @@ describe("ActionService", () => {
 		const action = new SingletonAction();
 
 		// Act.
-		const actions = new ActionsController(client, manifest);
+		const actions = new ActionsController(client, manifest, logger);
 		actions.registerAction(manifestId, action);
 
 		const { device, payload, context } = connection.__emit({
@@ -375,7 +378,7 @@ describe("ActionService", () => {
 		const action = new SingletonAction();
 
 		// Act.
-		const actions = new ActionsController(client, manifest);
+		const actions = new ActionsController(client, manifest, logger);
 		actions.registerAction(manifestId, action);
 
 		const { device, payload, context } = connection.__emit({
@@ -402,7 +405,7 @@ describe("ActionService", () => {
 		const action = new SingletonAction();
 
 		// Act.
-		const actions = new ActionsController(client, manifest);
+		const actions = new ActionsController(client, manifest, logger);
 		actions.registerAction(manifestId, action);
 
 		const { device, payload, context } = connection.__emit({
@@ -429,7 +432,7 @@ describe("ActionService", () => {
 		const action = new SingletonAction();
 
 		// Act.
-		const actions = new ActionsController(client, manifest);
+		const actions = new ActionsController(client, manifest, logger);
 		actions.registerAction(manifestId, action);
 
 		const { device, payload, context } = connection.__emit({
@@ -455,7 +458,7 @@ describe("ActionService", () => {
 	 * @returns The client and its connection.
 	 */
 	function getClient() {
-		const connection = new StreamDeckConnection() as MockStreamDeckConnection;
+		const connection = new StreamDeckConnection(registrationParameters, logger) as MockStreamDeckConnection;
 		return {
 			connection,
 			client: new StreamDeckClient(connection, new Map<string, Device>())

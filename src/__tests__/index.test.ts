@@ -25,7 +25,7 @@ describe("Index", () => {
 		jest.clearAllMocks();
 	});
 
-	it("Establishes single connection", async () => {
+	it("Initializes connection", async () => {
 		// Arrange, act.
 		await require("../index");
 
@@ -64,6 +64,19 @@ describe("Index", () => {
 		expect(streamDeck.info).toStrictEqual(mockedConnection.mock.results[0].value.registrationParameters.info);
 	});
 
+	it("Initializes logger", async () => {
+		// Arrange.
+		const { Logger } = await require("../common/logging");
+		const mockedLogger = Logger as jest.MockedClass<typeof Logger>;
+
+		// Act.
+		const streamDeck = await require("../index");
+
+		// Assert.
+		expect(mockedLogger.mock.calls).toHaveLength(1);
+		expect(streamDeck.logger).toEqual(mockedLogger.mock.instances[0]);
+	});
+
 	it("Initializes getManifest", async () => {
 		// Arrange, act.
 		const streamDeck = await require("../index");
@@ -85,7 +98,7 @@ describe("Index", () => {
 
 		// Assert.
 		expect(mockedI18nProvider.mock.calls).toHaveLength(1);
-		expect(mockedI18nProvider.mock.calls[0]).toEqual([registrationParameters.info.application.language]);
+		expect(mockedI18nProvider.mock.calls[0]).toEqual([registrationParameters.info.application.language, streamDeck.logger]);
 		expect(streamDeck.i18n).toEqual(mockedI18nProvider.mock.instances[0]);
 	});
 
@@ -101,7 +114,23 @@ describe("Index", () => {
 
 		// Assert.
 		expect(mockedActions.mock.calls).toHaveLength(1);
-		expect(mockedActions.mock.calls[0]).toEqual([streamDeck.client, getManifest()]);
+		expect(mockedActions.mock.calls[0]).toEqual([streamDeck.client, getManifest(), streamDeck.logger]);
 		expect(streamDeck.actions).toEqual(mockedActions.mock.instances[0]);
+	});
+
+	it("Initializes registration parameters", async () => {
+		// Arrange.
+		const { RegistrationParameters } = await require("../connectivity/registration");
+		const mockedRegistrationParameters = RegistrationParameters as jest.MockedClass<typeof RegistrationParameters>;
+
+		const { Logger } = await require("../common/logging");
+		const mockedLogger = Logger as jest.MockedClass<typeof Logger>;
+
+		// Act.
+		await require("../index");
+
+		// Assert.
+		expect(mockedRegistrationParameters.mock.calls).toHaveLength(1);
+		expect(mockedRegistrationParameters.mock.calls[0]).toEqual([process.argv, ...mockedLogger.mock.instances]);
 	});
 });

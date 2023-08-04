@@ -1,7 +1,7 @@
 import { EventEmitter } from "node:events";
 import WebSocket from "ws";
 
-import { logger } from "../common/logging";
+import type { Logger } from "../common/logging";
 import { PromiseCompletionSource } from "../common/promises";
 import { Command } from "./commands";
 import { Event, EventIdentifier } from "./events";
@@ -31,8 +31,9 @@ export class StreamDeckConnection {
 	 * Initializes a new instance of the {@link StreamDeckConnection} class.
 	 * @param registrationParameters Registration parameters used to establish a connection with the Stream Deck; these are automatically supplied as part of the command line arguments
 	 * when the plugin is ran by the Stream Deck.
+	 * @param logger Logger responsible for logging messages.
 	 */
-	constructor(public readonly registrationParameters = new RegistrationParameters(process.argv)) {}
+	constructor(public readonly registrationParameters: RegistrationParameters, private readonly logger: Logger) {}
 
 	/**
 	 * Establishes a connection with the Stream Deck, allowing for the plugin to send and receive messages.
@@ -43,7 +44,7 @@ export class StreamDeckConnection {
 			return;
 		}
 
-		logger.logDebug("Connecting to Stream Deck.");
+		this.logger.logDebug("Connecting to Stream Deck.");
 		this.ws = new WebSocket(`ws://127.0.0.1:${this.registrationParameters.port}`);
 		this.ws.on("message", (data) => this.propagateMessage(data));
 		this.ws.on("open", () => {
@@ -57,9 +58,9 @@ export class StreamDeckConnection {
 
 				// Web socket established a connection with the Stream Deck and the plugin was registered.
 				this.connection.setResult(this.ws);
-				logger.logDebug("Successfully connected to Stream Deck.");
+				this.logger.logDebug("Successfully connected to Stream Deck.");
 			} else {
-				logger.logError("Failed to connect to Stream Deck: Web Socket connection is undefined.");
+				this.logger.logError("Failed to connect to Stream Deck: Web Socket connection is undefined.");
 			}
 		});
 	}
@@ -108,7 +109,7 @@ export class StreamDeckConnection {
 		const connection = await this.connection.promise;
 		const message = JSON.stringify(command);
 
-		logger.logTrace(message);
+		this.logger.logTrace(message);
 		connection.send(message);
 	}
 
@@ -120,13 +121,13 @@ export class StreamDeckConnection {
 		try {
 			const message = JSON.parse(data.toString());
 			if (message.event) {
-				logger.logTrace(`${data}`);
+				this.logger.logTrace(`${data}`);
 				this.eventEmitter.emit(message.event, message);
 			} else {
-				logger.logWarn(`Received unknown message: ${data}`);
+				this.logger.logWarn(`Received unknown message: ${data}`);
 			}
 		} catch (err) {
-			logger.logError(`Failed to parse message: ${data}`, err);
+			this.logger.logError(`Failed to parse message: ${data}`, err);
 		}
 	}
 }

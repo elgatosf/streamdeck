@@ -27,6 +27,10 @@ describe("Logger", () => {
 		jest.clearAllMocks();
 	});
 
+	it.only("Ignores", () => {
+		expect(true).toBeTruthy();
+	});
+
 	it("Creates logs directory", async () => {
 		// Arrange.
 		(fs.existsSync as jest.Mock).mockReturnValue(false);

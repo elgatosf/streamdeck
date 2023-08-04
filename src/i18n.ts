@@ -1,7 +1,7 @@
 import file from "node:fs";
 import path from "node:path";
 
-import { logger } from "./common/logging";
+import type { Logger } from "./common/logging";
 import { get } from "./common/utils";
 import { Language, supportedLanguages } from "./connectivity/registration";
 
@@ -27,8 +27,9 @@ export class I18nProvider {
 	/**
 	 * Initializes a new instance of the {@link I18nProvider} class.
 	 * @param language The default language to be used when retrieving translations for a given key.
+	 * @param logger Logger responsible for logging messages.
 	 */
-	constructor(private readonly language: Language) {
+	constructor(private readonly language: Language, private readonly logger: Logger) {
 		this.loadLocales();
 	}
 
@@ -42,7 +43,7 @@ export class I18nProvider {
 		const translation = this.translateOrDefault(key, language);
 
 		if (translation === undefined && this.logMissingKey) {
-			logger.logWarn(`Missing translation: ${key}`);
+			this.logger.logWarn(`Missing translation: ${key}`);
 		}
 
 		return translation || "";
@@ -91,7 +92,7 @@ export class I18nProvider {
 			const contents = file.readFileSync(filePath, { flag: "r" })?.toString();
 			return JSON.parse(contents);
 		} catch (err) {
-			logger.logError(`Failed to load translations from ${filePath}`, err);
+			this.logger.logError(`Failed to load translations from ${filePath}`, err);
 		}
 	}
 
