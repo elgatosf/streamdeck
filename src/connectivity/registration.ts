@@ -2,6 +2,31 @@ import type { Logger } from "../common/logging";
 import { DeviceInfo } from "./device-info";
 
 /**
+ * Defines the type of argument supplied by Stream Deck.
+ */
+enum Argument {
+	/**
+	 * Identifies the argument that specifies the web socket port that Stream Deck is listening on.
+	 */
+	Port = "-port",
+
+	/**
+	 * Identifies the argument that supplies information about the Stream Deck and the plugin.
+	 */
+	Info = "-info",
+
+	/**
+	 * Identifies the argument that specifies the unique identifier that can be used when registering the plugin.
+	 */
+	PluginUUID = "-pluginUUID",
+
+	/**
+	 * Identifies the argument that specifies the event to be sent to Stream Deck as part of the registration procedure.
+	 */
+	RegisterEvent = "-registerEvent"
+}
+
+/**
  * Registration information supplied by the Stream Deck when launching the plugin, that enables the plugin to establish a secure connection with the Stream Deck.
  */
 export class RegistrationParameters {
@@ -35,27 +60,23 @@ export class RegistrationParameters {
 			const param = args[i];
 			const value = args[++i];
 
-			if (value === undefined || value === null) {
-				throw new Error(`Failed to parse registration information: The ${param} parameter cannot be undefined or null.`);
-			}
-
 			switch (param) {
-				case "-port":
+				case Argument.Port:
 					logger.logDebug(`port=${value}`);
 					this.port = value;
 					break;
 
-				case "-pluginUUID":
+				case Argument.PluginUUID:
 					logger.logDebug(`pluginUUID=${value}`);
 					this.pluginUUID = value;
 					break;
 
-				case "-registerEvent":
+				case Argument.RegisterEvent:
 					logger.logDebug(`registerEvent=${value}`);
 					this.registerEvent = value;
 					break;
 
-				case "-info":
+				case Argument.Info:
 					logger.logDebug(`info=${value}`);
 					this.info = JSON.parse(value);
 					break;
@@ -66,26 +87,20 @@ export class RegistrationParameters {
 			}
 		}
 
-		const undefinedArgs = [];
+		const invalidArgs: string[] = [];
+		const validate = (name: string, value: unknown) => {
+			if (value === undefined) {
+				invalidArgs.push(name);
+			}
+		};
 
-		if (this.port === undefined) {
-			undefinedArgs.push("-port");
-		}
+		validate(Argument.Port, this.port);
+		validate(Argument.PluginUUID, this.pluginUUID);
+		validate(Argument.RegisterEvent, this.registerEvent);
+		validate(Argument.Info, this.info);
 
-		if (this.pluginUUID === undefined) {
-			undefinedArgs.push("-pluginUUID");
-		}
-
-		if (this.registerEvent === undefined) {
-			undefinedArgs.push("-registerEvent");
-		}
-
-		if (this.info === undefined) {
-			undefinedArgs.push("-info");
-		}
-
-		if (undefinedArgs.length > 0) {
-			throw new Error(`Unable to establish a connection with Stream Deck, missing command line arguments: ${undefinedArgs.join(", ")}`);
+		if (invalidArgs.length > 0) {
+			throw new Error(`Unable to establish a connection with Stream Deck, missing command line arguments: ${invalidArgs.join(", ")}`);
 		}
 	}
 }

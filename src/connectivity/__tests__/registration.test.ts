@@ -28,6 +28,31 @@ describe("Registration Parameters", () => {
 		expect(regParams.info.plugin.version).toBe("0.1.0");
 	});
 
+	it("Ignores unknown arguments", () => {
+		// Arrange, act.
+		const regParams = new RegistrationParameters([...port, "-other", "Hello world", ...pluginUUID, ...registerEvent, ...info], logger);
+
+		// Assert.
+		expect(regParams.port).toBe("12345");
+		expect(regParams.pluginUUID).toBe("abc123");
+		expect(regParams.registerEvent).toBe("test_event");
+		expect(regParams.info).not.toBeUndefined();
+		expect(regParams.info.plugin.uuid).toBe("com.elgato.test");
+		expect(regParams.info.plugin.version).toBe("0.1.0");
+	});
+
+	it("Handles uneven arguments", () => {
+		const regParams = new RegistrationParameters([...port, ...pluginUUID, "-bool", ...registerEvent, ...info], logger);
+
+		// Assert.
+		expect(regParams.port).toBe("12345");
+		expect(regParams.pluginUUID).toBe("abc123");
+		expect(regParams.registerEvent).toBe("test_event");
+		expect(regParams.info).not.toBeUndefined();
+		expect(regParams.info.plugin.uuid).toBe("com.elgato.test");
+		expect(regParams.info.plugin.version).toBe("0.1.0");
+	});
+
 	it("Logs arguments", () => {
 		// Arrange, act.
 		const regParams = new RegistrationParameters([...port, ...pluginUUID, ...registerEvent, ...info], logger);
