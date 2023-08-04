@@ -1,9 +1,7 @@
+import { getMockClient } from "../../test/client";
 import { Action } from "../actions/action";
 import { StreamDeckClient } from "../client";
-import { Logger } from "../common/logging";
-import { MockStreamDeckConnection } from "../connectivity/__mocks__/connection";
 import * as mockEvents from "../connectivity/__mocks__/events";
-import { registrationParameters } from "../connectivity/__mocks__/registration";
 import {
 	GetGlobalSettings,
 	GetSettings,
@@ -54,7 +52,7 @@ describe("StreamDeckClient", () => {
 	 */
 	it("Can getGlobalSettings", async () => {
 		// Arrange.
-		const { connection, client } = getClient();
+		const { connection, client } = getMockClient();
 
 		// Act (Command).
 		const settings = client.getGlobalSettings<mockEvents.Settings>();
@@ -83,7 +81,7 @@ describe("StreamDeckClient", () => {
 	 */
 	it("Can getSettings", async () => {
 		// Arrange.
-		const { connection, client } = getClient();
+		const { connection, client } = getMockClient();
 
 		// Act (Command).
 		const settings = client.getSettings<mockEvents.Settings>(mockEvents.didReceiveSettings.context);
@@ -117,7 +115,7 @@ describe("StreamDeckClient", () => {
 	 */
 	it("Receives onApplicationDidLaunch", () => {
 		// Arrange.
-		const { connection, client } = getClient();
+		const { connection, client } = getMockClient();
 
 		const listener = jest.fn();
 		client.onApplicationDidLaunch(listener);
@@ -140,7 +138,7 @@ describe("StreamDeckClient", () => {
 	 */
 	it("Receives onApplicationDidTerminate", () => {
 		// Arrange.
-		const { connection, client } = getClient();
+		const { connection, client } = getMockClient();
 
 		const listener = jest.fn();
 		client.onApplicationDidTerminate(listener);
@@ -163,7 +161,7 @@ describe("StreamDeckClient", () => {
 	 */
 	it("Receives onDeviceDidConnect", () => {
 		// Arrange.
-		const { connection, client } = getClient();
+		const { connection, client } = getMockClient();
 
 		const listener = jest.fn();
 		client.onDeviceDidConnect(listener);
@@ -188,7 +186,7 @@ describe("StreamDeckClient", () => {
 	 */
 	it("Receives onDeviceDidDisconnect", () => {
 		// Arrange.
-		const { connection, client } = getClient();
+		const { connection, client } = getMockClient();
 
 		const listener = jest.fn();
 		client.onDeviceDidDisconnect(listener);
@@ -223,7 +221,7 @@ describe("StreamDeckClient", () => {
 			...mockEvents.deviceDidConnect.deviceInfo
 		});
 
-		const { connection, client } = getClient(devices);
+		const { connection, client } = getMockClient(devices);
 
 		const listener = jest.fn();
 		client.onDeviceDidDisconnect(listener);
@@ -248,7 +246,7 @@ describe("StreamDeckClient", () => {
 	 */
 	it("Receives onDialDown", () => {
 		// Arrange.
-		const { connection, client } = getClient();
+		const { connection, client } = getMockClient();
 
 		const listener = jest.fn();
 		client.onDialDown(listener);
@@ -271,7 +269,7 @@ describe("StreamDeckClient", () => {
 	 */
 	it("Receives onDialRotate", () => {
 		// Arrange.
-		const { connection, client } = getClient();
+		const { connection, client } = getMockClient();
 
 		const listener = jest.fn();
 		client.onDialRotate(listener);
@@ -294,7 +292,7 @@ describe("StreamDeckClient", () => {
 	 */
 	it("Receives onDialUp", () => {
 		// Arrange.
-		const { connection, client } = getClient();
+		const { connection, client } = getMockClient();
 
 		const listener = jest.fn();
 		client.onDialUp(listener);
@@ -317,7 +315,7 @@ describe("StreamDeckClient", () => {
 	 */
 	it("Receives onDidReceiveGlobalSettings", () => {
 		// Arrange.
-		const { connection, client } = getClient();
+		const { connection, client } = getMockClient();
 
 		const listener = jest.fn();
 		client.onDidReceiveGlobalSettings(listener);
@@ -340,7 +338,7 @@ describe("StreamDeckClient", () => {
 	 */
 	it("Receives onDidReceiveSettings", () => {
 		// Arrange.
-		const { connection, client } = getClient();
+		const { connection, client } = getMockClient();
 
 		const listener = jest.fn();
 		client.onDidReceiveSettings(listener);
@@ -363,7 +361,7 @@ describe("StreamDeckClient", () => {
 	 */
 	it("Receives onKeyDown", () => {
 		// Arrange.
-		const { connection, client } = getClient();
+		const { connection, client } = getMockClient();
 
 		const listener = jest.fn();
 		client.onKeyDown(listener);
@@ -386,7 +384,7 @@ describe("StreamDeckClient", () => {
 	 */
 	it("Receives onKeyUp", () => {
 		// Arrange.
-		const { connection, client } = getClient();
+		const { connection, client } = getMockClient();
 
 		const listener = jest.fn();
 		client.onKeyUp(listener);
@@ -409,7 +407,7 @@ describe("StreamDeckClient", () => {
 	 */
 	it("Receives onPropertyInspectorDidAppear", () => {
 		// Arrange.
-		const { connection, client } = getClient();
+		const { connection, client } = getMockClient();
 
 		const listener = jest.fn();
 		client.onPropertyInspectorDidAppear(listener);
@@ -431,7 +429,7 @@ describe("StreamDeckClient", () => {
 	 */
 	it("Receives onPropertyInspectorDidDisappear", () => {
 		// Arrange.
-		const { connection, client } = getClient();
+		const { connection, client } = getMockClient();
 
 		const listener = jest.fn();
 		client.onPropertyInspectorDidDisappear(listener);
@@ -453,7 +451,7 @@ describe("StreamDeckClient", () => {
 	 */
 	it("Receives onSendToPlugin", () => {
 		// Arrange.
-		const { connection, client } = getClient();
+		const { connection, client } = getMockClient();
 
 		const listener = jest.fn();
 		client.onSendToPlugin(listener);
@@ -475,7 +473,7 @@ describe("StreamDeckClient", () => {
 	 */
 	it("Receives onSystemDidWakeUp", () => {
 		// Arrange.
-		const { connection, client } = getClient();
+		const { connection, client } = getMockClient();
 
 		const listener = jest.fn();
 		client.onSystemDidWakeUp(listener);
@@ -495,7 +493,7 @@ describe("StreamDeckClient", () => {
 	 */
 	it("Receives onTitleParametersDidChange", () => {
 		// Arrange.
-		const { connection, client } = getClient();
+		const { connection, client } = getMockClient();
 
 		const listener = jest.fn();
 		client.onTitleParametersDidChange(listener);
@@ -518,7 +516,7 @@ describe("StreamDeckClient", () => {
 	 */
 	it("Receives onTouchTap", () => {
 		// Arrange.
-		const { connection, client } = getClient();
+		const { connection, client } = getMockClient();
 
 		const listener = jest.fn();
 		client.onTouchTap(listener);
@@ -541,7 +539,7 @@ describe("StreamDeckClient", () => {
 	 */
 	it("Receives onWillAppear", () => {
 		// Arrange.
-		const { connection, client } = getClient();
+		const { connection, client } = getMockClient();
 
 		const listener = jest.fn();
 		client.onWillAppear(listener);
@@ -564,7 +562,7 @@ describe("StreamDeckClient", () => {
 	 */
 	it("Receives onWillAppear", () => {
 		// Arrange.
-		const { connection, client } = getClient();
+		const { connection, client } = getMockClient();
 
 		const listener = jest.fn();
 		client.onWillDisappear(listener);
@@ -587,7 +585,7 @@ describe("StreamDeckClient", () => {
 	 */
 	it("Sends openUrl", async () => {
 		// Arrange.
-		const { connection, client } = getClient();
+		const { connection, client } = getMockClient();
 
 		// Act.
 		await client.openUrl("https://www.elgato.com");
@@ -607,7 +605,7 @@ describe("StreamDeckClient", () => {
 	 */
 	it("Sends sendToPropertyInspector", async () => {
 		// Arrange.
-		const { connection, client } = getClient();
+		const { connection, client } = getMockClient();
 
 		// Act.
 		await client.sendToPropertyInspector("ABC123", {
@@ -630,7 +628,7 @@ describe("StreamDeckClient", () => {
 	 */
 	it("Sends setFeedback", async () => {
 		// Arrange.
-		const { connection, client } = getClient();
+		const { connection, client } = getMockClient();
 
 		// Act.
 		await client.setFeedback("ABC123", {
@@ -659,7 +657,7 @@ describe("StreamDeckClient", () => {
 	 */
 	it("Sends setFeedback", async () => {
 		// Arrange.
-		const { connection, client } = getClient();
+		const { connection, client } = getMockClient();
 
 		// Act.
 		await client.setFeedbackLayout("ABC123", "./layouts/custom.json");
@@ -680,7 +678,7 @@ describe("StreamDeckClient", () => {
 	 */
 	it("Sends setGlobalSettings", async () => {
 		// Arrange.
-		const { connection, client } = getClient();
+		const { connection, client } = getMockClient();
 
 		// Act.
 		await client.setGlobalSettings({
@@ -703,7 +701,7 @@ describe("StreamDeckClient", () => {
 	 */
 	it("Sends setImage", async () => {
 		// Arrange.
-		const { connection, client } = getClient();
+		const { connection, client } = getMockClient();
 
 		// Act.
 		await client.setImage("ABC123");
@@ -738,7 +736,7 @@ describe("StreamDeckClient", () => {
 	 */
 	it("Sends setSettings", async () => {
 		// Arrange.
-		const { connection, client } = getClient();
+		const { connection, client } = getMockClient();
 
 		// Act.
 		await client.setSettings("ABC123", {
@@ -761,7 +759,7 @@ describe("StreamDeckClient", () => {
 	 */
 	it("Sends setState", async () => {
 		// Arrange.
-		const { connection, client } = getClient();
+		const { connection, client } = getMockClient();
 
 		// Act.
 		await client.setState("ABC123", 0);
@@ -791,7 +789,7 @@ describe("StreamDeckClient", () => {
 	 */
 	it("Sends setTitle", async () => {
 		// Arrange.
-		const { connection, client } = getClient();
+		const { connection, client } = getMockClient();
 
 		// Act.
 		await client.setTitle("ABC123");
@@ -825,7 +823,7 @@ describe("StreamDeckClient", () => {
 	 */
 	it("Sends showAlert", async () => {
 		// Arrange.
-		const { connection, client } = getClient();
+		const { connection, client } = getMockClient();
 
 		// Act.
 		await client.showAlert("ABC123");
@@ -843,7 +841,7 @@ describe("StreamDeckClient", () => {
 	 */
 	it("Sends showOk", async () => {
 		// Arrange.
-		const { connection, client } = getClient();
+		const { connection, client } = getMockClient();
 
 		// Act.
 		await client.showOk("ABC123");
@@ -861,7 +859,7 @@ describe("StreamDeckClient", () => {
 	 */
 	it("Sends switchToProfile", async () => {
 		// Arrange.
-		const { connection, client } = getClient();
+		const { connection, client } = getMockClient();
 
 		// Act.
 		await client.switchToProfile("Custom Profile", "DEV1");
@@ -877,17 +875,4 @@ describe("StreamDeckClient", () => {
 			}
 		});
 	});
-
-	/**
-	 * Gets the {@link StreamDeckClient} connected to a mock {@link StreamDeckConnection}
-	 * @param devices Optional devices supplied to the {@link StreamDeckClient}.
-	 * @returns The client and its connection.
-	 */
-	function getClient(devices: Map<string, Device> = new Map<string, Device>()) {
-		const connection = new StreamDeckConnection(registrationParameters, new Logger()) as MockStreamDeckConnection;
-		return {
-			connection,
-			client: new StreamDeckClient(connection, devices)
-		};
-	}
 });

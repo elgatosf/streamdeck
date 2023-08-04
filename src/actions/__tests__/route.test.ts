@@ -1,10 +1,5 @@
-import { StreamDeckClient } from "../../client";
-import { Logger } from "../../common/logging";
-import { MockStreamDeckConnection } from "../../connectivity/__mocks__/connection";
+import { getMockClient } from "../../../test/client";
 import * as mockEvents from "../../connectivity/__mocks__/events";
-import { registrationParameters } from "../../connectivity/__mocks__/registration";
-import { StreamDeckConnection } from "../../connectivity/connection";
-import { Device } from "../../devices";
 import {
 	DialDownEvent,
 	DialRotateEvent,
@@ -24,20 +19,16 @@ import { Action } from "../action";
 import { Route } from "../route";
 import type { SingletonAction } from "../singleton-action";
 
-jest.mock("../../common/logging");
-jest.mock("../../connectivity/connection");
 jest.mock("../singleton-action");
 
 describe("Route", () => {
-	let logger: Logger;
 	const manifestId = "com.elgato.action-service.one";
 
-	beforeEach(() => (logger = new Logger()));
 	afterEach(() => jest.clearAllMocks());
 
 	it("Routes onDialDown", () => {
 		// Arrange.
-		const { connection, client } = getClient();
+		const { connection, client } = getMockClient();
 		const action: SingletonAction = {
 			onDialDown: jest.fn()
 		};
@@ -64,7 +55,7 @@ describe("Route", () => {
 
 	it("Routes onDialRotate", () => {
 		// Arrange.
-		const { connection, client } = getClient();
+		const { connection, client } = getMockClient();
 		const action: SingletonAction = {
 			onDialRotate: jest.fn()
 		};
@@ -92,7 +83,7 @@ describe("Route", () => {
 
 	it("Routes onDialUp", () => {
 		// Arrange.
-		const { connection, client } = getClient();
+		const { connection, client } = getMockClient();
 		const action: SingletonAction = {
 			onDialUp: jest.fn()
 		};
@@ -120,7 +111,7 @@ describe("Route", () => {
 
 	it("Routes onDidReceiveSettings", () => {
 		// Arrange.
-		const { connection, client } = getClient();
+		const { connection, client } = getMockClient();
 		const action: SingletonAction = {
 			onDidReceiveSettings: jest.fn()
 		};
@@ -148,7 +139,7 @@ describe("Route", () => {
 
 	it("Routes onKeyDown", () => {
 		// Arrange.
-		const { connection, client } = getClient();
+		const { connection, client } = getMockClient();
 		const action: SingletonAction = {
 			onKeyDown: jest.fn()
 		};
@@ -176,7 +167,7 @@ describe("Route", () => {
 
 	it("Routes onKeyUp", () => {
 		// Arrange.
-		const { connection, client } = getClient();
+		const { connection, client } = getMockClient();
 		const action: SingletonAction = {
 			onKeyUp: jest.fn()
 		};
@@ -204,7 +195,7 @@ describe("Route", () => {
 
 	it("Routes onPropertyInspectorDidAppear", () => {
 		// Arrange.
-		const { connection, client } = getClient();
+		const { connection, client } = getMockClient();
 		const action: SingletonAction = {
 			onPropertyInspectorDidAppear: jest.fn()
 		};
@@ -231,7 +222,7 @@ describe("Route", () => {
 
 	it("Routes onPropertyInspectorDidDisappear", () => {
 		// Arrange.
-		const { connection, client } = getClient();
+		const { connection, client } = getMockClient();
 		const action: SingletonAction = {
 			onPropertyInspectorDidDisappear: jest.fn()
 		};
@@ -258,7 +249,7 @@ describe("Route", () => {
 
 	it("Routes onSendToPlugin", () => {
 		// Arrange.
-		const { connection, client } = getClient();
+		const { connection, client } = getMockClient();
 		const action: SingletonAction = {
 			onSendToPlugin: jest.fn()
 		};
@@ -285,7 +276,7 @@ describe("Route", () => {
 
 	it("Routes onTitleParametersDidChange", () => {
 		// Arrange.
-		const { connection, client } = getClient();
+		const { connection, client } = getMockClient();
 		const action: SingletonAction = {
 			onTitleParametersDidChange: jest.fn()
 		};
@@ -313,7 +304,7 @@ describe("Route", () => {
 
 	it("Routes onTouchTap", () => {
 		// Arrange.
-		const { connection, client } = getClient();
+		const { connection, client } = getMockClient();
 		const action: SingletonAction = {
 			onTouchTap: jest.fn()
 		};
@@ -341,7 +332,7 @@ describe("Route", () => {
 
 	it("Routes onWillAppear", () => {
 		// Arrange.
-		const { connection, client } = getClient();
+		const { connection, client } = getMockClient();
 		const action: SingletonAction = {
 			onWillAppear: jest.fn()
 		};
@@ -369,7 +360,7 @@ describe("Route", () => {
 
 	it("Routes onWillDisappear", () => {
 		// Arrange.
-		const { connection, client } = getClient();
+		const { connection, client } = getMockClient();
 		const action: SingletonAction = {
 			onWillDisappear: jest.fn()
 		};
@@ -397,7 +388,7 @@ describe("Route", () => {
 
 	it("Ignore undefined handlers", () => {
 		// Arrange.
-		const { connection, client } = getClient();
+		const { connection, client } = getMockClient();
 		const onSpy = jest.spyOn(connection, "on");
 
 		// Act.
@@ -406,16 +397,4 @@ describe("Route", () => {
 		// Assert.
 		expect(onSpy).not.toHaveBeenCalled();
 	});
-
-	/**
-	 * Gets the {@link StreamDeckClient} connected to a mock {@link StreamDeckConnection}
-	 * @returns The client and its connection.
-	 */
-	function getClient() {
-		const connection = new StreamDeckConnection(registrationParameters, logger) as MockStreamDeckConnection;
-		return {
-			connection,
-			client: new StreamDeckClient(connection, new Map<string, Device>())
-		};
-	}
 });

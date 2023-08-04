@@ -1,22 +1,14 @@
-import { StreamDeckClient } from "../../client";
-import { Logger } from "../../common/logging";
-import type { MockStreamDeckConnection } from "../../connectivity/__mocks__/connection";
+import { getMockClient } from "../../../test/client";
 import * as mockEvents from "../../connectivity/__mocks__/events";
-import { registrationParameters } from "../../connectivity/__mocks__/registration";
 import { GetSettings, SendToPropertyInspector, SetFeedback, SetFeedbackLayout, SetImage, SetSettings, SetState, SetTitle, ShowAlert, ShowOk } from "../../connectivity/commands";
-import { StreamDeckConnection } from "../../connectivity/connection";
 import { DidReceiveGlobalSettings } from "../../connectivity/events";
 import { Target } from "../../connectivity/target";
-import { Device } from "../../devices";
 import { Action } from "../action";
-
-jest.mock("../../common/logging");
-jest.mock("../../connectivity/connection");
 
 describe("Action", () => {
 	it("Constructor sets manifestId and id", () => {
 		// Arrange.
-		const { client } = getClient();
+		const { client } = getMockClient();
 
 		// Act.
 		const action = new Action(client, "com.elgato.test.one", "ABC123");
@@ -28,7 +20,7 @@ describe("Action", () => {
 
 	it("Can getSettings", async () => {
 		// Arrange.
-		const { connection, client } = getClient();
+		const { connection, client } = getMockClient();
 		const action = new Action(client, "com.elgato.test.one", "ABC123");
 
 		// Act (Command).
@@ -64,7 +56,7 @@ describe("Action", () => {
 
 	it("Sends sendToPropertyInspector", async () => {
 		// Arrange.
-		const { connection, client } = getClient();
+		const { connection, client } = getMockClient();
 		const action = new Action(client, "com.elgato.test.one", "ABC123");
 
 		// Act.
@@ -85,7 +77,7 @@ describe("Action", () => {
 
 	it("Sends setFeedback", async () => {
 		// Arrange.
-		const { connection, client } = getClient();
+		const { connection, client } = getMockClient();
 		const action = new Action(client, "com.elgato.test.one", "ABC123");
 
 		// Act.
@@ -108,7 +100,7 @@ describe("Action", () => {
 
 	it("Sends setFeedbackLayout", async () => {
 		// Arrange.
-		const { connection, client } = getClient();
+		const { connection, client } = getMockClient();
 		const action = new Action(client, "com.elgato.test.one", "ABC123");
 
 		// Act.
@@ -127,7 +119,7 @@ describe("Action", () => {
 
 	it("Sends setImage", async () => {
 		// Arrange.
-		const { connection, client } = getClient();
+		const { connection, client } = getMockClient();
 		const action = new Action(client, "com.elgato.test.one", "ABC123");
 
 		// Act.
@@ -148,7 +140,7 @@ describe("Action", () => {
 
 	it("Sends setSettings", async () => {
 		// Arrange.
-		const { connection, client } = getClient();
+		const { connection, client } = getMockClient();
 		const action = new Action(client, "com.elgato.test.one", "ABC123");
 
 		// Act.
@@ -169,7 +161,7 @@ describe("Action", () => {
 
 	it("Sends setState", async () => {
 		// Arrange.
-		const { connection, client } = getClient();
+		const { connection, client } = getMockClient();
 		const action = new Action(client, "com.elgato.test.one", "ABC123");
 
 		// Act.
@@ -188,7 +180,7 @@ describe("Action", () => {
 
 	it("Sends setTitle", async () => {
 		// Arrange.
-		const { connection, client } = getClient();
+		const { connection, client } = getMockClient();
 		const action = new Action(client, "com.elgato.test.one", "ABC123");
 
 		// Act.
@@ -209,7 +201,7 @@ describe("Action", () => {
 
 	it("Sends showAlert", async () => {
 		// Arrange.
-		const { connection, client } = getClient();
+		const { connection, client } = getMockClient();
 		const action = new Action(client, "com.elgato.test.one", "ABC123");
 
 		// Act.
@@ -225,7 +217,7 @@ describe("Action", () => {
 
 	it("Sends showOk", async () => {
 		// Arrange.
-		const { connection, client } = getClient();
+		const { connection, client } = getMockClient();
 		const action = new Action(client, "com.elgato.test.one", "ABC123");
 
 		// Act.
@@ -238,16 +230,4 @@ describe("Action", () => {
 			event: "showOk"
 		});
 	});
-
-	/**
-	 * Gets the {@link StreamDeckClient} connected to a mock {@link StreamDeckConnection}
-	 * @returns The client and its connection.
-	 */
-	function getClient() {
-		const connection = new StreamDeckConnection(registrationParameters, new Logger()) as MockStreamDeckConnection;
-		return {
-			connection,
-			client: new StreamDeckClient(connection, new Map<string, Device>())
-		};
-	}
 });
