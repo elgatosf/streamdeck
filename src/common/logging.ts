@@ -137,10 +137,11 @@ export class Logger {
 		try {
 			write(`${new Date().toISOString()} ${LogLevel[logLevel].padEnd(5)} ${message}${EOL}`);
 			if (error !== undefined) {
-				if (error instanceof Error && error.stack) {
-					write(`${error.stack}\n`);
-				} else {
-					write(`${error}`);
+				if (error instanceof Object && "message" in error && error.message && error.message !== "") {
+					write(`${error.message}${EOL}`);
+				}
+				if (error instanceof Object && "stack" in error && error.stack) {
+					write(`${error.stack}${EOL}`);
 				}
 			}
 		} finally {
