@@ -7,6 +7,7 @@ import type { Config } from "@jest/types";
 const config: Config.InitialOptions = {
 	collectCoverageFrom: ["src/**/*.ts", "!<rootDir>/node_modules/"],
 	coverageReporters: ["json-summary", "text"],
+	globalSetup: "./test/global-setup.ts",
 	maxWorkers: 1,
 	verbose: true,
 	roots: ["src", "test"],
