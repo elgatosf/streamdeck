@@ -1,6 +1,18 @@
 import { getMockClient } from "../../../test/client";
 import * as mockEvents from "../../connectivity/__mocks__/events";
-import { GetSettings, SendToPropertyInspector, SetFeedback, SetFeedbackLayout, SetImage, SetSettings, SetState, SetTitle, ShowAlert, ShowOk } from "../../connectivity/commands";
+import {
+	GetSettings,
+	SendToPropertyInspector,
+	SetFeedback,
+	SetFeedbackLayout,
+	SetImage,
+	SetSettings,
+	SetState,
+	SetTitle,
+	SetTriggerDescription,
+	ShowAlert,
+	ShowOk
+} from "../../connectivity/commands";
 import { DidReceiveGlobalSettings } from "../../connectivity/events";
 import { Target } from "../../connectivity/target";
 import { Action } from "../action";
@@ -195,6 +207,40 @@ describe("Action", () => {
 				title: "Hello world",
 				state: 0,
 				target: Target.Software
+			}
+		});
+	});
+
+	it("Sends setTriggerDescription", async () => {
+		// Arrange.
+		const { connection, client } = getMockClient();
+		const action = new Action(client, "com.elgato.test.one", "ABC123");
+
+		// Act.
+		await action.setTriggerDescription();
+		await action.setTriggerDescription({
+			longTouch: "Long-touch",
+			push: "Push",
+			rotate: "Rotate",
+			touch: "Touch"
+		});
+
+		// Assert.
+		expect(connection.send).toHaveBeenCalledTimes(2);
+		expect(connection.send).toHaveBeenNthCalledWith<[SetTriggerDescription]>(1, {
+			event: "setTriggerDescription",
+			context: action.id,
+			payload: {}
+		});
+
+		expect(connection.send).toHaveBeenNthCalledWith<[SetTriggerDescription]>(2, {
+			event: "setTriggerDescription",
+			context: action.id,
+			payload: {
+				longTouch: "Long-touch",
+				push: "Push",
+				rotate: "Rotate",
+				touch: "Touch"
 			}
 		});
 	});

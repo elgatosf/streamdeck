@@ -1,4 +1,5 @@
 import type { Settings, StreamDeckClient } from "../client";
+import { SetTriggerDescription } from "../connectivity/commands";
 import { State } from "../connectivity/events";
 import { FeedbackPayload } from "../connectivity/layouts";
 import { Target } from "../connectivity/target";
@@ -145,6 +146,17 @@ export class Action {
 	 */
 	public setTitle(title?: string, state: State | undefined = undefined, target: Target = Target.HardwareAndSoftware): Promise<void> {
 		return this.client.setTitle(this.id, title, state, target);
+	}
+
+	/**
+	 * Sets the trigger (interaction) {@link descriptions} associated with this action instance. Descriptions are shown within the Stream Deck application, and informs the user what
+	 * will happen when they interact with the action, e.g. rotate, touch, etc. When {@link descriptions} is `undefined`, the descriptions will be reset to the values provided as part
+	 * of the manifest. **NB** only applies to encoders as part of Stream Deck+ (dials / touchscreens).
+	 * @param descriptions Descriptions that detail the action's interaction.
+	 * @returns `Promise` resolved when the request to set the {@link descriptions} has been sent to Stream Deck.
+	 */
+	public setTriggerDescription(descriptions?: SetTriggerDescription["payload"]) {
+		return this.client.setTriggerDescription(this.id, descriptions);
 	}
 
 	/**

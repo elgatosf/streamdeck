@@ -14,6 +14,7 @@ import {
 	SetSettings,
 	SetState,
 	SetTitle,
+	SetTriggerDescription,
 	ShowAlert,
 	ShowOk,
 	SwitchToProfile
@@ -814,6 +815,42 @@ describe("StreamDeckClient", () => {
 				state: 1,
 				target: 2,
 				title: "Hello world"
+			}
+		});
+	});
+
+	/**
+	 * Asserts {@link StreamDeckClient.setTriggerDescription} sends the command to the underlying {@link StreamDeckConnection}.
+	 */
+	it("Sends setTriggerDescription", async () => {
+		// Arrange.
+		const { connection, client } = getMockClient();
+
+		// Act.
+		await client.setTriggerDescription("ABC123");
+		await client.setTriggerDescription("XYZ789", {
+			longTouch: "Long-touch",
+			push: "Push",
+			rotate: "Rotate",
+			touch: "Touch"
+		});
+
+		// Assert.
+		expect(connection.send).toHaveBeenCalledTimes(2);
+		expect(connection.send).toHaveBeenNthCalledWith<[SetTriggerDescription]>(1, {
+			event: "setTriggerDescription",
+			context: "ABC123",
+			payload: {}
+		});
+
+		expect(connection.send).toHaveBeenNthCalledWith<[SetTriggerDescription]>(2, {
+			event: "setTriggerDescription",
+			context: "XYZ789",
+			payload: {
+				longTouch: "Long-touch",
+				push: "Push",
+				rotate: "Rotate",
+				touch: "Touch"
 			}
 		});
 	});

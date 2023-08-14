@@ -168,6 +168,34 @@ export type SetState = ContextualizedCommand<
 >;
 
 /**
+ * Sets the trigger descriptions associated with an encoder action instance.
+ */
+export type SetTriggerDescription = ContextualizedCommand<
+	"setTriggerDescription",
+	{
+		/**
+		 * Touchscreen "long-touch" interaction behavior description; when `undefined`, the description will not be shown.
+		 */
+		longTouch?: string;
+
+		/**
+		 * Dial "push" (press) interaction behavior description; when `undefined`, the description will not be shown.
+		 */
+		push?: string;
+
+		/**
+		 * Dial rotation interaction behavior description; when `undefined`, the description will not be shown.
+		 */
+		rotate?: string;
+
+		/**
+		 * Touchscreen "touch" interaction behavior description; when `undefined`, the description will not be shown.
+		 */
+		touch?: string;
+	}
+>;
+
+/**
  * Switches the pre-defined profile on the specified device. **NB**, plugins can only switch to profiles included as part of the plugin and defined within the manifest, and cannot
  * switch to custom profiles created by users.
  */
@@ -207,6 +235,7 @@ export type Command =
 	| SetSettings
 	| SetState
 	| SetTitle
+	| SetTriggerDescription
 	| ShowAlert
 	| ShowOk
 	| SwitchToProfile;
