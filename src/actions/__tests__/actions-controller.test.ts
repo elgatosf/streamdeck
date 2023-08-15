@@ -1,4 +1,4 @@
-import { getMockClient } from "../../../test/client";
+import { getMockedClient } from "../../../test/mocks/client";
 import { manifest as mockManifest } from "../../__mocks__/manifest";
 import { ActionsController } from "../actions-controller";
 import { Route } from "../route";
@@ -25,7 +25,7 @@ describe("ActionsController", () => {
 	it("Adds valid routes", () => {
 		// Arrange.
 		const mockedRoute = Route as jest.MockedClass<typeof Route>;
-		const { loggerFactory, client } = getMockClient();
+		const { loggerFactory, client } = getMockedClient();
 		const action: SingletonAction = {};
 		const actions = new ActionsController(client, manifest, loggerFactory);
 
@@ -39,7 +39,7 @@ describe("ActionsController", () => {
 
 	it("Warns when action does not exist in manifest", () => {
 		// Arrange.
-		const { loggerFactory, logger, client } = getMockClient();
+		const { loggerFactory, logger, client } = getMockedClient();
 		const actions = new ActionsController(client, manifest, loggerFactory);
 
 		// Act.

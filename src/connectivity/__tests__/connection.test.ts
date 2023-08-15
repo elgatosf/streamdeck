@@ -1,7 +1,7 @@
 import WebSocket from "ws";
 
 import { emitFromAll } from "../../../test/events";
-import { getLogging } from "../../../test/mocks";
+import { getMockedLogging } from "../../../test/mocks/logging";
 import { LoggerFactory } from "../../logging";
 import { OpenUrl } from "../commands";
 import { StreamDeckConnection } from "../connection";
@@ -10,7 +10,7 @@ import { RegistrationParameters } from "../registration";
 jest.mock("ws");
 
 const mockArgv = ["-port", "12345", "-pluginUUID", "abc123", "-registerEvent", "test_event", "-info", `{"plugin":{"uuid":"com.elgato.test","version":"0.1.0"}}`];
-const regParams = new RegistrationParameters(mockArgv, getLogging().loggerFactory);
+const regParams = new RegistrationParameters(mockArgv, getMockedLogging().loggerFactory);
 
 const originalArgv = process.argv;
 
@@ -27,7 +27,7 @@ describe("StreamDeckConnection", () => {
 	 */
 	it("Does not auto-connect on construction", () => {
 		process.argv = originalArgv;
-		new StreamDeckConnection(regParams, getLogging().loggerFactory);
+		new StreamDeckConnection(regParams, getMockedLogging().loggerFactory);
 		expect(mockedWebSocket.mock.instances).toHaveLength(0);
 	});
 
@@ -36,7 +36,7 @@ describe("StreamDeckConnection", () => {
 	 */
 	it("Registers on connection", () => {
 		// Arrange.
-		const connection = new StreamDeckConnection(regParams, getLogging().loggerFactory);
+		const connection = new StreamDeckConnection(regParams, getMockedLogging().loggerFactory);
 		connection.connect();
 
 		// Act.
@@ -58,7 +58,7 @@ describe("StreamDeckConnection", () => {
 	 */
 	it("Log when WebSocket is undefined", () => {
 		// Arrange.
-		const { loggerFactory, logger } = getLogging();
+		const { loggerFactory, logger } = getMockedLogging();
 		const connection = new StreamDeckConnection(regParams, loggerFactory);
 		connection.connect();
 
@@ -77,7 +77,7 @@ describe("StreamDeckConnection", () => {
 	 */
 	it("Does not connect twice", () => {
 		// Arrange.
-		const { loggerFactory, logger } = getLogging();
+		const { loggerFactory, logger } = getMockedLogging();
 		const connection = openConnection(loggerFactory);
 
 		expect(logger.debug).toHaveBeenNthCalledWith(1, "Connecting to Stream Deck.");
@@ -95,7 +95,7 @@ describe("StreamDeckConnection", () => {
 	 */
 	it("Emits on", () => {
 		// Arrange.
-		const { loggerFactory } = getLogging();
+		const { loggerFactory } = getMockedLogging();
 		const connection = openConnection(loggerFactory);
 
 		let emitCount = 0;
@@ -115,7 +115,7 @@ describe("StreamDeckConnection", () => {
 	 */
 	it("Emits once", () => {
 		// Arrange.
-		const { loggerFactory } = getLogging();
+		const { loggerFactory } = getMockedLogging();
 		const connection = openConnection(loggerFactory);
 
 		let emitCount = 0;
@@ -135,7 +135,7 @@ describe("StreamDeckConnection", () => {
 	 */
 	it("Removes listeners", () => {
 		// Arrange.
-		const { loggerFactory } = getLogging();
+		const { loggerFactory } = getMockedLogging();
 		const connection = openConnection(loggerFactory);
 
 		let emitCount = 0;
@@ -157,7 +157,7 @@ describe("StreamDeckConnection", () => {
 	 */
 	it("Sends to the WebSocket", async () => {
 		// Arrange.
-		const { loggerFactory } = getLogging();
+		const { loggerFactory } = getMockedLogging();
 		const connection = openConnection(loggerFactory);
 
 		const command: OpenUrl = {
@@ -179,7 +179,7 @@ describe("StreamDeckConnection", () => {
 	 */
 	it("Logs unknown messages", () => {
 		// Arrange.
-		const { loggerFactory, logger } = getLogging();
+		const { loggerFactory, logger } = getMockedLogging();
 		openConnection(loggerFactory);
 
 		const msg = JSON.stringify({ name: "Hello world " });
@@ -197,7 +197,7 @@ describe("StreamDeckConnection", () => {
 	 */
 	it("Logs unreadable messages", () => {
 		// Arrange.
-		const { loggerFactory, logger } = getLogging();
+		const { loggerFactory, logger } = getMockedLogging();
 		openConnection(loggerFactory);
 
 		// Act.

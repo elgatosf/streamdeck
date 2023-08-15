@@ -1,7 +1,7 @@
 import fs, { Dirent } from "node:fs";
 import path from "node:path";
 
-import { getLogging } from "../../test/mocks";
+import { getMockedLogging } from "../../test/mocks/logging";
 import { I18nProvider } from "../i18n";
 
 describe("I18nProvider", () => {
@@ -32,7 +32,7 @@ describe("I18nProvider", () => {
 		jest.spyOn(fs, "readdirSync").mockReturnValueOnce(["de.json", "en.json", "es.json", "fr.json", "ja.json", "zh_CN.json", "other.json"] as unknown[] as Dirent[]);
 		const readFileSyncSpy = jest.spyOn(fs, "readFileSync").mockImplementation(() => "{}");
 
-		const { loggerFactory } = getLogging();
+		const { loggerFactory } = getMockedLogging();
 
 		// Act.
 		const i18n = new I18nProvider("en", loggerFactory);
@@ -56,7 +56,7 @@ describe("I18nProvider", () => {
 		jest.spyOn(fs, "readdirSync").mockReturnValue(["de.json", "en.json", "fr.json"] as unknown[] as Dirent[]);
 		jest.spyOn(fs, "readFileSync").mockImplementation((path) => JSON.stringify(mockedResources.get(path as string)));
 
-		const { loggerFactory } = getLogging();
+		const { loggerFactory } = getMockedLogging();
 		const i18n = new I18nProvider("en", loggerFactory);
 
 		// Act.
@@ -73,7 +73,7 @@ describe("I18nProvider", () => {
 		jest.spyOn(fs, "readdirSync").mockReturnValue(["de.json", "en.json", "fr.json"] as unknown[] as Dirent[]);
 		jest.spyOn(fs, "readFileSync").mockImplementation((path) => JSON.stringify(mockedResources.get(path as string)));
 
-		const { loggerFactory } = getLogging();
+		const { loggerFactory } = getMockedLogging();
 		const i18n = new I18nProvider("de", loggerFactory);
 
 		// Act.
@@ -92,7 +92,7 @@ describe("I18nProvider", () => {
 		jest.spyOn(fs, "readdirSync").mockReturnValue([]);
 		jest.spyOn(fs, "readFileSync").mockReturnValue("{}");
 
-		const { loggerFactory, logger } = getLogging();
+		const { loggerFactory, logger } = getMockedLogging();
 		const i18n = new I18nProvider("en", loggerFactory);
 
 		// Act.
@@ -110,7 +110,7 @@ describe("I18nProvider", () => {
 		jest.spyOn(fs, "readdirSync").mockReturnValue([]);
 		jest.spyOn(fs, "readFileSync").mockReturnValue("{}");
 
-		const { loggerFactory, logger } = getLogging();
+		const { loggerFactory, logger } = getMockedLogging();
 		const i18n = new I18nProvider("en", loggerFactory);
 
 		// Act.
@@ -126,7 +126,7 @@ describe("I18nProvider", () => {
 		// Arrange.
 		jest.spyOn(fs, "readdirSync").mockReturnValue(["en.json"] as unknown[] as Dirent[]);
 		jest.spyOn(fs, "readFileSync").mockReturnValue("{INVALID}");
-		const { loggerFactory, logger } = getLogging();
+		const { loggerFactory, logger } = getMockedLogging();
 
 		// Act.
 		const i18n = new I18nProvider("en", loggerFactory);
@@ -148,7 +148,7 @@ describe("I18nProvider", () => {
 			})
 		);
 
-		const { loggerFactory } = getLogging();
+		const { loggerFactory } = getMockedLogging();
 		const i18n = new I18nProvider("en", loggerFactory);
 
 		// Act.

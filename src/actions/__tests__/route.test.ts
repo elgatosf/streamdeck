@@ -1,4 +1,4 @@
-import { getMockClient } from "../../../test/client";
+import { getMockedClient } from "../../../test/mocks/client";
 import * as mockEvents from "../../connectivity/__mocks__/events";
 import {
 	DialDownEvent,
@@ -28,7 +28,7 @@ describe("Route", () => {
 
 	it("Routes onDialDown", () => {
 		// Arrange.
-		const { connection, client } = getMockClient();
+		const { connection, client } = getMockedClient();
 		const action: SingletonAction = {
 			onDialDown: jest.fn()
 		};
@@ -55,7 +55,7 @@ describe("Route", () => {
 
 	it("Routes onDialRotate", () => {
 		// Arrange.
-		const { connection, client } = getMockClient();
+		const { connection, client } = getMockedClient();
 		const action: SingletonAction = {
 			onDialRotate: jest.fn()
 		};
@@ -83,7 +83,7 @@ describe("Route", () => {
 
 	it("Routes onDialUp", () => {
 		// Arrange.
-		const { connection, client } = getMockClient();
+		const { connection, client } = getMockedClient();
 		const action: SingletonAction = {
 			onDialUp: jest.fn()
 		};
@@ -111,7 +111,7 @@ describe("Route", () => {
 
 	it("Routes onDidReceiveSettings", () => {
 		// Arrange.
-		const { connection, client } = getMockClient();
+		const { connection, client } = getMockedClient();
 		const action: SingletonAction = {
 			onDidReceiveSettings: jest.fn()
 		};
@@ -139,7 +139,7 @@ describe("Route", () => {
 
 	it("Routes onKeyDown", () => {
 		// Arrange.
-		const { connection, client } = getMockClient();
+		const { connection, client } = getMockedClient();
 		const action: SingletonAction = {
 			onKeyDown: jest.fn()
 		};
@@ -167,7 +167,7 @@ describe("Route", () => {
 
 	it("Routes onKeyUp", () => {
 		// Arrange.
-		const { connection, client } = getMockClient();
+		const { connection, client } = getMockedClient();
 		const action: SingletonAction = {
 			onKeyUp: jest.fn()
 		};
@@ -195,7 +195,7 @@ describe("Route", () => {
 
 	it("Routes onPropertyInspectorDidAppear", () => {
 		// Arrange.
-		const { connection, client } = getMockClient();
+		const { connection, client } = getMockedClient();
 		const action: SingletonAction = {
 			onPropertyInspectorDidAppear: jest.fn()
 		};
@@ -222,7 +222,7 @@ describe("Route", () => {
 
 	it("Routes onPropertyInspectorDidDisappear", () => {
 		// Arrange.
-		const { connection, client } = getMockClient();
+		const { connection, client } = getMockedClient();
 		const action: SingletonAction = {
 			onPropertyInspectorDidDisappear: jest.fn()
 		};
@@ -249,7 +249,7 @@ describe("Route", () => {
 
 	it("Routes onSendToPlugin", () => {
 		// Arrange.
-		const { connection, client } = getMockClient();
+		const { connection, client } = getMockedClient();
 		const action: SingletonAction = {
 			onSendToPlugin: jest.fn()
 		};
@@ -276,7 +276,7 @@ describe("Route", () => {
 
 	it("Routes onTitleParametersDidChange", () => {
 		// Arrange.
-		const { connection, client } = getMockClient();
+		const { connection, client } = getMockedClient();
 		const action: SingletonAction = {
 			onTitleParametersDidChange: jest.fn()
 		};
@@ -304,7 +304,7 @@ describe("Route", () => {
 
 	it("Routes onTouchTap", () => {
 		// Arrange.
-		const { connection, client } = getMockClient();
+		const { connection, client } = getMockedClient();
 		const action: SingletonAction = {
 			onTouchTap: jest.fn()
 		};
@@ -332,7 +332,7 @@ describe("Route", () => {
 
 	it("Routes onWillAppear", () => {
 		// Arrange.
-		const { connection, client } = getMockClient();
+		const { connection, client } = getMockedClient();
 		const action: SingletonAction = {
 			onWillAppear: jest.fn()
 		};
@@ -360,7 +360,7 @@ describe("Route", () => {
 
 	it("Routes onWillDisappear", () => {
 		// Arrange.
-		const { connection, client } = getMockClient();
+		const { connection, client } = getMockedClient();
 		const action: SingletonAction = {
 			onWillDisappear: jest.fn()
 		};
@@ -388,7 +388,7 @@ describe("Route", () => {
 
 	it("Ignore undefined handlers", () => {
 		// Arrange.
-		const { connection, client } = getMockClient();
+		const { connection, client } = getMockedClient();
 		const onSpy = jest.spyOn(connection, "on");
 
 		// Act.

@@ -1,4 +1,4 @@
-import { getLogging } from "../../test/mocks";
+import { getMockedLogging } from "../../test/mocks/logging";
 import { MockStreamDeckConnection } from "../connectivity/__mocks__/connection";
 import { registrationParameters } from "../connectivity/__mocks__/registration";
 import { StreamDeckConnection } from "../connectivity/connection";
@@ -10,7 +10,7 @@ jest.mock("../connectivity/connection");
 describe("getDevices", () => {
 	it("Adds devices from registration info", () => {
 		// Arrange.
-		const { loggerFactory } = getLogging();
+		const { loggerFactory } = getMockedLogging();
 		const connection = new StreamDeckConnection(registrationParameters, loggerFactory) as MockStreamDeckConnection;
 
 		// Act.
@@ -29,7 +29,7 @@ describe("getDevices", () => {
 
 	it("Adds device on deviceDidConnect", () => {
 		// Arrange.
-		const { loggerFactory } = getLogging();
+		const { loggerFactory } = getMockedLogging();
 		const connection = new StreamDeckConnection(registrationParameters, loggerFactory) as MockStreamDeckConnection;
 
 		// Act.
@@ -61,7 +61,7 @@ describe("getDevices", () => {
 
 	it("Updates device on deviceDidConnect", () => {
 		// Arrange.
-		const { loggerFactory } = getLogging();
+		const { loggerFactory } = getMockedLogging();
 		const connection = new StreamDeckConnection(registrationParameters, loggerFactory) as MockStreamDeckConnection;
 
 		// Act.
@@ -87,7 +87,7 @@ describe("getDevices", () => {
 
 	it("Updates device on deviceDidDisconnect", () => {
 		// Arrange.
-		const { loggerFactory } = getLogging();
+		const { loggerFactory } = getMockedLogging();
 		const connection = new StreamDeckConnection(registrationParameters, loggerFactory) as MockStreamDeckConnection;
 
 		// Act.
@@ -119,7 +119,7 @@ describe("getDevices", () => {
 
 	it("Ignores unknown devices on deviceDidDisconnect", () => {
 		// Arrange.
-		const { loggerFactory } = getLogging();
+		const { loggerFactory } = getMockedLogging();
 		const connection = new StreamDeckConnection(registrationParameters, loggerFactory) as MockStreamDeckConnection;
 
 		// Act.

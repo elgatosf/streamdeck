@@ -1,4 +1,4 @@
-import { getLogging } from "../../../test/mocks";
+import { getMockedLogging } from "../../../test/mocks/logging";
 import { RegistrationParameters } from "../registration";
 
 jest.mock("../../logging");
@@ -15,7 +15,7 @@ describe("Registration Parameters", () => {
 	 */
 	it("Parses valid arguments", () => {
 		// Arrange, act.
-		const { loggerFactory } = getLogging();
+		const { loggerFactory } = getMockedLogging();
 		const regParams = new RegistrationParameters([...port, ...pluginUUID, ...registerEvent, ...info], loggerFactory);
 
 		// Assert.
@@ -32,7 +32,7 @@ describe("Registration Parameters", () => {
 	 */
 	it("Ignores unknown arguments", () => {
 		// Arrange, act.
-		const { loggerFactory } = getLogging();
+		const { loggerFactory } = getMockedLogging();
 		const regParams = new RegistrationParameters([...port, "-other", "Hello world", ...pluginUUID, ...registerEvent, ...info], loggerFactory);
 
 		// Assert.
@@ -49,7 +49,7 @@ describe("Registration Parameters", () => {
 	 */
 	it("Handles uneven arguments", () => {
 		// Arrange, act.
-		const { loggerFactory } = getLogging();
+		const { loggerFactory } = getMockedLogging();
 		const regParams = new RegistrationParameters([...port, ...pluginUUID, "-bool", ...registerEvent, ...info], loggerFactory);
 
 		// Assert.
@@ -66,7 +66,7 @@ describe("Registration Parameters", () => {
 	 */
 	it("Logs arguments", () => {
 		// Arrange, act.
-		const { loggerFactory, logger } = getLogging();
+		const { loggerFactory, logger } = getMockedLogging();
 		const regParams = new RegistrationParameters([...port, ...pluginUUID, ...registerEvent, ...info], loggerFactory);
 
 		// Assert.
@@ -82,7 +82,7 @@ describe("Registration Parameters", () => {
 	 */
 	it("Creates a named logger", () => {
 		// Arrange, act.
-		const { loggerFactory, logger } = getLogging();
+		const { loggerFactory, logger } = getMockedLogging();
 		new RegistrationParameters([...port, ...pluginUUID, ...registerEvent, ...info], loggerFactory);
 
 		// Assert.
@@ -94,7 +94,7 @@ describe("Registration Parameters", () => {
 	 */
 	it("Includes all missing arguments", () => {
 		// Arrange.
-		const { loggerFactory } = getLogging();
+		const { loggerFactory } = getMockedLogging();
 
 		// Act, assert.
 		expect(() => new RegistrationParameters([], loggerFactory)).toThrow(
@@ -107,7 +107,7 @@ describe("Registration Parameters", () => {
 	 */
 	it("Requires port", () => {
 		// Arrange.
-		const { loggerFactory } = getLogging();
+		const { loggerFactory } = getMockedLogging();
 
 		// Act, assert.
 		expect(() => new RegistrationParameters([...pluginUUID, ...registerEvent, ...info], loggerFactory)).toThrow(
@@ -120,7 +120,7 @@ describe("Registration Parameters", () => {
 	 */
 	it("Requires pluginUUID", () => {
 		// Arrange.
-		const { loggerFactory } = getLogging();
+		const { loggerFactory } = getMockedLogging();
 
 		// Act, assert.
 		expect(() => new RegistrationParameters([...port, ...registerEvent, ...info], loggerFactory)).toThrow(
@@ -133,7 +133,7 @@ describe("Registration Parameters", () => {
 	 */
 	it("Requires registerEvent", () => {
 		// Arrange.
-		const { loggerFactory } = getLogging();
+		const { loggerFactory } = getMockedLogging();
 
 		// Act, assert.
 		expect(() => new RegistrationParameters([...port, ...pluginUUID, ...info], loggerFactory)).toThrow(
@@ -146,7 +146,7 @@ describe("Registration Parameters", () => {
 	 */
 	it("Requires info", () => {
 		// Arrange.
-		const { loggerFactory } = getLogging();
+		const { loggerFactory } = getMockedLogging();
 
 		// Act, assert.
 		expect(() => new RegistrationParameters([...port, ...pluginUUID, ...registerEvent], loggerFactory)).toThrow(
