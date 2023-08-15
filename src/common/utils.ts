@@ -1,3 +1,5 @@
+import path from "node:path";
+
 /**
  * Gets the value at the specified {@link path}.
  * @param path Path to the property to get.
@@ -23,6 +25,17 @@ export const isDebugMode = (function () {
 
 	return false;
 })();
+
+/**
+ * Gets the plugin's unique-identifier from the current working directory.
+ * @returns The plugin's unique-identifier.
+ */
+export function getPluginUUID() {
+	const name = path.basename(process.cwd());
+	const suffixIndex = name.lastIndexOf(".sdPlugin");
+
+	return suffixIndex < 0 ? name : name.substring(0, suffixIndex);
+}
 
 /**
  * Helper type used by `StrictUnion` to extract keys of type `T`. Credit {@link https://stackoverflow.com/a/65805753/259656}.

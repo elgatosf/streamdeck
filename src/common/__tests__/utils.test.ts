@@ -1,5 +1,10 @@
-import { get } from "../utils";
+import path from "node:path";
 
+import { get, getPluginUUID } from "../utils";
+
+/**
+ * Asserts {@link get}.
+ */
 describe("get", () => {
 	it("Gets the value for a top-level path", () => {
 		const obj = { foo: "bar" };
@@ -22,6 +27,36 @@ describe("get", () => {
 	});
 });
 
+/**
+ * Asserts {@link getPluginUUID} is correctly parsed from the current working directory.
+ */
+describe("getPluginUUID", () => {
+	const cases = [
+		{
+			name: "Parses with .sdPlugin suffix",
+			cwd: path.join("tests", "com.elgato.test.sdPlugin"),
+			expected: "com.elgato.test"
+		},
+		{
+			name: "Parses without .sdPlugin suffix",
+			cwd: path.join("tests", "com.elgato.test"),
+			expected: "com.elgato.test"
+		}
+	];
+
+	it.each(cases)("$name", async ({ cwd, expected }) => {
+		// Arrange, act.
+		jest.spyOn(process, "cwd").mockReturnValue(cwd);
+		const pluginUUID = getPluginUUID();
+
+		// Assert.
+		expect(pluginUUID).toBe(expected);
+	});
+});
+
+/**
+ * Asserts `isDebugMode` is correctly determined by the process arguments.
+ */
 describe("isDebugMode", () => {
 	beforeEach(() => jest.resetModules());
 
