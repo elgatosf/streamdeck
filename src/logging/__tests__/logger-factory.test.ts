@@ -65,97 +65,128 @@ describe("LoggerFactory", () => {
 	});
 
 	/**
-	 * Asserts {@link LoggerFactory} validates the {@link LogLevel} as part of the construction.
+	 * Asserts validating the {@link LogLevel} can be set based on the environment.
 	 */
-	describe("Validates log-level on construction", () => {
-		describe("When debug mode is false", () => {
-			beforeEach(() => ((utils as any).isDebugMode = false));
-
-			it("Can be ERROR", () => verify(LogLevel.ERROR, LogLevel.ERROR));
-			it("Can be WARN", () => verify(LogLevel.WARN, LogLevel.WARN));
-			it("Can be INFO", () => verify(LogLevel.INFO, LogLevel.INFO));
-			it("Cannot be DEBUG", () => verify(LogLevel.DEBUG, LogLevel.INFO));
-			it("Cannot be TRACE", () => verify(LogLevel.TRACE, LogLevel.INFO));
-		});
-
-		describe("When debug mode is true", () => {
-			beforeEach(() => ((utils as any).isDebugMode = true));
-
-			it("Can be ERROR", () => verify(LogLevel.ERROR, LogLevel.ERROR));
-			it("Can be WARN", () => verify(LogLevel.WARN, LogLevel.WARN));
-			it("Can be INFO", () => verify(LogLevel.INFO, LogLevel.INFO));
-			it("Can be DEBUG", () => verify(LogLevel.DEBUG, LogLevel.DEBUG));
-			it("Can be TRACE", () => verify(LogLevel.TRACE, LogLevel.TRACE));
-		});
-
-		function verify(logLevel: LogLevel, expectedLogLevel: LogLevel) {
-			// Arrange.
-			const { LoggerFactory } = require("../logger-factory") as typeof import("../logger-factory");
-
-			const loggerSpy = jest.spyOn(loggerModule, "Logger");
-			const options: LoggingOptions = {
-				logLevel,
-				target: { write: jest.fn() }
-			};
-
-			// Act.
-			new LoggerFactory(options);
-
-			// Assert
-			expect(loggerSpy.mock.calls[0][1].logLevel).toEqual(expectedLogLevel);
-			expect(loggerSpy.mock.instances[0].warn).toHaveBeenCalledTimes(logLevel !== expectedLogLevel ? 1 : 0);
-		}
-	});
-
-	/**
-	 * Asserts {@link LoggerFactory} validates the {@link LogLevel} as part of {@link LoggerFactory.setLogLevel}.
-	 */
-	describe("Validates setLogLevel", () => {
-		describe("When debug mode is false", () => {
-			beforeEach(() => ((utils as any).isDebugMode = false));
-
-			it("Can be set to ERROR", () => verify(LogLevel.WARN, LogLevel.ERROR, true));
-			it("Can be set to WARN", () => verify(LogLevel.ERROR, LogLevel.WARN, true));
-			it("Can be set to INFO", () => verify(LogLevel.ERROR, LogLevel.INFO, true));
-			it("Cannot be set to DEBUG", () => verify(LogLevel.ERROR, LogLevel.DEBUG, false));
-			it("Cannot be set to TRACE", () => verify(LogLevel.ERROR, LogLevel.TRACE, false));
-		});
-
-		describe("When debug mode is true", () => {
-			beforeEach(() => ((utils as any).isDebugMode = true));
-
-			it("Can be set to ERROR", () => verify(LogLevel.WARN, LogLevel.ERROR, true));
-			it("Can be set to WARN", () => verify(LogLevel.ERROR, LogLevel.WARN, true));
-			it("Can be set to INFO", () => verify(LogLevel.ERROR, LogLevel.INFO, true));
-			it("Can be set to DEBUG", () => verify(LogLevel.ERROR, LogLevel.DEBUG, true));
-			it("Can be set to TRACE", () => verify(LogLevel.ERROR, LogLevel.TRACE, true));
-		});
-
-		function verify(originalValue: LogLevel, newValue: LogLevel, expectedChange: boolean) {
-			// Arrange.
-			const { LoggerFactory } = require("../logger-factory") as typeof import("../logger-factory");
-
-			const loggerSpy = jest.spyOn(loggerModule, "Logger");
-			const options: LoggingOptions = {
-				logLevel: originalValue,
-				target: { write: jest.fn() }
-			};
-
-			const loggerFactory = new LoggerFactory(options);
-
-			// Act.
-			const didChange = loggerFactory.setLogLevel(newValue);
-
-			// Assert
-			expect(didChange).toBe(expectedChange);
-			expect(loggerSpy.mock.instances[0].warn).toHaveBeenCalledTimes(expectedChange ? 0 : 1);
-
-			if (didChange) {
-				expect(loggerSpy.mock.calls[0][1].logLevel).toEqual(newValue);
-			} else {
-				expect(loggerSpy.mock.calls[0][1].logLevel).toEqual(originalValue);
+	describe("Validate log-level", () => {
+		const testCases = [
+			{
+				isDebugMode: false,
+				level: "ERROR",
+				logLevel: LogLevel.ERROR,
+				expected: LogLevel.ERROR
+			},
+			{
+				isDebugMode: true,
+				level: "ERROR",
+				logLevel: LogLevel.ERROR,
+				expected: LogLevel.ERROR
+			},
+			{
+				isDebugMode: false,
+				level: "WARN",
+				logLevel: LogLevel.WARN,
+				expected: LogLevel.WARN
+			},
+			{
+				isDebugMode: true,
+				level: "WARN",
+				logLevel: LogLevel.WARN,
+				expected: LogLevel.WARN
+			},
+			{
+				isDebugMode: false,
+				level: "INFO",
+				logLevel: LogLevel.INFO,
+				expected: LogLevel.INFO
+			},
+			{
+				isDebugMode: true,
+				level: "INFO",
+				logLevel: LogLevel.INFO,
+				expected: LogLevel.INFO
+			},
+			{
+				isDebugMode: false,
+				level: "DEBUG",
+				logLevel: LogLevel.DEBUG,
+				expected: LogLevel.INFO
+			},
+			{
+				isDebugMode: true,
+				level: "DEBUG",
+				logLevel: LogLevel.DEBUG,
+				expected: LogLevel.DEBUG
+			},
+			{
+				isDebugMode: false,
+				level: "TRACE",
+				logLevel: LogLevel.TRACE,
+				expected: LogLevel.INFO
+			},
+			{
+				isDebugMode: true,
+				level: "TRACE",
+				logLevel: LogLevel.TRACE,
+				expected: LogLevel.TRACE
 			}
-		}
+		];
+
+		/**
+		 * Asserts {@link LoggerFactory} validates the {@link LogLevel} on construction.
+		 */
+		describe("Construction", () => {
+			it.each(testCases)("$level when debug is $isDebugMode", ({ logLevel, expected, isDebugMode }) => {
+				// Arrange.
+				(utils as any).isDebugMode = isDebugMode;
+				const { LoggerFactory } = require("../logger-factory") as typeof import("../logger-factory");
+
+				const loggerSpy = jest.spyOn(loggerModule, "Logger");
+				const options: LoggingOptions = {
+					logLevel,
+					target: { write: jest.fn() }
+				};
+
+				// Act.
+				new LoggerFactory(options);
+
+				// Assert.
+				expect(loggerSpy.mock.calls[0][1].logLevel).toEqual(expected);
+				expect(loggerSpy.mock.instances[0].warn).toHaveBeenCalledTimes(logLevel !== expected ? 1 : 0);
+			});
+		});
+
+		/**
+		 * Asserts {@link LoggerFactory.setLogLevel} validates teh {@link LogLevel}.
+		 */
+		describe("setLogLevel", () => {
+			it.each(testCases)("$level when debug is $isDebugMode", ({ logLevel, expected, isDebugMode }) => {
+				// Arrange.
+				(utils as any).isDebugMode = isDebugMode;
+				const { LoggerFactory } = require("../logger-factory") as typeof import("../logger-factory");
+
+				const loggerSpy = jest.spyOn(loggerModule, "Logger");
+				const options: LoggingOptions = {
+					logLevel: LogLevel.ERROR,
+					target: { write: jest.fn() }
+				};
+
+				const loggerFactory = new LoggerFactory(options);
+				let expectedChange = logLevel === expected;
+
+				// Act.
+				const didChange = loggerFactory.setLogLevel(logLevel);
+
+				// Assert
+				expect(didChange).toBe(expectedChange);
+				expect(loggerSpy.mock.instances[0].warn).toHaveBeenCalledTimes(expectedChange ? 0 : 1);
+
+				if (didChange) {
+					expect(loggerSpy.mock.calls[0][1].logLevel).toEqual(logLevel);
+				} else {
+					expect(loggerSpy.mock.calls[0][1].logLevel).toEqual(LogLevel.ERROR);
+				}
+			});
+		});
 	});
 
 	/**
