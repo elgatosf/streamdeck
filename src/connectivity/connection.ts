@@ -1,8 +1,8 @@
 import { EventEmitter } from "node:events";
 import WebSocket from "ws";
 
-import type { Logger } from "../common/logging";
 import { PromiseCompletionSource } from "../common/promises";
+import { Logger, LoggerFactory } from "../logging";
 import { Command } from "./commands";
 import { Event, EventIdentifier } from "./events";
 import { RegistrationParameters } from "./registration";
@@ -23,6 +23,11 @@ export class StreamDeckConnection {
 	private readonly eventEmitter = new EventEmitter();
 
 	/**
+	 * Logger scoped to this class.
+	 */
+	private readonly logger: Logger;
+
+	/**
 	 * Web socket connection used by this instance to establish the connection with the Stream Deck.
 	 */
 	private ws?: WebSocket;
@@ -31,9 +36,11 @@ export class StreamDeckConnection {
 	 * Initializes a new instance of the {@link StreamDeckConnection} class.
 	 * @param registrationParameters Registration parameters used to establish a connection with the Stream Deck; these are automatically supplied as part of the command line arguments
 	 * when the plugin is ran by the Stream Deck.
-	 * @param logger Logger responsible for logging messages.
+	 * @param loggerFactory Logger factory responsible for creating a logger that can be consumed by this class.
 	 */
-	constructor(public readonly registrationParameters: RegistrationParameters, private readonly logger: Logger) {}
+	constructor(public readonly registrationParameters: RegistrationParameters, loggerFactory: LoggerFactory) {
+		this.logger = loggerFactory.createLogger("StreamDeckConnection");
+	}
 
 	/**
 	 * Establishes a connection with the Stream Deck, allowing for the plugin to send and receive messages.
@@ -44,7 +51,7 @@ export class StreamDeckConnection {
 			return;
 		}
 
-		this.logger.logDebug("Connecting to Stream Deck.");
+		this.logger.debug("Connecting to Stream Deck.");
 		this.ws = new WebSocket(`ws://127.0.0.1:${this.registrationParameters.port}`);
 		this.ws.on("message", (data) => this.propagateMessage(data));
 		this.ws.on("open", () => {
@@ -58,9 +65,9 @@ export class StreamDeckConnection {
 
 				// Web socket established a connection with the Stream Deck and the plugin was registered.
 				this.connection.setResult(this.ws);
-				this.logger.logDebug("Successfully connected to Stream Deck.");
+				this.logger.debug("Successfully connected to Stream Deck.");
 			} else {
-				this.logger.logError("Failed to connect to Stream Deck: Web Socket connection is undefined.");
+				this.logger.error("Failed to connect to Stream Deck: Web Socket connection is undefined.");
 			}
 		});
 	}
@@ -109,7 +116,7 @@ export class StreamDeckConnection {
 		const connection = await this.connection.promise;
 		const message = JSON.stringify(command);
 
-		this.logger.logTrace(message);
+		this.logger.trace(message);
 		connection.send(message);
 	}
 
@@ -121,13 +128,13 @@ export class StreamDeckConnection {
 		try {
 			const message = JSON.parse(data.toString());
 			if (message.event) {
-				this.logger.logTrace(`${data}`);
+				this.logger.trace(`${data}`);
 				this.eventEmitter.emit(message.event, message);
 			} else {
-				this.logger.logWarn(`Received unknown message: ${data}`);
+				this.logger.warn(`Received unknown message: ${data}`);
 			}
 		} catch (err) {
-			this.logger.logError(`Failed to parse message: ${data}`, err);
+			this.logger.error(`Failed to parse message: ${data}`, err);
 		}
 	}
 }

@@ -6,35 +6,35 @@
  */
 import { ActionsController } from "./actions/actions-controller";
 import { StreamDeckClient } from "./client";
-import { Logger } from "./common/logging";
 import { StreamDeckConnection } from "./connectivity/connection";
 import { RegistrationInfo, RegistrationParameters } from "./connectivity/registration";
 import { getDevices } from "./devices";
 import { I18nProvider } from "./i18n";
+import { createLoggerFactory } from "./logging";
 import { getManifest } from "./manifest";
 
 export { SingletonAction } from "./actions/singleton-action";
-export { LogLevel } from "./common/logging";
 export * from "./connectivity/layouts";
 export { Target } from "./connectivity/target";
 export * from "./events";
+export { LogLevel } from "./logging";
 export { Manifest } from "./manifest";
-export { actions, client, devices, i18n, info, logger, manifest };
+export { actions, client, devices, i18n, info, logging, manifest };
 
 /**
  * Local file logger; logs can be found within the plugins directory under the "./logs" folder. Log files are re-indexed at 50MiB, with the 10 most recent log files being retained.
  */
-const logger = new Logger();
+const logging = createLoggerFactory();
 
 /**
  * Registration parameters supplied by Stream Deck.
  */
-const registrationParameters = new RegistrationParameters(process.argv, logger);
+const registrationParameters = new RegistrationParameters(process.argv, logging);
 
 /**
  * Singleton connection used throughout the plugin.
  */
-const connection = new StreamDeckConnection(registrationParameters, logger);
+const connection = new StreamDeckConnection(registrationParameters, logging);
 
 /**
  * Information about the plugin, and the Stream Deck application.
@@ -59,11 +59,11 @@ const manifest = getManifest();
 /**
  * Provides information about, and methods for interacting with, actions associated with the Stream Deck plugin.
  */
-const actions = new ActionsController(client, manifest, logger);
+const actions = new ActionsController(client, manifest, logging);
 
 /**
  * Internalization provider for retrieving translations from locally defined resources, see {@link https://docs.elgato.com/sdk/plugins/localization}
  */
-const i18n = new I18nProvider(connection.registrationParameters.info.application.language, logger);
+const i18n = new I18nProvider(connection.registrationParameters.info.application.language, logging);
 
 connection.connect();

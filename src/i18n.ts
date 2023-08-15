@@ -1,9 +1,9 @@
 import file from "node:fs";
 import path from "node:path";
 
-import type { Logger } from "./common/logging";
 import { get } from "./common/utils";
 import { Language, supportedLanguages } from "./connectivity/registration";
+import { Logger, LoggerFactory } from "./logging";
 
 /**
  * Provides locales and translations for internalization.
@@ -25,11 +25,17 @@ export class I18nProvider {
 	private readonly locales = new Map<Language, unknown>();
 
 	/**
+	 * Logger scoped to this class.
+	 */
+	private readonly logger: Logger;
+
+	/**
 	 * Initializes a new instance of the {@link I18nProvider} class.
 	 * @param language The default language to be used when retrieving translations for a given key.
-	 * @param logger Logger responsible for logging messages.
+	 * @param loggerFactory Logger factory responsible for creating a logger that can be consumed by this class.
 	 */
-	constructor(private readonly language: Language, private readonly logger: Logger) {
+	constructor(private readonly language: Language, loggerFactory: LoggerFactory) {
+		this.logger = loggerFactory.createLogger("I18nProvider");
 		this.loadLocales();
 	}
 
@@ -43,7 +49,7 @@ export class I18nProvider {
 		const translation = this.translateOrDefault(key, language);
 
 		if (translation === undefined && this.logMissingKey) {
-			this.logger.logWarn(`Missing translation: ${key}`);
+			this.logger.warn(`Missing translation: ${key}`);
 		}
 
 		return translation || "";
@@ -92,7 +98,7 @@ export class I18nProvider {
 			const contents = file.readFileSync(filePath, { flag: "r" })?.toString();
 			return JSON.parse(contents);
 		} catch (err) {
-			this.logger.logError(`Failed to load translations from ${filePath}`, err);
+			this.logger.error(`Failed to load translations from ${filePath}`, err);
 		}
 	}
 

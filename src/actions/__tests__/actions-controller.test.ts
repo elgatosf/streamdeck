@@ -20,14 +20,14 @@ describe("ActionsController", () => {
 		}
 	];
 
-	afterEach(() => jest.clearAllMocks());
+	afterEach(() => jest.resetAllMocks());
 
 	it("Adds valid routes", () => {
 		// Arrange.
 		const mockedRoute = Route as jest.MockedClass<typeof Route>;
-		const { logger, client } = getMockClient();
+		const { loggerFactory, client } = getMockClient();
 		const action: SingletonAction = {};
-		const actions = new ActionsController(client, manifest, logger);
+		const actions = new ActionsController(client, manifest, loggerFactory);
 
 		// Act.
 		actions.registerAction(manifestId, action);
@@ -39,14 +39,14 @@ describe("ActionsController", () => {
 
 	it("Warns when action does not exist in manifest", () => {
 		// Arrange.
-		const { logger, client } = getMockClient();
-		const actions = new ActionsController(client, manifest, logger);
+		const { loggerFactory, logger, client } = getMockClient();
+		const actions = new ActionsController(client, manifest, loggerFactory);
 
 		// Act.
 		actions.registerAction("com.elgato.action-service.__one", new SingletonAction());
 
 		// Assert.
-		expect(logger.logWarn).toHaveBeenCalledTimes(1);
-		expect(logger.logWarn).toHaveBeenCalledWith("Failed to route action. The specified action UUID does not exist in the manifest: com.elgato.action-service.__one");
+		expect(logger.warn).toHaveBeenCalledTimes(1);
+		expect(logger.warn).toHaveBeenCalledWith("Failed to route action. The specified action UUID does not exist in the manifest: com.elgato.action-service.__one");
 	});
 });

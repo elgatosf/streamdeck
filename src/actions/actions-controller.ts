@@ -1,5 +1,5 @@
 import { StreamDeckClient } from "../client";
-import type { Logger } from "../common/logging";
+import { Logger, LoggerFactory } from "../logging";
 import { Manifest } from "../manifest";
 import { Route } from "./route";
 import { SingletonAction } from "./singleton-action";
@@ -9,6 +9,11 @@ import { SingletonAction } from "./singleton-action";
  */
 export class ActionsController {
 	/**
+	 * Logger scoped to this class.
+	 */
+	private readonly logger: Logger;
+
+	/**
 	 * Collection of registered routes.
 	 */
 	private readonly routes: Route[] = [];
@@ -17,9 +22,11 @@ export class ActionsController {
 	 * Initializes a new instance of the {@link ActionsController} class.
 	 * @param client The Stream Deck client.
 	 * @param manifest Manifest associated with the plugin.
-	 * @param logger Logger responsible for logging messages.
+	 * @param loggerFactory Logger factory responsible for creating a logger that can be consumed by this class.
 	 */
-	constructor(private readonly client: StreamDeckClient, private readonly manifest: Manifest, private readonly logger: Logger) {}
+	constructor(private readonly client: StreamDeckClient, private readonly manifest: Manifest, loggerFactory: LoggerFactory) {
+		this.logger = loggerFactory.createLogger("ActionsController");
+	}
 
 	/**
 	 * Registers the action with the Stream Deck, routing all events associated with the {@link manifestId} to the specified {@link action}.
@@ -40,7 +47,7 @@ export class ActionsController {
 		if (this.manifest.Actions.find((a) => a.UUID === manifestId)) {
 			this.routes.push(new Route(this.client, manifestId, action));
 		} else {
-			this.logger.logWarn(`Failed to route action. The specified action UUID does not exist in the manifest: ${manifestId}`);
+			this.logger.warn(`Failed to route action. The specified action UUID does not exist in the manifest: ${manifestId}`);
 		}
 	}
 }

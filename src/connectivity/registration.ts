@@ -1,4 +1,4 @@
-import type { Logger } from "../common/logging";
+import { LoggerFactory } from "../logging/logger-factory";
 import { DeviceInfo } from "./device-info";
 
 /**
@@ -53,31 +53,33 @@ export class RegistrationParameters {
 	/**
 	 * Initializes a new instance of the {@link RegistrationParameters} class.
 	 * @param args Command line arguments supplied by Stream Deck when launching this plugin, used to parse the required registration parameters.
-	 * @param logger Logger responsible for logging messages.
+	 * @param loggerFactory Logger factory responsible for creating a logger that can be consumed by this class.
 	 */
-	constructor(args: string[], logger: Logger) {
+	constructor(args: string[], loggerFactory: LoggerFactory) {
+		const logger = loggerFactory.createLogger("RegistrationParameters");
+
 		for (let i = 0; i < args.length - 1; i++) {
 			const param = args[i];
 			const value = args[++i];
 
 			switch (param) {
 				case Argument.Port:
-					logger.logDebug(`port=${value}`);
+					logger.debug(`port=${value}`);
 					this.port = value;
 					break;
 
 				case Argument.PluginUUID:
-					logger.logDebug(`pluginUUID=${value}`);
+					logger.debug(`pluginUUID=${value}`);
 					this.pluginUUID = value;
 					break;
 
 				case Argument.RegisterEvent:
-					logger.logDebug(`registerEvent=${value}`);
+					logger.debug(`registerEvent=${value}`);
 					this.registerEvent = value;
 					break;
 
 				case Argument.Info:
-					logger.logDebug(`info=${value}`);
+					logger.debug(`info=${value}`);
 					this.info = JSON.parse(value);
 					break;
 

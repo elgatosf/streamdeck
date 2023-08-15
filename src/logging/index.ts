@@ -7,6 +7,8 @@ import { LogLevel } from "./log-level";
 import { LoggerFactory } from "./logger-factory";
 
 export { LogLevel } from "./log-level";
+export { Logger } from "./logger";
+export { LoggerFactory } from "./logger-factory";
 
 /**
  * Create a {@link LoggerFactory} for the current plugin based on its environment.

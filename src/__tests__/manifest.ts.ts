@@ -4,8 +4,6 @@ import path from "node:path";
 import { manifest as mockManifest } from "../__mocks__/manifest";
 import { getManifest } from "../manifest";
 
-jest.mock("../common/logging");
-
 describe("getManifest", () => {
 	it("Errors when file does not exist", () => {
 		// Arrange.

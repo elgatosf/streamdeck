@@ -1,9 +1,10 @@
 import type { StreamDeckClient } from "../client";
 import { registrationParameters } from "../connectivity/__mocks__/registration";
 import type { StreamDeckConnection } from "../connectivity/connection";
+import { LoggerFactory } from "../logging";
 
 jest.mock("../actions/actions-controller");
-jest.mock("../common/logging");
+jest.mock("../logging");
 jest.mock("../connectivity/connection");
 jest.mock("../connectivity/registration");
 jest.mock("../client");
@@ -36,7 +37,7 @@ describe("Index", () => {
 
 	it("Initializes client", async () => {
 		// Arrange, act.
-		const streamDeck = await require("../index");
+		const streamDeck = (await require("../index")) as typeof import("../index");
 
 		// Assert.
 		expect(mockedClient.mock.calls).toHaveLength(1);
@@ -47,7 +48,7 @@ describe("Index", () => {
 	it("Initializes devices", async () => {
 		// Arrange, act.
 		const { getDevices } = await require("../devices");
-		const streamDeck = await require("../index");
+		const streamDeck = (await require("../index")) as typeof import("../index");
 
 		// Assert
 		expect(jest.isMockFunction(getDevices)).toBeTruthy();
@@ -58,28 +59,28 @@ describe("Index", () => {
 
 	it("Exports info", async () => {
 		// Arrange, act.
-		const streamDeck = await require("../index");
+		const streamDeck = (await require("../index")) as typeof import("../index");
 
 		// Assert.
 		expect(streamDeck.info).toStrictEqual(mockedConnection.mock.results[0].value.registrationParameters.info);
 	});
 
-	it("Initializes logger", async () => {
+	it("Initializes logging", async () => {
 		// Arrange.
-		const { Logger } = await require("../common/logging");
-		const mockedLogger = Logger as jest.MockedClass<typeof Logger>;
+		const logging = (await require("../logging")) as typeof import("../logging");
+		const createLoggerFactory = jest.spyOn(logging, "createLoggerFactory").mockReturnValue("__mock__logger_factory__" as unknown as LoggerFactory);
 
 		// Act.
-		const streamDeck = await require("../index");
+		const streamDeck = (await require("../index")) as typeof import("../index");
 
 		// Assert.
-		expect(mockedLogger.mock.calls).toHaveLength(1);
-		expect(streamDeck.logger).toEqual(mockedLogger.mock.instances[0]);
+		expect(createLoggerFactory).toHaveBeenCalledTimes(1);
+		expect(streamDeck.logging).toEqual("__mock__logger_factory__");
 	});
 
 	it("Initializes getManifest", async () => {
 		// Arrange, act.
-		const streamDeck = await require("../index");
+		const streamDeck = (await require("../index")) as typeof import("../index");
 		const { getManifest } = await require("../manifest");
 
 		// Assert.
@@ -94,11 +95,11 @@ describe("Index", () => {
 		const mockedI18nProvider = I18nProvider as jest.MockedClass<typeof I18nProvider>;
 
 		// Act.
-		const streamDeck = await require("../index");
+		const streamDeck = (await require("../index")) as typeof import("../index");
 
 		// Assert.
 		expect(mockedI18nProvider.mock.calls).toHaveLength(1);
-		expect(mockedI18nProvider.mock.calls[0]).toEqual([registrationParameters.info.application.language, streamDeck.logger]);
+		expect(mockedI18nProvider.mock.calls[0]).toEqual([registrationParameters.info.application.language, streamDeck.logging]);
 		expect(streamDeck.i18n).toEqual(mockedI18nProvider.mock.instances[0]);
 	});
 
@@ -110,11 +111,11 @@ describe("Index", () => {
 		const mockedActions = ActionsController as jest.MockedClass<typeof ActionsController>;
 
 		// Act.
-		const streamDeck = await require("../index");
+		const streamDeck = (await require("../index")) as typeof import("../index");
 
 		// Assert.
 		expect(mockedActions.mock.calls).toHaveLength(1);
-		expect(mockedActions.mock.calls[0]).toEqual([streamDeck.client, getManifest(), streamDeck.logger]);
+		expect(mockedActions.mock.calls[0]).toEqual([streamDeck.client, getManifest(), streamDeck.logging]);
 		expect(streamDeck.actions).toEqual(mockedActions.mock.instances[0]);
 	});
 
@@ -123,7 +124,7 @@ describe("Index", () => {
 		const { RegistrationParameters } = await require("../connectivity/registration");
 		const mockedRegistrationParameters = RegistrationParameters as jest.MockedClass<typeof RegistrationParameters>;
 
-		const { Logger } = await require("../common/logging");
+		const { Logger } = await require("../logging");
 		const mockedLogger = Logger as jest.MockedClass<typeof Logger>;
 
 		// Act.

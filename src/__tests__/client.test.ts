@@ -44,7 +44,7 @@ import {
 	WillDisappearEvent
 } from "../events";
 
-jest.mock("../common/logging");
+jest.mock("../logging");
 jest.mock("../connectivity/connection");
 
 describe("StreamDeckClient", () => {
