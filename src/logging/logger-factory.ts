@@ -60,7 +60,7 @@ export class LoggerFactory {
 	 * @returns `true` when the log level was successfully updated; otherwise `false`.
 	 */
 	public setLogLevel(value: LogLevel) {
-		if ((value === LogLevel.DEBUG || value === LogLevel.TRACE) && !isDebugMode) {
+		if ((value === LogLevel.DEBUG || value === LogLevel.TRACE) && !isDebugMode()) {
 			this.logger.warn(`Log level cannot be set to ${LogLevel[value]} whilst not in debug mode.`);
 			return false;
 		}

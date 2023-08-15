@@ -1,27 +1,18 @@
-import { Dirent } from "node:fs";
+import fs, { Dirent } from "node:fs";
 import { EOL } from "node:os";
+import path from "node:path";
 
 import { LogLevel } from "../log-level";
 
-import path = require("node:path");
+jest.mock("node:fs");
 
 describe("FileTarget", () => {
-	let fs: typeof import("node:fs");
 	const mockedDate = new Date(2000, 11, 25, 10, 30, 0, 123);
 	const mockedDest = path.join("test", "logs");
 	const mockedFileDescriptor = 13;
 
-	beforeEach(() => {
-		jest.doMock("node:fs", () => jest.createMockFromModule("node:fs"));
-		fs = require("node:fs");
-
-		jest.useFakeTimers().setSystemTime(mockedDate);
-	});
-
-	afterEach(() => {
-		jest.resetAllMocks();
-		jest.resetModules();
-	});
+	beforeEach(() => jest.useFakeTimers().setSystemTime(mockedDate));
+	afterEach(() => jest.resetAllMocks());
 
 	describe("Writing to file", () => {
 		const testCases = [

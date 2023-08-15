@@ -16,7 +16,7 @@ export class Logger {
 	/**
 	 * Minimum log level used to determine which log messages can be written; default is `INFO`, or `DEBUG` whilst a debugger can be attached.
 	 */
-	private logLevel = isDebugMode ? LogLevel.DEBUG : LogLevel.INFO;
+	private logLevel = isDebugMode() ? LogLevel.DEBUG : LogLevel.INFO;
 
 	/**
 	 * Path to the current log file.

@@ -1,9 +1,9 @@
 import path from "node:path";
 
-import { get, getPluginUUID } from "../utils";
+import { get, getPluginUUID, isDebugMode } from "../utils";
 
 /**
- * Asserts {@link get}.
+ * Asserts {@link get} correct reads values from objects based on the specified path.
  */
 describe("get", () => {
 	it("Gets the value for a top-level path", () => {
@@ -55,7 +55,7 @@ describe("getPluginUUID", () => {
 });
 
 /**
- * Asserts `isDebugMode` is correctly determined by the process arguments.
+ * Asserts {@link isDebugMode} is correctly determined by the process arguments.
  */
 describe("isDebugMode", () => {
 	beforeEach(() => jest.resetModules());
@@ -110,10 +110,9 @@ describe("isDebugMode", () => {
 	it.each(cases)("$args returns $expected", async ({ args, expected }) => {
 		const origArgs = process.execArgv;
 		try {
+			// Arrange, act, assert.
 			process.execArgv = args;
-
-			const { isDebugMode } = await require("../utils");
-			return expect(isDebugMode).toBe(expected);
+			return expect(isDebugMode()).toBe(expected);
 		} finally {
 			process.execArgv = origArgs;
 		}

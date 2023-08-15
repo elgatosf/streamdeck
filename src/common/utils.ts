@@ -12,10 +12,11 @@ export function get(path: string, source: unknown): unknown {
 }
 
 /**
- * Determines whether the current plugin is running in a debug environment; this is determined by the command-line arguments supplied to the plugin by Stream.
- * Specifically, either `--inspect`, `--inspect-brk` or `--inspect-port` must be present.
+ * Determines whether the current plugin is running in a debug environment; this is determined by the command-line arguments supplied to the plugin by Stream. Specifically, the result
+ * is `true` when  either `--inspect`, `--inspect-brk` or `--inspect-port` are present as part of the processes' arguments.
+ * @returns `true` when the plugin is running in debug mode; otherwise `false`.
  */
-export const isDebugMode = (function () {
+export function isDebugMode() {
 	for (const arg of process.execArgv) {
 		const name = arg.split("=")[0];
 		if (name === "--inspect" || name === "--inspect-brk" || name === "--inspect-port") {
@@ -24,7 +25,7 @@ export const isDebugMode = (function () {
 	}
 
 	return false;
-})();
+}
 
 /**
  * Gets the plugin's unique-identifier from the current working directory.

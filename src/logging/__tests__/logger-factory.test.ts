@@ -1,23 +1,14 @@
+import * as utils from "../../common/utils";
 import { LogLevel } from "../log-level";
+import { Logger } from "../logger";
 import type { LoggingOptions } from "../logger-factory";
+import { LoggerFactory } from "../logger-factory";
+
+jest.mock("../../common/utils");
+jest.mock("../logger");
 
 describe("LoggerFactory", () => {
-	let utils: typeof import("../../common/utils");
-	let loggerModule: typeof import("../logger");
-	let LoggerFactory: typeof import("../logger-factory").LoggerFactory;
-
-	beforeEach(async () => {
-		jest.doMock("../../common/utils", () => jest.createMockFromModule("../../common/utils"));
-		utils = await require("../../common/utils");
-
-		jest.doMock("../logger", () => jest.createMockFromModule("../logger"));
-		loggerModule = await require("../logger");
-	});
-
-	afterEach(() => {
-		jest.resetAllMocks();
-		jest.resetModules();
-	});
+	afterEach(() => jest.resetAllMocks());
 
 	/**
 	 * Asserts {@link LoggerFactory} creates its own logger on construction.
@@ -26,18 +17,18 @@ describe("LoggerFactory", () => {
 		// Arrange.
 		const { LoggerFactory } = require("../logger-factory") as typeof import("../logger-factory");
 
-		const loggerSpy = jest.spyOn(loggerModule, "Logger");
+		//const loggerSpy = jest.spyOn(loggerModule, "Logger");
 		const options: LoggingOptions = {
 			logLevel: LogLevel.INFO,
 			target: { write: jest.fn() }
 		};
 
 		// Act.
-		const loggerFactory = new LoggerFactory(options);
+		new LoggerFactory(options);
 
 		// Assert
-		expect(loggerSpy).toHaveBeenCalledTimes(1);
-		expect(loggerSpy).toHaveBeenNthCalledWith(1, "LoggerFactory", options);
+		expect(Logger).toHaveBeenCalledTimes(1);
+		expect(Logger).toHaveBeenNthCalledWith(1, "LoggerFactory", options);
 	});
 
 	/**
@@ -45,9 +36,6 @@ describe("LoggerFactory", () => {
 	 */
 	it("Clones options on construction", () => {
 		// Arrange.
-		const { LoggerFactory } = require("../logger-factory") as typeof import("../logger-factory");
-		const loggerSpy = jest.spyOn(loggerModule, "Logger");
-
 		const options: LoggingOptions = {
 			logLevel: LogLevel.INFO,
 			target: { write: jest.fn() }
@@ -60,8 +48,7 @@ describe("LoggerFactory", () => {
 
 		// Assert
 		expect(options.logLevel).toBe(LogLevel.INFO);
-		console.log(loggerSpy.mock.calls);
-		expect(loggerSpy.mock.calls[0][1].logLevel).toEqual(LogLevel.ERROR);
+		expect((Logger as jest.MockedClass<typeof Logger>).mock.calls[0][1].logLevel).toEqual(LogLevel.ERROR);
 	});
 
 	/**
@@ -137,10 +124,8 @@ describe("LoggerFactory", () => {
 		describe("Construction", () => {
 			it.each(testCases)("$level when debug is $isDebugMode", ({ logLevel, expected, isDebugMode }) => {
 				// Arrange.
-				(utils as any).isDebugMode = isDebugMode;
-				const { LoggerFactory } = require("../logger-factory") as typeof import("../logger-factory");
+				jest.spyOn(utils, "isDebugMode").mockReturnValue(isDebugMode);
 
-				const loggerSpy = jest.spyOn(loggerModule, "Logger");
 				const options: LoggingOptions = {
 					logLevel,
 					target: { write: jest.fn() }
@@ -150,8 +135,8 @@ describe("LoggerFactory", () => {
 				new LoggerFactory(options);
 
 				// Assert.
-				expect(loggerSpy.mock.calls[0][1].logLevel).toEqual(expected);
-				expect(loggerSpy.mock.instances[0].warn).toHaveBeenCalledTimes(logLevel !== expected ? 1 : 0);
+				expect((Logger as jest.MockedClass<typeof Logger>).mock.calls[0][1].logLevel).toEqual(expected);
+				expect(Logger.prototype.warn).toHaveBeenCalledTimes(logLevel !== expected ? 1 : 0);
 			});
 		});
 
@@ -161,10 +146,8 @@ describe("LoggerFactory", () => {
 		describe("setLogLevel", () => {
 			it.each(testCases)("$level when debug is $isDebugMode", ({ logLevel, expected, isDebugMode }) => {
 				// Arrange.
-				(utils as any).isDebugMode = isDebugMode;
-				const { LoggerFactory } = require("../logger-factory") as typeof import("../logger-factory");
+				jest.spyOn(utils, "isDebugMode").mockReturnValue(isDebugMode);
 
-				const loggerSpy = jest.spyOn(loggerModule, "Logger");
 				const options: LoggingOptions = {
 					logLevel: LogLevel.ERROR,
 					target: { write: jest.fn() }
@@ -178,12 +161,12 @@ describe("LoggerFactory", () => {
 
 				// Assert
 				expect(didChange).toBe(expectedChange);
-				expect(loggerSpy.mock.instances[0].warn).toHaveBeenCalledTimes(expectedChange ? 0 : 1);
+				expect(Logger.prototype.warn).toHaveBeenCalledTimes(expectedChange ? 0 : 1);
 
 				if (didChange) {
-					expect(loggerSpy.mock.calls[0][1].logLevel).toEqual(logLevel);
+					expect((Logger as jest.MockedClass<typeof Logger>).mock.calls[0][1].logLevel).toEqual(logLevel);
 				} else {
-					expect(loggerSpy.mock.calls[0][1].logLevel).toEqual(LogLevel.ERROR);
+					expect((Logger as jest.MockedClass<typeof Logger>).mock.calls[0][1].logLevel).toEqual(LogLevel.ERROR);
 				}
 			});
 		});
@@ -194,9 +177,6 @@ describe("LoggerFactory", () => {
 	 */
 	it("Creates a scoped logger", () => {
 		// Arrange.
-		const { LoggerFactory } = require("../logger-factory") as typeof import("../logger-factory");
-
-		const loggerSpy = jest.spyOn(loggerModule, "Logger");
 		const options: LoggingOptions = {
 			logLevel: LogLevel.INFO,
 			target: { write: jest.fn() }
@@ -208,9 +188,9 @@ describe("LoggerFactory", () => {
 		const logger = loggerFactory.createLogger("Foo");
 
 		// Assert
-		expect(logger).toBeInstanceOf(loggerSpy);
-		expect(loggerSpy).toHaveBeenCalledTimes(2);
-		expect(loggerSpy).toHaveBeenNthCalledWith(2, "Foo", options);
+		expect(logger).toBeInstanceOf(Logger);
+		expect(Logger).toHaveBeenCalledTimes(2);
+		expect(Logger).toHaveBeenNthCalledWith(2, "Foo", options);
 	});
 
 	/**
@@ -218,9 +198,6 @@ describe("LoggerFactory", () => {
 	 */
 	it("Re-uses loggers", () => {
 		// Arrange.
-		const { LoggerFactory } = require("../logger-factory") as typeof import("../logger-factory");
-
-		const loggerSpy = jest.spyOn(loggerModule, "Logger");
 		const options: LoggingOptions = {
 			logLevel: LogLevel.INFO,
 			target: { write: jest.fn() }

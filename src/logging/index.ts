@@ -8,15 +8,20 @@ import { LoggerFactory } from "./logger-factory";
 
 export { LogLevel } from "./log-level";
 
-// Default logging to local-system files.
-const target = new FileTarget({
-	dest: path.join(cwd(), "logs"),
-	fileName: getPluginUUID(),
-	maxFileCount: 10,
-	maxSize: 50 * 1024 * 1024
-});
+/**
+ * Create a {@link LoggerFactory} for the current plugin based on its environment.
+ * @returns The {@link LoggerFactory}.
+ */
+export function createLoggerFactory() {
+	const target = new FileTarget({
+		dest: path.join(cwd(), "logs"),
+		fileName: getPluginUUID(),
+		maxFileCount: 10,
+		maxSize: 50 * 1024 * 1024
+	});
 
-export const loggerFactory = new LoggerFactory({
-	logLevel: isDebugMode ? LogLevel.DEBUG : LogLevel.INFO,
-	target
-});
+	return new LoggerFactory({
+		logLevel: isDebugMode() ? LogLevel.DEBUG : LogLevel.INFO,
+		target
+	});
+}
