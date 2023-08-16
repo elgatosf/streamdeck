@@ -2,7 +2,7 @@ import fs, { Dirent } from "node:fs";
 import { EOL } from "node:os";
 import path from "node:path";
 
-import type { FileTarget } from "../file-target";
+import { FileTarget } from "../file-target";
 import { LogLevel } from "../log-level";
 
 jest.mock("node:fs");
@@ -52,7 +52,6 @@ describe("FileTarget", () => {
 			jest.spyOn(fs, "existsSync").mockReturnValue(false);
 			jest.spyOn(fs, "openSync").mockReturnValue(mockedFileDescriptor);
 
-			const { FileTarget } = (await require("../file-target")) as typeof import("../file-target");
 			const fileTarget = new FileTarget({
 				dest: mockedDest,
 				fileName: "com.elgato.test",
@@ -80,7 +79,6 @@ describe("FileTarget", () => {
 			jest.spyOn(fs, "existsSync").mockReturnValue(false);
 			jest.spyOn(fs, "openSync").mockReturnValue(mockedFileDescriptor);
 
-			const { FileTarget } = (await require("../file-target")) as typeof import("../file-target");
 			const fileTarget = new FileTarget({
 				dest: mockedDest,
 				fileName: "com.elgato.test",
@@ -122,8 +120,6 @@ describe("FileTarget", () => {
 				mockPath("com.elgato.test.1.log")
 			] as unknown[] as Dirent[]);
 
-			const { FileTarget } = (await require("../file-target")) as typeof import("../file-target");
-
 			// Act.
 			new FileTarget({
 				dest: mockedDest,
@@ -153,7 +149,6 @@ describe("FileTarget", () => {
 			jest.spyOn(fs, "readdirSync").mockReturnValueOnce(dirs);
 			jest.spyOn(fs, "readdirSync").mockReturnValueOnce([...dirs, mockPath("com.elgato.test.2.log")] as unknown[] as Dirent[]);
 
-			const { FileTarget } = (await require("../file-target")) as typeof import("../file-target");
 			const fileTarget = new FileTarget({
 				dest: mockedDest,
 				fileName: "com.elgato.test",
