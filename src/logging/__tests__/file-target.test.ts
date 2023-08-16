@@ -2,6 +2,7 @@ import fs, { Dirent } from "node:fs";
 import { EOL } from "node:os";
 import path from "node:path";
 
+import type { FileTarget } from "../file-target";
 import { LogLevel } from "../log-level";
 
 jest.mock("node:fs");
@@ -124,7 +125,7 @@ describe("FileTarget", () => {
 			const { FileTarget } = (await require("../file-target")) as typeof import("../file-target");
 
 			// Act.
-			const fileTarget = new FileTarget({
+			new FileTarget({
 				dest: mockedDest,
 				fileName: "com.elgato.test",
 				maxFileCount: 3,

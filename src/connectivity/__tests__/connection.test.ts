@@ -210,6 +210,7 @@ describe("StreamDeckConnection", () => {
 
 	/**
 	 * Creates {@link StreamDeckConnection} and connects it to a mock {@link WebSocket}.
+	 * @param loggerFactory The logger factory to be consumed by the {@link StreamDeckConnection}.
 	 * @returns A {@link StreamDeckConnection} that is in a connected state.
 	 */
 	function openConnection(loggerFactory: LoggerFactory) {

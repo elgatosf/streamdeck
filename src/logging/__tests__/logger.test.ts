@@ -191,6 +191,11 @@ describe("Logger", () => {
 			it("Does log TRACE", () => verify((logger) => logger.trace("trace"), true));
 		});
 
+		/**
+		 * Asserts {@link Logger} correctly does, or does not, log a message of a specific level, based on the {@link LogLevel} associated with the logger.
+		 * @param act Function responsible for logging to the {@link Logger}, e.g. {@link Logger.error}, {@link Logger.warn}, etc.
+		 * @param expectLog Whether a log was expected to be written.
+		 */
 		function verify(act: (logger: Logger) => void, expectLog: boolean) {
 			// Arrange.
 			const target = { write: jest.fn() };

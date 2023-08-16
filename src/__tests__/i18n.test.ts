@@ -35,7 +35,7 @@ describe("I18nProvider", () => {
 		const { loggerFactory } = getMockedLogging();
 
 		// Act.
-		const i18n = new I18nProvider("en", loggerFactory);
+		new I18nProvider("en", loggerFactory);
 
 		// Assert.
 		expect(readFileSyncSpy).toHaveBeenCalledTimes(7);
@@ -129,7 +129,7 @@ describe("I18nProvider", () => {
 		const { loggerFactory, logger } = getMockedLogging();
 
 		// Act.
-		const i18n = new I18nProvider("en", loggerFactory);
+		new I18nProvider("en", loggerFactory);
 
 		// Assert.
 		expect(logger.error).toHaveBeenCalledTimes(2);

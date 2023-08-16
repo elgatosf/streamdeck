@@ -15,9 +15,6 @@ describe("LoggerFactory", () => {
 	 */
 	it("Creates the LoggerFactory logger on construction", () => {
 		// Arrange.
-		const { LoggerFactory } = require("../logger-factory") as typeof import("../logger-factory");
-
-		//const loggerSpy = jest.spyOn(loggerModule, "Logger");
 		const options: LoggingOptions = {
 			logLevel: LogLevel.INFO,
 			target: { write: jest.fn() }
@@ -154,7 +151,7 @@ describe("LoggerFactory", () => {
 				};
 
 				const loggerFactory = new LoggerFactory(options);
-				let expectedChange = logLevel === expected;
+				const expectedChange = logLevel === expected;
 
 				// Act.
 				const didChange = loggerFactory.setLogLevel(logLevel);

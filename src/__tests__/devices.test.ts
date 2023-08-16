@@ -19,7 +19,7 @@ describe("getDevices", () => {
 		// Assert.
 		expect(devices.size).toBe(1);
 
-		const [[_, device]] = devices.entries();
+		const [[, device]] = devices.entries();
 		expect(device.id).toBe(registrationParameters.info.devices[0].id);
 		expect(device.isConnected).toBeFalsy();
 		expect(device.name).toBe(registrationParameters.info.devices[0].name);
@@ -50,7 +50,7 @@ describe("getDevices", () => {
 		// Assert.
 		expect(devices.size).toBe(2);
 
-		const [_, [__, device]] = devices.entries();
+		const [, [, device]] = devices.entries();
 		expect(device.id).toBe("__NEW_DEV__");
 		expect(device.isConnected).toBeTruthy();
 		expect(device.name).toBe("New Device");
@@ -66,7 +66,7 @@ describe("getDevices", () => {
 
 		// Act.
 		const devices = getDevices(connection);
-		const [[_, device]] = devices.entries();
+		const [[, device]] = devices.entries();
 		expect(device.isConnected).toBeFalsy();
 
 		connection.__emit({
@@ -92,7 +92,7 @@ describe("getDevices", () => {
 
 		// Act.
 		const devices = getDevices(connection);
-		const [[_, device]] = devices.entries();
+		const [[, device]] = devices.entries();
 		expect(device.isConnected).toBeFalsy();
 
 		connection.__emit({
@@ -124,7 +124,7 @@ describe("getDevices", () => {
 
 		// Act.
 		const devices = getDevices(connection);
-		const [[_, device]] = devices.entries();
+		const [[, device]] = devices.entries();
 		expect(device.isConnected).toBeFalsy();
 
 		connection.__emit({

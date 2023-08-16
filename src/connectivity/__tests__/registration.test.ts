@@ -1,4 +1,5 @@
 import { getMockedLogging } from "../../../test/mocks/logging";
+import type { Logger } from "../../logging";
 import { RegistrationParameters } from "../registration";
 
 jest.mock("../../logging");
@@ -67,7 +68,7 @@ describe("Registration Parameters", () => {
 	it("Logs arguments", () => {
 		// Arrange, act.
 		const { loggerFactory, logger } = getMockedLogging();
-		const regParams = new RegistrationParameters([...port, ...pluginUUID, ...registerEvent, ...info], loggerFactory);
+		new RegistrationParameters([...port, ...pluginUUID, ...registerEvent, ...info], loggerFactory);
 
 		// Assert.
 		expect(logger.debug).toHaveBeenCalledTimes(4);
@@ -82,7 +83,7 @@ describe("Registration Parameters", () => {
 	 */
 	it("Creates a named logger", () => {
 		// Arrange, act.
-		const { loggerFactory, logger } = getMockedLogging();
+		const { loggerFactory } = getMockedLogging();
 		new RegistrationParameters([...port, ...pluginUUID, ...registerEvent, ...info], loggerFactory);
 
 		// Assert.
