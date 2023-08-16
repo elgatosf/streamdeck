@@ -55,6 +55,7 @@ streamDeck.client.onKeyDown(({ action }) => {
 });
 ```
 
+> [!IMPORTANT]
 > Stream Deck plug-ins require scaffolding, and it is highly recommended to use the `streamdeck create` CLI command.
 
 ## 🌐 Manifest
@@ -63,20 +64,9 @@ _TODO_
 
 ## 📖 Usage
 
-The top-level import `streamDeck` provides common functionality to assist with building, debugging, and communicating with the Stream Deck.
+The top-level import provides common functionality to assist with building, debugging, and communicating with the Stream Deck.
 
-```typescript
-import * as streamDeck from "@elgato/streamdeck";
-
-/*
- * streamDeck.client
- * streamDeck.actions
- * streamDeck.devices
- * streamDeck.logger
- */
-```
-
-### 🔗 Client
+#### 🔗 Client
 
 The `streamDeck.client` acts as the main bridge between your plug-in, and the Stream Deck. The client provides event listeners for receiving events from Stream Deck e.g. when an action appears, and functions for sending request to the Stream Deck e.g. updating settings.
 
@@ -90,7 +80,7 @@ streamDeck.client.setGlobalSettings(settings); // Updates the global settings.
 streamDeck.client.switchToProfile(profile, device); // Switch to a pre-defined profile.
 ```
 
-### 🗺️ Actions
+#### 🗺️ Actions
 
 The `streamDeck.actions` object provides information about actions currently visible on the Stream Deck, and methods for routing events of a specific action type; routing is particularly useful when your plug-in provides multiple actions.
 
@@ -113,7 +103,7 @@ streamDeck.actions.registerAction("com.elgato.test.change-brightness", new Chang
 streamDeck.actions.registerAction("com.elgato.test.toggle-on-off", new ToggleOnOff());
 ```
 
-### 🎛️ Devices
+#### 🎛️ Devices
 
 The `streamDeck.devices` collection contains information about the user's Stream Deck devices.
 
@@ -125,33 +115,31 @@ streamDeck.devices.forEach((device) => {
 });
 ```
 
-### 📄 Logger
+#### 📄 Logging
 
-The `streamDeck.logger` provides local file-based logging capabilities, allowing you to diagnose, track, and debug potential problems. Logs files operate a file-rotation and are re-indexed when the current file exceeds 50MiB, with the 10 most recent files being retained. Logs can be found within the Stream Deck plugins folder, under `/logs`.
+The `streamDeck.logging` object provides local file-based logging capabilities, allowing you to diagnose, track, and debug potential problems. Logs files operate a file-rotation policy and are re-indexed when the current file exceeds 50MiB, with the 10 most recent files being retained.
 
-To assist with identifying the significant of a log, the following levels are available:
+> [!NOTE]
+> Logs can be found within the plug-in's folder, under `/logs`.
 
-1. `ERROR`
-1. `WARN`
-1. `INFO`
-1. `DEBUG`
-1. `TRACE`
-
-The default log level is `LogLevel.INFO`; this means `ERROR`, `WARN`, and `INFO` messages will be written. When the plug-in is run in debug mode, it is possible to change the default log-level.
+To assist with identifying the severity of logs, there are five levels: `ERROR`, `WARN`, `INFO`, `DEBUG`, and `TRACE` with the default being `INFO`, unless the plugin in debug mode in which case the level defaults to `DEBUG`.
 
 ```typescript
-import * streamDeck from "@elgato/streamdeck";
+import * as streamDeck from "@elgato/streamdeck";
 
-streamDeck.logger.logError("Error message");
-streamDeck.logger.logWarn("Warning message")
-streamDeck.logger.logInfo("Information message");
-streamDeck.logger.logDebug("Debug message"); // ❌ As the default log-level is INFO, this will not be written.
-streamDeck.logger.logTrace("Trace message"); // ❌ As the default log-level is INFO, this will not be written.
+const logger = streamDeck.logging.createLogger();
 
-streamDeck.logger.setLogLevel(streamDeck.LogLevel.TRACE)
-streamDeck.logger.logDebug("Debug message"); // ✅ This will now be written.
-streamDeck.logger.logTrace("Trace message"); // ✅ This will now be written.
+logger.error("Error message");
+logger.warn("Warning message");
+logger.info("Information message");
+logger.debug("Debug message"); // ❌ Default level is INFO
+logger.trace("Trace message"); // ❌ Default level is INFO
+
+streamDeck.logging.setLogLevel(streamDeck.LogLevel.TRACE);
+
+logger.debug("Debug message"); // ✅
+logger.trace("Trace message"); // ✅
 ```
 
-> ⚠️ **Warning**
+> [!WARNING]  
 > When the log-level is set to `TRACE` **all** communication between the Stream Deck and the plug-in will be logged to the file system, this includes all settings. Please ensure sensitive information is not transmitted whilst `TRACE` is active.
