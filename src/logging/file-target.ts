@@ -3,7 +3,7 @@ import { EOL } from "node:os";
 import path from "node:path";
 
 import { LogLevel } from "./log-level";
-import type { LogTarget } from "./log-target";
+import type { LogEntry, LogTarget } from "./log-target";
 
 /**
  * Provides a {@link LogTarget} capable of logging to a local file system.
@@ -31,7 +31,7 @@ export class FileTarget implements LogTarget {
 	/**
 	 * @inheritdoc
 	 */
-	public write(logLevel: LogLevel, message: string, error?: unknown): void {
+	public write({ level, message, error }: LogEntry): void {
 		const fd = fs.openSync(this.filePath, "a");
 		const write = (message: string) => {
 			fs.writeSync(fd, message);
@@ -39,7 +39,7 @@ export class FileTarget implements LogTarget {
 		};
 
 		try {
-			write(`${new Date().toISOString()} ${LogLevel[logLevel].padEnd(5)} ${message}${EOL}`);
+			write(`${new Date().toISOString()} ${LogLevel[level].padEnd(5)} ${message}${EOL}`);
 			if (error !== undefined) {
 				if (error instanceof Object && "message" in error && error.message && error.message !== "") {
 					write(`${error.message}${EOL}`);

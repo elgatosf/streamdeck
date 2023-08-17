@@ -22,12 +22,25 @@ describe("ActionsController", () => {
 
 	afterEach(() => jest.resetAllMocks());
 
+	it("Creates a scoped logger", () => {
+		// Arrange.
+		const { logger, client } = getMockedClient();
+		const createScopeSpy = jest.spyOn(logger, "createScope");
+
+		// Act.
+		new ActionsController(client, manifest, logger);
+
+		// Act.
+		expect(createScopeSpy).toHaveBeenCalledTimes(1);
+		expect(createScopeSpy).toHaveBeenCalledWith("ActionsController");
+	});
+
 	it("Adds valid routes", () => {
 		// Arrange.
 		const mockedRoute = Route as jest.MockedClass<typeof Route>;
-		const { loggerFactory, client } = getMockedClient();
+		const { logger, client } = getMockedClient();
 		const action: SingletonAction = {};
-		const actions = new ActionsController(client, manifest, loggerFactory);
+		const actions = new ActionsController(client, manifest, logger);
 
 		// Act.
 		actions.registerAction(manifestId, action);
@@ -39,14 +52,14 @@ describe("ActionsController", () => {
 
 	it("Warns when action does not exist in manifest", () => {
 		// Arrange.
-		const { loggerFactory, logger, client } = getMockedClient();
-		const actions = new ActionsController(client, manifest, loggerFactory);
+		const { logger, scopedLogger, client } = getMockedClient();
+		const actions = new ActionsController(client, manifest, logger);
 
 		// Act.
 		actions.registerAction("com.elgato.action-service.__one", new SingletonAction());
 
 		// Assert.
-		expect(logger.warn).toHaveBeenCalledTimes(1);
-		expect(logger.warn).toHaveBeenCalledWith("Failed to route action. The specified action UUID does not exist in the manifest: com.elgato.action-service.__one");
+		expect(scopedLogger.warn).toHaveBeenCalledTimes(1);
+		expect(scopedLogger.warn).toHaveBeenCalledWith("Failed to route action. The specified action UUID does not exist in the manifest: com.elgato.action-service.__one");
 	});
 });

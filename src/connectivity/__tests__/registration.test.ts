@@ -1,4 +1,4 @@
-import { getMockedLogging } from "../../../test/mocks/logging";
+import { getMockedLogger } from "../../../test/mocks/logging";
 import type { Logger } from "../../logging";
 import { RegistrationParameters } from "../registration";
 
@@ -16,8 +16,8 @@ describe("Registration Parameters", () => {
 	 */
 	it("Parses valid arguments", () => {
 		// Arrange, act.
-		const { loggerFactory } = getMockedLogging();
-		const regParams = new RegistrationParameters([...port, ...pluginUUID, ...registerEvent, ...info], loggerFactory);
+		const { logger } = getMockedLogger();
+		const regParams = new RegistrationParameters([...port, ...pluginUUID, ...registerEvent, ...info], logger);
 
 		// Assert.
 		expect(regParams.port).toBe("12345");
@@ -33,8 +33,8 @@ describe("Registration Parameters", () => {
 	 */
 	it("Ignores unknown arguments", () => {
 		// Arrange, act.
-		const { loggerFactory } = getMockedLogging();
-		const regParams = new RegistrationParameters([...port, "-other", "Hello world", ...pluginUUID, ...registerEvent, ...info], loggerFactory);
+		const { logger } = getMockedLogger();
+		const regParams = new RegistrationParameters([...port, "-other", "Hello world", ...pluginUUID, ...registerEvent, ...info], logger);
 
 		// Assert.
 		expect(regParams.port).toBe("12345");
@@ -50,8 +50,8 @@ describe("Registration Parameters", () => {
 	 */
 	it("Handles uneven arguments", () => {
 		// Arrange, act.
-		const { loggerFactory } = getMockedLogging();
-		const regParams = new RegistrationParameters([...port, ...pluginUUID, "-bool", ...registerEvent, ...info], loggerFactory);
+		const { logger } = getMockedLogger();
+		const regParams = new RegistrationParameters([...port, ...pluginUUID, "-bool", ...registerEvent, ...info], logger);
 
 		// Assert.
 		expect(regParams.port).toBe("12345");
@@ -67,27 +67,27 @@ describe("Registration Parameters", () => {
 	 */
 	it("Logs arguments", () => {
 		// Arrange, act.
-		const { loggerFactory, logger } = getMockedLogging();
-		new RegistrationParameters([...port, ...pluginUUID, ...registerEvent, ...info], loggerFactory);
+		const { logger, scopedLogger } = getMockedLogger();
+		new RegistrationParameters([...port, ...pluginUUID, ...registerEvent, ...info], logger);
 
 		// Assert.
-		expect(logger.debug).toHaveBeenCalledTimes(4);
-		expect(logger.debug).toBeCalledWith(`port=${[port[1]]}`);
-		expect(logger.debug).toBeCalledWith(`pluginUUID=${[pluginUUID[1]]}`);
-		expect(logger.debug).toBeCalledWith(`registerEvent=${[registerEvent[1]]}`);
-		expect(logger.debug).toBeCalledWith(`info=${info[1]}`);
+		expect(scopedLogger.debug).toHaveBeenCalledTimes(4);
+		expect(scopedLogger.debug).toBeCalledWith(`port=${[port[1]]}`);
+		expect(scopedLogger.debug).toBeCalledWith(`pluginUUID=${[pluginUUID[1]]}`);
+		expect(scopedLogger.debug).toBeCalledWith(`registerEvent=${[registerEvent[1]]}`);
+		expect(scopedLogger.debug).toBeCalledWith(`info=${info[1]}`);
 	});
 
 	/**
 	 * Asserts {@link RegistrationParameters} creates a named {@link Logger}.
 	 */
-	it("Creates a named logger", () => {
+	it("Creates a scoped logger", () => {
 		// Arrange, act.
-		const { loggerFactory } = getMockedLogging();
-		new RegistrationParameters([...port, ...pluginUUID, ...registerEvent, ...info], loggerFactory);
+		const { logger } = getMockedLogger();
+		new RegistrationParameters([...port, ...pluginUUID, ...registerEvent, ...info], logger);
 
 		// Assert.
-		expect(loggerFactory.createLogger).toBeCalledWith("RegistrationParameters");
+		expect(logger.createScope).toBeCalledWith("RegistrationParameters");
 	});
 
 	/**
@@ -95,10 +95,10 @@ describe("Registration Parameters", () => {
 	 */
 	it("Includes all missing arguments", () => {
 		// Arrange.
-		const { loggerFactory } = getMockedLogging();
+		const { logger } = getMockedLogger();
 
 		// Act, assert.
-		expect(() => new RegistrationParameters([], loggerFactory)).toThrow(
+		expect(() => new RegistrationParameters([], logger)).toThrow(
 			"Unable to establish a connection with Stream Deck, missing command line arguments: -port, -pluginUUID, -registerEvent, -info"
 		);
 	});
@@ -108,10 +108,10 @@ describe("Registration Parameters", () => {
 	 */
 	it("Requires port", () => {
 		// Arrange.
-		const { loggerFactory } = getMockedLogging();
+		const { logger } = getMockedLogger();
 
 		// Act, assert.
-		expect(() => new RegistrationParameters([...pluginUUID, ...registerEvent, ...info], loggerFactory)).toThrow(
+		expect(() => new RegistrationParameters([...pluginUUID, ...registerEvent, ...info], logger)).toThrow(
 			"Unable to establish a connection with Stream Deck, missing command line arguments: -port"
 		);
 	});
@@ -121,10 +121,10 @@ describe("Registration Parameters", () => {
 	 */
 	it("Requires pluginUUID", () => {
 		// Arrange.
-		const { loggerFactory } = getMockedLogging();
+		const { logger } = getMockedLogger();
 
 		// Act, assert.
-		expect(() => new RegistrationParameters([...port, ...registerEvent, ...info], loggerFactory)).toThrow(
+		expect(() => new RegistrationParameters([...port, ...registerEvent, ...info], logger)).toThrow(
 			"Unable to establish a connection with Stream Deck, missing command line arguments: -pluginUUID"
 		);
 	});
@@ -134,10 +134,10 @@ describe("Registration Parameters", () => {
 	 */
 	it("Requires registerEvent", () => {
 		// Arrange.
-		const { loggerFactory } = getMockedLogging();
+		const { logger } = getMockedLogger();
 
 		// Act, assert.
-		expect(() => new RegistrationParameters([...port, ...pluginUUID, ...info], loggerFactory)).toThrow(
+		expect(() => new RegistrationParameters([...port, ...pluginUUID, ...info], logger)).toThrow(
 			"Unable to establish a connection with Stream Deck, missing command line arguments: -registerEvent"
 		);
 	});
@@ -147,10 +147,10 @@ describe("Registration Parameters", () => {
 	 */
 	it("Requires info", () => {
 		// Arrange.
-		const { loggerFactory } = getMockedLogging();
+		const { logger } = getMockedLogger();
 
 		// Act, assert.
-		expect(() => new RegistrationParameters([...port, ...pluginUUID, ...registerEvent], loggerFactory)).toThrow(
+		expect(() => new RegistrationParameters([...port, ...pluginUUID, ...registerEvent], logger)).toThrow(
 			"Unable to establish a connection with Stream Deck, missing command line arguments: -info"
 		);
 	});

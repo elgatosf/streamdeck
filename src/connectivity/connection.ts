@@ -2,7 +2,7 @@ import { EventEmitter } from "node:events";
 import WebSocket from "ws";
 
 import { PromiseCompletionSource } from "../common/promises";
-import { Logger, LoggerFactory } from "../logging";
+import { Logger } from "../logging";
 import { Command } from "./commands";
 import { Event, EventIdentifier } from "./events";
 import { RegistrationParameters } from "./registration";
@@ -36,10 +36,10 @@ export class StreamDeckConnection {
 	 * Initializes a new instance of the {@link StreamDeckConnection} class.
 	 * @param registrationParameters Registration parameters used to establish a connection with the Stream Deck; these are automatically supplied as part of the command line arguments
 	 * when the plugin is ran by the Stream Deck.
-	 * @param loggerFactory Logger factory responsible for creating a logger that can be consumed by this class.
+	 * @param logger Logger responsible for capturing log entries.
 	 */
-	constructor(public readonly registrationParameters: RegistrationParameters, loggerFactory: LoggerFactory) {
-		this.logger = loggerFactory.createLogger("StreamDeckConnection");
+	constructor(public readonly registrationParameters: RegistrationParameters, logger: Logger) {
+		this.logger = logger.createScope("StreamDeckConnection");
 	}
 
 	/**

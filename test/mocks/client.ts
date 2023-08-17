@@ -3,8 +3,8 @@ import { MockStreamDeckConnection } from "../../src/connectivity/__mocks__/conne
 import { registrationParameters } from "../../src/connectivity/__mocks__/registration";
 import { StreamDeckConnection } from "../../src/connectivity/connection";
 import { Device } from "../../src/devices";
-import type { Logger, LoggerFactory } from "../../src/logging";
-import { getMockedLogging } from "./logging";
+import type { Logger } from "../../src/logging";
+import { getMockedLogger } from "./logging";
 
 jest.mock("../../src/connectivity/connection");
 
@@ -14,8 +14,8 @@ jest.mock("../../src/connectivity/connection");
  * @returns The client and its connection.
  */
 export function getMockedClient(devices: Map<string, Device> = new Map<string, Device>()) {
-	const { loggerFactory, logger } = getMockedLogging();
-	const connection = new StreamDeckConnection(registrationParameters, loggerFactory) as MockStreamDeckConnection;
+	const { logger, scopedLogger } = getMockedLogger();
+	const connection = new StreamDeckConnection(registrationParameters, logger) as MockStreamDeckConnection;
 
 	return {
 		/**
@@ -29,13 +29,13 @@ export function getMockedClient(devices: Map<string, Device> = new Map<string, D
 		connection,
 
 		/**
-		 * Mocked {@link Logger} resolved by the mocked {@link LoggerFactory}.
+		 * Mocked {@link Logger}.
 		 */
 		logger,
 
 		/**
-		 * Mocked {@link LoggerFactory} that resolves the mocked {@link Logger} when creating new loggers.
+		 * The mocked scoped {@link Logger} returned when calling {@link Logger.createScope}.
 		 */
-		loggerFactory
+		scopedLogger
 	};
 }

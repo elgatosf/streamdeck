@@ -1,8 +1,8 @@
 import WebSocket from "ws";
 
 import { emitFromAll } from "../../../test/events";
-import { getMockedLogging } from "../../../test/mocks/logging";
-import { LoggerFactory } from "../../logging";
+import { getMockedLogger } from "../../../test/mocks/logging";
+import { Logger } from "../../logging";
 import { OpenUrl } from "../commands";
 import { StreamDeckConnection } from "../connection";
 import { RegistrationParameters } from "../registration";
@@ -10,7 +10,7 @@ import { RegistrationParameters } from "../registration";
 jest.mock("ws");
 
 const mockArgv = ["-port", "12345", "-pluginUUID", "abc123", "-registerEvent", "test_event", "-info", `{"plugin":{"uuid":"com.elgato.test","version":"0.1.0"}}`];
-const regParams = new RegistrationParameters(mockArgv, getMockedLogging().loggerFactory);
+const regParams = new RegistrationParameters(mockArgv, getMockedLogger().logger);
 
 const originalArgv = process.argv;
 
@@ -27,7 +27,7 @@ describe("StreamDeckConnection", () => {
 	 */
 	it("Does not auto-connect on construction", () => {
 		process.argv = originalArgv;
-		new StreamDeckConnection(regParams, getMockedLogging().loggerFactory);
+		new StreamDeckConnection(regParams, getMockedLogger().logger);
 		expect(mockedWebSocket.mock.instances).toHaveLength(0);
 	});
 
@@ -36,7 +36,7 @@ describe("StreamDeckConnection", () => {
 	 */
 	it("Registers on connection", () => {
 		// Arrange.
-		const connection = new StreamDeckConnection(regParams, getMockedLogging().loggerFactory);
+		const connection = new StreamDeckConnection(regParams, getMockedLogger().logger);
 		connection.connect();
 
 		// Act.
@@ -58,8 +58,8 @@ describe("StreamDeckConnection", () => {
 	 */
 	it("Log when WebSocket is undefined", () => {
 		// Arrange.
-		const { loggerFactory, logger } = getMockedLogging();
-		const connection = new StreamDeckConnection(regParams, loggerFactory);
+		const { logger, scopedLogger } = getMockedLogger();
+		const connection = new StreamDeckConnection(regParams, logger);
 		connection.connect();
 
 		(connection as any).ws = undefined;
@@ -68,8 +68,8 @@ describe("StreamDeckConnection", () => {
 		emitFromAll(mockedWebSocket, "open");
 
 		// Assert.
-		expect(logger.error).toHaveBeenCalledTimes(1);
-		expect(logger.error).toHaveBeenCalledWith("Failed to connect to Stream Deck: Web Socket connection is undefined.");
+		expect(scopedLogger.error).toHaveBeenCalledTimes(1);
+		expect(scopedLogger.error).toHaveBeenCalledWith("Failed to connect to Stream Deck: Web Socket connection is undefined.");
 	});
 
 	/**
@@ -77,17 +77,17 @@ describe("StreamDeckConnection", () => {
 	 */
 	it("Does not connect twice", () => {
 		// Arrange.
-		const { loggerFactory, logger } = getMockedLogging();
-		const connection = openConnection(loggerFactory);
+		const { logger, scopedLogger } = getMockedLogger();
+		const connection = openConnection(logger);
 
-		expect(logger.debug).toHaveBeenNthCalledWith(1, "Connecting to Stream Deck.");
-		expect(logger.debug).toHaveBeenNthCalledWith(2, "Successfully connected to Stream Deck.");
+		expect(scopedLogger.debug).toHaveBeenNthCalledWith(1, "Connecting to Stream Deck.");
+		expect(scopedLogger.debug).toHaveBeenNthCalledWith(2, "Successfully connected to Stream Deck.");
 
 		// Act.
 		connection.connect();
 
 		// Assert.
-		expect(logger.debug).toHaveBeenCalledTimes(2);
+		expect(scopedLogger.debug).toHaveBeenCalledTimes(2);
 	});
 
 	/**
@@ -95,8 +95,8 @@ describe("StreamDeckConnection", () => {
 	 */
 	it("Emits on", () => {
 		// Arrange.
-		const { loggerFactory } = getMockedLogging();
-		const connection = openConnection(loggerFactory);
+		const { logger } = getMockedLogger();
+		const connection = openConnection(logger);
 
 		let emitCount = 0;
 		connection.on("systemDidWakeUp", () => emitCount++);
@@ -115,8 +115,8 @@ describe("StreamDeckConnection", () => {
 	 */
 	it("Emits once", () => {
 		// Arrange.
-		const { loggerFactory } = getMockedLogging();
-		const connection = openConnection(loggerFactory);
+		const { logger } = getMockedLogger();
+		const connection = openConnection(logger);
 
 		let emitCount = 0;
 		connection.once("systemDidWakeUp", () => emitCount++);
@@ -135,8 +135,8 @@ describe("StreamDeckConnection", () => {
 	 */
 	it("Removes listeners", () => {
 		// Arrange.
-		const { loggerFactory } = getMockedLogging();
-		const connection = openConnection(loggerFactory);
+		const { logger } = getMockedLogger();
+		const connection = openConnection(logger);
 
 		let emitCount = 0;
 		const listener = () => emitCount++;
@@ -157,8 +157,8 @@ describe("StreamDeckConnection", () => {
 	 */
 	it("Sends to the WebSocket", async () => {
 		// Arrange.
-		const { loggerFactory } = getMockedLogging();
-		const connection = openConnection(loggerFactory);
+		const { logger } = getMockedLogger();
+		const connection = openConnection(logger);
 
 		const command: OpenUrl = {
 			event: "openUrl",
@@ -179,8 +179,8 @@ describe("StreamDeckConnection", () => {
 	 */
 	it("Logs unknown messages", () => {
 		// Arrange.
-		const { loggerFactory, logger } = getMockedLogging();
-		openConnection(loggerFactory);
+		const { logger, scopedLogger } = getMockedLogger();
+		openConnection(logger);
 
 		const msg = JSON.stringify({ name: "Hello world " });
 
@@ -188,8 +188,8 @@ describe("StreamDeckConnection", () => {
 		emitFromAll(mockedWebSocket, "message", msg);
 
 		// Assert.
-		expect(logger.warn).toBeCalledTimes(1);
-		expect(logger.warn).toBeCalledWith(`Received unknown message: ${msg}`);
+		expect(scopedLogger.warn).toBeCalledTimes(1);
+		expect(scopedLogger.warn).toBeCalledWith(`Received unknown message: ${msg}`);
 	});
 
 	/**
@@ -197,24 +197,40 @@ describe("StreamDeckConnection", () => {
 	 */
 	it("Logs unreadable messages", () => {
 		// Arrange.
-		const { loggerFactory, logger } = getMockedLogging();
-		openConnection(loggerFactory);
+		const { logger, scopedLogger } = getMockedLogger();
+		openConnection(logger);
 
 		// Act.
 		emitFromAll(mockedWebSocket, "message", "{INVALID_JSON}");
 
 		// Assert.
-		expect(logger.error).toBeCalledTimes(1);
-		expect(logger.error).toBeCalledWith("Failed to parse message: {INVALID_JSON}", expect.any(Error));
+		expect(scopedLogger.error).toBeCalledTimes(1);
+		expect(scopedLogger.error).toBeCalledWith("Failed to parse message: {INVALID_JSON}", expect.any(Error));
+	});
+
+	/**
+	 * Asserts {@link StreamDeckConnection} creates a scoped logger.
+	 */
+	it("Creates a scoped logger", () => {
+		// Arrange.
+		const { logger } = getMockedLogger();
+		const createScopeSpy = jest.spyOn(logger, "createScope");
+
+		// Act.
+		new StreamDeckConnection(regParams, logger);
+
+		// Assert.
+		expect(createScopeSpy).toHaveBeenCalledTimes(1);
+		expect(createScopeSpy).toHaveBeenCalledWith("StreamDeckConnection");
 	});
 
 	/**
 	 * Creates {@link StreamDeckConnection} and connects it to a mock {@link WebSocket}.
-	 * @param loggerFactory The logger factory to be consumed by the {@link StreamDeckConnection}.
+	 * @param logger The logger factory to be consumed by the {@link StreamDeckConnection}.
 	 * @returns A {@link StreamDeckConnection} that is in a connected state.
 	 */
-	function openConnection(loggerFactory: LoggerFactory) {
-		const connection = new StreamDeckConnection(regParams, loggerFactory);
+	function openConnection(logger: Logger) {
+		const connection = new StreamDeckConnection(regParams, logger);
 		connection.connect();
 
 		emitFromAll(mockedWebSocket, "open");

@@ -4,17 +4,16 @@ import { cwd } from "node:process";
 import { getPluginUUID, isDebugMode } from "../common/utils";
 import { FileTarget } from "./file-target";
 import { LogLevel } from "./log-level";
-import { LoggerFactory } from "./logger-factory";
+import { Logger } from "./logger";
 
 export { LogLevel } from "./log-level";
 export { Logger } from "./logger";
-export { LoggerFactory } from "./logger-factory";
 
 /**
- * Create a {@link LoggerFactory} for the current plugin based on its environment.
- * @returns The {@link LoggerFactory}.
+ * Create the default {@link Logger} for the current plugin based on its environment.
+ * @returns The default {@link Logger}.
  */
-export function createLoggerFactory() {
+export function createLogger() {
 	const target = new FileTarget({
 		dest: path.join(cwd(), "logs"),
 		fileName: getPluginUUID(),
@@ -22,8 +21,8 @@ export function createLoggerFactory() {
 		maxSize: 50 * 1024 * 1024
 	});
 
-	return new LoggerFactory({
-		logLevel: isDebugMode() ? LogLevel.DEBUG : LogLevel.INFO,
+	return new Logger({
+		level: isDebugMode() ? LogLevel.DEBUG : LogLevel.INFO,
 		target
 	});
 }

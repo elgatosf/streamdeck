@@ -1,5 +1,5 @@
 import { StreamDeckClient } from "../client";
-import { Logger, LoggerFactory } from "../logging";
+import { Logger } from "../logging";
 import { Manifest } from "../manifest";
 import { Route } from "./route";
 import { SingletonAction } from "./singleton-action";
@@ -22,10 +22,10 @@ export class ActionsController {
 	 * Initializes a new instance of the {@link ActionsController} class.
 	 * @param client The Stream Deck client.
 	 * @param manifest Manifest associated with the plugin.
-	 * @param loggerFactory Logger factory responsible for creating a logger that can be consumed by this class.
+	 * @param logger Logger responsible for capturing log entries.
 	 */
-	constructor(private readonly client: StreamDeckClient, private readonly manifest: Manifest, loggerFactory: LoggerFactory) {
-		this.logger = loggerFactory.createLogger("ActionsController");
+	constructor(private readonly client: StreamDeckClient, private readonly manifest: Manifest, logger: Logger) {
+		this.logger = logger.createScope("ActionsController");
 	}
 
 	/**

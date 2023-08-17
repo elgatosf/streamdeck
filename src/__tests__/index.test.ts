@@ -1,7 +1,7 @@
 import type { StreamDeckClient } from "../client";
 import { registrationParameters } from "../connectivity/__mocks__/registration";
 import type { StreamDeckConnection } from "../connectivity/connection";
-import { LoggerFactory } from "../logging";
+import type { Logger } from "../logging";
 
 jest.mock("../actions/actions-controller");
 jest.mock("../logging");
@@ -68,14 +68,14 @@ describe("Index", () => {
 	it("Initializes logging", async () => {
 		// Arrange.
 		const logging = (await require("../logging")) as typeof import("../logging");
-		const createLoggerFactory = jest.spyOn(logging, "createLoggerFactory").mockReturnValue("__mock__logger_factory__" as unknown as LoggerFactory);
+		const createLoggerSpy = jest.spyOn(logging, "createLogger").mockReturnValue("__mock__logger__" as unknown as Logger);
 
 		// Act.
 		const streamDeck = (await require("../index")) as typeof import("../index");
 
 		// Assert.
-		expect(createLoggerFactory).toHaveBeenCalledTimes(1);
-		expect(streamDeck.logging).toEqual("__mock__logger_factory__");
+		expect(createLoggerSpy).toHaveBeenCalledTimes(1);
+		expect(streamDeck.logger).toEqual("__mock__logger__");
 	});
 
 	it("Initializes getManifest", async () => {
@@ -99,7 +99,7 @@ describe("Index", () => {
 
 		// Assert.
 		expect(mockedI18nProvider.mock.calls).toHaveLength(1);
-		expect(mockedI18nProvider.mock.calls[0]).toEqual([registrationParameters.info.application.language, streamDeck.logging]);
+		expect(mockedI18nProvider.mock.calls[0]).toEqual([registrationParameters.info.application.language, streamDeck.logger]);
 		expect(streamDeck.i18n).toEqual(mockedI18nProvider.mock.instances[0]);
 	});
 
@@ -115,7 +115,7 @@ describe("Index", () => {
 
 		// Assert.
 		expect(mockedActions.mock.calls).toHaveLength(1);
-		expect(mockedActions.mock.calls[0]).toEqual([streamDeck.client, getManifest(), streamDeck.logging]);
+		expect(mockedActions.mock.calls[0]).toEqual([streamDeck.client, getManifest(), streamDeck.logger]);
 		expect(streamDeck.actions).toEqual(mockedActions.mock.instances[0]);
 	});
 

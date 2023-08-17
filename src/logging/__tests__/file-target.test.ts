@@ -18,27 +18,27 @@ describe("FileTarget", () => {
 		const testCases = [
 			{
 				name: "ERROR",
-				logLevel: LogLevel.ERROR,
+				level: LogLevel.ERROR,
 				expectedMessage: `2000-12-25T10:30:00.123Z ERROR Hello world${EOL}`
 			},
 			{
 				name: "WARN",
-				logLevel: LogLevel.WARN,
+				level: LogLevel.WARN,
 				expectedMessage: `2000-12-25T10:30:00.123Z WARN  Hello world${EOL}`
 			},
 			{
 				name: "INFO",
-				logLevel: LogLevel.INFO,
+				level: LogLevel.INFO,
 				expectedMessage: `2000-12-25T10:30:00.123Z INFO  Hello world${EOL}`
 			},
 			{
 				name: "DEBUG",
-				logLevel: LogLevel.DEBUG,
+				level: LogLevel.DEBUG,
 				expectedMessage: `2000-12-25T10:30:00.123Z DEBUG Hello world${EOL}`
 			},
 			{
 				name: "TRACE",
-				logLevel: LogLevel.TRACE,
+				level: LogLevel.TRACE,
 				expectedMessage: `2000-12-25T10:30:00.123Z TRACE Hello world${EOL}`
 			}
 		];
@@ -46,7 +46,7 @@ describe("FileTarget", () => {
 		/**
 		 * Asserts {@link FileTarget.write} writes the formatted log message to the file.
 		 */
-		it.each(testCases)("$name message", async ({ logLevel, expectedMessage }) => {
+		it.each(testCases)("$name message", async ({ level, expectedMessage }) => {
 			// Arrange.
 			jest.spyOn(fs, "existsSync").mockReturnValue(false);
 			jest.spyOn(fs, "openSync").mockReturnValue(mockedFileDescriptor);
@@ -60,7 +60,10 @@ describe("FileTarget", () => {
 			const fileTarget = new FileTarget(options);
 
 			// Act.
-			fileTarget.write(logLevel, "Hello world");
+			fileTarget.write({
+				level,
+				message: "Hello world"
+			});
 
 			// Assert.
 			expect(fs.openSync).toHaveBeenCalledTimes(1);
@@ -74,7 +77,7 @@ describe("FileTarget", () => {
 		/**
 		 * Asserts {@link FileTarget.write} writes the formatted log message, including the error, to the file.
 		 */
-		it.each(testCases)("$name message, with error", async ({ logLevel, expectedMessage }) => {
+		it.each(testCases)("$name message, with error", async ({ level, expectedMessage }) => {
 			// Arrange.
 			jest.spyOn(fs, "existsSync").mockReturnValue(false);
 			jest.spyOn(fs, "openSync").mockReturnValue(mockedFileDescriptor);
@@ -88,10 +91,14 @@ describe("FileTarget", () => {
 
 			const fileTarget = new FileTarget(options);
 
-			const err = new Error("Hello world, this is a test");
+			const error = new Error("Hello world, this is a test");
 
 			// Act.
-			fileTarget.write(logLevel, "Hello world", err);
+			fileTarget.write({
+				level,
+				message: "Hello world",
+				error
+			});
 
 			// Assert.
 			expect(fs.openSync).toHaveBeenCalledTimes(1);
@@ -99,7 +106,7 @@ describe("FileTarget", () => {
 			expect(fs.writeSync).toHaveBeenCalledTimes(3);
 			expect(fs.writeSync).toHaveBeenNthCalledWith(1, mockedFileDescriptor, expectedMessage);
 			expect(fs.writeSync).toHaveBeenNthCalledWith(2, mockedFileDescriptor, `Hello world, this is a test${EOL}`);
-			expect(fs.writeSync).toHaveBeenNthCalledWith(3, mockedFileDescriptor, `${(<Error>err).stack}${EOL}`);
+			expect(fs.writeSync).toHaveBeenNthCalledWith(3, mockedFileDescriptor, `${(<Error>error).stack}${EOL}`);
 			expect(fs.closeSync).toHaveBeenCalledTimes(1);
 			expect(fs.closeSync).toHaveBeenCalledWith(mockedFileDescriptor);
 		});
@@ -164,9 +171,20 @@ describe("FileTarget", () => {
 			const fileTarget = new FileTarget(options);
 
 			// Act.
-			fileTarget.write(LogLevel.ERROR, "Hello world (1)");
-			fileTarget.write(LogLevel.ERROR, "Hello world (2)");
-			fileTarget.write(LogLevel.ERROR, "Hello world (3)");
+			fileTarget.write({
+				level: LogLevel.ERROR,
+				message: "Hello world (1)"
+			});
+
+			fileTarget.write({
+				level: LogLevel.ERROR,
+				message: "Hello world (2)"
+			});
+
+			fileTarget.write({
+				level: LogLevel.ERROR,
+				message: "Hello world (3)"
+			});
 
 			expect(fs.rmSync).toHaveBeenCalledTimes(1);
 			expect(fs.rmSync).toHaveBeenLastCalledWith(path.join(options.dest, "com.elgato.test.2.log"));

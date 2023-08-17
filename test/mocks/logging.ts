@@ -1,32 +1,40 @@
 import { Logger, LogLevel } from "../../src/logging";
-import { LoggerFactory, LoggingOptions } from "../../src/logging/logger-factory";
+import { LoggerOptions } from "../../src/logging/logger";
 
 jest.mock("../../src/logging");
 
 /**
- * Gets a mocked {@link LoggerFactory} that always resolves a mocked {@link Logger}.
- * @returns The mocked {@link LoggerFactory} and {@link Logger}.
+ * Creates a new mock {@link Logger}.
+ * @returns The mocked {@link Logger}.
  */
-export function getMockedLogging() {
-	const options: LoggingOptions = {
-		logLevel: LogLevel.TRACE,
+export function getMockedLogger() {
+	const options: LoggerOptions = {
+		level: LogLevel.TRACE,
 		target: { write: jest.fn() }
 	};
 
-	const logger = new Logger("Mock", options);
-	const loggerFactory = new LoggerFactory(options);
+	const logger = new Logger(options);
+	const scopedLogger = new Logger({
+		...options,
+		scope: "Scope"
+	});
 
-	jest.spyOn(loggerFactory, "createLogger").mockReturnValue(logger);
+	jest.spyOn(logger, "createScope").mockReturnValue(scopedLogger);
 
 	return {
 		/**
-		 * Mocked {@link Logger} resolved by the mocked {@link LoggerFactory}.
+		 * Mocked {@link Logger}.
 		 */
 		logger,
 
 		/**
-		 * Mocked {@link LoggerFactory} that resolves the mocked {@link Logger} when creating new loggers.
+		 * Options used to construct the mock {@link Logger}.
 		 */
-		loggerFactory
+		options,
+
+		/**
+		 * The mocked scoped {@link Logger} returned when calling {@link Logger.createScope}.
+		 */
+		scopedLogger
 	};
 }

@@ -1,148 +1,197 @@
+import * as utils from "../../common/utils";
 import { LogLevel } from "../log-level";
-import type { LogTarget } from "../log-target";
-import { Logger } from "../logger";
+import { LogEntry, LogTarget } from "../log-target";
+import { Logger, LoggerOptions } from "../logger";
+
+jest.mock("../../common/utils");
 
 describe("Logger", () => {
+	afterEach(() => jest.resetAllMocks());
+
 	/**
-	 * Asserts {@link Logger} correctly formats an empty name when writing messages.
+	 * Asserts the {@link Logger} clones options on construction.
 	 */
-	it("Formats message with empty name", () => {
+	it("Clones options on construction", () => {
 		// Arrange.
-		const target = { write: jest.fn() };
-		const logger = new Logger(undefined, {
-			logLevel: LogLevel.TRACE,
-			target
-		});
+		const options: LoggerOptions = {
+			level: LogLevel.ERROR,
+			target: { write: jest.fn() }
+		};
+
+		const logger = new Logger(options);
 
 		// Act.
-		logger.error("Log error", new Error("error"));
-		logger.warn("Log warn", new Error("warn"));
-		logger.info("Log info", new Error("info"));
-		logger.debug("Log debug", new Error("debug"));
-		logger.trace("Log trace", new Error("trace"));
+		logger.setLevel(LogLevel.INFO);
+		logger.info("Hello world");
 
-		// Assert.
-		expect(target.write).toHaveBeenCalledTimes(5);
-		expect(target.write).toHaveBeenNthCalledWith(
-			1,
-			LogLevel.ERROR,
-			"Log error",
-			expect.objectContaining({
-				message: "error"
-			})
-		);
-
-		expect(target.write).toHaveBeenNthCalledWith(
-			2,
-			LogLevel.WARN,
-			"Log warn",
-			expect.objectContaining({
-				message: "warn"
-			})
-		);
-
-		expect(target.write).toHaveBeenNthCalledWith(
-			3,
-			LogLevel.INFO,
-			"Log info",
-			expect.objectContaining({
-				message: "info"
-			})
-		);
-
-		expect(target.write).toHaveBeenNthCalledWith(
-			4,
-			LogLevel.DEBUG,
-			"Log debug",
-			expect.objectContaining({
-				message: "debug"
-			})
-		);
-
-		expect(target.write).toHaveBeenNthCalledWith(
-			5,
-			LogLevel.TRACE,
-			"Log trace",
-			expect.objectContaining({
-				message: "trace"
-			})
-		);
+		// Assert
+		expect(logger.level).toBe(LogLevel.INFO);
+		expect(options.level).toBe(LogLevel.ERROR);
+		expect(options.target.write).toHaveBeenCalledTimes(1);
+		expect(options.target.write).toHaveBeenCalledWith<[LogEntry]>({
+			level: LogLevel.INFO,
+			message: "Hello world"
+		});
 	});
 
 	/**
-	 * Asserts {@link Logger} correctly formats the name when writing messages.
+	 * Asserts {@link Logger} correctly formats an empty name when writing messages.
 	 */
-	it("Formats message with name", () => {
-		// Arrange.
-		const target = { write: jest.fn() };
-		const logger = new Logger("Foo", {
-			logLevel: LogLevel.TRACE,
-			target
+	describe("Formats with unscoped log entires", () => {
+		it.each([[undefined], [""], ["    "]])("When scope is '%s'", (scope) => {
+			// Arrange.
+			jest.spyOn(utils, "isDebugMode").mockReturnValue(true);
+
+			const target = { write: jest.fn() };
+			const logger = new Logger({
+				level: LogLevel.TRACE,
+				scope,
+				target
+			});
+
+			// Act.
+			logger.error("Log error", new Error("error"));
+			logger.warn("Log warn", new Error("warn"));
+			logger.info("Log info", new Error("info"));
+			logger.debug("Log debug", new Error("debug"));
+			logger.trace("Log trace", new Error("trace"));
+
+			// Assert.
+			expect(target.write).toHaveBeenCalledTimes(5);
+			expect(target.write).toHaveBeenNthCalledWith<[LogEntry]>(1, {
+				level: LogLevel.ERROR,
+				message: "Log error",
+				error: expect.objectContaining({
+					message: "error"
+				})
+			});
+
+			expect(target.write).toHaveBeenNthCalledWith<[LogEntry]>(2, {
+				level: LogLevel.WARN,
+				message: "Log warn",
+				error: expect.objectContaining({
+					message: "warn"
+				})
+			});
+
+			expect(target.write).toHaveBeenNthCalledWith<[LogEntry]>(3, {
+				level: LogLevel.INFO,
+				message: "Log info",
+				error: expect.objectContaining({
+					message: "info"
+				})
+			});
+
+			expect(target.write).toHaveBeenNthCalledWith<[LogEntry]>(4, {
+				level: LogLevel.DEBUG,
+				message: "Log debug",
+				error: expect.objectContaining({
+					message: "debug"
+				})
+			});
+
+			expect(target.write).toHaveBeenNthCalledWith<[LogEntry]>(5, {
+				level: LogLevel.TRACE,
+				message: "Log trace",
+				error: expect.objectContaining({
+					message: "trace"
+				})
+			});
 		});
+	});
 
-		// Act.
-		logger.error("Log error", new Error("error"));
-		logger.warn("Log warn", new Error("warn"));
-		logger.info("Log info", new Error("info"));
-		logger.debug("Log debug", new Error("debug"));
-		logger.trace("Log trace", new Error("trace"));
+	/**
+	 * Asserts {@link Logger} correctly formats scoped entries.
+	 */
+	describe("Formats scoped log entries", () => {
+		it.each([
+			{
+				scopes: ["Foo "],
+				expectedPrefix: "Foo: "
+			},
+			{
+				scopes: ["Foo", "  "],
+				expectedPrefix: "Foo: "
+			},
+			{
+				scopes: [" Hello", "World"],
+				expectedPrefix: "Hello->World: "
+			},
+			{
+				scopes: ["One", " Two ", "Three"],
+				expectedPrefix: "One->Two->Three: "
+			}
+		])("When scopes are $scopes", ({ scopes, expectedPrefix }) => {
+			// Arrange.
+			jest.spyOn(utils, "isDebugMode").mockReturnValue(true);
 
-		// Assert.
-		expect(target.write).toHaveBeenCalledTimes(5);
-		expect(target.write).toHaveBeenNthCalledWith(
-			1,
-			LogLevel.ERROR,
-			"Foo: Log error",
-			expect.objectContaining({
-				message: "error"
-			})
-		);
+			const target = { write: jest.fn() };
+			const parent = new Logger({
+				level: LogLevel.TRACE,
+				target
+			});
 
-		expect(target.write).toHaveBeenNthCalledWith(
-			2,
-			LogLevel.WARN,
-			"Foo: Log warn",
-			expect.objectContaining({
-				message: "warn"
-			})
-		);
+			const logger = scopes.reduce((prev, current) => prev.createScope(current), parent);
 
-		expect(target.write).toHaveBeenNthCalledWith(
-			3,
-			LogLevel.INFO,
-			"Foo: Log info",
-			expect.objectContaining({
-				message: "info"
-			})
-		);
+			// Act.
+			logger.error("Log error", new Error("error"));
+			logger.warn("Log warn", new Error("warn"));
+			logger.info("Log info", new Error("info"));
+			logger.debug("Log debug", new Error("debug"));
+			logger.trace("Log trace", new Error("trace"));
 
-		expect(target.write).toHaveBeenNthCalledWith(
-			4,
-			LogLevel.DEBUG,
-			"Foo: Log debug",
-			expect.objectContaining({
-				message: "debug"
-			})
-		);
+			// Assert.
+			expect(target.write).toHaveBeenCalledTimes(5);
+			expect(target.write).toHaveBeenNthCalledWith<[LogEntry]>(1, {
+				level: LogLevel.ERROR,
+				message: `${expectedPrefix}Log error`,
+				error: expect.objectContaining({
+					message: "error"
+				})
+			});
 
-		expect(target.write).toHaveBeenNthCalledWith(
-			5,
-			LogLevel.TRACE,
-			"Foo: Log trace",
-			expect.objectContaining({
-				message: "trace"
-			})
-		);
+			expect(target.write).toHaveBeenNthCalledWith<[LogEntry]>(2, {
+				level: LogLevel.WARN,
+				message: `${expectedPrefix}Log warn`,
+				error: expect.objectContaining({
+					message: "warn"
+				})
+			});
+
+			expect(target.write).toHaveBeenNthCalledWith<[LogEntry]>(3, {
+				level: LogLevel.INFO,
+				message: `${expectedPrefix}Log info`,
+				error: expect.objectContaining({
+					message: "info"
+				})
+			});
+
+			expect(target.write).toHaveBeenNthCalledWith<[LogEntry]>(4, {
+				level: LogLevel.DEBUG,
+				message: `${expectedPrefix}Log debug`,
+				error: expect.objectContaining({
+					message: "debug"
+				})
+			});
+
+			expect(target.write).toHaveBeenNthCalledWith<[LogEntry]>(5, {
+				level: LogLevel.TRACE,
+				message: `${expectedPrefix}Log trace`,
+				error: expect.objectContaining({
+					message: "trace"
+				})
+			});
+		});
 	});
 
 	/**
 	 * Asserts {@link Logger} only writes messages to the {@link LogTarget} when the log-level is allowed.
 	 */
-	describe("Log level checks", () => {
-		let logLevel: LogLevel;
+	describe("Checks the log level before forwarding to target", () => {
+		let level: LogLevel;
 
 		describe("ERROR", () => {
-			beforeAll(() => (logLevel = LogLevel.ERROR));
+			beforeAll(() => (level = LogLevel.ERROR));
 
 			it("Does log ERROR", () => verify((logger) => logger.error("error"), true));
 			it("Does not log WARN", () => verify((logger) => logger.warn("warn"), false));
@@ -152,7 +201,7 @@ describe("Logger", () => {
 		});
 
 		describe("WARN", () => {
-			beforeAll(() => (logLevel = LogLevel.WARN));
+			beforeAll(() => (level = LogLevel.WARN));
 
 			it("Does log ERROR", () => verify((logger) => logger.error("error"), true));
 			it("Does log WARN", () => verify((logger) => logger.warn("warn"), true));
@@ -162,7 +211,7 @@ describe("Logger", () => {
 		});
 
 		describe("INFO", () => {
-			beforeAll(() => (logLevel = LogLevel.INFO));
+			beforeAll(() => (level = LogLevel.INFO));
 
 			it("Does log ERROR", () => verify((logger) => logger.error("error"), true));
 			it("Does log WARN", () => verify((logger) => logger.warn("warn"), true));
@@ -172,7 +221,7 @@ describe("Logger", () => {
 		});
 
 		describe("DEBUG", () => {
-			beforeAll(() => (logLevel = LogLevel.DEBUG));
+			beforeAll(() => (level = LogLevel.DEBUG));
 
 			it("Does log ERROR", () => verify((logger) => logger.error("error"), true));
 			it("Does log WARN", () => verify((logger) => logger.warn("warn"), true));
@@ -181,8 +230,8 @@ describe("Logger", () => {
 			it("Does not log TRACE", () => verify((logger) => logger.trace("trace"), false));
 		});
 
-		describe("DEBUG", () => {
-			beforeAll(() => (logLevel = LogLevel.TRACE));
+		describe("TRACE", () => {
+			beforeAll(() => (level = LogLevel.TRACE));
 
 			it("Does log ERROR", () => verify((logger) => logger.error("error"), true));
 			it("Does log WARN", () => verify((logger) => logger.warn("warn"), true));
@@ -198,9 +247,11 @@ describe("Logger", () => {
 		 */
 		function verify(act: (logger: Logger) => void, expectLog: boolean) {
 			// Arrange.
+			jest.spyOn(utils, "isDebugMode").mockReturnValue(true);
+
 			const target = { write: jest.fn() };
-			const logger = new Logger("Foo", {
-				logLevel,
+			const logger = new Logger({
+				level,
 				target
 			});
 
@@ -210,5 +261,137 @@ describe("Logger", () => {
 			// Assert.
 			expect(target.write).toHaveBeenCalledTimes(expectLog ? 1 : 0);
 		}
+	});
+
+	/**
+	 * Asserts validating the {@link LogLevel} can be set based on the environment.
+	 */
+	describe("Log-level validation", () => {
+		const testCases = [
+			{
+				isDebugMode: false,
+				name: "Can be ERROR",
+				level: LogLevel.ERROR,
+				expected: LogLevel.ERROR
+			},
+			{
+				isDebugMode: true,
+				name: "Can be ERROR",
+				level: LogLevel.ERROR,
+				expected: LogLevel.ERROR
+			},
+			{
+				isDebugMode: false,
+				name: "Can be WARN",
+				level: LogLevel.WARN,
+				expected: LogLevel.WARN
+			},
+			{
+				isDebugMode: true,
+				name: "Can be WARN",
+				level: LogLevel.WARN,
+				expected: LogLevel.WARN
+			},
+			{
+				isDebugMode: false,
+				name: "Can be INFO",
+				level: LogLevel.INFO,
+				expected: LogLevel.INFO
+			},
+			{
+				isDebugMode: true,
+				name: "Can be INFO",
+				level: LogLevel.INFO,
+				expected: LogLevel.INFO
+			},
+			{
+				isDebugMode: false,
+				name: "Cannot be DEBUG",
+				level: LogLevel.DEBUG,
+				expected: LogLevel.INFO
+			},
+			{
+				isDebugMode: true,
+				name: "Can be DEBUG",
+				level: LogLevel.DEBUG,
+				expected: LogLevel.DEBUG
+			},
+			{
+				isDebugMode: false,
+				name: "Cannot be TRACE",
+				level: LogLevel.TRACE,
+				expected: LogLevel.INFO
+			},
+			{
+				isDebugMode: true,
+				name: "Can be TRACE",
+				level: LogLevel.TRACE,
+				expected: LogLevel.TRACE
+			}
+		];
+
+		/**
+		 * Asserts the {@link Logger} validates the {@link LogLevel} on construction.
+		 */
+		describe("Construction", () => {
+			it.each(testCases)("$name when isDebugMode is $isDebugMode", ({ level, expected, isDebugMode }) => {
+				// Arrange.
+				jest.spyOn(utils, "isDebugMode").mockReturnValue(isDebugMode);
+
+				const options: LoggerOptions = {
+					level,
+					target: { write: jest.fn() }
+				};
+
+				// Act.
+				const logger = new Logger(options);
+
+				// Assert.
+				expect(logger.level).toBe(expected);
+
+				if (level === expected) {
+					expect(options.target.write).toHaveBeenCalledTimes(0);
+				} else {
+					expect(options.target.write).toHaveBeenCalledTimes(1);
+					expect(options.target.write).toHaveBeenCalledWith<[LogEntry]>({
+						level: LogLevel.WARN,
+						message: `Log level cannot be set to ${LogLevel[level]} whilst not in debug mode.`
+					});
+				}
+			});
+		});
+
+		/**
+		 * Asserts {@link Logger.setLogLevel} validates teh {@link LogLevel}.
+		 */
+		describe("setLevel", () => {
+			it.each(testCases)("$name when isDebugMode is $isDebugMode", ({ level, expected, isDebugMode }) => {
+				// Arrange.
+				jest.spyOn(utils, "isDebugMode").mockReturnValue(isDebugMode);
+
+				const options: LoggerOptions = {
+					level: LogLevel.ERROR,
+					target: { write: jest.fn() }
+				};
+
+				const logger = new Logger(options);
+
+				// Act.
+				logger.setLevel(level);
+
+				// Assert.
+				expect(logger.level).toBe(expected);
+
+				if (level === expected) {
+					expect(options.target.write).toHaveBeenCalledTimes(0);
+				} else {
+					expect(options.target.write).toHaveBeenCalledTimes(1);
+					expect(options.target.write).toHaveBeenCalledWith<[LogEntry]>({
+						level: LogLevel.WARN,
+						message: `Log level cannot be set to ${LogLevel[level]} whilst not in debug mode.`
+					});
+				}
+			});
+		});
 	});
 });

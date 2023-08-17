@@ -3,7 +3,7 @@ import path from "node:path";
 
 import { get } from "./common/utils";
 import { Language, supportedLanguages } from "./connectivity/registration";
-import { Logger, LoggerFactory } from "./logging";
+import { Logger } from "./logging";
 
 /**
  * Provides locales and translations for internalization.
@@ -32,10 +32,10 @@ export class I18nProvider {
 	/**
 	 * Initializes a new instance of the {@link I18nProvider} class.
 	 * @param language The default language to be used when retrieving translations for a given key.
-	 * @param loggerFactory Logger factory responsible for creating a logger that can be consumed by this class.
+	 * @param logger Logger responsible for capturing log entries.
 	 */
-	constructor(private readonly language: Language, loggerFactory: LoggerFactory) {
-		this.logger = loggerFactory.createLogger("I18nProvider");
+	constructor(private readonly language: Language, logger: Logger) {
+		this.logger = logger.createScope("I18nProvider");
 		this.loadLocales();
 	}
 

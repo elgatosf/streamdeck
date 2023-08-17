@@ -2,21 +2,20 @@ import path from "node:path";
 
 import * as utils from "../../common/utils";
 import { FileTarget, FileTargetOptions } from "../file-target";
-import { createLoggerFactory, LogLevel } from "../index";
-import { LoggerFactory, LoggingOptions } from "../logger-factory";
+import { createLogger, LogLevel } from "../index";
+import { Logger, LoggerOptions } from "../logger";
 
 jest.mock("../../common/utils");
 jest.mock("../file-target");
-jest.mock("../logger-factory");
 jest.mock("../logger");
 
-describe("createLoggerFactory", () => {
+describe("createLogger", () => {
 	const mockedCwd = path.join("stream-deck", "tests");
 
 	afterEach(() => jest.resetAllMocks());
 
 	/**
-	 * Asserts {@link createLoggerFactory} uses a {@link FileTarget} with the correct default options.
+	 * Asserts {@link createLogger} uses a {@link FileTarget} with the correct default options.
 	 */
 	it.each([
 		{
@@ -27,14 +26,14 @@ describe("createLoggerFactory", () => {
 			isDebugMode: false,
 			expectedLogLevel: LogLevel.INFO
 		}
-	])("Initializes default logger factory (isDebugMode=$isDebugMode)", async ({ isDebugMode, expectedLogLevel }) => {
+	])("Initializes default logger (isDebugMode=$isDebugMode)", async ({ isDebugMode, expectedLogLevel }) => {
 		// Arrange.
 		jest.spyOn(process, "cwd").mockReturnValue(mockedCwd);
 		jest.spyOn(utils, "getPluginUUID").mockReturnValue("com.elgato.test");
 		jest.spyOn(utils, "isDebugMode").mockReturnValue(isDebugMode);
 
 		// Act.
-		const loggerFactory = createLoggerFactory();
+		const logger = createLogger();
 
 		// Assert.
 		expect(FileTarget).toHaveBeenCalledTimes(1);
@@ -45,9 +44,10 @@ describe("createLoggerFactory", () => {
 			maxSize: 50 * 1024 * 1024
 		});
 
-		expect(loggerFactory).toBeInstanceOf(LoggerFactory);
-		expect(LoggerFactory).toHaveBeenCalledWith<[LoggingOptions]>({
-			logLevel: expectedLogLevel,
+		expect(logger).toBeInstanceOf(Logger);
+		expect(Logger).toHaveBeenCalledWith<[LoggerOptions]>({
+			level: expectedLogLevel,
+			scope: undefined,
 			target: (FileTarget as jest.MockedClass<typeof FileTarget>).mock.instances[0]
 		});
 	});
