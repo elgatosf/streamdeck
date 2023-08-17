@@ -117,7 +117,7 @@ streamDeck.devices.forEach((device) => {
 
 #### 📄 Logging
 
-The `streamDeck.logging` object provides local file-based logging capabilities, allowing you to diagnose, track, and debug potential problems. Logs files operate a file-rotation policy and are re-indexed when the current file exceeds 50MiB, with the 10 most recent files being retained.
+The `streamDeck.logger` object provides local file-based logging capabilities, allowing you to diagnose, track, and debug potential problems. Logs files operate a file-rotation policy and are re-indexed when the current file exceeds 50MiB, with the 10 most recent files being retained.
 
 > [!NOTE]
 > Logs can be found within the plugin's folder, under `/logs`.
@@ -127,15 +127,15 @@ To assist with identifying the severity of logs, there are five levels: `ERROR`,
 ```typescript
 import * as streamDeck from "@elgato/streamdeck";
 
-const logger = streamDeck.logging.createLogger();
+const logger = streamDeck.logger.createScope("Custom Logger");
 
-logger.error("Error message");
-logger.warn("Warning message");
-logger.info("Information message");
-logger.debug("Debug message"); // ❌ Default level is INFO
-logger.trace("Trace message"); // ❌ Default level is INFO
+loggerr.error("Error message");
+loggerr.warn("Warning message");
+loggerr.info("Information message");
+loggerr.debug("Debug message"); // ❌ Default level is INFO
+loggerr.trace("Trace message"); // ❌ Default level is INFO
 
-streamDeck.logging.setLogLevel(streamDeck.LogLevel.TRACE);
+logger.setLevel(streamDeck.LogLevel.TRACE);
 
 logger.debug("Debug message"); // ✅
 logger.trace("Trace message"); // ✅
