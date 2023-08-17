@@ -2,14 +2,13 @@ import fs, { Dirent } from "node:fs";
 import { EOL } from "node:os";
 import path from "node:path";
 
-import { FileTarget } from "../file-target";
+import { FileTarget, FileTargetOptions } from "../file-target";
 import { LogLevel } from "../log-level";
 
 jest.mock("node:fs");
 
 describe("FileTarget", () => {
 	const mockedDate = new Date(2000, 11, 25, 10, 30, 0, 123);
-	const mockedDest = path.join("test", "logs");
 	const mockedFileDescriptor = 13;
 
 	beforeEach(() => jest.useFakeTimers().setSystemTime(mockedDate));
@@ -52,19 +51,20 @@ describe("FileTarget", () => {
 			jest.spyOn(fs, "existsSync").mockReturnValue(false);
 			jest.spyOn(fs, "openSync").mockReturnValue(mockedFileDescriptor);
 
-			const fileTarget = new FileTarget({
-				dest: mockedDest,
+			const options: FileTargetOptions = {
+				dest: path.join("home", "test", "logs"),
 				fileName: "com.elgato.test",
 				maxFileCount: 1,
 				maxSize: 1024 * 10 * 10
-			});
+			};
+			const fileTarget = new FileTarget(options);
 
 			// Act.
 			fileTarget.write(logLevel, "Hello world");
 
 			// Assert.
 			expect(fs.openSync).toHaveBeenCalledTimes(1);
-			expect(fs.openSync).toHaveBeenNthCalledWith(1, mockPath("com.elgato.test.0.log"), "a");
+			expect(fs.openSync).toHaveBeenNthCalledWith(1, path.join(options.dest, "com.elgato.test.0.log"), "a");
 			expect(fs.writeSync).toHaveBeenCalledTimes(1);
 			expect(fs.writeSync).toHaveBeenCalledWith(mockedFileDescriptor, expectedMessage);
 			expect(fs.closeSync).toHaveBeenCalledTimes(1);
@@ -79,12 +79,14 @@ describe("FileTarget", () => {
 			jest.spyOn(fs, "existsSync").mockReturnValue(false);
 			jest.spyOn(fs, "openSync").mockReturnValue(mockedFileDescriptor);
 
-			const fileTarget = new FileTarget({
-				dest: mockedDest,
+			const options: FileTargetOptions = {
+				dest: path.join("home", "tests", "logs"),
 				fileName: "com.elgato.test",
 				maxFileCount: 1,
 				maxSize: 1024 * 10 * 10
-			});
+			};
+
+			const fileTarget = new FileTarget(options);
 
 			const err = new Error("Hello world, this is a test");
 
@@ -93,7 +95,7 @@ describe("FileTarget", () => {
 
 			// Assert.
 			expect(fs.openSync).toHaveBeenCalledTimes(1);
-			expect(fs.openSync).toHaveBeenNthCalledWith(1, mockPath("com.elgato.test.0.log"), "a");
+			expect(fs.openSync).toHaveBeenNthCalledWith(1, path.join(options.dest, "com.elgato.test.0.log"), "a");
 			expect(fs.writeSync).toHaveBeenCalledTimes(3);
 			expect(fs.writeSync).toHaveBeenNthCalledWith(1, mockedFileDescriptor, expectedMessage);
 			expect(fs.writeSync).toHaveBeenNthCalledWith(2, mockedFileDescriptor, `Hello world, this is a test${EOL}`);
@@ -111,31 +113,34 @@ describe("FileTarget", () => {
 			// Arrange.
 			jest.spyOn(fs, "existsSync").mockReturnValue(true);
 			jest.spyOn(fs, "readdirSync").mockReturnValue([
-				mockPath("__com.elgato.test.0.log"), // Ignored, other file name.
-				mockPath("com.elgato.test.0.log"),
-				mockPath("com.elgato.test.log"), // Ignored, invalid index format.
-				mockPath("com.elgato.test.4.log"),
-				mockPath("com.elgato.test.5.log"),
-				mockPath("com.elgato.other.0.log"), // Ignored, other file name.
-				mockPath("com.elgato.test.1.log")
-			] as unknown[] as Dirent[]);
+				mockDirent("__com.elgato.test.0.log"), // Ignored other file name.
+				mockDirent("com.elgato.test.0.log"),
+				mockDirent("com.elgato.test.log"), // Ignore invalid index format.
+				mockDirent("com.elgato.test.4.log"),
+				mockDirent("com.elgato.test.5.log"),
+				mockDirent("com.elgato.other.0.log"), // Ignore other file name.
+				mockDirent("com.elgato.test.0.log", true), // Ignore directories.
+				mockDirent("com.elgato.test.1.log")
+			]);
 
-			// Act.
-			new FileTarget({
-				dest: mockedDest,
+			const options: FileTargetOptions = {
+				dest: path.join("home", "test", "logs"),
 				fileName: "com.elgato.test",
 				maxFileCount: 3,
 				maxSize: 100
-			});
+			};
+
+			// Act.
+			new FileTarget(options);
 
 			// Assert.
 			expect(fs.rmSync).toHaveBeenCalledTimes(2);
-			expect(fs.rmSync).toHaveBeenNthCalledWith(1, mockPath("com.elgato.test.5.log"));
-			expect(fs.rmSync).toHaveBeenNthCalledWith(2, mockPath("com.elgato.test.4.log"));
+			expect(fs.rmSync).toHaveBeenNthCalledWith(1, path.join(options.dest, "com.elgato.test.5.log"));
+			expect(fs.rmSync).toHaveBeenNthCalledWith(2, path.join(options.dest, "com.elgato.test.4.log"));
 
 			expect(fs.renameSync).toHaveBeenCalledTimes(2);
-			expect(fs.renameSync).toHaveBeenNthCalledWith(1, mockPath("com.elgato.test.1.log"), mockPath("com.elgato.test.2.log"));
-			expect(fs.renameSync).toHaveBeenNthCalledWith(2, mockPath("com.elgato.test.0.log"), mockPath("com.elgato.test.1.log"));
+			expect(fs.renameSync).toHaveBeenNthCalledWith(1, path.join(options.dest, "com.elgato.test.1.log"), path.join(options.dest, "com.elgato.test.2.log"));
+			expect(fs.renameSync).toHaveBeenNthCalledWith(2, path.join(options.dest, "com.elgato.test.0.log"), path.join(options.dest, "com.elgato.test.1.log"));
 		});
 
 		/**
@@ -143,18 +148,20 @@ describe("FileTarget", () => {
 		 */
 		it("Occurs when size exceeded", async () => {
 			// Arrange.
-			const dirs = [mockPath("com.elgato.test.0.log"), mockPath("com.elgato.test.1.log")] as unknown[] as Dirent[];
+			const dirEntries = [mockDirent("com.elgato.test.0.log"), mockDirent("com.elgato.test.1.log")];
 
 			jest.spyOn(fs, "existsSync").mockReturnValue(true);
-			jest.spyOn(fs, "readdirSync").mockReturnValueOnce(dirs);
-			jest.spyOn(fs, "readdirSync").mockReturnValueOnce([...dirs, mockPath("com.elgato.test.2.log")] as unknown[] as Dirent[]);
+			jest.spyOn(fs, "readdirSync").mockReturnValueOnce(dirEntries);
+			jest.spyOn(fs, "readdirSync").mockReturnValueOnce([...dirEntries, mockDirent("com.elgato.test.2.log")]);
 
-			const fileTarget = new FileTarget({
-				dest: mockedDest,
+			const options: FileTargetOptions = {
+				dest: path.join("home", "test", "logs"),
 				fileName: "com.elgato.test",
 				maxFileCount: 3,
 				maxSize: 50
-			});
+			};
+
+			const fileTarget = new FileTarget(options);
 
 			// Act.
 			fileTarget.write(LogLevel.ERROR, "Hello world (1)");
@@ -162,19 +169,23 @@ describe("FileTarget", () => {
 			fileTarget.write(LogLevel.ERROR, "Hello world (3)");
 
 			expect(fs.rmSync).toHaveBeenCalledTimes(1);
-			expect(fs.rmSync).toHaveBeenLastCalledWith(mockPath("com.elgato.test.2.log"));
+			expect(fs.rmSync).toHaveBeenLastCalledWith(path.join(options.dest, "com.elgato.test.2.log"));
 			expect(fs.renameSync).toHaveBeenCalledTimes(4); // Re-indexing occurs twice, once on construction, and then on exceeding size.
-			expect(fs.renameSync).nthCalledWith(3, mockPath("com.elgato.test.1.log"), mockPath("com.elgato.test.2.log"));
-			expect(fs.renameSync).nthCalledWith(4, mockPath("com.elgato.test.0.log"), mockPath("com.elgato.test.1.log"));
+			expect(fs.renameSync).nthCalledWith(3, path.join(options.dest, "com.elgato.test.1.log"), path.join(options.dest, "com.elgato.test.2.log"));
+			expect(fs.renameSync).nthCalledWith(4, path.join(options.dest, "com.elgato.test.0.log"), path.join(options.dest, "com.elgato.test.1.log"));
 		});
 	});
 
 	/**
-	 * Helper function for getting a mock path.
-	 * @param fileName Name of the file.
-	 * @returns Mock path.
+	 * Creates a mock {@link Dirent}.
+	 * @param name The name of the entry
+	 * @param isDirectory Mock value of {@link Dirent.isDirectory}.
+	 * @returns The mocked {@link Dirent}.
 	 */
-	function mockPath(fileName: string) {
-		return path.join(mockedDest, fileName);
+	function mockDirent(name: string, isDirectory = false) {
+		return {
+			name,
+			isDirectory: jest.fn().mockReturnValue(isDirectory)
+		} as unknown as Dirent;
 	}
 });

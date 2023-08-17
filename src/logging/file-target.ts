@@ -1,4 +1,4 @@
-import fs from "node:fs";
+import fs, { Dirent } from "node:fs";
 import { EOL } from "node:os";
 import path from "node:path";
 
@@ -75,21 +75,19 @@ export class FileTarget implements LogTarget {
 		const regex = /^\.(\d+)\.log$/;
 
 		return fs
-			.readdirSync(this.options.dest)
-			.reduce((prev: LogFileEntry[], filePath) => {
-				const basename = path.basename(filePath);
-				if (basename.indexOf(this.options.fileName) < 0) {
+			.readdirSync(this.options.dest, { withFileTypes: true })
+			.reduce((prev: LogFileEntry[], entry: Dirent) => {
+				if (entry.isDirectory() || entry.name.indexOf(this.options.fileName) < 0) {
 					return prev;
 				}
 
-				const match = basename.substring(this.options.fileName.length).match(regex);
+				const match = entry.name.substring(this.options.fileName.length).match(regex);
 				if (match?.length !== 2) {
 					return prev;
 				}
 
 				prev.push({
-					basename,
-					filePath,
+					path: path.join(this.options.dest, entry.name),
 					index: parseInt(match[1])
 				});
 
@@ -115,9 +113,9 @@ export class FileTarget implements LogTarget {
 		for (let i = logFiles.length - 1; i >= 0; i--) {
 			const log = logFiles[i];
 			if (i >= this.options.maxFileCount - 1) {
-				fs.rmSync(log.filePath);
+				fs.rmSync(log.path);
 			} else {
-				fs.renameSync(log.filePath, this.getLogFilePath(i + 1));
+				fs.renameSync(log.path, this.getLogFilePath(i + 1));
 			}
 		}
 	}
@@ -133,14 +131,9 @@ type LogFileEntry = {
 	index: number;
 
 	/**
-	 * Basename of the log file.
+	 * Path to the log file.
 	 */
-	basename: string;
-
-	/**
-	 * Full file path.
-	 */
-	filePath: string;
+	path: string;
 };
 
 /**
