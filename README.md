@@ -56,7 +56,7 @@ streamDeck.client.onKeyDown(({ action }) => {
 ```
 
 > [!IMPORTANT]
-> Stream Deck plug-ins require scaffolding, and it is highly recommended to use the `streamdeck create` CLI command.
+> Stream Deck plugins require scaffolding, and it is highly recommended to use the `streamdeck create` CLI command.
 
 ## 🌐 Manifest
 
@@ -68,7 +68,7 @@ The top-level import provides common functionality to assist with building, debu
 
 #### 🔗 Client
 
-The `streamDeck.client` acts as the main bridge between your plug-in, and the Stream Deck. The client provides event listeners for receiving events from Stream Deck e.g. when an action appears, and functions for sending request to the Stream Deck e.g. updating settings.
+The `streamDeck.client` acts as the main bridge between your plugin, and the Stream Deck. The client provides event listeners for receiving events from Stream Deck e.g. when an action appears, and functions for sending request to the Stream Deck e.g. updating settings.
 
 ```typescript
 import * as streamDeck from "@elgato/streamdeck";
@@ -82,7 +82,7 @@ streamDeck.client.switchToProfile(profile, device); // Switch to a pre-defined p
 
 #### 🗺️ Actions
 
-The `streamDeck.actions` object provides information about actions currently visible on the Stream Deck, and methods for routing events of a specific action type; routing is particularly useful when your plug-in provides multiple actions.
+The `streamDeck.actions` object provides information about actions currently visible on the Stream Deck, and methods for routing events of a specific action type; routing is particularly useful when your plugin provides multiple actions.
 
 ```typescript
 import * as streamDeck from "@elgato/streamdeck";
@@ -120,7 +120,7 @@ streamDeck.devices.forEach((device) => {
 The `streamDeck.logging` object provides local file-based logging capabilities, allowing you to diagnose, track, and debug potential problems. Logs files operate a file-rotation policy and are re-indexed when the current file exceeds 50MiB, with the 10 most recent files being retained.
 
 > [!NOTE]
-> Logs can be found within the plug-in's folder, under `/logs`.
+> Logs can be found within the plugin's folder, under `/logs`.
 
 To assist with identifying the severity of logs, there are five levels: `ERROR`, `WARN`, `INFO`, `DEBUG`, and `TRACE` with the default being `INFO`, unless the plugin in debug mode in which case the level defaults to `DEBUG`.
 
@@ -142,4 +142,4 @@ logger.trace("Trace message"); // ✅
 ```
 
 > [!WARNING]  
-> When the log-level is set to `TRACE` **all** communication between the Stream Deck and the plug-in will be logged to the file system, this includes all settings. Please ensure sensitive information is not transmitted whilst `TRACE` is active.
+> When the log-level is set to `TRACE` **all** communication between the Stream Deck and the plugin will be logged to the file system, this includes all settings. Please ensure sensitive information is not transmitted whilst `TRACE` is active.
