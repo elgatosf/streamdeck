@@ -9,6 +9,6 @@
 		"scripts/**/*.ts",
 		"src/**/__mocks__/**/*.ts",
 		"src/**/__tests__/**/*.ts",
-		"test"
+		"tests"
 	]
 }

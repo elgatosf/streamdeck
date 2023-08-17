@@ -1,4 +1,4 @@
-import { getMockedClient } from "../../../test/mocks/client";
+import { getMockedClient } from "../../../tests/__mocks__/client";
 import * as mockEvents from "../../connectivity/__mocks__/events";
 import {
 	DialDownEvent,

@@ -1,4 +1,4 @@
-import { getMockedLogger } from "../../test/mocks/logging";
+import { getMockedLogger } from "../../tests/__mocks__/logging";
 import { MockStreamDeckConnection } from "../connectivity/__mocks__/connection";
 import { registrationParameters } from "../connectivity/__mocks__/registration";
 import { StreamDeckConnection } from "../connectivity/connection";

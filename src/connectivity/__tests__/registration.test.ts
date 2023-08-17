@@ -1,4 +1,4 @@
-import { getMockedLogger } from "../../../test/mocks/logging";
+import { getMockedLogger } from "../../../tests/__mocks__/logging";
 import type { Logger } from "../../logging";
 import { RegistrationParameters } from "../registration";
 

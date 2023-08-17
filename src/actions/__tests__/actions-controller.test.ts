@@ -1,4 +1,4 @@
-import { getMockedClient } from "../../../test/mocks/client";
+import { getMockedClient } from "../../../tests/__mocks__/client";
 import { manifest as mockManifest } from "../../__mocks__/manifest";
 import { ActionsController } from "../actions-controller";
 import { Route } from "../route";

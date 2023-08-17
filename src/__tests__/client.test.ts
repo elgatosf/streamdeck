@@ -1,4 +1,4 @@
-import { getMockedClient } from "../../test/mocks/client";
+import { getMockedClient } from "../../tests/__mocks__/client";
 import { Action } from "../actions/action";
 import { StreamDeckClient } from "../client";
 import * as mockEvents from "../connectivity/__mocks__/events";

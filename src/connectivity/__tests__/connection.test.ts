@@ -1,7 +1,6 @@
-import WebSocket from "ws";
+import WebSocket, { EventEmitter } from "ws";
 
-import { emitFromAll } from "../../../test/events";
-import { getMockedLogger } from "../../../test/mocks/logging";
+import { getMockedLogger } from "../../../tests/__mocks__/logging";
 import { Logger } from "../../logging";
 import { OpenUrl } from "../commands";
 import { StreamDeckConnection } from "../connection";
@@ -40,7 +39,7 @@ describe("StreamDeckConnection", () => {
 		connection.connect();
 
 		// Act.
-		emitFromAll(mockedWebSocket, "open");
+		emitFromWebSocket("open");
 
 		// Assert.
 		const [webSocket] = mockedWebSocket.mock.instances;
@@ -65,7 +64,7 @@ describe("StreamDeckConnection", () => {
 		(connection as any).ws = undefined;
 
 		// Act.
-		emitFromAll(mockedWebSocket, "open");
+		emitFromWebSocket("open");
 
 		// Assert.
 		expect(scopedLogger.error).toHaveBeenCalledTimes(1);
@@ -102,9 +101,9 @@ describe("StreamDeckConnection", () => {
 		connection.on("systemDidWakeUp", () => emitCount++);
 
 		// Act.
-		emitFromAll(mockedWebSocket, "message", JSON.stringify({ event: "someOtherEvent" }));
-		emitFromAll(mockedWebSocket, "message", JSON.stringify({ event: "systemDidWakeUp" }));
-		emitFromAll(mockedWebSocket, "message", JSON.stringify({ event: "systemDidWakeUp" }));
+		emitFromWebSocket("message", JSON.stringify({ event: "someOtherEvent" }));
+		emitFromWebSocket("message", JSON.stringify({ event: "systemDidWakeUp" }));
+		emitFromWebSocket("message", JSON.stringify({ event: "systemDidWakeUp" }));
 
 		// Assert.
 		expect(emitCount).toBe(2);
@@ -122,9 +121,9 @@ describe("StreamDeckConnection", () => {
 		connection.once("systemDidWakeUp", () => emitCount++);
 
 		// Act.
-		emitFromAll(mockedWebSocket, "message", JSON.stringify({ event: "someOtherEvent" }));
-		emitFromAll(mockedWebSocket, "message", JSON.stringify({ event: "systemDidWakeUp" }));
-		emitFromAll(mockedWebSocket, "message", JSON.stringify({ event: "systemDidWakeUp" }));
+		emitFromWebSocket("message", JSON.stringify({ event: "someOtherEvent" }));
+		emitFromWebSocket("message", JSON.stringify({ event: "systemDidWakeUp" }));
+		emitFromWebSocket("message", JSON.stringify({ event: "systemDidWakeUp" }));
 
 		// Assert.
 		expect(emitCount).toBe(1);
@@ -143,10 +142,10 @@ describe("StreamDeckConnection", () => {
 
 		// Act.
 		connection.once("systemDidWakeUp", listener);
-		emitFromAll(mockedWebSocket, "message", JSON.stringify({ event: "systemDidWakeUp" }));
+		emitFromWebSocket("message", JSON.stringify({ event: "systemDidWakeUp" }));
 
 		connection.removeListener("systemDidWakeUp", listener);
-		emitFromAll(mockedWebSocket, "message", JSON.stringify({ event: "systemDidWakeUp" }));
+		emitFromWebSocket("message", JSON.stringify({ event: "systemDidWakeUp" }));
 
 		// Assert.
 		expect(emitCount).toBe(1);
@@ -185,7 +184,7 @@ describe("StreamDeckConnection", () => {
 		const msg = JSON.stringify({ name: "Hello world " });
 
 		// Act.
-		emitFromAll(mockedWebSocket, "message", msg);
+		emitFromWebSocket("message", msg);
 
 		// Assert.
 		expect(scopedLogger.warn).toBeCalledTimes(1);
@@ -201,7 +200,7 @@ describe("StreamDeckConnection", () => {
 		openConnection(logger);
 
 		// Act.
-		emitFromAll(mockedWebSocket, "message", "{INVALID_JSON}");
+		emitFromWebSocket("message", "{INVALID_JSON}");
 
 		// Assert.
 		expect(scopedLogger.error).toBeCalledTimes(1);
@@ -233,7 +232,23 @@ describe("StreamDeckConnection", () => {
 		const connection = new StreamDeckConnection(regParams, logger);
 		connection.connect();
 
-		emitFromAll(mockedWebSocket, "open");
+		emitFromWebSocket("open");
 		return connection;
+	}
+
+	/**
+	 * Emits the specified {@link eventName} from the mocked {@link WebSocket}.
+	 * @param eventName Event name to emit.
+	 * @param args Arguments supplied when emitting the event.
+	 */
+	function emitFromWebSocket(eventName: string, ...args: unknown[]) {
+		for (const instance of mockedWebSocket.mock.instances) {
+			const listeners = (instance.on as unknown as jest.MockedFunction<EventEmitter["on"]>).mock.calls;
+			for (const [name, listener] of listeners) {
+				if (name === eventName) {
+					listener(...args);
+				}
+			}
+		}
 	}
 });
