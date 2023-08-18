@@ -7,6 +7,11 @@ import type { LogTarget } from "./log-target";
  */
 export class Logger {
 	/**
+	 * Backing field for the {@link Logger.level}.
+	 */
+	private _level?: LogLevel;
+
+	/**
 	 * Options that define the loggers behavior.
 	 */
 	private readonly options: LoggerOptions;
@@ -24,15 +29,21 @@ export class Logger {
 		this.options = { ...opts };
 		this.scope = this.options.scope === undefined || this.options.scope.trim() === "" ? "" : `${this.options.scope}: `;
 
-		this.setLevel(opts.level);
+		if (typeof this.options.level !== "function") {
+			this.setLevel(this.options.level);
+		}
 	}
 
 	/**
-	 * Gets the current {@link LogLevel}.
+	 * Gets the {@link LogLevel}.
 	 * @returns The {@link LogLevel}.
 	 */
 	public get level(): LogLevel {
-		return this.options.level;
+		if (this._level !== undefined) {
+			return this._level;
+		}
+
+		return typeof this.options.level === "function" ? this.options.level() : this.options.level;
 	}
 
 	/**
@@ -48,6 +59,7 @@ export class Logger {
 
 		return new Logger({
 			...this.options,
+			level: () => this.level,
 			scope: this.options.scope ? `${this.options.scope}->${scope}` : scope
 		});
 	}
@@ -83,17 +95,16 @@ export class Logger {
 	}
 
 	/**
-	 * Sets the log-level that determine which logs should be written; applies to all future scoped-loggers created from this instance. **NB.** previous scoped-loggers created from
-	 * this instance will not have their log-level affected.
-	 * @param level The log-level that determines which logs should be written.
+	 * Sets the log-level that determines which logs should be written. **NB.** this level will be inherited by all scoped loggers unless they have log-level explicitly defined.
+	 * @param level The log-level that determines which logs should be written; when `undefined`, the level will be inherited from the parent logger, or default to the environment level.
 	 * @returns This instance for chaining.
 	 */
-	public setLevel(level: LogLevel): Logger {
+	public setLevel(level?: LogLevel): Logger {
 		if ((level === LogLevel.DEBUG || level === LogLevel.TRACE) && !isDebugMode()) {
-			this.options.level = LogLevel.INFO;
+			this._level = LogLevel.INFO;
 			this.warn(`Log level cannot be set to ${LogLevel[level]} whilst not in debug mode.`);
 		} else {
-			this.options.level = level;
+			this._level = level;
 		}
 
 		return this;
@@ -127,7 +138,7 @@ export class Logger {
 	 * @returns This instance for chaining.
 	 */
 	private log(level: LogLevel, message: string, error?: Error | unknown) {
-		if (level <= this.options.level) {
+		if (level <= this.level) {
 			this.options.target.write({
 				level,
 				message: `${this.scope}${message}`,
@@ -146,7 +157,7 @@ export type LoggerOptions = {
 	/**
 	 * Minimum log-level required for a log message to be written.
 	 */
-	level: LogLevel;
+	level: LogLevel | (() => LogLevel);
 
 	/**
 	 * Optional value that defines the scope of the logger.

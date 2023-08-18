@@ -263,6 +263,79 @@ describe("Logger", () => {
 		}
 	});
 
+	describe("setLogLevel", () => {
+		/**
+		 * Asserts scoped {@link Logger} inherit the {@link LogLevel} of their parent.
+		 */
+		it("Inherited by scoped loggers", () => {
+			// Arrange.
+			const parent = new Logger({
+				level: LogLevel.ERROR,
+				target: { write: jest.fn() }
+			});
+
+			// Act.
+			const childBefore = parent.createScope("Child (Before)");
+			const grandchildBefore = childBefore.createScope("Grandchild (Before)");
+
+			parent.setLevel(LogLevel.INFO);
+			const childAfter = parent.createScope("Child (After)");
+
+			// Assert.
+			expect(parent.level).toBe(LogLevel.INFO);
+			expect(childBefore.level).toBe(LogLevel.INFO);
+			expect(grandchildBefore.level).toBe(LogLevel.INFO);
+			expect(childAfter.level).toBe(LogLevel.INFO);
+		});
+
+		/**
+		 * Asserts scoped {@link Logger} inherit the {@link LogLevel} of their earliest parent that has an explicit {@link LogLevel} defined.
+		 */
+		it("Inherited from parents with defined log-level", () => {
+			// Arrange.
+			const parent = new Logger({
+				level: LogLevel.ERROR,
+				target: { write: jest.fn() }
+			});
+
+			// Act.
+			const child = parent.createScope("Child");
+			const grandchild = child.createScope("Grandchild");
+
+			child.setLevel(LogLevel.WARN);
+			parent.setLevel(LogLevel.INFO);
+
+			// Assert.
+			expect(parent.level).toBe(LogLevel.INFO);
+			expect(child.level).toBe(LogLevel.WARN);
+			expect(grandchild.level).toBe(LogLevel.WARN);
+		});
+
+		/**
+		 * Asserts scoped {@link Logger} inherit the {@link LogLevel}, from their parent, when resetting the {@link LogLevel}.
+		 */
+		it("Defaults when set to undefined", () => {
+			// Arrange.
+			const parent = new Logger({
+				level: LogLevel.ERROR,
+				target: { write: jest.fn() }
+			});
+
+			// Act (1).
+			const child = parent.createScope("Child");
+			const grandchild = child.createScope("Grandchild");
+
+			child.setLevel(LogLevel.WARN);
+			parent.setLevel(LogLevel.INFO);
+			child.setLevel();
+
+			// Assert (1).
+			expect(parent.level).toBe(LogLevel.INFO);
+			expect(child.level).toBe(LogLevel.INFO);
+			expect(grandchild.level).toBe(LogLevel.INFO);
+		});
+	});
+
 	/**
 	 * Asserts validating the {@link LogLevel} can be set based on the environment.
 	 */
