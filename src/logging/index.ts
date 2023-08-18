@@ -21,8 +21,11 @@ export function createLogger() {
 		maxSize: 50 * 1024 * 1024
 	});
 
-	return new Logger({
+	const logger = new Logger({
 		level: isDebugMode() ? LogLevel.DEBUG : LogLevel.INFO,
 		target
 	});
+
+	process.once("uncaughtException", (err) => logger.error("Process encountered uncaught exception", err));
+	return logger;
 }

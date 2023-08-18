@@ -29,6 +29,7 @@ describe("createLogger", () => {
 	])("Initializes default logger (isDebugMode=$isDebugMode)", async ({ isDebugMode, expectedLogLevel }) => {
 		// Arrange.
 		jest.spyOn(process, "cwd").mockReturnValue(mockedCwd);
+		const processOnceSpy = jest.spyOn(process, "once");
 		jest.spyOn(utils, "getPluginUUID").mockReturnValue("com.elgato.test");
 		jest.spyOn(utils, "isDebugMode").mockReturnValue(isDebugMode);
 
@@ -43,6 +44,9 @@ describe("createLogger", () => {
 			maxFileCount: 10,
 			maxSize: 50 * 1024 * 1024
 		});
+
+		expect(processOnceSpy).toHaveBeenCalledTimes(1);
+		expect(processOnceSpy).toHaveBeenCalledWith("uncaughtException", expect.any(Function));
 
 		expect(logger).toBeInstanceOf(Logger);
 		expect(Logger).toHaveBeenCalledWith<[LoggerOptions]>({
