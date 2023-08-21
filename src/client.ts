@@ -336,7 +336,6 @@ export class StreamDeckClient {
 	 * @returns `Promise` resolved when the request to set the {@link feedback} has been sent to Stream Deck.
 	 */
 	public setFeedback(context: string, feedback: FeedbackPayload): Promise<void> {
-		// TODO: Should we rename this to "updateLayout"?
 		return this.connection.send({
 			event: "setFeedback",
 			context,
@@ -352,7 +351,6 @@ export class StreamDeckClient {
 	 * @returns `Promise` resolved when the new layout has been sent to Stream Deck.
 	 */
 	public setFeedbackLayout(context: string, layout: string): Promise<void> {
-		// TODO: Should we rename this to simply be "setLayout"?
 		return this.connection.send({
 			event: "setFeedbackLayout",
 			context,
@@ -392,7 +390,6 @@ export class StreamDeckClient {
 	 * @returns `Promise` resolved when the request to set the {@link image} has been sent to Stream Deck.
 	 */
 	public setImage(context: string, image?: string, state: State | undefined = undefined, target?: Target | undefined): Promise<void> {
-		// TODO: Ensure we can reset to the manifest image as `image` is not undefinable.
 		return this.connection.send({
 			event: "setImage",
 			context,
