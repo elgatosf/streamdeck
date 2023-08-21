@@ -29,9 +29,8 @@ export class ActionsController {
 	}
 
 	/**
-	 * Registers the action with the Stream Deck, routing all events associated with the {@link manifestId} to the specified {@link action}.
-	 * @param manifestId Unique identifier of the action as defined within the plugin's manifest (`Actions[].UUID`), e.g. "com.elgato.wave-link.mute".
-	 * @param action The action that will receive the events.
+	 * Registers the action with the Stream Deck, routing all events associated with the {@link uuid} to the specified {@link action}.
+	 * @param registration The action to register.
 	 * @example
 	 * ```
 	 * class MyCustomAction extends SingletonAction<MySettings> {
@@ -40,14 +39,32 @@ export class ActionsController {
 	 *     }
 	 * }
 	 *
-	 * streamDeck.router.route("com.elgato.example.my-custom-action", new MyCustomAction());
+	 * streamDeck.actions.registerAction({
+	 *     uuid: "com.elgato.example.my-custom-action"
+	 *     action: new MyCustomAction()
+	 * });
 	 * ```
 	 */
-	public registerAction<TAction extends SingletonAction<TSettings>, TSettings = unknown>(manifestId: string, action: TAction) {
-		if (this.manifest.Actions.find((a) => a.UUID === manifestId)) {
-			this.routes.push(new Route(this.client, manifestId, action));
+	public registerAction<TAction extends SingletonAction<TSettings>, TSettings = unknown>(registration: ActionRegistration<TAction>) {
+		if (this.manifest.Actions.find((a) => a.UUID === registration.uuid)) {
+			this.routes.push(new Route(this.client, registration.uuid, registration.action));
 		} else {
-			this.logger.warn(`Failed to route action. The specified action UUID does not exist in the manifest: ${manifestId}`);
+			this.logger.warn(`Failed to route action. The specified action UUID does not exist in the manifest: ${registration.uuid}`);
 		}
 	}
 }
+
+/**
+ * Provides information for an action registered with the actions controller whereby events will be routed.
+ */
+export type ActionRegistration<TAction extends SingletonAction<TSettings>, TSettings = unknown> = {
+	/**
+	 * The action that will receive the events.
+	 */
+	action: TAction;
+
+	/**
+	 * Unique identifier of the action as defined within the plugin's manifest (`Actions[].UUID`), e.g. "com.elgato.wave-link.mute".
+	 */
+	uuid: string;
+};

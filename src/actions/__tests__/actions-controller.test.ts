@@ -9,12 +9,12 @@ jest.mock("../route");
 
 describe("ActionsController", () => {
 	const manifest = mockManifest;
-	const manifestId = "com.elgato.action-service.one";
+	const uuid = "com.elgato.action-service.one";
 
 	manifest.Actions = [
 		{
 			Name: "Action One",
-			UUID: manifestId,
+			UUID: uuid,
 			Icon: "icon.png",
 			States: [{ Image: "state.png" }]
 		}
@@ -43,11 +43,14 @@ describe("ActionsController", () => {
 		const actions = new ActionsController(client, manifest, logger);
 
 		// Act.
-		actions.registerAction(manifestId, action);
+		actions.registerAction({
+			uuid,
+			action
+		});
 
 		// Assert.
 		expect(mockedRoute.mock.instances).toHaveLength(1);
-		expect(mockedRoute.mock.calls[0]).toEqual([client, manifestId, action]);
+		expect(mockedRoute.mock.calls[0]).toEqual([client, uuid, action]);
 	});
 
 	it("Warns when action does not exist in manifest", () => {
@@ -56,7 +59,10 @@ describe("ActionsController", () => {
 		const actions = new ActionsController(client, manifest, logger);
 
 		// Act.
-		actions.registerAction("com.elgato.action-service.__one", new SingletonAction());
+		actions.registerAction({
+			uuid: "com.elgato.action-service.__one",
+			action: new SingletonAction()
+		});
 
 		// Assert.
 		expect(scopedLogger.warn).toHaveBeenCalledTimes(1);
