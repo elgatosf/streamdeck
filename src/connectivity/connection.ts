@@ -12,10 +12,15 @@ import { RegistrationParameters } from "./registration";
  */
 export class StreamDeckConnection {
 	/**
+	 * Used to ensure {@link StreamDeckConnection.connect} is invoked as a singleton; `false` when a connection is occurring or established.
+	 */
+	private canConnect = true;
+
+	/**
 	 * Connection between the plugin and the Stream Deck in the form of a promise; once connected to the Stream Deck and the plugin has been registered, the promised is resolved and
 	 * the connection becomes available.
 	 */
-	private readonly connection = new PromiseCompletionSource<WebSocket>();
+	private connection = new PromiseCompletionSource<WebSocket>();
 
 	/**
 	 * Event emitter used to propagate events from the Stream Deck to the plugin.
@@ -26,11 +31,6 @@ export class StreamDeckConnection {
 	 * Logger scoped to this class.
 	 */
 	private readonly logger: Logger;
-
-	/**
-	 * Web socket connection used by this instance to establish the connection with the Stream Deck.
-	 */
-	private ws?: WebSocket;
 
 	/**
 	 * Initializes a new instance of the {@link StreamDeckConnection} class.
@@ -44,19 +44,20 @@ export class StreamDeckConnection {
 
 	/**
 	 * Establishes a connection with the Stream Deck, allowing for the plugin to send and receive messages.
+	 * @returns A promise that is resolved when a connection has been established.
 	 */
-	public connect() {
+	public async connect(): Promise<void> {
 		// Ensure we only establish a single connection.
-		if (this.ws !== undefined) {
-			return;
-		}
+		if (this.canConnect) {
+			this.canConnect = false;
+			this.logger.debug("Connecting to Stream Deck.");
 
-		this.logger.debug("Connecting to Stream Deck.");
-		this.ws = new WebSocket(`ws://127.0.0.1:${this.registrationParameters.port}`);
-		this.ws.on("message", (data) => this.propagateMessage(data));
-		this.ws.on("open", () => {
-			if (this.ws) {
-				this.ws.send(
+			const webSocket = new WebSocket(`ws://127.0.0.1:${this.registrationParameters.port}`);
+			webSocket.on("error", () => this.resetConnection());
+			webSocket.on("close", () => this.resetConnection());
+			webSocket.on("message", (data) => this.tryEmit(data));
+			webSocket.once("open", () => {
+				webSocket.send(
 					JSON.stringify({
 						event: this.registrationParameters.registerEvent,
 						uuid: this.registrationParameters.pluginUUID
@@ -64,17 +65,17 @@ export class StreamDeckConnection {
 				);
 
 				// Web socket established a connection with the Stream Deck and the plugin was registered.
-				this.connection.setResult(this.ws);
 				this.logger.debug("Successfully connected to Stream Deck.");
-			} else {
-				this.logger.error("Failed to connect to Stream Deck: Web Socket connection is undefined.");
-			}
-		});
+				this.connection.setResult(webSocket);
+			});
+		}
+
+		await this.connection.promise;
 	}
 
 	/**
-	 * Adds the `listener` function to be invoked when Stream Deck emits the event named `eventName`, e.g. "willAppear" when an action becomes visible, "deviceDidDisconnect" when a
-	 * device is connected to user's machine, etc.
+	 * Adds the {@link listener} function to be invoked when Stream Deck emits the event named {@link eventName}, e.g. "willAppear" when an action becomes visible, "deviceDidDisconnect"
+	 * when a device is connected to user's machine, etc.
 	 * @param eventName Event to listen for.
 	 * @param listener Callback invoked when Stream Deck emits the event.
 	 * @returns This instance for chaining.
@@ -85,8 +86,8 @@ export class StreamDeckConnection {
 	}
 
 	/**
-	 * Adds a **one-time** `listener` function to be invoked when Stream Deck emits the event named `eventName`. The next time `eventName` is triggered, this listener is removed and
-	 * then invoked.
+	 * Adds a **one-time** {@link listener} function to be invoked when Stream Deck emits the event named {@link eventName}. The next time {@link eventName} is triggered, this listener
+	 * is removed and then invoked.
 	 * @param eventName Event to listen for.
 	 * @param listener Callback invoked when Stream Deck emits the event.
 	 * @returns This instance for chaining.
@@ -97,7 +98,7 @@ export class StreamDeckConnection {
 	}
 
 	/**
-	 * Removes the specified `listener` registered against the `eventName`. Inverse of {@link StreamDeckConnection.on}.
+	 * Removes the specified {@link listener} registered against the {@link eventName}. Inverse of {@link StreamDeckConnection.on}.
 	 * @param eventName Name of the event the listener is being removed from.
 	 * @param listener Callback to remove.
 	 * @returns This instance for chaining.
@@ -121,10 +122,20 @@ export class StreamDeckConnection {
 	}
 
 	/**
-	 * Propagates the event emitted by the Stream Deck's web socket connection, to the event emitter used by the plugin.
+	 * Resets the {@link StreamDeckConnection.connection}.
+	 */
+	private resetConnection(): void {
+		this.canConnect = true;
+
+		this.connection.setException();
+		this.connection = new PromiseCompletionSource();
+	}
+
+	/**
+	 * Attempts to emit the {@link data} that was received from the {@link StreamDeckConnection.connection}.
 	 * @param data Event message data received from the Stream Deck.
 	 */
-	private propagateMessage(data: WebSocket.RawData) {
+	private tryEmit(data: WebSocket.RawData) {
 		try {
 			const message = JSON.parse(data.toString());
 			if (message.event) {
