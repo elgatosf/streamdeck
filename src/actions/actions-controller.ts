@@ -46,10 +46,10 @@ export class ActionsController {
 	 * ```
 	 */
 	public registerAction<TAction extends SingletonAction<TSettings>, TSettings = unknown>(registration: ActionRegistration<TAction>) {
-		if (this.manifest.Actions.find((a) => a.UUID === registration.uuid)) {
-			this.routes.push(new Route(this.client, registration.uuid, registration.action));
+		if (this.manifest.Actions.find((a) => a.UUID === registration.manifestId)) {
+			this.routes.push(new Route(this.client, registration.manifestId, registration.action));
 		} else {
-			this.logger.warn(`Failed to route action. The specified action UUID does not exist in the manifest: ${registration.uuid}`);
+			this.logger.warn(`Failed to route action. The specified action UUID does not exist in the manifest: ${registration.manifestId}`);
 		}
 	}
 }
@@ -66,5 +66,5 @@ export type ActionRegistration<TAction extends SingletonAction<TSettings>, TSett
 	/**
 	 * Unique identifier of the action as defined within the plugin's manifest (`Actions[].UUID`), e.g. "com.elgato.wave-link.mute".
 	 */
-	uuid: string;
+	manifestId: string;
 };
