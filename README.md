@@ -27,6 +27,7 @@ nvm install 20.1.0
 nvm use 20.1.0
 ```
 
+<!--
 ## ✏️ Getting Started
 
 With Node.js and npm installed, the easiest way to get started is using our Stream Deck Plugin creation wizard, provided as part of our CLI toolset.
@@ -39,6 +40,7 @@ streamdeck create
 <p align="center">
   <img src="./assets/cli-create.gif">
 </p>
+-->
 
 ## 📦 Example
 
@@ -47,7 +49,7 @@ npm i @elgato/streamdeck
 ```
 
 ```typescript
-import * as streamDeck from "@elgato/streamdeck";
+import streamDeck from "@elgato/streamdeck";
 
 // Show an "OK" icon when an action is pressed.
 streamDeck.client.onKeyDown(({ action }) => {
@@ -58,34 +60,30 @@ streamDeck.client.onKeyDown(({ action }) => {
 > [!IMPORTANT]
 > Stream Deck plugins require scaffolding, and it is highly recommended to use the `streamdeck create` CLI command.
 
-## 🌐 Manifest
-
-_TODO_
-
 ## 📖 Usage
 
-The top-level import provides common functionality to assist with building, debugging, and communicating with the Stream Deck.
+### 🔗 Client
 
-#### 🔗 Client
-
-The `streamDeck.client` acts as the main bridge between your plugin, and the Stream Deck. The client provides event listeners for receiving events from Stream Deck e.g. when an action appears, and functions for sending request to the Stream Deck e.g. updating settings.
+The `streamDeck.client` acts as the bridge between your plugin, and the Stream Deck. The client provides event listeners for receiving events from Stream Deck e.g. when an action appears, and functions for sending commands to the Stream Deck e.g. updating settings.
 
 ```typescript
-import * as streamDeck from "@elgato/streamdeck";
+import streamDeck from "@elgato/streamdeck";
 
+// Event examples.
 streamDeck.client.onWillAppear(({ action }) => { ... });     // Occurs when an action appears.
 streamDeck.client.onWillDisappear(({ action }) => { ... });  // Occurs when an action disappears.
 
+// Command examples.
 streamDeck.client.setGlobalSettings(settings); // Updates the global settings.
 streamDeck.client.switchToProfile(profile, device); // Switch to a pre-defined profile.
 ```
 
-#### 🗺️ Actions
+### 🗺️ Actions
 
-The `streamDeck.actions` object provides information about actions currently visible on the Stream Deck, and methods for routing events of a specific action type; routing is particularly useful when your plugin provides multiple actions.
+The `streamDeck.actions` object provides methods for routing events of a specific action type, as identified by their `UUID` defined within the manifest; routing is particularly useful when your plugin provides multiple actions.
 
 ```typescript
-import * as streamDeck from "@elgato/streamdeck";
+import streamDeck from "@elgato/streamdeck";
 
 class ToggleOnOff extends streamDeck.SingletonAction {
     onKeyDown(ev) {
@@ -99,33 +97,38 @@ class ChangeBrightness extends streamDeck.SingletonAction {
     }
 }
 
-streamDeck.actions.registerAction("com.elgato.test.change-brightness", new ChangeBrightness());
-streamDeck.actions.registerAction("com.elgato.test.toggle-on-off", new ToggleOnOff());
+streamDeck.actions.registerAction({
+    manifestId: "com.elgato.test.change-brightness",
+    action: new ChangeBrightness()
+});
+
+streamDeck.actions.registerAction({
+    manifestId: "com.elgato.test.toggle-on-off",
+    action: new ToggleOnOff()
+});
 ```
 
-#### 🎛️ Devices
+### 🎛️ Devices
 
 The `streamDeck.devices` collection contains information about the user's Stream Deck devices.
 
 ```typescript
-import * as streamDeck from "@elgato/streamdeck";
+import streamDeck from "@elgato/streamdeck";
 
 streamDeck.devices.forEach((device) => {
     // Device information.
 });
 ```
 
-#### 📄 Logging
+### 📄 Logging
 
-The `streamDeck.logger` object provides local file-based logging capabilities, allowing you to diagnose, track, and debug potential problems. Logs files operate a file-rotation policy and are re-indexed when the current file exceeds 50MiB, with the 10 most recent files being retained.
+The `streamDeck.logger` object provides local file-based logging, allowing you to diagnose, track, and debug your plugin. Logs files operate a file-rotation policy and are re-indexed when the plugin starts or they exceed 50MiB, with the 10 most recent log files being retained.
 
 > [!NOTE]
 > Logs can be found within the plugin's folder, under `/logs`.
 
-To assist with identifying the severity of logs, there are five levels: `ERROR`, `WARN`, `INFO`, `DEBUG`, and `TRACE` with the default being `INFO`, unless the plugin in debug mode in which case the level defaults to `DEBUG`.
-
 ```typescript
-import * as streamDeck from "@elgato/streamdeck";
+import streamDeck, { LogLevel } from "@elgato/streamdeck";
 
 const logger = streamDeck.logger.createScope("Custom Logger");
 
@@ -135,7 +138,7 @@ loggerr.info("Information message");
 loggerr.debug("Debug message"); // ❌ Default level is INFO
 loggerr.trace("Trace message"); // ❌ Default level is INFO
 
-logger.setLevel(streamDeck.LogLevel.TRACE);
+logger.setLevel(LogLevel.TRACE);
 
 logger.debug("Debug message"); // ✅
 logger.trace("Trace message"); // ✅
