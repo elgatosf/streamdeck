@@ -20,7 +20,7 @@ Welcome to the official SDK for creating Stream Deck plugins. Designed to make b
 
 ## 📥 Prerequisites
 
-This Stream Deck SDK uses [Node.js](https://nodejs.org/en) (v20.1) and [npm](https://www.npmjs.com/). We highly recommend installing these using a version manager such as [nvm](https://github.com/creationix/nvm) (macOS) or [nvm-windows](nvm-windows). Once installed, the version of Node can be set via:
+The Stream Deck SDK uses [Node.js](https://nodejs.org/en); we recommend installing Node with a Node version manager such as [nvm](https://github.com/creationix/nvm) (macOS) or [nvm-windows](nvm-windows) (Windows). With one of these version managers installed, the specific version of Node can be set via:
 
 ```bash
 nvm install 20.1.0
