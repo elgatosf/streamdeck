@@ -2,10 +2,10 @@
 
 ## {version}
 
-🚨 Break
+🚨 Breaking change
 ✨ Add
 🐞 Fix
-♻️ Update
+♻️ Refactor / Enhance / Update
 
 -->
 
