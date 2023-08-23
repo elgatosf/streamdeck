@@ -1,0 +1,11 @@
+{
+	"extends": "@tsconfig/node20/tsconfig.json",
+	"include": [
+		"scripts/**/*.ts",
+		"src/**/*.ts",
+		"tests/**/*.ts"
+	],
+	"exclude": [
+		"node_modules"
+	]
+}

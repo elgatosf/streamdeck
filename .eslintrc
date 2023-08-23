@@ -1,0 +1,123 @@
+{
+	"env": {
+		"node": true
+	},
+	"extends": [
+		"eslint:recommended",
+		"plugin:@typescript-eslint/recommended",
+		"plugin:jsdoc/recommended-typescript",
+		"prettier"
+	],
+	"ignorePatterns": [
+		"dist/",
+		"node_modules/"
+	],
+	"parser": "@typescript-eslint/parser",
+	"plugins": [
+		"jsdoc",
+		"prettier",
+		"@typescript-eslint"
+	],
+	"root": true,
+	"rules": {
+		"indent": [
+			"warn",
+			"tab",
+			{
+				"SwitchCase": 1
+			}
+		],
+		"jsdoc/require-jsdoc": [
+			"warn",
+			{
+				"contexts": [
+					"ClassDeclaration",
+					"PropertyDefinition",
+					"MethodDefinition",
+					"TSEnumDeclaration",
+					"TSEnumMember",
+					"TSPropertySignature",
+					"TSTypeAliasDeclaration"
+				]
+			}
+		],
+		"@typescript-eslint/explicit-member-accessibility": [
+			"error",
+			{
+				"accessibility": "explicit",
+				"overrides": {
+					"constructors": "no-public"
+				}
+			}
+		],
+		"@typescript-eslint/member-ordering": [
+			"warn",
+			{
+				"default": {
+					"memberTypes": [
+						// Fields.
+						"public-static-field",
+						"public-abstract-field",
+						"public-field",
+						"protected-static-field",
+						"protected-abstract-field",
+						"protected-field",
+						"private-static-field",
+						"private-field",
+						// Constructors
+						"public-constructor",
+						"protected-constructor",
+						"private-constructor",
+						// Signature
+						"signature",
+						"call-signature",
+						// Properties
+						"public-static-get",
+						"public-static-set",
+						"public-abstract-get",
+						"public-abstract-set",
+						"public-get",
+						"public-set",
+						"protected-static-get",
+						"protected-static-set",
+						"protected-abstract-get",
+						"protected-abstract-set",
+						"protected-get",
+						"protected-set",
+						"private-static-get",
+						"private-static-set",
+						"private-get",
+						"private-set",
+						// Methods
+						"public-static-method",
+						"public-abstract-method",
+						"public-method",
+						"protected-static-method",
+						"protected-abstract-method",
+						"protected-method",
+						"private-static-method",
+						"private-method"
+					],
+					"order": "alphabetically"
+				}
+			}
+		],
+		"@typescript-eslint/sort-type-constituents": "warn"
+	},
+	"overrides": [
+		{
+			"files": "src/**/*.test.ts",
+			"rules": {
+				"jsdoc/require-jsdoc": [
+					"warn",
+					{
+						"contexts": [
+							"MethodDefinition"
+						]
+					}
+				],
+				"@typescript-eslint/no-explicit-any": "off"
+			}
+		}
+	]
+}
