@@ -9,23 +9,26 @@ export class Route {
 	/**
 	 * Initializes a new instance of the {@link Route} class.
 	 * @param client The Stream Deck client.
-	 * @param manifestId Unique identifier of the action as defined within the plugin's manifest (`Actions[].UUID`), e.g. "com.elgato.wave-link.mute".
 	 * @param action The action that will receive the events.
 	 */
-	constructor(private readonly client: StreamDeckClient, public readonly manifestId: string, private readonly action: SingletonAction) {
-		this.addEventListener(this.manifestId, this.client.onDialDown, this.action.onDialDown);
-		this.addEventListener(this.manifestId, this.client.onDialUp, this.action.onDialUp);
-		this.addEventListener(this.manifestId, this.client.onDialRotate, this.action.onDialRotate);
-		this.addEventListener(this.manifestId, this.client.onDidReceiveSettings, this.action.onDidReceiveSettings);
-		this.addEventListener(this.manifestId, this.client.onKeyDown, this.action.onKeyDown);
-		this.addEventListener(this.manifestId, this.client.onKeyUp, this.action.onKeyUp);
-		this.addEventListener(this.manifestId, this.client.onPropertyInspectorDidAppear, this.action.onPropertyInspectorDidAppear);
-		this.addEventListener(this.manifestId, this.client.onPropertyInspectorDidDisappear, this.action.onPropertyInspectorDidDisappear);
-		this.addEventListener(this.manifestId, this.client.onSendToPlugin, this.action.onSendToPlugin);
-		this.addEventListener(this.manifestId, this.client.onTitleParametersDidChange, this.action.onTitleParametersDidChange);
-		this.addEventListener(this.manifestId, this.client.onTouchTap, this.action.onTouchTap);
-		this.addEventListener(this.manifestId, this.client.onWillAppear, this.action.onWillAppear);
-		this.addEventListener(this.manifestId, this.client.onWillDisappear, this.action.onWillDisappear);
+	constructor(private readonly client: StreamDeckClient, private readonly action: SingletonAction) {
+		if (action.manifestId === undefined) {
+			throw new Error("The action's manifestId cannot be undefined.");
+		}
+
+		this.addEventListener(action.manifestId, this.client.onDialDown, this.action.onDialDown);
+		this.addEventListener(action.manifestId, this.client.onDialUp, this.action.onDialUp);
+		this.addEventListener(action.manifestId, this.client.onDialRotate, this.action.onDialRotate);
+		this.addEventListener(action.manifestId, this.client.onDidReceiveSettings, this.action.onDidReceiveSettings);
+		this.addEventListener(action.manifestId, this.client.onKeyDown, this.action.onKeyDown);
+		this.addEventListener(action.manifestId, this.client.onKeyUp, this.action.onKeyUp);
+		this.addEventListener(action.manifestId, this.client.onPropertyInspectorDidAppear, this.action.onPropertyInspectorDidAppear);
+		this.addEventListener(action.manifestId, this.client.onPropertyInspectorDidDisappear, this.action.onPropertyInspectorDidDisappear);
+		this.addEventListener(action.manifestId, this.client.onSendToPlugin, this.action.onSendToPlugin);
+		this.addEventListener(action.manifestId, this.client.onTitleParametersDidChange, this.action.onTitleParametersDidChange);
+		this.addEventListener(action.manifestId, this.client.onTouchTap, this.action.onTouchTap);
+		this.addEventListener(action.manifestId, this.client.onWillAppear, this.action.onWillAppear);
+		this.addEventListener(action.manifestId, this.client.onWillDisappear, this.action.onWillDisappear);
 	}
 
 	/**

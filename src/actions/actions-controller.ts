@@ -29,42 +29,23 @@ export class ActionsController {
 	}
 
 	/**
-	 * Registers the action with the Stream Deck, routing all events associated with the {@link uuid} to the specified {@link action}.
-	 * @param registration The action to register.
+	 * Registers the action with the Stream Deck, routing all events associated with the {@link SingletonAction.manifestId} to the specified {@link action}.
+	 * @param action The action to register.
 	 * @example
-	 * ```
-	 * class MyCustomAction extends SingletonAction<MySettings> {
-	 *     public onKeyDown(ev: streamDeck.KeyDownEvent<MySettings>) {
-	 *         // Some awesome thing.
+	 * ＠action({ UUID: "com.elgato.test.action" })
+	 * class MyCustomAction extends SingletonAction {
+	 *     public onKeyDown(ev: KeyDownEvent) {
+	 *         // Do some awesome thing.
 	 *     }
 	 * }
 	 *
-	 * streamDeck.actions.registerAction({
-	 *     uuid: "com.elgato.example.my-custom-action"
-	 *     action: new MyCustomAction()
-	 * });
-	 * ```
+	 * streamDeck.actions.registerAction(new MyCustomAction());
 	 */
-	public registerAction<TAction extends SingletonAction<TSettings>, TSettings = unknown>(registration: ActionRegistration<TAction>) {
-		if (this.manifest.Actions.find((a) => a.UUID === registration.manifestId)) {
-			this.routes.push(new Route(this.client, registration.manifestId, registration.action));
+	public registerAction<TAction extends SingletonAction<TSettings>, TSettings = unknown>(action: TAction) {
+		if (action.manifestId !== undefined && this.manifest.Actions.find((a) => a.UUID === action.manifestId)) {
+			this.routes.push(new Route(this.client, action));
 		} else {
-			this.logger.warn(`Failed to route action. The specified action UUID does not exist in the manifest: ${registration.manifestId}`);
+			this.logger.warn(`Failed to route action: manifestId (UUID) ${action.manifestId} was not found in the manifest.`);
 		}
 	}
 }
-
-/**
- * Provides information for an action registered with the actions controller whereby events will be routed.
- */
-export type ActionRegistration<TAction extends SingletonAction<TSettings>, TSettings = unknown> = {
-	/**
-	 * The action that will receive the events.
-	 */
-	action: TAction;
-
-	/**
-	 * Unique identifier of the action as defined within the plugin's manifest (`Actions[].UUID`), e.g. "com.elgato.wave-link.mute".
-	 */
-	manifestId: string;
-};

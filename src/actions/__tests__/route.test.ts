@@ -26,15 +26,27 @@ describe("Route", () => {
 
 	afterEach(() => jest.clearAllMocks());
 
+	it("Validates the manifestId is not undefined", () => {
+		// Arrange.
+		const { client } = getMockedClient();
+		const action: SingletonAction = {
+			manifestId: undefined
+		};
+
+		// Act, assert.
+		expect(() => new Route(client, action)).toThrow("The action's manifestId cannot be undefined.");
+	});
+
 	it("Routes onDialDown", () => {
 		// Arrange.
 		const { connection, client } = getMockedClient();
 		const action: SingletonAction = {
+			manifestId,
 			onDialDown: jest.fn()
 		};
 
 		// Act.
-		new Route(client, manifestId, action);
+		new Route(client, action);
 
 		const { device, payload, context } = connection.__emit({
 			...mockEvents.dialDown,
@@ -57,11 +69,12 @@ describe("Route", () => {
 		// Arrange.
 		const { connection, client } = getMockedClient();
 		const action: SingletonAction = {
+			manifestId,
 			onDialRotate: jest.fn()
 		};
 
 		// Act.
-		new Route(client, manifestId, action);
+		new Route(client, action);
 
 		const { device, payload, context } = connection.__emit({
 			...mockEvents.dialRotate,
@@ -85,11 +98,12 @@ describe("Route", () => {
 		// Arrange.
 		const { connection, client } = getMockedClient();
 		const action: SingletonAction = {
+			manifestId,
 			onDialUp: jest.fn()
 		};
 
 		// Act.
-		new Route(client, manifestId, action);
+		new Route(client, action);
 
 		const { device, payload, context } = connection.__emit({
 			...mockEvents.dialUp,
@@ -113,11 +127,12 @@ describe("Route", () => {
 		// Arrange.
 		const { connection, client } = getMockedClient();
 		const action: SingletonAction = {
+			manifestId,
 			onDidReceiveSettings: jest.fn()
 		};
 
 		// Act.
-		new Route(client, manifestId, action);
+		new Route(client, action);
 
 		const { device, payload, context } = connection.__emit({
 			...mockEvents.didReceiveSettings,
@@ -141,11 +156,12 @@ describe("Route", () => {
 		// Arrange.
 		const { connection, client } = getMockedClient();
 		const action: SingletonAction = {
+			manifestId,
 			onKeyDown: jest.fn()
 		};
 
 		// Act.
-		new Route(client, manifestId, action);
+		new Route(client, action);
 
 		const { device, payload, context } = connection.__emit({
 			...mockEvents.keyDown,
@@ -169,11 +185,12 @@ describe("Route", () => {
 		// Arrange.
 		const { connection, client } = getMockedClient();
 		const action: SingletonAction = {
+			manifestId,
 			onKeyUp: jest.fn()
 		};
 
 		// Act.
-		new Route(client, manifestId, action);
+		new Route(client, action);
 
 		const { device, payload, context } = connection.__emit({
 			...mockEvents.keyUp,
@@ -197,11 +214,12 @@ describe("Route", () => {
 		// Arrange.
 		const { connection, client } = getMockedClient();
 		const action: SingletonAction = {
+			manifestId,
 			onPropertyInspectorDidAppear: jest.fn()
 		};
 
 		// Act.
-		new Route(client, manifestId, action);
+		new Route(client, action);
 
 		const { device, context } = connection.__emit({
 			...mockEvents.propertyInspectorDidAppear,
@@ -224,11 +242,12 @@ describe("Route", () => {
 		// Arrange.
 		const { connection, client } = getMockedClient();
 		const action: SingletonAction = {
+			manifestId,
 			onPropertyInspectorDidDisappear: jest.fn()
 		};
 
 		// Act.
-		new Route(client, manifestId, action);
+		new Route(client, action);
 
 		const { device, context } = connection.__emit({
 			...mockEvents.propertyInspectorDidDisappear,
@@ -251,11 +270,12 @@ describe("Route", () => {
 		// Arrange.
 		const { connection, client } = getMockedClient();
 		const action: SingletonAction = {
+			manifestId,
 			onSendToPlugin: jest.fn()
 		};
 
 		// Act.
-		new Route(client, manifestId, action);
+		new Route(client, action);
 
 		const { payload, context } = connection.__emit({
 			...mockEvents.sendToPlugin,
@@ -278,11 +298,12 @@ describe("Route", () => {
 		// Arrange.
 		const { connection, client } = getMockedClient();
 		const action: SingletonAction = {
+			manifestId,
 			onTitleParametersDidChange: jest.fn()
 		};
 
 		// Act.
-		new Route(client, manifestId, action);
+		new Route(client, action);
 
 		const { device, payload, context } = connection.__emit({
 			...mockEvents.titleParametersDidChange,
@@ -306,11 +327,12 @@ describe("Route", () => {
 		// Arrange.
 		const { connection, client } = getMockedClient();
 		const action: SingletonAction = {
+			manifestId,
 			onTouchTap: jest.fn()
 		};
 
 		// Act.
-		new Route(client, manifestId, action);
+		new Route(client, action);
 
 		const { device, payload, context } = connection.__emit({
 			...mockEvents.touchTap,
@@ -334,11 +356,12 @@ describe("Route", () => {
 		// Arrange.
 		const { connection, client } = getMockedClient();
 		const action: SingletonAction = {
+			manifestId,
 			onWillAppear: jest.fn()
 		};
 
 		// Act.
-		new Route(client, manifestId, action);
+		new Route(client, action);
 
 		const { device, payload, context } = connection.__emit({
 			...mockEvents.willAppear,
@@ -362,11 +385,12 @@ describe("Route", () => {
 		// Arrange.
 		const { connection, client } = getMockedClient();
 		const action: SingletonAction = {
+			manifestId,
 			onWillDisappear: jest.fn()
 		};
 
 		// Act.
-		new Route(client, manifestId, action);
+		new Route(client, action);
 
 		const { device, payload, context } = connection.__emit({
 			...mockEvents.willDisappear,
@@ -392,7 +416,7 @@ describe("Route", () => {
 		const onSpy = jest.spyOn(connection, "on");
 
 		// Act.
-		new Route(client, manifestId, {});
+		new Route(client, { manifestId });
 
 		// Assert.
 		expect(onSpy).not.toHaveBeenCalled();

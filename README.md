@@ -83,29 +83,24 @@ streamDeck.client.switchToProfile(profile, device); // Switch to a pre-defined p
 The `streamDeck.actions` object provides methods for routing events of a specific action type, as identified by their `UUID` defined within the manifest; routing is particularly useful when your plugin provides multiple actions.
 
 ```typescript
-import streamDeck from "@elgato/streamdeck";
+import streamDeck, { action, SingletonAction } from "@elgato/streamdeck";
 
-class ToggleOnOff extends streamDeck.SingletonAction {
-    onKeyDown(ev) {
+@action({ UUID: "com.elgato.test.toggle-on-off" })
+class ToggleOnOff extends SingletonAction {
+    onKeyDown() {
         // Occurs when key down happens for an action of type "com.elgato.test.toggle-on-off"
     }
 }
 
-class ChangeBrightness extends streamDeck.SingletonAction {
-    onKeyDown(ev) {
+@action({ UUID: "com.elgato.test.change-brightness" })
+class ChangeBrightness extends SingletonAction {
+    onKeyDown() {
         // Occurs when key down happens for an action of type "com.elgato.test.change-brightness"
     }
 }
 
-streamDeck.actions.registerAction({
-    manifestId: "com.elgato.test.change-brightness",
-    action: new ChangeBrightness()
-});
-
-streamDeck.actions.registerAction({
-    manifestId: "com.elgato.test.toggle-on-off",
-    action: new ToggleOnOff()
-});
+streamDeck.actions.registerAction(new ToggleOnOff());
+streamDeck.actions.registerAction(new ChangeBrightness());
 ```
 
 ### 🎛️ Devices
@@ -132,11 +127,11 @@ import streamDeck, { LogLevel } from "@elgato/streamdeck";
 
 const logger = streamDeck.logger.createScope("Custom Logger");
 
-loggerr.error("Error message");
-loggerr.warn("Warning message");
-loggerr.info("Information message");
-loggerr.debug("Debug message"); // ❌ Default level is INFO
-loggerr.trace("Trace message"); // ❌ Default level is INFO
+logger.error("Error message");
+logger.warn("Warning message");
+logger.info("Information message");
+logger.debug("Debug message"); // ❌ Default level is INFO
+logger.trace("Trace message"); // ❌ Default level is INFO
 
 logger.setLevel(LogLevel.TRACE);
 

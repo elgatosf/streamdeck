@@ -20,6 +20,11 @@ import {
  */
 export class SingletonAction<TSettings = unknown> {
 	/**
+	 * The universally-unique value that identifies the action within the manifest.
+	 */
+	public readonly manifestId: string | undefined;
+
+	/**
 	 * Occurs when the user presses a dial (Stream Deck+). **NB** For other action types see {@link StreamDeckClient.onKeyDown}. Also see {@link StreamDeckClient.onDialUp}.
 	 * @param listener Function to be invoked when the event occurs.
 	 */
