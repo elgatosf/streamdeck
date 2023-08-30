@@ -1,5 +1,7 @@
 import path from "node:path";
 
+let __isDebugMode: boolean | undefined = undefined;
+
 /**
  * Gets the value at the specified {@link path}.
  * @param path Path to the property to get.
@@ -17,14 +19,14 @@ export function get(path: string, source: unknown): unknown {
  * @returns `true` when the plugin is running in debug mode; otherwise `false`.
  */
 export function isDebugMode() {
-	for (const arg of process.execArgv) {
-		const name = arg.split("=")[0];
-		if (name === "--inspect" || name === "--inspect-brk" || name === "--inspect-port") {
-			return true;
-		}
+	if (__isDebugMode === undefined) {
+		__isDebugMode = process.execArgv.some((arg) => {
+			const name = arg.split("=")[0];
+			return name === "--inspect" || name === "--inspect-brk" || name === "--inspect-port";
+		});
 	}
 
-	return false;
+	return __isDebugMode;
 }
 
 /**
