@@ -85,7 +85,7 @@ export class StreamDeck {
 	 * @returns The {@link I18nProvider}.
 	 */
 	public get i18n(): I18nProvider {
-		return this._i18n || (this._i18n = new I18nProvider(this.registrationParameters.info.application.language, this.logger));
+		return this._i18n || (this._i18n = new I18nProvider(this.registrationParameters.info.application.language, this.manifest, this.logger));
 	}
 
 	/**

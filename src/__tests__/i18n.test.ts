@@ -4,6 +4,7 @@ import path from "node:path";
 import { getMockedLogger } from "../../tests/__mocks__/logging";
 import { I18nProvider } from "../i18n";
 import type { Logger } from "../logging";
+import type { Manifest } from "../manifest";
 
 describe("I18nProvider", () => {
 	/**
@@ -22,11 +23,14 @@ describe("I18nProvider", () => {
 	mockedResources.set("de.json", { greeting: "Hello welt", germanOnly: "German" });
 	mockedResources.set("en.json", { greeting: "Hello world", englishOnly: "English" });
 	mockedResources.set("fr.json", { greeting: "Bonjour le monde", frenchOnly: "French" });
-	mockedResources.set(path.join(mockedCwd, "manifest.json"), { greeting: "This should never be used", manifestOnly: "Manifest" });
+
+	const mockedManifest = {
+		greeting: "This should never be used",
+		manifestOnly: "Manifest"
+	} as unknown as Manifest;
 
 	beforeEach(() => jest.spyOn(process, "cwd").mockReturnValue(mockedCwd));
-
-	afterEach(() => jest.resetAllMocks());
+	afterEach(() => jest.restoreAllMocks());
 
 	/**
 	 * Asserts {@link I18nProvider} uses a scoped {@link Logger}.
@@ -40,7 +44,7 @@ describe("I18nProvider", () => {
 		const createScopeSpy = jest.spyOn(logger, "createScope");
 
 		// Act.
-		new I18nProvider("en", logger);
+		new I18nProvider("en", mockedManifest, logger);
 
 		// Assert.
 		expect(createScopeSpy).toHaveBeenCalledTimes(1);
@@ -58,10 +62,10 @@ describe("I18nProvider", () => {
 		const { logger } = getMockedLogger();
 
 		// Act.
-		new I18nProvider("en", logger);
+		new I18nProvider("en", mockedManifest, logger);
 
 		// Assert.
-		expect(readFileSyncSpy).toHaveBeenCalledTimes(7);
+		expect(readFileSyncSpy).toHaveBeenCalledTimes(6);
 
 		const opts = { flag: "r" };
 		expect(readFileSyncSpy).toHaveBeenCalledWith("de.json", opts);
@@ -71,7 +75,7 @@ describe("I18nProvider", () => {
 		expect(readFileSyncSpy).toHaveBeenCalledWith("ja.json", opts);
 		expect(readFileSyncSpy).toHaveBeenCalledWith("zh_CN.json", opts);
 		expect(readFileSyncSpy).not.toHaveBeenCalledWith("other.json", opts);
-		expect(readFileSyncSpy).toHaveBeenCalledWith(path.join(process.cwd(), "manifest.json"), opts);
+		expect(readFileSyncSpy).not.toHaveBeenCalledWith(path.join(process.cwd(), "manifest.json"), opts);
 	});
 
 	/**
@@ -83,7 +87,7 @@ describe("I18nProvider", () => {
 		jest.spyOn(fs, "readFileSync").mockImplementation((path) => JSON.stringify(mockedResources.get(path as string)));
 
 		const { logger } = getMockedLogger();
-		const i18n = new I18nProvider("en", logger);
+		const i18n = new I18nProvider("en", mockedManifest, logger);
 
 		// Act.
 		const greeting = i18n.translate("greeting");
@@ -103,7 +107,7 @@ describe("I18nProvider", () => {
 		jest.spyOn(fs, "readFileSync").mockImplementation((path) => JSON.stringify(mockedResources.get(path as string)));
 
 		const { logger } = getMockedLogger();
-		const i18n = new I18nProvider("de", logger);
+		const i18n = new I18nProvider("de", mockedManifest, logger);
 
 		// Act.
 		const greeting = i18n.translate("greeting");
@@ -125,7 +129,7 @@ describe("I18nProvider", () => {
 		jest.spyOn(fs, "readFileSync").mockReturnValue("{}");
 
 		const { logger, scopedLogger } = getMockedLogger();
-		const i18n = new I18nProvider("en", logger);
+		const i18n = new I18nProvider("en", mockedManifest, logger);
 
 		// Act.
 		i18n.logMissingKey = true;
@@ -146,7 +150,7 @@ describe("I18nProvider", () => {
 		jest.spyOn(fs, "readFileSync").mockReturnValue("{}");
 
 		const { logger, scopedLogger } = getMockedLogger();
-		const i18n = new I18nProvider("en", logger);
+		const i18n = new I18nProvider("en", mockedManifest, logger);
 
 		// Act.
 		i18n.logMissingKey = false;
@@ -167,12 +171,11 @@ describe("I18nProvider", () => {
 		const { logger, scopedLogger } = getMockedLogger();
 
 		// Act.
-		new I18nProvider("en", logger);
+		new I18nProvider("en", mockedManifest, logger);
 
 		// Assert.
-		expect(scopedLogger.error).toHaveBeenCalledTimes(2);
+		expect(scopedLogger.error).toHaveBeenCalledTimes(1);
 		expect(scopedLogger.error).toHaveBeenCalledWith("Failed to load translations from en.json", expect.any(Error));
-		expect(scopedLogger.error).toHaveBeenCalledWith(`Failed to load translations from ${path.join(mockedCwd, "manifest.json")}`, expect.any(Error));
 	});
 
 	/**
@@ -190,7 +193,7 @@ describe("I18nProvider", () => {
 		);
 
 		const { logger } = getMockedLogger();
-		const i18n = new I18nProvider("en", logger);
+		const i18n = new I18nProvider("en", mockedManifest, logger);
 
 		// Act.
 		const result = i18n.translate("parent.child");

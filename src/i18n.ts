@@ -4,6 +4,7 @@ import path from "node:path";
 import { get } from "./common/utils";
 import { Language, supportedLanguages } from "./connectivity/registration";
 import { Logger } from "./logging";
+import type { Manifest } from "./manifest";
 
 /**
  * Provides locales and translations for internalization.
@@ -32,11 +33,12 @@ export class I18nProvider {
 	/**
 	 * Initializes a new instance of the {@link I18nProvider} class.
 	 * @param language The default language to be used when retrieving translations for a given key.
+	 * @param manifest Manifest that accompanies the plugin.
 	 * @param logger Logger responsible for capturing log entries.
 	 */
-	constructor(private readonly language: Language, logger: Logger) {
+	constructor(private readonly language: Language, manifest: Manifest, logger: Logger) {
 		this.logger = logger.createScope("I18nProvider");
-		this.loadLocales();
+		this.loadLocales(manifest);
 	}
 
 	/**
@@ -57,8 +59,9 @@ export class I18nProvider {
 
 	/**
 	 * Loads all known locales from the current working directory.
+	 * @param manifest Manifest that accompanies the plugin.
 	 */
-	private loadLocales() {
+	private loadLocales(manifest: Manifest) {
 		for (const filePath of file.readdirSync(process.cwd())) {
 			const { ext, name } = path.parse(filePath);
 			const lng = name as Language;
@@ -71,21 +74,11 @@ export class I18nProvider {
 			}
 		}
 
-		this.mergeManifestWithDefault();
-	}
-
-	/**
-	 * Merges the default language (English) with the manifest; when there are duplicate keys, the default language resources will take precedence over the manifest.
-	 */
-	private mergeManifestWithDefault() {
-		const manifest = this.readFile(path.join(process.cwd(), "manifest.json"));
-
-		if (manifest !== undefined) {
-			this.locales.set(I18nProvider.DEFAULT_LANGUAGE, {
-				...manifest,
-				...(this.locales.get(I18nProvider.DEFAULT_LANGUAGE) || {})
-			});
-		}
+		// Merge the manifest into the default language, prioritizing explicitly defined resources.
+		this.locales.set(I18nProvider.DEFAULT_LANGUAGE, {
+			...manifest,
+			...(this.locales.get(I18nProvider.DEFAULT_LANGUAGE) || {})
+		});
 	}
 
 	/**

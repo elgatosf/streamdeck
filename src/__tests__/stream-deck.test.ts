@@ -152,7 +152,7 @@ describe("StreamDeck", () => {
 
 			const { _registrationParameters, logger } = streamDeck;
 			expect(I18nProvider).toHaveBeenCalledTimes(1);
-			expect(I18nProvider).toHaveBeenCalledWith(_registrationParameters.info.application.language, logger);
+			expect(I18nProvider).toHaveBeenCalledWith(_registrationParameters.info.application.language, getManifest(), logger);
 		});
 
 		/**
@@ -279,7 +279,7 @@ describe("StreamDeck", () => {
 			expect(getDevices).toHaveBeenCalledTimes(0);
 			expect(I18nProvider).toHaveBeenCalledTimes(1);
 			expect(createLogger).toHaveBeenCalledTimes(1);
-			expect(getManifest).toHaveBeenCalledTimes(0);
+			expect(getManifest).toHaveBeenCalledTimes(1);
 			expect(StreamDeckClient).toHaveBeenCalledTimes(0);
 			expect(StreamDeckConnection).toHaveBeenCalledTimes(0);
 			expect(RegistrationParameters).toHaveBeenCalledTimes(1);
