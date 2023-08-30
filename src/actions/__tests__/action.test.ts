@@ -33,10 +33,10 @@ describe("Action", () => {
 	it("Can getSettings", async () => {
 		// Arrange.
 		const { connection, client } = getMockedClient();
-		const action = new Action(client, "com.elgato.test.one", "ABC123");
+		const action = new Action<mockEvents.Settings>(client, "com.elgato.test.one", "ABC123");
 
 		// Act (Command).
-		const settings = action.getSettings<mockEvents.Settings>();
+		const settings = action.getSettings();
 
 		// Assert (Command).
 		expect(connection.send).toHaveBeenCalledTimes(1);
@@ -153,7 +153,7 @@ describe("Action", () => {
 	it("Sends setSettings", async () => {
 		// Arrange.
 		const { connection, client } = getMockedClient();
-		const action = new Action(client, "com.elgato.test.one", "ABC123");
+		const action = new Action<mockEvents.Settings>(client, "com.elgato.test.one", "ABC123");
 
 		// Act.
 		await action.setSettings({

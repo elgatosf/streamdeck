@@ -16,7 +16,7 @@ import {
 	WillDisappearEvent
 } from "../../events";
 import { Action } from "../action";
-import { Route } from "../route";
+import { addRoute } from "../route";
 import type { SingletonAction } from "../singleton-action";
 
 jest.mock("../singleton-action");
@@ -34,7 +34,7 @@ describe("Route", () => {
 		};
 
 		// Act, assert.
-		expect(() => new Route(client, action)).toThrow("The action's manifestId cannot be undefined.");
+		expect(() => addRoute(client, action)).toThrow("The action's manifestId cannot be undefined.");
 	});
 
 	it("Routes onDialDown", () => {
@@ -46,7 +46,7 @@ describe("Route", () => {
 		};
 
 		// Act.
-		new Route(client, action);
+		addRoute(client, action);
 
 		const { device, payload, context } = connection.__emit({
 			...mockEvents.dialDown,
@@ -74,7 +74,7 @@ describe("Route", () => {
 		};
 
 		// Act.
-		new Route(client, action);
+		addRoute(client, action);
 
 		const { device, payload, context } = connection.__emit({
 			...mockEvents.dialRotate,
@@ -103,7 +103,7 @@ describe("Route", () => {
 		};
 
 		// Act.
-		new Route(client, action);
+		addRoute(client, action);
 
 		const { device, payload, context } = connection.__emit({
 			...mockEvents.dialUp,
@@ -132,7 +132,7 @@ describe("Route", () => {
 		};
 
 		// Act.
-		new Route(client, action);
+		addRoute(client, action);
 
 		const { device, payload, context } = connection.__emit({
 			...mockEvents.didReceiveSettings,
@@ -161,7 +161,7 @@ describe("Route", () => {
 		};
 
 		// Act.
-		new Route(client, action);
+		addRoute(client, action);
 
 		const { device, payload, context } = connection.__emit({
 			...mockEvents.keyDown,
@@ -190,7 +190,7 @@ describe("Route", () => {
 		};
 
 		// Act.
-		new Route(client, action);
+		addRoute(client, action);
 
 		const { device, payload, context } = connection.__emit({
 			...mockEvents.keyUp,
@@ -219,7 +219,7 @@ describe("Route", () => {
 		};
 
 		// Act.
-		new Route(client, action);
+		addRoute(client, action);
 
 		const { device, context } = connection.__emit({
 			...mockEvents.propertyInspectorDidAppear,
@@ -231,7 +231,7 @@ describe("Route", () => {
 		// Assert.
 		expect(action.onPropertyInspectorDidAppear).toHaveBeenCalledTimes(1);
 		expect((action.onPropertyInspectorDidAppear as jest.Mock).mock.contexts[0]).toStrictEqual(action);
-		expect(action.onPropertyInspectorDidAppear).toHaveBeenCalledWith<[PropertyInspectorDidAppearEvent]>({
+		expect(action.onPropertyInspectorDidAppear).toHaveBeenCalledWith<[PropertyInspectorDidAppearEvent<never>]>({
 			action: new Action(client, manifestId, context),
 			deviceId: device,
 			type: "propertyInspectorDidAppear"
@@ -247,7 +247,7 @@ describe("Route", () => {
 		};
 
 		// Act.
-		new Route(client, action);
+		addRoute(client, action);
 
 		const { device, context } = connection.__emit({
 			...mockEvents.propertyInspectorDidDisappear,
@@ -259,7 +259,7 @@ describe("Route", () => {
 		// Assert.
 		expect(action.onPropertyInspectorDidDisappear).toHaveBeenCalledTimes(1);
 		expect((action.onPropertyInspectorDidDisappear as jest.Mock).mock.contexts[0]).toStrictEqual(action);
-		expect(action.onPropertyInspectorDidDisappear).toHaveBeenCalledWith<[PropertyInspectorDidDisappearEvent]>({
+		expect(action.onPropertyInspectorDidDisappear).toHaveBeenCalledWith<[PropertyInspectorDidDisappearEvent<never>]>({
 			action: new Action(client, manifestId, context),
 			deviceId: device,
 			type: "propertyInspectorDidDisappear"
@@ -275,7 +275,7 @@ describe("Route", () => {
 		};
 
 		// Act.
-		new Route(client, action);
+		addRoute(client, action);
 
 		const { payload, context } = connection.__emit({
 			...mockEvents.sendToPlugin,
@@ -287,7 +287,7 @@ describe("Route", () => {
 		// Assert.
 		expect(action.onSendToPlugin).toHaveBeenCalledTimes(1);
 		expect((action.onSendToPlugin as jest.Mock).mock.contexts[0]).toStrictEqual(action);
-		expect(action.onSendToPlugin).toHaveBeenCalledWith<[SendToPluginEvent<mockEvents.Settings>]>({
+		expect(action.onSendToPlugin).toHaveBeenCalledWith<[SendToPluginEvent<mockEvents.Settings, never>]>({
 			action: new Action(client, manifestId, context),
 			payload,
 			type: "sendToPlugin"
@@ -303,7 +303,7 @@ describe("Route", () => {
 		};
 
 		// Act.
-		new Route(client, action);
+		addRoute(client, action);
 
 		const { device, payload, context } = connection.__emit({
 			...mockEvents.titleParametersDidChange,
@@ -332,7 +332,7 @@ describe("Route", () => {
 		};
 
 		// Act.
-		new Route(client, action);
+		addRoute(client, action);
 
 		const { device, payload, context } = connection.__emit({
 			...mockEvents.touchTap,
@@ -361,7 +361,7 @@ describe("Route", () => {
 		};
 
 		// Act.
-		new Route(client, action);
+		addRoute(client, action);
 
 		const { device, payload, context } = connection.__emit({
 			...mockEvents.willAppear,
@@ -390,7 +390,7 @@ describe("Route", () => {
 		};
 
 		// Act.
-		new Route(client, action);
+		addRoute(client, action);
 
 		const { device, payload, context } = connection.__emit({
 			...mockEvents.willDisappear,
@@ -416,7 +416,7 @@ describe("Route", () => {
 		const onSpy = jest.spyOn(connection, "on");
 
 		// Act.
-		new Route(client, { manifestId });
+		addRoute(client, { manifestId });
 
 		// Assert.
 		expect(onSpy).not.toHaveBeenCalled();
