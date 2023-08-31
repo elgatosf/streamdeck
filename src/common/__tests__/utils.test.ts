@@ -92,6 +92,10 @@ describe("isDebugMode", () => {
 			expected: true
 		},
 		{
+			args: ["--inspect=12345"],
+			expected: true
+		},
+		{
 			args: ["--inspect=127.0.0.1:1234"],
 			expected: true
 		},
