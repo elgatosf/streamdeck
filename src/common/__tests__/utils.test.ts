@@ -1,6 +1,7 @@
 import path from "node:path";
 
-import { get, getPluginUUID, isDebugMode } from "../utils";
+import type { isDebugMode } from "../utils";
+import { get, getPluginUUID } from "../utils";
 
 /**
  * Asserts {@link get} correct reads values from objects based on the specified path.
@@ -58,7 +59,12 @@ describe("getPluginUUID", () => {
  * Asserts {@link isDebugMode} is correctly determined by the process arguments.
  */
 describe("isDebugMode", () => {
-	beforeEach(() => jest.resetModules());
+	let origArgs: string[] = [];
+	beforeEach(() => (origArgs = process.execArgv));
+	afterEach(() => {
+		process.execArgv = origArgs;
+		jest.resetModules();
+	});
 
 	const cases = [
 		{
@@ -86,6 +92,10 @@ describe("isDebugMode", () => {
 			expected: true
 		},
 		{
+			args: ["--inspect=12345"],
+			expected: true
+		},
+		{
 			args: ["--inspect=127.0.0.1:1234"],
 			expected: true
 		},
@@ -108,13 +118,25 @@ describe("isDebugMode", () => {
 	];
 
 	it.each(cases)("$args returns $expected", async ({ args, expected }) => {
-		const origArgs = process.execArgv;
-		try {
-			// Arrange, act, assert.
-			process.execArgv = args;
-			return expect(isDebugMode()).toBe(expected);
-		} finally {
-			process.execArgv = origArgs;
-		}
+		// Arrange.
+		const { isDebugMode } = (await require("../utils")) as typeof import("../utils");
+		process.execArgv = args;
+
+		// Act, assert.
+		expect(isDebugMode()).toBe(expected);
+	});
+
+	it("Caches result", async () => {
+		// Arrange.
+		const { isDebugMode } = (await require("../utils")) as typeof import("../utils");
+		process.execArgv = ["--inspect", "127.0.0.1"];
+
+		// Act, assert.
+		expect(isDebugMode()).toBe(true);
+
+		// Re-arrange, act, assert.
+		process.execArgv = [];
+		expect(isDebugMode()).toBe(true);
+		console.log("Hello world");
 	});
 });
