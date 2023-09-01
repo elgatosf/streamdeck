@@ -190,24 +190,28 @@ export class StreamDeckClient {
 	 * Occurs when the property inspector associated with the action becomes visible, i.e. the user selected an action in the Stream Deck application. Also see {@link StreamDeckClient.onPropertyInspectorDidDisappear}.
 	 * @param listener Function to be invoked when the event occurs.
 	 */
-	public onPropertyInspectorDidAppear(listener: (ev: PropertyInspectorDidAppearEvent) => void): void {
-		this.connection.on("propertyInspectorDidAppear", (ev: events.PropertyInspectorDidAppear) => listener(new ActionWithoutPayloadEvent(this, ev)));
+	public onPropertyInspectorDidAppear<TSettings = unknown>(listener: (ev: PropertyInspectorDidAppearEvent<TSettings>) => void): void {
+		this.connection.on("propertyInspectorDidAppear", (ev: events.PropertyInspectorDidAppear) =>
+			listener(new ActionWithoutPayloadEvent<events.PropertyInspectorDidAppear, TSettings>(this, ev))
+		);
 	}
 
 	/**
 	 * Occurs when the property inspector associated with the action becomes invisible, i.e. the user unselected the action in the Stream Deck application. Also see {@link StreamDeckClient.onPropertyInspectorDidAppear}.
 	 * @param listener Function to be invoked when the event occurs.
 	 */
-	public onPropertyInspectorDidDisappear(listener: (ev: PropertyInspectorDidDisappearEvent) => void): void {
-		this.connection.on("propertyInspectorDidDisappear", (ev: events.PropertyInspectorDidDisappear) => listener(new ActionWithoutPayloadEvent(this, ev)));
+	public onPropertyInspectorDidDisappear<TSettings = unknown>(listener: (ev: PropertyInspectorDidDisappearEvent<TSettings>) => void): void {
+		this.connection.on("propertyInspectorDidDisappear", (ev: events.PropertyInspectorDidDisappear) =>
+			listener(new ActionWithoutPayloadEvent<events.PropertyInspectorDidDisappear, TSettings>(this, ev))
+		);
 	}
 
 	/**
 	 * Occurs when a message was sent to the plugin _from_ the property inspector. The plugin can also send messages _to_ the property inspector using {@link StreamDeckClient.sendToPropertyInspector}.
 	 * @param listener Function to be invoked when the event occurs.
 	 */
-	public onSendToPlugin<TPayload extends object>(listener: (ev: SendToPluginEvent<TPayload>) => void): void {
-		this.connection.on("sendToPlugin", (ev: events.SendToPlugin<TPayload>) => listener(new SendToPluginEvent(this, ev)));
+	public onSendToPlugin<TPayload extends object, TSettings = unknown>(listener: (ev: SendToPluginEvent<TPayload, TSettings>) => void): void {
+		this.connection.on("sendToPlugin", (ev: events.SendToPlugin<TPayload>) => listener(new SendToPluginEvent<TPayload, TSettings>(this, ev)));
 	}
 
 	/**
@@ -371,7 +375,7 @@ export class StreamDeckClient {
 	 *   connectedDate: new Date()
 	 * })
 	 */
-	public setGlobalSettings<T>(settings: Settings<T>): Promise<void> {
+	public setGlobalSettings<T>(settings: T): Promise<void> {
 		return this.connection.send({
 			event: "setGlobalSettings",
 			context: this.connection.registrationParameters.pluginUUID,
@@ -412,7 +416,7 @@ export class StreamDeckClient {
 	 *   name: "Elgato"
 	 * })
 	 */
-	public setSettings<T>(context: string, settings: Settings<T>): Promise<void> {
+	public setSettings<T>(context: string, settings: T): Promise<void> {
 		return this.connection.send({
 			event: "setSettings",
 			context,
@@ -517,12 +521,3 @@ export class StreamDeckClient {
 		});
 	}
 }
-
-/**
- * Defines the object structure of settings that can be persisted within Stream Deck. Settings are persisted as JSON objects, and can only include primitive types, and objects.
- */
-export type Settings<T> = {
-	[K in keyof T]: T[K] extends (...args: unknown[]) => unknown ? never : unknown;
-}[keyof T] extends never
-	? never
-	: T;

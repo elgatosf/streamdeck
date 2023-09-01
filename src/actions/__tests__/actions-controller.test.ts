@@ -1,7 +1,7 @@
 import { getMockedClient } from "../../../tests/__mocks__/client";
 import { manifest as mockManifest } from "../../__mocks__/manifest";
 import { ActionsController } from "../actions-controller";
-import { Route } from "../route";
+import { addRoute } from "../route";
 import { SingletonAction } from "../singleton-action";
 
 jest.mock("../singleton-action");
@@ -35,9 +35,8 @@ describe("ActionsController", () => {
 		expect(createScopeSpy).toHaveBeenCalledWith("ActionsController");
 	});
 
-	it("Adds valid routes", () => {
+	it("Configures route", () => {
 		// Arrange.
-		const mockedRoute = Route as jest.MockedClass<typeof Route>;
 		const { logger, client } = getMockedClient();
 		const action: SingletonAction = {
 			manifestId
@@ -48,8 +47,8 @@ describe("ActionsController", () => {
 		actions.registerAction(action);
 
 		// Assert.
-		expect(mockedRoute.mock.instances).toHaveLength(1);
-		expect(mockedRoute.mock.calls[0]).toEqual([client, action]);
+		expect(addRoute).toHaveBeenCalledTimes(1);
+		expect(addRoute).toHaveBeenCalledWith(client, action);
 	});
 
 	it("Warns when action does not exist in manifest", () => {

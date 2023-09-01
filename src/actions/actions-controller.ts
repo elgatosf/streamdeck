@@ -1,7 +1,7 @@
 import { StreamDeckClient } from "../client";
 import { Logger } from "../logging";
 import { Manifest } from "../manifest";
-import { Route } from "./route";
+import { addRoute } from "./route";
 import { SingletonAction } from "./singleton-action";
 
 /**
@@ -12,11 +12,6 @@ export class ActionsController {
 	 * Logger scoped to this class.
 	 */
 	private readonly logger: Logger;
-
-	/**
-	 * Collection of registered routes.
-	 */
-	private readonly routes: Route[] = [];
 
 	/**
 	 * Initializes a new instance of the {@link ActionsController} class.
@@ -43,7 +38,7 @@ export class ActionsController {
 	 */
 	public registerAction<TAction extends SingletonAction<TSettings>, TSettings = unknown>(action: TAction) {
 		if (action.manifestId !== undefined && this.manifest.Actions.find((a) => a.UUID === action.manifestId)) {
-			this.routes.push(new Route(this.client, action));
+			addRoute(this.client, action);
 		} else {
 			this.logger.warn(`Failed to route action: manifestId (UUID) ${action.manifestId} was not found in the manifest.`);
 		}

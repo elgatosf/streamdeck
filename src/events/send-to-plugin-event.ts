@@ -6,11 +6,11 @@ import { Event } from "./event";
 /**
  * Provides information for an event trigger by a message being sent to the plugin, from the property inspector.
  */
-export class SendToPluginEvent<TPayload extends object> extends Event<SendToPlugin<TPayload>> {
+export class SendToPluginEvent<TPayload extends object, TSettings> extends Event<SendToPlugin<TPayload>> {
 	/**
 	 * The action that raised the event.
 	 */
-	public readonly action: Action;
+	public readonly action: Action<TSettings>;
 
 	/**
 	 * Payload sent from the property inspector.

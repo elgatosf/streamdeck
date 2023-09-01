@@ -418,7 +418,7 @@ describe("StreamDeckClient", () => {
 
 		// Assert.
 		expect(listener).toHaveBeenCalledTimes(1);
-		expect(listener).toHaveBeenCalledWith<[PropertyInspectorDidAppearEvent]>({
+		expect(listener).toHaveBeenCalledWith<[PropertyInspectorDidAppearEvent<never>]>({
 			action: new Action(client, action, context),
 			deviceId: device,
 			type: "propertyInspectorDidAppear"
@@ -440,7 +440,7 @@ describe("StreamDeckClient", () => {
 
 		// Assert.
 		expect(listener).toHaveBeenCalledTimes(1);
-		expect(listener).toHaveBeenCalledWith<[PropertyInspectorDidDisappearEvent]>({
+		expect(listener).toHaveBeenCalledWith<[PropertyInspectorDidDisappearEvent<never>]>({
 			action: new Action(client, action, context),
 			deviceId: device,
 			type: "propertyInspectorDidDisappear"
@@ -462,7 +462,7 @@ describe("StreamDeckClient", () => {
 
 		// Assert.
 		expect(listener).toHaveBeenCalledTimes(1);
-		expect(listener).toHaveBeenCalledWith<[SendToPluginEvent<mockEvents.Settings>]>({
+		expect(listener).toHaveBeenCalledWith<[SendToPluginEvent<mockEvents.Settings, never>]>({
 			action: new Action(client, action, context),
 			payload,
 			type: "sendToPlugin"

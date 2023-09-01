@@ -32,47 +32,47 @@ export type DeviceDidDisconnectEvent = DeviceEvent<events.DeviceDidDisconnect, D
 /**
  * Event information received from Stream Deck as part of the {@link events.DialDown} event.
  */
-export type DialDownEvent<TSettings> = ActionEvent<events.DialDown<TSettings>>;
+export type DialDownEvent<TSettings> = ActionEvent<events.DialDown<TSettings>, TSettings>;
 
 /**
  * Event information received from Stream Deck as part of the {@link events.DialRotate} event.
  */
-export type DialRotateEvent<TSettings> = ActionEvent<events.DialRotate<TSettings>>;
+export type DialRotateEvent<TSettings> = ActionEvent<events.DialRotate<TSettings>, TSettings>;
 
 /**
  * Event information received from Stream Deck as part of the {@link events.DialUp} event.
  */
-export type DialUpEvent<TSettings> = ActionEvent<events.DialUp<TSettings>>;
+export type DialUpEvent<TSettings> = ActionEvent<events.DialUp<TSettings>, TSettings>;
 
 /**
  * Event information received from Stream Deck as part of the {@link events.DidReceiveSettings} event.
  */
-export type DidReceiveSettingsEvent<TSettings> = ActionEvent<events.DidReceiveSettings<TSettings>>;
+export type DidReceiveSettingsEvent<TSettings> = ActionEvent<events.DidReceiveSettings<TSettings>, TSettings>;
 
 /**
  * Event information received from Stream Deck as part of the {@link events.KeyDown} event.
  */
-export type KeyDownEvent<TSettings> = ActionEvent<events.KeyDown<TSettings>>;
+export type KeyDownEvent<TSettings> = ActionEvent<events.KeyDown<TSettings>, TSettings>;
 
 /**
  * Event information received from Stream Deck as part of the {@link events.KeyUp} event.
  */
-export type KeyUpEvent<TSettings> = ActionEvent<events.KeyUp<TSettings>>;
+export type KeyUpEvent<TSettings> = ActionEvent<events.KeyUp<TSettings>, TSettings>;
 
 /**
  * Event information received from Stream Deck as part of the {@link events.PropertyInspectorDidAppear} event.
  */
-export type PropertyInspectorDidAppearEvent = ActionWithoutPayloadEvent<events.PropertyInspectorDidAppear>;
+export type PropertyInspectorDidAppearEvent<TSettings> = ActionWithoutPayloadEvent<events.PropertyInspectorDidAppear, TSettings>;
 
 /**
  * Event information received from Stream Deck as part of the {@link events.PropertyInspectorDidDisappear} event.
  */
-export type PropertyInspectorDidDisappearEvent = ActionWithoutPayloadEvent<events.PropertyInspectorDidDisappear>;
+export type PropertyInspectorDidDisappearEvent<TSettings> = ActionWithoutPayloadEvent<events.PropertyInspectorDidDisappear, TSettings>;
 
 /**
  * Event information received from Stream Deck as part of the {@link events.TitleParametersDidChange} event.
  */
-export type TitleParametersDidChangeEvent<TSettings> = ActionEvent<events.TitleParametersDidChange<TSettings>>;
+export type TitleParametersDidChangeEvent<TSettings> = ActionEvent<events.TitleParametersDidChange<TSettings>, TSettings>;
 
 /**
  * Event information receives from Streak Deck as part of the {@link events.SystemDidWakeUp} event.
@@ -82,14 +82,14 @@ export type SystemDidWakeUpEvent = Event<events.SystemDidWakeUp>;
 /**
  * Event information received from Stream Deck as part of the {@link events.TouchTap} event.
  */
-export type TouchTapEvent<TSettings> = ActionEvent<events.TouchTap<TSettings>>;
+export type TouchTapEvent<TSettings> = ActionEvent<events.TouchTap<TSettings>, TSettings>;
 
 /**
  * Event information received from Stream Deck as part of the {@link events.WillAppear} event.
  */
-export type WillAppearEvent<TSettings> = ActionEvent<events.WillAppear<TSettings>>;
+export type WillAppearEvent<TSettings> = ActionEvent<events.WillAppear<TSettings>, TSettings>;
 
 /**
  * Event information received from Stream Deck as part of the {@link events.WillDisappear} event.
  */
-export type WillDisappearEvent<TSettings> = ActionEvent<events.WillDisappear<TSettings>>;
+export type WillDisappearEvent<TSettings> = ActionEvent<events.WillDisappear<TSettings>, TSettings>;

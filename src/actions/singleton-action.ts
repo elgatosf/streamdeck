@@ -64,19 +64,19 @@ export class SingletonAction<TSettings = unknown> {
 	 * Occurs when the property inspector associated with the action becomes visible, i.e. the user selected an action in the Stream Deck application. Also see {@link StreamDeckClient.onPropertyInspectorDidDisappear}.
 	 * @param listener Function to be invoked when the event occurs.
 	 */
-	public onPropertyInspectorDidAppear?(ev: PropertyInspectorDidAppearEvent): void;
+	public onPropertyInspectorDidAppear?(ev: PropertyInspectorDidAppearEvent<TSettings>): void;
 
 	/**
 	 * Occurs when the property inspector associated with the action becomes invisible, i.e. the user unselected the action in the Stream Deck application. Also see {@link StreamDeckClient.onPropertyInspectorDidAppear}.
 	 * @param listener Function to be invoked when the event occurs.
 	 */
-	public onPropertyInspectorDidDisappear?(ev: PropertyInspectorDidDisappearEvent): void;
+	public onPropertyInspectorDidDisappear?(ev: PropertyInspectorDidDisappearEvent<TSettings>): void;
 
 	/**
 	 * Occurs when a message was sent to the plugin _from_ the property inspector. The plugin can also send messages _to_ the property inspector using {@link StreamDeckClient.sendToPropertyInspector}.
 	 * @param listener Function to be invoked when the event occurs.
 	 */
-	public onSendToPlugin?(ev: SendToPluginEvent<object>): void;
+	public onSendToPlugin?(ev: SendToPluginEvent<object, TSettings>): void;
 
 	/**
 	 * Occurs when the user updates an action's title settings in the Stream Deck application. Also see {@link StreamDeckClient.setTitle}.

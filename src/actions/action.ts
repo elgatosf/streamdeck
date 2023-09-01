@@ -1,4 +1,4 @@
-import type { Settings, StreamDeckClient } from "../client";
+import type { StreamDeckClient } from "../client";
 import { SetTriggerDescription } from "../connectivity/commands";
 import { State } from "../connectivity/events";
 import { FeedbackPayload } from "../connectivity/layouts";
@@ -8,7 +8,7 @@ import type { SingletonAction } from "./singleton-action";
 /**
  * Provides a contextualized instance of an {@link Action}, allowing for direct communication with the Stream Deck.
  */
-export class Action {
+export class Action<TSettings> {
 	/**
 	 * Initializes a new instance of the {@see Action} class.
 	 * @param client The Stream Deck client.
@@ -22,7 +22,7 @@ export class Action {
 	 * with {@link Action.setSettings}.
 	 * @returns Promise containing the action instance's settings.
 	 */
-	public getSettings<T = unknown>(): Promise<Partial<T>> {
+	public getSettings<T = TSettings>(): Promise<Partial<T>> {
 		return this.client.getSettings<T>(this.id);
 	}
 
@@ -118,12 +118,8 @@ export class Action {
 	 * Sets the {@link settings} associated with this action instance. Use in conjunction with {@link Action.getSettings}.
 	 * @param settings Settings to persist.
 	 * @returns `Promise` resolved when the {@link settings} are sent to Stream Deck.
-	 * @example
-	 * action.setSettings({
-	 *   name: "Elgato"
-	 * })
 	 */
-	public setSettings<T>(settings: Settings<T>): Promise<void> {
+	public setSettings(settings: TSettings): Promise<void> {
 		return this.client.setSettings(this.id, settings);
 	}
 
