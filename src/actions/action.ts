@@ -151,7 +151,7 @@ export class Action<TSettings> {
 	 * @param descriptions Descriptions that detail the action's interaction.
 	 * @returns `Promise` resolved when the request to set the {@link descriptions} has been sent to Stream Deck.
 	 */
-	public setTriggerDescription(descriptions?: SetTriggerDescription["payload"]) {
+	public setTriggerDescription(descriptions?: SetTriggerDescription["payload"]): Promise<void> {
 		return this.client.setTriggerDescription(this.id, descriptions);
 	}
 

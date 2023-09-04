@@ -7,7 +7,7 @@ import { SingletonAction } from "./singleton-action";
  * @param client The Stream Deck client.
  * @param action The action that will receive the events.
  */
-export function addRoute<TAction extends SingletonAction<TSettings>, TSettings = ExtractSettings<TAction>>(client: StreamDeckClient, action: TAction) {
+export function addRoute<TAction extends SingletonAction<TSettings>, TSettings = ExtractSettings<TAction>>(client: StreamDeckClient, action: TAction): void {
 	if (action.manifestId === undefined) {
 		throw new Error("The action's manifestId cannot be undefined.");
 	}
@@ -36,7 +36,7 @@ export function addRoute<TAction extends SingletonAction<TSettings>, TSettings =
 		manifestId: string,
 		event: (listener: (ev: TEventArgs) => void) => void,
 		listener: ((ev: TEventArgs) => Promise<void> | void) | undefined
-	) {
+	): void {
 		const boundedListener = listener?.bind(action);
 		if (boundedListener === undefined) {
 			return;

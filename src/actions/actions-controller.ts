@@ -36,7 +36,7 @@ export class ActionsController {
 	 *
 	 * streamDeck.actions.registerAction(new MyCustomAction());
 	 */
-	public registerAction<TAction extends SingletonAction<TSettings>, TSettings = unknown>(action: TAction) {
+	public registerAction<TAction extends SingletonAction<TSettings>, TSettings = unknown>(action: TAction): void {
 		if (action.manifestId !== undefined && this.manifest.Actions.find((a) => a.UUID === action.manifestId)) {
 			addRoute(this.client, action);
 		} else {

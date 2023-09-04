@@ -70,7 +70,7 @@ export class Logger {
 	 * @param error Optional error to log with the {@link message}.
 	 * @returns This instance for chaining.
 	 */
-	public debug(message: string, error?: Error | unknown) {
+	public debug(message: string, error?: Error | unknown): Logger {
 		return this.log(LogLevel.DEBUG, message, error);
 	}
 
@@ -80,7 +80,7 @@ export class Logger {
 	 * @param error Optional error to log with the {@link message}.
 	 * @returns This instance for chaining.
 	 */
-	public error(message: string, error?: Error | unknown) {
+	public error(message: string, error?: Error | unknown): Logger {
 		return this.log(LogLevel.ERROR, message, error);
 	}
 
@@ -90,7 +90,7 @@ export class Logger {
 	 * @param error Optional error to log with the {@link message}.
 	 * @returns This instance for chaining.
 	 */
-	public info(message: string, error?: Error | unknown) {
+	public info(message: string, error?: Error | unknown): Logger {
 		return this.log(LogLevel.INFO, message, error);
 	}
 
@@ -116,7 +116,7 @@ export class Logger {
 	 * @param error Optional error to log with the {@link message}.
 	 * @returns This instance for chaining.
 	 */
-	public trace(message: string, error?: Error | unknown) {
+	public trace(message: string, error?: Error | unknown): Logger {
 		return this.log(LogLevel.TRACE, message, error);
 	}
 
@@ -126,7 +126,7 @@ export class Logger {
 	 * @param error Optional error to log with the {@link message}.
 	 * @returns This instance for chaining.
 	 */
-	public warn(message: string, error?: Error | unknown) {
+	public warn(message: string, error?: Error | unknown): Logger {
 		return this.log(LogLevel.WARN, message, error);
 	}
 
@@ -137,7 +137,7 @@ export class Logger {
 	 * @param error Optional error to log with the {@link message}.
 	 * @returns This instance for chaining.
 	 */
-	private log(level: LogLevel, message: string, error?: Error | unknown) {
+	private log(level: LogLevel, message: string, error?: Error | unknown): Logger {
 		if (level <= this.level) {
 			this.options.target.write({
 				level,

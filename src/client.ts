@@ -67,7 +67,7 @@ export class StreamDeckClient {
 	 */
 	public getSettings<T = unknown>(context: string): Promise<Partial<T>> {
 		return new Promise((resolve) => {
-			const callback = (ev: events.DidReceiveSettings<T>) => {
+			const callback = (ev: events.DidReceiveSettings<T>): void => {
 				if (ev.context == context) {
 					resolve(ev.payload.settings);
 					this.connection.removeListener("didReceiveSettings", callback);
@@ -218,7 +218,7 @@ export class StreamDeckClient {
 	 * Occurs when the computer wakes up.
 	 * @param listener Function to be invoked when the event occurs.
 	 */
-	public onSystemDidWakeUp(listener: (ev: SystemDidWakeUpEvent) => void) {
+	public onSystemDidWakeUp(listener: (ev: SystemDidWakeUpEvent) => void): void {
 		this.connection.on("systemDidWakeUp", (ev) => listener(new Event<events.SystemDidWakeUp>(ev)));
 	}
 
@@ -469,7 +469,7 @@ export class StreamDeckClient {
 	 * @param descriptions Descriptions that detail the action's interaction.
 	 * @returns `Promise` resolved when the request to set the {@link descriptions} has been sent to Stream Deck.
 	 */
-	public setTriggerDescription(context: string, descriptions?: SetTriggerDescription["payload"]) {
+	public setTriggerDescription(context: string, descriptions?: SetTriggerDescription["payload"]): Promise<void> {
 		return this.connection.send({
 			event: "setTriggerDescription",
 			context,

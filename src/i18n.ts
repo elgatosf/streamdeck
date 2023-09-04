@@ -61,7 +61,7 @@ export class I18nProvider {
 	 * Loads all known locales from the current working directory.
 	 * @param manifest Manifest that accompanies the plugin.
 	 */
-	private loadLocales(manifest: Manifest) {
+	private loadLocales(manifest: Manifest): void {
 		for (const filePath of file.readdirSync(process.cwd())) {
 			const { ext, name } = path.parse(filePath);
 			const lng = name as Language;

@@ -13,7 +13,7 @@ export { Logger } from "./logger";
  * Create the default {@link Logger} for the current plugin based on its environment.
  * @returns The default {@link Logger}.
  */
-export function createLogger() {
+export function createLogger(): Logger {
 	const target = new FileTarget({
 		dest: path.join(cwd(), "logs"),
 		fileName: getPluginUUID(),

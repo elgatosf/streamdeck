@@ -16,7 +16,7 @@ generateAndWriteSchema("Layout");
  * Generates the JSON schema for the specified TypeScript `type`, and writes it locally to `{type}.json`.
  * @param type TypeScript type whose schema should be generated.
  */
-function generateAndWriteSchema(type: string) {
+function generateAndWriteSchema(type: string): void {
 	const schema = generator.createSchema(type);
 	addMarkdownDescription(schema);
 
@@ -32,7 +32,7 @@ function generateAndWriteSchema(type: string) {
  * Traverses the specified `schema` and appends the `markdownDescription` property for all definitions within the schema that have a `description`.
  * @param schema Schema definition whose properties should be traversed, and `markdownDescription` applied.
  */
-function addMarkdownDescription(schema: ExtendedSchema) {
+function addMarkdownDescription(schema: ExtendedSchema): void {
 	if (typeof schema === "object") {
 		for (const [prop, value] of Object.entries(schema)) {
 			if (typeof value === "object") {

@@ -135,7 +135,7 @@ export class StreamDeckConnection {
 	 * Attempts to emit the {@link data} that was received from the {@link StreamDeckConnection.connection}.
 	 * @param data Event message data received from the Stream Deck.
 	 */
-	private tryEmit(data: WebSocket.RawData) {
+	private tryEmit(data: WebSocket.RawData): void {
 		try {
 			const message = JSON.parse(data.toString());
 			if (message.event) {
