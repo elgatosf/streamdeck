@@ -102,6 +102,28 @@
 										],
 										"markdownDescription": "Width of the border around the bar, as a whole number. Default is `2`."
 									},
+									"range": {
+										"type": "object",
+										"properties": {
+											"min": {
+												"type": "number",
+												"description": "Minimum value of the bar.",
+												"markdownDescription": "Minimum value of the bar."
+											},
+											"max": {
+												"type": "number",
+												"description": "Maximum value of the bar",
+												"markdownDescription": "Maximum value of the bar"
+											}
+										},
+										"required": [
+											"min",
+											"max"
+										],
+										"additionalProperties": false,
+										"description": "Defines the range of the value the bar represents, e.g. 0-20, 0-100, etc.",
+										"markdownDescription": "Defines the range of the value the bar represents, e.g. 0-20, 0-100, etc."
+									},
 									"subtype": {
 										"$ref": "#/definitions/BarSubType",
 										"description": "Sub-type used to determine the type of bar to render. Default is  {@link  BarSubType.Groove } .",
@@ -252,6 +274,28 @@
 											2
 										],
 										"markdownDescription": "Width of the border around the bar, as a whole number. Default is `2`."
+									},
+									"range": {
+										"type": "object",
+										"properties": {
+											"min": {
+												"type": "number",
+												"description": "Minimum value of the bar.",
+												"markdownDescription": "Minimum value of the bar."
+											},
+											"max": {
+												"type": "number",
+												"description": "Maximum value of the bar",
+												"markdownDescription": "Maximum value of the bar"
+											}
+										},
+										"required": [
+											"min",
+											"max"
+										],
+										"additionalProperties": false,
+										"description": "Defines the range of the value the bar represents, e.g. 0-20, 0-100, etc.",
+										"markdownDescription": "Defines the range of the value the bar represents, e.g. 0-20, 0-100, etc."
 									},
 									"subtype": {
 										"$ref": "#/definitions/BarSubType",

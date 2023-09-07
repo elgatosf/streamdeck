@@ -6,6 +6,7 @@ import { createGenerator, Schema } from "ts-json-schema-generator";
 // Create a generator so we're able to produce multiple schemas.
 const generator = createGenerator({
 	path: path.join(__dirname, "../src/index.ts"),
+	skipTypeCheck: true,
 	tsconfig: path.join(__dirname, "../tsconfig.json")
 });
 
