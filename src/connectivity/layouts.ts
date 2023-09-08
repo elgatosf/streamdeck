@@ -138,6 +138,21 @@ export type Bar = LayoutItem & {
 	border_w?: number;
 
 	/**
+	 * Defines the range of the value the bar represents, e.g. 0-20, 0-100, etc.
+	 */
+	range?: {
+		/**
+		 * Minimum value of the bar.
+		 */
+		min: number;
+
+		/**
+		 * Maximum value of the bar
+		 */
+		max: number;
+	};
+
+	/**
 	 * Sub-type used to determine the type of bar to render. Default is {@link BarSubType.Groove}.
 	 */
 	subtype?: BarSubType;

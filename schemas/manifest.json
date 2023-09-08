@@ -497,9 +497,7 @@
 				"Description",
 				"Icon",
 				"Name",
-				"Nodejs",
 				"OS",
-				"Profiles",
 				"SDKVersion",
 				"Software",
 				"Version"
@@ -520,8 +518,8 @@
 				6,
 				7
 			],
-			"description": "Stream Deck devices.",
-			"markdownDescription": "Stream Deck devices."
+			"description": "Stream Deck device types.",
+			"markdownDescription": "Stream Deck device types."
 		}
 	}
 }
