@@ -33,7 +33,7 @@ export class FileTarget implements LogTarget {
 	 */
 	public write({ level, message, error }: LogEntry): void {
 		const fd = fs.openSync(this.filePath, "a");
-		const write = (message: string) => {
+		const write = (message: string): void => {
 			fs.writeSync(fd, message);
 			this.size += message.length;
 		};
@@ -63,7 +63,7 @@ export class FileTarget implements LogTarget {
 	 * @param index Optional index of the log file to be included as part of the file name.
 	 * @returns File path that represents the indexed log file.
 	 */
-	private getLogFilePath(index = 0) {
+	private getLogFilePath(index = 0): string {
 		return path.join(this.options.dest, `${this.options.fileName}.${index}.log`);
 	}
 
@@ -71,7 +71,7 @@ export class FileTarget implements LogTarget {
 	 * Gets the log files associated with this file target, including past and present.
 	 * @returns Log file entries.
 	 */
-	private getLogFiles() {
+	private getLogFiles(): LogFileEntry[] {
 		const regex = /^\.(\d+)\.log$/;
 
 		return fs

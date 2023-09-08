@@ -55,7 +55,7 @@ export class StreamDeck {
 	 * Provides information about, and methods for interacting with, actions associated with the Stream Deck plugin.
 	 * @returns The {@link ActionsController}.
 	 */
-	public get actions() {
+	public get actions(): ActionsController {
 		return this._actions || (this._actions = new ActionsController(this.client, this.manifest, this.logger));
 	}
 
@@ -63,7 +63,7 @@ export class StreamDeck {
 	 * Main communication entry-point between the plugin, and the Stream Deck.
 	 * @returns The {@link StreamDeckClient}.
 	 */
-	public get client() {
+	public get client(): StreamDeckClient {
 		return this._client || (this._client = new StreamDeckClient(this.connection, this.devices));
 	}
 

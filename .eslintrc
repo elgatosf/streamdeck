@@ -51,6 +51,7 @@
 				}
 			}
 		],
+		"@typescript-eslint/explicit-function-return-type": "warn",
 		"@typescript-eslint/member-ordering": [
 			"warn",
 			{
@@ -107,7 +108,10 @@
 	},
 	"overrides": [
 		{
-			"files": "src/**/*.test.ts",
+			"files": [
+				"{src,tests}/**/__mocks__/*.ts",
+				"{src,tests}/**/__tests__/*test.ts"
+			],
 			"rules": {
 				"jsdoc/require-jsdoc": [
 					"warn",
@@ -117,6 +121,7 @@
 						]
 					}
 				],
+				"@typescript-eslint/explicit-function-return-type": "off",
 				"@typescript-eslint/no-explicit-any": "off"
 			}
 		}

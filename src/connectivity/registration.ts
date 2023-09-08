@@ -90,7 +90,7 @@ export class RegistrationParameters {
 		}
 
 		const invalidArgs: string[] = [];
-		const validate = (name: string, value: unknown) => {
+		const validate = (name: string, value: unknown): void => {
 			if (value === undefined) {
 				invalidArgs.push(name);
 			}

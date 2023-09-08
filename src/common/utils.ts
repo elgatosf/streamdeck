@@ -18,7 +18,7 @@ export function get(path: string, source: unknown): unknown {
  * is `true` when  either `--inspect`, `--inspect-brk` or `--inspect-port` are present as part of the processes' arguments.
  * @returns `true` when the plugin is running in debug mode; otherwise `false`.
  */
-export function isDebugMode() {
+export function isDebugMode(): boolean {
 	if (__isDebugMode === undefined) {
 		__isDebugMode = process.execArgv.some((arg) => {
 			const name = arg.split("=")[0];
@@ -33,7 +33,7 @@ export function isDebugMode() {
  * Gets the plugin's unique-identifier from the current working directory.
  * @returns The plugin's unique-identifier.
  */
-export function getPluginUUID() {
+export function getPluginUUID(): string {
 	const name = path.basename(process.cwd());
 	const suffixIndex = name.lastIndexOf(".sdPlugin");
 

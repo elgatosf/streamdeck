@@ -49,9 +49,9 @@ export class Logger {
 	/**
 	 * Creates a scoped logger with the given {@link scope}; logs created by scoped-loggers include their scope to enable their source to be easily identified.
 	 * @param scope Value that represents the scope of the new logger.
-	 * @returns The scoped logger.
+	 * @returns The scoped logger, or this instance when {@link scope} is not defined.
 	 */
-	public createScope(scope: string): Logger {
+	public createScope(scope: string): Logger | this {
 		scope = scope.trim();
 		if (scope === "") {
 			return this;
@@ -70,7 +70,7 @@ export class Logger {
 	 * @param error Optional error to log with the {@link message}.
 	 * @returns This instance for chaining.
 	 */
-	public debug(message: string, error?: Error | unknown) {
+	public debug(message: string, error?: Error | unknown): this {
 		return this.log(LogLevel.DEBUG, message, error);
 	}
 
@@ -80,7 +80,7 @@ export class Logger {
 	 * @param error Optional error to log with the {@link message}.
 	 * @returns This instance for chaining.
 	 */
-	public error(message: string, error?: Error | unknown) {
+	public error(message: string, error?: Error | unknown): this {
 		return this.log(LogLevel.ERROR, message, error);
 	}
 
@@ -90,7 +90,7 @@ export class Logger {
 	 * @param error Optional error to log with the {@link message}.
 	 * @returns This instance for chaining.
 	 */
-	public info(message: string, error?: Error | unknown) {
+	public info(message: string, error?: Error | unknown): this {
 		return this.log(LogLevel.INFO, message, error);
 	}
 
@@ -99,7 +99,7 @@ export class Logger {
 	 * @param level The log-level that determines which logs should be written; when `undefined`, the level will be inherited from the parent logger, or default to the environment level.
 	 * @returns This instance for chaining.
 	 */
-	public setLevel(level?: LogLevel): Logger {
+	public setLevel(level?: LogLevel): this {
 		if ((level === LogLevel.DEBUG || level === LogLevel.TRACE) && !isDebugMode()) {
 			this._level = LogLevel.INFO;
 			this.warn(`Log level cannot be set to ${LogLevel[level]} whilst not in debug mode.`);
@@ -116,7 +116,7 @@ export class Logger {
 	 * @param error Optional error to log with the {@link message}.
 	 * @returns This instance for chaining.
 	 */
-	public trace(message: string, error?: Error | unknown) {
+	public trace(message: string, error?: Error | unknown): this {
 		return this.log(LogLevel.TRACE, message, error);
 	}
 
@@ -126,7 +126,7 @@ export class Logger {
 	 * @param error Optional error to log with the {@link message}.
 	 * @returns This instance for chaining.
 	 */
-	public warn(message: string, error?: Error | unknown) {
+	public warn(message: string, error?: Error | unknown): this {
 		return this.log(LogLevel.WARN, message, error);
 	}
 
@@ -137,7 +137,7 @@ export class Logger {
 	 * @param error Optional error to log with the {@link message}.
 	 * @returns This instance for chaining.
 	 */
-	private log(level: LogLevel, message: string, error?: Error | unknown) {
+	private log(level: LogLevel, message: string, error?: Error | unknown): this {
 		if (level <= this.level) {
 			this.options.target.write({
 				level,
