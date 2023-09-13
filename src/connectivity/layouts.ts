@@ -11,6 +11,11 @@ export type FeedbackPayload = Record<string, Partial<Bar> | Partial<GBar> | Part
  */
 export type Layout = {
 	/**
+	 * JSON schema responsible for describing the manifest's data format and validation.
+	 */
+	$schema?: string;
+
+	/**
 	 * Unique identifier associated with the layout.
 	 */
 	id: string;
@@ -216,6 +221,15 @@ export type Text = LayoutItem & {
 		 */
 		weight?: number;
 	};
+
+	/**
+	 * Defines how overflowing text should be rendered on the layout.
+	 * - clip, truncates the text at the boundary of the element (default).
+	 * - ellipsis, truncates the text prior to the boundary of the element, and adds an ellipsis (…) to the end.
+	 * - fade, applies a fade-gradient over the end of the text.
+	 * @default clip
+	 */
+	"text-overflow"?: "clip" | "ellipsis" | "fade";
 
 	/**
 	 * Text to be displayed.

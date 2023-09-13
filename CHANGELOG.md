@@ -11,7 +11,12 @@
 
 # Change Log
 
-## 0.2.0-beta.0 (Pending)
+## 0.1.0-beta.1 (Pending)
+
+### New
+
+-   ✨ Add support for `range` as part of `bar` and `gbar` elements in layouts.
+-   ✨ Add support for `text-overflow` as part of `text` elements in layouts.
 
 ### Fixes
 
@@ -19,6 +24,7 @@
 
 ### Miscellaneous
 
+-   ♻️ Update JSON schemas for layouts to support `range` and `text-overflow`.
 -   ♻️ Result of evaluating debug mode is now cached to improve the performance of subsequent calls.
 -   ♻️ Default localizations now read from the in-memory manifest to reduce disk I/O.
 

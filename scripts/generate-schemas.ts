@@ -1,4 +1,3 @@
-import chalk from "chalk";
 import fs from "node:fs";
 import path from "node:path";
 import { createGenerator, Schema } from "ts-json-schema-generator";
@@ -25,7 +24,7 @@ function generateAndWriteSchema(type: string): void {
 	const contents = JSON.stringify(schema, null, "\t");
 
 	fs.writeFile(outputPath, contents, {}, () => {
-		console.log(`Successfully generated schema for ${chalk.green(type)}.`);
+		console.log(`Successfully generated schema for ${type}.`);
 	});
 }
 
