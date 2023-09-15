@@ -57,7 +57,7 @@ type ActionEvent<TEvent, TSettings = void, TPayload = void> = DeviceIdentifier &
 					/**
 					 * Settings associated with the action instance.
 					 */
-					settings: Partial<TSettings>;
+					settings: TSettings;
 				};
 		  });
 
@@ -86,7 +86,7 @@ export type DidReceiveGlobalSettings<TSettings = unknown> = EventIdentifier<"did
 		/**
 		 * Global settings associated with this plugin.
 		 */
-		readonly settings: Partial<TSettings>;
+		readonly settings: TSettings;
 	};
 };
 
