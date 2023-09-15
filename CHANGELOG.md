@@ -25,6 +25,7 @@
 ### Miscellaneous
 
 -   ♻️ Update JSON schemas for layouts to support `range` and `text-overflow`.
+-   ♻️ Refactor payload settings to more accurately reflect specified settings.
 -   ♻️ Result of evaluating debug mode is now cached to improve the performance of subsequent calls.
 -   ♻️ Default localizations now read from the in-memory manifest to reduce disk I/O.
 
