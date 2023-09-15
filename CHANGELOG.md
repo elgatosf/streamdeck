@@ -11,7 +11,7 @@
 
 # Change Log
 
-## 0.1.0-beta.1 (Pending)
+## 0.1.0-beta.1
 
 ### New
 
