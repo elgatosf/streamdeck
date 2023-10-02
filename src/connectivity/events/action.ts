@@ -12,7 +12,12 @@ export type DidReceiveSettings<TSettings = unknown> = ActionEvent<"didReceiveSet
  */
 export type TitleParametersDidChange<TSettings = unknown> = ActionEvent<
 	"titleParametersDidChange",
-	SingleActionPayload<TSettings> & {
+	Omit<SingleActionPayload<TSettings>, "isInMultiAction"> & {
+		/**
+		 * Title of the action, as specified by the user or dynamically by the plugin.
+		 */
+		readonly title: string;
+
 		/**
 		 * Defines aesthetic properties that determine how the title should be rendered.
 		 */

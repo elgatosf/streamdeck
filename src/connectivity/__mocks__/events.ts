@@ -61,7 +61,7 @@ export const dialDown: events.DialDown<Settings> = {
 		controller: "Encoder",
 		coordinates: {
 			column: 3,
-			row: 1
+			row: 0
 		},
 		settings: {
 			name: "Elgato"
@@ -81,7 +81,7 @@ export const dialRotate: events.DialRotate<Settings> = {
 		controller: "Encoder",
 		coordinates: {
 			column: 3,
-			row: 1
+			row: 0
 		},
 		pressed: true,
 		settings: {
@@ -207,6 +207,7 @@ export const titleParametersDidChange: events.TitleParametersDidChange<Settings>
 	device,
 	event: "titleParametersDidChange",
 	payload: {
+		controller: "Keypad",
 		coordinates: {
 			column: 3,
 			row: 4
@@ -237,9 +238,10 @@ export const touchTap: events.TouchTap<Settings> = {
 	device,
 	event: "touchTap",
 	payload: {
+		controller: "Encoder",
 		coordinates: {
 			column: 4,
-			row: 1
+			row: 0
 		},
 		hold: true,
 		settings: {
