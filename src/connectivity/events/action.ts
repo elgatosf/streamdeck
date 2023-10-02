@@ -121,7 +121,7 @@ export type SingleActionPayload<TSettings, TController extends Controller = Cont
 	/**
 	 * Determines whether the action is part of a multi-action.
 	 */
-	readonly isInMultiAction: boolean;
+	readonly isInMultiAction: false;
 
 	/**
 	 * Settings associated with the action instance.
@@ -141,7 +141,7 @@ export type MultiActionPayload<TSettings> = {
 	/**
 	 * Determines whether the action is part of a multi-action.
 	 */
-	readonly isInMultiAction: boolean;
+	readonly isInMultiAction: true;
 
 	/**
 	 * Settings associated with the action instance.
