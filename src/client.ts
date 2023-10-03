@@ -49,7 +49,7 @@ export class StreamDeckClient {
 	 * Gets the global settings associated with the plugin. Use in conjunction with {@link StreamDeckClient.setGlobalSettings}.
 	 * @returns Promise containing the plugin's global settings.
 	 */
-	public getGlobalSettings<T = unknown>(): Promise<Partial<T>> {
+	public getGlobalSettings<T extends object = object>(): Promise<Partial<T>> {
 		return new Promise((resolve) => {
 			this.connection.once("didReceiveGlobalSettings", (ev: events.DidReceiveGlobalSettings<T>) => resolve(ev.payload.settings));
 			this.connection.send({
@@ -158,7 +158,7 @@ export class StreamDeckClient {
 	 * Occurs when the global settings are requested using {@link StreamDeckClient.getGlobalSettings}, or when the the global settings were updated by the property inspector.
 	 * @param listener Function to be invoked when the event occurs.
 	 */
-	public onDidReceiveGlobalSettings<TSettings = unknown>(listener: (ev: DidReceiveGlobalSettingsEvent<TSettings>) => void): void {
+	public onDidReceiveGlobalSettings<TSettings extends object = object>(listener: (ev: DidReceiveGlobalSettingsEvent<TSettings>) => void): void {
 		this.connection.on("didReceiveGlobalSettings", (ev: events.DidReceiveGlobalSettings<TSettings>) => listener(new DidReceiveGlobalSettingsEvent(ev)));
 	}
 

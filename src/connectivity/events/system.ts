@@ -16,7 +16,7 @@ export type ApplicationDidTerminate = ApplicationEvent<"applicationDidTerminate"
 /**
  * Occurs when the plugin receives the global settings from the Stream Deck.
  */
-export type DidReceiveGlobalSettings<TSettings = unknown> = EventIdentifier<"didReceiveGlobalSettings"> & {
+export type DidReceiveGlobalSettings<TSettings extends object = object> = EventIdentifier<"didReceiveGlobalSettings"> & {
 	/**
 	 * Additional information about the event that occurred.
 	 */
@@ -24,7 +24,7 @@ export type DidReceiveGlobalSettings<TSettings = unknown> = EventIdentifier<"did
 		/**
 		 * Global settings associated with this plugin.
 		 */
-		settings: TSettings;
+		settings: TSettings extends [] ? never : TSettings;
 	};
 };
 

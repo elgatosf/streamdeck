@@ -4,11 +4,11 @@ import { Event } from "./event";
 /**
  * Provides event information for when the plugin received the global settings.
  */
-export class DidReceiveGlobalSettingsEvent<TSettings> extends Event<DidReceiveGlobalSettings<TSettings>> {
+export class DidReceiveGlobalSettingsEvent<TSettings extends object> extends Event<DidReceiveGlobalSettings<TSettings>> {
 	/**
 	 * Settings associated with the event.
 	 */
-	public readonly settings: Partial<TSettings>;
+	public readonly settings: TSettings;
 
 	/**
 	 * Initializes a new instance of the {@link DidReceiveGlobalSettingsEvent} class.
