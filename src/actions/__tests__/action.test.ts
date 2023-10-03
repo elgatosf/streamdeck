@@ -196,17 +196,26 @@ describe("Action", () => {
 		const action = new Action(client, "com.elgato.test.one", "ABC123");
 
 		// Act.
-		await action.setTitle("Hello world", 0, Target.Software);
+		await action.setTitle("Hello world");
+		await action.setTitle("This is a test", { state: 1, target: Target.Software });
 
 		// Assert.
-		expect(connection.send).toHaveBeenCalledTimes(1);
-		expect(connection.send).toHaveBeenCalledWith<[SetTitle]>({
-			context: action.id,
+		expect(connection.send).toHaveBeenCalledTimes(2);
+		expect(connection.send).toHaveBeenNthCalledWith<[SetTitle]>(1, {
 			event: "setTitle",
+			context: "ABC123",
 			payload: {
-				title: "Hello world",
-				state: 0,
-				target: Target.Software
+				title: "Hello world"
+			}
+		});
+
+		expect(connection.send).toHaveBeenNthCalledWith<[SetTitle]>(2, {
+			event: "setTitle",
+			context: "ABC123",
+			payload: {
+				state: 1,
+				target: Target.Software,
+				title: "This is a test"
 			}
 		});
 	});

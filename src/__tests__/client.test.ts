@@ -793,28 +793,26 @@ describe("StreamDeckClient", () => {
 		const { connection, client } = getMockedClient();
 
 		// Act.
-		await client.setTitle("ABC123");
-		await client.setTitle("XYZ789", "Hello world", 1, Target.Software);
+		await client.setTitle("CTX1", "Hello world");
+		await client.setTitle("CTX2", "This is a test", { state: 1, target: Target.Software });
 
 		// Assert.
 		expect(connection.send).toHaveBeenCalledTimes(2);
 		expect(connection.send).toHaveBeenNthCalledWith<[SetTitle]>(1, {
 			event: "setTitle",
-			context: "ABC123",
+			context: "CTX1",
 			payload: {
-				state: undefined,
-				target: undefined,
-				title: undefined
+				title: "Hello world"
 			}
 		});
 
 		expect(connection.send).toHaveBeenNthCalledWith<[SetTitle]>(2, {
 			event: "setTitle",
-			context: "XYZ789",
+			context: "CTX2",
 			payload: {
 				state: 1,
-				target: 2,
-				title: "Hello world"
+				target: Target.Software,
+				title: "This is a test"
 			}
 		});
 	});

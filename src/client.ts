@@ -1,5 +1,4 @@
-import type { SingletonAction } from "./actions/singleton-action";
-import { SetTriggerDescription } from "./connectivity/commands";
+import { SetTitle, SetTriggerDescription } from "./connectivity/commands";
 import { StreamDeckConnection } from "./connectivity/connection";
 import * as events from "./connectivity/events";
 import { State } from "./connectivity/events";
@@ -441,22 +440,19 @@ export class StreamDeckClient {
 	}
 
 	/**
-	 * Sets the {@link title} displayed for an instance of an action, as identified by the {@link context}. Often used in conjunction with {@link StreamDeckClient.onTitleParametersDidChange}
-	 * / {@link SingletonAction.onTitleParametersDidChange} event.
+	 * Sets the {@link title} displayed for an instance of an action, as identified by the {@link context}. See also {@link StreamDeckClient.onTitleParametersDidChange}.
 	 * @param context Unique identifier of the action instance whose title will be updated.
-	 * @param title Title to display; when no title is specified, the title will reset to the title set by the user.
-	 * @param state Action state the request applies to; when no state is supplied, the title is set for both states. **Note**, only applies to multi-state actions.
-	 * @param target Specifies which aspects of the Stream Deck should be updated, hardware, software, or both.
+	 * @param title Title to display. **NB.** the title will only be set if the user has not specified a custom title.
+	 * @param options Additional options that define where and how the title should be rendered.
 	 * @returns `Promise` resolved when the request to set the {@link title} has been sent to Stream Deck.
 	 */
-	public setTitle(context: string, title?: string, state: State | undefined = undefined, target?: Target | undefined): Promise<void> {
+	public setTitle(context: string, title: string, options?: TitleOptions): Promise<void> {
 		return this.connection.send({
 			event: "setTitle",
 			context,
 			payload: {
-				state,
-				target,
-				title
+				title,
+				...options
 			}
 		});
 	}
@@ -521,3 +517,8 @@ export class StreamDeckClient {
 		});
 	}
 }
+
+/**
+ * Options that define how to render a title.
+ */
+export type TitleOptions = Omit<SetTitle["payload"], "title">;
