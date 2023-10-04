@@ -1,20 +1,21 @@
 import type { ActionEvent, Controller, MultiActionPayload, SingleActionPayload, State } from "./action";
 import type { DialDown, DialUp } from "./encoder";
+import type { PayloadObject } from "./index";
 
 /**
  * Occurs when the user presses a action down. **NB** For dials / touchscreens see {@link DialDown}. Also see {@link KeyUp}.
  */
-export type KeyDown<TSettings = unknown> = ActionEvent<"keyDown", KeypadPayload<TSettings>>;
+export type KeyDown<TSettings extends PayloadObject<TSettings>> = ActionEvent<"keyDown", KeypadPayload<TSettings>>;
 
 /**
  * Occurs when the user releases a pressed action. **NB** For dials / touchscreens see {@link DialUp}. Also see {@link KeyDown}.
  */
-export type KeyUp<TSettings = unknown> = ActionEvent<"keyUp", KeypadPayload<TSettings>>;
+export type KeyUp<TSettings extends PayloadObject<TSettings>> = ActionEvent<"keyUp", KeypadPayload<TSettings>>;
 
 /**
  * Additional information about a keypad event that occurred.
  */
-type KeypadPayload<TSettings> =
+type KeypadPayload<TSettings extends PayloadObject<TSettings>> =
 	| SingleActionPayload<TSettings, Extract<Controller, "Keypad">>
 	| (MultiActionPayload<TSettings> & {
 			/**

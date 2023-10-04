@@ -1,14 +1,15 @@
 import type { StreamDeckClient } from "../client";
 import { SetTriggerDescription } from "../connectivity/commands";
-import { State } from "../connectivity/events";
+import { PayloadObject, State } from "../connectivity/events";
 import { FeedbackPayload } from "../connectivity/layouts";
 import { Target } from "../connectivity/target";
 import type { SingletonAction } from "./singleton-action";
 
 /**
  * Provides a contextualized instance of an {@link Action}, allowing for direct communication with the Stream Deck.
+ * @template T The type of settings associated with the action.
  */
-export class Action<TSettings> {
+export class Action<T extends PayloadObject<T> = object> {
 	/**
 	 * Initializes a new instance of the {@see Action} class.
 	 * @param client The Stream Deck client.
@@ -18,21 +19,22 @@ export class Action<TSettings> {
 	constructor(private readonly client: StreamDeckClient, public readonly manifestId: string, public readonly id: string) {}
 
 	/**
-	 * Gets the settings associated this action instance.
-	 * with {@link Action.setSettings}.
+	 * Gets the settings associated this action instance. See also {@link Action.setSettings}.
+	 * @template U The type of settings associated with the action.
 	 * @returns Promise containing the action instance's settings.
 	 */
-	public getSettings<T = TSettings>(): Promise<Partial<T>> {
-		return this.client.getSettings<T>(this.id);
+	public getSettings<U extends PayloadObject<U> = T>(): Promise<U> {
+		return this.client.getSettings<U>(this.id);
 	}
 
 	/**
-	 * Sends the {@link payload} to the current property inspector associated with this action instance. The plugin can also receive information from the property inspector via {@link StreamDeckClient.onSendToPlugin}
-	 * and {@link SingletonAction.onSendToPlugin} allowing for bi-directional communication.
+	 * Sends the {@link payload} to the current property inspector associated with this action instance. The plugin can also receive information from the property inspector via
+	 * {@link StreamDeckClient.onSendToPlugin} and {@link SingletonAction.onSendToPlugin} allowing for bi-directional communication.
+	 * @template T The type of the payload received from the property inspector.
 	 * @param payload Payload to send to the property inspector.
 	 * @returns `Promise` resolved when {@link payload} has been sent to the property inspector.
 	 */
-	public sendToPropertyInspector(payload: unknown): Promise<void> {
+	public sendToPropertyInspector<T extends PayloadObject<T> = object>(payload: T): Promise<void> {
 		return this.client.sendToPropertyInspector(this.id, payload);
 	}
 
@@ -119,7 +121,7 @@ export class Action<TSettings> {
 	 * @param settings Settings to persist.
 	 * @returns `Promise` resolved when the {@link settings} are sent to Stream Deck.
 	 */
-	public setSettings(settings: TSettings): Promise<void> {
+	public setSettings(settings: T): Promise<void> {
 		return this.client.setSettings(this.id, settings);
 	}
 

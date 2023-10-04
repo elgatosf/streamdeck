@@ -1,19 +1,20 @@
 import type { ActionEvent, Controller, Coordinates, SingleActionPayload } from "./action";
+import type { PayloadObject } from "./index";
 
 /**
  * Occurs when the user presses a dial (Stream Deck+).
  */
-export type DialDown<TSettings = unknown> = ActionEvent<"dialDown", EncoderPayload<TSettings>>;
+export type DialDown<TSettings extends PayloadObject<TSettings>> = ActionEvent<"dialDown", EncoderPayload<TSettings>>;
 
 /**
  * Occurs when the user releases a pressed dial (Stream Deck+).
  */
-export type DialUp<TSettings = unknown> = ActionEvent<"dialUp", EncoderPayload<TSettings>>;
+export type DialUp<TSettings extends PayloadObject<TSettings>> = ActionEvent<"dialUp", EncoderPayload<TSettings>>;
 
 /**
  * Occurs when the user rotates a dial (Stream Deck+).
  */
-export type DialRotate<TSettings = unknown> = ActionEvent<
+export type DialRotate<TSettings extends PayloadObject<TSettings>> = ActionEvent<
 	"dialRotate",
 	EncoderPayload<TSettings> & {
 		/**
@@ -31,7 +32,7 @@ export type DialRotate<TSettings = unknown> = ActionEvent<
 /**
  * Occurs when the user taps the touchscreen (Stream Deck+).
  */
-export type TouchTap<TSettings = unknown> = ActionEvent<
+export type TouchTap<TSettings extends PayloadObject<TSettings>> = ActionEvent<
 	"touchTap",
 	EncoderPayload<TSettings> & {
 		/**
@@ -49,7 +50,7 @@ export type TouchTap<TSettings = unknown> = ActionEvent<
 /**
  * Additional information about the action and event that occurred.
  */
-type EncoderPayload<TSettings> = Pick<SingleActionPayload<TSettings, Extract<Controller, "Encoder">>, "controller" | "settings"> & {
+type EncoderPayload<TSettings extends PayloadObject<TSettings>> = Pick<SingleActionPayload<TSettings, Extract<Controller, "Encoder">>, "controller" | "settings"> & {
 	/**
 	 * Coordinates that identify the location of the action.
 	 */

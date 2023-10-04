@@ -1,4 +1,5 @@
 import { StreamDeckClient } from "../client";
+import { PayloadObject } from "../connectivity/events";
 import { Action } from "./action";
 import { SingletonAction } from "./singleton-action";
 
@@ -7,7 +8,7 @@ import { SingletonAction } from "./singleton-action";
  * @param client The Stream Deck client.
  * @param action The action that will receive the events.
  */
-export function addRoute<TAction extends SingletonAction<TSettings>, TSettings = ExtractSettings<TAction>>(client: StreamDeckClient, action: TAction): void {
+export function addRoute<TAction extends SingletonAction<TSettings>, TSettings extends PayloadObject<TSettings> = object>(client: StreamDeckClient, action: TAction): void {
 	if (action.manifestId === undefined) {
 		throw new Error("The action's manifestId cannot be undefined.");
 	}
@@ -51,16 +52,11 @@ export function addRoute<TAction extends SingletonAction<TSettings>, TSettings =
 }
 
 /**
- * Utility type for extracting the action's settings.
- */
-type ExtractSettings<T> = T extends SingletonAction<infer TSettings> ? TSettings : never;
-
-/**
  * Event associated with an {@link Action}.
  */
-type RoutingEvent<TSettings> = {
+type RoutingEvent<T extends PayloadObject<T>> = {
 	/**
 	 * The {@link Action} the event is associated with.
 	 */
-	action: Action<TSettings>;
+	action: Action<T>;
 };

@@ -1,5 +1,5 @@
 import type { Manifest } from "../../manifest";
-import type { EventIdentifier } from "./index";
+import type { EventIdentifier, PayloadObject } from "./index";
 
 /**
  * Occurs when a monitored application is launched. Monitored applications can be defined in the `manifest.json` file via the {@link Manifest.ApplicationsToMonitor} property. Also see
@@ -16,7 +16,7 @@ export type ApplicationDidTerminate = ApplicationEvent<"applicationDidTerminate"
 /**
  * Occurs when the plugin receives the global settings from the Stream Deck.
  */
-export type DidReceiveGlobalSettings<TSettings extends object = object> = EventIdentifier<"didReceiveGlobalSettings"> & {
+export type DidReceiveGlobalSettings<TSettings extends PayloadObject<TSettings>> = EventIdentifier<"didReceiveGlobalSettings"> & {
 	/**
 	 * Additional information about the event that occurred.
 	 */
@@ -24,7 +24,7 @@ export type DidReceiveGlobalSettings<TSettings extends object = object> = EventI
 		/**
 		 * Global settings associated with this plugin.
 		 */
-		settings: TSettings extends [] ? never : TSettings;
+		settings: PayloadObject<TSettings>;
 	};
 };
 

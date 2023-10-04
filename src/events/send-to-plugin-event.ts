@@ -1,12 +1,12 @@
 import { Action } from "../actions/action";
 import type { StreamDeckClient } from "../client";
-import { SendToPlugin } from "../connectivity/events";
+import { PayloadObject, SendToPlugin } from "../connectivity/events";
 import { Event } from "./event";
 
 /**
  * Provides information for an event trigger by a message being sent to the plugin, from the property inspector.
  */
-export class SendToPluginEvent<TPayload extends object, TSettings> extends Event<SendToPlugin<TPayload>> {
+export class SendToPluginEvent<TPayload extends PayloadObject<TPayload>, TSettings extends PayloadObject<TSettings>> extends Event<SendToPlugin<TPayload>> {
 	/**
 	 * The action that raised the event.
 	 */

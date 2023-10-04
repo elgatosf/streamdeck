@@ -6,7 +6,10 @@ import { Event } from "./event";
 /**
  * Provides information for an event relating to an action.
  */
-export class ActionWithoutPayloadEvent<T extends Extract<api.Event, api.ActionIdentifier & api.DeviceIdentifier>, TSettings> extends Event<T> {
+export class ActionWithoutPayloadEvent<
+	TSource extends Extract<api.Event, api.ActionIdentifier & api.DeviceIdentifier>,
+	TSettings extends api.PayloadObject<TSettings>
+> extends Event<TSource> {
 	/**
 	 * The action that raised the event.
 	 */
@@ -22,7 +25,7 @@ export class ActionWithoutPayloadEvent<T extends Extract<api.Event, api.ActionId
 	 * @param client The Stream Deck client that raised the event.
 	 * @param source Source of the event, i.e. the original message from Stream Deck.
 	 */
-	constructor(client: StreamDeckClient, source: T) {
+	constructor(client: StreamDeckClient, source: TSource) {
 		super(source);
 
 		this.action = new Action<TSettings>(client, source.action, source.context);
@@ -33,18 +36,21 @@ export class ActionWithoutPayloadEvent<T extends Extract<api.Event, api.ActionId
 /**
  * Provides information for an event relating to an action.
  */
-export class ActionEvent<T extends Extract<api.Event, api.ActionIdentifier & api.DeviceIdentifier> & PayloadEvent<T>, TSettings> extends ActionWithoutPayloadEvent<T, TSettings> {
+export class ActionEvent<
+	TSource extends Extract<api.Event, api.ActionIdentifier & api.DeviceIdentifier> & PayloadEvent<TSource>,
+	TSettings extends api.PayloadObject<TSettings> = ExtractSettings<TSource>
+> extends ActionWithoutPayloadEvent<TSource, TSettings> {
 	/**
 	 * Provides additional information about the event that occurred, e.g. how many `ticks` the dial was rotated, the current `state` of the action, etc.
 	 */
-	public readonly payload: ExtractPayload<T>;
+	public readonly payload: ExtractPayload<TSource>;
 
 	/**
 	 * Initializes a new instance of the {@link ActionEvent} class.
 	 * @param client The Stream Deck client that raised the event.
 	 * @param source Source of the event, i.e. the original message from Stream Deck.
 	 */
-	constructor(client: StreamDeckClient, source: T) {
+	constructor(client: StreamDeckClient, source: TSource) {
 		super(client, source);
 		this.payload = source.payload;
 	}
@@ -61,6 +67,22 @@ type ExtractPayload<T> = T extends {
 }
 	? TPayload extends object
 		? TPayload
+		: never
+	: never;
+
+/**
+ * Utility type for extracting the settings from the payload.
+ */
+type ExtractSettings<T> = ExtractPayload<T> extends {
+	/**
+	 * Settings associated with the action instance.
+	 */
+	settings: infer TSettings;
+}
+	? TSettings extends object
+		? TSettings extends api.PayloadObject<TSettings>
+			? TSettings
+			: never
 		: never
 	: never;
 
