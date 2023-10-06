@@ -706,11 +706,13 @@ describe("StreamDeckClient", () => {
 
 		// Act.
 		await client.setImage("ABC123");
-		await client.setImage("XYZ789", "./imgs/test.png", 1, Target.Software);
+		await client.setImage("XYZ789", "./imgs/test.png", {
+			state: 1,
+			target: Target.Software
+		});
 
 		// Assert.
 		expect(connection.send).toHaveBeenCalledTimes(2);
-
 		expect(connection.send).toHaveBeenNthCalledWith<[SetImage]>(1, {
 			event: "setImage",
 			context: "ABC123",

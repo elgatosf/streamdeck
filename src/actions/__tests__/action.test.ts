@@ -135,15 +135,29 @@ describe("Action", () => {
 		const action = new Action(client, "com.elgato.test.one", "ABC123");
 
 		// Act.
-		await action.setImage("imgs/test.png", 1, Target.Hardware);
+		await action.setImage();
+		await action.setImage("./imgs/test.png", {
+			state: 1,
+			target: Target.Hardware
+		});
 
 		// Assert.
-		expect(connection.send).toHaveBeenCalledTimes(1);
-		expect(connection.send).toHaveBeenCalledWith<[SetImage]>({
+		expect(connection.send).toHaveBeenCalledTimes(2);
+		expect(connection.send).toHaveBeenNthCalledWith<[SetImage]>(1, {
 			context: action.id,
 			event: "setImage",
 			payload: {
-				image: "imgs/test.png",
+				image: undefined,
+				state: undefined,
+				target: undefined
+			}
+		});
+
+		expect(connection.send).toHaveBeenNthCalledWith<[SetImage]>(2, {
+			context: action.id,
+			event: "setImage",
+			payload: {
+				image: "./imgs/test.png",
 				state: 1,
 				target: Target.Hardware
 			}
