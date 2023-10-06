@@ -152,6 +152,11 @@ export type MultiActionPayload<TSettings> = {
 	 * Current state of the action; only applicable to actions that have multiple states defined within the `manifest.json` file.
 	 */
 	readonly state?: State;
+
+	/**
+	 * Desired state as specified by the user; only applicable to actions that have multiple states defined within the `manifest.json` file, and when this action instance is part of a multi-action.
+	 */
+	readonly userDesiredState?: State;
 };
 
 /**
