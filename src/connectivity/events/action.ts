@@ -1,16 +1,16 @@
 import type { DeviceType } from "../device-info";
 import type { DeviceIdentifier } from "./device";
-import type { EventIdentifier } from "./index";
+import type { EventIdentifier, PayloadObject } from "./index";
 
 /**
  * Occurs when the settings associated with an action instance are requested, or when the the settings were updated by the property inspector.
  */
-export type DidReceiveSettings<TSettings = unknown> = ActionEvent<"didReceiveSettings", MultiActionPayload<TSettings> | SingleActionPayload<TSettings>>;
+export type DidReceiveSettings<TSettings extends PayloadObject<TSettings>> = ActionEvent<"didReceiveSettings", MultiActionPayload<TSettings> | SingleActionPayload<TSettings>>;
 
 /**
  * Occurs when the user updates an action's title settings in the Stream Deck application.
  */
-export type TitleParametersDidChange<TSettings = unknown> = ActionEvent<
+export type TitleParametersDidChange<TSettings extends PayloadObject<TSettings>> = ActionEvent<
 	"titleParametersDidChange",
 	Omit<SingleActionPayload<TSettings>, "isInMultiAction"> & {
 		/**
@@ -65,13 +65,13 @@ export type TitleParametersDidChange<TSettings = unknown> = ActionEvent<
  * page". An action refers to _all_ types of actions, e.g. keys, dials,
  * touchscreens, pedals, etc.
  */
-export type WillAppear<TSettings = unknown> = ActionEvent<"willAppear", MultiActionPayload<TSettings> | SingleActionPayload<TSettings>>;
+export type WillAppear<TSettings extends PayloadObject<TSettings>> = ActionEvent<"willAppear", MultiActionPayload<TSettings> | SingleActionPayload<TSettings>>;
 
 /**
  * Occurs when an action disappears from the Stream Deck due to the user navigating to another page, profile, folder, etc. An action refers to _all_ types of actions, e.g. keys, dials,
  * touchscreens, pedals, etc.
  */
-export type WillDisappear<TSettings = unknown> = ActionEvent<"willDisappear", MultiActionPayload<TSettings> | SingleActionPayload<TSettings>>;
+export type WillDisappear<TSettings extends PayloadObject<TSettings>> = ActionEvent<"willDisappear", MultiActionPayload<TSettings> | SingleActionPayload<TSettings>>;
 
 /**
  * Provide information that identifies an action associated with an event.
@@ -106,7 +106,7 @@ export type ActionEvent<TEvent extends string, TPayload = void> = DeviceIdentifi
 /**
  * Additional information about the action and event that occurred as part of a single-action event.
  */
-export type SingleActionPayload<TSettings, TController extends Controller = Controller> = {
+export type SingleActionPayload<TSettings extends PayloadObject<TSettings>, TController extends Controller = Controller> = ActionPayload<TSettings> & {
 	/**
 	 * Coordinates that identify the location of an action.
 	 */
@@ -122,42 +122,31 @@ export type SingleActionPayload<TSettings, TController extends Controller = Cont
 	 * Determines whether the action is part of a multi-action.
 	 */
 	readonly isInMultiAction: false;
-
-	/**
-	 * Settings associated with the action instance.
-	 */
-	settings: TSettings;
-
-	/**
-	 * Current state of the action; only applicable to actions that have multiple states defined within the `manifest.json` file.
-	 */
-	readonly state?: State;
 };
 
 /**
  * Additional information about the action and event that occurred as part of a multi-action event.
  */
-export type MultiActionPayload<TSettings> = {
+export type MultiActionPayload<TSettings extends PayloadObject<TSettings>> = ActionPayload<TSettings> & {
 	/**
 	 * Determines whether the action is part of a multi-action.
 	 */
 	readonly isInMultiAction: true;
+};
 
+/**
+ * Base payload provided as part of events received, relating to an action.
+ */
+type ActionPayload<TSettings extends PayloadObject<TSettings>> = {
 	/**
 	 * Settings associated with the action instance.
 	 */
-	settings: TSettings;
+	settings: PayloadObject<TSettings>;
 
 	/**
 	 * Current state of the action; only applicable to actions that have multiple states defined within the `manifest.json` file.
 	 */
 	readonly state?: State;
-
-	/**
-	 * Desired state as specified by the user; only applicable to actions that have multiple states defined within the `manifest.json` file, and when this action instance is part of
-	 * a multi-action.
-	 */
-	readonly userDesiredState?: State;
 };
 
 /**

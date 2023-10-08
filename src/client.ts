@@ -1,6 +1,6 @@
 import { SetImage, SetTitle, SetTriggerDescription } from "./connectivity/commands";
 import { StreamDeckConnection } from "./connectivity/connection";
-import * as events from "./connectivity/events";
+import * as api from "./connectivity/events";
 import { State } from "./connectivity/events";
 import { FeedbackPayload } from "./connectivity/layouts";
 import { Device } from "./devices";
@@ -45,11 +45,12 @@ export class StreamDeckClient {
 
 	/**
 	 * Gets the global settings associated with the plugin. Use in conjunction with {@link StreamDeckClient.setGlobalSettings}.
+	 * @template T The type of global settings associated with the plugin.
 	 * @returns Promise containing the plugin's global settings.
 	 */
-	public getGlobalSettings<T = unknown>(): Promise<Partial<T>> {
+	public getGlobalSettings<T extends api.PayloadObject<T> = object>(): Promise<T> {
 		return new Promise((resolve) => {
-			this.connection.once("didReceiveGlobalSettings", (ev: events.DidReceiveGlobalSettings<T>) => resolve(ev.payload.settings));
+			this.connection.once("didReceiveGlobalSettings", (ev: api.DidReceiveGlobalSettings<T>) => resolve(ev.payload.settings));
 			this.connection.send({
 				event: "getGlobalSettings",
 				context: this.connection.registrationParameters.pluginUUID
@@ -58,14 +59,15 @@ export class StreamDeckClient {
 	}
 
 	/**
-	 * Gets the settings associated with an instance of an action, as identified by the {@link context}. An instance of an action represents a button, dial, pedal, etc. Use in conjunction
-	 * with {@link StreamDeckClient.setSettings}.
+	 * Gets the settings associated with an instance of an action, as identified by the {@link context}. An instance of an action represents a button, dial, pedal, etc. See also
+	 * {@link StreamDeckClient.setSettings}.
+	 * @template T The type of settings associated with the action.
 	 * @param context Unique identifier of the action instance whose settings are being requested.
 	 * @returns Promise containing the action instance's settings.
 	 */
-	public getSettings<T = unknown>(context: string): Promise<Partial<T>> {
+	public getSettings<T extends api.PayloadObject<T> = object>(context: string): Promise<T> {
 		return new Promise((resolve) => {
-			const callback = (ev: events.DidReceiveSettings<T>): void => {
+			const callback = (ev: api.DidReceiveSettings<T>): void => {
 				if (ev.context == context) {
 					resolve(ev.payload.settings);
 					this.connection.removeListener("didReceiveSettings", callback);
@@ -130,86 +132,96 @@ export class StreamDeckClient {
 
 	/**
 	 * Occurs when the user presses a dial (Stream Deck+). **NB** For other action types see {@link StreamDeckClient.onKeyDown}. Also see {@link StreamDeckClient.onDialUp}.
+	 * @template T The type of settings associated with the action.
 	 * @param listener Function to be invoked when the event occurs.
 	 */
-	public onDialDown<TSettings = unknown>(listener: (ev: DialDownEvent<TSettings>) => void): void {
-		this.connection.on("dialDown", (ev: events.DialDown<TSettings>) => listener(new ActionEvent(this, ev)));
+	public onDialDown<T extends api.PayloadObject<T> = object>(listener: (ev: DialDownEvent<T>) => void): void {
+		this.connection.on("dialDown", (ev: api.DialDown<T>) => listener(new ActionEvent<api.DialDown<T>>(this, ev)));
 	}
 
 	/**
 	 * Occurs when the user rotates a dial (Stream Deck+).
+	 * @template T The type of settings associated with the action.
 	 * @param listener Function to be invoked when the event occurs.
 	 */
-	public onDialRotate<TSettings = unknown>(listener: (ev: DialRotateEvent<TSettings>) => void): void {
-		this.connection.on("dialRotate", (ev: events.DialRotate<TSettings>) => listener(new ActionEvent(this, ev)));
+	public onDialRotate<T extends api.PayloadObject<T> = object>(listener: (ev: DialRotateEvent<T>) => void): void {
+		this.connection.on("dialRotate", (ev: api.DialRotate<T>) => listener(new ActionEvent<api.DialRotate<T>>(this, ev)));
 	}
 
 	/**
 	 * Occurs when the user releases a pressed dial (Stream Deck+). **NB** For other action types see {@link StreamDeckClient.onKeyUp}. Also see {@link StreamDeckClient.onDialDown}.
+	 * @template T The type of settings associated with the action.
 	 * @param listener Function to be invoked when the event occurs.
 	 */
-	public onDialUp<TSettings = unknown>(listener: (ev: DialUpEvent<TSettings>) => void): void {
-		this.connection.on("dialUp", (ev: events.DialUp<TSettings>) => listener(new ActionEvent(this, ev)));
+	public onDialUp<T extends api.PayloadObject<T> = object>(listener: (ev: DialUpEvent<T>) => void): void {
+		this.connection.on("dialUp", (ev: api.DialUp<T>) => listener(new ActionEvent<api.DialUp<T>>(this, ev)));
 	}
 
 	/**
 	 * Occurs when the global settings are requested using {@link StreamDeckClient.getGlobalSettings}, or when the the global settings were updated by the property inspector.
+	 * @template T The type of settings associated with the action.
 	 * @param listener Function to be invoked when the event occurs.
 	 */
-	public onDidReceiveGlobalSettings<TSettings = unknown>(listener: (ev: DidReceiveGlobalSettingsEvent<TSettings>) => void): void {
-		this.connection.on("didReceiveGlobalSettings", (ev: events.DidReceiveGlobalSettings<TSettings>) => listener(new DidReceiveGlobalSettingsEvent(ev)));
+	public onDidReceiveGlobalSettings<T extends api.PayloadObject<T> = object>(listener: (ev: DidReceiveGlobalSettingsEvent<T>) => void): void {
+		this.connection.on("didReceiveGlobalSettings", (ev: api.DidReceiveGlobalSettings<T>) => listener(new DidReceiveGlobalSettingsEvent(ev)));
 	}
 
 	/**
 	 * Occurs when the settings associated with an action instance are requested using {@link StreamDeckClient.getSettings}, or when the the settings were updated by the property inspector.
+	 * @template T The type of settings associated with the action.
 	 * @param listener Function to be invoked when the event occurs.
 	 */
-	public onDidReceiveSettings<TSettings = unknown>(listener: (ev: DidReceiveSettingsEvent<TSettings>) => void): void {
-		this.connection.on("didReceiveSettings", (ev: events.DidReceiveSettings<TSettings>) => listener(new ActionEvent(this, ev)));
+	public onDidReceiveSettings<T extends api.PayloadObject<T> = object>(listener: (ev: DidReceiveSettingsEvent<T>) => void): void {
+		this.connection.on("didReceiveSettings", (ev: api.DidReceiveSettings<T>) => listener(new ActionEvent<api.DidReceiveSettings<T>>(this, ev)));
 	}
 
 	/**
 	 * Occurs when the user presses a action down. **NB** For dials / touchscreens see {@link StreamDeckClient.onDialDown}. Also see {@link StreamDeckClient.onKeyUp}.
+	 * @template T The type of settings associated with the action.
 	 * @param listener Function to be invoked when the event occurs.
 	 */
-	public onKeyDown<TSettings = unknown>(listener: (ev: KeyDownEvent<TSettings>) => void): void {
-		this.connection.on("keyDown", (ev: events.KeyDown<TSettings>) => listener(new ActionEvent(this, ev)));
+	public onKeyDown<T extends api.PayloadObject<T> = object>(listener: (ev: KeyDownEvent<T>) => void): void {
+		this.connection.on("keyDown", (ev: api.KeyDown<T>) => listener(new ActionEvent<api.KeyDown<T>>(this, ev)));
 	}
 
 	/**
 	 * Occurs when the user releases a pressed action. **NB** For dials / touchscreens see {@link StreamDeckClient.onDialUp}. Also see {@link StreamDeckClient.onKeyDown}.
+	 * @template T The type of settings associated with the action.
 	 * @param listener Function to be invoked when the event occurs.
 	 */
-	public onKeyUp<TSettings = unknown>(listener: (ev: KeyUpEvent<TSettings>) => void): void {
-		this.connection.on("keyUp", (ev: events.KeyUp<TSettings>) => listener(new ActionEvent(this, ev)));
+	public onKeyUp<T extends api.PayloadObject<T> = object>(listener: (ev: KeyUpEvent<T>) => void): void {
+		this.connection.on("keyUp", (ev: api.KeyUp<T>) => listener(new ActionEvent<api.KeyUp<T>>(this, ev)));
 	}
 
 	/**
 	 * Occurs when the property inspector associated with the action becomes visible, i.e. the user selected an action in the Stream Deck application. Also see {@link StreamDeckClient.onPropertyInspectorDidDisappear}.
+	 * @template T The type of settings associated with the action.
 	 * @param listener Function to be invoked when the event occurs.
 	 */
-	public onPropertyInspectorDidAppear<TSettings = unknown>(listener: (ev: PropertyInspectorDidAppearEvent<TSettings>) => void): void {
-		this.connection.on("propertyInspectorDidAppear", (ev: events.PropertyInspectorDidAppear) =>
-			listener(new ActionWithoutPayloadEvent<events.PropertyInspectorDidAppear, TSettings>(this, ev))
-		);
+	public onPropertyInspectorDidAppear<T extends api.PayloadObject<T> = object>(listener: (ev: PropertyInspectorDidAppearEvent<T>) => void): void {
+		this.connection.on("propertyInspectorDidAppear", (ev: api.PropertyInspectorDidAppear) => listener(new ActionWithoutPayloadEvent<api.PropertyInspectorDidAppear, T>(this, ev)));
 	}
 
 	/**
 	 * Occurs when the property inspector associated with the action becomes invisible, i.e. the user unselected the action in the Stream Deck application. Also see {@link StreamDeckClient.onPropertyInspectorDidAppear}.
+	 * @template T The type of settings associated with the action.
 	 * @param listener Function to be invoked when the event occurs.
 	 */
-	public onPropertyInspectorDidDisappear<TSettings = unknown>(listener: (ev: PropertyInspectorDidDisappearEvent<TSettings>) => void): void {
-		this.connection.on("propertyInspectorDidDisappear", (ev: events.PropertyInspectorDidDisappear) =>
-			listener(new ActionWithoutPayloadEvent<events.PropertyInspectorDidDisappear, TSettings>(this, ev))
+	public onPropertyInspectorDidDisappear<T extends api.PayloadObject<T> = object>(listener: (ev: PropertyInspectorDidDisappearEvent<T>) => void): void {
+		this.connection.on("propertyInspectorDidDisappear", (ev: api.PropertyInspectorDidDisappear) =>
+			listener(new ActionWithoutPayloadEvent<api.PropertyInspectorDidDisappear, T>(this, ev))
 		);
 	}
 
 	/**
 	 * Occurs when a message was sent to the plugin _from_ the property inspector. The plugin can also send messages _to_ the property inspector using {@link StreamDeckClient.sendToPropertyInspector}.
+	 * @template T The type of the payload received from the property inspector.
 	 * @param listener Function to be invoked when the event occurs.
 	 */
-	public onSendToPlugin<TPayload extends object, TSettings = unknown>(listener: (ev: SendToPluginEvent<TPayload, TSettings>) => void): void {
-		this.connection.on("sendToPlugin", (ev: events.SendToPlugin<TPayload>) => listener(new SendToPluginEvent<TPayload, TSettings>(this, ev)));
+	public onSendToPlugin<T extends api.PayloadObject<T> = object, TSettings extends api.PayloadObject<TSettings> = object>(
+		listener: (ev: SendToPluginEvent<T, TSettings>) => void
+	): void {
+		this.connection.on("sendToPlugin", (ev: api.SendToPlugin<T>) => listener(new SendToPluginEvent<T, TSettings>(this, ev)));
 	}
 
 	/**
@@ -217,41 +229,45 @@ export class StreamDeckClient {
 	 * @param listener Function to be invoked when the event occurs.
 	 */
 	public onSystemDidWakeUp(listener: (ev: SystemDidWakeUpEvent) => void): void {
-		this.connection.on("systemDidWakeUp", (ev) => listener(new Event<events.SystemDidWakeUp>(ev)));
+		this.connection.on("systemDidWakeUp", (ev) => listener(new Event<api.SystemDidWakeUp>(ev)));
 	}
 
 	/**
 	 * Occurs when the user updates an action's title settings in the Stream Deck application. Also see {@link StreamDeckClient.setTitle}.
+	 * @template T The type of settings associated with the action.
 	 * @param listener Function to be invoked when the event occurs.
 	 */
-	public onTitleParametersDidChange<TSettings = unknown>(listener: (ev: TitleParametersDidChangeEvent<TSettings>) => void): void {
-		this.connection.on("titleParametersDidChange", (ev: events.TitleParametersDidChange<TSettings>) => listener(new ActionEvent(this, ev)));
+	public onTitleParametersDidChange<T extends api.PayloadObject<T> = object>(listener: (ev: TitleParametersDidChangeEvent<T>) => void): void {
+		this.connection.on("titleParametersDidChange", (ev: api.TitleParametersDidChange<T>) => listener(new ActionEvent<api.TitleParametersDidChange<T>>(this, ev)));
 	}
 
 	/**
 	 * Occurs when the user taps the touchscreen (Stream Deck+).
+	 * @template T The type of settings associated with the action.
 	 * @param listener Function to be invoked when the event occurs.
 	 */
-	public onTouchTap<TSettings = unknown>(listener: (ev: TouchTapEvent<TSettings>) => void): void {
-		this.connection.on("touchTap", (ev: events.TouchTap<TSettings>) => listener(new ActionEvent(this, ev)));
+	public onTouchTap<TSettings extends api.PayloadObject<TSettings> = object>(listener: (ev: TouchTapEvent<TSettings>) => void): void {
+		this.connection.on("touchTap", (ev: api.TouchTap<TSettings>) => listener(new ActionEvent<api.TouchTap<TSettings>>(this, ev)));
 	}
 
 	/**
 	 * Occurs when an action appears on the Stream Deck due to the user navigating to another page, profile, folder, etc. This also occurs during startup if the action is on the "front
 	 * page". An action refers to _all_ types of actions, e.g. keys, dials,
+	 * @template T The type of settings associated with the action.
 	 * @param listener Function to be invoked when the event occurs.
 	 */
-	public onWillAppear<TSettings = unknown>(listener: (ev: WillAppearEvent<TSettings>) => void): void {
-		this.connection.on("willAppear", (ev: events.WillAppear<TSettings>) => listener(new ActionEvent(this, ev)));
+	public onWillAppear<T extends api.PayloadObject<T> = object>(listener: (ev: WillAppearEvent<T>) => void): void {
+		this.connection.on("willAppear", (ev: api.WillAppear<T>) => listener(new ActionEvent<api.WillAppear<T>>(this, ev)));
 	}
 
 	/**
 	 * Occurs when an action disappears from the Stream Deck due to the user navigating to another page, profile, folder, etc. An action refers to _all_ types of actions, e.g. keys,
 	 * dials, touchscreens, pedals, etc.
+	 * @template T The type of settings associated with the action.
 	 * @param listener Function to be invoked when the event occurs.
 	 */
-	public onWillDisappear<TSettings = unknown>(listener: (ev: WillDisappearEvent<TSettings>) => void): void {
-		this.connection.on("willDisappear", (ev: events.WillDisappear<TSettings>) => listener(new ActionEvent(this, ev)));
+	public onWillDisappear<T extends api.PayloadObject<T> = object>(listener: (ev: WillDisappearEvent<T>) => void): void {
+		this.connection.on("willDisappear", (ev: api.WillDisappear<T>) => listener(new ActionEvent<api.WillDisappear<T>>(this, ev)));
 	}
 
 	/**
@@ -276,7 +292,7 @@ export class StreamDeckClient {
 	 * @param payload Payload to send to the property inspector.
 	 * @returns `Promise` resolved when the request to send the {@link payload} to the property inspector has been sent to Stream Deck.
 	 */
-	public sendToPropertyInspector(context: string, payload: unknown): Promise<void> {
+	public sendToPropertyInspector<T extends api.PayloadObject<T> = object>(context: string, payload: T): Promise<void> {
 		return this.connection.send({
 			event: "sendToPropertyInspector",
 			context,

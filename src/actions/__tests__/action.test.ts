@@ -56,7 +56,7 @@ describe("Action", () => {
 		const actual = JSON.parse(JSON.stringify(mockEvents.didReceiveSettings));
 		actual.context = action.id;
 		actual.action = action.manifestId;
-		connection.__emit(actual as DidReceiveGlobalSettings);
+		connection.__emit(actual as DidReceiveGlobalSettings<mockEvents.Settings>);
 
 		await settings;
 

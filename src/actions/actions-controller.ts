@@ -1,4 +1,5 @@
 import { StreamDeckClient } from "../client";
+import { PayloadObject } from "../connectivity/events";
 import { Logger } from "../logging";
 import { Manifest } from "../manifest";
 import { addRoute } from "./route";
@@ -36,9 +37,9 @@ export class ActionsController {
 	 *
 	 * streamDeck.actions.registerAction(new MyCustomAction());
 	 */
-	public registerAction<TAction extends SingletonAction<TSettings>, TSettings = unknown>(action: TAction): void {
+	public registerAction<TAction extends SingletonAction<TSettings>, TSettings extends PayloadObject<TSettings> = object>(action: TAction): void {
 		if (action.manifestId !== undefined && this.manifest.Actions.find((a) => a.UUID === action.manifestId)) {
-			addRoute(this.client, action);
+			addRoute<TAction, TSettings>(this.client, action);
 		} else {
 			this.logger.warn(`Failed to route action: manifestId (UUID) ${action.manifestId} was not found in the manifest.`);
 		}

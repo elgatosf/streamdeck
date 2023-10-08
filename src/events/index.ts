@@ -1,4 +1,4 @@
-import * as events from "../connectivity/events";
+import * as api from "../connectivity/events";
 import { Device } from "../devices";
 import { ActionEvent, ActionWithoutPayloadEvent } from "./action-event";
 import { ApplicationEvent } from "./application-event";
@@ -10,86 +10,86 @@ export { DidReceiveGlobalSettingsEvent } from "./settings-event";
 export { ActionEvent, ActionWithoutPayloadEvent, ApplicationEvent, DeviceEvent, Event };
 
 /**
- * Event information received from Stream Deck as part of the {@link events.applicationDidLaunch} event.
+ * Event information received from Stream Deck as part of the {@link api.applicationDidLaunch} event.
  */
-export type ApplicationDidLaunchEvent = ApplicationEvent<events.ApplicationDidLaunch>;
+export type ApplicationDidLaunchEvent = ApplicationEvent<api.ApplicationDidLaunch>;
 
 /**
- * Event information received from Stream Deck as part of the {@link events.ApplicationDidTerminate} event.
+ * Event information received from Stream Deck as part of the {@link api.ApplicationDidTerminate} event.
  */
-export type ApplicationDidTerminateEvent = ApplicationEvent<events.ApplicationDidTerminate>;
+export type ApplicationDidTerminateEvent = ApplicationEvent<api.ApplicationDidTerminate>;
 
 /**
- * Event information received from Stream Deck as part of the {@link events.DeviceDidConnect} event.
+ * Event information received from Stream Deck as part of the {@link api.DeviceDidConnect} event.
  */
-export type DeviceDidConnectEvent = DeviceEvent<events.DeviceDidConnect, Required<Device>>;
+export type DeviceDidConnectEvent = DeviceEvent<api.DeviceDidConnect, Required<Device>>;
 
 /**
- * Event information received from Stream Deck as part of the {@link events.DeviceDidDisconnect} event.
+ * Event information received from Stream Deck as part of the {@link api.DeviceDidDisconnect} event.
  */
-export type DeviceDidDisconnectEvent = DeviceEvent<events.DeviceDidDisconnect, Device>;
+export type DeviceDidDisconnectEvent = DeviceEvent<api.DeviceDidDisconnect, Device>;
 
 /**
- * Event information received from Stream Deck as part of the {@link events.DialDown} event.
+ * Event information received from Stream Deck as part of the {@link api.DialDown} event.
  */
-export type DialDownEvent<TSettings> = ActionEvent<events.DialDown<TSettings>, TSettings>;
+export type DialDownEvent<TSettings extends api.PayloadObject<TSettings>> = ActionEvent<api.DialDown<TSettings>>;
 
 /**
- * Event information received from Stream Deck as part of the {@link events.DialRotate} event.
+ * Event information received from Stream Deck as part of the {@link api.DialRotate} event.
  */
-export type DialRotateEvent<TSettings> = ActionEvent<events.DialRotate<TSettings>, TSettings>;
+export type DialRotateEvent<TSettings extends api.PayloadObject<TSettings>> = ActionEvent<api.DialRotate<TSettings>>;
 
 /**
- * Event information received from Stream Deck as part of the {@link events.DialUp} event.
+ * Event information received from Stream Deck as part of the {@link api.DialUp} event.
  */
-export type DialUpEvent<TSettings> = ActionEvent<events.DialUp<TSettings>, TSettings>;
+export type DialUpEvent<TSettings extends api.PayloadObject<TSettings>> = ActionEvent<api.DialUp<TSettings>>;
 
 /**
- * Event information received from Stream Deck as part of the {@link events.DidReceiveSettings} event.
+ * Event information received from Stream Deck as part of the {@link api.DidReceiveSettings} event.
  */
-export type DidReceiveSettingsEvent<TSettings> = ActionEvent<events.DidReceiveSettings<TSettings>, TSettings>;
+export type DidReceiveSettingsEvent<TSettings extends api.PayloadObject<TSettings>> = ActionEvent<api.DidReceiveSettings<TSettings>>;
 
 /**
- * Event information received from Stream Deck as part of the {@link events.KeyDown} event.
+ * Event information received from Stream Deck as part of the {@link api.KeyDown} event.
  */
-export type KeyDownEvent<TSettings> = ActionEvent<events.KeyDown<TSettings>, TSettings>;
+export type KeyDownEvent<TSettings extends api.PayloadObject<TSettings>> = ActionEvent<api.KeyDown<TSettings>>;
 
 /**
- * Event information received from Stream Deck as part of the {@link events.KeyUp} event.
+ * Event information received from Stream Deck as part of the {@link api.KeyUp} event.
  */
-export type KeyUpEvent<TSettings> = ActionEvent<events.KeyUp<TSettings>, TSettings>;
+export type KeyUpEvent<TSettings extends api.PayloadObject<TSettings>> = ActionEvent<api.KeyUp<TSettings>>;
 
 /**
- * Event information received from Stream Deck as part of the {@link events.PropertyInspectorDidAppear} event.
+ * Event information received from Stream Deck as part of the {@link api.PropertyInspectorDidAppear} event.
  */
-export type PropertyInspectorDidAppearEvent<TSettings> = ActionWithoutPayloadEvent<events.PropertyInspectorDidAppear, TSettings>;
+export type PropertyInspectorDidAppearEvent<TSettings extends api.PayloadObject<TSettings>> = ActionWithoutPayloadEvent<api.PropertyInspectorDidAppear, TSettings>;
 
 /**
- * Event information received from Stream Deck as part of the {@link events.PropertyInspectorDidDisappear} event.
+ * Event information received from Stream Deck as part of the {@link api.PropertyInspectorDidDisappear} event.
  */
-export type PropertyInspectorDidDisappearEvent<TSettings> = ActionWithoutPayloadEvent<events.PropertyInspectorDidDisappear, TSettings>;
+export type PropertyInspectorDidDisappearEvent<TSettings extends api.PayloadObject<TSettings>> = ActionWithoutPayloadEvent<api.PropertyInspectorDidDisappear, TSettings>;
 
 /**
- * Event information received from Stream Deck as part of the {@link events.TitleParametersDidChange} event.
+ * Event information received from Stream Deck as part of the {@link api.TitleParametersDidChange} event.
  */
-export type TitleParametersDidChangeEvent<TSettings> = ActionEvent<events.TitleParametersDidChange<TSettings>, TSettings>;
+export type TitleParametersDidChangeEvent<TSettings extends api.PayloadObject<TSettings>> = ActionEvent<api.TitleParametersDidChange<TSettings>>;
 
 /**
- * Event information receives from Streak Deck as part of the {@link events.SystemDidWakeUp} event.
+ * Event information receives from Streak Deck as part of the {@link api.SystemDidWakeUp} event.
  */
-export type SystemDidWakeUpEvent = Event<events.SystemDidWakeUp>;
+export type SystemDidWakeUpEvent = Event<api.SystemDidWakeUp>;
 
 /**
- * Event information received from Stream Deck as part of the {@link events.TouchTap} event.
+ * Event information received from Stream Deck as part of the {@link api.TouchTap} event.
  */
-export type TouchTapEvent<TSettings> = ActionEvent<events.TouchTap<TSettings>, TSettings>;
+export type TouchTapEvent<TSettings extends api.PayloadObject<TSettings>> = ActionEvent<api.TouchTap<TSettings>>;
 
 /**
- * Event information received from Stream Deck as part of the {@link events.WillAppear} event.
+ * Event information received from Stream Deck as part of the {@link api.WillAppear} event.
  */
-export type WillAppearEvent<TSettings> = ActionEvent<events.WillAppear<TSettings>, TSettings>;
+export type WillAppearEvent<TSettings extends api.PayloadObject<TSettings>> = ActionEvent<api.WillAppear<TSettings>>;
 
 /**
- * Event information received from Stream Deck as part of the {@link events.WillDisappear} event.
+ * Event information received from Stream Deck as part of the {@link api.WillDisappear} event.
  */
-export type WillDisappearEvent<TSettings> = ActionEvent<events.WillDisappear<TSettings>, TSettings>;
+export type WillDisappearEvent<TSettings extends api.PayloadObject<TSettings>> = ActionEvent<api.WillDisappear<TSettings>>;

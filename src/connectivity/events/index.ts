@@ -26,25 +26,30 @@ export type EventIdentifier<TEvent> = {
 };
 
 /**
+ * Represents an object sent as part of the Stream Deck's API.
+ */
+export type PayloadObject<T extends object> = { [K in keyof T]: T[K] } extends RelativeIndexable<unknown> ? never : { [K in keyof T]: T[K] };
+
+/**
  * Events received by the plugin, from the Stream Deck.
  */
-export type Event<TSettings = unknown> =
+export type Event<T extends PayloadObject<T> = object> =
 	| ApplicationDidLaunch
 	| ApplicationDidTerminate
 	| DeviceDidConnect
 	| DeviceDidDisconnect
-	| DialDown<TSettings>
-	| DialRotate<TSettings>
-	| DialUp<TSettings>
-	| DidReceiveGlobalSettings
-	| DidReceiveSettings<TSettings>
-	| KeyDown<TSettings>
-	| KeyUp<TSettings>
+	| DialDown<T>
+	| DialRotate<T>
+	| DialUp<T>
+	| DidReceiveGlobalSettings<T>
+	| DidReceiveSettings<T>
+	| KeyDown<T>
+	| KeyUp<T>
 	| PropertyInspectorDidAppear
 	| PropertyInspectorDidDisappear
-	| SendToPlugin
+	| SendToPlugin<T>
 	| SystemDidWakeUp
-	| TitleParametersDidChange<TSettings>
-	| TouchTap<TSettings>
-	| WillAppear<TSettings>
-	| WillDisappear<TSettings>;
+	| TitleParametersDidChange<T>
+	| TouchTap<T>
+	| WillAppear<T>
+	| WillDisappear<T>;
