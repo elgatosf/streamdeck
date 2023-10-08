@@ -1,8 +1,7 @@
-import type { StreamDeckClient } from "../client";
+import type { ImageOptions, StreamDeckClient, TitleOptions } from "../client";
 import { SetTriggerDescription } from "../connectivity/commands";
 import { PayloadObject, State } from "../connectivity/events";
 import { FeedbackPayload } from "../connectivity/layouts";
-import { Target } from "../connectivity/target";
 import type { SingletonAction } from "./singleton-action";
 
 /**
@@ -108,12 +107,11 @@ export class Action<T extends PayloadObject<T> = object> {
 	 * Sets the {@link image} to be display for this action instance. **NB** This will be ignored if the user has chosen a custom image within the Stream Deck application.
 	 * @param image Image to display; this can be either a path to a local file within the plugin's folder, a base64 encoded `string` with the mime type declared (e.g. PNG, JPEG, etc.),
 	 * or an SVG `string`. When {@link image} is `undefined`, the image from the manifest is used.
-	 * @param state Action state the request applies to; when no state is supplied, the image is set for both states. **NB** Only applies to multi-state actions.
-	 * @param target Specifies which aspects of the Stream Deck should be updated, hardware, software, or both.
+	 * @param options Additional options that define where and how the image should be rendered.
 	 * @returns `Promise` resolved when the request to set the {@link image} has been sent to Stream Deck.
 	 */
-	public setImage(image?: string, state: State | undefined = undefined, target: Target = Target.HardwareAndSoftware): Promise<void> {
-		return this.client.setImage(this.id, image, state, target);
+	public setImage(image?: string, options?: ImageOptions): Promise<void> {
+		return this.client.setImage(this.id, image, options);
 	}
 
 	/**
@@ -135,15 +133,13 @@ export class Action<T extends PayloadObject<T> = object> {
 	}
 
 	/**
-	 * Sets the {@link title} displayed for this action instance. Often used in conjunction with the {@link StreamDeckClient.onTitleParametersDidChange} / {@link SingletonAction.onTitleParametersDidChange}
-	 * event.
-	 * @param title Title to display; when no title is specified, the title will reset to the title set by the user.
-	 * @param state Action state the request applies to; when no state is supplied, the title is set for both states. **Note**, only applies to multi-state actions.
-	 * @param target Specifies which aspects of the Stream Deck should be updated, hardware, software, or both.
+	 * Sets the {@link title} displayed for this action instance. See also {@link SingletonAction.onTitleParametersDidChange}.
+	 * @param title Title to display; when undefined the title within the manifest will be used. **NB.** the title will only be set if the user has not specified a custom title.
+	 * @param options Additional options that define where and how the title should be rendered.
 	 * @returns `Promise` resolved when the request to set the {@link title} has been sent to Stream Deck.
 	 */
-	public setTitle(title?: string, state: State | undefined = undefined, target: Target = Target.HardwareAndSoftware): Promise<void> {
-		return this.client.setTitle(this.id, title, state, target);
+	public setTitle(title?: string, options?: TitleOptions): Promise<void> {
+		return this.client.setTitle(this.id, title, options);
 	}
 
 	/**
