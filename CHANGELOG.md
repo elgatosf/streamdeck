@@ -11,6 +11,12 @@
 
 # Change Log
 
+## 0.1.0-beta.2 (Pending)
+
+### Breaking
+
+-   🚨 Update `setTitle` function signature; `title` is now required, and `state` and `target` are now a single optional `options` parameter.
+
 ## 0.1.0-beta.1
 
 ### New
