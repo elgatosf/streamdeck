@@ -13,7 +13,7 @@
 	"scripts": {
 		"build": "rm -rf ./dist && rollup --config rollup.config.ts --configPlugin typescript",
 		"watch": "rollup --config rollup.config.ts --configPlugin typescript --watch",
-		"generate-schemas": "ts-node ./scripts/generate-schemas.ts",
+		"generate-schemas": "node -r @swc-node/register ./scripts/generate-schemas.ts",
 		"lint": "eslint . --ext .ts --max-warnings 0",
 		"lint:fix": "prettier --config .prettierrc src/**/*.ts --write",
 		"preversion": "npm run build && npm test && npm run lint",
@@ -48,6 +48,7 @@
 		"@rollup/plugin-node-resolve": "^15.2.2",
 		"@rollup/plugin-terser": "^0.4.4",
 		"@rollup/plugin-typescript": "^11.1.5",
+		"@swc-node/register": "^1.6.8",
 		"@trivago/prettier-plugin-sort-imports": "^4.2.0",
 		"@tsconfig/node20": "^20.1.2",
 		"@types/jest": "^29.5.5",
@@ -66,7 +67,6 @@
 		"rollup-plugin-dts": "^6.1.0",
 		"ts-jest": "^29.1.1",
 		"ts-json-schema-generator": "^1.3.0",
-		"ts-node": "^10.9.1",
 		"typescript": "^5.2.2"
 	},
 	"dependencies": {
