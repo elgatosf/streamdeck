@@ -1,12 +1,12 @@
 import { Action } from "../actions/action";
 import type { StreamDeckClient } from "../client";
-import * as events from "../connectivity/events";
+import * as api from "../connectivity/events";
 import { Event } from "./event";
 
 /**
  * Provides information for an event relating to an action.
  */
-export class ActionWithoutPayloadEvent<T extends Extract<events.Event, events.ActionIdentifier & events.DeviceIdentifier>, TSettings> extends Event<T> {
+export class ActionWithoutPayloadEvent<T extends Extract<api.Event, api.ActionIdentifier & api.DeviceIdentifier>, TSettings> extends Event<T> {
 	/**
 	 * The action that raised the event.
 	 */
@@ -33,10 +33,7 @@ export class ActionWithoutPayloadEvent<T extends Extract<events.Event, events.Ac
 /**
  * Provides information for an event relating to an action.
  */
-export class ActionEvent<T extends Extract<events.Event, events.ActionIdentifier & events.DeviceIdentifier> & PayloadEvent<T>, TSettings> extends ActionWithoutPayloadEvent<
-	T,
-	TSettings
-> {
+export class ActionEvent<T extends Extract<api.Event, api.ActionIdentifier & api.DeviceIdentifier> & PayloadEvent<T>, TSettings> extends ActionWithoutPayloadEvent<T, TSettings> {
 	/**
 	 * Provides additional information about the event that occurred, e.g. how many `ticks` the dial was rotated, the current `state` of the action, etc.
 	 */
