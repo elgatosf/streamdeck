@@ -41,7 +41,7 @@ npm install -g @elgato/cli
 
 Once installed, run the `create` command to initialize the creation wizard.
 
-```
+```bash
 streamdeck create
 ```
 
