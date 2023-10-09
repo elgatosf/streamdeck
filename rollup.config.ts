@@ -1,6 +1,4 @@
-import commonjs from "@rollup/plugin-commonjs";
 import nodeResolve from "@rollup/plugin-node-resolve";
-import terser from "@rollup/plugin-terser";
 import typescript from "@rollup/plugin-typescript";
 import path from "node:path";
 import url from "node:url";
@@ -31,12 +29,9 @@ const config: RollupOptions[] = [
 				tsconfig: "tsconfig.build.json",
 				mapRoot: isWatching ? "./" : undefined
 			}),
-			nodeResolve(),
-			commonjs({
-				exclude: ["ws"]
-			}),
-			terser()
-		]
+			nodeResolve()
+		],
+		external: ["ws"]
 	},
 	{
 		input: "src/index.ts",
