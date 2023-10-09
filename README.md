@@ -14,15 +14,15 @@
 
 ---
 
-Welcome to the Node.js SDK for creating Stream Deck plugins. Designed to make building with Stream Deck easy, the SDK provides everything you need to connect and communicate with Stream Deck, and lets you focus on the fun stuff.
-
 ## 👋 You're Early!
 
-Our Node.js SDK is currently in public early-access, and available to everyone running Stream Deck 6.4 or newer. If you're interested in building plugins with Node.js and would like to know more, please join our [Marketplace Makers Discord](https://discord.gg/GehBUcu627).
+Welcome to the Node.js SDK for creating Stream Deck plugins. Designed to make building with Stream Deck easy, the SDK provides everything you need to connect, communicate and build with Stream Deck, and lets you focus on the fun stuff.
+
+Our Node.js SDK is currently in public early-access, and available to everyone running Stream Deck 6.4 or newer. If you're interested in building plugins and would like to know more, please join our [Marketplace Makers Discord](https://discord.gg/GehBUcu627).
 
 ## 📥 Prerequisites
 
-Stream Deck's Node.js SDK requires Node.js v20.1. We recommend installing Node.js with a version manager such as [nvm](https://github.com/creationix/nvm) (macOS) or [nvm-windows](nvm-windows) (Windows). Once installed, v20.1 can be installed via:
+Stream Deck's Node.js SDK requires Node.js v20.1. When installing Node.js, it is recommended to use a version manager such as [nvm](https://github.com/creationix/nvm) (macOS) or [nvm-windows](nvm-windows) (Windows). Once installed, v20.1 can be installed via:
 
 ```bash
 nvm install 20.1.0
@@ -31,15 +31,15 @@ nvm use 20.1.0
 
 ## 🚀 Quick Start
 
-We recommend using [our CLI tool](https://github.com/elgatosf/cli) when building Stream Deck plugins which will guide you through creating a sample "counter" plugin, and scaffold everything required to run a plugin in a local environment.
+We recommend using the [`@elgato/cli`](https://github.com/elgatosf/cli) tool for building Stream Deck plugins as this provides all scaffolding required to get started with a sample "Counter" plugin.
 
-1. Install our CLI tool, available from npm.
+Install the CLI.
 
 ```bash
 npm install -g @elgato/cli
 ```
 
-2. Once installed, run the `create` command to initialize the creation wizard.
+Once installed, run the `create` command to initialize the creation wizard.
 
 ```
 streamdeck create
@@ -51,10 +51,10 @@ streamdeck create
 
 ## 🗺️ Plugin Structure
 
-After creating a plugin with `streamdeck create` you'll be provided with a set of files and folders that look as follows:
+After creating a plugin with `streamdeck create` you'll be provided with a local environment for building a plugin.
 
 ```
-hello-world/
+/
 ├── *.sdPlugin/
 │   ├── bin/
 │   ├── imgs/
@@ -71,26 +71,26 @@ hello-world/
 
 ### \*.sdPlugin/
 
-The root of the plugin; this folder contains the build output from your source files as well as assets that support your plugin, e.g. pre-defined profiles, icons, etc. Please note, this folder name changes based on your plugin's unique identifier (UUID), and under the hood is referenced by Stream Deck via s symbolic-link.
+The root of the plugin; this folder contains the build output from the source files as well as assets that support the plugin, such as icons, profiles, etc.
 
--   **manifest.json** - defines the plugin ([read more](https://docs.elgato.com/sdk/plugins/manifest)).
--   **bin/** - build output (generated from src).
--   **imgs/** - assets used by the plugin, e.g. action icons.
--   **logs/** - logs generated from `streamDeck.logger`.
+-   **manifest.json** - plugin metadata (for more information, see [manifest documentation](https://docs.elgato.com/sdk/plugins/manifest)).
+-   **bin/** - build output.
+-   **imgs/** - assets used by the plugin, such as icons, profiles, etc.
+-   **logs/** - logs generated from [`streamDeck.logger`](https://github.com/elgatosf/streamdeck/tree/readme#-logging).
 
 ### src/
 
--   **plugin.ts** - source code main entry point.
--   **actions/increment-counter.ts** - example "counter" action.
+-   **plugin.ts** - build entry point.
+-   **actions/increment-counter.ts** - example "Counter" action.
 
-By default, there are also two npm scripts for building / watching changes, these are:
+The `package.json` provides two scripts for building the plugin.
 
--   `npm run build`
--   `npm run watch`
+-   `npm run build` - builds the plugin.
+-   `npm run watch` - continuously watches for changes, and hot-reloads the plugin after build.
 
 ## ✨ Actions
 
-Actions are the star of the show and enable users to interact with plugins from Stream Deck device. At their core, actions are classes that extend an interface, which allows the SDK to route events emitted from Stream Deck to the appropriate action e.g. key down, dial rotate, etc.
+Actions are the star of the show and enable users to interact with plugins. At their core, actions are classes that fulfil an interface. This enables the SDK to route events, such as key down, dial rotate, etc., emitted from Stream Deck to the appropriate action, as determined by the action's unique-identifier.
 
 The following is an example of an action that listens for the `keyDown` event, and then sets the title of the action to "Hello world" after being pressed.
 
@@ -111,7 +111,7 @@ The following is an example of an action that listens for the `keyDown` event, a
 > }
 > ```
 
-We must then register the action in two places, firstly our sources' entry point...
+The action's implementation must be registered in the sources' entry point`.
 
 > **src/plugin.ts**
 >
@@ -122,11 +122,10 @@ We must then register the action in two places, firstly our sources' entry point
 >
 > // Register the action, and connect to Stream Deck.
 > streamDeck.actions.registerAction(new SayHelloAction());
->
 > streamDeck.connect();
 > ```
 
-And secondly within the `manifest.json` file...
+And the action's metadata must be defined within the plugin's manifest file.
 
 > **\*.sdPlugin/manifest.json**
 >
@@ -143,18 +142,11 @@ And secondly within the `manifest.json` file...
 > }
 > ```
 
-We can then run
-
-```
-npm run build
-streamdeck restart com.elgato.hello-world
-```
-
-To see our changes. Alternatively we can run `npm run watch` to continually watch for changes and restart automatically.
+When observing changes with `npm run watch`, the changes will immediately be available within Stream Deck. Altneratively the changes can be built with `npm run build` followed by `streamdeck restart <uuid>`, where `<uuid>` represents the unique-identifier of your plugin.
 
 ### 🎛️ Devices
 
-The `streamDeck.devices` collection contains information about known devices associated with the user. This includes information such as the id, name, and type of device. Additionally, as devices may not be connected at all times, the `device` object provides insight into the connectivity status of a device.
+The `streamDeck.devices` collection contains information about known devices associated with the user. This includes information such as the id, name, and type of device. Additionally, as devices may not be connected at all times the `Device` provides insight into the connection status of a device.
 
 ```typescript
 import streamDeck from "@elgato/streamdeck";
@@ -166,7 +158,7 @@ streamDeck.devices.forEach((device) => {
 
 ## 📄 Logging
 
-The `streamDeck.logger` object provides local file-based logging, allowing you to diagnose, track, and debug your plugin. Logs files operate a file-rotation policy and are re-indexed when the plugin starts or they exceed 50MiB, with the 10 most recent log files being retained.
+The `streamDeck.logger` provides local file-based logging, allowing you to diagnose, track, and debug your plugin. Logs files operate a file-rotation policy and are re-indexed when the plugin starts or the log file exceeds 50MiB, with the 10 most recent log files being retained.
 
 ```typescript
 import streamDeck, { LogLevel } from "@elgato/streamdeck";
