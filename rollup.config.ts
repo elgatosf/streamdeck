@@ -7,6 +7,7 @@ import url from "node:url";
 import { RollupOptions } from "rollup";
 import dts from "rollup-plugin-dts";
 
+const isWatching = !!process.env.ROLLUP_WATCH;
 const banner = `/**!
  * @author Elgato
  * @module elgato/streamdeck
@@ -20,14 +21,15 @@ const config: RollupOptions[] = [
 		output: {
 			file: "dist/index.js",
 			banner,
-			sourcemap: true,
+			sourcemap: isWatching,
 			sourcemapPathTransform: (relativeSourcePath: string, sourcemapPath: string): string => {
 				return url.pathToFileURL(path.resolve(path.dirname(sourcemapPath), relativeSourcePath)).href;
 			}
 		},
 		plugins: [
 			typescript({
-				tsconfig: "tsconfig.build.json"
+				tsconfig: "tsconfig.build.json",
+				mapRoot: isWatching ? "./" : undefined
 			}),
 			nodeResolve(),
 			commonjs({
