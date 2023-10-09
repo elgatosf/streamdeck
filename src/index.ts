@@ -1,9 +1,3 @@
-/**!
- * @author Elgato
- * @module elgato/streamdeck
- * @license MIT
- * @copyright Copyright (c) 2023 Corsair Memory Inc.
- */
 import { StreamDeck } from "./stream-deck";
 
 export { action } from "./actions/decorators";
