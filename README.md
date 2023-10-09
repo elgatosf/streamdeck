@@ -144,7 +144,7 @@ And the action's metadata must be defined within the plugin's manifest file.
 
 When observing changes with `npm run watch`, the changes will immediately be available within Stream Deck. Altneratively the changes can be built with `npm run build` followed by `streamdeck restart <uuid>`, where `<uuid>` represents the unique-identifier of your plugin.
 
-### 🎛️ Devices
+## 🎛️ Devices
 
 The `streamDeck.devices` collection contains information about known devices associated with the user. This includes information such as the id, name, and type of device. Additionally, as devices may not be connected at all times the `Device` provides insight into the connection status of a device.
 
