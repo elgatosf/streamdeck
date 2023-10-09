@@ -41,7 +41,10 @@ export class StreamDeckClient {
 	 * @param connection Underlying connection with the Stream Deck.
 	 * @param devices Device collection responsible for tracking devices.
 	 */
-	constructor(private readonly connection: StreamDeckConnection, private readonly devices: ReadonlyMap<string, Device>) {}
+	constructor(
+		private readonly connection: StreamDeckConnection,
+		private readonly devices: ReadonlyMap<string, Device>
+	) {}
 
 	/**
 	 * Gets the global settings associated with the plugin. Use in conjunction with {@link StreamDeckClient.setGlobalSettings}.
@@ -513,17 +516,18 @@ export class StreamDeckClient {
 	}
 
 	/**
-	 * Requests the Stream Deck switches the current profile of the specified {@link device}, to the {@link profile}. **NB**, plugins can only switch to profiles included as part
+	 * Requests the Stream Deck switches the current profile of the specified {@link deviceId} to the {@link profile}; when no {@link profile} is provided the previously active profile
+	 * is activated. **NB**, plugins can only switch to profiles included as part
 	 * of the plugin and defined within the manifest, and cannot switch to custom profiles created by users.
-	 * @param profile Name of the profile to switch to. The name must be identical to the one provided in the manifest.
-	 * @param device Unique identifier of the device where the profile should be set.
+	 * @param deviceId Unique identifier of the device where the profile should be set.
+	 * @param profile Optional name of the profile to switch to; when `undefined` the previous profile will be activated. **NB** name must be identical to the one provided in the manifest.
 	 * @returns `Promise` resolved when the request to switch the `profile` has been sent to Stream Deck.
 	 */
-	public switchToProfile(profile: string, device: string): Promise<void> {
+	public switchToProfile(deviceId: string, profile?: string): Promise<void> {
 		return this.connection.send({
 			event: "switchToProfile",
 			context: this.connection.registrationParameters.pluginUUID,
-			device,
+			device: deviceId,
 			payload: {
 				profile
 			}
