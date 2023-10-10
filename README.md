@@ -3,7 +3,7 @@
 </p>
 <div align="center">
 
-### Stream Deck SDK (Beta)
+# Stream Deck SDK (Beta)
 
 [![Stream Deck npm package](https://img.shields.io/npm/v/%40elgato/streamdeck?logo=npm&logoColor=white)](https://www.npmjs.com/package/@elgato/streamdeck)
 [![SDK documentation](https://img.shields.io/badge/Documentation-2ea043?labelColor=grey&logo=gitbook&logoColor=white)](https://docs.elgato.com/sdk)
@@ -12,11 +12,9 @@
 
 </div>
 
----
-
 ## 👋 You're Early!
 
-Welcome to the Node.js SDK for creating Stream Deck plugins. Designed to make building with Stream Deck easy, the SDK provides everything you need to connect, communicate and build with Stream Deck, and lets you focus on the fun stuff.
+Welcome to the Stream Deck Node.js SDK. Designed to make creating Stream Deck plugins easy, the SDK provides everything you need to connect, communicate and build with Stream Deck, and lets you focus on the fun stuff.
 
 Our Node.js SDK is currently in public early-access, and available to everyone running Stream Deck 6.4 or newer. If you're interested in building plugins and would like to know more, please join our [Marketplace Makers Discord](https://discord.gg/GehBUcu627).
 
