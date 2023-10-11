@@ -4,6 +4,9 @@
 	"description": "The official Node.js SDK for creating Stream Deck plugins.",
 	"main": "./dist/index.js",
 	"type": "module",
+	"engines": {
+		"node": "^20.1.0"
+	},
 	"types": "./dist/index.d.ts",
 	"files": [
 		"dist/**/*.d.ts",
@@ -12,11 +15,11 @@
 	],
 	"scripts": {
 		"build": "rm -rf ./dist && rollup --config rollup.config.ts --configPlugin typescript",
+		"build:schemas": "node -r @swc-node/register ./scripts/generate-schemas.ts",
 		"watch": "rollup --config rollup.config.ts --configPlugin typescript --watch",
-		"generate-schemas": "node -r @swc-node/register ./scripts/generate-schemas.ts",
 		"lint": "eslint . --ext .ts --max-warnings 0",
 		"lint:fix": "prettier --config .prettierrc src/**/*.ts --write",
-		"preversion": "npm run build && npm test && npm run lint",
+		"preversion": "npm run build && npm test && npm run build:schemas && npm run lint",
 		"test": "jest",
 		"test:coverage": "jest --coverage",
 		"test:watch": "jest --watch"

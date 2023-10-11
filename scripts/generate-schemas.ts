@@ -1,13 +1,19 @@
-import fs from "node:fs";
-import path from "node:path";
-import { createGenerator, Schema } from "ts-json-schema-generator";
+import { existsSync, mkdirSync, writeFileSync } from "node:fs";
+import { join } from "node:path";
+import { Schema, createGenerator } from "ts-json-schema-generator";
 
 // Create a generator so we're able to produce multiple schemas.
 const generator = createGenerator({
-	path: path.join(__dirname, "../src/index.ts"),
+	path: join(__dirname, "../src/index.ts"),
 	skipTypeCheck: true,
-	tsconfig: path.join(__dirname, "../tsconfig.json")
+	tsconfig: join(__dirname, "../tsconfig.json")
 });
+
+// Prepare the output directory.
+const outputDir = join(__dirname, "../schemas");
+if (!existsSync(outputDir)) {
+	mkdirSync(outputDir, { recursive: true });
+}
 
 generateAndWriteSchema("Manifest");
 generateAndWriteSchema("Layout");
@@ -20,12 +26,11 @@ function generateAndWriteSchema(type: string): void {
 	const schema = generator.createSchema(type);
 	addMarkdownDescription(schema);
 
-	const outputPath = path.join(__dirname, "../schemas", `${type.toLowerCase()}.json`);
+	const outputPath = join(outputDir, `${type.toLowerCase()}.json`);
 	const contents = JSON.stringify(schema, null, "\t");
 
-	fs.writeFile(outputPath, contents, {}, () => {
-		console.log(`Successfully generated schema for ${type}.`);
-	});
+	writeFileSync(outputPath, contents);
+	console.log(`Successfully generated schema for ${type}.`);
 }
 
 /**
