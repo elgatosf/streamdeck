@@ -899,14 +899,23 @@ describe("StreamDeckClient", () => {
 		const { connection, client } = getMockedClient();
 
 		// Act.
-		await client.switchToProfile("Custom Profile", "DEV1");
+		await client.switchToProfile("DEV1");
+		await client.switchToProfile("DEV2", "Custom Profile");
 
 		// Assert.
-		expect(connection.send).toHaveBeenCalledTimes(1);
-		expect(connection.send).toHaveBeenCalledWith<[SwitchToProfile]>({
+		expect(connection.send).toHaveBeenCalledTimes(2);
+		expect(connection.send).toHaveBeenNthCalledWith<[SwitchToProfile]>(1, {
 			event: "switchToProfile",
 			context: connection.registrationParameters.pluginUUID,
 			device: "DEV1",
+			payload: {
+				profile: undefined
+			}
+		});
+		expect(connection.send).toHaveBeenNthCalledWith<[SwitchToProfile]>(2, {
+			event: "switchToProfile",
+			context: connection.registrationParameters.pluginUUID,
+			device: "DEV2",
 			payload: {
 				profile: "Custom Profile"
 			}

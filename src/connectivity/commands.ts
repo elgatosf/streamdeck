@@ -205,7 +205,7 @@ export type SwitchToProfile = ContextualizedCommand<
 		/**
 		 * Name of the profile to switch to. The name must be identical to the one provided in the manifest.
 		 */
-		profile: string;
+		profile?: string;
 	}
 > & {
 	/**
