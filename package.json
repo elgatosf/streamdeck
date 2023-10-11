@@ -30,9 +30,12 @@
 	},
 	"keywords": [
 		"elgato",
-		"stream-deck",
-		"plugins",
-		"sdk"
+		"stream deck",
+		"plugin",
+		"sdk",
+		"framework",
+		"marketplace",
+		"maker"
 	],
 	"author": {
 		"name": "Elgato",
