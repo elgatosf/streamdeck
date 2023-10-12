@@ -1,7 +1,6 @@
-<p align="center">
-	<img src="./assets/banner.png">
-</p>
 <div align="center">
+
+[![Stream Deck SDK banner](./assets/banner.png)](https://docs.elgato.com/sdk)
 
 # Stream Deck SDK (Beta)
 
@@ -14,18 +13,11 @@
 
 ## 👋 You're Early!
 
-Welcome to the Stream Deck Node.js SDK. Designed to make creating Stream Deck plugins easy, the SDK provides everything you need to connect, communicate and build with Stream Deck, and lets you focus on the fun stuff.
+Welcome to the Stream Deck SDK for Node.js. Designed to make creating Stream Deck plugins easy, the Stream Deck SDK provides everything you need to connect, communicate and build with Stream Deck, and lets you focus on the fun stuff.
 
-Our Node.js SDK is currently in public early-access, and available to everyone running Stream Deck 6.4 or newer. If you're interested in building plugins and would like to know more, please join our [Marketplace Makers Discord](https://discord.gg/GehBUcu627).
+The Stream Deck SDK for Node.js is currently in public beta, and is available to everyone running Stream Deck 6.4 or newer. If you're interested in building plugins and would like to know more, please join our [Marketplace Makers Discord](https://discord.gg/GehBUcu627).
 
-## 📥 Prerequisites
-
-Stream Deck's Node.js SDK requires Node.js v20.1. When installing Node.js, it is recommended to use a version manager such as [nvm](https://github.com/creationix/nvm) (macOS) or [nvm-windows](nvm-windows) (Windows). Once installed, v20.1 can be installed via:
-
-```bash
-nvm install 20.1.0
-nvm use 20.1.0
-```
+> Creating Node.js Stream Deck plugins requires Node.js v20.1. We recommended using a version manager, such as [nvm](https://github.com/creationix/nvm) (macOS) or [nvm-windows](nvm-windows) (Windows), to install Node.js.
 
 ## 🚀 Quick Start
 
