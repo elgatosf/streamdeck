@@ -152,7 +152,7 @@ export type Bar = LayoutItem & {
 		min: number;
 
 		/**
-		 * Maximum value of the bar
+		 * Maximum value of the bar.
 		 */
 		max: number;
 	};

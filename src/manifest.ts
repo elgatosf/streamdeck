@@ -190,13 +190,21 @@ export type Manifest = {
 		Tooltip?: string;
 
 		/**
-		 * Unique identifier that identifies the action, represented in reverse-DNS format. This value is supplied by Stream Deck when events are emitted that relate to the action
-		 * enabling you to identify the source of the event. **NB.** This must be unique, and should be prefixed with the plugin's UUID.
+		 * Unique identifier of the action, represented in reverse-DNS format. This value is supplied by Stream Deck when events are emitted that relate to the action enabling you
+		 * to identify the source of the event. **NB.** This must be unique, and should be prefixed with the plugin's UUID.
+		 *
+		 * **Allowed characters:**
+		 * - Lowercase alphanumeric characters (a-z, 0-9)
+		 * - Hyphens (-)
+		 * - Underscores (_)
+		 * - Periods (.)
 		 *
 		 * **Examples:**
 		 * - com.elgato.wavelink.toggle-mute
 		 * - com.elgato.discord.join-voice
-		 * - tv.twitch.studio.go-live
+		 * - tv.twitch.go-live
+		 * @pattern
+		 * ^([a-z0-9\-_]*[a-z0-9][a-z0-9\-_]*\.){2,3}[a-z0-9\-_]*[a-z0-9][a-z0-9\-_]*$
 		 */
 		UUID: string;
 
@@ -420,7 +428,7 @@ export type Manifest = {
 		/**
 		 * Minimum version of the Stream Deck application required for this plugin to run.
 		 */
-		MinimumVersion: `${number}.${number}`;
+		MinimumVersion: "6.4";
 	};
 
 	/**
@@ -433,16 +441,6 @@ export type Manifest = {
 	URL?: string;
 
 	/**
-	 * Unique identifier used to identify the plugin, represented in reverse-DNS format.
-	 *
-	 * **Examples:**
-	 * - com.elgato.wave-link
-	 * - com.philips.hue
-	 * - tv.twitch.studio
-	 */
-	UUID?: `${string}.${string}.${string}`;
-
-	/**
 	 * Version of the plugin, represented as a {@link https://semver.org semantic version}. **NB.** pre-release values are not currently supported.
 	 *
 	 * **Examples:**
@@ -452,7 +450,7 @@ export type Manifest = {
 	 * @example
 	 * "1.0.0"
 	 */
-	Version: string;
+	Version: `${number}.${number}.${number}`;
 };
 
 /**

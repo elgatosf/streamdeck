@@ -117,8 +117,8 @@
 											},
 											"max": {
 												"type": "number",
-												"description": "Maximum value of the bar",
-												"markdownDescription": "Maximum value of the bar"
+												"description": "Maximum value of the bar.",
+												"markdownDescription": "Maximum value of the bar."
 											}
 										},
 										"required": [
@@ -290,8 +290,8 @@
 											},
 											"max": {
 												"type": "number",
-												"description": "Maximum value of the bar",
-												"markdownDescription": "Maximum value of the bar"
+												"description": "Maximum value of the bar.",
+												"markdownDescription": "Maximum value of the bar."
 											}
 										},
 										"required": [
