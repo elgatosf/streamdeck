@@ -1,6 +1,6 @@
 <div align="center">
 
-[![Stream Deck SDK banner](./assets/banner.png)](https://docs.elgato.com/sdk)
+[![Stream Deck SDK banner](https://images.ctfassets.net/8j9xr8kwdre8/1ihLKCwNWEfPixs27dq0c0/130be66a5173f332e4caa892a3462893/banner.png)](https://docs.elgato.com/sdk)
 
 # Stream Deck SDK (Beta)
 
