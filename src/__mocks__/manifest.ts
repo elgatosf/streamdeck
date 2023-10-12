@@ -31,7 +31,6 @@ export const manifest: Manifest = {
 	Software: {
 		MinimumVersion: "6.4"
 	},
-	UUID: "com.elgato.test",
 	Version: "1.0.0"
 };
 
