@@ -17,7 +17,7 @@ Welcome to the Stream Deck SDK for Node.js. Designed to make creating Stream Dec
 
 The Stream Deck SDK for Node.js is currently in public beta, and is available to everyone running Stream Deck 6.4 or newer. If you're interested in building plugins and would like to know more, please join our [Marketplace Makers Discord](https://discord.gg/GehBUcu627).
 
-> Creating Stream Deck plugins with Node.js requires Node.js v20.1. When installing Node.js, we recommended using a version manager such as [nvm](https://github.com/creationix/nvm) (macOS) or [nvm-windows](nvm-windows) (Windows).
+> Creating Stream Deck plugins with Node.js requires Node.js v20.1. When installing Node.js, we recommended using a version manager such as [nvm](https://github.com/creationix/nvm) (macOS) or [nvm-windows](https://github.com/coreybutler/nvm-windows) (Windows).
 
 ## 🚀 Quick Start
 
@@ -66,7 +66,7 @@ The root of the plugin; this folder contains the build output from the source fi
 -   **manifest.json** - plugin metadata (for more information, see [manifest documentation](https://docs.elgato.com/sdk/plugins/manifest)).
 -   **bin/** - build output.
 -   **imgs/** - assets used by the plugin, such as icons, profiles, etc.
--   **logs/** - logs generated from [`streamDeck.logger`](https://github.com/elgatosf/streamdeck/tree/readme#-logging).
+-   **logs/** - logs generated from [`streamDeck.logger`](#-logging).
 
 ### src/
 
