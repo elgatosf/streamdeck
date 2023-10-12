@@ -146,6 +146,31 @@ streamDeck.devices.forEach((device) => {
 });
 ```
 
+## 🐞 Debugging
+
+Plugins can be debugged from all supporting Node.js debuggers, such as Visual Studio Code, Chrome, etc., and by default will have debugging enabled when created with the CLI tool's `streamdeck create` command.
+
+Debugging can be configured from within the plugin's manifest as part the Node.js configuration object.
+
+```json
+{
+    // ...
+    "Nodejs": {
+        "Version": "20",
+        "Debug": "enabled"
+    }
+}
+```
+
+There are four available options when configuring the `Debug` property within the manifest:
+
+-   `"enabled"` - the plugin will run with [`--inspect`](https://nodejs.org/api/cli.html#--inspecthostport) allowing debuggers to connect.
+-   `"break"` - the plugin will launch with [`--inspect-brk`](https://nodejs.org/api/cli.html#--inspect-brkhostport) and will await a debugger attaching before running.
+-   `string` - a collection of [CLI arguments](https://nodejs.org/api/cli.html) supplied to the plugin.
+-   `undefined` - debugging is disabled.
+
+> When running the plugin in either debug mode `"enabled"` or `"break"`, a random available port will be allocated to the debug listener each time the plugin launches. If you wish to listen on a specific port, the `Debug` value can be set to a string of CLI arguments, for example to listen on port `12345`, the `Debug` value would be `--inspect=127.0.0.1:12345`.
+
 ## 📄 Logging
 
 The `streamDeck.logger` provides local file-based logging, allowing you to diagnose, track, and debug your plugin. Logs files operate a file-rotation policy and are re-indexed when the plugin starts or the log file exceeds 50MiB, with the 10 most recent log files being retained.
