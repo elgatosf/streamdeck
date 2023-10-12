@@ -152,7 +152,7 @@ Plugins can be debugged from all supporting Node.js debuggers, such as Visual St
 
 Debugging can be configured from within the plugin's manifest as part the Node.js configuration object.
 
-```json
+```jsonc
 {
     // ...
     "Nodejs": {
