@@ -17,7 +17,7 @@ Welcome to the Stream Deck SDK for Node.js. Designed to make creating Stream Dec
 
 The Stream Deck SDK for Node.js is currently in public beta, and is available to everyone running Stream Deck 6.4 or newer. If you're interested in building plugins and would like to know more, please join our [Marketplace Makers Discord](https://discord.gg/GehBUcu627).
 
-> Creating Stream Deck plugins with Node.js requires Node.js v20.1. When installing Node.js, we recommended using a version manager such as [nvm](https://github.com/creationix/nvm) (macOS) or [nvm-windows](https://github.com/coreybutler/nvm-windows) (Windows).
+> Creating Stream Deck plugins with Node.js requires Node.js v20.5.1. When installing Node.js, we recommended using a version manager such as [nvm](https://github.com/creationix/nvm) (macOS) or [nvm-windows](https://github.com/coreybutler/nvm-windows) (Windows).
 
 ## 🚀 Quick Start
 
