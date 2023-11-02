@@ -15,7 +15,7 @@
 
 ### Breaking Changes
 
--   ♻️ Add `system` namespace; the following have been relocated from `streamDeck.client` to `streamDeck.system`:
+-   ✨ Add `system` namespace; the following have been relocated from `streamDeck.client` to `streamDeck.system`:
     -   `onApplicationDidLaunch`
     -   `onApplicationDidTerminate`
     -   `onSystemDidWakeUp`
