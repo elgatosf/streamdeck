@@ -5,7 +5,6 @@ import * as mockEvents from "../connectivity/__mocks__/events";
 import {
 	GetGlobalSettings,
 	GetSettings,
-	OpenUrl,
 	SendToPropertyInspector,
 	SetFeedback,
 	SetFeedbackLayout,
@@ -23,8 +22,6 @@ import { StreamDeckConnection } from "../connectivity/connection";
 import { Target } from "../connectivity/target";
 import { Device } from "../devices";
 import {
-	ApplicationDidLaunchEvent,
-	ApplicationDidTerminateEvent,
 	DeviceDidConnectEvent,
 	DeviceDidDisconnectEvent,
 	DialDownEvent,
@@ -37,7 +34,6 @@ import {
 	PropertyInspectorDidAppearEvent,
 	PropertyInspectorDidDisappearEvent,
 	SendToPluginEvent,
-	SystemDidWakeUpEvent,
 	TitleParametersDidChangeEvent,
 	TouchTapEvent,
 	WillAppearEvent,
@@ -108,52 +104,6 @@ describe("StreamDeckClient", () => {
 		// Assert (Event).
 		expect(await settings).toEqual<mockEvents.Settings>({
 			name: "Elgato"
-		});
-	});
-
-	/**
-	 * Asserts {@link StreamDeckClient.onApplicationDidLaunch} invokes the listener when the connection emits the `applicationDidLaunch` event.
-	 */
-	it("Receives onApplicationDidLaunch", () => {
-		// Arrange.
-		const { connection, client } = getMockedClient();
-
-		const listener = jest.fn();
-		client.onApplicationDidLaunch(listener);
-
-		// Act.
-		const {
-			payload: { application }
-		} = connection.__emit(mockEvents.applicationDidLaunch);
-
-		//Assert.
-		expect(listener).toHaveBeenCalledTimes(1);
-		expect(listener).toHaveBeenCalledWith<[ApplicationDidLaunchEvent]>({
-			application,
-			type: "applicationDidLaunch"
-		});
-	});
-
-	/**
-	 * Asserts {@link StreamDeckClient.onApplicationDidTerminate} invokes the listener when the connection emits the `applicationDidTerminate` event.
-	 */
-	it("Receives onApplicationDidTerminate", () => {
-		// Arrange.
-		const { connection, client } = getMockedClient();
-
-		const listener = jest.fn();
-		client.onApplicationDidTerminate(listener);
-
-		// Act.
-		const {
-			payload: { application }
-		} = connection.__emit(mockEvents.applicationDidTerminate);
-
-		//Assert.
-		expect(listener).toHaveBeenCalledTimes(1);
-		expect(listener).toHaveBeenCalledWith<[ApplicationDidTerminateEvent]>({
-			application,
-			type: "applicationDidTerminate"
 		});
 	});
 
@@ -470,26 +420,6 @@ describe("StreamDeckClient", () => {
 	});
 
 	/**
-	 * Asserts {@link StreamDeckClient.onSystemDidWakeUp} invokes the listener when the connection emits the `systemDidWakeUp` event.
-	 */
-	it("Receives onSystemDidWakeUp", () => {
-		// Arrange.
-		const { connection, client } = getMockedClient();
-
-		const listener = jest.fn();
-		client.onSystemDidWakeUp(listener);
-
-		// Act.
-		connection.__emit(mockEvents.systemDidWakeUp);
-
-		// Assert.
-		expect(listener).toHaveBeenCalledTimes(1);
-		expect(listener).toHaveBeenCalledWith<[SystemDidWakeUpEvent]>({
-			type: "systemDidWakeUp"
-		});
-	});
-
-	/**
 	 * Asserts {@link StreamDeckClient.onTitleParametersDidChange} invokes the listener when the connection emits the `titleParametersDidChange` event.
 	 */
 	it("Receives onTitleParametersDidChange", () => {
@@ -578,26 +508,6 @@ describe("StreamDeckClient", () => {
 			deviceId: device,
 			payload,
 			type: "willDisappear"
-		});
-	});
-
-	/**
-	 * Asserts {@link StreamDeckClient.openUrl} sends the command to the underlying {@link StreamDeckConnection}.
-	 */
-	it("Sends openUrl", async () => {
-		// Arrange.
-		const { connection, client } = getMockedClient();
-
-		// Act.
-		await client.openUrl("https://www.elgato.com");
-
-		// Assert.
-		expect(connection.send).toHaveBeenCalledTimes(1);
-		expect(connection.send).toHaveBeenCalledWith<[OpenUrl]>({
-			event: "openUrl",
-			payload: {
-				url: "https://www.elgato.com"
-			}
 		});
 	});
 

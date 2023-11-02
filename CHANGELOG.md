@@ -11,6 +11,18 @@
 
 # Change Log
 
+## 0.2.0 (Pending)
+
+### Breaking Changes
+
+-   ♻️ Add `system` namespace; the following have been relocated from `streamDeck.client` to `streamDeck.system`:
+    -   `onApplicationDidLaunch`
+    -   `onApplicationDidTerminate`
+    -   `onSystemDidWakeUp`
+    -   `openUrl`
+
+### New
+
 ## 0.1.0
 
 ### New

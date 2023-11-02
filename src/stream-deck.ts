@@ -4,8 +4,9 @@ import { StreamDeckConnection } from "./connectivity/connection";
 import { RegistrationInfo, RegistrationParameters } from "./connectivity/registration";
 import { Device, getDevices } from "./devices";
 import { I18nProvider } from "./i18n";
-import { createLogger, Logger } from "./logging";
-import { getManifest, Manifest } from "./manifest";
+import { Logger, createLogger } from "./logging";
+import { Manifest, getManifest } from "./manifest";
+import { System } from "./system";
 
 /**
  * Defines the default export of this library.
@@ -50,6 +51,11 @@ export class StreamDeck {
 	 * Private backing field for {@link StreamDeck.registrationParameters}
 	 */
 	private _registrationParameters: RegistrationParameters | undefined;
+
+	/**
+	 * Private backing field for {@link StreamDeck.system};
+	 */
+	private _system: System | undefined;
 
 	/**
 	 * Provides information about, and methods for interacting with, actions associated with the Stream Deck plugin.
@@ -110,6 +116,14 @@ export class StreamDeck {
 	 */
 	public get manifest(): Omit<Manifest, "$schema"> {
 		return this._manifest || (this._manifest = getManifest());
+	}
+
+	/**
+	 * Provides events and methods for interacting with the system, e.g. monitoring applications or when the system wakes, etc.
+	 * @returns The {@link System}.
+	 */
+	public get system(): System {
+		return this._system || (this._system = new System(this.connection));
 	}
 
 	/**

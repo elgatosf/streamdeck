@@ -7,9 +7,6 @@ import { Device } from "./devices";
 import {
 	ActionEvent,
 	ActionWithoutPayloadEvent,
-	ApplicationDidLaunchEvent,
-	ApplicationDidTerminateEvent,
-	ApplicationEvent,
 	DeviceDidConnectEvent,
 	DeviceDidDisconnectEvent,
 	DeviceEvent,
@@ -18,19 +15,16 @@ import {
 	DialUpEvent,
 	DidReceiveGlobalSettingsEvent,
 	DidReceiveSettingsEvent,
-	Event,
 	KeyDownEvent,
 	KeyUpEvent,
 	PropertyInspectorDidAppearEvent,
 	PropertyInspectorDidDisappearEvent,
 	SendToPluginEvent,
-	SystemDidWakeUpEvent,
 	TitleParametersDidChangeEvent,
 	TouchTapEvent,
 	WillAppearEvent,
 	WillDisappearEvent
 } from "./events";
-import type { Manifest } from "./manifest";
 
 /**
  * Provides the main bridge between the plugin and the Stream Deck allowing the plugin to send requests and receive events, e.g. when the user presses an action.
@@ -83,24 +77,6 @@ export class StreamDeckClient {
 				context
 			});
 		});
-	}
-
-	/**
-	 * Occurs when a monitored application is launched. Monitored applications can be defined in the manifest via the {@link Manifest.ApplicationsToMonitor} property.
-	 * Also see {@link StreamDeckClient.onApplicationDidTerminate}.
-	 * @param listener Function to be invoked when the event occurs.
-	 */
-	public onApplicationDidLaunch(listener: (ev: ApplicationDidLaunchEvent) => void): void {
-		this.connection.on("applicationDidLaunch", (ev) => listener(new ApplicationEvent(ev)));
-	}
-
-	/**
-	 * Occurs when a monitored application terminates. Monitored applications can be defined in the manifest via the {@link Manifest.ApplicationsToMonitor} property.
-	 * Also see {@link StreamDeckClient.onApplicationDidLaunch}.
-	 * @param listener Function to be invoked when the event occurs.
-	 */
-	public onApplicationDidTerminate(listener: (ev: ApplicationDidTerminateEvent) => void): void {
-		this.connection.on("applicationDidTerminate", (ev) => listener(new ApplicationEvent(ev)));
 	}
 
 	/**
@@ -228,14 +204,6 @@ export class StreamDeckClient {
 	}
 
 	/**
-	 * Occurs when the computer wakes up.
-	 * @param listener Function to be invoked when the event occurs.
-	 */
-	public onSystemDidWakeUp(listener: (ev: SystemDidWakeUpEvent) => void): void {
-		this.connection.on("systemDidWakeUp", (ev) => listener(new Event<api.SystemDidWakeUp>(ev)));
-	}
-
-	/**
 	 * Occurs when the user updates an action's title settings in the Stream Deck application. Also see {@link StreamDeckClient.setTitle}.
 	 * @template T The type of settings associated with the action.
 	 * @param listener Function to be invoked when the event occurs.
@@ -271,20 +239,6 @@ export class StreamDeckClient {
 	 */
 	public onWillDisappear<T extends api.PayloadObject<T> = object>(listener: (ev: WillDisappearEvent<T>) => void): void {
 		this.connection.on("willDisappear", (ev: api.WillDisappear<T>) => listener(new ActionEvent<api.WillDisappear<T>>(this, ev)));
-	}
-
-	/**
-	 * Opens the specified `url` in the user's default browser.
-	 * @param url URL to open.
-	 * @returns `Promise` resolved when the request to open the `url` has been sent to Stream Deck.
-	 */
-	public openUrl(url: string): Promise<void> {
-		return this.connection.send({
-			event: "openUrl",
-			payload: {
-				url
-			}
-		});
 	}
 
 	/**

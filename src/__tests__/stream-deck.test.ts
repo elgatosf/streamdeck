@@ -9,6 +9,7 @@ import * as logging from "../logging";
 import { createLogger } from "../logging";
 import { getManifest } from "../manifest";
 import { StreamDeck } from "../stream-deck";
+import { System } from "../system";
 
 jest.mock("../actions/actions-controller");
 jest.mock("../client");
@@ -18,6 +19,7 @@ jest.mock("../devices");
 jest.mock("../i18n");
 jest.mock("../logging");
 jest.mock("../manifest");
+jest.mock("../system");
 
 describe("StreamDeck", () => {
 	beforeEach(async () => {
@@ -51,6 +53,7 @@ describe("StreamDeck", () => {
 		expect(StreamDeckClient).toHaveBeenCalledTimes(0);
 		expect(StreamDeckConnection).toHaveBeenCalledTimes(0);
 		expect(RegistrationParameters).toHaveBeenCalledTimes(0);
+		expect(System).toHaveBeenCalledTimes(0);
 	});
 
 	/**
@@ -68,6 +71,7 @@ describe("StreamDeck", () => {
 			expect(streamDeck.info).not.toBeUndefined();
 			expect(streamDeck.logger).not.toBeUndefined();
 			expect(streamDeck.manifest).not.toBeUndefined();
+			expect(streamDeck.system).not.toBeUndefined();
 		};
 
 		const expectInitializedOnce = () => {
@@ -79,6 +83,7 @@ describe("StreamDeck", () => {
 			expect(StreamDeckClient).toHaveBeenCalledTimes(1);
 			expect(StreamDeckConnection).toHaveBeenCalledTimes(1);
 			expect(RegistrationParameters).toHaveBeenCalledTimes(1);
+			expect(System).toHaveBeenCalledTimes(1);
 		};
 
 		// Act, assert.
@@ -198,6 +203,22 @@ describe("StreamDeck", () => {
 			expect(getManifest).toHaveBeenCalledTimes(1);
 			expect(getManifest).toHaveBeenCalledWith();
 		});
+
+		/**
+		 * Asserts accessing the {@link StreamDeck.system} correctly loads its dependencies and dependents.
+		 */
+		it("system", async () => {
+			// Arrange, act.
+			const streamDeck = new StreamDeck() as any;
+			const { system } = streamDeck;
+
+			// Assert.
+			expect(system).not.toBeUndefined();
+
+			const { _connection } = streamDeck;
+			expect(System).toHaveBeenCalledTimes(1);
+			expect(System).toHaveBeenCalledWith(_connection);
+		});
 	});
 
 	describe("Only initializes dependencies and dependents", () => {
@@ -220,6 +241,7 @@ describe("StreamDeck", () => {
 			expect(StreamDeckClient).toHaveBeenCalledTimes(1);
 			expect(StreamDeckConnection).toHaveBeenCalledTimes(1);
 			expect(RegistrationParameters).toHaveBeenCalledTimes(1);
+			expect(System).toHaveBeenCalledTimes(0);
 		});
 
 		/**
@@ -241,6 +263,7 @@ describe("StreamDeck", () => {
 			expect(StreamDeckClient).toHaveBeenCalledTimes(1);
 			expect(StreamDeckConnection).toHaveBeenCalledTimes(1);
 			expect(RegistrationParameters).toHaveBeenCalledTimes(1);
+			expect(System).toHaveBeenCalledTimes(0);
 		});
 
 		/**
@@ -262,6 +285,7 @@ describe("StreamDeck", () => {
 			expect(StreamDeckClient).toHaveBeenCalledTimes(0);
 			expect(StreamDeckConnection).toHaveBeenCalledTimes(1);
 			expect(RegistrationParameters).toHaveBeenCalledTimes(1);
+			expect(System).toHaveBeenCalledTimes(0);
 		});
 
 		/**
@@ -283,6 +307,7 @@ describe("StreamDeck", () => {
 			expect(StreamDeckClient).toHaveBeenCalledTimes(0);
 			expect(StreamDeckConnection).toHaveBeenCalledTimes(0);
 			expect(RegistrationParameters).toHaveBeenCalledTimes(1);
+			expect(System).toHaveBeenCalledTimes(0);
 		});
 
 		/**
@@ -303,6 +328,7 @@ describe("StreamDeck", () => {
 			expect(StreamDeckClient).toHaveBeenCalledTimes(0);
 			expect(StreamDeckConnection).toHaveBeenCalledTimes(0);
 			expect(RegistrationParameters).toHaveBeenCalledTimes(1);
+			expect(System).toHaveBeenCalledTimes(0);
 		});
 
 		/**
@@ -324,6 +350,7 @@ describe("StreamDeck", () => {
 			expect(StreamDeckClient).toHaveBeenCalledTimes(0);
 			expect(StreamDeckConnection).toHaveBeenCalledTimes(0);
 			expect(RegistrationParameters).toHaveBeenCalledTimes(0);
+			expect(System).toHaveBeenCalledTimes(0);
 		});
 
 		/**
@@ -344,6 +371,29 @@ describe("StreamDeck", () => {
 			expect(StreamDeckClient).toHaveBeenCalledTimes(0);
 			expect(StreamDeckConnection).toHaveBeenCalledTimes(0);
 			expect(RegistrationParameters).toHaveBeenCalledTimes(0);
+			expect(System).toHaveBeenCalledTimes(0);
+		});
+
+		/**
+		 * Asserts {@link StreamDeck.system} is constructed with the correct dependencies
+		 */
+		it("system", () => {
+			// Arrange, act.
+			const { system } = new StreamDeck();
+
+			// Assert.
+			expect(system).not.toBeUndefined();
+			expect(system).toBeInstanceOf(System);
+
+			expect(ActionsController).toHaveBeenCalledTimes(0);
+			expect(getDevices).toHaveBeenCalledTimes(1);
+			expect(I18nProvider).toHaveBeenCalledTimes(0);
+			expect(createLogger).toHaveBeenCalledTimes(1);
+			expect(getManifest).toHaveBeenCalledTimes(0);
+			expect(StreamDeckClient).toHaveBeenCalledTimes(0);
+			expect(StreamDeckConnection).toHaveBeenCalledTimes(1);
+			expect(RegistrationParameters).toHaveBeenCalledTimes(1);
+			expect(System).toHaveBeenCalledTimes(1);
 		});
 	});
 
