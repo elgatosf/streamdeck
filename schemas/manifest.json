@@ -279,8 +279,8 @@
 						}
 					},
 					"additionalProperties": false,
-					"description": "Applications to monitor on Mac and Windows; upon a monitored application being launched or terminated, Stream Deck will notify the plugin.\n\n**Also see:**\n- `streamDeck.client.onApplicationDidLaunch(...)`\n- `streamDeck.client.onApplicationDidTerminate(...)`",
-					"markdownDescription": "Applications to monitor on Mac and Windows; upon a monitored application being launched or terminated, Stream Deck will notify the plugin.\n\n**Also see:**\n- `streamDeck.client.onApplicationDidLaunch(...)`\n- `streamDeck.client.onApplicationDidTerminate(...)`"
+					"description": "Applications to monitor on Mac and Windows; upon a monitored application being launched or terminated, Stream Deck will notify the plugin.\n\n**Also see:**\n- `streamDeck.system.onApplicationDidLaunch(...)`\n- `streamDeck.system.onApplicationDidTerminate(...)`",
+					"markdownDescription": "Applications to monitor on Mac and Windows; upon a monitored application being launched or terminated, Stream Deck will notify the plugin.\n\n**Also see:**\n- `streamDeck.system.onApplicationDidLaunch(...)`\n- `streamDeck.system.onApplicationDidTerminate(...)`"
 				},
 				"Author": {
 					"type": "string",
@@ -441,8 +441,8 @@
 						],
 						"additionalProperties": false
 					},
-					"description": "Collection of pre-defined profiles that are distributed with this plugin. Upon installation of the plugin, the user will be prompted to install the profiles. Once installed, the plugin can switch any of the pre-defined profiles. **NB.** It is not yet possible to switch to a user-defined profile.\n\n**Also see:** `streamDeck.client.switchToProfile(...)`",
-					"markdownDescription": "Collection of pre-defined profiles that are distributed with this plugin. Upon installation of the plugin, the user will be prompted to install the profiles. Once installed, the plugin can switch any of the pre-defined profiles. **NB.** It is not yet possible to switch to a user-defined profile.\n\n**Also see:** `streamDeck.client.switchToProfile(...)`"
+					"description": "Collection of pre-defined profiles that are distributed with this plugin. Upon installation of the plugin, the user will be prompted to install the profiles. Once installed, the plugin can switch any of the pre-defined profiles. **NB.** It is not yet possible to switch to a user-defined profile.\n\n**Also see:** `streamDeck.profiles.switchToProfile(...)`",
+					"markdownDescription": "Collection of pre-defined profiles that are distributed with this plugin. Upon installation of the plugin, the user will be prompted to install the profiles. Once installed, the plugin can switch any of the pre-defined profiles. **NB.** It is not yet possible to switch to a user-defined profile.\n\n**Also see:** `streamDeck.profiles.switchToProfile(...)`"
 				},
 				"PropertyInspectorPath": {
 					"type": "string",

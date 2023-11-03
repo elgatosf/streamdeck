@@ -8,6 +8,7 @@ import { I18nProvider } from "../i18n";
 import * as logging from "../logging";
 import { createLogger } from "../logging";
 import { getManifest } from "../manifest";
+import { ProfilesController } from "../profiles";
 import { StreamDeck } from "../stream-deck";
 import { System } from "../system";
 
@@ -19,6 +20,7 @@ jest.mock("../devices");
 jest.mock("../i18n");
 jest.mock("../logging");
 jest.mock("../manifest");
+jest.mock("../profiles");
 jest.mock("../system");
 
 describe("StreamDeck", () => {
@@ -50,6 +52,7 @@ describe("StreamDeck", () => {
 		expect(I18nProvider).toHaveBeenCalledTimes(0);
 		expect(createLogger).toHaveBeenCalledTimes(0);
 		expect(getManifest).toHaveBeenCalledTimes(0);
+		expect(ProfilesController).toHaveBeenCalledTimes(0);
 		expect(StreamDeckClient).toHaveBeenCalledTimes(0);
 		expect(StreamDeckConnection).toHaveBeenCalledTimes(0);
 		expect(RegistrationParameters).toHaveBeenCalledTimes(0);
@@ -71,6 +74,7 @@ describe("StreamDeck", () => {
 			expect(streamDeck.info).not.toBeUndefined();
 			expect(streamDeck.logger).not.toBeUndefined();
 			expect(streamDeck.manifest).not.toBeUndefined();
+			expect(streamDeck.profiles).not.toBeUndefined();
 			expect(streamDeck.system).not.toBeUndefined();
 		};
 
@@ -80,6 +84,7 @@ describe("StreamDeck", () => {
 			expect(I18nProvider).toHaveBeenCalledTimes(1);
 			expect(createLogger).toHaveBeenCalledTimes(1);
 			expect(getManifest).toHaveBeenCalledTimes(1);
+			expect(ProfilesController).toHaveBeenCalledTimes(1);
 			expect(StreamDeckClient).toHaveBeenCalledTimes(1);
 			expect(StreamDeckConnection).toHaveBeenCalledTimes(1);
 			expect(RegistrationParameters).toHaveBeenCalledTimes(1);
@@ -238,6 +243,7 @@ describe("StreamDeck", () => {
 			expect(I18nProvider).toHaveBeenCalledTimes(0);
 			expect(createLogger).toHaveBeenCalledTimes(1);
 			expect(getManifest).toHaveBeenCalledTimes(1);
+			expect(ProfilesController).toHaveBeenCalledTimes(0);
 			expect(StreamDeckClient).toHaveBeenCalledTimes(1);
 			expect(StreamDeckConnection).toHaveBeenCalledTimes(1);
 			expect(RegistrationParameters).toHaveBeenCalledTimes(1);
@@ -260,6 +266,7 @@ describe("StreamDeck", () => {
 			expect(I18nProvider).toHaveBeenCalledTimes(0);
 			expect(createLogger).toHaveBeenCalledTimes(1);
 			expect(getManifest).toHaveBeenCalledTimes(0);
+			expect(ProfilesController).toHaveBeenCalledTimes(0);
 			expect(StreamDeckClient).toHaveBeenCalledTimes(1);
 			expect(StreamDeckConnection).toHaveBeenCalledTimes(1);
 			expect(RegistrationParameters).toHaveBeenCalledTimes(1);
@@ -282,6 +289,7 @@ describe("StreamDeck", () => {
 			expect(I18nProvider).toHaveBeenCalledTimes(0);
 			expect(createLogger).toHaveBeenCalledTimes(1);
 			expect(getManifest).toHaveBeenCalledTimes(0);
+			expect(ProfilesController).toHaveBeenCalledTimes(0);
 			expect(StreamDeckClient).toHaveBeenCalledTimes(0);
 			expect(StreamDeckConnection).toHaveBeenCalledTimes(1);
 			expect(RegistrationParameters).toHaveBeenCalledTimes(1);
@@ -304,6 +312,7 @@ describe("StreamDeck", () => {
 			expect(I18nProvider).toHaveBeenCalledTimes(1);
 			expect(createLogger).toHaveBeenCalledTimes(1);
 			expect(getManifest).toHaveBeenCalledTimes(1);
+			expect(ProfilesController).toHaveBeenCalledTimes(0);
 			expect(StreamDeckClient).toHaveBeenCalledTimes(0);
 			expect(StreamDeckConnection).toHaveBeenCalledTimes(0);
 			expect(RegistrationParameters).toHaveBeenCalledTimes(1);
@@ -325,6 +334,7 @@ describe("StreamDeck", () => {
 			expect(I18nProvider).toHaveBeenCalledTimes(0);
 			expect(createLogger).toHaveBeenCalledTimes(1);
 			expect(getManifest).toHaveBeenCalledTimes(0);
+			expect(ProfilesController).toHaveBeenCalledTimes(0);
 			expect(StreamDeckClient).toHaveBeenCalledTimes(0);
 			expect(StreamDeckConnection).toHaveBeenCalledTimes(0);
 			expect(RegistrationParameters).toHaveBeenCalledTimes(1);
@@ -347,6 +357,7 @@ describe("StreamDeck", () => {
 			expect(I18nProvider).toHaveBeenCalledTimes(0);
 			expect(createLogger).toHaveBeenCalledTimes(1);
 			expect(getManifest).toHaveBeenCalledTimes(0);
+			expect(ProfilesController).toHaveBeenCalledTimes(0);
 			expect(StreamDeckClient).toHaveBeenCalledTimes(0);
 			expect(StreamDeckConnection).toHaveBeenCalledTimes(0);
 			expect(RegistrationParameters).toHaveBeenCalledTimes(0);
@@ -368,9 +379,33 @@ describe("StreamDeck", () => {
 			expect(I18nProvider).toHaveBeenCalledTimes(0);
 			expect(createLogger).toHaveBeenCalledTimes(0);
 			expect(getManifest).toHaveBeenCalledTimes(1);
+			expect(ProfilesController).toHaveBeenCalledTimes(0);
 			expect(StreamDeckClient).toHaveBeenCalledTimes(0);
 			expect(StreamDeckConnection).toHaveBeenCalledTimes(0);
 			expect(RegistrationParameters).toHaveBeenCalledTimes(0);
+			expect(System).toHaveBeenCalledTimes(0);
+		});
+
+		/**
+		 * Asserts {@link StreamDeck.profiles} is constructed with the correct dependencies
+		 */
+		it("profiles", () => {
+			// Arrange, act.
+			const { profiles } = new StreamDeck();
+
+			// Assert.
+			expect(profiles).not.toBeUndefined();
+			expect(profiles).toBeInstanceOf(ProfilesController);
+
+			expect(ActionsController).toHaveBeenCalledTimes(0);
+			expect(getDevices).toHaveBeenCalledTimes(1);
+			expect(I18nProvider).toHaveBeenCalledTimes(0);
+			expect(createLogger).toHaveBeenCalledTimes(1);
+			expect(getManifest).toHaveBeenCalledTimes(0);
+			expect(ProfilesController).toHaveBeenCalledTimes(1);
+			expect(StreamDeckClient).toHaveBeenCalledTimes(0);
+			expect(StreamDeckConnection).toHaveBeenCalledTimes(1);
+			expect(RegistrationParameters).toHaveBeenCalledTimes(1);
 			expect(System).toHaveBeenCalledTimes(0);
 		});
 
@@ -390,6 +425,7 @@ describe("StreamDeck", () => {
 			expect(I18nProvider).toHaveBeenCalledTimes(0);
 			expect(createLogger).toHaveBeenCalledTimes(1);
 			expect(getManifest).toHaveBeenCalledTimes(0);
+			expect(ProfilesController).toHaveBeenCalledTimes(0);
 			expect(StreamDeckClient).toHaveBeenCalledTimes(0);
 			expect(StreamDeckConnection).toHaveBeenCalledTimes(1);
 			expect(RegistrationParameters).toHaveBeenCalledTimes(1);

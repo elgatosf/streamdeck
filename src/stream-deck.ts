@@ -6,6 +6,7 @@ import { Device, getDevices } from "./devices";
 import { I18nProvider } from "./i18n";
 import { Logger, createLogger } from "./logging";
 import { Manifest, getManifest } from "./manifest";
+import { ProfilesController } from "./profiles";
 import { System } from "./system";
 
 /**
@@ -46,6 +47,11 @@ export class StreamDeck {
 	 * Private backing field for {@link StreamDeck.manifest}.
 	 */
 	private _manifest: Manifest | undefined;
+
+	/**
+	 * Private backing field for {@link StreamDeck.profiles};
+	 */
+	private _profiles: ProfilesController | undefined;
 
 	/**
 	 * Private backing field for {@link StreamDeck.registrationParameters}
@@ -116,6 +122,14 @@ export class StreamDeck {
 	 */
 	public get manifest(): Omit<Manifest, "$schema"> {
 		return this._manifest || (this._manifest = getManifest());
+	}
+
+	/**
+	 * Provides interaction with Stream Deck profiles.
+	 * @returns The {@link ProfilesController}.
+	 */
+	public get profiles(): ProfilesController {
+		return this._profiles || (this._profiles = new ProfilesController(this.connection));
 	}
 
 	/**

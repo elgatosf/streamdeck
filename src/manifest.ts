@@ -228,8 +228,8 @@ export type Manifest = {
 	 * Applications to monitor on Mac and Windows; upon a monitored application being launched or terminated, Stream Deck will notify the plugin.
 	 *
 	 * **Also see:**
-	 * - `streamDeck.client.onApplicationDidLaunch(...)`
-	 * - `streamDeck.client.onApplicationDidTerminate(...)`
+	 * - `streamDeck.system.onApplicationDidLaunch(...)`
+	 * - `streamDeck.system.onApplicationDidTerminate(...)`
 	 */
 	ApplicationsToMonitor?: {
 		/**
@@ -374,7 +374,7 @@ export type Manifest = {
 	 * the plugin can switch any of the pre-defined profiles. **NB.** It is not yet possible to switch to a user-defined profile.
 	 *
 	 * **Also see:**
-	 * `streamDeck.client.switchToProfile(...)`
+	 * `streamDeck.profiles.switchToProfile(...)`
 	 */
 	Profiles?: {
 		/**

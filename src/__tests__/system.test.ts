@@ -5,7 +5,7 @@ import { StreamDeckConnection } from "../connectivity/connection";
 import { ApplicationDidLaunchEvent, ApplicationDidTerminateEvent, SystemDidWakeUpEvent } from "../events";
 import { System } from "../system";
 
-describe("StreamDeckClient", () => {
+describe("System", () => {
 	/**
 	 * Asserts {@link System.onApplicationDidLaunch} invokes the listener when the connection emits the `applicationDidLaunch` event.
 	 */
