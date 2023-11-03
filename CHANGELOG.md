@@ -15,6 +15,8 @@
 
 ### Breaking Changes
 
+-   ✨ Add `profiles` namespace; the following have been relocated from `streamDeck.client` to `streamDeck.profiles`:
+    -   `switchToProfile`
 -   ✨ Add `system` namespace; the following have been relocated from `streamDeck.client` to `streamDeck.system`:
     -   `onApplicationDidLaunch`
     -   `onApplicationDidTerminate`
