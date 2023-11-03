@@ -3,12 +3,10 @@ import { Action } from "../actions/action";
 import { StreamDeckClient } from "../client";
 import * as mockEvents from "../connectivity/__mocks__/events";
 import {
-	GetGlobalSettings,
 	GetSettings,
 	SendToPropertyInspector,
 	SetFeedback,
 	SetFeedbackLayout,
-	SetGlobalSettings,
 	SetImage,
 	SetSettings,
 	SetState,
@@ -26,7 +24,6 @@ import {
 	DialDownEvent,
 	DialRotateEvent,
 	DialUpEvent,
-	DidReceiveGlobalSettingsEvent,
 	DidReceiveSettingsEvent,
 	KeyDownEvent,
 	KeyUpEvent,
@@ -43,35 +40,6 @@ jest.mock("../logging");
 jest.mock("../connectivity/connection");
 
 describe("StreamDeckClient", () => {
-	/**
-	 * Asserts {@link StreamDeckClient.getGlobalSettings} sends the command, and awaits the settings.
-	 */
-	it("Can getGlobalSettings", async () => {
-		// Arrange.
-		const { connection, client } = getMockedClient();
-
-		// Act (Command).
-		const settings = client.getGlobalSettings<mockEvents.Settings>();
-
-		// Assert (Command).
-		expect(connection.send).toHaveBeenCalledTimes(1);
-		expect(connection.send).toHaveBeenLastCalledWith({
-			event: "getGlobalSettings",
-			context: connection.registrationParameters.pluginUUID
-		} as GetGlobalSettings);
-
-		expect(Promise.race([settings, false])).resolves.toBe(false);
-
-		// Act (Event).
-		connection.__emit(mockEvents.didReceiveGlobalSettings);
-		await settings;
-
-		// Assert (Event).
-		expect(settings).resolves.toEqual<mockEvents.Settings>({
-			name: "Elgato"
-		});
-	});
-
 	/**
 	 * Asserts {@link StreamDeckClient.getSettings} sends the command, and awaits the settings.
 	 */
@@ -257,29 +225,6 @@ describe("StreamDeckClient", () => {
 			deviceId: device,
 			payload,
 			type: "dialUp"
-		});
-	});
-
-	/**
-	 * Asserts {@link StreamDeckClient.onDidReceiveGlobalSettings} invokes the listener when the connection emits the `didReceiveGlobalSettings` event.
-	 */
-	it("Receives onDidReceiveGlobalSettings", () => {
-		// Arrange.
-		const { connection, client } = getMockedClient();
-
-		const listener = jest.fn();
-		client.onDidReceiveGlobalSettings(listener);
-
-		// Act.
-		const {
-			payload: { settings }
-		} = connection.__emit(mockEvents.didReceiveGlobalSettings);
-
-		// Assert.
-		expect(listener).toHaveBeenCalledTimes(1);
-		expect(listener).toHaveBeenCalledWith<[DidReceiveGlobalSettingsEvent<mockEvents.Settings>]>({
-			settings,
-			type: "didReceiveGlobalSettings"
 		});
 	});
 
@@ -579,29 +524,6 @@ describe("StreamDeckClient", () => {
 			context: "ABC123",
 			payload: {
 				layout: "./layouts/custom.json"
-			}
-		});
-	});
-
-	/**
-	 * Asserts {@link StreamDeckClient.setGlobalSettings} sends the command to the underlying {@link StreamDeckConnection}.
-	 */
-	it("Sends setGlobalSettings", async () => {
-		// Arrange.
-		const { connection, client } = getMockedClient();
-
-		// Act.
-		await client.setGlobalSettings({
-			name: "Elgato"
-		});
-
-		// Assert.
-		expect(connection.send).toHaveBeenCalledTimes(1);
-		expect(connection.send).toHaveBeenCalledWith<[SetGlobalSettings]>({
-			event: "setGlobalSettings",
-			context: connection.registrationParameters.pluginUUID,
-			payload: {
-				name: "Elgato"
 			}
 		});
 	});

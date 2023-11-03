@@ -13,7 +13,6 @@ import {
 	DialDownEvent,
 	DialRotateEvent,
 	DialUpEvent,
-	DidReceiveGlobalSettingsEvent,
 	DidReceiveSettingsEvent,
 	KeyDownEvent,
 	KeyUpEvent,
@@ -39,21 +38,6 @@ export class StreamDeckClient {
 		private readonly connection: StreamDeckConnection,
 		private readonly devices: ReadonlyMap<string, Device>
 	) {}
-
-	/**
-	 * Gets the global settings associated with the plugin. Use in conjunction with {@link StreamDeckClient.setGlobalSettings}.
-	 * @template T The type of global settings associated with the plugin.
-	 * @returns Promise containing the plugin's global settings.
-	 */
-	public getGlobalSettings<T extends api.PayloadObject<T> = object>(): Promise<T> {
-		return new Promise((resolve) => {
-			this.connection.once("didReceiveGlobalSettings", (ev: api.DidReceiveGlobalSettings<T>) => resolve(ev.payload.settings));
-			this.connection.send({
-				event: "getGlobalSettings",
-				context: this.connection.registrationParameters.pluginUUID
-			});
-		});
-	}
 
 	/**
 	 * Gets the settings associated with an instance of an action, as identified by the {@link context}. An instance of an action represents a button, dial, pedal, etc. See also
@@ -134,15 +118,6 @@ export class StreamDeckClient {
 	 */
 	public onDialUp<T extends api.PayloadObject<T> = object>(listener: (ev: DialUpEvent<T>) => void): void {
 		this.connection.on("dialUp", (ev: api.DialUp<T>) => listener(new ActionEvent<api.DialUp<T>>(this, ev)));
-	}
-
-	/**
-	 * Occurs when the global settings are requested using {@link StreamDeckClient.getGlobalSettings}, or when the the global settings were updated by the property inspector.
-	 * @template T The type of settings associated with the action.
-	 * @param listener Function to be invoked when the event occurs.
-	 */
-	public onDidReceiveGlobalSettings<T extends api.PayloadObject<T> = object>(listener: (ev: DidReceiveGlobalSettingsEvent<T>) => void): void {
-		this.connection.on("didReceiveGlobalSettings", (ev: api.DidReceiveGlobalSettings<T>) => listener(new DidReceiveGlobalSettingsEvent(ev)));
 	}
 
 	/**
@@ -332,25 +307,6 @@ export class StreamDeckClient {
 			payload: {
 				layout
 			}
-		});
-	}
-
-	/**
-	 * Sets the global {@link settings} associated the plugin. **Note**, these settings are only available to this plugin, and should be used to persist information securely. Use in
-	 * conjunction with {@link StreamDeckClient.getGlobalSettings}.
-	 * @param settings Settings to save.
-	 * @returns `Promise` resolved when the global `settings` are sent to Stream Deck.
-	 * @example
-	 * streamDeck.client.setGlobalSettings({
-	 *   apiKey,
-	 *   connectedDate: new Date()
-	 * })
-	 */
-	public setGlobalSettings<T>(settings: T): Promise<void> {
-		return this.connection.send({
-			event: "setGlobalSettings",
-			context: this.connection.registrationParameters.pluginUUID,
-			payload: settings
 		});
 	}
 

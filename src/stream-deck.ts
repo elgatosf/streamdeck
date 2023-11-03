@@ -7,6 +7,7 @@ import { I18nProvider } from "./i18n";
 import { Logger, createLogger } from "./logging";
 import { Manifest, getManifest } from "./manifest";
 import { ProfilesController } from "./profiles";
+import { SettingsClient } from "./settings";
 import { System } from "./system";
 
 /**
@@ -57,6 +58,11 @@ export class StreamDeck {
 	 * Private backing field for {@link StreamDeck.registrationParameters}
 	 */
 	private _registrationParameters: RegistrationParameters | undefined;
+
+	/**
+	 * Private backing field for {@link StreamDeck.settings};
+	 */
+	private _settings: SettingsClient | undefined;
 
 	/**
 	 * Private backing field for {@link StreamDeck.system};
@@ -130,6 +136,14 @@ export class StreamDeck {
 	 */
 	public get profiles(): ProfilesController {
 		return this._profiles || (this._profiles = new ProfilesController(this.connection));
+	}
+
+	/**
+	 * Provides management of settings associated with the Stream Deck plugin.
+	 * @returns The {@link System}.
+	 */
+	public get settings(): SettingsClient {
+		return this._settings || (this._settings = new SettingsClient(this.connection));
 	}
 
 	/**
