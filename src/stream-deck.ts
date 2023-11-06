@@ -1,4 +1,4 @@
-import { ActionsController } from "./actions/actions-controller";
+import { ActionRegistry } from "./actions/action-registry";
 import { StreamDeckClient } from "./client";
 import { StreamDeckConnection } from "./connectivity/connection";
 import { RegistrationInfo, RegistrationParameters } from "./connectivity/registration";
@@ -17,7 +17,7 @@ export class StreamDeck {
 	/**
 	 * Private backing field for {@link StreamDeck.actions}.
 	 */
-	private _actions: ActionsController | undefined;
+	private _actions: ActionRegistry | undefined;
 
 	/**
 	 * Private backing field for {@link StreamDeck.client}.
@@ -73,8 +73,8 @@ export class StreamDeck {
 	 * Provides information about, and methods for interacting with, actions associated with the Stream Deck plugin.
 	 * @returns The {@link ActionsController}.
 	 */
-	public get actions(): ActionsController {
-		return this._actions || (this._actions = new ActionsController(this.client, this.manifest, this.logger));
+	public get actions(): ActionRegistry {
+		return this._actions || (this._actions = new ActionRegistry(this.client, this.manifest, this.logger));
 	}
 
 	/**
