@@ -1,6 +1,5 @@
 import { Action } from "../actions/action";
-import type { StreamDeckClient } from "../client";
-import * as api from "../connectivity/events";
+import type * as api from "../connectivity/events";
 import { Event } from "./event";
 
 /**
@@ -11,24 +10,20 @@ export class ActionWithoutPayloadEvent<
 	TSettings extends api.PayloadObject<TSettings>
 > extends Event<TSource> {
 	/**
-	 * The action that raised the event.
-	 */
-	public readonly action: Action<TSettings>;
-
-	/**
 	 * Device identifier the action is associated with.
 	 */
 	public readonly deviceId: string;
 
 	/**
 	 * Initializes a new instance of the {@link ActionWithoutPayloadEvent} class.
-	 * @param client The Stream Deck client that raised the event.
+	 * @param action Action that raised the event.
 	 * @param source Source of the event, i.e. the original message from Stream Deck.
 	 */
-	constructor(client: StreamDeckClient, source: TSource) {
+	constructor(
+		public readonly action: Action<TSettings>,
+		source: TSource
+	) {
 		super(source);
-
-		this.action = new Action<TSettings>(client, source.action, source.context);
 		this.deviceId = source.device;
 	}
 }
@@ -47,11 +42,11 @@ export class ActionEvent<
 
 	/**
 	 * Initializes a new instance of the {@link ActionEvent} class.
-	 * @param client The Stream Deck client that raised the event.
+	 * @param action Action that raised the event.
 	 * @param source Source of the event, i.e. the original message from Stream Deck.
 	 */
-	constructor(client: StreamDeckClient, source: TSource) {
-		super(client, source);
+	constructor(action: Action<TSettings>, source: TSource) {
+		super(action, source);
 		this.payload = source.payload;
 	}
 }

@@ -1,4 +1,4 @@
-import { getMockedClient } from "../../../tests/__mocks__/client";
+import { getMockedActionContainer } from "../../../tests/__mocks__/action-container";
 import { manifest as mockedManifest } from "../../__mocks__/manifest";
 import * as mockEvents from "../../connectivity/__mocks__/events";
 import {
@@ -17,23 +17,23 @@ import {
 	WillDisappearEvent
 } from "../../events";
 import { Action } from "../action";
-import { ActionRegistry } from "../action-registry";
+import { ActionContainer } from "../action-container";
 import type { SingletonAction } from "../singleton-action";
 
 jest.mock("../singleton-action");
 
-describe("ActionRegistry", () => {
+describe("ActionContainer", () => {
 	it("Creates a scoped logger", () => {
 		// Arrange.
-		const { logger, client } = getMockedClient();
+		const { connection, logger } = getMockedActionContainer();
 		const createScopeSpy = jest.spyOn(logger, "createScope");
 
 		// Act.
-		new ActionRegistry(client, mockedManifest, logger);
+		new ActionContainer(connection, mockedManifest, logger);
 
 		// Act.
 		expect(createScopeSpy).toHaveBeenCalledTimes(1);
-		expect(createScopeSpy).toHaveBeenCalledWith("ActionRegistry");
+		expect(createScopeSpy).toHaveBeenCalledWith("ActionContainer");
 	});
 
 	describe("registerAction", () => {
@@ -43,24 +43,24 @@ describe("ActionRegistry", () => {
 
 		it("Validates the manifestId is not undefined", () => {
 			// Arrange.
-			const { client, logger } = getMockedClient();
-			const registrar = new ActionRegistry(client, mockedManifest, logger);
+			const { connection, logger } = getMockedActionContainer();
+			const container = new ActionContainer(connection, mockedManifest, logger);
 
 			const action: SingletonAction = {
 				manifestId: undefined
 			};
 
 			// Act, assert.
-			expect(() => registrar.registerAction(action)).toThrow("The action's manifestId cannot be undefined.");
+			expect(() => container.registerAction(action)).toThrow("The action's manifestId cannot be undefined.");
 		});
 
 		it("Warns when action does not exist in manifest", () => {
 			// Arrange.
-			const { client, logger, scopedLogger } = getMockedClient();
-			const registrar = new ActionRegistry(client, mockedManifest, logger);
+			const { connection, logger, scopedLogger } = getMockedActionContainer();
+			const container = new ActionContainer(connection, mockedManifest, logger);
 
 			// Act.
-			registrar.registerAction({
+			container.registerAction({
 				manifestId: "com.elgato.action-service.__one"
 			});
 
@@ -71,8 +71,8 @@ describe("ActionRegistry", () => {
 
 		it("Routes onDialDown", () => {
 			// Arrange.
-			const { connection, client, logger } = getMockedClient();
-			const registrar = new ActionRegistry(client, mockedManifest, logger);
+			const { connection, logger } = getMockedActionContainer();
+			const container = new ActionContainer(connection, mockedManifest, logger);
 
 			const action: SingletonAction = {
 				manifestId,
@@ -80,7 +80,7 @@ describe("ActionRegistry", () => {
 			};
 
 			// Act.
-			registrar.registerAction(action);
+			container.registerAction(action);
 
 			const { device, payload, context } = connection.__emit({
 				...mockEvents.dialDown,
@@ -92,7 +92,7 @@ describe("ActionRegistry", () => {
 			// Assert.
 			expect(action.onDialDown).toHaveBeenCalledTimes(1);
 			expect(action.onDialDown).toHaveBeenCalledWith<[DialDownEvent<mockEvents.Settings>]>({
-				action: new Action(client, manifestId, context),
+				action: new Action(container.controller, manifestId, context),
 				deviceId: device,
 				payload,
 				type: "dialDown"
@@ -101,8 +101,8 @@ describe("ActionRegistry", () => {
 
 		it("Routes onDialRotate", () => {
 			// Arrange.
-			const { connection, client, logger } = getMockedClient();
-			const registrar = new ActionRegistry(client, mockedManifest, logger);
+			const { connection, logger } = getMockedActionContainer();
+			const container = new ActionContainer(connection, mockedManifest, logger);
 
 			const action: SingletonAction = {
 				manifestId,
@@ -110,7 +110,7 @@ describe("ActionRegistry", () => {
 			};
 
 			// Act.
-			registrar.registerAction(action);
+			container.registerAction(action);
 
 			const { device, payload, context } = connection.__emit({
 				...mockEvents.dialRotate,
@@ -123,7 +123,7 @@ describe("ActionRegistry", () => {
 			expect(action.onDialRotate).toHaveBeenCalledTimes(1);
 			expect((action.onDialRotate as jest.Mock).mock.contexts[0]).toStrictEqual(action);
 			expect(action.onDialRotate).toHaveBeenCalledWith<[DialRotateEvent<mockEvents.Settings>]>({
-				action: new Action(client, manifestId, context),
+				action: new Action(container.controller, manifestId, context),
 				deviceId: device,
 				payload,
 				type: "dialRotate"
@@ -132,8 +132,8 @@ describe("ActionRegistry", () => {
 
 		it("Routes onDialUp", () => {
 			// Arrange.
-			const { connection, client, logger } = getMockedClient();
-			const registrar = new ActionRegistry(client, mockedManifest, logger);
+			const { connection, logger } = getMockedActionContainer();
+			const container = new ActionContainer(connection, mockedManifest, logger);
 
 			const action: SingletonAction = {
 				manifestId,
@@ -141,7 +141,7 @@ describe("ActionRegistry", () => {
 			};
 
 			// Act.
-			registrar.registerAction(action);
+			container.registerAction(action);
 
 			const { device, payload, context } = connection.__emit({
 				...mockEvents.dialUp,
@@ -154,7 +154,7 @@ describe("ActionRegistry", () => {
 			expect(action.onDialUp).toHaveBeenCalledTimes(1);
 			expect((action.onDialUp as jest.Mock).mock.contexts[0]).toStrictEqual(action);
 			expect(action.onDialUp).toHaveBeenCalledWith<[DialUpEvent<mockEvents.Settings>]>({
-				action: new Action(client, manifestId, context),
+				action: new Action(container.controller, manifestId, context),
 				deviceId: device,
 				payload,
 				type: "dialUp"
@@ -163,8 +163,8 @@ describe("ActionRegistry", () => {
 
 		it("Routes onDidReceiveSettings", () => {
 			// Arrange.
-			const { connection, client, logger } = getMockedClient();
-			const registrar = new ActionRegistry(client, mockedManifest, logger);
+			const { connection, logger } = getMockedActionContainer();
+			const container = new ActionContainer(connection, mockedManifest, logger);
 
 			const action: SingletonAction = {
 				manifestId,
@@ -172,7 +172,7 @@ describe("ActionRegistry", () => {
 			};
 
 			// Act.
-			registrar.registerAction(action);
+			container.registerAction(action);
 
 			const { device, payload, context } = connection.__emit({
 				...mockEvents.didReceiveSettings,
@@ -185,7 +185,7 @@ describe("ActionRegistry", () => {
 			expect(action.onDidReceiveSettings).toHaveBeenCalledTimes(1);
 			expect((action.onDidReceiveSettings as jest.Mock).mock.contexts[0]).toStrictEqual(action);
 			expect(action.onDidReceiveSettings).toHaveBeenCalledWith<[DidReceiveSettingsEvent<mockEvents.Settings>]>({
-				action: new Action(client, manifestId, context),
+				action: new Action(container.controller, manifestId, context),
 				deviceId: device,
 				payload,
 				type: "didReceiveSettings"
@@ -194,8 +194,8 @@ describe("ActionRegistry", () => {
 
 		it("Routes onKeyDown", () => {
 			// Arrange.
-			const { connection, client, logger } = getMockedClient();
-			const registrar = new ActionRegistry(client, mockedManifest, logger);
+			const { connection, logger } = getMockedActionContainer();
+			const container = new ActionContainer(connection, mockedManifest, logger);
 
 			const action: SingletonAction = {
 				manifestId,
@@ -203,7 +203,7 @@ describe("ActionRegistry", () => {
 			};
 
 			// Act.
-			registrar.registerAction(action);
+			container.registerAction(action);
 
 			const { device, payload, context } = connection.__emit({
 				...mockEvents.keyDown,
@@ -216,7 +216,7 @@ describe("ActionRegistry", () => {
 			expect(action.onKeyDown).toHaveBeenCalledTimes(1);
 			expect((action.onKeyDown as jest.Mock).mock.contexts[0]).toStrictEqual(action);
 			expect(action.onKeyDown).toHaveBeenCalledWith<[KeyDownEvent<mockEvents.Settings>]>({
-				action: new Action(client, manifestId, context),
+				action: new Action(container.controller, manifestId, context),
 				deviceId: device,
 				payload,
 				type: "keyDown"
@@ -225,8 +225,8 @@ describe("ActionRegistry", () => {
 
 		it("Routes onKeyUp", () => {
 			// Arrange.
-			const { connection, client, logger } = getMockedClient();
-			const registrar = new ActionRegistry(client, mockedManifest, logger);
+			const { connection, logger } = getMockedActionContainer();
+			const container = new ActionContainer(connection, mockedManifest, logger);
 
 			const action: SingletonAction = {
 				manifestId,
@@ -234,7 +234,7 @@ describe("ActionRegistry", () => {
 			};
 
 			// Act.
-			registrar.registerAction(action);
+			container.registerAction(action);
 
 			const { device, payload, context } = connection.__emit({
 				...mockEvents.keyUp,
@@ -247,7 +247,7 @@ describe("ActionRegistry", () => {
 			expect(action.onKeyUp).toHaveBeenCalledTimes(1);
 			expect((action.onKeyUp as jest.Mock).mock.contexts[0]).toStrictEqual(action);
 			expect(action.onKeyUp).toHaveBeenCalledWith<[KeyUpEvent<mockEvents.Settings>]>({
-				action: new Action(client, manifestId, context),
+				action: new Action(container.controller, manifestId, context),
 				deviceId: device,
 				payload,
 				type: "keyUp"
@@ -256,8 +256,8 @@ describe("ActionRegistry", () => {
 
 		it("Routes onPropertyInspectorDidAppear", () => {
 			// Arrange.
-			const { connection, client, logger } = getMockedClient();
-			const registrar = new ActionRegistry(client, mockedManifest, logger);
+			const { connection, logger } = getMockedActionContainer();
+			const container = new ActionContainer(connection, mockedManifest, logger);
 
 			const action: SingletonAction = {
 				manifestId,
@@ -265,7 +265,7 @@ describe("ActionRegistry", () => {
 			};
 
 			// Act.
-			registrar.registerAction(action);
+			container.registerAction(action);
 
 			const { device, context } = connection.__emit({
 				...mockEvents.propertyInspectorDidAppear,
@@ -278,7 +278,7 @@ describe("ActionRegistry", () => {
 			expect(action.onPropertyInspectorDidAppear).toHaveBeenCalledTimes(1);
 			expect((action.onPropertyInspectorDidAppear as jest.Mock).mock.contexts[0]).toStrictEqual(action);
 			expect(action.onPropertyInspectorDidAppear).toHaveBeenCalledWith<[PropertyInspectorDidAppearEvent<never>]>({
-				action: new Action(client, manifestId, context),
+				action: new Action(container.controller, manifestId, context),
 				deviceId: device,
 				type: "propertyInspectorDidAppear"
 			});
@@ -286,8 +286,8 @@ describe("ActionRegistry", () => {
 
 		it("Routes onPropertyInspectorDidDisappear", () => {
 			// Arrange.
-			const { connection, client, logger } = getMockedClient();
-			const registrar = new ActionRegistry(client, mockedManifest, logger);
+			const { connection, logger } = getMockedActionContainer();
+			const container = new ActionContainer(connection, mockedManifest, logger);
 
 			const action: SingletonAction = {
 				manifestId,
@@ -295,7 +295,7 @@ describe("ActionRegistry", () => {
 			};
 
 			// Act.
-			registrar.registerAction(action);
+			container.registerAction(action);
 
 			const { device, context } = connection.__emit({
 				...mockEvents.propertyInspectorDidDisappear,
@@ -308,7 +308,7 @@ describe("ActionRegistry", () => {
 			expect(action.onPropertyInspectorDidDisappear).toHaveBeenCalledTimes(1);
 			expect((action.onPropertyInspectorDidDisappear as jest.Mock).mock.contexts[0]).toStrictEqual(action);
 			expect(action.onPropertyInspectorDidDisappear).toHaveBeenCalledWith<[PropertyInspectorDidDisappearEvent<never>]>({
-				action: new Action(client, manifestId, context),
+				action: new Action(container.controller, manifestId, context),
 				deviceId: device,
 				type: "propertyInspectorDidDisappear"
 			});
@@ -316,8 +316,8 @@ describe("ActionRegistry", () => {
 
 		it("Routes onSendToPlugin", () => {
 			// Arrange.
-			const { connection, client, logger } = getMockedClient();
-			const registrar = new ActionRegistry(client, mockedManifest, logger);
+			const { connection, logger } = getMockedActionContainer();
+			const container = new ActionContainer(connection, mockedManifest, logger);
 
 			const action: SingletonAction = {
 				manifestId,
@@ -325,7 +325,7 @@ describe("ActionRegistry", () => {
 			};
 
 			// Act.
-			registrar.registerAction(action);
+			container.registerAction(action);
 
 			const { payload, context } = connection.__emit({
 				...mockEvents.sendToPlugin,
@@ -338,7 +338,7 @@ describe("ActionRegistry", () => {
 			expect(action.onSendToPlugin).toHaveBeenCalledTimes(1);
 			expect((action.onSendToPlugin as jest.Mock).mock.contexts[0]).toStrictEqual(action);
 			expect(action.onSendToPlugin).toHaveBeenCalledWith<[SendToPluginEvent<mockEvents.Settings, never>]>({
-				action: new Action(client, manifestId, context),
+				action: new Action(container.controller, manifestId, context),
 				payload,
 				type: "sendToPlugin"
 			});
@@ -346,8 +346,8 @@ describe("ActionRegistry", () => {
 
 		it("Routes onTitleParametersDidChange", () => {
 			// Arrange.
-			const { connection, client, logger } = getMockedClient();
-			const registrar = new ActionRegistry(client, mockedManifest, logger);
+			const { connection, logger } = getMockedActionContainer();
+			const container = new ActionContainer(connection, mockedManifest, logger);
 
 			const action: SingletonAction = {
 				manifestId,
@@ -355,7 +355,7 @@ describe("ActionRegistry", () => {
 			};
 
 			// Act.
-			registrar.registerAction(action);
+			container.registerAction(action);
 
 			const { device, payload, context } = connection.__emit({
 				...mockEvents.titleParametersDidChange,
@@ -368,7 +368,7 @@ describe("ActionRegistry", () => {
 			expect(action.onTitleParametersDidChange).toHaveBeenCalledTimes(1);
 			expect((action.onTitleParametersDidChange as jest.Mock).mock.contexts[0]).toStrictEqual(action);
 			expect(action.onTitleParametersDidChange).toHaveBeenCalledWith<[TitleParametersDidChangeEvent<mockEvents.Settings>]>({
-				action: new Action(client, manifestId, context),
+				action: new Action(container.controller, manifestId, context),
 				deviceId: device,
 				payload,
 				type: "titleParametersDidChange"
@@ -377,8 +377,8 @@ describe("ActionRegistry", () => {
 
 		it("Routes onTouchTap", () => {
 			// Arrange.
-			const { connection, client, logger } = getMockedClient();
-			const registrar = new ActionRegistry(client, mockedManifest, logger);
+			const { connection, logger } = getMockedActionContainer();
+			const container = new ActionContainer(connection, mockedManifest, logger);
 
 			const action: SingletonAction = {
 				manifestId,
@@ -386,7 +386,7 @@ describe("ActionRegistry", () => {
 			};
 
 			// Act.
-			registrar.registerAction(action);
+			container.registerAction(action);
 
 			const { device, payload, context } = connection.__emit({
 				...mockEvents.touchTap,
@@ -399,7 +399,7 @@ describe("ActionRegistry", () => {
 			expect(action.onTouchTap).toHaveBeenCalledTimes(1);
 			expect((action.onTouchTap as jest.Mock).mock.contexts[0]).toStrictEqual(action);
 			expect(action.onTouchTap).toHaveBeenCalledWith<[TouchTapEvent<mockEvents.Settings>]>({
-				action: new Action(client, manifestId, context),
+				action: new Action(container.controller, manifestId, context),
 				deviceId: device,
 				payload,
 				type: "touchTap"
@@ -408,8 +408,8 @@ describe("ActionRegistry", () => {
 
 		it("Routes onWillAppear", () => {
 			// Arrange.
-			const { connection, client, logger } = getMockedClient();
-			const registrar = new ActionRegistry(client, mockedManifest, logger);
+			const { connection, logger } = getMockedActionContainer();
+			const container = new ActionContainer(connection, mockedManifest, logger);
 
 			const action: SingletonAction = {
 				manifestId,
@@ -417,7 +417,7 @@ describe("ActionRegistry", () => {
 			};
 
 			// Act.
-			registrar.registerAction(action);
+			container.registerAction(action);
 
 			const { device, payload, context } = connection.__emit({
 				...mockEvents.willAppear,
@@ -430,7 +430,7 @@ describe("ActionRegistry", () => {
 			expect(action.onWillAppear).toHaveBeenCalledTimes(1);
 			expect((action.onWillAppear as jest.Mock).mock.contexts[0]).toStrictEqual(action);
 			expect(action.onWillAppear).toHaveBeenCalledWith<[WillAppearEvent<mockEvents.Settings>]>({
-				action: new Action(client, manifestId, context),
+				action: new Action(container.controller, manifestId, context),
 				deviceId: device,
 				payload,
 				type: "willAppear"
@@ -439,8 +439,8 @@ describe("ActionRegistry", () => {
 
 		it("Routes onWillDisappear", () => {
 			// Arrange.
-			const { connection, client, logger } = getMockedClient();
-			const registrar = new ActionRegistry(client, mockedManifest, logger);
+			const { connection, logger } = getMockedActionContainer();
+			const container = new ActionContainer(connection, mockedManifest, logger);
 
 			const action: SingletonAction = {
 				manifestId,
@@ -448,7 +448,7 @@ describe("ActionRegistry", () => {
 			};
 
 			// Act.
-			registrar.registerAction(action);
+			container.registerAction(action);
 
 			const { device, payload, context } = connection.__emit({
 				...mockEvents.willDisappear,
@@ -461,7 +461,7 @@ describe("ActionRegistry", () => {
 			expect(action.onWillDisappear).toHaveBeenCalledTimes(1);
 			expect((action.onWillDisappear as jest.Mock).mock.contexts[0]).toStrictEqual(action);
 			expect(action.onWillDisappear).toHaveBeenCalledWith<[WillDisappearEvent<mockEvents.Settings>]>({
-				action: new Action(client, manifestId, context),
+				action: new Action(container.controller, manifestId, context),
 				deviceId: device,
 				payload,
 				type: "willDisappear"
@@ -470,13 +470,13 @@ describe("ActionRegistry", () => {
 
 		it("Ignore undefined handlers", () => {
 			// Arrange.
-			const { connection, client, logger } = getMockedClient();
-			const registrar = new ActionRegistry(client, mockedManifest, logger);
+			const { connection, logger } = getMockedActionContainer();
+			const container = new ActionContainer(connection, mockedManifest, logger);
 
 			const onSpy = jest.spyOn(connection, "on");
 
 			// Act.
-			registrar.registerAction({ manifestId });
+			container.registerAction({ manifestId });
 
 			// Assert.
 			expect(onSpy).not.toHaveBeenCalled();

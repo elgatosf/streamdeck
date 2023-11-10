@@ -1,105 +1,44 @@
-import { SetImage, SetTitle, SetTriggerDescription } from "./connectivity/commands";
-import { StreamDeckConnection } from "./connectivity/connection";
-import * as api from "./connectivity/events";
-import { State } from "./connectivity/events";
-import { FeedbackPayload } from "./connectivity/layouts";
-import { Device } from "./devices";
+import type { SetImage, SetTitle, SetTriggerDescription } from "../connectivity/commands";
+import type { StreamDeckConnection } from "../connectivity/connection";
+import type * as api from "../connectivity/events";
+import type { State } from "../connectivity/events";
+import type { FeedbackPayload } from "../connectivity/layouts";
 import {
 	ActionEvent,
-	ActionWithoutPayloadEvent,
-	DeviceDidConnectEvent,
-	DeviceDidDisconnectEvent,
-	DeviceEvent,
 	DialDownEvent,
 	DialRotateEvent,
 	DialUpEvent,
-	DidReceiveSettingsEvent,
 	KeyDownEvent,
 	KeyUpEvent,
-	PropertyInspectorDidAppearEvent,
-	PropertyInspectorDidDisappearEvent,
-	SendToPluginEvent,
 	TitleParametersDidChangeEvent,
 	TouchTapEvent,
 	WillAppearEvent,
 	WillDisappearEvent
-} from "./events";
+} from "../events";
+import type { IActionContainer } from "./action-container";
+import type { SingletonAction } from "./singleton-action";
 
 /**
- * Provides the main bridge between the plugin and the Stream Deck allowing the plugin to send requests and receive events, e.g. when the user presses an action.
+ * Client responsible for interacting with Stream Deck actions.
  */
-export class StreamDeckClient {
+export class ActionClient implements Pick<IActionContainer, "registerAction"> {
 	/**
-	 * Initializes a new instance of the {@link StreamDeckClient} class.
+	 * Initializes a new instance of the {@link ActionClient} class.
 	 * @param connection Underlying connection with the Stream Deck.
-	 * @param devices Device collection responsible for tracking devices.
+	 * @param container Action container capable of resolving Stream Deck actions.
 	 */
 	constructor(
 		private readonly connection: StreamDeckConnection,
-		private readonly devices: ReadonlyMap<string, Device>
+		private readonly container: IActionContainer
 	) {}
 
 	/**
-	 * Gets the settings associated with an instance of an action, as identified by the {@link context}. An instance of an action represents a button, dial, pedal, etc. See also
-	 * {@link StreamDeckClient.setSettings}.
-	 * @template T The type of settings associated with the action.
-	 * @param context Unique identifier of the action instance whose settings are being requested.
-	 * @returns Promise containing the action instance's settings.
-	 */
-	public getSettings<T extends api.PayloadObject<T> = object>(context: string): Promise<T> {
-		return new Promise((resolve) => {
-			const callback = (ev: api.DidReceiveSettings<T>): void => {
-				if (ev.context == context) {
-					resolve(ev.payload.settings);
-					this.connection.removeListener("didReceiveSettings", callback);
-				}
-			};
-
-			this.connection.on("didReceiveSettings", callback);
-			this.connection.send({
-				event: "getSettings",
-				context
-			});
-		});
-	}
-
-	/**
-	 * Occurs when a Stream Deck device is connected. Also see {@link StreamDeckClient.onDeviceDidConnect}.
-	 * @param listener Function to be invoked when the event occurs.
-	 */
-	public onDeviceDidConnect(listener: (ev: DeviceDidConnectEvent) => void): void {
-		this.connection.on("deviceDidConnect", (ev) =>
-			listener(
-				new DeviceEvent(ev, {
-					...ev.deviceInfo,
-					...{ id: ev.device, isConnected: true }
-				})
-			)
-		);
-	}
-
-	/**
-	 * Occurs when a Stream Deck device is disconnected. Also see {@link StreamDeckClient.onDeviceDidDisconnect}.
-	 * @param listener Function to be invoked when the event occurs.
-	 */
-	public onDeviceDidDisconnect(listener: (ev: DeviceDidDisconnectEvent) => void): void {
-		this.connection.on("deviceDidDisconnect", (ev) =>
-			listener(
-				new DeviceEvent(ev, {
-					...this.devices.get(ev.device),
-					...{ id: ev.device, isConnected: false }
-				})
-			)
-		);
-	}
-
-	/**
-	 * Occurs when the user presses a dial (Stream Deck+). **NB** For other action types see {@link StreamDeckClient.onKeyDown}. Also see {@link StreamDeckClient.onDialUp}.
+	 * Occurs when the user presses a dial (Stream Deck+). **NB** For other action types see {@link ActionClient.onKeyDown}. Also see {@link ActionClient.onDialUp}.
 	 * @template T The type of settings associated with the action.
 	 * @param listener Function to be invoked when the event occurs.
 	 */
 	public onDialDown<T extends api.PayloadObject<T> = object>(listener: (ev: DialDownEvent<T>) => void): void {
-		this.connection.on("dialDown", (ev: api.DialDown<T>) => listener(new ActionEvent<api.DialDown<T>>(this, ev)));
+		this.connection.on("dialDown", (ev: api.DialDown<T>) => listener(new ActionEvent<api.DialDown<T>>(this.container.resolveAction<T>(ev), ev)));
 	}
 
 	/**
@@ -108,83 +47,45 @@ export class StreamDeckClient {
 	 * @param listener Function to be invoked when the event occurs.
 	 */
 	public onDialRotate<T extends api.PayloadObject<T> = object>(listener: (ev: DialRotateEvent<T>) => void): void {
-		this.connection.on("dialRotate", (ev: api.DialRotate<T>) => listener(new ActionEvent<api.DialRotate<T>>(this, ev)));
+		this.connection.on("dialRotate", (ev: api.DialRotate<T>) => listener(new ActionEvent<api.DialRotate<T>>(this.container.resolveAction<T>(ev), ev)));
 	}
 
 	/**
-	 * Occurs when the user releases a pressed dial (Stream Deck+). **NB** For other action types see {@link StreamDeckClient.onKeyUp}. Also see {@link StreamDeckClient.onDialDown}.
+	 * Occurs when the user releases a pressed dial (Stream Deck+). **NB** For other action types see {@link ActionClient.onKeyUp}. Also see {@link ActionClient.onDialDown}.
 	 * @template T The type of settings associated with the action.
 	 * @param listener Function to be invoked when the event occurs.
 	 */
 	public onDialUp<T extends api.PayloadObject<T> = object>(listener: (ev: DialUpEvent<T>) => void): void {
-		this.connection.on("dialUp", (ev: api.DialUp<T>) => listener(new ActionEvent<api.DialUp<T>>(this, ev)));
+		this.connection.on("dialUp", (ev: api.DialUp<T>) => listener(new ActionEvent<api.DialUp<T>>(this.container.resolveAction<T>(ev), ev)));
 	}
 
 	/**
-	 * Occurs when the settings associated with an action instance are requested using {@link StreamDeckClient.getSettings}, or when the the settings were updated by the property inspector.
-	 * @template T The type of settings associated with the action.
-	 * @param listener Function to be invoked when the event occurs.
-	 */
-	public onDidReceiveSettings<T extends api.PayloadObject<T> = object>(listener: (ev: DidReceiveSettingsEvent<T>) => void): void {
-		this.connection.on("didReceiveSettings", (ev: api.DidReceiveSettings<T>) => listener(new ActionEvent<api.DidReceiveSettings<T>>(this, ev)));
-	}
-
-	/**
-	 * Occurs when the user presses a action down. **NB** For dials / touchscreens see {@link StreamDeckClient.onDialDown}. Also see {@link StreamDeckClient.onKeyUp}.
+	 * Occurs when the user presses a action down. **NB** For dials / touchscreens see {@link ActionClient.onDialDown}. Also see {@link ActionClient.onKeyUp}.
 	 * @template T The type of settings associated with the action.
 	 * @param listener Function to be invoked when the event occurs.
 	 */
 	public onKeyDown<T extends api.PayloadObject<T> = object>(listener: (ev: KeyDownEvent<T>) => void): void {
-		this.connection.on("keyDown", (ev: api.KeyDown<T>) => listener(new ActionEvent<api.KeyDown<T>>(this, ev)));
+		this.connection.on("keyDown", (ev: api.KeyDown<T>) => listener(new ActionEvent<api.KeyDown<T>>(this.container.resolveAction<T>(ev), ev)));
 	}
 
 	/**
-	 * Occurs when the user releases a pressed action. **NB** For dials / touchscreens see {@link StreamDeckClient.onDialUp}. Also see {@link StreamDeckClient.onKeyDown}.
+	 * Occurs when the user releases a pressed action. **NB** For dials / touchscreens see {@link ActionClient.onDialUp}. Also see {@link ActionClient.onKeyDown}.
 	 * @template T The type of settings associated with the action.
 	 * @param listener Function to be invoked when the event occurs.
 	 */
 	public onKeyUp<T extends api.PayloadObject<T> = object>(listener: (ev: KeyUpEvent<T>) => void): void {
-		this.connection.on("keyUp", (ev: api.KeyUp<T>) => listener(new ActionEvent<api.KeyUp<T>>(this, ev)));
+		this.connection.on("keyUp", (ev: api.KeyUp<T>) => listener(new ActionEvent<api.KeyUp<T>>(this.container.resolveAction<T>(ev), ev)));
 	}
 
 	/**
-	 * Occurs when the property inspector associated with the action becomes visible, i.e. the user selected an action in the Stream Deck application. Also see {@link StreamDeckClient.onPropertyInspectorDidDisappear}.
-	 * @template T The type of settings associated with the action.
-	 * @param listener Function to be invoked when the event occurs.
-	 */
-	public onPropertyInspectorDidAppear<T extends api.PayloadObject<T> = object>(listener: (ev: PropertyInspectorDidAppearEvent<T>) => void): void {
-		this.connection.on("propertyInspectorDidAppear", (ev: api.PropertyInspectorDidAppear) => listener(new ActionWithoutPayloadEvent<api.PropertyInspectorDidAppear, T>(this, ev)));
-	}
-
-	/**
-	 * Occurs when the property inspector associated with the action becomes invisible, i.e. the user unselected the action in the Stream Deck application. Also see {@link StreamDeckClient.onPropertyInspectorDidAppear}.
-	 * @template T The type of settings associated with the action.
-	 * @param listener Function to be invoked when the event occurs.
-	 */
-	public onPropertyInspectorDidDisappear<T extends api.PayloadObject<T> = object>(listener: (ev: PropertyInspectorDidDisappearEvent<T>) => void): void {
-		this.connection.on("propertyInspectorDidDisappear", (ev: api.PropertyInspectorDidDisappear) =>
-			listener(new ActionWithoutPayloadEvent<api.PropertyInspectorDidDisappear, T>(this, ev))
-		);
-	}
-
-	/**
-	 * Occurs when a message was sent to the plugin _from_ the property inspector. The plugin can also send messages _to_ the property inspector using {@link StreamDeckClient.sendToPropertyInspector}.
-	 * @template T The type of the payload received from the property inspector.
-	 * @param listener Function to be invoked when the event occurs.
-	 */
-	public onSendToPlugin<T extends api.PayloadObject<T> = object, TSettings extends api.PayloadObject<TSettings> = object>(
-		listener: (ev: SendToPluginEvent<T, TSettings>) => void
-	): void {
-		this.connection.on("sendToPlugin", (ev: api.SendToPlugin<T>) => listener(new SendToPluginEvent<T, TSettings>(this, ev)));
-	}
-
-	/**
-	 * Occurs when the user updates an action's title settings in the Stream Deck application. Also see {@link StreamDeckClient.setTitle}.
+	 * Occurs when the user updates an action's title settings in the Stream Deck application. Also see {@link ActionClient.setTitle}.
 	 * @template T The type of settings associated with the action.
 	 * @param listener Function to be invoked when the event occurs.
 	 */
 	public onTitleParametersDidChange<T extends api.PayloadObject<T> = object>(listener: (ev: TitleParametersDidChangeEvent<T>) => void): void {
-		this.connection.on("titleParametersDidChange", (ev: api.TitleParametersDidChange<T>) => listener(new ActionEvent<api.TitleParametersDidChange<T>>(this, ev)));
+		this.connection.on("titleParametersDidChange", (ev: api.TitleParametersDidChange<T>) =>
+			listener(new ActionEvent<api.TitleParametersDidChange<T>>(this.container.resolveAction<T>(ev), ev))
+		);
 	}
 
 	/**
@@ -193,7 +94,7 @@ export class StreamDeckClient {
 	 * @param listener Function to be invoked when the event occurs.
 	 */
 	public onTouchTap<TSettings extends api.PayloadObject<TSettings> = object>(listener: (ev: TouchTapEvent<TSettings>) => void): void {
-		this.connection.on("touchTap", (ev: api.TouchTap<TSettings>) => listener(new ActionEvent<api.TouchTap<TSettings>>(this, ev)));
+		this.connection.on("touchTap", (ev: api.TouchTap<TSettings>) => listener(new ActionEvent<api.TouchTap<TSettings>>(this.container.resolveAction<TSettings>(ev), ev)));
 	}
 
 	/**
@@ -203,7 +104,7 @@ export class StreamDeckClient {
 	 * @param listener Function to be invoked when the event occurs.
 	 */
 	public onWillAppear<T extends api.PayloadObject<T> = object>(listener: (ev: WillAppearEvent<T>) => void): void {
-		this.connection.on("willAppear", (ev: api.WillAppear<T>) => listener(new ActionEvent<api.WillAppear<T>>(this, ev)));
+		this.connection.on("willAppear", (ev: api.WillAppear<T>) => listener(new ActionEvent<api.WillAppear<T>>(this.container.resolveAction<T>(ev), ev)));
 	}
 
 	/**
@@ -213,28 +114,19 @@ export class StreamDeckClient {
 	 * @param listener Function to be invoked when the event occurs.
 	 */
 	public onWillDisappear<T extends api.PayloadObject<T> = object>(listener: (ev: WillDisappearEvent<T>) => void): void {
-		this.connection.on("willDisappear", (ev: api.WillDisappear<T>) => listener(new ActionEvent<api.WillDisappear<T>>(this, ev)));
+		this.connection.on("willDisappear", (ev: api.WillDisappear<T>) => listener(new ActionEvent<api.WillDisappear<T>>(this.container.resolveAction<T>(ev), ev)));
 	}
 
 	/**
-	 * Sends the {@link payload} to the current property inspector associated with an instance of an action, as identified by the {@link context}. The plugin can also receive information
-	 * from the property inspector via the `"sendToPlugin"` event, allowing for bi-directional communication. **Note**, the {@link payload} is only received by the property inspector
-	 * when it is associated with the specified {@link context}.
-	 * @param context Unique identifier of the action instance whose property inspector will receive the {@link payload}.
-	 * @param payload Payload to send to the property inspector.
-	 * @returns `Promise` resolved when the request to send the {@link payload} to the property inspector has been sent to Stream Deck.
+	 * @inheritdoc
 	 */
-	public sendToPropertyInspector<T extends api.PayloadObject<T> = object>(context: string, payload: T): Promise<void> {
-		return this.connection.send({
-			event: "sendToPropertyInspector",
-			context,
-			payload
-		});
+	public registerAction<TAction extends SingletonAction<TSettings>, TSettings extends api.PayloadObject<TSettings> = object>(action: TAction): void {
+		this.container.registerAction<TAction, TSettings>(action);
 	}
 
 	/**
 	 * Sets the {@link feedback} for the layout associated with an action instance allowing for visual items to be updated. Layouts are a powerful way to provide dynamic information
-	 * to users, and can be assigned in the manifest, or dynamically via {@link StreamDeckClient.setFeedbackLayout}.
+	 * to users, and can be assigned in the manifest, or dynamically via {@link ActionClient.setFeedbackLayout}.
 	 *
 	 * The {@link feedback} payload defines which items within the layout should be updated, and are identified by their property name (defined as the `key` in the layout's definition).
 	 * The values can either by a complete new definition, a `string` for layout item types of `text` and `pixmap`, or a `number` for layout item types of `bar` and `gbar`.
@@ -266,7 +158,7 @@ export class StreamDeckClient {
 	 *
 	 * The layout item's text can be updated dynamically via.
 	 * ```
-	 * streamDeck.client.setFeedback(ctx, {
+	 * streamDeck.actions.setFeedback(ctx, {
 	 *  // "text_item" matches a "key" within the layout's JSON file.
 	 *   text_item: "Some new value"
 	 * })
@@ -274,7 +166,7 @@ export class StreamDeckClient {
 	 *
 	 * Alternatively, more information can be updated.
 	 * ```
-	 * streamDeck.client.setFeedback(ctx, {
+	 * streamDeck.actions.setFeedback(ctx, {
 	 *   text_item: { // <-- "text_item" matches a "key" within the layout's JSON file.
 	 *     value: "Some new value",
 	 *     alignment: "center"
@@ -295,7 +187,7 @@ export class StreamDeckClient {
 
 	/**
 	 * Sets the layout associated with an action instance, as identified by the {@link context}. The layout must be either a built-in layout identifier, or path to a local layout JSON file
-	 * within the plugin's folder. Use in conjunction with {@link StreamDeckClient.setFeedback} to update the layouts current settings once it has been changed.
+	 * within the plugin's folder. Use in conjunction with {@link ActionClient.setFeedback} to update the layouts current settings once it has been changed.
 	 * @param context Unique identifier of the action instance whose layout will be updated.
 	 * @param layout Name of a pre-defined layout, or relative path to a custom one.
 	 * @returns `Promise` resolved when the new layout has been sent to Stream Deck.
@@ -331,25 +223,6 @@ export class StreamDeckClient {
 	}
 
 	/**
-	 * Sets the {@link settings} associated with an instance of an action, as identified by the {@link context}. An instance of an action represents a button, dial, pedal, etc. Use
-	 * in conjunction with {@link StreamDeckClient.getSettings}.
-	 * @param context Unique identifier of the action instance whose settings will be updated.
-	 * @param settings Settings to associate with the action instance.
-	 * @returns `Promise` resolved when the {@link settings} are sent to Stream Deck.
-	 * @example
-	 * streamDeck.client.setSettings(ctx, {
-	 *   name: "Elgato"
-	 * })
-	 */
-	public setSettings<T>(context: string, settings: T): Promise<void> {
-		return this.connection.send({
-			event: "setSettings",
-			context,
-			payload: settings
-		});
-	}
-
-	/**
 	 * Sets the current state of an action instance; this only applies to actions that have multiple states defined within the manifest.
 	 * @param context Unique identifier of the action instance who state will be set.
 	 * @param state State to set; this be either 0, or 1.
@@ -366,7 +239,7 @@ export class StreamDeckClient {
 	}
 
 	/**
-	 * Sets the {@link title} displayed for an instance of an action, as identified by the {@link context}. See also {@link StreamDeckClient.onTitleParametersDidChange}.
+	 * Sets the {@link title} displayed for an instance of an action, as identified by the {@link context}. See also {@link ActionClient.onTitleParametersDidChange}.
 	 * @param context Unique identifier of the action instance whose title will be updated.
 	 * @param title Title to display; when undefined the title within the manifest will be used. **NB.** the title will only be set if the user has not specified a custom title.
 	 * @param options Additional options that define where and how the title should be rendered.

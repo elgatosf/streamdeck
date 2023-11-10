@@ -3,9 +3,9 @@ import { StreamDeckConnection } from "./connectivity/connection";
 /**
  * Provides interaction with Stream Deck profiles.
  */
-export class ProfilesController {
+export class ProfileClient {
 	/**
-	 * Initializes a new instance of the {@link ProfilesController} class.
+	 * Initializes a new instance of the {@link ProfileClient} class.
 	 * @param connection Underlying connection with the Stream Deck.
 	 */
 	constructor(private readonly connection: StreamDeckConnection) {}

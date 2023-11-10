@@ -1,16 +1,16 @@
 import { getMockedConnection } from "../../tests/__mocks__/connection";
 import { SwitchToProfile } from "../connectivity/commands";
 import { StreamDeckConnection } from "../connectivity/connection";
-import { ProfilesController } from "../profiles";
+import { ProfileClient } from "../profiles";
 
-describe("ProfilesController", () => {
+describe("ProfileClient", () => {
 	/**
-	 * Asserts {@link ProfilesController.switchToProfile} sends the command to the underlying {@link StreamDeckConnection}.
+	 * Asserts {@link ProfileClient.switchToProfile} sends the command to the underlying {@link StreamDeckConnection}.
 	 */
 	it("Sends switchToProfile", async () => {
 		// Arrange.
 		const { connection } = getMockedConnection();
-		const profiles = new ProfilesController(connection);
+		const profiles = new ProfileClient(connection);
 
 		// Act.
 		await profiles.switchToProfile("DEV1");

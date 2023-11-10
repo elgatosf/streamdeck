@@ -1,20 +1,25 @@
-import { ActionRegistry } from "../actions/action-registry";
-import { StreamDeckClient } from "../client";
+import { ActionClient } from "../actions/action-client";
+import { ActionContainer } from "../actions/action-container";
 import { StreamDeckConnection } from "../connectivity/connection";
 import { RegistrationParameters } from "../connectivity/registration";
-import * as devices from "../devices";
-import { Device, getDevices } from "../devices";
+import { DeviceClient } from "../devices";
 import { I18nProvider } from "../i18n";
 import * as logging from "../logging";
 import { createLogger } from "../logging";
 import { getManifest } from "../manifest";
-import { ProfilesController } from "../profiles";
+import { ProfileClient } from "../profiles";
 import { SettingsClient } from "../settings";
 import { StreamDeck } from "../stream-deck";
 import { System } from "../system";
+import { UIClient } from "../ui";
 
-jest.mock("../actions/action-registry");
-jest.mock("../client");
+jest.mock<typeof import("../actions/action-container")>("../actions/action-container", () => {
+	const actionsContainerModule = <typeof import("../actions/action-container")>jest.requireActual("../actions/action-container");
+	return {
+		ActionContainer: jest.fn().mockImplementation((connection, manifest, logger) => new actionsContainerModule.ActionContainer(connection, manifest, logger))
+	};
+});
+jest.mock("../actions/action-client");
 jest.mock("../connectivity/connection");
 jest.mock("../connectivity/registration");
 jest.mock("../devices");
@@ -24,6 +29,7 @@ jest.mock("../manifest");
 jest.mock("../profiles");
 jest.mock("../settings");
 jest.mock("../system");
+jest.mock("../ui");
 
 describe("StreamDeck", () => {
 	beforeEach(async () => {
@@ -35,8 +41,6 @@ describe("StreamDeck", () => {
 				}
 			})
 		);
-
-		jest.spyOn(devices, "getDevices").mockReturnValue(new Map<string, Device>());
 	});
 
 	afterEach(() => jest.clearAllMocks());
@@ -49,17 +53,19 @@ describe("StreamDeck", () => {
 		new StreamDeck();
 
 		// Assert.
-		expect(ActionRegistry).toHaveBeenCalledTimes(0);
-		expect(getDevices).toHaveBeenCalledTimes(0);
+		expect(ActionClient).toHaveBeenCalledTimes(0);
+		expect(ActionContainer).toHaveBeenCalledTimes(0);
+		expect(DeviceClient).toHaveBeenCalledTimes(0);
 		expect(I18nProvider).toHaveBeenCalledTimes(0);
 		expect(createLogger).toHaveBeenCalledTimes(0);
 		expect(getManifest).toHaveBeenCalledTimes(0);
-		expect(ProfilesController).toHaveBeenCalledTimes(0);
+		expect(ProfileClient).toHaveBeenCalledTimes(0);
 		expect(SettingsClient).toHaveBeenCalledTimes(0);
-		expect(StreamDeckClient).toHaveBeenCalledTimes(0);
 		expect(StreamDeckConnection).toHaveBeenCalledTimes(0);
 		expect(RegistrationParameters).toHaveBeenCalledTimes(0);
+		expect(SettingsClient).toHaveBeenCalledTimes(0);
 		expect(System).toHaveBeenCalledTimes(0);
+		expect(UIClient).toHaveBeenCalledTimes(0);
 	});
 
 	/**
@@ -71,29 +77,30 @@ describe("StreamDeck", () => {
 
 		const readAllProperties = () => {
 			expect(streamDeck.actions).not.toBeUndefined();
-			expect(streamDeck.client).not.toBeUndefined();
 			expect(streamDeck.devices).not.toBeUndefined();
 			expect(streamDeck.i18n).not.toBeUndefined();
 			expect(streamDeck.info).not.toBeUndefined();
 			expect(streamDeck.logger).not.toBeUndefined();
 			expect(streamDeck.manifest).not.toBeUndefined();
 			expect(streamDeck.profiles).not.toBeUndefined();
-			expect(streamDeck.client).not.toBeUndefined();
+			expect(streamDeck.settings).not.toBeUndefined();
 			expect(streamDeck.system).not.toBeUndefined();
+			expect(streamDeck.ui).not.toBeUndefined();
 		};
 
 		const expectInitializedOnce = () => {
-			expect(ActionRegistry).toHaveBeenCalledTimes(1);
-			expect(getDevices).toHaveBeenCalledTimes(1);
+			expect(ActionClient).toHaveBeenCalledTimes(1);
+			expect(ActionContainer).toHaveBeenCalledTimes(1);
+			expect(DeviceClient).toHaveBeenCalledTimes(1);
 			expect(I18nProvider).toHaveBeenCalledTimes(1);
 			expect(createLogger).toHaveBeenCalledTimes(1);
 			expect(getManifest).toHaveBeenCalledTimes(1);
-			expect(ProfilesController).toHaveBeenCalledTimes(1);
-			expect(SettingsClient).toHaveBeenCalledTimes(0);
-			expect(StreamDeckClient).toHaveBeenCalledTimes(1);
+			expect(ProfileClient).toHaveBeenCalledTimes(1);
+			expect(SettingsClient).toHaveBeenCalledTimes(1);
 			expect(StreamDeckConnection).toHaveBeenCalledTimes(1);
 			expect(RegistrationParameters).toHaveBeenCalledTimes(1);
 			expect(System).toHaveBeenCalledTimes(1);
+			expect(UIClient).toHaveBeenCalledTimes(1);
 		};
 
 		// Act, assert.
@@ -117,25 +124,11 @@ describe("StreamDeck", () => {
 			// Assert.
 			expect(actions).not.toBeUndefined();
 
-			const { client, manifest, logger } = streamDeck;
-			expect(ActionRegistry).toHaveBeenCalledTimes(1);
-			expect(ActionRegistry).toHaveBeenCalledWith(client, manifest, logger);
-		});
-
-		/**
-		 * Asserts accessing the {@link StreamDeck.client} correctly loads its dependencies and dependents.
-		 */
-		it("client", async () => {
-			// Arrange, act.
-			const streamDeck = new StreamDeck() as any;
-			const { client } = streamDeck;
-
-			// Assert.
-			expect(client).not.toBeUndefined();
-
-			const { _connection, devices } = streamDeck;
-			expect(StreamDeckClient).toHaveBeenCalledTimes(1);
-			expect(StreamDeckClient).toHaveBeenCalledWith(_connection, devices);
+			const { _connection, _actionContainer, logger, manifest } = streamDeck;
+			expect(ActionClient).toHaveBeenCalledTimes(1);
+			expect(ActionClient).toHaveBeenCalledWith(_connection, _actionContainer);
+			expect(ActionContainer).toHaveBeenCalledTimes(1);
+			expect(ActionContainer).toHaveBeenCalledWith(_connection, manifest, logger);
 		});
 
 		/**
@@ -150,8 +143,8 @@ describe("StreamDeck", () => {
 			expect(devices).not.toBeUndefined();
 
 			const { _connection } = streamDeck;
-			expect(getDevices).toHaveBeenCalledTimes(1);
-			expect(getDevices).toHaveBeenCalledWith(_connection);
+			expect(DeviceClient).toHaveBeenCalledTimes(1);
+			expect(DeviceClient).toHaveBeenCalledWith(_connection);
 		});
 
 		/**
@@ -215,6 +208,40 @@ describe("StreamDeck", () => {
 		});
 
 		/**
+		 * Asserts accessing the {@link StreamDeck.profiles} correctly loads its dependencies and dependents.
+		 */
+		it("profiles", async () => {
+			// Arrange, act.
+			const streamDeck = new StreamDeck() as any;
+			const { profiles } = streamDeck;
+
+			// Assert.
+			expect(profiles).not.toBeUndefined();
+
+			const { _connection } = streamDeck;
+			expect(ProfileClient).toHaveBeenCalledTimes(1);
+			expect(ProfileClient).toHaveBeenCalledWith(_connection);
+		});
+
+		/**
+		 * Asserts accessing the {@link StreamDeck.settings} correctly loads its dependencies and dependents.
+		 */
+		it("settings", async () => {
+			// Arrange, act.
+			const streamDeck = new StreamDeck() as any;
+			const { settings } = streamDeck;
+
+			// Assert.
+			expect(settings).not.toBeUndefined();
+
+			const { _connection, _actionContainer, logger, manifest } = streamDeck;
+			expect(SettingsClient).toHaveBeenCalledTimes(1);
+			expect(SettingsClient).toHaveBeenCalledWith(_connection, _actionContainer);
+			expect(ActionContainer).toHaveBeenCalledTimes(1);
+			expect(ActionContainer).toHaveBeenCalledWith(_connection, manifest, logger);
+		});
+
+		/**
 		 * Asserts accessing the {@link StreamDeck.system} correctly loads its dependencies and dependents.
 		 */
 		it("system", async () => {
@@ -229,6 +256,24 @@ describe("StreamDeck", () => {
 			expect(System).toHaveBeenCalledTimes(1);
 			expect(System).toHaveBeenCalledWith(_connection);
 		});
+
+		/**
+		 * Asserts accessing the {@link StreamDeck.ui} correctly loads its dependencies and dependents.
+		 */
+		it("ui", async () => {
+			// Arrange, act.
+			const streamDeck = new StreamDeck() as any;
+			const { ui } = streamDeck;
+
+			// Assert.
+			expect(ui).not.toBeUndefined();
+
+			const { _connection, _actionContainer, logger, manifest } = streamDeck;
+			expect(UIClient).toHaveBeenCalledTimes(1);
+			expect(UIClient).toHaveBeenCalledWith(_connection, _actionContainer);
+			expect(ActionContainer).toHaveBeenCalledTimes(1);
+			expect(ActionContainer).toHaveBeenCalledWith(_connection, manifest, logger);
+		});
 	});
 
 	describe("Only initializes dependencies and dependents", () => {
@@ -241,43 +286,20 @@ describe("StreamDeck", () => {
 
 			// Assert.
 			expect(actions).not.toBeUndefined();
-			expect(actions).toBeInstanceOf(ActionRegistry);
+			expect(actions).toBeInstanceOf(ActionClient);
 
-			expect(ActionRegistry).toHaveBeenCalledTimes(1);
-			expect(getDevices).toHaveBeenCalledTimes(1);
+			expect(ActionClient).toHaveBeenCalledTimes(1);
+			expect(ActionContainer).toHaveBeenCalledTimes(1);
+			expect(DeviceClient).toHaveBeenCalledTimes(0);
 			expect(I18nProvider).toHaveBeenCalledTimes(0);
 			expect(createLogger).toHaveBeenCalledTimes(1);
 			expect(getManifest).toHaveBeenCalledTimes(1);
-			expect(ProfilesController).toHaveBeenCalledTimes(0);
-			expect(SettingsClient).toHaveBeenCalledTimes(0);
-			expect(StreamDeckClient).toHaveBeenCalledTimes(1);
+			expect(ProfileClient).toHaveBeenCalledTimes(0);
+			expect(SettingsClient).toHaveBeenCalledTimes(1);
 			expect(StreamDeckConnection).toHaveBeenCalledTimes(1);
 			expect(RegistrationParameters).toHaveBeenCalledTimes(1);
 			expect(System).toHaveBeenCalledTimes(0);
-		});
-
-		/**
-		 * Asserts {@link StreamDeck.client} is constructed with the correct dependencies
-		 */
-		it("client", async () => {
-			// Arrange, act.
-			const { client } = new StreamDeck();
-
-			// Assert.
-			expect(client).not.toBeUndefined();
-			expect(client).toBeInstanceOf(StreamDeckClient);
-
-			expect(ActionRegistry).toHaveBeenCalledTimes(0);
-			expect(getDevices).toHaveBeenCalledTimes(1);
-			expect(I18nProvider).toHaveBeenCalledTimes(0);
-			expect(createLogger).toHaveBeenCalledTimes(1);
-			expect(getManifest).toHaveBeenCalledTimes(0);
-			expect(ProfilesController).toHaveBeenCalledTimes(0);
-			expect(SettingsClient).toHaveBeenCalledTimes(0);
-			expect(StreamDeckClient).toHaveBeenCalledTimes(1);
-			expect(StreamDeckConnection).toHaveBeenCalledTimes(1);
-			expect(RegistrationParameters).toHaveBeenCalledTimes(1);
-			expect(System).toHaveBeenCalledTimes(0);
+			expect(UIClient).toHaveBeenCalledTimes(1);
 		});
 
 		/**
@@ -289,19 +311,20 @@ describe("StreamDeck", () => {
 
 			// Assert.
 			expect(devices).not.toBeUndefined();
-			expect(devices).toBeInstanceOf(Map<string, Device>);
+			expect(devices).toBeInstanceOf(DeviceClient);
 
-			expect(ActionRegistry).toHaveBeenCalledTimes(0);
-			expect(getDevices).toHaveBeenCalledTimes(1);
+			expect(ActionClient).toHaveBeenCalledTimes(0);
+			expect(ActionContainer).toHaveBeenCalledTimes(0);
+			expect(DeviceClient).toHaveBeenCalledTimes(1);
 			expect(I18nProvider).toHaveBeenCalledTimes(0);
 			expect(createLogger).toHaveBeenCalledTimes(1);
 			expect(getManifest).toHaveBeenCalledTimes(0);
-			expect(ProfilesController).toHaveBeenCalledTimes(0);
+			expect(ProfileClient).toHaveBeenCalledTimes(0);
 			expect(SettingsClient).toHaveBeenCalledTimes(0);
-			expect(StreamDeckClient).toHaveBeenCalledTimes(0);
 			expect(StreamDeckConnection).toHaveBeenCalledTimes(1);
 			expect(RegistrationParameters).toHaveBeenCalledTimes(1);
 			expect(System).toHaveBeenCalledTimes(0);
+			expect(UIClient).toHaveBeenCalledTimes(0);
 		});
 
 		/**
@@ -315,17 +338,18 @@ describe("StreamDeck", () => {
 			expect(i18n).not.toBeUndefined();
 			expect(i18n).toBeInstanceOf(I18nProvider);
 
-			expect(ActionRegistry).toHaveBeenCalledTimes(0);
-			expect(getDevices).toHaveBeenCalledTimes(0);
+			expect(ActionClient).toHaveBeenCalledTimes(0);
+			expect(ActionContainer).toHaveBeenCalledTimes(0);
+			expect(DeviceClient).toHaveBeenCalledTimes(0);
 			expect(I18nProvider).toHaveBeenCalledTimes(1);
 			expect(createLogger).toHaveBeenCalledTimes(1);
 			expect(getManifest).toHaveBeenCalledTimes(1);
-			expect(ProfilesController).toHaveBeenCalledTimes(0);
+			expect(ProfileClient).toHaveBeenCalledTimes(0);
 			expect(SettingsClient).toHaveBeenCalledTimes(0);
-			expect(StreamDeckClient).toHaveBeenCalledTimes(0);
 			expect(StreamDeckConnection).toHaveBeenCalledTimes(0);
 			expect(RegistrationParameters).toHaveBeenCalledTimes(1);
 			expect(System).toHaveBeenCalledTimes(0);
+			expect(UIClient).toHaveBeenCalledTimes(0);
 		});
 
 		/**
@@ -338,17 +362,18 @@ describe("StreamDeck", () => {
 			// Assert.
 			expect(info).not.toBeUndefined();
 
-			expect(ActionRegistry).toHaveBeenCalledTimes(0);
-			expect(getDevices).toHaveBeenCalledTimes(0);
+			expect(ActionClient).toHaveBeenCalledTimes(0);
+			expect(ActionContainer).toHaveBeenCalledTimes(0);
+			expect(DeviceClient).toHaveBeenCalledTimes(0);
 			expect(I18nProvider).toHaveBeenCalledTimes(0);
 			expect(createLogger).toHaveBeenCalledTimes(1);
 			expect(getManifest).toHaveBeenCalledTimes(0);
-			expect(ProfilesController).toHaveBeenCalledTimes(0);
+			expect(ProfileClient).toHaveBeenCalledTimes(0);
 			expect(SettingsClient).toHaveBeenCalledTimes(0);
-			expect(StreamDeckClient).toHaveBeenCalledTimes(0);
 			expect(StreamDeckConnection).toHaveBeenCalledTimes(0);
 			expect(RegistrationParameters).toHaveBeenCalledTimes(1);
 			expect(System).toHaveBeenCalledTimes(0);
+			expect(UIClient).toHaveBeenCalledTimes(0);
 		});
 
 		/**
@@ -362,17 +387,18 @@ describe("StreamDeck", () => {
 			expect(logger).not.toBeUndefined();
 			expect(logger).toBeInstanceOf(logging.Logger);
 
-			expect(ActionRegistry).toHaveBeenCalledTimes(0);
-			expect(getDevices).toHaveBeenCalledTimes(0);
+			expect(ActionClient).toHaveBeenCalledTimes(0);
+			expect(ActionContainer).toHaveBeenCalledTimes(0);
+			expect(DeviceClient).toHaveBeenCalledTimes(0);
 			expect(I18nProvider).toHaveBeenCalledTimes(0);
 			expect(createLogger).toHaveBeenCalledTimes(1);
 			expect(getManifest).toHaveBeenCalledTimes(0);
-			expect(ProfilesController).toHaveBeenCalledTimes(0);
+			expect(ProfileClient).toHaveBeenCalledTimes(0);
 			expect(SettingsClient).toHaveBeenCalledTimes(0);
-			expect(StreamDeckClient).toHaveBeenCalledTimes(0);
 			expect(StreamDeckConnection).toHaveBeenCalledTimes(0);
 			expect(RegistrationParameters).toHaveBeenCalledTimes(0);
 			expect(System).toHaveBeenCalledTimes(0);
+			expect(UIClient).toHaveBeenCalledTimes(0);
 		});
 
 		/**
@@ -385,17 +411,18 @@ describe("StreamDeck", () => {
 			// Assert.
 			expect(manifest).not.toBeUndefined();
 
-			expect(ActionRegistry).toHaveBeenCalledTimes(0);
-			expect(getDevices).toHaveBeenCalledTimes(0);
+			expect(ActionClient).toHaveBeenCalledTimes(0);
+			expect(ActionContainer).toHaveBeenCalledTimes(0);
+			expect(DeviceClient).toHaveBeenCalledTimes(0);
 			expect(I18nProvider).toHaveBeenCalledTimes(0);
 			expect(createLogger).toHaveBeenCalledTimes(0);
 			expect(getManifest).toHaveBeenCalledTimes(1);
-			expect(ProfilesController).toHaveBeenCalledTimes(0);
+			expect(ProfileClient).toHaveBeenCalledTimes(0);
 			expect(SettingsClient).toHaveBeenCalledTimes(0);
-			expect(StreamDeckClient).toHaveBeenCalledTimes(0);
 			expect(StreamDeckConnection).toHaveBeenCalledTimes(0);
 			expect(RegistrationParameters).toHaveBeenCalledTimes(0);
 			expect(System).toHaveBeenCalledTimes(0);
+			expect(UIClient).toHaveBeenCalledTimes(0);
 		});
 
 		/**
@@ -407,19 +434,20 @@ describe("StreamDeck", () => {
 
 			// Assert.
 			expect(profiles).not.toBeUndefined();
-			expect(profiles).toBeInstanceOf(ProfilesController);
+			expect(profiles).toBeInstanceOf(ProfileClient);
 
-			expect(ActionRegistry).toHaveBeenCalledTimes(0);
-			expect(getDevices).toHaveBeenCalledTimes(1);
+			expect(ActionClient).toHaveBeenCalledTimes(0);
+			expect(ActionContainer).toHaveBeenCalledTimes(0);
+			expect(DeviceClient).toHaveBeenCalledTimes(0);
 			expect(I18nProvider).toHaveBeenCalledTimes(0);
 			expect(createLogger).toHaveBeenCalledTimes(1);
 			expect(getManifest).toHaveBeenCalledTimes(0);
-			expect(ProfilesController).toHaveBeenCalledTimes(1);
+			expect(ProfileClient).toHaveBeenCalledTimes(1);
 			expect(SettingsClient).toHaveBeenCalledTimes(0);
-			expect(StreamDeckClient).toHaveBeenCalledTimes(0);
 			expect(StreamDeckConnection).toHaveBeenCalledTimes(1);
 			expect(RegistrationParameters).toHaveBeenCalledTimes(1);
 			expect(System).toHaveBeenCalledTimes(0);
+			expect(UIClient).toHaveBeenCalledTimes(0);
 		});
 
 		/**
@@ -433,17 +461,18 @@ describe("StreamDeck", () => {
 			expect(settings).not.toBeUndefined();
 			expect(settings).toBeInstanceOf(SettingsClient);
 
-			expect(ActionRegistry).toHaveBeenCalledTimes(0);
-			expect(getDevices).toHaveBeenCalledTimes(1);
+			expect(ActionClient).toHaveBeenCalledTimes(1);
+			expect(ActionContainer).toHaveBeenCalledTimes(1);
+			expect(DeviceClient).toHaveBeenCalledTimes(0);
 			expect(I18nProvider).toHaveBeenCalledTimes(0);
 			expect(createLogger).toHaveBeenCalledTimes(1);
-			expect(getManifest).toHaveBeenCalledTimes(0);
-			expect(ProfilesController).toHaveBeenCalledTimes(0);
+			expect(getManifest).toHaveBeenCalledTimes(1);
+			expect(ProfileClient).toHaveBeenCalledTimes(0);
 			expect(SettingsClient).toHaveBeenCalledTimes(1);
-			expect(StreamDeckClient).toHaveBeenCalledTimes(0);
 			expect(StreamDeckConnection).toHaveBeenCalledTimes(1);
 			expect(RegistrationParameters).toHaveBeenCalledTimes(1);
 			expect(System).toHaveBeenCalledTimes(0);
+			expect(UIClient).toHaveBeenCalledTimes(1);
 		});
 
 		/**
@@ -457,17 +486,43 @@ describe("StreamDeck", () => {
 			expect(system).not.toBeUndefined();
 			expect(system).toBeInstanceOf(System);
 
-			expect(ActionRegistry).toHaveBeenCalledTimes(0);
-			expect(getDevices).toHaveBeenCalledTimes(1);
+			expect(ActionClient).toHaveBeenCalledTimes(0);
+			expect(ActionContainer).toHaveBeenCalledTimes(0);
+			expect(DeviceClient).toHaveBeenCalledTimes(0);
 			expect(I18nProvider).toHaveBeenCalledTimes(0);
 			expect(createLogger).toHaveBeenCalledTimes(1);
 			expect(getManifest).toHaveBeenCalledTimes(0);
-			expect(ProfilesController).toHaveBeenCalledTimes(0);
+			expect(ProfileClient).toHaveBeenCalledTimes(0);
 			expect(SettingsClient).toHaveBeenCalledTimes(0);
-			expect(StreamDeckClient).toHaveBeenCalledTimes(0);
 			expect(StreamDeckConnection).toHaveBeenCalledTimes(1);
 			expect(RegistrationParameters).toHaveBeenCalledTimes(1);
 			expect(System).toHaveBeenCalledTimes(1);
+			expect(UIClient).toHaveBeenCalledTimes(0);
+		});
+
+		/**
+		 * Asserts {@link StreamDeck.ui} is constructed with the correct dependencies.
+		 */
+		it("ui", async () => {
+			// Arrange, act.
+			const { ui } = new StreamDeck();
+
+			// Assert.
+			expect(ui).not.toBeUndefined();
+			expect(ui).toBeInstanceOf(UIClient);
+
+			expect(ActionClient).toHaveBeenCalledTimes(1);
+			expect(ActionContainer).toHaveBeenCalledTimes(1);
+			expect(DeviceClient).toHaveBeenCalledTimes(0);
+			expect(I18nProvider).toHaveBeenCalledTimes(0);
+			expect(createLogger).toHaveBeenCalledTimes(1);
+			expect(getManifest).toHaveBeenCalledTimes(1);
+			expect(ProfileClient).toHaveBeenCalledTimes(0);
+			expect(SettingsClient).toHaveBeenCalledTimes(1);
+			expect(StreamDeckConnection).toHaveBeenCalledTimes(1);
+			expect(RegistrationParameters).toHaveBeenCalledTimes(1);
+			expect(System).toHaveBeenCalledTimes(0);
+			expect(UIClient).toHaveBeenCalledTimes(1);
 		});
 	});
 
@@ -483,5 +538,6 @@ describe("StreamDeck", () => {
 
 		// Assert.
 		expect(streamDeck._connection.connect).toHaveBeenCalledTimes(1);
+		expect(DeviceClient).toHaveBeenCalledTimes(1);
 	});
 });

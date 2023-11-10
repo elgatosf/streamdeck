@@ -1,7 +1,9 @@
-import type { ImageOptions, StreamDeckClient, TitleOptions } from "../client";
-import { SetTriggerDescription } from "../connectivity/commands";
-import { PayloadObject, State } from "../connectivity/events";
-import { FeedbackPayload } from "../connectivity/layouts";
+import type { SetTriggerDescription } from "../connectivity/commands";
+import type { PayloadObject, State } from "../connectivity/events";
+import type { FeedbackPayload } from "../connectivity/layouts";
+import type { UIClient } from "../ui";
+import type { ImageOptions, TitleOptions } from "./action-client";
+import type { ActionController } from "./action-container";
 import type { SingletonAction } from "./singleton-action";
 
 /**
@@ -11,11 +13,15 @@ import type { SingletonAction } from "./singleton-action";
 export class Action<T extends PayloadObject<T> = object> {
 	/**
 	 * Initializes a new instance of the {@see Action} class.
-	 * @param client The Stream Deck client.
+	 * @param controller Action controller capable of interacting with the Stream Deck.
 	 * @param manifestId Unique identifier (UUID) of the action as defined within the plugin's manifest's actions collection.
 	 * @param id Unique identifier of the instance of the action; this can be used to update the action on the Stream Deck, e.g. its title, settings, etc.
 	 */
-	constructor(private readonly client: StreamDeckClient, public readonly manifestId: string, public readonly id: string) {}
+	constructor(
+		private readonly controller: ActionController,
+		public readonly manifestId: string,
+		public readonly id: string
+	) {}
 
 	/**
 	 * Gets the settings associated this action instance. See also {@link Action.setSettings}.
@@ -23,18 +29,18 @@ export class Action<T extends PayloadObject<T> = object> {
 	 * @returns Promise containing the action instance's settings.
 	 */
 	public getSettings<U extends PayloadObject<U> = T>(): Promise<U> {
-		return this.client.getSettings<U>(this.id);
+		return this.controller.settings.getSettings<U>(this.id);
 	}
 
 	/**
 	 * Sends the {@link payload} to the current property inspector associated with this action instance. The plugin can also receive information from the property inspector via
-	 * {@link StreamDeckClient.onSendToPlugin} and {@link SingletonAction.onSendToPlugin} allowing for bi-directional communication.
+	 * {@link UIClient.onSendToPlugin} and {@link SingletonAction.onSendToPlugin} allowing for bi-directional communication.
 	 * @template T The type of the payload received from the property inspector.
 	 * @param payload Payload to send to the property inspector.
 	 * @returns `Promise` resolved when {@link payload} has been sent to the property inspector.
 	 */
 	public sendToPropertyInspector<T extends PayloadObject<T> = object>(payload: T): Promise<void> {
-		return this.client.sendToPropertyInspector(this.id, payload);
+		return this.controller.ui.sendToPropertyInspector(this.id, payload);
 	}
 
 	/**
@@ -71,7 +77,7 @@ export class Action<T extends PayloadObject<T> = object> {
 	 *
 	 * The layout item's text can be updated dynamically via.
 	 * ```
-	 * client.setFeedback(ctx, {
+	 * action.setFeedback(ctx, {
 	 *  // "text_item" matches a "key" within the layout's JSON file.
 	 *   text_item: "Some new value"
 	 * })
@@ -79,7 +85,7 @@ export class Action<T extends PayloadObject<T> = object> {
 	 *
 	 * Alternatively, more information can be updated.
 	 * ```
-	 * client.setFeedback(ctx, {
+	 * action.setFeedback(ctx, {
 	 *   text_item: { // <-- "text_item" matches a "key" within the layout's JSON file.
 	 *     value: "Some new value",
 	 *     alignment: "center"
@@ -90,7 +96,7 @@ export class Action<T extends PayloadObject<T> = object> {
 	 * @returns `Promise` resolved when the request to set the {@link feedback} has been sent to Stream Deck.
 	 */
 	public setFeedback(feedback: FeedbackPayload): Promise<void> {
-		return this.client.setFeedback(this.id, feedback);
+		return this.controller.actions.setFeedback(this.id, feedback);
 	}
 
 	/**
@@ -100,7 +106,7 @@ export class Action<T extends PayloadObject<T> = object> {
 	 * @returns `Promise` resolved when the new layout has been sent to Stream Deck.
 	 */
 	public setFeedbackLayout(layout: string): Promise<void> {
-		return this.client.setFeedbackLayout(this.id, layout);
+		return this.controller.actions.setFeedbackLayout(this.id, layout);
 	}
 
 	/**
@@ -111,7 +117,7 @@ export class Action<T extends PayloadObject<T> = object> {
 	 * @returns `Promise` resolved when the request to set the {@link image} has been sent to Stream Deck.
 	 */
 	public setImage(image?: string, options?: ImageOptions): Promise<void> {
-		return this.client.setImage(this.id, image, options);
+		return this.controller.actions.setImage(this.id, image, options);
 	}
 
 	/**
@@ -120,7 +126,7 @@ export class Action<T extends PayloadObject<T> = object> {
 	 * @returns `Promise` resolved when the {@link settings} are sent to Stream Deck.
 	 */
 	public setSettings(settings: T): Promise<void> {
-		return this.client.setSettings(this.id, settings);
+		return this.controller.settings.setSettings(this.id, settings);
 	}
 
 	/**
@@ -129,7 +135,7 @@ export class Action<T extends PayloadObject<T> = object> {
 	 * @returns `Promise` resolved when the request to set the state of an action instance has been sent to Stream Deck.
 	 */
 	public setState(state: State): Promise<void> {
-		return this.client.setState(this.id, state);
+		return this.controller.actions.setState(this.id, state);
 	}
 
 	/**
@@ -139,7 +145,7 @@ export class Action<T extends PayloadObject<T> = object> {
 	 * @returns `Promise` resolved when the request to set the {@link title} has been sent to Stream Deck.
 	 */
 	public setTitle(title?: string, options?: TitleOptions): Promise<void> {
-		return this.client.setTitle(this.id, title, options);
+		return this.controller.actions.setTitle(this.id, title, options);
 	}
 
 	/**
@@ -150,7 +156,7 @@ export class Action<T extends PayloadObject<T> = object> {
 	 * @returns `Promise` resolved when the request to set the {@link descriptions} has been sent to Stream Deck.
 	 */
 	public setTriggerDescription(descriptions?: SetTriggerDescription["payload"]): Promise<void> {
-		return this.client.setTriggerDescription(this.id, descriptions);
+		return this.controller.actions.setTriggerDescription(this.id, descriptions);
 	}
 
 	/**
@@ -158,7 +164,7 @@ export class Action<T extends PayloadObject<T> = object> {
 	 * @returns `Promise` resolved when the request to show an alert has been sent to Stream Deck.
 	 */
 	public showAlert(): Promise<void> {
-		return this.client.showAlert(this.id);
+		return this.controller.actions.showAlert(this.id);
 	}
 
 	/**
@@ -167,6 +173,6 @@ export class Action<T extends PayloadObject<T> = object> {
 	 * @returns `Promise` resolved when the request to show an "OK" has been sent to Stream Deck.
 	 */
 	public showOk(): Promise<void> {
-		return this.client.showOk(this.id);
+		return this.controller.actions.showOk(this.id);
 	}
 }

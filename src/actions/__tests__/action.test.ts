@@ -1,4 +1,4 @@
-import { getMockedClient } from "../../../tests/__mocks__/client";
+import { getMockedActionContainer } from "../../../tests/__mocks__/action-container";
 import * as mockEvents from "../../connectivity/__mocks__/events";
 import {
 	GetSettings,
@@ -19,11 +19,11 @@ import { Action } from "../action";
 
 describe("Action", () => {
 	it("Constructor sets manifestId and id", () => {
-		// Arrange.
-		const { client } = getMockedClient();
+		// Arrange.}
+		const { container } = getMockedActionContainer();
 
 		// Act.
-		const action = new Action(client, "com.elgato.test.one", "ABC123");
+		const action = new Action(container.controller, "com.elgato.test.one", "ABC123");
 
 		// Assert.
 		expect(action.id).toBe("ABC123");
@@ -32,8 +32,8 @@ describe("Action", () => {
 
 	it("Can getSettings", async () => {
 		// Arrange.
-		const { connection, client } = getMockedClient();
-		const action = new Action<mockEvents.Settings>(client, "com.elgato.test.one", "ABC123");
+		const { connection, container } = getMockedActionContainer();
+		const action = new Action<mockEvents.Settings>(container.controller, "com.elgato.test.one", "ABC123");
 
 		// Act (Command).
 		const settings = action.getSettings();
@@ -68,8 +68,8 @@ describe("Action", () => {
 
 	it("Sends sendToPropertyInspector", async () => {
 		// Arrange.
-		const { connection, client } = getMockedClient();
-		const action = new Action(client, "com.elgato.test.one", "ABC123");
+		const { connection, container } = getMockedActionContainer();
+		const action = new Action(container.controller, "com.elgato.test.one", "ABC123");
 
 		// Act.
 		await action.sendToPropertyInspector({
@@ -89,8 +89,8 @@ describe("Action", () => {
 
 	it("Sends setFeedback", async () => {
 		// Arrange.
-		const { connection, client } = getMockedClient();
-		const action = new Action(client, "com.elgato.test.one", "ABC123");
+		const { connection, container } = getMockedActionContainer();
+		const action = new Action(container.controller, "com.elgato.test.one", "ABC123");
 
 		// Act.
 		await action.setFeedback({
@@ -112,8 +112,8 @@ describe("Action", () => {
 
 	it("Sends setFeedbackLayout", async () => {
 		// Arrange.
-		const { connection, client } = getMockedClient();
-		const action = new Action(client, "com.elgato.test.one", "ABC123");
+		const { connection, container } = getMockedActionContainer();
+		const action = new Action(container.controller, "com.elgato.test.one", "ABC123");
 
 		// Act.
 		await action.setFeedbackLayout("CustomLayout.json");
@@ -131,8 +131,8 @@ describe("Action", () => {
 
 	it("Sends setImage", async () => {
 		// Arrange.
-		const { connection, client } = getMockedClient();
-		const action = new Action(client, "com.elgato.test.one", "ABC123");
+		const { connection, container } = getMockedActionContainer();
+		const action = new Action(container.controller, "com.elgato.test.one", "ABC123");
 
 		// Act.
 		await action.setImage();
@@ -166,8 +166,8 @@ describe("Action", () => {
 
 	it("Sends setSettings", async () => {
 		// Arrange.
-		const { connection, client } = getMockedClient();
-		const action = new Action<mockEvents.Settings>(client, "com.elgato.test.one", "ABC123");
+		const { connection, container } = getMockedActionContainer();
+		const action = new Action<mockEvents.Settings>(container.controller, "com.elgato.test.one", "ABC123");
 
 		// Act.
 		await action.setSettings({
@@ -187,8 +187,8 @@ describe("Action", () => {
 
 	it("Sends setState", async () => {
 		// Arrange.
-		const { connection, client } = getMockedClient();
-		const action = new Action(client, "com.elgato.test.one", "ABC123");
+		const { connection, container } = getMockedActionContainer();
+		const action = new Action(container.controller, "com.elgato.test.one", "ABC123");
 
 		// Act.
 		await action.setState(1);
@@ -206,8 +206,8 @@ describe("Action", () => {
 
 	it("Sends setTitle", async () => {
 		// Arrange.
-		const { connection, client } = getMockedClient();
-		const action = new Action(client, "com.elgato.test.one", "ABC123");
+		const { connection, container } = getMockedActionContainer();
+		const action = new Action(container.controller, "com.elgato.test.one", "ABC123");
 
 		// Act.
 		await action.setTitle("Hello world");
@@ -236,8 +236,8 @@ describe("Action", () => {
 
 	it("Sends setTriggerDescription", async () => {
 		// Arrange.
-		const { connection, client } = getMockedClient();
-		const action = new Action(client, "com.elgato.test.one", "ABC123");
+		const { connection, container } = getMockedActionContainer();
+		const action = new Action(container.controller, "com.elgato.test.one", "ABC123");
 
 		// Act.
 		await action.setTriggerDescription();
@@ -270,8 +270,8 @@ describe("Action", () => {
 
 	it("Sends showAlert", async () => {
 		// Arrange.
-		const { connection, client } = getMockedClient();
-		const action = new Action(client, "com.elgato.test.one", "ABC123");
+		const { connection, container } = getMockedActionContainer();
+		const action = new Action(container.controller, "com.elgato.test.one", "ABC123");
 
 		// Act.
 		await action.showAlert();
@@ -286,8 +286,8 @@ describe("Action", () => {
 
 	it("Sends showOk", async () => {
 		// Arrange.
-		const { connection, client } = getMockedClient();
-		const action = new Action(client, "com.elgato.test.one", "ABC123");
+		const { connection, container } = getMockedActionContainer();
+		const action = new Action(container.controller, "com.elgato.test.one", "ABC123");
 
 		// Act.
 		await action.showOk();
