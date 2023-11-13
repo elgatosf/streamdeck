@@ -48,6 +48,18 @@ export class ActionClient {
 	}
 
 	/**
+	 * Creates an {@link Action} controller capable of interacting with Stream Deck.
+	 * @param id The instance identifier of the action to control; identifiers are supplied as part of events emitted by this client, and are accessible via {@link Action.id}.
+	 * @returns The {@link Action} controller.
+	 */
+	public createController<T extends api.PayloadObject<T> = object>(id: string): Omit<Action<T>, "manifestId"> {
+		return new Action<T>(this.connection, {
+			action: "",
+			context: id
+		});
+	}
+
+	/**
 	 * Occurs when the user presses a dial (Stream Deck+). **NB** For other action types see {@link ActionClient.onKeyDown}. Also see {@link ActionClient.onDialUp}.
 	 * @template T The type of settings associated with the action.
 	 * @param listener Function to be invoked when the event occurs.

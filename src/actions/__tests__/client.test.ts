@@ -1,6 +1,8 @@
 import { getMockedConnection } from "../../../tests/__mocks__/connection";
 import { manifest as mockedManifest } from "../../__mocks__/manifest";
 import * as mockEvents from "../../connectivity/__mocks__/events";
+import { StreamDeckConnection } from "../../connectivity/connection";
+import { ActionIdentifier } from "../../connectivity/events";
 import {
 	DialDownEvent,
 	DialRotateEvent,
@@ -22,7 +24,18 @@ import { Action } from "../action";
 import { ActionClient } from "../client";
 import { SingletonAction } from "../singleton-action";
 
+jest.mock("../action", () => {
+	const ActionModule = jest.requireActual("../action") as typeof import("../action");
+	return {
+		Action: jest.fn().mockImplementation((connection, source) => {
+			return new ActionModule.Action(connection, source);
+		})
+	};
+});
+
 describe("ActionClient", () => {
+	afterEach(() => jest.clearAllMocks());
+
 	/**
 	 * Asserts the constructor for {@link ActionClient} creates a scoped logger.
 	 */
@@ -37,6 +50,26 @@ describe("ActionClient", () => {
 		// Act.
 		expect(createScopeSpy).toHaveBeenCalledTimes(1);
 		expect(createScopeSpy).toHaveBeenCalledWith("ActionClient");
+	});
+
+	/**
+	 * Asserts {@link ActionClient.createController} initializes a new action.
+	 */
+	it("Creates controllers", () => {
+		// Arrange.
+		const { connection, settingsClient, uiClient, logger } = getParameters();
+		const client = new ActionClient(connection, mockedManifest, settingsClient, uiClient, logger);
+
+		// Act.
+		const action = client.createController("ABC123");
+
+		// Assert.
+		expect(action).not.toBeUndefined();
+		expect(action.id).toBe("ABC123");
+		// @ts-expect-error: manifestId is omitted, and should be an empty string.
+		expect(action.manifestId).toBe("");
+		expect(Action).toHaveBeenCalledTimes(1);
+		expect(Action).toHaveBeenCalledWith<[StreamDeckConnection, ActionIdentifier]>(connection, { action: "", context: "ABC123" });
 	});
 
 	describe("Event emitters", () => {
