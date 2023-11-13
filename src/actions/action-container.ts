@@ -1,11 +1,11 @@
-import type { Manifest } from "..";
 import type { StreamDeckConnection } from "../connectivity/connection";
 import type * as api from "../connectivity/events";
 import type { Logger } from "../logging";
-import { SettingsClient } from "../settings";
+import type { Manifest } from "../manifest";
+import { SettingsClient } from "../settings/client";
 import { UIClient } from "../ui";
 import { Action } from "./action";
-import { ActionClient } from "./action-client";
+import { ActionClient } from "./client";
 import type { SingletonAction } from "./singleton-action";
 
 /**
@@ -24,12 +24,12 @@ export class ActionContainer implements IActionContainer {
 
 	/**
 	 * Initializes a new instance of the {@link ActionContainer} class.
-	 * @param connection Underlying connection with the Stream Deck.
+	 * @param connection Connection with the Stream Deck.
 	 * @param manifest Manifest associated with the plugin.
 	 * @param logger Logger responsible for capturing log entries.
 	 */
 	constructor(
-		connection: StreamDeckConnection,
+		private readonly connection: StreamDeckConnection,
 		private readonly manifest: Manifest,
 		logger: Logger
 	) {
@@ -72,6 +72,9 @@ export class ActionContainer implements IActionContainer {
 			});
 		};
 
+		// Should we directly reference the connection here to remove the need for the controllers?
+		// If we want to simulate an emitting of a settings event, as requested by HipTech, we could emit on the actual connection, which is more robust.
+
 		addEventListener(action.manifestId, this.controller.actions, (client) => client.onDialDown, action.onDialDown);
 		addEventListener(action.manifestId, this.controller.actions, (client) => client.onDialUp, action.onDialUp);
 		addEventListener(action.manifestId, this.controller.actions, (client) => client.onDialRotate, action.onDialRotate);
@@ -93,7 +96,7 @@ export class ActionContainer implements IActionContainer {
 	 * @inheritdoc
 	 */
 	public resolveAction<T extends api.PayloadObject<T> = object>(event: api.ActionIdentifier): Action<T> {
-		return new Action<T>(this.controller, event.action, event.context);
+		return new Action<T>(this.connection, event.action, event.context);
 	}
 }
 

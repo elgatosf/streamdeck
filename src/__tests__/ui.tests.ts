@@ -1,8 +1,6 @@
 import { getMockedActionContainer } from "../../tests/__mocks__/action-container";
 import { Action } from "../actions/action";
 import * as mockEvents from "../connectivity/__mocks__/events";
-import { SendToPropertyInspector } from "../connectivity/commands";
-import { StreamDeckConnection } from "../connectivity/connection";
 import { PropertyInspectorDidAppearEvent, PropertyInspectorDidDisappearEvent, SendToPluginEvent } from "../events";
 import { UIClient } from "../ui";
 
@@ -24,7 +22,7 @@ describe("UIClient", () => {
 		// Assert.
 		expect(listener).toHaveBeenCalledTimes(1);
 		expect(listener).toHaveBeenCalledWith<[PropertyInspectorDidAppearEvent<never>]>({
-			action: new Action(container.controller, action, context),
+			action: new Action(connection, action, context),
 			deviceId: device,
 			type: "propertyInspectorDidAppear"
 		});
@@ -47,7 +45,7 @@ describe("UIClient", () => {
 		// Assert.
 		expect(listener).toHaveBeenCalledTimes(1);
 		expect(listener).toHaveBeenCalledWith<[PropertyInspectorDidDisappearEvent<never>]>({
-			action: new Action(container.controller, action, context),
+			action: new Action(connection, action, context),
 			deviceId: device,
 			type: "propertyInspectorDidDisappear"
 		});
@@ -70,33 +68,9 @@ describe("UIClient", () => {
 		// Assert.
 		expect(listener).toHaveBeenCalledTimes(1);
 		expect(listener).toHaveBeenCalledWith<[SendToPluginEvent<mockEvents.Settings, never>]>({
-			action: new Action(container.controller, action, context),
+			action: new Action(connection, action, context),
 			payload,
 			type: "sendToPlugin"
-		});
-	});
-
-	/**
-	 * Assert {@link UIClient.sendToPropertyInspector} sends the command to the underlying {@link StreamDeckConnection}.
-	 */
-	it("Sends sendToPropertyInspector", async () => {
-		// Arrange.
-		const { connection, container } = getMockedActionContainer();
-		const client = new UIClient(connection, container);
-
-		// Act.
-		await client.sendToPropertyInspector("ABC123", {
-			name: "Elgato"
-		});
-
-		// Assert.
-		expect(connection.send).toHaveBeenCalledTimes(1);
-		expect(connection.send).toHaveBeenCalledWith<[SendToPropertyInspector]>({
-			event: "sendToPropertyInspector",
-			context: "ABC123",
-			payload: {
-				name: "Elgato"
-			}
 		});
 	});
 });

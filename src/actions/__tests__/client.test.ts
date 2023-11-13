@@ -1,8 +1,5 @@
 import { getMockedActionContainer } from "../../../tests/__mocks__/action-container";
 import * as mockEvents from "../../connectivity/__mocks__/events";
-import { SetFeedback, SetFeedbackLayout, SetImage, SetState, SetTitle, SetTriggerDescription, ShowAlert, ShowOk } from "../../connectivity/commands";
-import { StreamDeckConnection } from "../../connectivity/connection";
-import { Target } from "../../connectivity/target";
 import {
 	DialDownEvent,
 	DialRotateEvent,
@@ -15,7 +12,7 @@ import {
 	WillDisappearEvent
 } from "../../events";
 import { Action } from "../action";
-import { ActionClient } from "../action-client";
+import { ActionClient } from "../client";
 import { SingletonAction } from "../singleton-action";
 
 describe("ActionClient", () => {
@@ -36,7 +33,7 @@ describe("ActionClient", () => {
 		// Assert.
 		expect(listener).toHaveBeenCalledTimes(1);
 		expect(listener).toHaveBeenCalledWith<[DialDownEvent<mockEvents.Settings>]>({
-			action: new Action(container.controller, action, context),
+			action: new Action(connection, action, context),
 			deviceId: device,
 			payload,
 			type: "dialDown"
@@ -60,7 +57,7 @@ describe("ActionClient", () => {
 		// Assert.
 		expect(listener).toHaveBeenCalledTimes(1);
 		expect(listener).toHaveBeenCalledWith<[DialRotateEvent<mockEvents.Settings>]>({
-			action: new Action(container.controller, action, context),
+			action: new Action(connection, action, context),
 			deviceId: device,
 			payload,
 			type: "dialRotate"
@@ -84,7 +81,7 @@ describe("ActionClient", () => {
 		// Assert.
 		expect(listener).toHaveBeenCalledTimes(1);
 		expect(listener).toHaveBeenCalledWith<[DialUpEvent<mockEvents.Settings>]>({
-			action: new Action(container.controller, action, context),
+			action: new Action(connection, action, context),
 			deviceId: device,
 			payload,
 			type: "dialUp"
@@ -108,7 +105,7 @@ describe("ActionClient", () => {
 		// Assert.
 		expect(listener).toHaveBeenCalledTimes(1);
 		expect(listener).toHaveBeenCalledWith<[KeyDownEvent<mockEvents.Settings>]>({
-			action: new Action(container.controller, action, context),
+			action: new Action(connection, action, context),
 			deviceId: device,
 			payload,
 			type: "keyDown"
@@ -132,7 +129,7 @@ describe("ActionClient", () => {
 		// Assert.
 		expect(listener).toHaveBeenCalledTimes(1);
 		expect(listener).toHaveBeenCalledWith<[KeyUpEvent<mockEvents.Settings>]>({
-			action: new Action(container.controller, action, context),
+			action: new Action(connection, action, context),
 			deviceId: device,
 			payload,
 			type: "keyUp"
@@ -156,7 +153,7 @@ describe("ActionClient", () => {
 		// Assert.
 		expect(listener).toHaveBeenCalledTimes(1);
 		expect(listener).toHaveBeenCalledWith<[TitleParametersDidChangeEvent<mockEvents.Settings>]>({
-			action: new Action(container.controller, action, context),
+			action: new Action(connection, action, context),
 			deviceId: device,
 			payload,
 			type: "titleParametersDidChange"
@@ -180,7 +177,7 @@ describe("ActionClient", () => {
 		// Assert.
 		expect(listener).toHaveBeenCalledTimes(1);
 		expect(listener).toHaveBeenCalledWith<[TouchTapEvent<mockEvents.Settings>]>({
-			action: new Action(container.controller, action, context),
+			action: new Action(connection, action, context),
 			deviceId: device,
 			payload,
 			type: "touchTap"
@@ -204,7 +201,7 @@ describe("ActionClient", () => {
 		// Assert.
 		expect(listener).toHaveBeenCalledTimes(1);
 		expect(listener).toHaveBeenCalledWith<[WillAppearEvent<mockEvents.Settings>]>({
-			action: new Action(container.controller, action, context),
+			action: new Action(connection, action, context),
 			deviceId: device,
 			payload,
 			type: "willAppear"
@@ -228,7 +225,7 @@ describe("ActionClient", () => {
 		// Assert.
 		expect(listener).toHaveBeenCalledTimes(1);
 		expect(listener).toHaveBeenCalledWith<[WillDisappearEvent<mockEvents.Settings>]>({
-			action: new Action(container.controller, action, context),
+			action: new Action(connection, action, context),
 			deviceId: device,
 			payload,
 			type: "willDisappear"
@@ -254,234 +251,5 @@ describe("ActionClient", () => {
 		// Assert.
 		expect(registerActionSpy).toHaveBeenCalledTimes(1);
 		expect(registerActionSpy).toHaveBeenCalledWith(action);
-	});
-
-	/**
-	 * Asserts {@link ActionClient.setFeedback} sends the command to the underlying {@link StreamDeckConnection}.
-	 */
-	it("Sends setFeedback", async () => {
-		// Arrange.
-		const { connection, container } = getMockedActionContainer();
-		const client = new ActionClient(connection, container);
-
-		// Act.
-		await client.setFeedback("ABC123", {
-			key1: {
-				value: "Hello"
-			},
-			key2: 13
-		});
-
-		// Assert.
-		expect(connection.send).toHaveBeenCalledTimes(1);
-		expect(connection.send).toHaveBeenCalledWith<[SetFeedback]>({
-			event: "setFeedback",
-			context: "ABC123",
-			payload: {
-				key1: {
-					value: "Hello"
-				},
-				key2: 13
-			}
-		});
-	});
-
-	/**
-	 * Asserts {@link ActionClient.setFeedbackLayout} sends the command to the underlying {@link StreamDeckConnection}.
-	 */
-	it("Sends setFeedback", async () => {
-		// Arrange.
-		const { connection, container } = getMockedActionContainer();
-		const client = new ActionClient(connection, container);
-
-		// Act.
-		await client.setFeedbackLayout("ABC123", "./layouts/custom.json");
-
-		// Assert.
-		expect(connection.send).toHaveBeenCalledTimes(1);
-		expect(connection.send).toHaveBeenCalledWith<[SetFeedbackLayout]>({
-			event: "setFeedbackLayout",
-			context: "ABC123",
-			payload: {
-				layout: "./layouts/custom.json"
-			}
-		});
-	});
-
-	/**
-	 * Asserts {@link ActionClient.setImage} sends the command to the underlying {@link StreamDeckConnection}.
-	 */
-	it("Sends setImage", async () => {
-		// Arrange.
-		const { connection, container } = getMockedActionContainer();
-		const client = new ActionClient(connection, container);
-
-		// Act.
-		await client.setImage("ABC123");
-		await client.setImage("XYZ789", "./imgs/test.png", {
-			state: 1,
-			target: Target.Software
-		});
-
-		// Assert.
-		expect(connection.send).toHaveBeenCalledTimes(2);
-		expect(connection.send).toHaveBeenNthCalledWith<[SetImage]>(1, {
-			event: "setImage",
-			context: "ABC123",
-			payload: {
-				image: undefined,
-				state: undefined,
-				target: undefined
-			}
-		});
-
-		expect(connection.send).toHaveBeenNthCalledWith<[SetImage]>(2, {
-			event: "setImage",
-			context: "XYZ789",
-			payload: {
-				image: "./imgs/test.png",
-				state: 1,
-				target: 2
-			}
-		});
-	});
-
-	/**
-	 * Asserts {@link ActionClient.setState} sends the command to the underlying {@link StreamDeckConnection}.
-	 */
-	it("Sends setState", async () => {
-		// Arrange.
-		const { connection, container } = getMockedActionContainer();
-		const client = new ActionClient(connection, container);
-
-		// Act.
-		await client.setState("ABC123", 0);
-		await client.setState("XYZ789", 1);
-
-		// Assert.
-		expect(connection.send).toHaveBeenCalledTimes(2);
-		expect(connection.send).toHaveBeenNthCalledWith<[SetState]>(1, {
-			event: "setState",
-			context: "ABC123",
-			payload: {
-				state: 0
-			}
-		});
-
-		expect(connection.send).toHaveBeenNthCalledWith<[SetState]>(2, {
-			event: "setState",
-			context: "XYZ789",
-			payload: {
-				state: 1
-			}
-		});
-	});
-
-	/**
-	 * Asserts {@link ActionClient.setTitle} sends the command to the underlying {@link StreamDeckConnection}.
-	 */
-	it("Sends setTitle", async () => {
-		// Arrange.
-		const { connection, container } = getMockedActionContainer();
-		const client = new ActionClient(connection, container);
-
-		// Act.
-		await client.setTitle("CTX1", "Hello world");
-		await client.setTitle("CTX2", "This is a test", { state: 1, target: Target.Software });
-
-		// Assert.
-		expect(connection.send).toHaveBeenCalledTimes(2);
-		expect(connection.send).toHaveBeenNthCalledWith<[SetTitle]>(1, {
-			event: "setTitle",
-			context: "CTX1",
-			payload: {
-				title: "Hello world"
-			}
-		});
-
-		expect(connection.send).toHaveBeenNthCalledWith<[SetTitle]>(2, {
-			event: "setTitle",
-			context: "CTX2",
-			payload: {
-				state: 1,
-				target: Target.Software,
-				title: "This is a test"
-			}
-		});
-	});
-
-	/**
-	 * Asserts {@link ActionClient.setTriggerDescription} sends the command to the underlying {@link StreamDeckConnection}.
-	 */
-	it("Sends setTriggerDescription", async () => {
-		// Arrange.
-		const { connection, container } = getMockedActionContainer();
-		const client = new ActionClient(connection, container);
-
-		// Act.
-		await client.setTriggerDescription("ABC123");
-		await client.setTriggerDescription("XYZ789", {
-			longTouch: "Long-touch",
-			push: "Push",
-			rotate: "Rotate",
-			touch: "Touch"
-		});
-
-		// Assert.
-		expect(connection.send).toHaveBeenCalledTimes(2);
-		expect(connection.send).toHaveBeenNthCalledWith<[SetTriggerDescription]>(1, {
-			event: "setTriggerDescription",
-			context: "ABC123",
-			payload: {}
-		});
-
-		expect(connection.send).toHaveBeenNthCalledWith<[SetTriggerDescription]>(2, {
-			event: "setTriggerDescription",
-			context: "XYZ789",
-			payload: {
-				longTouch: "Long-touch",
-				push: "Push",
-				rotate: "Rotate",
-				touch: "Touch"
-			}
-		});
-	});
-
-	/**
-	 * Asserts {@link ActionClient.showAlert} sends the command to the underlying {@link StreamDeckConnection}.
-	 */
-	it("Sends showAlert", async () => {
-		// Arrange.
-		const { connection, container } = getMockedActionContainer();
-		const client = new ActionClient(connection, container);
-
-		// Act.
-		await client.showAlert("ABC123");
-
-		// Assert.
-		expect(connection.send).toHaveBeenCalledTimes(1);
-		expect(connection.send).toHaveBeenCalledWith<[ShowAlert]>({
-			event: "showAlert",
-			context: "ABC123"
-		});
-	});
-
-	/**
-	 * Asserts {@link ActionClient.showOk} sends the command to the underlying {@link StreamDeckConnection}.
-	 */
-	it("Sends showOk", async () => {
-		// Arrange.
-		const { connection, container } = getMockedActionContainer();
-		const client = new ActionClient(connection, container);
-
-		// Act.
-		await client.showOk("ABC123");
-
-		// Assert.
-		expect(connection.send).toHaveBeenCalledTimes(1);
-		expect(connection.send).toHaveBeenCalledWith<[ShowOk]>({
-			event: "showOk",
-			context: "ABC123"
-		});
 	});
 });

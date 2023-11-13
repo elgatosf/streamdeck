@@ -1,7 +1,7 @@
-import type { IActionContainer } from "./actions/action-container";
-import type { StreamDeckConnection } from "./connectivity/connection";
-import type * as api from "./connectivity/events";
-import { ActionEvent, DidReceiveGlobalSettingsEvent, DidReceiveSettingsEvent } from "./events";
+import type { IActionContainer } from "../actions/action-container";
+import type { StreamDeckConnection } from "../connectivity/connection";
+import type * as api from "../connectivity/events";
+import { ActionEvent, DidReceiveGlobalSettingsEvent, DidReceiveSettingsEvent } from "../events";
 
 /**
  * Provides management of settings associated with the Stream Deck plugin.
@@ -28,30 +28,6 @@ export class SettingsClient {
 			this.connection.send({
 				event: "getGlobalSettings",
 				context: this.connection.registrationParameters.pluginUUID
-			});
-		});
-	}
-
-	/**
-	 * Gets the settings associated with an instance of an action, as identified by the {@link context}. An instance of an action represents a button, dial, pedal, etc. See also
-	 * {@link SettingsClient.setSettings}.
-	 * @template T The type of settings associated with the action.
-	 * @param context Unique identifier of the action instance whose settings are being requested.
-	 * @returns Promise containing the action instance's settings.
-	 */
-	public getSettings<T extends api.PayloadObject<T> = object>(context: string): Promise<T> {
-		return new Promise((resolve) => {
-			const callback = (ev: api.DidReceiveSettings<T>): void => {
-				if (ev.context == context) {
-					resolve(ev.payload.settings);
-					this.connection.removeListener("didReceiveSettings", callback);
-				}
-			};
-
-			this.connection.on("didReceiveSettings", callback);
-			this.connection.send({
-				event: "getSettings",
-				context
 			});
 		});
 	}
@@ -89,25 +65,6 @@ export class SettingsClient {
 		return this.connection.send({
 			event: "setGlobalSettings",
 			context: this.connection.registrationParameters.pluginUUID,
-			payload: settings
-		});
-	}
-
-	/**
-	 * Sets the {@link settings} associated with an instance of an action, as identified by the {@link context}. An instance of an action represents a button, dial, pedal, etc. Use
-	 * in conjunction with {@link SettingsClient.getSettings}.
-	 * @param context Unique identifier of the action instance whose settings will be updated.
-	 * @param settings Settings to associate with the action instance.
-	 * @returns `Promise` resolved when the {@link settings} are sent to Stream Deck.
-	 * @example
-	 * streamDeck.settings.setSettings(ctx, {
-	 *   name: "Elgato"
-	 * })
-	 */
-	public setSettings<T>(context: string, settings: T): Promise<void> {
-		return this.connection.send({
-			event: "setSettings",
-			context,
 			payload: settings
 		});
 	}

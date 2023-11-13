@@ -126,10 +126,6 @@ export type Manifest = {
 			 * **Examples:**
 			 * - $A1
 			 * - layouts/my-custom-layout.json
-			 *
-			 * **Also see:**
-			 * - `streamDeck.client.setFeedback(...)`
-			 * - `streamDeck.client.setFeedbackLayout(...)`
 			 * @examples
 			 * [ "$X1", "$A0", "$A1", "$B1", "$B2", "$C1" ]
 			 * @pattern
@@ -148,9 +144,6 @@ export type Manifest = {
 		 * **Examples:**
 		 * - assets/counter
 		 * - imgs/actions/mute
-		 *
-		 * **Also see:**
-		 * - `streamDeck.client.setImage(...)`
 		 */
 		Icon: ImageFilePathWithoutExtension;
 
@@ -173,9 +166,6 @@ export type Manifest = {
 		/**
 		 * States the action can be in. When two states are defined the action will act as a toggle, with users being able to select their preferred iconography for each state. **NB.**
 		 * Automatic toggling of the state on action activation can be disabled by setting `DisableAutomaticStates` to `true`.
-		 *
-		 * **Also see:**
-		 * - `streamDeck.client.setState(...)`
 		 */
 		States: [State, State?];
 
@@ -211,9 +201,6 @@ export type Manifest = {
 		/**
 		 * Determines whether the title field is available to the user when viewing the action's property inspector. Setting this to `false` will disable the user from specifying a
 		 * title, thus allowing the plugin to have exclusive access to the title. Default is `true`, i.e. the title field is enabled.
-		 *
-		 * **Also see:**
-		 * - `streamDeck.client.setTitle(...)`
 		 */
 		UserTitleEnabled?: boolean;
 
@@ -411,8 +398,7 @@ export type Manifest = {
 	 * - actions/join-voice-chat/settings.html
 	 *
 	 * **Also see:**
-	 * - `streamDeck.client.sendToPropertyInspector(...)`
-	 * - `streamDeck.client.onSendToPlugin(...)`
+	 * - `streamDeck.ui.onSendToPlugin(...)`
 	 */
 	PropertyInspectorPath?: HtmlFilePath;
 
@@ -558,9 +544,6 @@ type State = {
 
 	/**
 	 * Default title to be shown when the action is added to the Stream Deck.
-	 *
-	 * **Also see:**
-	 * - `streamDeck.client.setTitle(...)`
 	 */
 	Title?: string;
 

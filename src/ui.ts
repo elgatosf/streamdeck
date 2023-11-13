@@ -50,20 +50,4 @@ export class UIClient {
 	): void {
 		this.connection.on("sendToPlugin", (ev: api.SendToPlugin<TPayload>) => listener(new SendToPluginEvent<TPayload, TSettings>(this.container.resolveAction<TSettings>(ev), ev)));
 	}
-
-	/**
-	 * Sends the {@link payload} to the current property inspector associated with an instance of an action, as identified by the {@link context}. The plugin can also receive information
-	 * from the property inspector via the `"sendToPlugin"` event, allowing for bi-directional communication. **Note**, the {@link payload} is only received by the property inspector
-	 * when it is associated with the specified {@link context}.
-	 * @param context Unique identifier of the action instance whose property inspector will receive the {@link payload}.
-	 * @param payload Payload to send to the property inspector.
-	 * @returns `Promise` resolved when the request to send the {@link payload} to the property inspector has been sent to Stream Deck.
-	 */
-	public sendToPropertyInspector<T extends api.PayloadObject<T> = object>(context: string, payload: T): Promise<void> {
-		return this.connection.send({
-			event: "sendToPropertyInspector",
-			context,
-			payload
-		});
-	}
 }

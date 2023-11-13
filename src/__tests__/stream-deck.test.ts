@@ -1,5 +1,5 @@
-import { ActionClient } from "../actions/action-client";
 import { ActionContainer } from "../actions/action-container";
+import { ActionClient } from "../actions/client";
 import { StreamDeckConnection } from "../connectivity/connection";
 import { RegistrationParameters } from "../connectivity/registration";
 import { DeviceClient } from "../devices";
@@ -8,7 +8,7 @@ import * as logging from "../logging";
 import { createLogger } from "../logging";
 import { getManifest } from "../manifest";
 import { ProfileClient } from "../profiles";
-import { SettingsClient } from "../settings";
+import { SettingsClient } from "../settings/client";
 import { StreamDeck } from "../stream-deck";
 import { System } from "../system";
 import { UIClient } from "../ui";
@@ -19,7 +19,7 @@ jest.mock<typeof import("../actions/action-container")>("../actions/action-conta
 		ActionContainer: jest.fn().mockImplementation((connection, manifest, logger) => new actionsContainerModule.ActionContainer(connection, manifest, logger))
 	};
 });
-jest.mock("../actions/action-client");
+jest.mock("../actions/client");
 jest.mock("../connectivity/connection");
 jest.mock("../connectivity/registration");
 jest.mock("../devices");
@@ -27,7 +27,7 @@ jest.mock("../i18n");
 jest.mock("../logging");
 jest.mock("../manifest");
 jest.mock("../profiles");
-jest.mock("../settings");
+jest.mock("../settings/client");
 jest.mock("../system");
 jest.mock("../ui");
 

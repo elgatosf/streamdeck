@@ -1,9 +1,10 @@
 import type { SetTriggerDescription } from "../connectivity/commands";
+import type { StreamDeckConnection } from "../connectivity/connection";
 import type { PayloadObject, State } from "../connectivity/events";
 import type { FeedbackPayload } from "../connectivity/layouts";
+import { getSettings } from "../settings/provider";
 import type { UIClient } from "../ui";
-import type { ImageOptions, TitleOptions } from "./action-client";
-import type { ActionController } from "./action-container";
+import type { ImageOptions, TitleOptions } from "./client";
 import type { SingletonAction } from "./singleton-action";
 
 /**
@@ -13,12 +14,12 @@ import type { SingletonAction } from "./singleton-action";
 export class Action<T extends PayloadObject<T> = object> {
 	/**
 	 * Initializes a new instance of the {@see Action} class.
-	 * @param controller Action controller capable of interacting with the Stream Deck.
+	 * @param connection Connection with Stream Deck.
 	 * @param manifestId Unique identifier (UUID) of the action as defined within the plugin's manifest's actions collection.
 	 * @param id Unique identifier of the instance of the action; this can be used to update the action on the Stream Deck, e.g. its title, settings, etc.
 	 */
 	constructor(
-		private readonly controller: ActionController,
+		private readonly connection: StreamDeckConnection,
 		public readonly manifestId: string,
 		public readonly id: string
 	) {}
@@ -29,7 +30,7 @@ export class Action<T extends PayloadObject<T> = object> {
 	 * @returns Promise containing the action instance's settings.
 	 */
 	public getSettings<U extends PayloadObject<U> = T>(): Promise<U> {
-		return this.controller.settings.getSettings<U>(this.id);
+		return getSettings<U>(this.connection, this.id);
 	}
 
 	/**
@@ -40,7 +41,11 @@ export class Action<T extends PayloadObject<T> = object> {
 	 * @returns `Promise` resolved when {@link payload} has been sent to the property inspector.
 	 */
 	public sendToPropertyInspector<T extends PayloadObject<T> = object>(payload: T): Promise<void> {
-		return this.controller.ui.sendToPropertyInspector(this.id, payload);
+		return this.connection.send({
+			event: "sendToPropertyInspector",
+			context: this.id,
+			payload
+		});
 	}
 
 	/**
@@ -96,7 +101,11 @@ export class Action<T extends PayloadObject<T> = object> {
 	 * @returns `Promise` resolved when the request to set the {@link feedback} has been sent to Stream Deck.
 	 */
 	public setFeedback(feedback: FeedbackPayload): Promise<void> {
-		return this.controller.actions.setFeedback(this.id, feedback);
+		return this.connection.send({
+			event: "setFeedback",
+			context: this.id,
+			payload: feedback
+		});
 	}
 
 	/**
@@ -106,7 +115,13 @@ export class Action<T extends PayloadObject<T> = object> {
 	 * @returns `Promise` resolved when the new layout has been sent to Stream Deck.
 	 */
 	public setFeedbackLayout(layout: string): Promise<void> {
-		return this.controller.actions.setFeedbackLayout(this.id, layout);
+		return this.connection.send({
+			event: "setFeedbackLayout",
+			context: this.id,
+			payload: {
+				layout
+			}
+		});
 	}
 
 	/**
@@ -117,7 +132,14 @@ export class Action<T extends PayloadObject<T> = object> {
 	 * @returns `Promise` resolved when the request to set the {@link image} has been sent to Stream Deck.
 	 */
 	public setImage(image?: string, options?: ImageOptions): Promise<void> {
-		return this.controller.actions.setImage(this.id, image, options);
+		return this.connection.send({
+			event: "setImage",
+			context: this.id,
+			payload: {
+				image,
+				...options
+			}
+		});
 	}
 
 	/**
@@ -126,7 +148,11 @@ export class Action<T extends PayloadObject<T> = object> {
 	 * @returns `Promise` resolved when the {@link settings} are sent to Stream Deck.
 	 */
 	public setSettings(settings: T): Promise<void> {
-		return this.controller.settings.setSettings(this.id, settings);
+		return this.connection.send({
+			event: "setSettings",
+			context: this.id,
+			payload: settings
+		});
 	}
 
 	/**
@@ -135,7 +161,13 @@ export class Action<T extends PayloadObject<T> = object> {
 	 * @returns `Promise` resolved when the request to set the state of an action instance has been sent to Stream Deck.
 	 */
 	public setState(state: State): Promise<void> {
-		return this.controller.actions.setState(this.id, state);
+		return this.connection.send({
+			event: "setState",
+			context: this.id,
+			payload: {
+				state
+			}
+		});
 	}
 
 	/**
@@ -145,7 +177,14 @@ export class Action<T extends PayloadObject<T> = object> {
 	 * @returns `Promise` resolved when the request to set the {@link title} has been sent to Stream Deck.
 	 */
 	public setTitle(title?: string, options?: TitleOptions): Promise<void> {
-		return this.controller.actions.setTitle(this.id, title, options);
+		return this.connection.send({
+			event: "setTitle",
+			context: this.id,
+			payload: {
+				title,
+				...options
+			}
+		});
 	}
 
 	/**
@@ -156,7 +195,11 @@ export class Action<T extends PayloadObject<T> = object> {
 	 * @returns `Promise` resolved when the request to set the {@link descriptions} has been sent to Stream Deck.
 	 */
 	public setTriggerDescription(descriptions?: SetTriggerDescription["payload"]): Promise<void> {
-		return this.controller.actions.setTriggerDescription(this.id, descriptions);
+		return this.connection.send({
+			event: "setTriggerDescription",
+			context: this.id,
+			payload: descriptions || {}
+		});
 	}
 
 	/**
@@ -164,7 +207,10 @@ export class Action<T extends PayloadObject<T> = object> {
 	 * @returns `Promise` resolved when the request to show an alert has been sent to Stream Deck.
 	 */
 	public showAlert(): Promise<void> {
-		return this.controller.actions.showAlert(this.id);
+		return this.connection.send({
+			event: "showAlert",
+			context: this.id
+		});
 	}
 
 	/**
@@ -173,6 +219,9 @@ export class Action<T extends PayloadObject<T> = object> {
 	 * @returns `Promise` resolved when the request to show an "OK" has been sent to Stream Deck.
 	 */
 	public showOk(): Promise<void> {
-		return this.controller.actions.showOk(this.id);
+		return this.connection.send({
+			event: "showOk",
+			context: this.id
+		});
 	}
 }

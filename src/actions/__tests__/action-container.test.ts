@@ -92,7 +92,7 @@ describe("ActionContainer", () => {
 			// Assert.
 			expect(action.onDialDown).toHaveBeenCalledTimes(1);
 			expect(action.onDialDown).toHaveBeenCalledWith<[DialDownEvent<mockEvents.Settings>]>({
-				action: new Action(container.controller, manifestId, context),
+				action: new Action(connection, manifestId, context),
 				deviceId: device,
 				payload,
 				type: "dialDown"
@@ -123,7 +123,7 @@ describe("ActionContainer", () => {
 			expect(action.onDialRotate).toHaveBeenCalledTimes(1);
 			expect((action.onDialRotate as jest.Mock).mock.contexts[0]).toStrictEqual(action);
 			expect(action.onDialRotate).toHaveBeenCalledWith<[DialRotateEvent<mockEvents.Settings>]>({
-				action: new Action(container.controller, manifestId, context),
+				action: new Action(connection, manifestId, context),
 				deviceId: device,
 				payload,
 				type: "dialRotate"
@@ -154,7 +154,7 @@ describe("ActionContainer", () => {
 			expect(action.onDialUp).toHaveBeenCalledTimes(1);
 			expect((action.onDialUp as jest.Mock).mock.contexts[0]).toStrictEqual(action);
 			expect(action.onDialUp).toHaveBeenCalledWith<[DialUpEvent<mockEvents.Settings>]>({
-				action: new Action(container.controller, manifestId, context),
+				action: new Action(connection, manifestId, context),
 				deviceId: device,
 				payload,
 				type: "dialUp"
@@ -185,7 +185,7 @@ describe("ActionContainer", () => {
 			expect(action.onDidReceiveSettings).toHaveBeenCalledTimes(1);
 			expect((action.onDidReceiveSettings as jest.Mock).mock.contexts[0]).toStrictEqual(action);
 			expect(action.onDidReceiveSettings).toHaveBeenCalledWith<[DidReceiveSettingsEvent<mockEvents.Settings>]>({
-				action: new Action(container.controller, manifestId, context),
+				action: new Action(connection, manifestId, context),
 				deviceId: device,
 				payload,
 				type: "didReceiveSettings"
@@ -216,7 +216,7 @@ describe("ActionContainer", () => {
 			expect(action.onKeyDown).toHaveBeenCalledTimes(1);
 			expect((action.onKeyDown as jest.Mock).mock.contexts[0]).toStrictEqual(action);
 			expect(action.onKeyDown).toHaveBeenCalledWith<[KeyDownEvent<mockEvents.Settings>]>({
-				action: new Action(container.controller, manifestId, context),
+				action: new Action(connection, manifestId, context),
 				deviceId: device,
 				payload,
 				type: "keyDown"
@@ -247,7 +247,7 @@ describe("ActionContainer", () => {
 			expect(action.onKeyUp).toHaveBeenCalledTimes(1);
 			expect((action.onKeyUp as jest.Mock).mock.contexts[0]).toStrictEqual(action);
 			expect(action.onKeyUp).toHaveBeenCalledWith<[KeyUpEvent<mockEvents.Settings>]>({
-				action: new Action(container.controller, manifestId, context),
+				action: new Action(connection, manifestId, context),
 				deviceId: device,
 				payload,
 				type: "keyUp"
@@ -278,7 +278,7 @@ describe("ActionContainer", () => {
 			expect(action.onPropertyInspectorDidAppear).toHaveBeenCalledTimes(1);
 			expect((action.onPropertyInspectorDidAppear as jest.Mock).mock.contexts[0]).toStrictEqual(action);
 			expect(action.onPropertyInspectorDidAppear).toHaveBeenCalledWith<[PropertyInspectorDidAppearEvent<never>]>({
-				action: new Action(container.controller, manifestId, context),
+				action: new Action(connection, manifestId, context),
 				deviceId: device,
 				type: "propertyInspectorDidAppear"
 			});
@@ -308,7 +308,7 @@ describe("ActionContainer", () => {
 			expect(action.onPropertyInspectorDidDisappear).toHaveBeenCalledTimes(1);
 			expect((action.onPropertyInspectorDidDisappear as jest.Mock).mock.contexts[0]).toStrictEqual(action);
 			expect(action.onPropertyInspectorDidDisappear).toHaveBeenCalledWith<[PropertyInspectorDidDisappearEvent<never>]>({
-				action: new Action(container.controller, manifestId, context),
+				action: new Action(connection, manifestId, context),
 				deviceId: device,
 				type: "propertyInspectorDidDisappear"
 			});
@@ -338,7 +338,7 @@ describe("ActionContainer", () => {
 			expect(action.onSendToPlugin).toHaveBeenCalledTimes(1);
 			expect((action.onSendToPlugin as jest.Mock).mock.contexts[0]).toStrictEqual(action);
 			expect(action.onSendToPlugin).toHaveBeenCalledWith<[SendToPluginEvent<mockEvents.Settings, never>]>({
-				action: new Action(container.controller, manifestId, context),
+				action: new Action(connection, manifestId, context),
 				payload,
 				type: "sendToPlugin"
 			});
@@ -368,7 +368,7 @@ describe("ActionContainer", () => {
 			expect(action.onTitleParametersDidChange).toHaveBeenCalledTimes(1);
 			expect((action.onTitleParametersDidChange as jest.Mock).mock.contexts[0]).toStrictEqual(action);
 			expect(action.onTitleParametersDidChange).toHaveBeenCalledWith<[TitleParametersDidChangeEvent<mockEvents.Settings>]>({
-				action: new Action(container.controller, manifestId, context),
+				action: new Action(connection, manifestId, context),
 				deviceId: device,
 				payload,
 				type: "titleParametersDidChange"
@@ -399,7 +399,7 @@ describe("ActionContainer", () => {
 			expect(action.onTouchTap).toHaveBeenCalledTimes(1);
 			expect((action.onTouchTap as jest.Mock).mock.contexts[0]).toStrictEqual(action);
 			expect(action.onTouchTap).toHaveBeenCalledWith<[TouchTapEvent<mockEvents.Settings>]>({
-				action: new Action(container.controller, manifestId, context),
+				action: new Action(connection, manifestId, context),
 				deviceId: device,
 				payload,
 				type: "touchTap"
@@ -430,7 +430,7 @@ describe("ActionContainer", () => {
 			expect(action.onWillAppear).toHaveBeenCalledTimes(1);
 			expect((action.onWillAppear as jest.Mock).mock.contexts[0]).toStrictEqual(action);
 			expect(action.onWillAppear).toHaveBeenCalledWith<[WillAppearEvent<mockEvents.Settings>]>({
-				action: new Action(container.controller, manifestId, context),
+				action: new Action(connection, manifestId, context),
 				deviceId: device,
 				payload,
 				type: "willAppear"
@@ -461,7 +461,7 @@ describe("ActionContainer", () => {
 			expect(action.onWillDisappear).toHaveBeenCalledTimes(1);
 			expect((action.onWillDisappear as jest.Mock).mock.contexts[0]).toStrictEqual(action);
 			expect(action.onWillDisappear).toHaveBeenCalledWith<[WillDisappearEvent<mockEvents.Settings>]>({
-				action: new Action(container.controller, manifestId, context),
+				action: new Action(connection, manifestId, context),
 				deviceId: device,
 				payload,
 				type: "willDisappear"

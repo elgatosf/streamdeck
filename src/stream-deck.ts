@@ -1,5 +1,5 @@
-import { ActionClient } from "./actions/action-client";
 import { ActionContainer } from "./actions/action-container";
+import { ActionClient } from "./actions/client";
 import { StreamDeckConnection } from "./connectivity/connection";
 import { RegistrationInfo, RegistrationParameters } from "./connectivity/registration";
 import { Device, DeviceClient } from "./devices";
@@ -7,7 +7,7 @@ import { I18nProvider } from "./i18n";
 import { Logger, createLogger } from "./logging";
 import { Manifest, getManifest } from "./manifest";
 import { ProfileClient } from "./profiles";
-import { SettingsClient } from "./settings";
+import { SettingsClient } from "./settings/client";
 import { System } from "./system";
 import { UIClient } from "./ui";
 

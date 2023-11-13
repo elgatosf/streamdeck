@@ -14,9 +14,9 @@ import type {
 	WillAppearEvent,
 	WillDisappearEvent
 } from "../events";
-import type { SettingsClient } from "../settings";
 import type { UIClient } from "../ui";
-import type { ActionClient } from "./action-client";
+import type { Action } from "./action";
+import type { ActionClient } from "./client";
 
 /**
  * Provides the main bridge between the plugin and the Stream Deck allowing the plugin to send requests and receive events, e.g. when the user presses an action.
@@ -47,7 +47,7 @@ export class SingletonAction<T extends PayloadObject<T> = object> {
 	public onDialUp?(ev: DialUpEvent<T>): Promise<void> | void;
 
 	/**
-	 * Occurs when the settings associated with an action instance are requested using {@link SettingsClient.getSettings}, or when the the settings were updated by the property inspector.
+	 * Occurs when the settings associated with an action instance are requested using {@link Action.getSettings}, or when the the settings were updated by the property inspector.
 	 * @param listener Function to be invoked when the event occurs.
 	 */
 	public onDidReceiveSettings?(ev: DidReceiveSettingsEvent<T>): Promise<void> | void;
@@ -77,13 +77,13 @@ export class SingletonAction<T extends PayloadObject<T> = object> {
 	public onPropertyInspectorDidDisappear?(ev: PropertyInspectorDidDisappearEvent<T>): Promise<void> | void;
 
 	/**
-	 * Occurs when a message was sent to the plugin _from_ the property inspector. The plugin can also send messages _to_ the property inspector using {@link UIClient.sendToPropertyInspector}.
+	 * Occurs when a message was sent to the plugin _from_ the property inspector. The plugin can also send messages _to_ the property inspector using {@link Action.sendToPropertyInspector}.
 	 * @param listener Function to be invoked when the event occurs.
 	 */
 	public onSendToPlugin?(ev: SendToPluginEvent<object, T>): Promise<void> | void;
 
 	/**
-	 * Occurs when the user updates an action's title settings in the Stream Deck application. Also see {@link ActionClient.setTitle}.
+	 * Occurs when the user updates an action's title settings in the Stream Deck application. Also see {@link Action.setTitle}.
 	 * @param listener Function to be invoked when the event occurs.
 	 */
 	public onTitleParametersDidChange?(ev: TitleParametersDidChangeEvent<T>): Promise<void> | void;

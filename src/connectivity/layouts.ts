@@ -1,5 +1,5 @@
 /* eslint-disable jsdoc/check-tag-names */
-import type { ActionClient } from "../actions/action-client";
+import type { ActionClient } from "../actions/client";
 
 /**
  * Payload object, used in conjunction with {@link ActionClient.setLayout}, that enables updating items within a layout.
