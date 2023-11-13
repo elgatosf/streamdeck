@@ -1,4 +1,4 @@
-import type { IActionContainer } from "../actions/action-container";
+import { Action } from "../actions/action";
 import type { StreamDeckConnection } from "../connectivity/connection";
 import type * as api from "../connectivity/events";
 import { ActionEvent, DidReceiveGlobalSettingsEvent, DidReceiveSettingsEvent } from "../events";
@@ -9,13 +9,9 @@ import { ActionEvent, DidReceiveGlobalSettingsEvent, DidReceiveSettingsEvent } f
 export class SettingsClient {
 	/**
 	 * Initializes a new instance of the {@link SettingsClient} class.
-	 * @param connection Underlying connection with the Stream Deck.
-	 * @param container Action container capable of resolving Stream Deck actions.
+	 * @param connection Connection with Stream Deck.
 	 */
-	constructor(
-		private readonly connection: StreamDeckConnection,
-		private readonly container: IActionContainer
-	) {}
+	constructor(private readonly connection: StreamDeckConnection) {}
 
 	/**
 	 * Gets the global settings associated with the plugin. Use in conjunction with {@link SettingsClient.setGlobalSettings}.
@@ -47,7 +43,7 @@ export class SettingsClient {
 	 * @param listener Function to be invoked when the event occurs.
 	 */
 	public onDidReceiveSettings<T extends api.PayloadObject<T> = object>(listener: (ev: DidReceiveSettingsEvent<T>) => void): void {
-		this.connection.on("didReceiveSettings", (ev: api.DidReceiveSettings<T>) => listener(new ActionEvent<api.DidReceiveSettings<T>>(this.container.resolveAction<T>(ev), ev)));
+		this.connection.on("didReceiveSettings", (ev: api.DidReceiveSettings<T>) => listener(new ActionEvent<api.DidReceiveSettings<T>>(new Action<T>(this.connection, ev), ev)));
 	}
 
 	/**

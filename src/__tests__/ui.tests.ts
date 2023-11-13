@@ -1,4 +1,4 @@
-import { getMockedActionContainer } from "../../tests/__mocks__/action-container";
+import { getMockedConnection } from "../../tests/__mocks__/connection";
 import { Action } from "../actions/action";
 import * as mockEvents from "../connectivity/__mocks__/events";
 import { PropertyInspectorDidAppearEvent, PropertyInspectorDidDisappearEvent, SendToPluginEvent } from "../events";
@@ -10,8 +10,8 @@ describe("UIClient", () => {
 	 */
 	it("Receives onPropertyInspectorDidAppear", () => {
 		// Arrange.
-		const { connection, container } = getMockedActionContainer();
-		const client = new UIClient(connection, container);
+		const { connection } = getMockedConnection();
+		const client = new UIClient(connection);
 
 		const listener = jest.fn();
 		client.onPropertyInspectorDidAppear(listener);
@@ -22,7 +22,7 @@ describe("UIClient", () => {
 		// Assert.
 		expect(listener).toHaveBeenCalledTimes(1);
 		expect(listener).toHaveBeenCalledWith<[PropertyInspectorDidAppearEvent<never>]>({
-			action: new Action(connection, action, context),
+			action: new Action(connection, { action, context }),
 			deviceId: device,
 			type: "propertyInspectorDidAppear"
 		});
@@ -33,8 +33,8 @@ describe("UIClient", () => {
 	 */
 	it("Receives onPropertyInspectorDidDisappear", () => {
 		// Arrange.
-		const { connection, container } = getMockedActionContainer();
-		const client = new UIClient(connection, container);
+		const { connection } = getMockedConnection();
+		const client = new UIClient(connection);
 
 		const listener = jest.fn();
 		client.onPropertyInspectorDidDisappear(listener);
@@ -45,7 +45,7 @@ describe("UIClient", () => {
 		// Assert.
 		expect(listener).toHaveBeenCalledTimes(1);
 		expect(listener).toHaveBeenCalledWith<[PropertyInspectorDidDisappearEvent<never>]>({
-			action: new Action(connection, action, context),
+			action: new Action(connection, { action, context }),
 			deviceId: device,
 			type: "propertyInspectorDidDisappear"
 		});
@@ -56,8 +56,8 @@ describe("UIClient", () => {
 	 */
 	it("Receives onSendToPlugin", () => {
 		// Arrange.
-		const { connection, container } = getMockedActionContainer();
-		const client = new UIClient(connection, container);
+		const { connection } = getMockedConnection();
+		const client = new UIClient(connection);
 
 		const listener = jest.fn();
 		client.onSendToPlugin(listener);
@@ -68,7 +68,7 @@ describe("UIClient", () => {
 		// Assert.
 		expect(listener).toHaveBeenCalledTimes(1);
 		expect(listener).toHaveBeenCalledWith<[SendToPluginEvent<mockEvents.Settings, never>]>({
-			action: new Action(connection, action, context),
+			action: new Action(connection, { action, context }),
 			payload,
 			type: "sendToPlugin"
 		});

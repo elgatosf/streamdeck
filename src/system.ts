@@ -9,7 +9,7 @@ import type { Manifest } from "./manifest";
 export class System {
 	/**
 	 * Initializes a new instance of the {@link System} class.
-	 * @param connection Underlying connection with the Stream Deck.
+	 * @param connection Connection with Stream Deck.
 	 */
 	constructor(private readonly connection: StreamDeckConnection) {}
 

@@ -13,27 +13,40 @@ import {
 	ShowAlert,
 	ShowOk
 } from "../../connectivity/commands";
-import { DidReceiveGlobalSettings } from "../../connectivity/events";
+import { ActionIdentifier, DidReceiveGlobalSettings } from "../../connectivity/events";
 import { Target } from "../../connectivity/target";
 import { Action } from "../action";
 
 describe("Action", () => {
+	/**
+	 * Asserts the constructor of {@link Action} sets the {@link Action.manifestId} and {@link Action.id}.
+	 */
 	it("Constructor sets manifestId and id", () => {
 		// Arrange.}
 		const { connection } = getMockedConnection();
+		const source: ActionIdentifier = {
+			action: "com.elgato.test.one",
+			context: "ABC123"
+		};
 
 		// Act.
-		const action = new Action(connection, "com.elgato.test.one", "ABC123");
+		const action = new Action(connection, source);
 
 		// Assert.
 		expect(action.id).toBe("ABC123");
 		expect(action.manifestId).toBe("com.elgato.test.one");
 	});
 
+	/**
+	 * Asserts {@link Action.getSettings} requests the settings from the connection.
+	 */
 	it("Can getSettings", async () => {
 		// Arrange.
 		const { connection } = getMockedConnection();
-		const action = new Action<mockEvents.Settings>(connection, "com.elgato.test.one", "ABC123");
+		const action = new Action<mockEvents.Settings>(connection, {
+			action: "com.elgato.test.one",
+			context: "ABC123"
+		});
 
 		// Act (Command).
 		const settings = action.getSettings();
@@ -72,7 +85,10 @@ describe("Action", () => {
 	it("Sends sendToPropertyInspector", async () => {
 		// Arrange.
 		const { connection } = getMockedConnection();
-		const action = new Action(connection, "com.elgato.test.one", "ABC123");
+		const action = new Action(connection, {
+			action: "com.elgato.test.one",
+			context: "ABC123"
+		});
 
 		// Act.
 		await action.sendToPropertyInspector({
@@ -96,7 +112,10 @@ describe("Action", () => {
 	it("Sends setFeedback", async () => {
 		// Arrange.
 		const { connection } = getMockedConnection();
-		const action = new Action(connection, "com.elgato.test.one", "ABC123");
+		const action = new Action(connection, {
+			action: "com.elgato.test.one",
+			context: "ABC123"
+		});
 
 		// Act.
 		await action.setFeedback({
@@ -122,7 +141,10 @@ describe("Action", () => {
 	it("Sends setFeedbackLayout", async () => {
 		// Arrange.
 		const { connection } = getMockedConnection();
-		const action = new Action(connection, "com.elgato.test.one", "ABC123");
+		const action = new Action(connection, {
+			action: "com.elgato.test.one",
+			context: "ABC123"
+		});
 
 		// Act.
 		await action.setFeedbackLayout("CustomLayout.json");
@@ -144,7 +166,10 @@ describe("Action", () => {
 	it("Sends setImage", async () => {
 		// Arrange.
 		const { connection } = getMockedConnection();
-		const action = new Action(connection, "com.elgato.test.one", "ABC123");
+		const action = new Action(connection, {
+			action: "com.elgato.test.one",
+			context: "ABC123"
+		});
 
 		// Act.
 		await action.setImage();
@@ -182,7 +207,10 @@ describe("Action", () => {
 	it("Sends setSettings", async () => {
 		// Arrange.
 		const { connection } = getMockedConnection();
-		const action = new Action<mockEvents.Settings>(connection, "com.elgato.test.one", "ABC123");
+		const action = new Action<mockEvents.Settings>(connection, {
+			action: "com.elgato.test.one",
+			context: "ABC123"
+		});
 
 		// Act.
 		await action.setSettings({
@@ -206,7 +234,10 @@ describe("Action", () => {
 	it("Sends setState", async () => {
 		// Arrange.
 		const { connection } = getMockedConnection();
-		const action = new Action(connection, "com.elgato.test.one", "ABC123");
+		const action = new Action(connection, {
+			action: "com.elgato.test.one",
+			context: "ABC123"
+		});
 
 		// Act.
 		await action.setState(1);
@@ -228,7 +259,10 @@ describe("Action", () => {
 	it("Sends setTitle", async () => {
 		// Arrange.
 		const { connection } = getMockedConnection();
-		const action = new Action(connection, "com.elgato.test.one", "ABC123");
+		const action = new Action(connection, {
+			action: "com.elgato.test.one",
+			context: "ABC123"
+		});
 
 		// Act.
 		await action.setTitle("Hello world");
@@ -261,7 +295,10 @@ describe("Action", () => {
 	it("Sends setTriggerDescription", async () => {
 		// Arrange.
 		const { connection } = getMockedConnection();
-		const action = new Action(connection, "com.elgato.test.one", "ABC123");
+		const action = new Action(connection, {
+			action: "com.elgato.test.one",
+			context: "ABC123"
+		});
 
 		// Act.
 		await action.setTriggerDescription();
@@ -298,7 +335,10 @@ describe("Action", () => {
 	it("Sends showAlert", async () => {
 		// Arrange.
 		const { connection } = getMockedConnection();
-		const action = new Action(connection, "com.elgato.test.one", "ABC123");
+		const action = new Action(connection, {
+			action: "com.elgato.test.one",
+			context: "ABC123"
+		});
 
 		// Act.
 		await action.showAlert();
@@ -317,7 +357,10 @@ describe("Action", () => {
 	it("Sends showOk", async () => {
 		// Arrange.
 		const { connection } = getMockedConnection();
-		const action = new Action(connection, "com.elgato.test.one", "ABC123");
+		const action = new Action(connection, {
+			action: "com.elgato.test.one",
+			context: "ABC123"
+		});
 
 		// Act.
 		await action.showOk();

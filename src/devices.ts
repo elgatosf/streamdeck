@@ -13,7 +13,7 @@ export class DeviceClient {
 
 	/**
 	 * Initializes a new instance of the {@link DeviceClient} class.
-	 * @param connection Underlying connection with the Stream Deck.
+	 * @param connection Connection with Stream Deck.
 	 */
 	constructor(private readonly connection: StreamDeckConnection) {
 		// Add the devices based on the registration parameters.

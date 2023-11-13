@@ -1,4 +1,3 @@
-import { ActionContainer } from "./actions/action-container";
 import { ActionClient } from "./actions/client";
 import { StreamDeckConnection } from "./connectivity/connection";
 import { RegistrationInfo, RegistrationParameters } from "./connectivity/registration";
@@ -16,9 +15,9 @@ import { UIClient } from "./ui";
  */
 export class StreamDeck {
 	/**
-	 * Private backing field for {@link StreamDeck.actionContainer}.
+	 * Private backing field for {@link StreamDeck.actions}.
 	 */
-	private _actionContainer: ActionContainer | undefined;
+	private _actions: ActionClient | undefined;
 
 	/**
 	 * Private backing field for {@link StreamDeck.connection}.
@@ -56,16 +55,26 @@ export class StreamDeck {
 	private _registrationParameters: RegistrationParameters | undefined;
 
 	/**
+	 * Private backing field for {@link StreamDeck.settings}.
+	 */
+	private _settings: SettingsClient | undefined;
+
+	/**
 	 * Private backing field for {@link StreamDeck.system};
 	 */
 	private _system: System | undefined;
+
+	/**
+	 * Private backing field for {@link StreamDeck.ui}.
+	 */
+	private _ui: UIClient | undefined;
 
 	/**
 	 * Provides information about, and methods for interacting with, actions associated with the Stream Deck plugin.
 	 * @returns The {@link ActionClient}.
 	 */
 	public get actions(): ActionClient {
-		return this.actionContainer.controller.actions;
+		return (this._actions ??= new ActionClient(this.connection, this.manifest, this.settings, this.ui, this.logger));
 	}
 
 	/**
@@ -121,7 +130,7 @@ export class StreamDeck {
 	 * @returns The {@link System}.
 	 */
 	public get settings(): SettingsClient {
-		return this.actionContainer.controller.settings;
+		return (this._settings ??= new SettingsClient(this.connection));
 	}
 
 	/**
@@ -137,15 +146,7 @@ export class StreamDeck {
 	 * @returns The {@link UIClient}.
 	 */
 	public get ui(): UIClient {
-		return this.actionContainer.controller.ui;
-	}
-
-	/**
-	 * Action registry responsible for managing the registration and resolving of Stream Deck actions.
-	 * @returns The {@link ActionContainer}.
-	 */
-	private get actionContainer(): ActionContainer {
-		return this._actionContainer || (this._actionContainer = new ActionContainer(this.connection, this.manifest, this.logger));
+		return (this._ui ??= new UIClient(this.connection));
 	}
 
 	/**

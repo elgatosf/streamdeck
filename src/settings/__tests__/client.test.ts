@@ -1,4 +1,4 @@
-import { getMockedActionContainer } from "../../../tests/__mocks__/action-container";
+import { getMockedConnection } from "../../../tests/__mocks__/connection";
 import { Action } from "../../actions/action";
 import * as mockEvents from "../../connectivity/__mocks__/events";
 import { GetGlobalSettings, SetGlobalSettings } from "../../connectivity/commands";
@@ -12,8 +12,8 @@ describe("SettingsClient", () => {
 	 */
 	it("Can getGlobalSettings", async () => {
 		// Arrange.
-		const { connection, container } = getMockedActionContainer();
-		const client = new SettingsClient(connection, container);
+		const { connection } = getMockedConnection();
+		const client = new SettingsClient(connection);
 
 		// Act (Command).
 		const settings = client.getGlobalSettings<mockEvents.Settings>();
@@ -42,8 +42,8 @@ describe("SettingsClient", () => {
 	 */
 	it("Receives onDidReceiveGlobalSettings", () => {
 		// Arrange.
-		const { connection, container } = getMockedActionContainer();
-		const client = new SettingsClient(connection, container);
+		const { connection } = getMockedConnection();
+		const client = new SettingsClient(connection);
 
 		const listener = jest.fn();
 		client.onDidReceiveGlobalSettings(listener);
@@ -66,8 +66,8 @@ describe("SettingsClient", () => {
 	 */
 	it("Receives onDidReceiveSettings", () => {
 		// Arrange.
-		const { connection, container } = getMockedActionContainer();
-		const client = new SettingsClient(connection, container);
+		const { connection } = getMockedConnection();
+		const client = new SettingsClient(connection);
 
 		const listener = jest.fn();
 		client.onDidReceiveSettings(listener);
@@ -78,7 +78,7 @@ describe("SettingsClient", () => {
 		// Assert.
 		expect(listener).toHaveBeenCalledTimes(1);
 		expect(listener).toHaveBeenCalledWith<[DidReceiveSettingsEvent<mockEvents.Settings>]>({
-			action: new Action(connection, action, context),
+			action: new Action(connection, { action, context }),
 			deviceId: device,
 			payload,
 			type: "didReceiveSettings"
@@ -90,8 +90,8 @@ describe("SettingsClient", () => {
 	 */
 	it("Sends setGlobalSettings", async () => {
 		// Arrange.
-		const { connection, container } = getMockedActionContainer();
-		const client = new SettingsClient(connection, container);
+		const { connection } = getMockedConnection();
+		const client = new SettingsClient(connection);
 
 		// Act.
 		await client.setGlobalSettings({

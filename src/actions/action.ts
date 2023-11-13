@@ -1,6 +1,6 @@
 import type { SetTriggerDescription } from "../connectivity/commands";
 import type { StreamDeckConnection } from "../connectivity/connection";
-import type { PayloadObject, State } from "../connectivity/events";
+import type { ActionIdentifier, PayloadObject, State } from "../connectivity/events";
 import type { FeedbackPayload } from "../connectivity/layouts";
 import { getSettings } from "../settings/provider";
 import type { UIClient } from "../ui";
@@ -13,16 +13,27 @@ import type { SingletonAction } from "./singleton-action";
  */
 export class Action<T extends PayloadObject<T> = object> {
 	/**
+	 * Unique identifier of the instance of the action; this can be used to update the action on the Stream Deck, e.g. its title, settings, etc.
+	 */
+	public readonly id: string;
+
+	/**
+	 * Unique identifier (UUID) of the action as defined within the plugin's manifest's actions collection.
+	 */
+	public readonly manifestId: string;
+
+	/**
 	 * Initializes a new instance of the {@see Action} class.
 	 * @param connection Connection with Stream Deck.
-	 * @param manifestId Unique identifier (UUID) of the action as defined within the plugin's manifest's actions collection.
-	 * @param id Unique identifier of the instance of the action; this can be used to update the action on the Stream Deck, e.g. its title, settings, etc.
+	 * @param source Source of the action.
 	 */
 	constructor(
 		private readonly connection: StreamDeckConnection,
-		public readonly manifestId: string,
-		public readonly id: string
-	) {}
+		source: ActionIdentifier
+	) {
+		this.id = source.context;
+		this.manifestId = source.action;
+	}
 
 	/**
 	 * Gets the settings associated this action instance. See also {@link Action.setSettings}.
