@@ -141,7 +141,7 @@ describe("DeviceClient", () => {
 		expect(device.type).toBe(DeviceType.StreamDeckMobile);
 	});
 
-	describe("getDevice", () => {
+	describe("getDeviceById", () => {
 		it("Known identifier", () => {
 			// Arrange.
 			const { logger } = getMockedLogger();
@@ -162,7 +162,7 @@ describe("DeviceClient", () => {
 			});
 
 			// Act.
-			const device = devices.getDevice("devices.test.ts.1");
+			const device = devices.getDeviceById("devices.test.ts.1");
 
 			// Assert.
 			expect(device).not.toBeUndefined();
@@ -181,7 +181,7 @@ describe("DeviceClient", () => {
 			const devices = new DeviceClient(connection);
 
 			// Act, assert.
-			expect(devices.getDevice("__unknown")).toBeUndefined();
+			expect(devices.getDeviceById("__unknown")).toBeUndefined();
 		});
 	});
 

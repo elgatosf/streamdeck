@@ -74,7 +74,7 @@ export class DeviceClient {
 	 * @param deviceId Identifier of the Stream Deck device.
 	 * @returns The Stream Deck device information; otherwise `undefined` if a device with the {@link deviceId} does not exist.
 	 */
-	public getDevice(deviceId: string): Device | undefined {
+	public getDeviceById(deviceId: string): Device | undefined {
 		return this.devices.get(deviceId);
 	}
 
