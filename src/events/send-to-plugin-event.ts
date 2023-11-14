@@ -1,6 +1,5 @@
 import { Action } from "../actions/action";
-import type { StreamDeckClient } from "../client";
-import { PayloadObject, SendToPlugin } from "../connectivity/events";
+import type { PayloadObject, SendToPlugin } from "../connectivity/events";
 import { Event } from "./event";
 
 /**
@@ -8,23 +7,20 @@ import { Event } from "./event";
  */
 export class SendToPluginEvent<TPayload extends PayloadObject<TPayload>, TSettings extends PayloadObject<TSettings>> extends Event<SendToPlugin<TPayload>> {
 	/**
-	 * The action that raised the event.
-	 */
-	public readonly action: Action<TSettings>;
-
-	/**
 	 * Payload sent from the property inspector.
 	 */
 	public payload: TPayload;
 
 	/**
 	 * Initializes a new instance of the {@link SendToPluginEvent} class.
-	 * @param client The Stream Deck client that raised the event.
+	 * @param action Action that raised the event.
 	 * @param source Source of the event, i.e. the original message from Stream Deck.
 	 */
-	constructor(client: StreamDeckClient, source: SendToPlugin<TPayload>) {
+	constructor(
+		public readonly action: Action<TSettings>,
+		source: SendToPlugin<TPayload>
+	) {
 		super(source);
-		this.action = new Action(client, source.action, source.context);
 		this.payload = source.payload;
 	}
 }

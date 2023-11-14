@@ -1,4 +1,4 @@
-import { getMockedClient } from "../../../tests/__mocks__/client";
+import { getMockedConnection } from "../../../tests/__mocks__/connection";
 import * as mockEvents from "../../connectivity/__mocks__/events";
 import {
 	GetSettings,
@@ -13,27 +13,40 @@ import {
 	ShowAlert,
 	ShowOk
 } from "../../connectivity/commands";
-import { DidReceiveGlobalSettings } from "../../connectivity/events";
+import { ActionIdentifier, DidReceiveGlobalSettings } from "../../connectivity/events";
 import { Target } from "../../connectivity/target";
 import { Action } from "../action";
 
 describe("Action", () => {
+	/**
+	 * Asserts the constructor of {@link Action} sets the {@link Action.manifestId} and {@link Action.id}.
+	 */
 	it("Constructor sets manifestId and id", () => {
-		// Arrange.
-		const { client } = getMockedClient();
+		// Arrange.}
+		const { connection } = getMockedConnection();
+		const source: ActionIdentifier = {
+			action: "com.elgato.test.one",
+			context: "ABC123"
+		};
 
 		// Act.
-		const action = new Action(client, "com.elgato.test.one", "ABC123");
+		const action = new Action(connection, source);
 
 		// Assert.
 		expect(action.id).toBe("ABC123");
 		expect(action.manifestId).toBe("com.elgato.test.one");
 	});
 
+	/**
+	 * Asserts {@link Action.getSettings} requests the settings from the connection.
+	 */
 	it("Can getSettings", async () => {
 		// Arrange.
-		const { connection, client } = getMockedClient();
-		const action = new Action<mockEvents.Settings>(client, "com.elgato.test.one", "ABC123");
+		const { connection } = getMockedConnection();
+		const action = new Action<mockEvents.Settings>(connection, {
+			action: "com.elgato.test.one",
+			context: "ABC123"
+		});
 
 		// Act (Command).
 		const settings = action.getSettings();
@@ -66,10 +79,16 @@ describe("Action", () => {
 		});
 	});
 
+	/**
+	 * Asserts {@link Action.sendToPropertyInspector} forwards the command to the Stream Deck connection.
+	 */
 	it("Sends sendToPropertyInspector", async () => {
 		// Arrange.
-		const { connection, client } = getMockedClient();
-		const action = new Action(client, "com.elgato.test.one", "ABC123");
+		const { connection } = getMockedConnection();
+		const action = new Action(connection, {
+			action: "com.elgato.test.one",
+			context: "ABC123"
+		});
 
 		// Act.
 		await action.sendToPropertyInspector({
@@ -87,10 +106,16 @@ describe("Action", () => {
 		});
 	});
 
+	/**
+	 * Asserts {@link Action.setFeedback} forwards the command to the Stream Deck connection.
+	 */
 	it("Sends setFeedback", async () => {
 		// Arrange.
-		const { connection, client } = getMockedClient();
-		const action = new Action(client, "com.elgato.test.one", "ABC123");
+		const { connection } = getMockedConnection();
+		const action = new Action(connection, {
+			action: "com.elgato.test.one",
+			context: "ABC123"
+		});
 
 		// Act.
 		await action.setFeedback({
@@ -110,10 +135,16 @@ describe("Action", () => {
 		});
 	});
 
+	/**
+	 * Asserts {@link Action.setFeedbackLayout} forwards the command to the Stream Deck connection.
+	 */
 	it("Sends setFeedbackLayout", async () => {
 		// Arrange.
-		const { connection, client } = getMockedClient();
-		const action = new Action(client, "com.elgato.test.one", "ABC123");
+		const { connection } = getMockedConnection();
+		const action = new Action(connection, {
+			action: "com.elgato.test.one",
+			context: "ABC123"
+		});
 
 		// Act.
 		await action.setFeedbackLayout("CustomLayout.json");
@@ -129,10 +160,16 @@ describe("Action", () => {
 		});
 	});
 
+	/**
+	 * Asserts {@link Action.setImage} forwards the command to the Stream Deck connection.
+	 */
 	it("Sends setImage", async () => {
 		// Arrange.
-		const { connection, client } = getMockedClient();
-		const action = new Action(client, "com.elgato.test.one", "ABC123");
+		const { connection } = getMockedConnection();
+		const action = new Action(connection, {
+			action: "com.elgato.test.one",
+			context: "ABC123"
+		});
 
 		// Act.
 		await action.setImage();
@@ -164,10 +201,16 @@ describe("Action", () => {
 		});
 	});
 
+	/**
+	 * Asserts {@link Action.setSettings} forwards the command to the Stream Deck connection.
+	 */
 	it("Sends setSettings", async () => {
 		// Arrange.
-		const { connection, client } = getMockedClient();
-		const action = new Action<mockEvents.Settings>(client, "com.elgato.test.one", "ABC123");
+		const { connection } = getMockedConnection();
+		const action = new Action<mockEvents.Settings>(connection, {
+			action: "com.elgato.test.one",
+			context: "ABC123"
+		});
 
 		// Act.
 		await action.setSettings({
@@ -185,10 +228,16 @@ describe("Action", () => {
 		});
 	});
 
+	/**
+	 * Asserts {@link Action.setState} forwards the command to the Stream Deck connection.
+	 */
 	it("Sends setState", async () => {
 		// Arrange.
-		const { connection, client } = getMockedClient();
-		const action = new Action(client, "com.elgato.test.one", "ABC123");
+		const { connection } = getMockedConnection();
+		const action = new Action(connection, {
+			action: "com.elgato.test.one",
+			context: "ABC123"
+		});
 
 		// Act.
 		await action.setState(1);
@@ -204,10 +253,16 @@ describe("Action", () => {
 		});
 	});
 
+	/**
+	 * Asserts {@link Action.setTitle} forwards the command to the Stream Deck connection.
+	 */
 	it("Sends setTitle", async () => {
 		// Arrange.
-		const { connection, client } = getMockedClient();
-		const action = new Action(client, "com.elgato.test.one", "ABC123");
+		const { connection } = getMockedConnection();
+		const action = new Action(connection, {
+			action: "com.elgato.test.one",
+			context: "ABC123"
+		});
 
 		// Act.
 		await action.setTitle("Hello world");
@@ -234,10 +289,16 @@ describe("Action", () => {
 		});
 	});
 
+	/**
+	 * Asserts {@link Action.setTriggerDescription} forwards the command to the Stream Deck connection.
+	 */
 	it("Sends setTriggerDescription", async () => {
 		// Arrange.
-		const { connection, client } = getMockedClient();
-		const action = new Action(client, "com.elgato.test.one", "ABC123");
+		const { connection } = getMockedConnection();
+		const action = new Action(connection, {
+			action: "com.elgato.test.one",
+			context: "ABC123"
+		});
 
 		// Act.
 		await action.setTriggerDescription();
@@ -268,10 +329,16 @@ describe("Action", () => {
 		});
 	});
 
+	/**
+	 * Asserts {@link Action.showAlert} forwards the command to the Stream Deck connection.
+	 */
 	it("Sends showAlert", async () => {
 		// Arrange.
-		const { connection, client } = getMockedClient();
-		const action = new Action(client, "com.elgato.test.one", "ABC123");
+		const { connection } = getMockedConnection();
+		const action = new Action(connection, {
+			action: "com.elgato.test.one",
+			context: "ABC123"
+		});
 
 		// Act.
 		await action.showAlert();
@@ -284,10 +351,16 @@ describe("Action", () => {
 		});
 	});
 
+	/**
+	 * Asserts {@link Action.showOk} forwards the command to the Stream Deck connection.
+	 */
 	it("Sends showOk", async () => {
 		// Arrange.
-		const { connection, client } = getMockedClient();
-		const action = new Action(client, "com.elgato.test.one", "ABC123");
+		const { connection } = getMockedConnection();
+		const action = new Action(connection, {
+			action: "com.elgato.test.one",
+			context: "ABC123"
+		});
 
 		// Act.
 		await action.showOk();

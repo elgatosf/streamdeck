@@ -137,6 +137,5 @@ describe("isDebugMode", () => {
 		// Re-arrange, act, assert.
 		process.execArgv = [];
 		expect(isDebugMode()).toBe(true);
-		console.log("Hello world");
 	});
 });

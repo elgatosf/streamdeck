@@ -1,6 +1,5 @@
-import { StreamDeckClient } from "../client";
-import { PayloadObject } from "../connectivity/events";
-import {
+import type { PayloadObject } from "../connectivity/events";
+import type {
 	DialDownEvent,
 	DialRotateEvent,
 	DialUpEvent,
@@ -15,6 +14,9 @@ import {
 	WillAppearEvent,
 	WillDisappearEvent
 } from "../events";
+import type { UIClient } from "../ui";
+import type { Action } from "./action";
+import type { ActionClient } from "./client";
 
 /**
  * Provides the main bridge between the plugin and the Stream Deck allowing the plugin to send requests and receive events, e.g. when the user presses an action.
@@ -27,7 +29,7 @@ export class SingletonAction<T extends PayloadObject<T> = object> {
 	public readonly manifestId: string | undefined;
 
 	/**
-	 * Occurs when the user presses a dial (Stream Deck+). **NB** For other action types see {@link StreamDeckClient.onKeyDown}. Also see {@link StreamDeckClient.onDialUp}.
+	 * Occurs when the user presses a dial (Stream Deck+). **NB** For other action types see {@link ActionClient.onKeyDown}. Also see {@link ActionClient.onDialUp}.
 	 * @param listener Function to be invoked when the event occurs.
 	 */
 	public onDialDown?(ev: DialDownEvent<T>): Promise<void> | void;
@@ -39,49 +41,49 @@ export class SingletonAction<T extends PayloadObject<T> = object> {
 	public onDialRotate?(ev: DialRotateEvent<T>): Promise<void> | void;
 
 	/**
-	 * Occurs when the user releases a pressed dial (Stream Deck+). **NB** For other action types see {@link StreamDeckClient.onKeyUp}. Also see {@link StreamDeckClient.onDialDown}.
+	 * Occurs when the user releases a pressed dial (Stream Deck+). **NB** For other action types see {@link ActionClient.onKeyUp}. Also see {@link ActionClient.onDialDown}.
 	 * @param listener Function to be invoked when the event occurs.
 	 */
 	public onDialUp?(ev: DialUpEvent<T>): Promise<void> | void;
 
 	/**
-	 * Occurs when the settings associated with an action instance are requested using {@link StreamDeckClient.getSettings}, or when the the settings were updated by the property inspector.
+	 * Occurs when the settings associated with an action instance are requested using {@link Action.getSettings}, or when the the settings were updated by the property inspector.
 	 * @param listener Function to be invoked when the event occurs.
 	 */
 	public onDidReceiveSettings?(ev: DidReceiveSettingsEvent<T>): Promise<void> | void;
 
 	/**
-	 * Occurs when the user presses a action down. **NB** For dials / touchscreens see {@link StreamDeckClient.onDialDown}. Also see {@link StreamDeckClient.onKeyUp}.
+	 * Occurs when the user presses a action down. **NB** For dials / touchscreens see {@link ActionClient.onDialDown}. Also see {@link ActionClient.onKeyUp}.
 	 * @param listener Function to be invoked when the event occurs.
 	 */
 	public onKeyDown?(ev: KeyDownEvent<T>): Promise<void> | void;
 
 	/**
-	 * Occurs when the user releases a pressed action. **NB** For dials / touchscreens see {@link StreamDeckClient.onDialUp}. Also see {@link StreamDeckClient.onKeyDown}.
+	 * Occurs when the user releases a pressed action. **NB** For dials / touchscreens see {@link ActionClient.onDialUp}. Also see {@link ActionClient.onKeyDown}.
 	 * @param listener Function to be invoked when the event occurs.
 	 */
 	public onKeyUp?(ev: KeyUpEvent<T>): Promise<void> | void;
 
 	/**
-	 * Occurs when the property inspector associated with the action becomes visible, i.e. the user selected an action in the Stream Deck application. Also see {@link StreamDeckClient.onPropertyInspectorDidDisappear}.
+	 * Occurs when the property inspector associated with the action becomes visible, i.e. the user selected an action in the Stream Deck application. Also see {@link UIClient.onPropertyInspectorDidDisappear}.
 	 * @param listener Function to be invoked when the event occurs.
 	 */
 	public onPropertyInspectorDidAppear?(ev: PropertyInspectorDidAppearEvent<T>): Promise<void> | void;
 
 	/**
-	 * Occurs when the property inspector associated with the action becomes invisible, i.e. the user unselected the action in the Stream Deck application. Also see {@link StreamDeckClient.onPropertyInspectorDidAppear}.
+	 * Occurs when the property inspector associated with the action becomes invisible, i.e. the user unselected the action in the Stream Deck application. Also see {@link UIClient.onPropertyInspectorDidAppear}.
 	 * @param listener Function to be invoked when the event occurs.
 	 */
 	public onPropertyInspectorDidDisappear?(ev: PropertyInspectorDidDisappearEvent<T>): Promise<void> | void;
 
 	/**
-	 * Occurs when a message was sent to the plugin _from_ the property inspector. The plugin can also send messages _to_ the property inspector using {@link StreamDeckClient.sendToPropertyInspector}.
+	 * Occurs when a message was sent to the plugin _from_ the property inspector. The plugin can also send messages _to_ the property inspector using {@link Action.sendToPropertyInspector}.
 	 * @param listener Function to be invoked when the event occurs.
 	 */
 	public onSendToPlugin?(ev: SendToPluginEvent<object, T>): Promise<void> | void;
 
 	/**
-	 * Occurs when the user updates an action's title settings in the Stream Deck application. Also see {@link StreamDeckClient.setTitle}.
+	 * Occurs when the user updates an action's title settings in the Stream Deck application. Also see {@link Action.setTitle}.
 	 * @param listener Function to be invoked when the event occurs.
 	 */
 	public onTitleParametersDidChange?(ev: TitleParametersDidChangeEvent<T>): Promise<void> | void;
