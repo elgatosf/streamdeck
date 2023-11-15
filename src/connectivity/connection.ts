@@ -24,7 +24,7 @@ export function createConnection(registrationParameters: RegistrationParameters,
  * Provides a connection between the plugin and the Stream Deck allowing for messages to be sent and received.
  */
 export type StreamDeckConnection = TypedEventEmitter<{
-	[K in Event["event"]]: (data: Extract<Event, EventIdentifier<K>>) => void;
+	[K in Event["event"]]: Extract<Event, EventIdentifier<K>>;
 }> & {
 	/**
 	 * Registration parameters used to establish a connection with the Stream Deck; these are automatically supplied as part of the command line arguments when the plugin is ran by

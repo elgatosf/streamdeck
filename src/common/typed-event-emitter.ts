@@ -1,55 +1,49 @@
 /**
- * Credit to https://github.com/andywer/typed-emitter/blob/master/index.d.ts
+ * Inspired by work credited to https://github.com/andywer/typed-emitter/blob/master/index.d.ts
  */
 import type { EventEmitter } from "node:events";
 
 /**
- * Map of event listeners, indexed by their event name.
- */
-export type EventMap = {
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	[key: string]: (...args: any[]) => void;
-};
-
-/**
  * An {@link EventEmitter} with typed event names and listeners.
  */
-export interface TypedEventEmitter<M extends EventMap> {
+export interface TypedEventEmitter<TMap> {
 	/** @inheritdoc */
-	addListener<E extends keyof M>(event: E, listener: M[E]): this;
+	addListener<TEventName extends keyof TMap, TData extends TMap[TEventName]>(event: TEventName, listener: (data: TData) => void): this;
 
 	/** @inheritdoc */
-	on<E extends keyof M>(event: E, listener: M[E]): this;
+	on<TEventName extends keyof TMap, TData extends TMap[TEventName]>(event: TEventName, listener: (data: TData) => void): this;
 
 	/** @inheritdoc */
-	once<E extends keyof M>(event: E, listener: M[E]): this;
+	once<TEventName extends keyof TMap, TData extends TMap[TEventName]>(event: TEventName, listener: (data: TData) => void): this;
 
 	/** @inheritdoc */
-	prependListener<E extends keyof M>(event: E, listener: M[E]): this;
+	prependListener<TEventName extends keyof TMap, TData extends TMap[TEventName]>(event: TEventName, listener: (data: TData) => void): this;
 
 	/** @inheritdoc */
-	prependOnceListener<E extends keyof M>(event: E, listener: M[E]): this;
+	prependOnceListener<TEventName extends keyof TMap, TData extends TMap[TEventName]>(event: TEventName, listener: (data: TData) => void): this;
 
 	/** @inheritdoc */
-	off<E extends keyof M>(event: E, listener: M[E]): this;
+	off<TEventName extends keyof TMap, TData extends TMap[TEventName]>(event: TEventName, listener: (data: TData) => void): this;
 
 	/** @inheritdoc */
-	removeAllListeners<E extends keyof M>(event?: E): this;
+	removeAllListeners<TEventName extends keyof TMap>(event?: TEventName): this;
 
 	/** @inheritdoc */
-	removeListener<E extends keyof M>(event: E, listener: M[E]): this;
+	removeListener<TEventName extends keyof TMap, TData extends TMap[TEventName]>(event: TEventName, listener: (data: TData) => void): this;
 
 	/** @inheritdoc */
-	emit<E extends keyof M>(event: E, ...args: Parameters<M[E]>): boolean;
+	emit<TEventName extends keyof TMap>(event: TEventName, data: TMap[TEventName]): boolean;
 
 	/** @inheritdoc */
-	rawListeners<E extends keyof M>(event: E): M[E][];
+	// eslint-disable-next-line @typescript-eslint/ban-types
+	rawListeners<TEventName extends keyof TMap>(event: TEventName): Function[];
 
 	/** @inheritdoc */
-	listeners<E extends keyof M>(event: E): M[E][];
+	// eslint-disable-next-line @typescript-eslint/ban-types
+	listeners<TEventName extends keyof TMap>(event: TEventName): Function[];
 
 	/** @inheritdoc */
-	listenerCount<E extends keyof M>(event: E): number;
+	listenerCount<TEventName extends keyof TMap>(event: TEventName): number;
 
 	/** @inheritdoc */
 	getMaxListeners(): number;
