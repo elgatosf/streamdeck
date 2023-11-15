@@ -1,4 +1,4 @@
-import { getMockedConnection } from "../../../tests/__mocks__/connection";
+import { getConnection } from "../../../tests/__mocks__/connection";
 import * as mockEvents from "../../connectivity/__mocks__/events";
 import { GetSettings } from "../../connectivity/commands";
 import { SettingsClient } from "../../settings/client";
@@ -10,7 +10,7 @@ describe("getSettings", () => {
 	 */
 	it("Requests and awaits settings from the connection", async () => {
 		// Arrange.
-		const { connection } = getMockedConnection();
+		const { connection, emitMessage } = getConnection();
 
 		// Act (Command).
 		const settings = getSettings(connection, mockEvents.didReceiveSettings.context);
@@ -29,8 +29,8 @@ describe("getSettings", () => {
 		other.context = "__XYZ123";
 		other.payload.settings.name = "Other settings";
 
-		connection.__emit(other);
-		connection.__emit(mockEvents.didReceiveSettings);
+		emitMessage(other);
+		emitMessage(mockEvents.didReceiveSettings);
 		await settings;
 
 		// Assert (Event).

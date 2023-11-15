@@ -1,10 +1,8 @@
-import { getMockedConnection } from "../../tests/__mocks__/connection";
+import { getConnection } from "../../tests/__mocks__/connection";
 import * as mockEvents from "../connectivity/__mocks__/events";
 import { DeviceType } from "../connectivity/device-info";
 import { Device, DeviceClient } from "../devices";
 import { DeviceDidConnectEvent, DeviceDidDisconnectEvent } from "../events";
-
-jest.mock("../connectivity/connection");
 
 describe("DeviceClient", () => {
 	/**
@@ -12,9 +10,9 @@ describe("DeviceClient", () => {
 	 */
 	it("Applies callback with forEach", () => {
 		// Arrange.
-		const { connection } = getMockedConnection();
+		const { connection, emitMessage } = getConnection();
 		const devices = new DeviceClient(connection);
-		const newDevice = connection.__emit({
+		const newDevice = emitMessage({
 			event: "deviceDidConnect",
 			device: "devices.test.ts.1",
 			deviceInfo: {
@@ -51,14 +49,14 @@ describe("DeviceClient", () => {
 	 */
 	it("Counts devices", () => {
 		// Arrange.
-		const { connection } = getMockedConnection();
+		const { connection, emitMessage } = getConnection();
 		const devices = new DeviceClient(connection);
 
 		// Act, assert: registration parameters are included.
 		expect(devices.length).toBe(1);
 
 		// Act, assert: count increments with new devices.
-		connection.__emit({
+		emitMessage({
 			event: "deviceDidConnect",
 			device: "devices.test.ts.1",
 			deviceInfo: {
@@ -71,7 +69,7 @@ describe("DeviceClient", () => {
 		expect(devices.length).toBe(2);
 
 		// Act, assert: count remains 2 when device disconnected
-		connection.__emit({
+		emitMessage({
 			event: "deviceDidDisconnect",
 			device: "devices.test.ts.1"
 		});
@@ -84,7 +82,7 @@ describe("DeviceClient", () => {
 	 */
 	it("Adds devices from registration info", () => {
 		// Arrange.
-		const { connection } = getMockedConnection();
+		const { connection } = getConnection();
 
 		// Act.
 		const devices = new DeviceClient(connection);
@@ -105,11 +103,11 @@ describe("DeviceClient", () => {
 	 */
 	it("Adds device on deviceDidConnect", () => {
 		// Arrange.
-		const { connection } = getMockedConnection();
+		const { connection, emitMessage } = getConnection();
 		const devices = new DeviceClient(connection);
 
 		// Act.
-		connection.__emit({
+		emitMessage({
 			event: "deviceDidConnect",
 			device: "__NEW_DEV__",
 			deviceInfo: {
@@ -137,10 +135,10 @@ describe("DeviceClient", () => {
 	describe("getDeviceById", () => {
 		it("Known identifier", () => {
 			// Arrange.
-			const { connection } = getMockedConnection();
+			const { connection, emitMessage } = getConnection();
 			const devices = new DeviceClient(connection);
 
-			connection.__emit({
+			emitMessage({
 				event: "deviceDidConnect",
 				device: "devices.test.ts.1",
 				deviceInfo: {
@@ -168,7 +166,7 @@ describe("DeviceClient", () => {
 
 		it("Unknown identifier", () => {
 			// Arrange.
-			const { connection } = getMockedConnection();
+			const { connection } = getConnection();
 			const devices = new DeviceClient(connection);
 
 			// Act, assert.
@@ -181,14 +179,14 @@ describe("DeviceClient", () => {
 	 */
 	it("Updates device on deviceDidConnect", () => {
 		// Arrange.
-		const { connection } = getMockedConnection();
+		const { connection, emitMessage } = getConnection();
 		const devices = new DeviceClient(connection);
 
 		// Act.
 		const [device] = devices;
 		expect(device.isConnected).toBeFalsy();
 
-		connection.__emit({
+		emitMessage({
 			event: "deviceDidConnect",
 			device: connection.registrationParameters.info.devices[0].id,
 			deviceInfo: connection.registrationParameters.info.devices[0]
@@ -209,21 +207,21 @@ describe("DeviceClient", () => {
 	 */
 	it("Updates device on deviceDidDisconnect", () => {
 		// Arrange.
-		const { connection } = getMockedConnection();
+		const { connection, emitMessage } = getConnection();
 		const devices = new DeviceClient(connection);
 
 		// Act.
 		const [device] = devices;
 		expect(device.isConnected).toBeFalsy();
 
-		connection.__emit({
+		emitMessage({
 			event: "deviceDidConnect",
 			device: connection.registrationParameters.info.devices[0].id,
 			deviceInfo: connection.registrationParameters.info.devices[0]
 		});
 
 		expect(device.isConnected).toBeTruthy();
-		connection.__emit({
+		emitMessage({
 			event: "deviceDidDisconnect",
 			device: connection.registrationParameters.info.devices[0].id
 		});
@@ -243,14 +241,14 @@ describe("DeviceClient", () => {
 	 */
 	it("Ignores unknown devices on deviceDidDisconnect", () => {
 		// Arrange.
-		const { connection } = getMockedConnection();
+		const { connection, emitMessage } = getConnection();
 		const devices = new DeviceClient(connection);
 
 		// Act.
 		const [device] = devices;
 		expect(device.isConnected).toBeFalsy();
 
-		connection.__emit({
+		emitMessage({
 			event: "deviceDidDisconnect",
 			device: "__UNKNOWN_DEVICE__"
 		});
@@ -270,14 +268,14 @@ describe("DeviceClient", () => {
 	 */
 	it("Receives onDeviceDidConnect", () => {
 		// Arrange.
-		const { connection } = getMockedConnection();
+		const { connection, emitMessage } = getConnection();
 		const devices = new DeviceClient(connection);
 
 		const listener = jest.fn();
 		devices.onDeviceDidConnect(listener);
 
 		// Act.
-		const { device } = connection.__emit(mockEvents.deviceDidConnect);
+		const { device } = emitMessage(mockEvents.deviceDidConnect);
 
 		// Assert.
 		expect(listener).toHaveBeenCalledTimes(1);
@@ -296,14 +294,14 @@ describe("DeviceClient", () => {
 	 */
 	it("Receives onDeviceDidDisconnect", () => {
 		// Arrange.
-		const { connection } = getMockedConnection();
+		const { connection, emitMessage } = getConnection();
 		const devices = new DeviceClient(connection);
 
 		const listener = jest.fn();
 		devices.onDeviceDidDisconnect(listener);
 
 		// Act.
-		const { device } = connection.__emit(mockEvents.deviceDidDisconnect);
+		const { device } = emitMessage(mockEvents.deviceDidDisconnect);
 
 		// Assert.
 		expect(listener).toBeCalledTimes(1);

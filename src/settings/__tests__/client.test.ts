@@ -1,4 +1,4 @@
-import { getMockedConnection } from "../../../tests/__mocks__/connection";
+import { getConnection } from "../../../tests/__mocks__/connection";
 import { Action } from "../../actions/action";
 import * as mockEvents from "../../connectivity/__mocks__/events";
 import { GetGlobalSettings, SetGlobalSettings } from "../../connectivity/commands";
@@ -12,7 +12,7 @@ describe("SettingsClient", () => {
 	 */
 	it("Can getGlobalSettings", async () => {
 		// Arrange.
-		const { connection } = getMockedConnection();
+		const { connection, emitMessage } = getConnection();
 		const client = new SettingsClient(connection);
 
 		// Act (Command).
@@ -28,7 +28,7 @@ describe("SettingsClient", () => {
 		expect(Promise.race([settings, false])).resolves.toBe(false);
 
 		// Act (Event).
-		connection.__emit(mockEvents.didReceiveGlobalSettings);
+		emitMessage(mockEvents.didReceiveGlobalSettings);
 		await settings;
 
 		// Assert (Event).
@@ -42,7 +42,7 @@ describe("SettingsClient", () => {
 	 */
 	it("Receives onDidReceiveGlobalSettings", () => {
 		// Arrange.
-		const { connection } = getMockedConnection();
+		const { connection, emitMessage } = getConnection();
 		const client = new SettingsClient(connection);
 
 		const listener = jest.fn();
@@ -51,7 +51,7 @@ describe("SettingsClient", () => {
 		// Act.
 		const {
 			payload: { settings: globalSettings }
-		} = connection.__emit(mockEvents.didReceiveGlobalSettings);
+		} = emitMessage(mockEvents.didReceiveGlobalSettings);
 
 		// Assert.
 		expect(listener).toHaveBeenCalledTimes(1);
@@ -66,14 +66,14 @@ describe("SettingsClient", () => {
 	 */
 	it("Receives onDidReceiveSettings", () => {
 		// Arrange.
-		const { connection } = getMockedConnection();
+		const { connection, emitMessage } = getConnection();
 		const client = new SettingsClient(connection);
 
 		const listener = jest.fn();
 		client.onDidReceiveSettings(listener);
 
 		// Act.
-		const { action, context, device, payload } = connection.__emit(mockEvents.didReceiveSettings);
+		const { action, context, device, payload } = emitMessage(mockEvents.didReceiveSettings);
 
 		// Assert.
 		expect(listener).toHaveBeenCalledTimes(1);
@@ -90,7 +90,7 @@ describe("SettingsClient", () => {
 	 */
 	it("Sends setGlobalSettings", async () => {
 		// Arrange.
-		const { connection } = getMockedConnection();
+		const { connection } = getConnection();
 		const client = new SettingsClient(connection);
 
 		// Act.

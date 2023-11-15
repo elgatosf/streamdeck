@@ -1,4 +1,4 @@
-import { getMockedConnection } from "../../tests/__mocks__/connection";
+import { getConnection } from "../../tests/__mocks__/connection";
 import { Action } from "../actions/action";
 import * as mockEvents from "../connectivity/__mocks__/events";
 import { PropertyInspectorDidAppearEvent, PropertyInspectorDidDisappearEvent, SendToPluginEvent } from "../events";
@@ -10,14 +10,14 @@ describe("UIClient", () => {
 	 */
 	it("Receives onPropertyInspectorDidAppear", () => {
 		// Arrange.
-		const { connection } = getMockedConnection();
+		const { connection, emitMessage } = getConnection();
 		const client = new UIClient(connection);
 
 		const listener = jest.fn();
 		client.onPropertyInspectorDidAppear(listener);
 
 		// Act.
-		const { action, context, device } = connection.__emit(mockEvents.propertyInspectorDidAppear);
+		const { action, context, device } = emitMessage(mockEvents.propertyInspectorDidAppear);
 
 		// Assert.
 		expect(listener).toHaveBeenCalledTimes(1);
@@ -33,14 +33,14 @@ describe("UIClient", () => {
 	 */
 	it("Receives onPropertyInspectorDidDisappear", () => {
 		// Arrange.
-		const { connection } = getMockedConnection();
+		const { connection, emitMessage } = getConnection();
 		const client = new UIClient(connection);
 
 		const listener = jest.fn();
 		client.onPropertyInspectorDidDisappear(listener);
 
 		// Act.
-		const { action, context, device } = connection.__emit(mockEvents.propertyInspectorDidDisappear);
+		const { action, context, device } = emitMessage(mockEvents.propertyInspectorDidDisappear);
 
 		// Assert.
 		expect(listener).toHaveBeenCalledTimes(1);
@@ -56,14 +56,14 @@ describe("UIClient", () => {
 	 */
 	it("Receives onSendToPlugin", () => {
 		// Arrange.
-		const { connection } = getMockedConnection();
+		const { connection, emitMessage } = getConnection();
 		const client = new UIClient(connection);
 
 		const listener = jest.fn();
 		client.onSendToPlugin(listener);
 
 		// Act.
-		const { action, context, payload } = connection.__emit(mockEvents.sendToPlugin);
+		const { action, context, payload } = emitMessage(mockEvents.sendToPlugin);
 
 		// Assert.
 		expect(listener).toHaveBeenCalledTimes(1);

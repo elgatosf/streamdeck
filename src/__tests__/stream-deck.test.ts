@@ -13,7 +13,9 @@ import { System } from "../system";
 import { UIClient } from "../ui";
 
 jest.mock("../actions/client");
-jest.mock("../connectivity/connection");
+jest.mock("../connectivity/connection", () => {
+	return { createConnection: jest.fn().mockReturnValue({ connect: jest.fn() }) };
+});
 jest.mock("../connectivity/registration");
 jest.mock("../devices");
 jest.mock("../i18n");

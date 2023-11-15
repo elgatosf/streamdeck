@@ -1,4 +1,4 @@
-import { getMockedConnection } from "../../tests/__mocks__/connection";
+import { getConnection } from "../../tests/__mocks__/connection";
 import * as mockEvents from "../connectivity/__mocks__/events";
 import { OpenUrl } from "../connectivity/commands";
 import { StreamDeckConnection } from "../connectivity/connection";
@@ -11,7 +11,7 @@ describe("System", () => {
 	 */
 	it("Receives onApplicationDidLaunch", () => {
 		// Arrange.
-		const { connection } = getMockedConnection();
+		const { connection, emitMessage } = getConnection();
 		const system = new System(connection);
 
 		const listener = jest.fn();
@@ -20,7 +20,7 @@ describe("System", () => {
 		// Act.
 		const {
 			payload: { application }
-		} = connection.__emit(mockEvents.applicationDidLaunch);
+		} = emitMessage(mockEvents.applicationDidLaunch);
 
 		//Assert.
 		expect(listener).toHaveBeenCalledTimes(1);
@@ -35,7 +35,7 @@ describe("System", () => {
 	 */
 	it("Receives onApplicationDidTerminate", () => {
 		// Arrange.
-		const { connection } = getMockedConnection();
+		const { connection, emitMessage } = getConnection();
 		const system = new System(connection);
 
 		const listener = jest.fn();
@@ -44,7 +44,7 @@ describe("System", () => {
 		// Act.
 		const {
 			payload: { application }
-		} = connection.__emit(mockEvents.applicationDidTerminate);
+		} = emitMessage(mockEvents.applicationDidTerminate);
 
 		//Assert.
 		expect(listener).toHaveBeenCalledTimes(1);
@@ -59,14 +59,14 @@ describe("System", () => {
 	 */
 	it("Receives onSystemDidWakeUp", () => {
 		// Arrange.
-		const { connection } = getMockedConnection();
+		const { connection, emitMessage } = getConnection();
 		const system = new System(connection);
 
 		const listener = jest.fn();
 		system.onSystemDidWakeUp(listener);
 
 		// Act.
-		connection.__emit(mockEvents.systemDidWakeUp);
+		emitMessage(mockEvents.systemDidWakeUp);
 
 		// Assert.
 		expect(listener).toHaveBeenCalledTimes(1);
@@ -80,7 +80,7 @@ describe("System", () => {
 	 */
 	it("Sends openUrl", async () => {
 		// Arrange.
-		const { connection } = getMockedConnection();
+		const { connection } = getConnection();
 		const system = new System(connection);
 
 		// Act.
