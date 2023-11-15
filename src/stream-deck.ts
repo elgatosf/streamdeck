@@ -1,5 +1,5 @@
 import { ActionClient } from "./actions/client";
-import { StreamDeckConnection } from "./connectivity/connection";
+import { StreamDeckConnection, createConnection } from "./connectivity/connection";
 import { RegistrationInfo, RegistrationParameters } from "./connectivity/registration";
 import { Device, DeviceClient } from "./devices";
 import { I18nProvider } from "./i18n";
@@ -154,7 +154,7 @@ export class StreamDeck {
 	 * @returns The {@link StreamDeckConnection}.
 	 */
 	private get connection(): StreamDeckConnection {
-		return (this._connection ??= new StreamDeckConnection(this.registrationParameters, this.logger));
+		return (this._connection ??= createConnection(this.registrationParameters, this.logger));
 	}
 
 	/**

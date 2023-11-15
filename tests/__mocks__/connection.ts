@@ -1,5 +1,5 @@
 import type { MockStreamDeckConnection } from "../../src/connectivity/__mocks__/connection";
-import { StreamDeckConnection } from "../../src/connectivity/connection";
+import { StreamDeckConnection, createConnection } from "../../src/connectivity/connection";
 import { RegistrationParameters } from "../../src/connectivity/registration";
 import type { Logger } from "../../src/logging";
 import { getMockedLogger } from "./logging";
@@ -13,7 +13,7 @@ jest.mock("../../src/connectivity/registration");
  */
 export function getMockedConnection() {
 	const { logger, scopedLogger } = getMockedLogger();
-	const connection = new StreamDeckConnection(new RegistrationParameters([], logger), logger) as MockStreamDeckConnection;
+	const connection = createConnection(new RegistrationParameters([], logger), logger) as MockStreamDeckConnection;
 
 	return {
 		/**

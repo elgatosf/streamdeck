@@ -1,5 +1,5 @@
 import { ActionClient } from "../actions/client";
-import { StreamDeckConnection } from "../connectivity/connection";
+import { createConnection } from "../connectivity/connection";
 import { RegistrationParameters } from "../connectivity/registration";
 import { DeviceClient } from "../devices";
 import { I18nProvider } from "../i18n";
@@ -53,7 +53,7 @@ describe("StreamDeck", () => {
 		expect(getManifest).toHaveBeenCalledTimes(0);
 		expect(ProfileClient).toHaveBeenCalledTimes(0);
 		expect(SettingsClient).toHaveBeenCalledTimes(0);
-		expect(StreamDeckConnection).toHaveBeenCalledTimes(0);
+		expect(createConnection).toHaveBeenCalledTimes(0);
 		expect(RegistrationParameters).toHaveBeenCalledTimes(0);
 		expect(SettingsClient).toHaveBeenCalledTimes(0);
 		expect(System).toHaveBeenCalledTimes(0);
@@ -88,7 +88,7 @@ describe("StreamDeck", () => {
 			expect(getManifest).toHaveBeenCalledTimes(1);
 			expect(ProfileClient).toHaveBeenCalledTimes(1);
 			expect(SettingsClient).toHaveBeenCalledTimes(1);
-			expect(StreamDeckConnection).toHaveBeenCalledTimes(1);
+			expect(createConnection).toHaveBeenCalledTimes(1);
 			expect(RegistrationParameters).toHaveBeenCalledTimes(1);
 			expect(System).toHaveBeenCalledTimes(1);
 			expect(UIClient).toHaveBeenCalledTimes(1);
@@ -280,7 +280,7 @@ describe("StreamDeck", () => {
 			expect(getManifest).toHaveBeenCalledTimes(1);
 			expect(ProfileClient).toHaveBeenCalledTimes(0);
 			expect(SettingsClient).toHaveBeenCalledTimes(1);
-			expect(StreamDeckConnection).toHaveBeenCalledTimes(1);
+			expect(createConnection).toHaveBeenCalledTimes(1);
 			expect(RegistrationParameters).toHaveBeenCalledTimes(1);
 			expect(System).toHaveBeenCalledTimes(0);
 			expect(UIClient).toHaveBeenCalledTimes(1);
@@ -304,7 +304,7 @@ describe("StreamDeck", () => {
 			expect(getManifest).toHaveBeenCalledTimes(0);
 			expect(ProfileClient).toHaveBeenCalledTimes(0);
 			expect(SettingsClient).toHaveBeenCalledTimes(0);
-			expect(StreamDeckConnection).toHaveBeenCalledTimes(1);
+			expect(createConnection).toHaveBeenCalledTimes(1);
 			expect(RegistrationParameters).toHaveBeenCalledTimes(1);
 			expect(System).toHaveBeenCalledTimes(0);
 			expect(UIClient).toHaveBeenCalledTimes(0);
@@ -328,7 +328,7 @@ describe("StreamDeck", () => {
 			expect(getManifest).toHaveBeenCalledTimes(1);
 			expect(ProfileClient).toHaveBeenCalledTimes(0);
 			expect(SettingsClient).toHaveBeenCalledTimes(0);
-			expect(StreamDeckConnection).toHaveBeenCalledTimes(0);
+			expect(createConnection).toHaveBeenCalledTimes(0);
 			expect(RegistrationParameters).toHaveBeenCalledTimes(1);
 			expect(System).toHaveBeenCalledTimes(0);
 			expect(UIClient).toHaveBeenCalledTimes(0);
@@ -351,7 +351,7 @@ describe("StreamDeck", () => {
 			expect(getManifest).toHaveBeenCalledTimes(0);
 			expect(ProfileClient).toHaveBeenCalledTimes(0);
 			expect(SettingsClient).toHaveBeenCalledTimes(0);
-			expect(StreamDeckConnection).toHaveBeenCalledTimes(0);
+			expect(createConnection).toHaveBeenCalledTimes(0);
 			expect(RegistrationParameters).toHaveBeenCalledTimes(1);
 			expect(System).toHaveBeenCalledTimes(0);
 			expect(UIClient).toHaveBeenCalledTimes(0);
@@ -375,7 +375,7 @@ describe("StreamDeck", () => {
 			expect(getManifest).toHaveBeenCalledTimes(0);
 			expect(ProfileClient).toHaveBeenCalledTimes(0);
 			expect(SettingsClient).toHaveBeenCalledTimes(0);
-			expect(StreamDeckConnection).toHaveBeenCalledTimes(0);
+			expect(createConnection).toHaveBeenCalledTimes(0);
 			expect(RegistrationParameters).toHaveBeenCalledTimes(0);
 			expect(System).toHaveBeenCalledTimes(0);
 			expect(UIClient).toHaveBeenCalledTimes(0);
@@ -398,7 +398,7 @@ describe("StreamDeck", () => {
 			expect(getManifest).toHaveBeenCalledTimes(1);
 			expect(ProfileClient).toHaveBeenCalledTimes(0);
 			expect(SettingsClient).toHaveBeenCalledTimes(0);
-			expect(StreamDeckConnection).toHaveBeenCalledTimes(0);
+			expect(createConnection).toHaveBeenCalledTimes(0);
 			expect(RegistrationParameters).toHaveBeenCalledTimes(0);
 			expect(System).toHaveBeenCalledTimes(0);
 			expect(UIClient).toHaveBeenCalledTimes(0);
@@ -422,7 +422,7 @@ describe("StreamDeck", () => {
 			expect(getManifest).toHaveBeenCalledTimes(0);
 			expect(ProfileClient).toHaveBeenCalledTimes(1);
 			expect(SettingsClient).toHaveBeenCalledTimes(0);
-			expect(StreamDeckConnection).toHaveBeenCalledTimes(1);
+			expect(createConnection).toHaveBeenCalledTimes(1);
 			expect(RegistrationParameters).toHaveBeenCalledTimes(1);
 			expect(System).toHaveBeenCalledTimes(0);
 			expect(UIClient).toHaveBeenCalledTimes(0);
@@ -446,7 +446,7 @@ describe("StreamDeck", () => {
 			expect(getManifest).toHaveBeenCalledTimes(0);
 			expect(ProfileClient).toHaveBeenCalledTimes(0);
 			expect(SettingsClient).toHaveBeenCalledTimes(1);
-			expect(StreamDeckConnection).toHaveBeenCalledTimes(1);
+			expect(createConnection).toHaveBeenCalledTimes(1);
 			expect(RegistrationParameters).toHaveBeenCalledTimes(1);
 			expect(System).toHaveBeenCalledTimes(0);
 			expect(UIClient).toHaveBeenCalledTimes(0);
@@ -470,7 +470,7 @@ describe("StreamDeck", () => {
 			expect(getManifest).toHaveBeenCalledTimes(0);
 			expect(ProfileClient).toHaveBeenCalledTimes(0);
 			expect(SettingsClient).toHaveBeenCalledTimes(0);
-			expect(StreamDeckConnection).toHaveBeenCalledTimes(1);
+			expect(createConnection).toHaveBeenCalledTimes(1);
 			expect(RegistrationParameters).toHaveBeenCalledTimes(1);
 			expect(System).toHaveBeenCalledTimes(1);
 			expect(UIClient).toHaveBeenCalledTimes(0);
@@ -494,7 +494,7 @@ describe("StreamDeck", () => {
 			expect(getManifest).toHaveBeenCalledTimes(0);
 			expect(ProfileClient).toHaveBeenCalledTimes(0);
 			expect(SettingsClient).toHaveBeenCalledTimes(0);
-			expect(StreamDeckConnection).toHaveBeenCalledTimes(1);
+			expect(createConnection).toHaveBeenCalledTimes(1);
 			expect(RegistrationParameters).toHaveBeenCalledTimes(1);
 			expect(System).toHaveBeenCalledTimes(0);
 			expect(UIClient).toHaveBeenCalledTimes(1);

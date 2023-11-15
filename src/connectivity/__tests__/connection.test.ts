@@ -3,7 +3,7 @@ import WebSocket from "ws";
 
 import { getMockedLogger } from "../../../tests/__mocks__/logging";
 import { OpenUrl } from "../commands";
-import { StreamDeckConnection } from "../connection";
+import { StreamDeckConnection, createConnection } from "../connection";
 import { ApplicationDidLaunch } from "../events";
 import { RegistrationParameters } from "../registration";
 
@@ -44,7 +44,7 @@ describe("StreamDeckConnection", () => {
 		process.argv = originalArgv;
 
 		// Act.
-		new StreamDeckConnection(regParams, getMockedLogger().logger);
+		createConnection(regParams, getMockedLogger().logger);
 
 		// Assert.
 		expect(webSocketSpy).toHaveLength(0);
@@ -56,7 +56,7 @@ describe("StreamDeckConnection", () => {
 	it("Registers on connection", () => {
 		// Arrange.
 		const webSocketSpy = jest.spyOn(WebSocket, "WebSocket");
-		const connection = new StreamDeckConnection(regParams, getMockedLogger().logger);
+		const connection = createConnection(regParams, getMockedLogger().logger);
 
 		// Act.
 		connection.connect();
@@ -249,7 +249,7 @@ describe("StreamDeckConnection", () => {
 		const createScopeSpy = jest.spyOn(logger, "createScope");
 
 		// Act.
-		new StreamDeckConnection(regParams, logger);
+		createConnection(regParams, logger);
 
 		// Assert.
 		expect(createScopeSpy).toHaveBeenCalledTimes(1);
@@ -263,7 +263,7 @@ describe("StreamDeckConnection", () => {
 	async function getOpenConnection() {
 		const webSocketSpy = jest.spyOn(WebSocket, "WebSocket");
 		const { logger, scopedLogger } = getMockedLogger();
-		const connection = new StreamDeckConnection(regParams, logger);
+		const connection = createConnection(regParams, logger);
 
 		const connect = connection.connect();
 		webSocketSpy.mock.instances[0].emit("open");

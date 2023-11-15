@@ -14,7 +14,7 @@ export type MockStreamDeckConnection = __StreamDeckConnection & {
 /**
  * Mocked {@link __StreamDeckConnection}.
  */
-export const StreamDeckConnection = jest.fn().mockImplementation(() => {
+export const createConnection = jest.fn().mockImplementation(() => {
 	const emitter = new EventEmitter();
 	return {
 		connect: jest.fn(),
