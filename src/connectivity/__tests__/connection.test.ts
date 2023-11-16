@@ -4,6 +4,7 @@ import WebSocket from "ws";
 import { getMockedLogger } from "../../../tests/__mocks__/logging";
 import { OpenUrl } from "../commands";
 import { StreamDeckConnection, createConnection } from "../connection";
+import * as api from "../events";
 import { ApplicationDidLaunch } from "../events";
 import { RegistrationParameters } from "../registration";
 
@@ -28,12 +29,7 @@ const regParams = new RegistrationParameters(mockArgv, getMockedLogger().logger)
 const originalArgv = process.argv;
 
 describe("StreamDeckConnection", () => {
-	//const mockedWebSocket = WebSocket as jest.MockedClass<typeof WebSocket>;
-
-	afterEach(() => {
-		process.argv = originalArgv;
-		jest.clearAllMocks();
-	});
+	afterEach(() => (process.argv = originalArgv));
 
 	/**
 	 * Asserts the {@link StreamDeckConnection} constructor does not automatically attempt to connect to Stream Deck.
@@ -254,6 +250,128 @@ describe("StreamDeckConnection", () => {
 		// Assert.
 		expect(createScopeSpy).toHaveBeenCalledTimes(1);
 		expect(createScopeSpy).toHaveBeenCalledWith("StreamDeckConnection");
+	});
+
+	describe("addDisposableListener", () => {
+		/**
+		 * Asserts the {@link disposableListener} adds the event listener.
+		 */
+		it("adds the listener", async () => {
+			// Arrange.
+			const { connection, webSocket } = await getOpenConnection();
+			const listener = jest.fn();
+
+			// Act.
+			connection.addDisposableListener("applicationDidLaunch", listener);
+			webSocket.emit(
+				"message",
+				JSON.stringify({
+					event: "applicationDidLaunch",
+					payload: { application: "one" }
+				} satisfies api.ApplicationDidLaunch)
+			);
+
+			// Assert.
+			expect(listener).toHaveBeenCalledTimes(1);
+			expect(listener).toHaveBeenCalledWith<[ApplicationDidLaunch]>({
+				event: "applicationDidLaunch",
+				payload: { application: "one" }
+			});
+		});
+
+		/**
+		 * Asserts listeners added via {@link disposableListener} can be removed by disposing.
+		 */
+		it("can remove after emitting", async () => {
+			// Arrange.
+			const { connection, webSocket } = await getOpenConnection();
+			const listener = jest.fn();
+
+			// Act.
+			const handler = connection.addDisposableListener("applicationDidLaunch", listener);
+			webSocket.emit(
+				"message",
+				JSON.stringify({
+					event: "applicationDidLaunch",
+					payload: { application: "one" }
+				} satisfies api.ApplicationDidLaunch)
+			);
+
+			// Assert.
+			expect(listener).toHaveBeenCalledTimes(1);
+			expect(listener).toHaveBeenCalledWith<[ApplicationDidLaunch]>({
+				event: "applicationDidLaunch",
+				payload: { application: "one" }
+			});
+
+			// Re-act
+			handler.dispose();
+			webSocket.emit(
+				"message",
+				JSON.stringify({
+					event: "applicationDidLaunch",
+					payload: { application: "__other__" }
+				} satisfies api.ApplicationDidLaunch)
+			);
+
+			// Re-assert
+			expect(listener).toHaveBeenCalledTimes(1);
+			expect(listener).toHaveBeenLastCalledWith<[ApplicationDidLaunch]>({
+				event: "applicationDidLaunch",
+				payload: { application: "one" }
+			});
+		});
+
+		describe("removing the listener", () => {
+			/**
+			 * Asserts `dispose()` on the result {@link disposableListener} removes the listener.
+			 */
+			it("dispose", async () => {
+				// Arrange.
+				const { connection, webSocket } = await getOpenConnection();
+				const listener = jest.fn();
+				const handler = connection.addDisposableListener("applicationDidLaunch", listener);
+
+				// Act.
+				handler.dispose();
+				webSocket.emit(
+					"message",
+					JSON.stringify({
+						event: "applicationDidLaunch",
+						payload: { application: "one" }
+					} satisfies api.ApplicationDidLaunch)
+				);
+
+				// Assert.
+				expect(listener).toHaveBeenCalledTimes(0);
+			});
+
+			/**
+			 * Asserts `[Symbol.dispose]()` on the result {@link disposableListener} removes the listener.
+			 */
+			it("[Symbol.dispose]", async () => {
+				// Arrange.
+				const { connection, webSocket } = await getOpenConnection();
+				const listener = jest.fn();
+
+				// Act.
+				{
+					// eslint-disable-next-line @typescript-eslint/no-unused-vars
+					using handler = connection.addDisposableListener("applicationDidLaunch", listener);
+				}
+
+				webSocket.emit(
+					"message",
+					JSON.stringify({
+						event: "applicationDidLaunch",
+						payload: { application: "one" }
+					} satisfies api.ApplicationDidLaunch)
+				);
+
+				// Assert.
+				expect(listener).toHaveBeenCalledTimes(0);
+			});
+		});
 	});
 
 	/**

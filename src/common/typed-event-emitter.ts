@@ -11,7 +11,7 @@ export interface TypedEventEmitter<TMap> {
 	addListener<TEventName extends keyof TMap, TData extends TMap[TEventName]>(event: TEventName, listener: (data: TData) => void): this;
 
 	/** @inheritdoc */
-	eventNames(): (keyof TMap)[];
+	eventNames(): (string | symbol | keyof TMap)[];
 
 	/** @inheritdoc */
 	on<TEventName extends keyof TMap, TData extends TMap[TEventName]>(event: TEventName, listener: (data: TData) => void): this;
