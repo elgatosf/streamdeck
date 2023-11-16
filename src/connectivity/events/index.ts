@@ -53,3 +53,10 @@ export type Event<T extends PayloadObject<T> = object> =
 	| TouchTap<T>
 	| WillAppear<T>
 	| WillDisappear<T>;
+
+/**
+ * Map of events received by the plugin, from the Stream Deck.
+ */
+export type EventMap = {
+	[K in Event["event"]]: Extract<Event, EventIdentifier<K>>;
+};

@@ -5,7 +5,7 @@
 	"main": "./dist/index.js",
 	"type": "module",
 	"engines": {
-		"node": "^20.1.0"
+		"node": "^20.5.1"
 	},
 	"types": "./dist/index.d.ts",
 	"files": [
@@ -55,7 +55,7 @@
 		"@trivago/prettier-plugin-sort-imports": "^4.2.1",
 		"@tsconfig/node20": "^20.1.2",
 		"@types/jest": "^29.5.5",
-		"@types/node": "^20.1.7",
+		"@types/node": "^20.5.1",
 		"@types/ws": "^8.5.6",
 		"@typescript-eslint/eslint-plugin": "^6.7.4",
 		"@typescript-eslint/parser": "^6.7.4",
