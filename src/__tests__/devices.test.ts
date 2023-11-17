@@ -272,10 +272,11 @@ describe("DeviceClient", () => {
 		const devices = new DeviceClient(connection);
 
 		const listener = jest.fn();
-		devices.onDeviceDidConnect(listener);
+		const emit = () => emitMessage(mockEvents.deviceDidConnect);
 
 		// Act.
-		const { device } = emitMessage(mockEvents.deviceDidConnect);
+		const result = devices.onDeviceDidConnect(listener);
+		const { device } = emit();
 
 		// Assert.
 		expect(listener).toHaveBeenCalledTimes(1);
@@ -287,6 +288,13 @@ describe("DeviceClient", () => {
 			},
 			type: mockEvents.deviceDidConnect.event
 		});
+
+		// Act (dispose).
+		result.dispose();
+		emit();
+
+		// Assert (dispose).
+		expect(listener).toHaveBeenCalledTimes(1);
 	});
 
 	/**
@@ -298,10 +306,11 @@ describe("DeviceClient", () => {
 		const devices = new DeviceClient(connection);
 
 		const listener = jest.fn();
-		devices.onDeviceDidDisconnect(listener);
+		const emit = () => emitMessage(mockEvents.deviceDidDisconnect);
 
 		// Act.
-		const { device } = emitMessage(mockEvents.deviceDidDisconnect);
+		const result = devices.onDeviceDidDisconnect(listener);
+		const { device } = emit();
 
 		// Assert.
 		expect(listener).toBeCalledTimes(1);
@@ -315,5 +324,12 @@ describe("DeviceClient", () => {
 			},
 			type: "deviceDidDisconnect"
 		});
+
+		// Act (dispose).
+		result.dispose();
+		emit();
+
+		// Assert (dispose).
+		expect(listener).toHaveBeenCalledTimes(1);
 	});
 });
