@@ -1,6 +1,6 @@
 import { Action } from "./actions/action";
-import { type IDisposable } from "./common/disposable";
-import { type StreamDeckConnection } from "./connectivity/connection";
+import type { IDisposable } from "./common/disposable";
+import type { StreamDeckConnection } from "./connectivity/connection";
 import type * as api from "./connectivity/events";
 import { ActionWithoutPayloadEvent, PropertyInspectorDidAppearEvent, PropertyInspectorDidDisappearEvent, SendToPluginEvent } from "./events";
 

@@ -1,4 +1,4 @@
-import { type StreamDeckConnection } from "../connectivity/connection";
+import type { StreamDeckConnection } from "../connectivity/connection";
 import type * as api from "../connectivity/events";
 
 /**

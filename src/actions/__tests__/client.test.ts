@@ -83,10 +83,11 @@ describe("ActionClient", () => {
 			const client = new ActionClient(connection, mockedManifest, settingsClient, uiClient, logger);
 
 			const listener = jest.fn();
-			client.onDialDown(listener);
+			const emit = () => emitMessage(mockEvents.dialDown);
 
 			// Act.
-			const { action, context, device, payload } = emitMessage(mockEvents.dialDown);
+			const result = client.onDialDown(listener);
+			const { action, context, device, payload } = emit();
 
 			// Assert.
 			expect(listener).toHaveBeenCalledTimes(1);
@@ -96,6 +97,13 @@ describe("ActionClient", () => {
 				payload,
 				type: "dialDown"
 			});
+
+			// Act (dispose).
+			result.dispose();
+			emit();
+
+			// Assert (dispose).
+			expect(listener).toHaveBeenCalledTimes(1);
 		});
 
 		/**
@@ -107,10 +115,11 @@ describe("ActionClient", () => {
 			const client = new ActionClient(connection, mockedManifest, settingsClient, uiClient, logger);
 
 			const listener = jest.fn();
-			client.onDialRotate(listener);
+			const emit = () => emitMessage(mockEvents.dialRotate);
 
 			// Act.
-			const { action, context, device, payload } = emitMessage(mockEvents.dialRotate);
+			const result = client.onDialRotate(listener);
+			const { action, context, device, payload } = emit();
 
 			// Assert.
 			expect(listener).toHaveBeenCalledTimes(1);
@@ -120,6 +129,13 @@ describe("ActionClient", () => {
 				payload,
 				type: "dialRotate"
 			});
+
+			// Act (dispose).
+			result.dispose();
+			emit();
+
+			// Assert (dispose).
+			expect(listener).toHaveBeenCalledTimes(1);
 		});
 
 		/**
@@ -131,10 +147,11 @@ describe("ActionClient", () => {
 			const client = new ActionClient(connection, mockedManifest, settingsClient, uiClient, logger);
 
 			const listener = jest.fn();
-			client.onDialUp(listener);
+			const emit = () => emitMessage(mockEvents.dialUp);
 
 			// Act.
-			const { action, context, device, payload } = emitMessage(mockEvents.dialUp);
+			const result = client.onDialUp(listener);
+			const { action, context, device, payload } = emit();
 
 			// Assert.
 			expect(listener).toHaveBeenCalledTimes(1);
@@ -144,6 +161,13 @@ describe("ActionClient", () => {
 				payload,
 				type: "dialUp"
 			});
+
+			// Act (dispose).
+			result.dispose();
+			emit();
+
+			// Assert (dispose).
+			expect(listener).toHaveBeenCalledTimes(1);
 		});
 
 		/**
@@ -155,10 +179,11 @@ describe("ActionClient", () => {
 			const client = new ActionClient(connection, mockedManifest, settingsClient, uiClient, logger);
 
 			const listener = jest.fn();
-			client.onKeyDown(listener);
+			const emit = () => emitMessage(mockEvents.keyDown);
 
 			// Act.
-			const { action, context, device, payload } = emitMessage(mockEvents.keyDown);
+			const result = client.onKeyDown(listener);
+			const { action, context, device, payload } = emit();
 
 			// Assert.
 			expect(listener).toHaveBeenCalledTimes(1);
@@ -168,6 +193,13 @@ describe("ActionClient", () => {
 				payload,
 				type: "keyDown"
 			});
+
+			// Act (dispose).
+			result.dispose();
+			emit();
+
+			// Assert (dispose).
+			expect(listener).toHaveBeenCalledTimes(1);
 		});
 
 		/**
@@ -179,10 +211,11 @@ describe("ActionClient", () => {
 			const client = new ActionClient(connection, mockedManifest, settingsClient, uiClient, logger);
 
 			const listener = jest.fn();
-			client.onKeyUp(listener);
+			const emit = () => emitMessage(mockEvents.keyUp);
 
 			// Act.
-			const { action, context, device, payload } = emitMessage(mockEvents.keyUp);
+			const result = client.onKeyUp(listener);
+			const { action, context, device, payload } = emit();
 
 			// Assert.
 			expect(listener).toHaveBeenCalledTimes(1);
@@ -192,6 +225,13 @@ describe("ActionClient", () => {
 				payload,
 				type: "keyUp"
 			});
+
+			// Act (dispose).
+			result.dispose();
+			emit();
+
+			// Assert (dispose).
+			expect(listener).toHaveBeenCalledTimes(1);
 		});
 
 		/**
@@ -203,10 +243,11 @@ describe("ActionClient", () => {
 			const client = new ActionClient(connection, mockedManifest, settingsClient, uiClient, logger);
 
 			const listener = jest.fn();
-			client.onTitleParametersDidChange(listener);
+			const emit = () => emitMessage(mockEvents.titleParametersDidChange);
 
 			// Act.
-			const { action, context, device, payload } = emitMessage(mockEvents.titleParametersDidChange);
+			const result = client.onTitleParametersDidChange(listener);
+			const { action, context, device, payload } = emit();
 
 			// Assert.
 			expect(listener).toHaveBeenCalledTimes(1);
@@ -216,6 +257,13 @@ describe("ActionClient", () => {
 				payload,
 				type: "titleParametersDidChange"
 			});
+
+			// Act (dispose).
+			result.dispose();
+			emit();
+
+			// Assert (dispose).
+			expect(listener).toHaveBeenCalledTimes(1);
 		});
 
 		/**
@@ -227,10 +275,11 @@ describe("ActionClient", () => {
 			const client = new ActionClient(connection, mockedManifest, settingsClient, uiClient, logger);
 
 			const listener = jest.fn();
-			client.onTouchTap(listener);
+			const emit = () => emitMessage(mockEvents.touchTap);
 
 			// Act.
-			const { action, context, device, payload } = emitMessage(mockEvents.touchTap);
+			const result = client.onTouchTap(listener);
+			const { action, context, device, payload } = emit();
 
 			// Assert.
 			expect(listener).toHaveBeenCalledTimes(1);
@@ -240,6 +289,13 @@ describe("ActionClient", () => {
 				payload,
 				type: "touchTap"
 			});
+
+			// Act (dispose).
+			result.dispose();
+			emit();
+
+			// Assert (dispose).
+			expect(listener).toHaveBeenCalledTimes(1);
 		});
 
 		/**
@@ -251,10 +307,11 @@ describe("ActionClient", () => {
 			const client = new ActionClient(connection, mockedManifest, settingsClient, uiClient, logger);
 
 			const listener = jest.fn();
-			client.onWillAppear(listener);
+			const emit = () => emitMessage(mockEvents.willAppear);
 
 			// Act.
-			const { action, context, device, payload } = emitMessage(mockEvents.willAppear);
+			const result = client.onWillAppear(listener);
+			const { action, context, device, payload } = emit();
 
 			// Assert.
 			expect(listener).toHaveBeenCalledTimes(1);
@@ -264,6 +321,13 @@ describe("ActionClient", () => {
 				payload,
 				type: "willAppear"
 			});
+
+			// Act (dispose).
+			result.dispose();
+			emit();
+
+			// Assert (dispose).
+			expect(listener).toHaveBeenCalledTimes(1);
 		});
 
 		/**
@@ -275,10 +339,11 @@ describe("ActionClient", () => {
 			const client = new ActionClient(connection, mockedManifest, settingsClient, uiClient, logger);
 
 			const listener = jest.fn();
-			client.onWillDisappear(listener);
+			const emit = () => emitMessage(mockEvents.willDisappear);
 
 			// Act.
-			const { action, context, device, payload } = emitMessage(mockEvents.willDisappear);
+			const result = client.onWillDisappear(listener);
+			const { action, context, device, payload } = emit();
 
 			// Assert.
 			expect(listener).toHaveBeenCalledTimes(1);
@@ -288,6 +353,13 @@ describe("ActionClient", () => {
 				payload,
 				type: "willDisappear"
 			});
+
+			// Act (dispose).
+			result.dispose();
+			emit();
+
+			// Assert (dispose).
+			expect(listener).toHaveBeenCalledTimes(1);
 		});
 	});
 
