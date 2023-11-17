@@ -2,7 +2,7 @@ import path from "node:path";
 
 import * as utils from "../../common/utils";
 import { FileTarget, FileTargetOptions } from "../file-target";
-import { createLogger, LogLevel } from "../index";
+import { LogLevel, createLogger } from "../index";
 import { Logger, LoggerOptions } from "../logger";
 
 jest.mock("../../common/utils");
@@ -29,7 +29,6 @@ describe("createLogger", () => {
 	])("Initializes default logger (isDebugMode=$isDebugMode)", async ({ isDebugMode, expectedLogLevel }) => {
 		// Arrange.
 		jest.spyOn(process, "cwd").mockReturnValue(mockedCwd);
-		const processOnceSpy = jest.spyOn(process, "once");
 		jest.spyOn(utils, "getPluginUUID").mockReturnValue("com.elgato.test");
 		jest.spyOn(utils, "isDebugMode").mockReturnValue(isDebugMode);
 
@@ -45,14 +44,31 @@ describe("createLogger", () => {
 			maxSize: 50 * 1024 * 1024
 		});
 
-		expect(processOnceSpy).toHaveBeenCalledTimes(1);
-		expect(processOnceSpy).toHaveBeenCalledWith("uncaughtException", expect.any(Function));
-
 		expect(logger).toBeInstanceOf(Logger);
 		expect(Logger).toHaveBeenCalledWith<[LoggerOptions]>({
 			level: expectedLogLevel,
 			scope: undefined,
 			target: (FileTarget as jest.MockedClass<typeof FileTarget>).mock.instances[0]
 		});
+	});
+
+	/**
+	 * Asserts {@link createLogger} listens for uncaught exceptions.
+	 */
+	it("Logs when an uncaught exception is thrown", () => {
+		// Arrange.
+		jest.spyOn(process, "cwd").mockReturnValue(mockedCwd);
+		const processOnceSpy = jest.spyOn(process, "once");
+		const err = new Error("Hello world");
+
+		// Act.
+		const logger = createLogger();
+		processOnceSpy.mock.calls[0][1](err);
+
+		// Assert.
+		expect(processOnceSpy).toHaveBeenCalledTimes(1);
+		expect(processOnceSpy).toHaveBeenCalledWith("uncaughtException", expect.any(Function));
+		expect(logger.error).toHaveBeenCalledTimes(1);
+		expect(logger.error).toHaveBeenCalledWith<[string, Error]>("Process encountered uncaught exception", err);
 	});
 });
