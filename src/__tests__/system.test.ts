@@ -15,12 +15,13 @@ describe("System", () => {
 		const system = new System(connection);
 
 		const listener = jest.fn();
-		system.onApplicationDidLaunch(listener);
+		const emit = () => emitMessage(mockEvents.applicationDidLaunch);
 
 		// Act.
+		const result = system.onApplicationDidLaunch(listener);
 		const {
 			payload: { application }
-		} = emitMessage(mockEvents.applicationDidLaunch);
+		} = emit();
 
 		//Assert.
 		expect(listener).toHaveBeenCalledTimes(1);
@@ -28,6 +29,13 @@ describe("System", () => {
 			application,
 			type: "applicationDidLaunch"
 		});
+
+		// Act (dispose).
+		result.dispose();
+		emit();
+
+		// Assert (dispose).
+		expect(listener).toHaveBeenCalledTimes(1);
 	});
 
 	/**
@@ -39,12 +47,13 @@ describe("System", () => {
 		const system = new System(connection);
 
 		const listener = jest.fn();
-		system.onApplicationDidTerminate(listener);
+		const emit = () => emitMessage(mockEvents.applicationDidTerminate);
 
 		// Act.
+		const result = system.onApplicationDidTerminate(listener);
 		const {
 			payload: { application }
-		} = emitMessage(mockEvents.applicationDidTerminate);
+		} = emit();
 
 		//Assert.
 		expect(listener).toHaveBeenCalledTimes(1);
@@ -52,6 +61,13 @@ describe("System", () => {
 			application,
 			type: "applicationDidTerminate"
 		});
+
+		// Act (dispose).
+		result.dispose();
+		emit();
+
+		// Assert (dispose).
+		expect(listener).toHaveBeenCalledTimes(1);
 	});
 
 	/**
@@ -63,16 +79,24 @@ describe("System", () => {
 		const system = new System(connection);
 
 		const listener = jest.fn();
-		system.onSystemDidWakeUp(listener);
+		const emit = () => emitMessage(mockEvents.systemDidWakeUp);
 
 		// Act.
-		emitMessage(mockEvents.systemDidWakeUp);
+		const result = system.onSystemDidWakeUp(listener);
+		emit();
 
 		// Assert.
 		expect(listener).toHaveBeenCalledTimes(1);
 		expect(listener).toHaveBeenCalledWith<[SystemDidWakeUpEvent]>({
 			type: "systemDidWakeUp"
 		});
+
+		// Act (dispose).
+		result.dispose();
+		emit();
+
+		// Assert (dispose).
+		expect(listener).toHaveBeenCalledTimes(1);
 	});
 
 	/**
