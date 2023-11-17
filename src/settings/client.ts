@@ -1,4 +1,5 @@
 import { Action } from "../actions/action";
+import { IDisposable } from "../common/disposable";
 import type { StreamDeckConnection } from "../connectivity/connection";
 import type * as api from "../connectivity/events";
 import { ActionEvent, DidReceiveGlobalSettingsEvent, DidReceiveSettingsEvent } from "../events";
@@ -32,18 +33,22 @@ export class SettingsClient {
 	 * Occurs when the global settings are requested using {@link SettingsClient.getGlobalSettings}, or when the the global settings were updated by the property inspector.
 	 * @template T The type of settings associated with the action.
 	 * @param listener Function to be invoked when the event occurs.
+	 * @returns A disposable that, when disposed, removes the listener.
 	 */
-	public onDidReceiveGlobalSettings<T extends api.PayloadObject<T> = object>(listener: (ev: DidReceiveGlobalSettingsEvent<T>) => void): void {
-		this.connection.on("didReceiveGlobalSettings", (ev: api.DidReceiveGlobalSettings<T>) => listener(new DidReceiveGlobalSettingsEvent(ev)));
+	public onDidReceiveGlobalSettings<T extends api.PayloadObject<T> = object>(listener: (ev: DidReceiveGlobalSettingsEvent<T>) => void): IDisposable {
+		return this.connection.addDisposableListener("didReceiveGlobalSettings", (ev: api.DidReceiveGlobalSettings<T>) => listener(new DidReceiveGlobalSettingsEvent(ev)));
 	}
 
 	/**
 	 * Occurs when the settings associated with an action instance are requested using {@link SettingsClient.getSettings}, or when the the settings were updated by the property inspector.
 	 * @template T The type of settings associated with the action.
 	 * @param listener Function to be invoked when the event occurs.
+	 * @returns A disposable that, when disposed, removes the listener.
 	 */
-	public onDidReceiveSettings<T extends api.PayloadObject<T> = object>(listener: (ev: DidReceiveSettingsEvent<T>) => void): void {
-		this.connection.on("didReceiveSettings", (ev: api.DidReceiveSettings<T>) => listener(new ActionEvent<api.DidReceiveSettings<T>>(new Action<T>(this.connection, ev), ev)));
+	public onDidReceiveSettings<T extends api.PayloadObject<T> = object>(listener: (ev: DidReceiveSettingsEvent<T>) => void): IDisposable {
+		return this.connection.addDisposableListener("didReceiveSettings", (ev: api.DidReceiveSettings<T>) =>
+			listener(new ActionEvent<api.DidReceiveSettings<T>>(new Action<T>(this.connection, ev), ev))
+		);
 	}
 
 	/**

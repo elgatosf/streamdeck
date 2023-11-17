@@ -46,12 +46,13 @@ describe("SettingsClient", () => {
 		const client = new SettingsClient(connection);
 
 		const listener = jest.fn();
-		client.onDidReceiveGlobalSettings(listener);
+		const emit = () => emitMessage(mockEvents.didReceiveGlobalSettings);
 
 		// Act.
+		const result = client.onDidReceiveGlobalSettings(listener);
 		const {
 			payload: { settings: globalSettings }
-		} = emitMessage(mockEvents.didReceiveGlobalSettings);
+		} = emit();
 
 		// Assert.
 		expect(listener).toHaveBeenCalledTimes(1);
@@ -59,6 +60,13 @@ describe("SettingsClient", () => {
 			settings: globalSettings,
 			type: "didReceiveGlobalSettings"
 		});
+
+		// Re-act (dispose).
+		result.dispose();
+		emit();
+
+		// Re-assert.
+		expect(listener).toHaveBeenCalledTimes(1);
 	});
 
 	/**
@@ -70,10 +78,11 @@ describe("SettingsClient", () => {
 		const client = new SettingsClient(connection);
 
 		const listener = jest.fn();
-		client.onDidReceiveSettings(listener);
+		const emit = () => emitMessage(mockEvents.didReceiveSettings);
 
 		// Act.
-		const { action, context, device, payload } = emitMessage(mockEvents.didReceiveSettings);
+		const result = client.onDidReceiveSettings(listener);
+		const { action, context, device, payload } = emit();
 
 		// Assert.
 		expect(listener).toHaveBeenCalledTimes(1);
@@ -83,6 +92,13 @@ describe("SettingsClient", () => {
 			payload,
 			type: "didReceiveSettings"
 		});
+
+		// Re-act (dispose).
+		result.dispose();
+		emit();
+
+		// Re-assert.
+		expect(listener).toHaveBeenCalledTimes(1);
 	});
 
 	/**
