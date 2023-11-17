@@ -61,11 +61,11 @@ describe("SettingsClient", () => {
 			type: "didReceiveGlobalSettings"
 		});
 
-		// Re-act (dispose).
+		// Act (dispose).
 		result.dispose();
 		emit();
 
-		// Re-assert.
+		// Assert (dispose).
 		expect(listener).toHaveBeenCalledTimes(1);
 	});
 
@@ -93,11 +93,11 @@ describe("SettingsClient", () => {
 			type: "didReceiveSettings"
 		});
 
-		// Re-act (dispose).
+		// Act (dispose).
 		result.dispose();
 		emit();
 
-		// Re-assert.
+		// Assert (dispose).
 		expect(listener).toHaveBeenCalledTimes(1);
 	});
 

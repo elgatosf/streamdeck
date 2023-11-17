@@ -254,7 +254,7 @@ describe("StreamDeckConnection", () => {
 
 	describe("addDisposableListener", () => {
 		/**
-		 * Asserts the {@link disposableListener} adds the event listener.
+		 * Asserts the {@link StreamDeckConnection.addDisposableListener} adds the event listener.
 		 */
 		it("adds the listener", async () => {
 			// Arrange.
@@ -280,7 +280,7 @@ describe("StreamDeckConnection", () => {
 		});
 
 		/**
-		 * Asserts listeners added via {@link disposableListener} can be removed by disposing.
+		 * Asserts listeners added via {@link StreamDeckConnection.addDisposableListener} can be removed by disposing.
 		 */
 		it("can remove after emitting", async () => {
 			// Arrange.
@@ -324,7 +324,7 @@ describe("StreamDeckConnection", () => {
 
 		describe("removing the listener", () => {
 			/**
-			 * Asserts `dispose()` on the result {@link disposableListener} removes the listener.
+			 * Asserts `dispose()` on the result {@link StreamDeckConnection.addDisposableListener} removes the listener.
 			 */
 			it("dispose", async () => {
 				// Arrange.
@@ -347,7 +347,7 @@ describe("StreamDeckConnection", () => {
 			});
 
 			/**
-			 * Asserts `[Symbol.dispose]()` on the result {@link disposableListener} removes the listener.
+			 * Asserts `[Symbol.dispose]()` on the result {@link StreamDeckConnection.addDisposableListener} removes the listener.
 			 */
 			it("[Symbol.dispose]", async () => {
 				// Arrange.

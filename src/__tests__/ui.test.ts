@@ -14,10 +14,11 @@ describe("UIClient", () => {
 		const client = new UIClient(connection);
 
 		const listener = jest.fn();
-		client.onPropertyInspectorDidAppear(listener);
+		const emit = () => emitMessage(mockEvents.propertyInspectorDidAppear);
 
 		// Act.
-		const { action, context, device } = emitMessage(mockEvents.propertyInspectorDidAppear);
+		const result = client.onPropertyInspectorDidAppear(listener);
+		const { action, context, device } = emit();
 
 		// Assert.
 		expect(listener).toHaveBeenCalledTimes(1);
@@ -26,6 +27,13 @@ describe("UIClient", () => {
 			deviceId: device,
 			type: "propertyInspectorDidAppear"
 		});
+
+		// Act (dispose).
+		result.dispose();
+		emit();
+
+		// Assert (dispose).
+		expect(listener).toHaveBeenCalledTimes(1);
 	});
 
 	/**
@@ -37,10 +45,11 @@ describe("UIClient", () => {
 		const client = new UIClient(connection);
 
 		const listener = jest.fn();
-		client.onPropertyInspectorDidDisappear(listener);
+		const emit = () => emitMessage(mockEvents.propertyInspectorDidDisappear);
 
 		// Act.
-		const { action, context, device } = emitMessage(mockEvents.propertyInspectorDidDisappear);
+		const result = client.onPropertyInspectorDidDisappear(listener);
+		const { action, context, device } = emit();
 
 		// Assert.
 		expect(listener).toHaveBeenCalledTimes(1);
@@ -49,6 +58,13 @@ describe("UIClient", () => {
 			deviceId: device,
 			type: "propertyInspectorDidDisappear"
 		});
+
+		// Act (dispose).
+		result.dispose();
+		emit();
+
+		// Assert (dispose).
+		expect(listener).toHaveBeenCalledTimes(1);
 	});
 
 	/**
@@ -60,10 +76,11 @@ describe("UIClient", () => {
 		const client = new UIClient(connection);
 
 		const listener = jest.fn();
-		client.onSendToPlugin(listener);
+		const emit = () => emitMessage(mockEvents.sendToPlugin);
 
 		// Act.
-		const { action, context, payload } = emitMessage(mockEvents.sendToPlugin);
+		const result = client.onSendToPlugin(listener);
+		const { action, context, payload } = emit();
 
 		// Assert.
 		expect(listener).toHaveBeenCalledTimes(1);
@@ -72,5 +89,12 @@ describe("UIClient", () => {
 			payload,
 			type: "sendToPlugin"
 		});
+
+		// Act (dispose).
+		result.dispose();
+		emit();
+
+		// Assert (dispose).
+		expect(listener).toHaveBeenCalledTimes(1);
 	});
 });
