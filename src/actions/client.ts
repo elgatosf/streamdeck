@@ -1,4 +1,5 @@
 import { Manifest } from "..";
+import type { IDisposable } from "../common/disposable";
 import type { SetImage, SetTitle } from "../connectivity/commands";
 import type { StreamDeckConnection } from "../connectivity/connection";
 import type * as api from "../connectivity/events";
@@ -63,54 +64,60 @@ export class ActionClient {
 	 * Occurs when the user presses a dial (Stream Deck+). **NB** For other action types see {@link ActionClient.onKeyDown}. Also see {@link ActionClient.onDialUp}.
 	 * @template T The type of settings associated with the action.
 	 * @param listener Function to be invoked when the event occurs.
+	 * @returns A disposable that, when disposed, removes the listener.
 	 */
-	public onDialDown<T extends api.PayloadObject<T> = object>(listener: (ev: DialDownEvent<T>) => void): void {
-		this.connection.on("dialDown", (ev: api.DialDown<T>) => listener(new ActionEvent<api.DialDown<T>>(new Action<T>(this.connection, ev), ev)));
+	public onDialDown<T extends api.PayloadObject<T> = object>(listener: (ev: DialDownEvent<T>) => void): IDisposable {
+		return this.connection.addDisposableListener("dialDown", (ev: api.DialDown<T>) => listener(new ActionEvent<api.DialDown<T>>(new Action<T>(this.connection, ev), ev)));
 	}
 
 	/**
 	 * Occurs when the user rotates a dial (Stream Deck+).
 	 * @template T The type of settings associated with the action.
 	 * @param listener Function to be invoked when the event occurs.
+	 * @returns A disposable that, when disposed, removes the listener.
 	 */
-	public onDialRotate<T extends api.PayloadObject<T> = object>(listener: (ev: DialRotateEvent<T>) => void): void {
-		this.connection.on("dialRotate", (ev: api.DialRotate<T>) => listener(new ActionEvent<api.DialRotate<T>>(new Action<T>(this.connection, ev), ev)));
+	public onDialRotate<T extends api.PayloadObject<T> = object>(listener: (ev: DialRotateEvent<T>) => void): IDisposable {
+		return this.connection.addDisposableListener("dialRotate", (ev: api.DialRotate<T>) => listener(new ActionEvent<api.DialRotate<T>>(new Action<T>(this.connection, ev), ev)));
 	}
 
 	/**
 	 * Occurs when the user releases a pressed dial (Stream Deck+). **NB** For other action types see {@link ActionClient.onKeyUp}. Also see {@link ActionClient.onDialDown}.
 	 * @template T The type of settings associated with the action.
 	 * @param listener Function to be invoked when the event occurs.
+	 * @returns A disposable that, when disposed, removes the listener.
 	 */
-	public onDialUp<T extends api.PayloadObject<T> = object>(listener: (ev: DialUpEvent<T>) => void): void {
-		this.connection.on("dialUp", (ev: api.DialUp<T>) => listener(new ActionEvent<api.DialUp<T>>(new Action<T>(this.connection, ev), ev)));
+	public onDialUp<T extends api.PayloadObject<T> = object>(listener: (ev: DialUpEvent<T>) => void): IDisposable {
+		return this.connection.addDisposableListener("dialUp", (ev: api.DialUp<T>) => listener(new ActionEvent<api.DialUp<T>>(new Action<T>(this.connection, ev), ev)));
 	}
 
 	/**
 	 * Occurs when the user presses a action down. **NB** For dials / touchscreens see {@link ActionClient.onDialDown}. Also see {@link ActionClient.onKeyUp}.
 	 * @template T The type of settings associated with the action.
 	 * @param listener Function to be invoked when the event occurs.
+	 * @returns A disposable that, when disposed, removes the listener.
 	 */
-	public onKeyDown<T extends api.PayloadObject<T> = object>(listener: (ev: KeyDownEvent<T>) => void): void {
-		this.connection.on("keyDown", (ev: api.KeyDown<T>) => listener(new ActionEvent<api.KeyDown<T>>(new Action<T>(this.connection, ev), ev)));
+	public onKeyDown<T extends api.PayloadObject<T> = object>(listener: (ev: KeyDownEvent<T>) => void): IDisposable {
+		return this.connection.addDisposableListener("keyDown", (ev: api.KeyDown<T>) => listener(new ActionEvent<api.KeyDown<T>>(new Action<T>(this.connection, ev), ev)));
 	}
 
 	/**
 	 * Occurs when the user releases a pressed action. **NB** For dials / touchscreens see {@link ActionClient.onDialUp}. Also see {@link ActionClient.onKeyDown}.
 	 * @template T The type of settings associated with the action.
 	 * @param listener Function to be invoked when the event occurs.
+	 * @returns A disposable that, when disposed, removes the listener.
 	 */
-	public onKeyUp<T extends api.PayloadObject<T> = object>(listener: (ev: KeyUpEvent<T>) => void): void {
-		this.connection.on("keyUp", (ev: api.KeyUp<T>) => listener(new ActionEvent<api.KeyUp<T>>(new Action<T>(this.connection, ev), ev)));
+	public onKeyUp<T extends api.PayloadObject<T> = object>(listener: (ev: KeyUpEvent<T>) => void): IDisposable {
+		return this.connection.addDisposableListener("keyUp", (ev: api.KeyUp<T>) => listener(new ActionEvent<api.KeyUp<T>>(new Action<T>(this.connection, ev), ev)));
 	}
 
 	/**
 	 * Occurs when the user updates an action's title settings in the Stream Deck application. Also see {@link ActionClient.setTitle}.
 	 * @template T The type of settings associated with the action.
 	 * @param listener Function to be invoked when the event occurs.
+	 * @returns A disposable that, when disposed, removes the listener.
 	 */
-	public onTitleParametersDidChange<T extends api.PayloadObject<T> = object>(listener: (ev: TitleParametersDidChangeEvent<T>) => void): void {
-		this.connection.on("titleParametersDidChange", (ev: api.TitleParametersDidChange<T>) =>
+	public onTitleParametersDidChange<T extends api.PayloadObject<T> = object>(listener: (ev: TitleParametersDidChangeEvent<T>) => void): IDisposable {
+		return this.connection.addDisposableListener("titleParametersDidChange", (ev: api.TitleParametersDidChange<T>) =>
 			listener(new ActionEvent<api.TitleParametersDidChange<T>>(new Action<T>(this.connection, ev), ev))
 		);
 	}
@@ -119,9 +126,12 @@ export class ActionClient {
 	 * Occurs when the user taps the touchscreen (Stream Deck+).
 	 * @template T The type of settings associated with the action.
 	 * @param listener Function to be invoked when the event occurs.
+	 * @returns A disposable that, when disposed, removes the listener.
 	 */
-	public onTouchTap<TSettings extends api.PayloadObject<TSettings> = object>(listener: (ev: TouchTapEvent<TSettings>) => void): void {
-		this.connection.on("touchTap", (ev: api.TouchTap<TSettings>) => listener(new ActionEvent<api.TouchTap<TSettings>>(new Action<TSettings>(this.connection, ev), ev)));
+	public onTouchTap<TSettings extends api.PayloadObject<TSettings> = object>(listener: (ev: TouchTapEvent<TSettings>) => void): IDisposable {
+		return this.connection.addDisposableListener("touchTap", (ev: api.TouchTap<TSettings>) =>
+			listener(new ActionEvent<api.TouchTap<TSettings>>(new Action<TSettings>(this.connection, ev), ev))
+		);
 	}
 
 	/**
@@ -129,9 +139,10 @@ export class ActionClient {
 	 * page". An action refers to _all_ types of actions, e.g. keys, dials,
 	 * @template T The type of settings associated with the action.
 	 * @param listener Function to be invoked when the event occurs.
+	 * @returns A disposable that, when disposed, removes the listener.
 	 */
-	public onWillAppear<T extends api.PayloadObject<T> = object>(listener: (ev: WillAppearEvent<T>) => void): void {
-		this.connection.on("willAppear", (ev: api.WillAppear<T>) => listener(new ActionEvent<api.WillAppear<T>>(new Action<T>(this.connection, ev), ev)));
+	public onWillAppear<T extends api.PayloadObject<T> = object>(listener: (ev: WillAppearEvent<T>) => void): IDisposable {
+		return this.connection.addDisposableListener("willAppear", (ev: api.WillAppear<T>) => listener(new ActionEvent<api.WillAppear<T>>(new Action<T>(this.connection, ev), ev)));
 	}
 
 	/**
@@ -139,9 +150,12 @@ export class ActionClient {
 	 * dials, touchscreens, pedals, etc.
 	 * @template T The type of settings associated with the action.
 	 * @param listener Function to be invoked when the event occurs.
+	 * @returns A disposable that, when disposed, removes the listener.
 	 */
-	public onWillDisappear<T extends api.PayloadObject<T> = object>(listener: (ev: WillDisappearEvent<T>) => void): void {
-		this.connection.on("willDisappear", (ev: api.WillDisappear<T>) => listener(new ActionEvent<api.WillDisappear<T>>(new Action<T>(this.connection, ev), ev)));
+	public onWillDisappear<T extends api.PayloadObject<T> = object>(listener: (ev: WillDisappearEvent<T>) => void): IDisposable {
+		return this.connection.addDisposableListener("willDisappear", (ev: api.WillDisappear<T>) =>
+			listener(new ActionEvent<api.WillDisappear<T>>(new Action<T>(this.connection, ev), ev))
+		);
 	}
 
 	/**

@@ -1,4 +1,5 @@
-import { StreamDeckConnection } from "./connectivity/connection";
+import type { IDisposable } from "./common/disposable";
+import type { StreamDeckConnection } from "./connectivity/connection";
 import type { DeviceInfo } from "./connectivity/device-info";
 import { DeviceDidConnectEvent, DeviceDidDisconnectEvent, DeviceEvent } from "./events";
 
@@ -81,9 +82,10 @@ export class DeviceClient {
 	/**
 	 * Occurs when a Stream Deck device is connected. Also see {@link DeviceClient.onDeviceDidConnect}.
 	 * @param listener Function to be invoked when the event occurs.
+	 * @returns A disposable that, when disposed, removes the listener.
 	 */
-	public onDeviceDidConnect(listener: (ev: DeviceDidConnectEvent) => void): void {
-		this.connection.on("deviceDidConnect", (ev) =>
+	public onDeviceDidConnect(listener: (ev: DeviceDidConnectEvent) => void): IDisposable {
+		return this.connection.addDisposableListener("deviceDidConnect", (ev) =>
 			listener(
 				new DeviceEvent(ev, {
 					...ev.deviceInfo,
@@ -96,9 +98,10 @@ export class DeviceClient {
 	/**
 	 * Occurs when a Stream Deck device is disconnected. Also see {@link DeviceClient.onDeviceDidDisconnect}.
 	 * @param listener Function to be invoked when the event occurs.
+	 * @returns A disposable that, when disposed, removes the listener.
 	 */
-	public onDeviceDidDisconnect(listener: (ev: DeviceDidDisconnectEvent) => void): void {
-		this.connection.on("deviceDidDisconnect", (ev) =>
+	public onDeviceDidDisconnect(listener: (ev: DeviceDidDisconnectEvent) => void): IDisposable {
+		return this.connection.addDisposableListener("deviceDidDisconnect", (ev) =>
 			listener(
 				new DeviceEvent(ev, {
 					...this.devices.get(ev.device),

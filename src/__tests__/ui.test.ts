@@ -1,4 +1,4 @@
-import { getMockedConnection } from "../../tests/__mocks__/connection";
+import { getConnection } from "../../tests/__mocks__/connection";
 import { Action } from "../actions/action";
 import * as mockEvents from "../connectivity/__mocks__/events";
 import { PropertyInspectorDidAppearEvent, PropertyInspectorDidDisappearEvent, SendToPluginEvent } from "../events";
@@ -10,14 +10,15 @@ describe("UIClient", () => {
 	 */
 	it("Receives onPropertyInspectorDidAppear", () => {
 		// Arrange.
-		const { connection } = getMockedConnection();
+		const { connection, emitMessage } = getConnection();
 		const client = new UIClient(connection);
 
 		const listener = jest.fn();
-		client.onPropertyInspectorDidAppear(listener);
+		const emit = () => emitMessage(mockEvents.propertyInspectorDidAppear);
 
 		// Act.
-		const { action, context, device } = connection.__emit(mockEvents.propertyInspectorDidAppear);
+		const result = client.onPropertyInspectorDidAppear(listener);
+		const { action, context, device } = emit();
 
 		// Assert.
 		expect(listener).toHaveBeenCalledTimes(1);
@@ -26,6 +27,13 @@ describe("UIClient", () => {
 			deviceId: device,
 			type: "propertyInspectorDidAppear"
 		});
+
+		// Act (dispose).
+		result.dispose();
+		emit();
+
+		// Assert (dispose).
+		expect(listener).toHaveBeenCalledTimes(1);
 	});
 
 	/**
@@ -33,14 +41,15 @@ describe("UIClient", () => {
 	 */
 	it("Receives onPropertyInspectorDidDisappear", () => {
 		// Arrange.
-		const { connection } = getMockedConnection();
+		const { connection, emitMessage } = getConnection();
 		const client = new UIClient(connection);
 
 		const listener = jest.fn();
-		client.onPropertyInspectorDidDisappear(listener);
+		const emit = () => emitMessage(mockEvents.propertyInspectorDidDisappear);
 
 		// Act.
-		const { action, context, device } = connection.__emit(mockEvents.propertyInspectorDidDisappear);
+		const result = client.onPropertyInspectorDidDisappear(listener);
+		const { action, context, device } = emit();
 
 		// Assert.
 		expect(listener).toHaveBeenCalledTimes(1);
@@ -49,6 +58,13 @@ describe("UIClient", () => {
 			deviceId: device,
 			type: "propertyInspectorDidDisappear"
 		});
+
+		// Act (dispose).
+		result.dispose();
+		emit();
+
+		// Assert (dispose).
+		expect(listener).toHaveBeenCalledTimes(1);
 	});
 
 	/**
@@ -56,14 +72,15 @@ describe("UIClient", () => {
 	 */
 	it("Receives onSendToPlugin", () => {
 		// Arrange.
-		const { connection } = getMockedConnection();
+		const { connection, emitMessage } = getConnection();
 		const client = new UIClient(connection);
 
 		const listener = jest.fn();
-		client.onSendToPlugin(listener);
+		const emit = () => emitMessage(mockEvents.sendToPlugin);
 
 		// Act.
-		const { action, context, payload } = connection.__emit(mockEvents.sendToPlugin);
+		const result = client.onSendToPlugin(listener);
+		const { action, context, payload } = emit();
 
 		// Assert.
 		expect(listener).toHaveBeenCalledTimes(1);
@@ -72,5 +89,12 @@ describe("UIClient", () => {
 			payload,
 			type: "sendToPlugin"
 		});
+
+		// Act (dispose).
+		result.dispose();
+		emit();
+
+		// Assert (dispose).
+		expect(listener).toHaveBeenCalledTimes(1);
 	});
 });

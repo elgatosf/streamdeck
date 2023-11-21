@@ -1,4 +1,4 @@
-import { getMockedConnection } from "../../tests/__mocks__/connection";
+import { getConnection } from "../../tests/__mocks__/connection";
 import { SwitchToProfile } from "../connectivity/commands";
 import { StreamDeckConnection } from "../connectivity/connection";
 import { ProfileClient } from "../profiles";
@@ -9,7 +9,7 @@ describe("ProfileClient", () => {
 	 */
 	it("Sends switchToProfile", async () => {
 		// Arrange.
-		const { connection } = getMockedConnection();
+		const { connection } = getConnection();
 		const profiles = new ProfileClient(connection);
 
 		// Act.

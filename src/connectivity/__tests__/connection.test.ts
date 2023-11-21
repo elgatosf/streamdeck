@@ -3,7 +3,8 @@ import WebSocket from "ws";
 
 import { getMockedLogger } from "../../../tests/__mocks__/logging";
 import { OpenUrl } from "../commands";
-import { StreamDeckConnection } from "../connection";
+import { StreamDeckConnection, createConnection } from "../connection";
+import * as api from "../events";
 import { ApplicationDidLaunch } from "../events";
 import { RegistrationParameters } from "../registration";
 
@@ -28,12 +29,7 @@ const regParams = new RegistrationParameters(mockArgv, getMockedLogger().logger)
 const originalArgv = process.argv;
 
 describe("StreamDeckConnection", () => {
-	//const mockedWebSocket = WebSocket as jest.MockedClass<typeof WebSocket>;
-
-	afterEach(() => {
-		process.argv = originalArgv;
-		jest.clearAllMocks();
-	});
+	afterEach(() => (process.argv = originalArgv));
 
 	/**
 	 * Asserts the {@link StreamDeckConnection} constructor does not automatically attempt to connect to Stream Deck.
@@ -44,7 +40,7 @@ describe("StreamDeckConnection", () => {
 		process.argv = originalArgv;
 
 		// Act.
-		new StreamDeckConnection(regParams, getMockedLogger().logger);
+		createConnection(regParams, getMockedLogger().logger);
 
 		// Assert.
 		expect(webSocketSpy).toHaveLength(0);
@@ -56,7 +52,7 @@ describe("StreamDeckConnection", () => {
 	it("Registers on connection", () => {
 		// Arrange.
 		const webSocketSpy = jest.spyOn(WebSocket, "WebSocket");
-		const connection = new StreamDeckConnection(regParams, getMockedLogger().logger);
+		const connection = createConnection(regParams, getMockedLogger().logger);
 
 		// Act.
 		connection.connect();
@@ -249,11 +245,133 @@ describe("StreamDeckConnection", () => {
 		const createScopeSpy = jest.spyOn(logger, "createScope");
 
 		// Act.
-		new StreamDeckConnection(regParams, logger);
+		createConnection(regParams, logger);
 
 		// Assert.
 		expect(createScopeSpy).toHaveBeenCalledTimes(1);
 		expect(createScopeSpy).toHaveBeenCalledWith("StreamDeckConnection");
+	});
+
+	describe("addDisposableListener", () => {
+		/**
+		 * Asserts the {@link StreamDeckConnection.addDisposableListener} adds the event listener.
+		 */
+		it("adds the listener", async () => {
+			// Arrange.
+			const { connection, webSocket } = await getOpenConnection();
+			const listener = jest.fn();
+
+			// Act.
+			connection.addDisposableListener("applicationDidLaunch", listener);
+			webSocket.emit(
+				"message",
+				JSON.stringify({
+					event: "applicationDidLaunch",
+					payload: { application: "one" }
+				} satisfies api.ApplicationDidLaunch)
+			);
+
+			// Assert.
+			expect(listener).toHaveBeenCalledTimes(1);
+			expect(listener).toHaveBeenCalledWith<[ApplicationDidLaunch]>({
+				event: "applicationDidLaunch",
+				payload: { application: "one" }
+			});
+		});
+
+		/**
+		 * Asserts listeners added via {@link StreamDeckConnection.addDisposableListener} can be removed by disposing.
+		 */
+		it("can remove after emitting", async () => {
+			// Arrange.
+			const { connection, webSocket } = await getOpenConnection();
+			const listener = jest.fn();
+
+			// Act.
+			const handler = connection.addDisposableListener("applicationDidLaunch", listener);
+			webSocket.emit(
+				"message",
+				JSON.stringify({
+					event: "applicationDidLaunch",
+					payload: { application: "one" }
+				} satisfies api.ApplicationDidLaunch)
+			);
+
+			// Assert.
+			expect(listener).toHaveBeenCalledTimes(1);
+			expect(listener).toHaveBeenCalledWith<[ApplicationDidLaunch]>({
+				event: "applicationDidLaunch",
+				payload: { application: "one" }
+			});
+
+			// Re-act
+			handler.dispose();
+			webSocket.emit(
+				"message",
+				JSON.stringify({
+					event: "applicationDidLaunch",
+					payload: { application: "__other__" }
+				} satisfies api.ApplicationDidLaunch)
+			);
+
+			// Re-assert
+			expect(listener).toHaveBeenCalledTimes(1);
+			expect(listener).toHaveBeenLastCalledWith<[ApplicationDidLaunch]>({
+				event: "applicationDidLaunch",
+				payload: { application: "one" }
+			});
+		});
+
+		describe("removing the listener", () => {
+			/**
+			 * Asserts `dispose()` on the result {@link StreamDeckConnection.addDisposableListener} removes the listener.
+			 */
+			it("dispose", async () => {
+				// Arrange.
+				const { connection, webSocket } = await getOpenConnection();
+				const listener = jest.fn();
+				const handler = connection.addDisposableListener("applicationDidLaunch", listener);
+
+				// Act.
+				handler.dispose();
+				webSocket.emit(
+					"message",
+					JSON.stringify({
+						event: "applicationDidLaunch",
+						payload: { application: "one" }
+					} satisfies api.ApplicationDidLaunch)
+				);
+
+				// Assert.
+				expect(listener).toHaveBeenCalledTimes(0);
+			});
+
+			/**
+			 * Asserts `[Symbol.dispose]()` on the result {@link StreamDeckConnection.addDisposableListener} removes the listener.
+			 */
+			it("[Symbol.dispose]", async () => {
+				// Arrange.
+				const { connection, webSocket } = await getOpenConnection();
+				const listener = jest.fn();
+
+				// Act.
+				{
+					// eslint-disable-next-line @typescript-eslint/no-unused-vars
+					using handler = connection.addDisposableListener("applicationDidLaunch", listener);
+				}
+
+				webSocket.emit(
+					"message",
+					JSON.stringify({
+						event: "applicationDidLaunch",
+						payload: { application: "one" }
+					} satisfies api.ApplicationDidLaunch)
+				);
+
+				// Assert.
+				expect(listener).toHaveBeenCalledTimes(0);
+			});
+		});
 	});
 
 	/**
@@ -263,7 +381,7 @@ describe("StreamDeckConnection", () => {
 	async function getOpenConnection() {
 		const webSocketSpy = jest.spyOn(WebSocket, "WebSocket");
 		const { logger, scopedLogger } = getMockedLogger();
-		const connection = new StreamDeckConnection(regParams, logger);
+		const connection = createConnection(regParams, logger);
 
 		const connect = connection.connect();
 		webSocketSpy.mock.instances[0].emit("open");

@@ -4,6 +4,10 @@
 		"customConditions": [
 			"node"
 		],
+		"lib": [
+			"es2022",
+			"esnext.disposable"
+		],
 		"module": "ES2022",
 		"moduleResolution": "Bundler"
 	},

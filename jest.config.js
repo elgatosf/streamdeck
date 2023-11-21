@@ -3,6 +3,7 @@
  * https://jestjs.io/docs/configuration
  */
 const config = {
+	clearMocks: true,
 	collectCoverageFrom: ["src/**/*.ts", "!<rootDir>/node_modules/"],
 	coverageReporters: ["json-summary", "text"],
 	globalSetup: "./tests/__setup__/global.ts",

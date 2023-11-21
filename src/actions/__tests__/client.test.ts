@@ -1,4 +1,5 @@
-import { getMockedConnection } from "../../../tests/__mocks__/connection";
+import { getConnection } from "../../../tests/__mocks__/connection";
+import { getMockedLogger } from "../../../tests/__mocks__/logging";
 import { manifest as mockedManifest } from "../../__mocks__/manifest";
 import * as mockEvents from "../../connectivity/__mocks__/events";
 import { StreamDeckConnection } from "../../connectivity/connection";
@@ -78,14 +79,15 @@ describe("ActionClient", () => {
 		 */
 		it("Receives onDialDown", () => {
 			// Arrange.
-			const { connection, settingsClient, uiClient, logger } = getParameters();
+			const { connection, settingsClient, uiClient, logger, emitMessage } = getParameters();
 			const client = new ActionClient(connection, mockedManifest, settingsClient, uiClient, logger);
 
 			const listener = jest.fn();
-			client.onDialDown(listener);
+			const emit = () => emitMessage(mockEvents.dialDown);
 
 			// Act.
-			const { action, context, device, payload } = connection.__emit(mockEvents.dialDown);
+			const result = client.onDialDown(listener);
+			const { action, context, device, payload } = emit();
 
 			// Assert.
 			expect(listener).toHaveBeenCalledTimes(1);
@@ -95,6 +97,13 @@ describe("ActionClient", () => {
 				payload,
 				type: "dialDown"
 			});
+
+			// Act (dispose).
+			result.dispose();
+			emit();
+
+			// Assert (dispose).
+			expect(listener).toHaveBeenCalledTimes(1);
 		});
 
 		/**
@@ -102,14 +111,15 @@ describe("ActionClient", () => {
 		 */
 		it("Receives onDialRotate", () => {
 			// Arrange.
-			const { connection, settingsClient, uiClient, logger } = getParameters();
+			const { connection, settingsClient, uiClient, logger, emitMessage } = getParameters();
 			const client = new ActionClient(connection, mockedManifest, settingsClient, uiClient, logger);
 
 			const listener = jest.fn();
-			client.onDialRotate(listener);
+			const emit = () => emitMessage(mockEvents.dialRotate);
 
 			// Act.
-			const { action, context, device, payload } = connection.__emit(mockEvents.dialRotate);
+			const result = client.onDialRotate(listener);
+			const { action, context, device, payload } = emit();
 
 			// Assert.
 			expect(listener).toHaveBeenCalledTimes(1);
@@ -119,6 +129,13 @@ describe("ActionClient", () => {
 				payload,
 				type: "dialRotate"
 			});
+
+			// Act (dispose).
+			result.dispose();
+			emit();
+
+			// Assert (dispose).
+			expect(listener).toHaveBeenCalledTimes(1);
 		});
 
 		/**
@@ -126,14 +143,15 @@ describe("ActionClient", () => {
 		 */
 		it("Receives onDialUp", () => {
 			// Arrange.
-			const { connection, settingsClient, uiClient, logger } = getParameters();
+			const { connection, settingsClient, uiClient, logger, emitMessage } = getParameters();
 			const client = new ActionClient(connection, mockedManifest, settingsClient, uiClient, logger);
 
 			const listener = jest.fn();
-			client.onDialUp(listener);
+			const emit = () => emitMessage(mockEvents.dialUp);
 
 			// Act.
-			const { action, context, device, payload } = connection.__emit(mockEvents.dialUp);
+			const result = client.onDialUp(listener);
+			const { action, context, device, payload } = emit();
 
 			// Assert.
 			expect(listener).toHaveBeenCalledTimes(1);
@@ -143,6 +161,13 @@ describe("ActionClient", () => {
 				payload,
 				type: "dialUp"
 			});
+
+			// Act (dispose).
+			result.dispose();
+			emit();
+
+			// Assert (dispose).
+			expect(listener).toHaveBeenCalledTimes(1);
 		});
 
 		/**
@@ -150,14 +175,15 @@ describe("ActionClient", () => {
 		 */
 		it("Receives onKeyDown", () => {
 			// Arrange.
-			const { connection, settingsClient, uiClient, logger } = getParameters();
+			const { connection, settingsClient, uiClient, logger, emitMessage } = getParameters();
 			const client = new ActionClient(connection, mockedManifest, settingsClient, uiClient, logger);
 
 			const listener = jest.fn();
-			client.onKeyDown(listener);
+			const emit = () => emitMessage(mockEvents.keyDown);
 
 			// Act.
-			const { action, context, device, payload } = connection.__emit(mockEvents.keyDown);
+			const result = client.onKeyDown(listener);
+			const { action, context, device, payload } = emit();
 
 			// Assert.
 			expect(listener).toHaveBeenCalledTimes(1);
@@ -167,6 +193,13 @@ describe("ActionClient", () => {
 				payload,
 				type: "keyDown"
 			});
+
+			// Act (dispose).
+			result.dispose();
+			emit();
+
+			// Assert (dispose).
+			expect(listener).toHaveBeenCalledTimes(1);
 		});
 
 		/**
@@ -174,14 +207,15 @@ describe("ActionClient", () => {
 		 */
 		it("Receives onKeyUp", () => {
 			// Arrange.
-			const { connection, settingsClient, uiClient, logger } = getParameters();
+			const { connection, settingsClient, uiClient, logger, emitMessage } = getParameters();
 			const client = new ActionClient(connection, mockedManifest, settingsClient, uiClient, logger);
 
 			const listener = jest.fn();
-			client.onKeyUp(listener);
+			const emit = () => emitMessage(mockEvents.keyUp);
 
 			// Act.
-			const { action, context, device, payload } = connection.__emit(mockEvents.keyUp);
+			const result = client.onKeyUp(listener);
+			const { action, context, device, payload } = emit();
 
 			// Assert.
 			expect(listener).toHaveBeenCalledTimes(1);
@@ -191,6 +225,13 @@ describe("ActionClient", () => {
 				payload,
 				type: "keyUp"
 			});
+
+			// Act (dispose).
+			result.dispose();
+			emit();
+
+			// Assert (dispose).
+			expect(listener).toHaveBeenCalledTimes(1);
 		});
 
 		/**
@@ -198,14 +239,15 @@ describe("ActionClient", () => {
 		 */
 		it("Receives onTitleParametersDidChange", () => {
 			// Arrange.
-			const { connection, settingsClient, uiClient, logger } = getParameters();
+			const { connection, settingsClient, uiClient, logger, emitMessage } = getParameters();
 			const client = new ActionClient(connection, mockedManifest, settingsClient, uiClient, logger);
 
 			const listener = jest.fn();
-			client.onTitleParametersDidChange(listener);
+			const emit = () => emitMessage(mockEvents.titleParametersDidChange);
 
 			// Act.
-			const { action, context, device, payload } = connection.__emit(mockEvents.titleParametersDidChange);
+			const result = client.onTitleParametersDidChange(listener);
+			const { action, context, device, payload } = emit();
 
 			// Assert.
 			expect(listener).toHaveBeenCalledTimes(1);
@@ -215,6 +257,13 @@ describe("ActionClient", () => {
 				payload,
 				type: "titleParametersDidChange"
 			});
+
+			// Act (dispose).
+			result.dispose();
+			emit();
+
+			// Assert (dispose).
+			expect(listener).toHaveBeenCalledTimes(1);
 		});
 
 		/**
@@ -222,14 +271,15 @@ describe("ActionClient", () => {
 		 */
 		it("Receives onTouchTap", () => {
 			// Arrange.
-			const { connection, settingsClient, uiClient, logger } = getParameters();
+			const { connection, settingsClient, uiClient, logger, emitMessage } = getParameters();
 			const client = new ActionClient(connection, mockedManifest, settingsClient, uiClient, logger);
 
 			const listener = jest.fn();
-			client.onTouchTap(listener);
+			const emit = () => emitMessage(mockEvents.touchTap);
 
 			// Act.
-			const { action, context, device, payload } = connection.__emit(mockEvents.touchTap);
+			const result = client.onTouchTap(listener);
+			const { action, context, device, payload } = emit();
 
 			// Assert.
 			expect(listener).toHaveBeenCalledTimes(1);
@@ -239,6 +289,13 @@ describe("ActionClient", () => {
 				payload,
 				type: "touchTap"
 			});
+
+			// Act (dispose).
+			result.dispose();
+			emit();
+
+			// Assert (dispose).
+			expect(listener).toHaveBeenCalledTimes(1);
 		});
 
 		/**
@@ -246,14 +303,15 @@ describe("ActionClient", () => {
 		 */
 		it("Receives onWillAppear", () => {
 			// Arrange.
-			const { connection, settingsClient, uiClient, logger } = getParameters();
+			const { connection, settingsClient, uiClient, logger, emitMessage } = getParameters();
 			const client = new ActionClient(connection, mockedManifest, settingsClient, uiClient, logger);
 
 			const listener = jest.fn();
-			client.onWillAppear(listener);
+			const emit = () => emitMessage(mockEvents.willAppear);
 
 			// Act.
-			const { action, context, device, payload } = connection.__emit(mockEvents.willAppear);
+			const result = client.onWillAppear(listener);
+			const { action, context, device, payload } = emit();
 
 			// Assert.
 			expect(listener).toHaveBeenCalledTimes(1);
@@ -263,6 +321,13 @@ describe("ActionClient", () => {
 				payload,
 				type: "willAppear"
 			});
+
+			// Act (dispose).
+			result.dispose();
+			emit();
+
+			// Assert (dispose).
+			expect(listener).toHaveBeenCalledTimes(1);
 		});
 
 		/**
@@ -270,14 +335,15 @@ describe("ActionClient", () => {
 		 */
 		it("Receives onWillAppear", () => {
 			// Arrange.
-			const { connection, settingsClient, uiClient, logger } = getParameters();
+			const { connection, settingsClient, uiClient, logger, emitMessage } = getParameters();
 			const client = new ActionClient(connection, mockedManifest, settingsClient, uiClient, logger);
 
 			const listener = jest.fn();
-			client.onWillDisappear(listener);
+			const emit = () => emitMessage(mockEvents.willDisappear);
 
 			// Act.
-			const { action, context, device, payload } = connection.__emit(mockEvents.willDisappear);
+			const result = client.onWillDisappear(listener);
+			const { action, context, device, payload } = emit();
 
 			// Assert.
 			expect(listener).toHaveBeenCalledTimes(1);
@@ -287,6 +353,13 @@ describe("ActionClient", () => {
 				payload,
 				type: "willDisappear"
 			});
+
+			// Act (dispose).
+			result.dispose();
+			emit();
+
+			// Assert (dispose).
+			expect(listener).toHaveBeenCalledTimes(1);
 		});
 	});
 
@@ -351,7 +424,7 @@ describe("ActionClient", () => {
 		 */
 		it("Routes onDialDown", () => {
 			// Arrange.
-			const { connection, settingsClient, uiClient, logger } = getParameters();
+			const { connection, settingsClient, uiClient, logger, emitMessage } = getParameters();
 			const client = new ActionClient(connection, mockedManifest, settingsClient, uiClient, logger);
 
 			const action: SingletonAction = {
@@ -362,12 +435,12 @@ describe("ActionClient", () => {
 			// Act.
 			client.registerAction(action);
 
-			const { device, payload, context } = connection.__emit({
+			const { device, payload, context } = emitMessage({
 				...mockEvents.dialDown,
 				action: manifestId
 			});
 
-			connection.__emit(mockEvents.dialDown);
+			emitMessage(mockEvents.dialDown);
 
 			// Assert.
 			expect(action.onDialDown).toHaveBeenCalledTimes(1);
@@ -384,7 +457,7 @@ describe("ActionClient", () => {
 		 */
 		it("Routes onDialRotate", () => {
 			// Arrange.
-			const { connection, settingsClient, uiClient, logger } = getParameters();
+			const { connection, settingsClient, uiClient, logger, emitMessage } = getParameters();
 			const client = new ActionClient(connection, mockedManifest, settingsClient, uiClient, logger);
 
 			const action: SingletonAction = {
@@ -395,12 +468,12 @@ describe("ActionClient", () => {
 			// Act.
 			client.registerAction(action);
 
-			const { device, payload, context } = connection.__emit({
+			const { device, payload, context } = emitMessage({
 				...mockEvents.dialRotate,
 				action: manifestId
 			});
 
-			connection.__emit(mockEvents.dialRotate);
+			emitMessage(mockEvents.dialRotate);
 
 			// Assert.
 			expect(action.onDialRotate).toHaveBeenCalledTimes(1);
@@ -418,7 +491,7 @@ describe("ActionClient", () => {
 		 */
 		it("Routes onDialUp", () => {
 			// Arrange.
-			const { connection, settingsClient, uiClient, logger } = getParameters();
+			const { connection, settingsClient, uiClient, logger, emitMessage } = getParameters();
 			const client = new ActionClient(connection, mockedManifest, settingsClient, uiClient, logger);
 
 			const action: SingletonAction = {
@@ -429,12 +502,12 @@ describe("ActionClient", () => {
 			// Act.
 			client.registerAction(action);
 
-			const { device, payload, context } = connection.__emit({
+			const { device, payload, context } = emitMessage({
 				...mockEvents.dialUp,
 				action: manifestId
 			});
 
-			connection.__emit(mockEvents.dialUp);
+			emitMessage(mockEvents.dialUp);
 
 			// Assert.
 			expect(action.onDialUp).toHaveBeenCalledTimes(1);
@@ -452,7 +525,7 @@ describe("ActionClient", () => {
 		 */
 		it("Routes onDidReceiveSettings", () => {
 			// Arrange.
-			const { connection, settingsClient, uiClient, logger } = getParameters();
+			const { connection, settingsClient, uiClient, logger, emitMessage } = getParameters();
 			const client = new ActionClient(connection, mockedManifest, settingsClient, uiClient, logger);
 
 			const action: SingletonAction = {
@@ -463,12 +536,12 @@ describe("ActionClient", () => {
 			// Act.
 			client.registerAction(action);
 
-			const { device, payload, context } = connection.__emit({
+			const { device, payload, context } = emitMessage({
 				...mockEvents.didReceiveSettings,
 				action: manifestId
 			});
 
-			connection.__emit(mockEvents.didReceiveSettings);
+			emitMessage(mockEvents.didReceiveSettings);
 
 			// Assert.
 			expect(action.onDidReceiveSettings).toHaveBeenCalledTimes(1);
@@ -486,7 +559,7 @@ describe("ActionClient", () => {
 		 */
 		it("Routes onKeyDown", () => {
 			// Arrange.
-			const { connection, settingsClient, uiClient, logger } = getParameters();
+			const { connection, settingsClient, uiClient, logger, emitMessage } = getParameters();
 			const client = new ActionClient(connection, mockedManifest, settingsClient, uiClient, logger);
 
 			const action: SingletonAction = {
@@ -497,12 +570,12 @@ describe("ActionClient", () => {
 			// Act.
 			client.registerAction(action);
 
-			const { device, payload, context } = connection.__emit({
+			const { device, payload, context } = emitMessage({
 				...mockEvents.keyDown,
 				action: manifestId
 			});
 
-			connection.__emit(mockEvents.keyDown);
+			emitMessage(mockEvents.keyDown);
 
 			// Assert.
 			expect(action.onKeyDown).toHaveBeenCalledTimes(1);
@@ -520,7 +593,7 @@ describe("ActionClient", () => {
 		 */
 		it("Routes onKeyUp", () => {
 			// Arrange.
-			const { connection, settingsClient, uiClient, logger } = getParameters();
+			const { connection, settingsClient, uiClient, logger, emitMessage } = getParameters();
 			const client = new ActionClient(connection, mockedManifest, settingsClient, uiClient, logger);
 
 			const action: SingletonAction = {
@@ -531,12 +604,12 @@ describe("ActionClient", () => {
 			// Act.
 			client.registerAction(action);
 
-			const { device, payload, context } = connection.__emit({
+			const { device, payload, context } = emitMessage({
 				...mockEvents.keyUp,
 				action: manifestId
 			});
 
-			connection.__emit(mockEvents.keyUp);
+			emitMessage(mockEvents.keyUp);
 
 			// Assert.
 			expect(action.onKeyUp).toHaveBeenCalledTimes(1);
@@ -554,7 +627,7 @@ describe("ActionClient", () => {
 		 */
 		it("Routes onPropertyInspectorDidAppear", () => {
 			// Arrange.
-			const { connection, settingsClient, uiClient, logger } = getParameters();
+			const { connection, settingsClient, uiClient, logger, emitMessage } = getParameters();
 			const client = new ActionClient(connection, mockedManifest, settingsClient, uiClient, logger);
 
 			const action: SingletonAction = {
@@ -565,12 +638,12 @@ describe("ActionClient", () => {
 			// Act.
 			client.registerAction(action);
 
-			const { device, context } = connection.__emit({
+			const { device, context } = emitMessage({
 				...mockEvents.propertyInspectorDidAppear,
 				action: manifestId
 			});
 
-			connection.__emit(mockEvents.propertyInspectorDidAppear);
+			emitMessage(mockEvents.propertyInspectorDidAppear);
 
 			// Assert.
 			expect(action.onPropertyInspectorDidAppear).toHaveBeenCalledTimes(1);
@@ -587,7 +660,7 @@ describe("ActionClient", () => {
 		 */
 		it("Routes onPropertyInspectorDidDisappear", () => {
 			// Arrange.
-			const { connection, settingsClient, uiClient, logger } = getParameters();
+			const { connection, settingsClient, uiClient, logger, emitMessage } = getParameters();
 			const client = new ActionClient(connection, mockedManifest, settingsClient, uiClient, logger);
 
 			const action: SingletonAction = {
@@ -598,12 +671,12 @@ describe("ActionClient", () => {
 			// Act.
 			client.registerAction(action);
 
-			const { device, context } = connection.__emit({
+			const { device, context } = emitMessage({
 				...mockEvents.propertyInspectorDidDisappear,
 				action: manifestId
 			});
 
-			connection.__emit(mockEvents.propertyInspectorDidDisappear);
+			emitMessage(mockEvents.propertyInspectorDidDisappear);
 
 			// Assert.
 			expect(action.onPropertyInspectorDidDisappear).toHaveBeenCalledTimes(1);
@@ -620,7 +693,7 @@ describe("ActionClient", () => {
 		 */
 		it("Routes onSendToPlugin", () => {
 			// Arrange.
-			const { connection, settingsClient, uiClient, logger } = getParameters();
+			const { connection, settingsClient, uiClient, logger, emitMessage } = getParameters();
 			const client = new ActionClient(connection, mockedManifest, settingsClient, uiClient, logger);
 
 			const action: SingletonAction = {
@@ -631,12 +704,12 @@ describe("ActionClient", () => {
 			// Act.
 			client.registerAction(action);
 
-			const { payload, context } = connection.__emit({
+			const { payload, context } = emitMessage({
 				...mockEvents.sendToPlugin,
 				action: manifestId
 			});
 
-			connection.__emit(mockEvents.sendToPlugin);
+			emitMessage(mockEvents.sendToPlugin);
 
 			// Assert.
 			expect(action.onSendToPlugin).toHaveBeenCalledTimes(1);
@@ -653,7 +726,7 @@ describe("ActionClient", () => {
 		 */
 		it("Routes onTitleParametersDidChange", () => {
 			// Arrange.
-			const { connection, settingsClient, uiClient, logger } = getParameters();
+			const { connection, settingsClient, uiClient, logger, emitMessage } = getParameters();
 			const client = new ActionClient(connection, mockedManifest, settingsClient, uiClient, logger);
 
 			const action: SingletonAction = {
@@ -664,12 +737,12 @@ describe("ActionClient", () => {
 			// Act.
 			client.registerAction(action);
 
-			const { device, payload, context } = connection.__emit({
+			const { device, payload, context } = emitMessage({
 				...mockEvents.titleParametersDidChange,
 				action: manifestId
 			});
 
-			connection.__emit(mockEvents.titleParametersDidChange);
+			emitMessage(mockEvents.titleParametersDidChange);
 
 			// Assert.
 			expect(action.onTitleParametersDidChange).toHaveBeenCalledTimes(1);
@@ -687,7 +760,7 @@ describe("ActionClient", () => {
 		 */
 		it("Routes onTouchTap", () => {
 			// Arrange.
-			const { connection, settingsClient, uiClient, logger } = getParameters();
+			const { connection, settingsClient, uiClient, logger, emitMessage } = getParameters();
 			const client = new ActionClient(connection, mockedManifest, settingsClient, uiClient, logger);
 
 			const action: SingletonAction = {
@@ -698,12 +771,12 @@ describe("ActionClient", () => {
 			// Act.
 			client.registerAction(action);
 
-			const { device, payload, context } = connection.__emit({
+			const { device, payload, context } = emitMessage({
 				...mockEvents.touchTap,
 				action: manifestId
 			});
 
-			connection.__emit(mockEvents.touchTap);
+			emitMessage(mockEvents.touchTap);
 
 			// Assert.
 			expect(action.onTouchTap).toHaveBeenCalledTimes(1);
@@ -721,7 +794,7 @@ describe("ActionClient", () => {
 		 */
 		it("Routes onWillAppear", () => {
 			// Arrange.
-			const { connection, settingsClient, uiClient, logger } = getParameters();
+			const { connection, settingsClient, uiClient, logger, emitMessage } = getParameters();
 			const client = new ActionClient(connection, mockedManifest, settingsClient, uiClient, logger);
 
 			const action: SingletonAction = {
@@ -732,12 +805,12 @@ describe("ActionClient", () => {
 			// Act.
 			client.registerAction(action);
 
-			const { device, payload, context } = connection.__emit({
+			const { device, payload, context } = emitMessage({
 				...mockEvents.willAppear,
 				action: manifestId
 			});
 
-			connection.__emit(mockEvents.willAppear);
+			emitMessage(mockEvents.willAppear);
 
 			// Assert.
 			expect(action.onWillAppear).toHaveBeenCalledTimes(1);
@@ -755,7 +828,7 @@ describe("ActionClient", () => {
 		 */
 		it("Routes onWillDisappear", () => {
 			// Arrange.
-			const { connection, settingsClient, uiClient, logger } = getParameters();
+			const { connection, settingsClient, uiClient, logger, emitMessage } = getParameters();
 			const client = new ActionClient(connection, mockedManifest, settingsClient, uiClient, logger);
 
 			const action: SingletonAction = {
@@ -766,12 +839,12 @@ describe("ActionClient", () => {
 			// Act.
 			client.registerAction(action);
 
-			const { device, payload, context } = connection.__emit({
+			const { device, payload, context } = emitMessage({
 				...mockEvents.willDisappear,
 				action: manifestId
 			});
 
-			connection.__emit(mockEvents.willDisappear);
+			emitMessage(mockEvents.willDisappear);
 
 			// Assert.
 			expect(action.onWillDisappear).toHaveBeenCalledTimes(1);
@@ -790,9 +863,11 @@ describe("ActionClient", () => {
 	 * @returns Mocked parameters.
 	 */
 	function getParameters() {
-		const { connection, logger, scopedLogger } = getMockedConnection();
+		const { logger, scopedLogger } = getMockedLogger();
+		const { connection, emitMessage } = getConnection();
 		return {
 			connection,
+			emitMessage,
 			logger,
 			scopedLogger,
 			settingsClient: new SettingsClient(connection),

@@ -1,13 +1,8 @@
-import { getMockedLogger } from "../../tests/__mocks__/logging";
-import { MockStreamDeckConnection } from "../connectivity/__mocks__/connection";
+import { getConnection } from "../../tests/__mocks__/connection";
 import * as mockEvents from "../connectivity/__mocks__/events";
-import { registrationParameters } from "../connectivity/__mocks__/registration";
-import { StreamDeckConnection } from "../connectivity/connection";
 import { DeviceType } from "../connectivity/device-info";
 import { Device, DeviceClient } from "../devices";
 import { DeviceDidConnectEvent, DeviceDidDisconnectEvent } from "../events";
-
-jest.mock("../connectivity/connection");
 
 describe("DeviceClient", () => {
 	/**
@@ -15,10 +10,9 @@ describe("DeviceClient", () => {
 	 */
 	it("Applies callback with forEach", () => {
 		// Arrange.
-		const { logger } = getMockedLogger();
-		const connection = new StreamDeckConnection(registrationParameters, logger) as MockStreamDeckConnection;
+		const { connection, emitMessage } = getConnection();
 		const devices = new DeviceClient(connection);
-		const newDevice = connection.__emit({
+		const newDevice = emitMessage({
 			event: "deviceDidConnect",
 			device: "devices.test.ts.1",
 			deviceInfo: {
@@ -35,11 +29,11 @@ describe("DeviceClient", () => {
 		// Assert.
 		expect(listener).toHaveBeenCalledTimes(2);
 		expect(listener).toHaveBeenNthCalledWith<[Device]>(1, {
-			id: registrationParameters.info.devices[0].id,
+			id: connection.registrationParameters.info.devices[0].id,
 			isConnected: false,
-			name: registrationParameters.info.devices[0].name,
-			size: registrationParameters.info.devices[0].size,
-			type: registrationParameters.info.devices[0].type
+			name: connection.registrationParameters.info.devices[0].name,
+			size: connection.registrationParameters.info.devices[0].size,
+			type: connection.registrationParameters.info.devices[0].type
 		});
 		expect(listener).toHaveBeenNthCalledWith<[Device]>(2, {
 			id: newDevice.device,
@@ -55,15 +49,14 @@ describe("DeviceClient", () => {
 	 */
 	it("Counts devices", () => {
 		// Arrange.
-		const { logger } = getMockedLogger();
-		const connection = new StreamDeckConnection(registrationParameters, logger) as MockStreamDeckConnection;
+		const { connection, emitMessage } = getConnection();
 		const devices = new DeviceClient(connection);
 
 		// Act, assert: registration parameters are included.
 		expect(devices.length).toBe(1);
 
 		// Act, assert: count increments with new devices.
-		connection.__emit({
+		emitMessage({
 			event: "deviceDidConnect",
 			device: "devices.test.ts.1",
 			deviceInfo: {
@@ -76,7 +69,7 @@ describe("DeviceClient", () => {
 		expect(devices.length).toBe(2);
 
 		// Act, assert: count remains 2 when device disconnected
-		connection.__emit({
+		emitMessage({
 			event: "deviceDidDisconnect",
 			device: "devices.test.ts.1"
 		});
@@ -89,8 +82,7 @@ describe("DeviceClient", () => {
 	 */
 	it("Adds devices from registration info", () => {
 		// Arrange.
-		const { logger } = getMockedLogger();
-		const connection = new StreamDeckConnection(registrationParameters, logger) as MockStreamDeckConnection;
+		const { connection } = getConnection();
 
 		// Act.
 		const devices = new DeviceClient(connection);
@@ -99,11 +91,11 @@ describe("DeviceClient", () => {
 		expect(devices.length).toBe(1);
 
 		const [device] = devices;
-		expect(device.id).toBe(registrationParameters.info.devices[0].id);
+		expect(device.id).toBe(connection.registrationParameters.info.devices[0].id);
 		expect(device.isConnected).toBeFalsy();
-		expect(device.name).toBe(registrationParameters.info.devices[0].name);
-		expect(device.size).toEqual(registrationParameters.info.devices[0].size);
-		expect(device.type).toBe(registrationParameters.info.devices[0].type);
+		expect(device.name).toBe(connection.registrationParameters.info.devices[0].name);
+		expect(device.size).toEqual(connection.registrationParameters.info.devices[0].size);
+		expect(device.type).toBe(connection.registrationParameters.info.devices[0].type);
 	});
 
 	/**
@@ -111,12 +103,11 @@ describe("DeviceClient", () => {
 	 */
 	it("Adds device on deviceDidConnect", () => {
 		// Arrange.
-		const { logger } = getMockedLogger();
-		const connection = new StreamDeckConnection(registrationParameters, logger) as MockStreamDeckConnection;
+		const { connection, emitMessage } = getConnection();
 		const devices = new DeviceClient(connection);
 
 		// Act.
-		connection.__emit({
+		emitMessage({
 			event: "deviceDidConnect",
 			device: "__NEW_DEV__",
 			deviceInfo: {
@@ -144,11 +135,10 @@ describe("DeviceClient", () => {
 	describe("getDeviceById", () => {
 		it("Known identifier", () => {
 			// Arrange.
-			const { logger } = getMockedLogger();
-			const connection = new StreamDeckConnection(registrationParameters, logger) as MockStreamDeckConnection;
+			const { connection, emitMessage } = getConnection();
 			const devices = new DeviceClient(connection);
 
-			connection.__emit({
+			emitMessage({
 				event: "deviceDidConnect",
 				device: "devices.test.ts.1",
 				deviceInfo: {
@@ -176,8 +166,7 @@ describe("DeviceClient", () => {
 
 		it("Unknown identifier", () => {
 			// Arrange.
-			const { logger } = getMockedLogger();
-			const connection = new StreamDeckConnection(registrationParameters, logger) as MockStreamDeckConnection;
+			const { connection } = getConnection();
 			const devices = new DeviceClient(connection);
 
 			// Act, assert.
@@ -190,28 +179,27 @@ describe("DeviceClient", () => {
 	 */
 	it("Updates device on deviceDidConnect", () => {
 		// Arrange.
-		const { logger } = getMockedLogger();
-		const connection = new StreamDeckConnection(registrationParameters, logger) as MockStreamDeckConnection;
+		const { connection, emitMessage } = getConnection();
 		const devices = new DeviceClient(connection);
 
 		// Act.
 		const [device] = devices;
 		expect(device.isConnected).toBeFalsy();
 
-		connection.__emit({
+		emitMessage({
 			event: "deviceDidConnect",
-			device: registrationParameters.info.devices[0].id,
-			deviceInfo: registrationParameters.info.devices[0]
+			device: connection.registrationParameters.info.devices[0].id,
+			deviceInfo: connection.registrationParameters.info.devices[0]
 		});
 
 		// Assert.
 		expect(devices.length).toBe(1);
 
-		expect(device.id).toBe(registrationParameters.info.devices[0].id);
+		expect(device.id).toBe(connection.registrationParameters.info.devices[0].id);
 		expect(device.isConnected).toBeTruthy();
-		expect(device.name).toBe(registrationParameters.info.devices[0].name);
-		expect(device.size).toEqual(registrationParameters.info.devices[0].size);
-		expect(device.type).toBe(registrationParameters.info.devices[0].type);
+		expect(device.name).toBe(connection.registrationParameters.info.devices[0].name);
+		expect(device.size).toEqual(connection.registrationParameters.info.devices[0].size);
+		expect(device.type).toBe(connection.registrationParameters.info.devices[0].type);
 	});
 
 	/**
@@ -219,34 +207,33 @@ describe("DeviceClient", () => {
 	 */
 	it("Updates device on deviceDidDisconnect", () => {
 		// Arrange.
-		const { logger } = getMockedLogger();
-		const connection = new StreamDeckConnection(registrationParameters, logger) as MockStreamDeckConnection;
+		const { connection, emitMessage } = getConnection();
 		const devices = new DeviceClient(connection);
 
 		// Act.
 		const [device] = devices;
 		expect(device.isConnected).toBeFalsy();
 
-		connection.__emit({
+		emitMessage({
 			event: "deviceDidConnect",
-			device: registrationParameters.info.devices[0].id,
-			deviceInfo: registrationParameters.info.devices[0]
+			device: connection.registrationParameters.info.devices[0].id,
+			deviceInfo: connection.registrationParameters.info.devices[0]
 		});
 
 		expect(device.isConnected).toBeTruthy();
-		connection.__emit({
+		emitMessage({
 			event: "deviceDidDisconnect",
-			device: registrationParameters.info.devices[0].id
+			device: connection.registrationParameters.info.devices[0].id
 		});
 
 		// Assert.
 		expect(devices.length).toBe(1);
 
-		expect(device.id).toBe(registrationParameters.info.devices[0].id);
+		expect(device.id).toBe(connection.registrationParameters.info.devices[0].id);
 		expect(device.isConnected).toBeFalsy();
-		expect(device.name).toBe(registrationParameters.info.devices[0].name);
-		expect(device.size).toEqual(registrationParameters.info.devices[0].size);
-		expect(device.type).toBe(registrationParameters.info.devices[0].type);
+		expect(device.name).toBe(connection.registrationParameters.info.devices[0].name);
+		expect(device.size).toEqual(connection.registrationParameters.info.devices[0].size);
+		expect(device.type).toBe(connection.registrationParameters.info.devices[0].type);
 	});
 
 	/**
@@ -254,15 +241,14 @@ describe("DeviceClient", () => {
 	 */
 	it("Ignores unknown devices on deviceDidDisconnect", () => {
 		// Arrange.
-		const { logger } = getMockedLogger();
-		const connection = new StreamDeckConnection(registrationParameters, logger) as MockStreamDeckConnection;
+		const { connection, emitMessage } = getConnection();
 		const devices = new DeviceClient(connection);
 
 		// Act.
 		const [device] = devices;
 		expect(device.isConnected).toBeFalsy();
 
-		connection.__emit({
+		emitMessage({
 			event: "deviceDidDisconnect",
 			device: "__UNKNOWN_DEVICE__"
 		});
@@ -270,11 +256,11 @@ describe("DeviceClient", () => {
 		// Assert.
 		expect(devices.length).toBe(1);
 
-		expect(device.id).toBe(registrationParameters.info.devices[0].id);
+		expect(device.id).toBe(connection.registrationParameters.info.devices[0].id);
 		expect(device.isConnected).toBeFalsy();
-		expect(device.name).toBe(registrationParameters.info.devices[0].name);
-		expect(device.size).toEqual(registrationParameters.info.devices[0].size);
-		expect(device.type).toBe(registrationParameters.info.devices[0].type);
+		expect(device.name).toBe(connection.registrationParameters.info.devices[0].name);
+		expect(device.size).toEqual(connection.registrationParameters.info.devices[0].size);
+		expect(device.type).toBe(connection.registrationParameters.info.devices[0].type);
 	});
 
 	/**
@@ -282,15 +268,15 @@ describe("DeviceClient", () => {
 	 */
 	it("Receives onDeviceDidConnect", () => {
 		// Arrange.
-		const { logger } = getMockedLogger();
-		const connection = new StreamDeckConnection(registrationParameters, logger) as MockStreamDeckConnection;
+		const { connection, emitMessage } = getConnection();
 		const devices = new DeviceClient(connection);
 
 		const listener = jest.fn();
-		devices.onDeviceDidConnect(listener);
+		const emit = () => emitMessage(mockEvents.deviceDidConnect);
 
 		// Act.
-		const { device } = connection.__emit(mockEvents.deviceDidConnect);
+		const result = devices.onDeviceDidConnect(listener);
+		const { device } = emit();
 
 		// Assert.
 		expect(listener).toHaveBeenCalledTimes(1);
@@ -302,6 +288,13 @@ describe("DeviceClient", () => {
 			},
 			type: mockEvents.deviceDidConnect.event
 		});
+
+		// Act (dispose).
+		result.dispose();
+		emit();
+
+		// Assert (dispose).
+		expect(listener).toHaveBeenCalledTimes(1);
 	});
 
 	/**
@@ -309,15 +302,15 @@ describe("DeviceClient", () => {
 	 */
 	it("Receives onDeviceDidDisconnect", () => {
 		// Arrange.
-		const { logger } = getMockedLogger();
-		const connection = new StreamDeckConnection(registrationParameters, logger) as MockStreamDeckConnection;
+		const { connection, emitMessage } = getConnection();
 		const devices = new DeviceClient(connection);
 
 		const listener = jest.fn();
-		devices.onDeviceDidDisconnect(listener);
+		const emit = () => emitMessage(mockEvents.deviceDidDisconnect);
 
 		// Act.
-		const { device } = connection.__emit(mockEvents.deviceDidDisconnect);
+		const result = devices.onDeviceDidDisconnect(listener);
+		const { device } = emit();
 
 		// Assert.
 		expect(listener).toBeCalledTimes(1);
@@ -331,5 +324,12 @@ describe("DeviceClient", () => {
 			},
 			type: "deviceDidDisconnect"
 		});
+
+		// Act (dispose).
+		result.dispose();
+		emit();
+
+		// Assert (dispose).
+		expect(listener).toHaveBeenCalledTimes(1);
 	});
 });

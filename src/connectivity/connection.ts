@@ -4,15 +4,61 @@ import WebSocket from "ws";
 import { PromiseCompletionSource } from "../common/promises";
 import { Logger } from "../logging";
 import { Command } from "./commands";
-import { Event, EventIdentifier } from "./events";
+
+import { IDisposable, deferredDisposable } from "../common/disposable";
+import { TypedEventEmitter } from "../common/typed-event-emitter";
+import { EventMap } from "./events";
 import { RegistrationParameters } from "./registration";
+
+/**
+ * Creates a new {@link StreamDeckConnection} capable of connecting and communicating with Stream Deck.
+ * @param registrationParameters Registration parameters used to establish a connection with the Stream Deck; these are automatically supplied as part of the command line arguments
+ * when the plugin is ran by the Stream Deck.
+ * @param logger Logger responsible for capturing log entries.
+ * @returns A connection with the Stream Deck, in an idle-unconnected state.
+ */
+export function createConnection(registrationParameters: RegistrationParameters, logger: Logger): StreamDeckConnection {
+	return new StreamDeckWebSocketConnection(registrationParameters, logger) as StreamDeckConnection;
+}
 
 /**
  * Provides a connection between the plugin and the Stream Deck allowing for messages to be sent and received.
  */
-export class StreamDeckConnection {
+export type StreamDeckConnection = TypedEventEmitter<EventMap> & {
 	/**
-	 * Used to ensure {@link StreamDeckConnection.connect} is invoked as a singleton; `false` when a connection is occurring or established.
+	 * Registration parameters used to establish a connection with the Stream Deck; these are automatically supplied as part of the command line arguments when the plugin is ran by
+	 * the Stream Deck.
+	 */
+	registrationParameters: RegistrationParameters;
+
+	/**
+	 * Adds the {@link listener} to the connection for the {@link eventName} and returns a disposable that, when disposed, removes the listener.
+	 * @param eventName Name of the event the listener is associated to.
+	 * @param listener The event listener.
+	 * @returns A disposable that removes the listener when disposed.
+	 */
+	addDisposableListener<TEventName extends keyof EventMap, TData extends EventMap[TEventName]>(eventName: TEventName, listener: (data: TData) => void): IDisposable;
+
+	/**
+	 * Establishes a connection with the Stream Deck, allowing for the plugin to send and receive messages.
+	 * @returns A promise that is resolved when a connection has been established.
+	 */
+	connect(): Promise<void>;
+
+	/**
+	 * Sends the commands to the Stream Deck, once the connection has been established and the plugin registered.
+	 * @param command Command being sent.
+	 * @returns `Promise` resolved when the command is sent to Stream Deck.
+	 */
+	send(command: Command): Promise<void>;
+};
+
+/**
+ * Provides a connection between the plugin and the Stream Deck allowing for messages to be sent and received.
+ */
+class StreamDeckWebSocketConnection extends EventEmitter implements StreamDeckConnection {
+	/**
+	 * Used to ensure {@link StreamDeckWebSocketConnection.connect} is invoked as a singleton; `false` when a connection is occurring or established.
 	 */
 	private canConnect = true;
 
@@ -23,28 +69,34 @@ export class StreamDeckConnection {
 	private connection = new PromiseCompletionSource<WebSocket>();
 
 	/**
-	 * Event emitter used to propagate events from the Stream Deck to the plugin.
-	 */
-	private readonly eventEmitter = new EventEmitter();
-
-	/**
 	 * Logger scoped to this class.
 	 */
 	private readonly logger: Logger;
 
 	/**
-	 * Initializes a new instance of the {@link StreamDeckConnection} class.
+	 * Initializes a new instance of the {@link StreamDeckWebSocketConnection} class.
 	 * @param registrationParameters Registration parameters used to establish a connection with the Stream Deck; these are automatically supplied as part of the command line arguments
 	 * when the plugin is ran by the Stream Deck.
 	 * @param logger Logger responsible for capturing log entries.
 	 */
-	constructor(public readonly registrationParameters: RegistrationParameters, logger: Logger) {
+	constructor(
+		public readonly registrationParameters: RegistrationParameters,
+		logger: Logger
+	) {
+		super();
 		this.logger = logger.createScope("StreamDeckConnection");
 	}
 
 	/**
-	 * Establishes a connection with the Stream Deck, allowing for the plugin to send and receive messages.
-	 * @returns A promise that is resolved when a connection has been established.
+	 * @inheritdoc
+	 */
+	public addDisposableListener<TEventName extends keyof EventMap, TData extends EventMap[TEventName]>(eventName: TEventName, listener: (data: TData) => void): IDisposable {
+		this.addListener(eventName, listener);
+		return deferredDisposable(() => this.removeListener(eventName, listener));
+	}
+
+	/**
+	 * @inheritdoc
 	 */
 	public async connect(): Promise<void> {
 		// Ensure we only establish a single connection.
@@ -74,44 +126,7 @@ export class StreamDeckConnection {
 	}
 
 	/**
-	 * Adds the {@link listener} function to be invoked when Stream Deck emits the event named {@link eventName}, e.g. "willAppear" when an action becomes visible, "deviceDidDisconnect"
-	 * when a device is connected to user's machine, etc.
-	 * @param eventName Event to listen for.
-	 * @param listener Callback invoked when Stream Deck emits the event.
-	 * @returns This instance for chaining.
-	 */
-	public on<TEvent extends Event["event"], TEventArgs extends Extract<Event, EventIdentifier<TEvent>>>(eventName: TEvent, listener: (data: TEventArgs) => void): this {
-		this.eventEmitter.on(eventName, listener);
-		return this;
-	}
-
-	/**
-	 * Adds a **one-time** {@link listener} function to be invoked when Stream Deck emits the event named {@link eventName}. The next time {@link eventName} is triggered, this listener
-	 * is removed and then invoked.
-	 * @param eventName Event to listen for.
-	 * @param listener Callback invoked when Stream Deck emits the event.
-	 * @returns This instance for chaining.
-	 */
-	public once<TEvent extends Event["event"], TEventArgs extends Extract<Event, EventIdentifier<TEvent>>>(eventName: TEvent, listener: (data: TEventArgs) => void): this {
-		this.eventEmitter.once(eventName, listener);
-		return this;
-	}
-
-	/**
-	 * Removes the specified {@link listener} registered against the {@link eventName}. Inverse of {@link StreamDeckConnection.on}.
-	 * @param eventName Name of the event the listener is being removed from.
-	 * @param listener Callback to remove.
-	 * @returns This instance for chaining.
-	 */
-	public removeListener<TEvent extends Event["event"], TEventArgs extends Extract<Event, EventIdentifier<TEvent>>>(eventName: TEvent, listener: (data: TEventArgs) => void): this {
-		this.eventEmitter.removeListener(eventName, listener);
-		return this;
-	}
-
-	/**
-	 * Sends the commands to the Stream Deck, once the connection has been established and the plugin registered.
-	 * @param command Command being sent.
-	 * @returns `Promise` resolved when the command is sent to Stream Deck.
+	 * @inheritdoc
 	 */
 	public async send(command: Command): Promise<void> {
 		const connection = await this.connection.promise;
@@ -122,7 +137,7 @@ export class StreamDeckConnection {
 	}
 
 	/**
-	 * Resets the {@link StreamDeckConnection.connection}.
+	 * Resets the {@link StreamDeckWebSocketConnection.connection}.
 	 */
 	private resetConnection(): void {
 		this.canConnect = true;
@@ -132,7 +147,7 @@ export class StreamDeckConnection {
 	}
 
 	/**
-	 * Attempts to emit the {@link data} that was received from the {@link StreamDeckConnection.connection}.
+	 * Attempts to emit the {@link data} that was received from the {@link StreamDeckWebSocketConnection.connection}.
 	 * @param data Event message data received from the Stream Deck.
 	 */
 	private tryEmit(data: WebSocket.RawData): void {
@@ -140,7 +155,7 @@ export class StreamDeckConnection {
 			const message = JSON.parse(data.toString());
 			if (message.event) {
 				this.logger.trace(`${data}`);
-				this.eventEmitter.emit(message.event, message);
+				this.emit(message.event, message);
 			} else {
 				this.logger.warn(`Received unknown message: ${data}`);
 			}

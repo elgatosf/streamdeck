@@ -1,4 +1,4 @@
-import { getMockedConnection } from "../../tests/__mocks__/connection";
+import { getConnection } from "../../tests/__mocks__/connection";
 import * as mockEvents from "../connectivity/__mocks__/events";
 import { OpenUrl } from "../connectivity/commands";
 import { StreamDeckConnection } from "../connectivity/connection";
@@ -11,16 +11,17 @@ describe("System", () => {
 	 */
 	it("Receives onApplicationDidLaunch", () => {
 		// Arrange.
-		const { connection } = getMockedConnection();
+		const { connection, emitMessage } = getConnection();
 		const system = new System(connection);
 
 		const listener = jest.fn();
-		system.onApplicationDidLaunch(listener);
+		const emit = () => emitMessage(mockEvents.applicationDidLaunch);
 
 		// Act.
+		const result = system.onApplicationDidLaunch(listener);
 		const {
 			payload: { application }
-		} = connection.__emit(mockEvents.applicationDidLaunch);
+		} = emit();
 
 		//Assert.
 		expect(listener).toHaveBeenCalledTimes(1);
@@ -28,6 +29,13 @@ describe("System", () => {
 			application,
 			type: "applicationDidLaunch"
 		});
+
+		// Act (dispose).
+		result.dispose();
+		emit();
+
+		// Assert (dispose).
+		expect(listener).toHaveBeenCalledTimes(1);
 	});
 
 	/**
@@ -35,16 +43,17 @@ describe("System", () => {
 	 */
 	it("Receives onApplicationDidTerminate", () => {
 		// Arrange.
-		const { connection } = getMockedConnection();
+		const { connection, emitMessage } = getConnection();
 		const system = new System(connection);
 
 		const listener = jest.fn();
-		system.onApplicationDidTerminate(listener);
+		const emit = () => emitMessage(mockEvents.applicationDidTerminate);
 
 		// Act.
+		const result = system.onApplicationDidTerminate(listener);
 		const {
 			payload: { application }
-		} = connection.__emit(mockEvents.applicationDidTerminate);
+		} = emit();
 
 		//Assert.
 		expect(listener).toHaveBeenCalledTimes(1);
@@ -52,6 +61,13 @@ describe("System", () => {
 			application,
 			type: "applicationDidTerminate"
 		});
+
+		// Act (dispose).
+		result.dispose();
+		emit();
+
+		// Assert (dispose).
+		expect(listener).toHaveBeenCalledTimes(1);
 	});
 
 	/**
@@ -59,20 +75,28 @@ describe("System", () => {
 	 */
 	it("Receives onSystemDidWakeUp", () => {
 		// Arrange.
-		const { connection } = getMockedConnection();
+		const { connection, emitMessage } = getConnection();
 		const system = new System(connection);
 
 		const listener = jest.fn();
-		system.onSystemDidWakeUp(listener);
+		const emit = () => emitMessage(mockEvents.systemDidWakeUp);
 
 		// Act.
-		connection.__emit(mockEvents.systemDidWakeUp);
+		const result = system.onSystemDidWakeUp(listener);
+		emit();
 
 		// Assert.
 		expect(listener).toHaveBeenCalledTimes(1);
 		expect(listener).toHaveBeenCalledWith<[SystemDidWakeUpEvent]>({
 			type: "systemDidWakeUp"
 		});
+
+		// Act (dispose).
+		result.dispose();
+		emit();
+
+		// Assert (dispose).
+		expect(listener).toHaveBeenCalledTimes(1);
 	});
 
 	/**
@@ -80,7 +104,7 @@ describe("System", () => {
 	 */
 	it("Sends openUrl", async () => {
 		// Arrange.
-		const { connection } = getMockedConnection();
+		const { connection } = getConnection();
 		const system = new System(connection);
 
 		// Act.

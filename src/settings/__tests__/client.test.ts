@@ -1,4 +1,4 @@
-import { getMockedConnection } from "../../../tests/__mocks__/connection";
+import { getConnection } from "../../../tests/__mocks__/connection";
 import { Action } from "../../actions/action";
 import * as mockEvents from "../../connectivity/__mocks__/events";
 import { GetGlobalSettings, SetGlobalSettings } from "../../connectivity/commands";
@@ -12,7 +12,7 @@ describe("SettingsClient", () => {
 	 */
 	it("Can getGlobalSettings", async () => {
 		// Arrange.
-		const { connection } = getMockedConnection();
+		const { connection, emitMessage } = getConnection();
 		const client = new SettingsClient(connection);
 
 		// Act (Command).
@@ -28,7 +28,7 @@ describe("SettingsClient", () => {
 		expect(Promise.race([settings, false])).resolves.toBe(false);
 
 		// Act (Event).
-		connection.__emit(mockEvents.didReceiveGlobalSettings);
+		emitMessage(mockEvents.didReceiveGlobalSettings);
 		await settings;
 
 		// Assert (Event).
@@ -42,16 +42,17 @@ describe("SettingsClient", () => {
 	 */
 	it("Receives onDidReceiveGlobalSettings", () => {
 		// Arrange.
-		const { connection } = getMockedConnection();
+		const { connection, emitMessage } = getConnection();
 		const client = new SettingsClient(connection);
 
 		const listener = jest.fn();
-		client.onDidReceiveGlobalSettings(listener);
+		const emit = () => emitMessage(mockEvents.didReceiveGlobalSettings);
 
 		// Act.
+		const result = client.onDidReceiveGlobalSettings(listener);
 		const {
 			payload: { settings: globalSettings }
-		} = connection.__emit(mockEvents.didReceiveGlobalSettings);
+		} = emit();
 
 		// Assert.
 		expect(listener).toHaveBeenCalledTimes(1);
@@ -59,6 +60,13 @@ describe("SettingsClient", () => {
 			settings: globalSettings,
 			type: "didReceiveGlobalSettings"
 		});
+
+		// Act (dispose).
+		result.dispose();
+		emit();
+
+		// Assert (dispose).
+		expect(listener).toHaveBeenCalledTimes(1);
 	});
 
 	/**
@@ -66,14 +74,15 @@ describe("SettingsClient", () => {
 	 */
 	it("Receives onDidReceiveSettings", () => {
 		// Arrange.
-		const { connection } = getMockedConnection();
+		const { connection, emitMessage } = getConnection();
 		const client = new SettingsClient(connection);
 
 		const listener = jest.fn();
-		client.onDidReceiveSettings(listener);
+		const emit = () => emitMessage(mockEvents.didReceiveSettings);
 
 		// Act.
-		const { action, context, device, payload } = connection.__emit(mockEvents.didReceiveSettings);
+		const result = client.onDidReceiveSettings(listener);
+		const { action, context, device, payload } = emit();
 
 		// Assert.
 		expect(listener).toHaveBeenCalledTimes(1);
@@ -83,6 +92,13 @@ describe("SettingsClient", () => {
 			payload,
 			type: "didReceiveSettings"
 		});
+
+		// Act (dispose).
+		result.dispose();
+		emit();
+
+		// Assert (dispose).
+		expect(listener).toHaveBeenCalledTimes(1);
 	});
 
 	/**
@@ -90,7 +106,7 @@ describe("SettingsClient", () => {
 	 */
 	it("Sends setGlobalSettings", async () => {
 		// Arrange.
-		const { connection } = getMockedConnection();
+		const { connection } = getConnection();
 		const client = new SettingsClient(connection);
 
 		// Act.
