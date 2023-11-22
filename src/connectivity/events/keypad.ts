@@ -16,7 +16,7 @@ export type KeyUp<TSettings extends PayloadObject<TSettings>> = ActionEvent<"key
  * Additional information about a keypad event that occurred.
  */
 type KeypadPayload<TSettings extends PayloadObject<TSettings>> =
-	| SingleActionPayload<TSettings, Extract<Controller, "Keypad">>
+	| SingleActionPayload<TSettings, Controller.Keypad>
 	| (MultiActionPayload<TSettings> & {
 			/**
 			 * Desired state as specified by the user; only applicable to actions that have multiple states defined within the `manifest.json` file, and when this action instance is

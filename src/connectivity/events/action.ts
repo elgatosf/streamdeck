@@ -129,6 +129,12 @@ export type SingleActionPayload<TSettings extends PayloadObject<TSettings>, TCon
  */
 export type MultiActionPayload<TSettings extends PayloadObject<TSettings>> = ActionPayload<TSettings> & {
 	/**
+	 * Defines the controller type the action is applicable to. **Keypad** refers to a standard action on a Stream Deck device, e.g. 1 of the 15 buttons on the Stream Deck MK.2,
+	 * or a pedal on the Stream Deck Pedal, etc., whereas an **Encoder** refers to a dial / touchscreen on the Stream Deck+.
+	 */
+	readonly controller: Controller.Keypad;
+
+	/**
 	 * Determines whether the action is part of a multi-action.
 	 */
 	readonly isInMultiAction: true;
@@ -153,7 +159,17 @@ type ActionPayload<TSettings extends PayloadObject<TSettings>> = {
  * Defines the controller type the action is applicable to. **Keypad** refers to a standard action on a Stream Deck device, e.g. 1 of the 15 buttons on the Stream Deck MK.2, or a pedal
  * on the Stream Deck Pedal, etc., whereas an **Encoder** refers to a dial / touchscreen on the Stream Deck+.
  */
-export type Controller = "Encoder" | "Keypad";
+export enum Controller {
+	/**
+	 * Encoder, represented as a dial and touch screen, as found on a Stream Deck+.
+	 */
+	Encoder = "Encoder",
+
+	/**
+	 * Key action, e.g. a button, pedal, or G-Key.
+	 */
+	Keypad = "Keypad"
+}
 
 /**
  * Coordinates that identify the location of an action.
