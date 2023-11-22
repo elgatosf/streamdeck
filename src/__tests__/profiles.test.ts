@@ -14,16 +14,18 @@ describe("ProfileClient", () => {
 
 		// Act.
 		await profiles.switchToProfile("DEV1");
-		await profiles.switchToProfile("DEV2", "Custom Profile");
+		await profiles.switchToProfile("DEV2", "Custom Profile (1)");
+		await profiles.switchToProfile("DEV3", "Custom Profile (2)", 2);
 
 		// Assert.
-		expect(connection.send).toHaveBeenCalledTimes(2);
+		expect(connection.send).toHaveBeenCalledTimes(3);
 		expect(connection.send).toHaveBeenNthCalledWith<[SwitchToProfile]>(1, {
 			event: "switchToProfile",
 			context: connection.registrationParameters.pluginUUID,
 			device: "DEV1",
 			payload: {
-				profile: undefined
+				profile: undefined,
+				page: undefined
 			}
 		});
 		expect(connection.send).toHaveBeenNthCalledWith<[SwitchToProfile]>(2, {
@@ -31,7 +33,17 @@ describe("ProfileClient", () => {
 			context: connection.registrationParameters.pluginUUID,
 			device: "DEV2",
 			payload: {
-				profile: "Custom Profile"
+				profile: "Custom Profile (1)",
+				page: undefined
+			}
+		});
+		expect(connection.send).toHaveBeenNthCalledWith<[SwitchToProfile]>(3, {
+			event: "switchToProfile",
+			context: connection.registrationParameters.pluginUUID,
+			device: "DEV3",
+			payload: {
+				profile: "Custom Profile (2)",
+				page: 2
 			}
 		});
 	});

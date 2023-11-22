@@ -203,6 +203,11 @@ export type SwitchToProfile = ContextualizedCommand<
 	"switchToProfile",
 	{
 		/**
+		 * Page to show when switching to the profile; indexed from 1.
+		 */
+		page?: number;
+
+		/**
 		 * Name of the profile to switch to. The name must be identical to the one provided in the manifest.
 		 */
 		profile?: string;
