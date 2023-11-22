@@ -1,5 +1,6 @@
 import { DeviceType } from "../device-info";
 import type * as events from "../events";
+import { Controller } from "../events/action";
 
 const action = "com.elgato.test.one";
 const context = "context123";
@@ -58,7 +59,7 @@ export const dialDown: events.DialDown<Settings> = {
 	context,
 	device,
 	payload: {
-		controller: "Encoder",
+		controller: Controller.Encoder,
 		coordinates: {
 			column: 3,
 			row: 0
@@ -78,7 +79,7 @@ export const dialRotate: events.DialRotate<Settings> = {
 	context,
 	device,
 	payload: {
-		controller: "Encoder",
+		controller: Controller.Encoder,
 		coordinates: {
 			column: 3,
 			row: 0
@@ -120,7 +121,7 @@ export const didReceiveSettings: events.DidReceiveSettings<Settings> = {
 	device,
 	event: "didReceiveSettings",
 	payload: {
-		controller: "Encoder",
+		controller: Controller.Encoder,
 		coordinates: {
 			column: 1,
 			row: 0
@@ -141,7 +142,7 @@ export const keyDown: events.KeyDown<Settings> = {
 	device,
 	event: "keyDown",
 	payload: {
-		controller: "Keypad",
+		controller: Controller.Keypad,
 		coordinates: {
 			column: 2,
 			row: 2
@@ -208,7 +209,7 @@ export const titleParametersDidChange: events.TitleParametersDidChange<Settings>
 	device,
 	event: "titleParametersDidChange",
 	payload: {
-		controller: "Keypad",
+		controller: Controller.Keypad,
 		coordinates: {
 			column: 3,
 			row: 4
@@ -239,7 +240,7 @@ export const touchTap: events.TouchTap<Settings> = {
 	device,
 	event: "touchTap",
 	payload: {
-		controller: "Encoder",
+		controller: Controller.Encoder,
 		coordinates: {
 			column: 4,
 			row: 0
@@ -261,7 +262,7 @@ export const willAppear: events.WillAppear<Settings> = {
 	device,
 	event: "willAppear",
 	payload: {
-		controller: "Keypad",
+		controller: Controller.Keypad,
 		coordinates: {
 			column: 8,
 			row: 2
