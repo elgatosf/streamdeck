@@ -2,7 +2,7 @@ import { getConnection } from "../../tests/__mocks__/connection";
 import * as mockEvents from "../connectivity/__mocks__/events";
 import { OpenUrl } from "../connectivity/commands";
 import { StreamDeckConnection } from "../connectivity/connection";
-import { ApplicationDidLaunchEvent, ApplicationDidTerminateEvent, SystemDidWakeUpEvent } from "../events";
+import { ApplicationDidLaunchEvent, ApplicationDidTerminateEvent, DidReceiveDeepLinkEvent, SystemDidWakeUpEvent } from "../events";
 import { System } from "../system";
 
 describe("System", () => {
@@ -60,6 +60,50 @@ describe("System", () => {
 		expect(listener).toHaveBeenCalledWith<[ApplicationDidTerminateEvent]>({
 			application,
 			type: "applicationDidTerminate"
+		});
+
+		// Act (dispose).
+		result.dispose();
+		emit();
+
+		// Assert (dispose).
+		expect(listener).toHaveBeenCalledTimes(1);
+	});
+
+	/**
+	 * Asserts {@link System.onDidReceiveDeepLink} invokes the listener when the connection emits the `didReceiveDeepLink` event.
+	 */
+	it("Receives onDidReceiveDeepLink", () => {
+		// Arrange.
+		const { connection, emitMessage } = getConnection();
+		const system = new System(connection);
+
+		const listener = jest.fn();
+		const emit = () =>
+			emitMessage({
+				event: "didReceiveDeepLink",
+				payload: {
+					url: "/hello/world?foo=bar#heading"
+				}
+			});
+
+		// Act.
+		const result = system.onDidReceiveDeepLink(listener);
+		const {
+			payload: { url }
+		} = emit();
+
+		//Assert.
+		expect(listener).toHaveBeenCalledTimes(1);
+		expect(listener).toHaveBeenCalledWith<[DidReceiveDeepLinkEvent]>({
+			type: "didReceiveDeepLink",
+			url: {
+				fragment: "heading",
+				href: url,
+				path: "/hello/world",
+				query: "foo=bar",
+				queryParameters: new URLSearchParams([["foo", "bar"]])
+			}
 		});
 
 		// Act (dispose).

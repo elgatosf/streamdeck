@@ -1,8 +1,17 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { WillAppear } from "..";
+import { Controller, Coordinates, State, WillAppear, WillDisappear } from "..";
 import { Expect, TypesAreEqual } from "../../../../tests/utils";
 import { Settings } from "../../__mocks__/events";
-import { Controller, Coordinates, State, WillDisappear } from "../action";
+
+describe("Controller", () => {
+	/**
+	 * Asserts the values associated with {@link Controller} match Stream Deck values.
+	 */
+	it("should match Stream Deck payload values", () => {
+		expect(Controller.Encoder).toBe("Encoder");
+		expect(Controller.Keypad).toBe("Keypad");
+	});
+});
 
 describe("action event types", () => {
 	/**

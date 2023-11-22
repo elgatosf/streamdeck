@@ -5,6 +5,7 @@ import { ApplicationEvent } from "./application-event";
 import { DeviceEvent } from "./device-event";
 import { Event } from "./event";
 
+export { DidReceiveDeepLinkEvent } from "./deep-link-event";
 export { SendToPluginEvent } from "./send-to-plugin-event";
 export { DidReceiveGlobalSettingsEvent } from "./settings-event";
 export { ActionEvent, ActionWithoutPayloadEvent, ApplicationEvent, DeviceEvent, Event };

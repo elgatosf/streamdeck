@@ -3,17 +3,17 @@ import { DeviceDidConnect, DeviceDidDisconnect } from "./device";
 import { DialDown, DialRotate, DialUp, TouchTap } from "./encoder";
 import { KeyDown, KeyUp } from "./keypad";
 import { PropertyInspectorDidAppear, PropertyInspectorDidDisappear, SendToPlugin } from "./property-inspector";
-import { ApplicationDidLaunch, ApplicationDidTerminate, DidReceiveGlobalSettings, SystemDidWakeUp } from "./system";
+import { ApplicationDidLaunch, ApplicationDidTerminate, DidReceiveDeepLink, DidReceiveGlobalSettings, SystemDidWakeUp } from "./system";
 
 export { ActionIdentifier, State } from "./action";
 export { DeviceIdentifier } from "./device";
 
-export { DidReceiveSettings, TitleParametersDidChange, WillAppear, WillDisappear } from "./action";
+export { Controller, Coordinates, DidReceiveSettings, TitleParametersDidChange, WillAppear, WillDisappear } from "./action";
 export { DeviceDidConnect, DeviceDidDisconnect } from "./device";
 export { DialDown, DialRotate, DialUp, TouchTap } from "./encoder";
 export { KeyDown, KeyUp } from "./keypad";
 export { PropertyInspectorDidAppear, PropertyInspectorDidDisappear, SendToPlugin } from "./property-inspector";
-export { ApplicationDidLaunch, ApplicationDidTerminate, DidReceiveGlobalSettings, SystemDidWakeUp } from "./system";
+export { ApplicationDidLaunch, ApplicationDidTerminate, DidReceiveDeepLink, DidReceiveGlobalSettings, SystemDidWakeUp } from "./system";
 
 /**
  * Represents an event that is emitted by the Stream Deck.
@@ -41,6 +41,7 @@ export type Event<T extends PayloadObject<T> = object> =
 	| DialDown<T>
 	| DialRotate<T>
 	| DialUp<T>
+	| DidReceiveDeepLink
 	| DidReceiveGlobalSettings<T>
 	| DidReceiveSettings<T>
 	| KeyDown<T>
