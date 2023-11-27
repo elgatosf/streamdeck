@@ -2,7 +2,7 @@ import EventEmitter from "node:events";
 import WebSocket from "ws";
 import { registrationParameters } from "../../src/connectivity/__mocks__/registration";
 import { StreamDeckConnection, createConnection } from "../../src/connectivity/connection";
-import { Event } from "../../src/connectivity/events";
+import { EventMessage } from "../../src/connectivity/events";
 import { getMockedLogger } from "./logging";
 
 jest.mock("../../src/connectivity/registration");
@@ -54,7 +54,7 @@ export function getConnection(version: number = 99.9) {
 		 * @param ev Event to emit; this is serialized to JSON and then emitted.
 		 * @returns The original {@link ev}.
 		 */
-		emitMessage: <T extends Event>(ev: T): T => {
+		emitMessage: <T extends EventMessage>(ev: T): T => {
 			webSocket.emit("message", JSON.stringify(ev));
 			return ev;
 		}

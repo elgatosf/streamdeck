@@ -4,6 +4,7 @@ import { join } from "node:path";
 
 import { Version } from "./common/version";
 import { DeviceType } from "./connectivity/device-info";
+import { Controller } from "./connectivity/events";
 
 /**
  * Defines the plugin and available actions, and all information associated with them, including the plugin's entry point, all iconography, action default behavior, etc.
@@ -168,7 +169,7 @@ export type Manifest = {
 		 * States the action can be in. When two states are defined the action will act as a toggle, with users being able to select their preferred iconography for each state. **NB.**
 		 * Automatic toggling of the state on action activation can be disabled by setting `DisableAutomaticStates` to `true`.
 		 */
-		States: [State, State?];
+		States: [ActionState, ActionState?];
 
 		/**
 		 * Determines whether the action is available to user's when they are creating multi-actions. Default is `true`.
@@ -441,12 +442,6 @@ export type Manifest = {
 };
 
 /**
- * Defines the controller type the action is applicable to. **Keypad** refers to a standard action on a Stream Deck device, e.g. 1 of the 15 buttons on the Stream Deck MK.2, or a pedal
- * on the Stream Deck Pedal, etc., whereas an **Encoder** refers to a dial / touchscreen on the Stream Deck+.
- */
-type Controller = "Encoder" | "Keypad";
-
-/**
  * File path that represents an HTML file relative to the plugin's manifest.
  * @pattern
  * ^(?!\/).+\.[Hh][Tt][Mm][Ll]?$
@@ -483,7 +478,7 @@ type OS = {
 /**
  * Defines the state of the action; this includes behavior, iconography, typography, etc.
  */
-type State = {
+type ActionState = {
 	/**
 	 * Default font-family to be used when rendering the title of this state. **NB.** This can be overridden by the user in the Stream Deck application.
 	 */

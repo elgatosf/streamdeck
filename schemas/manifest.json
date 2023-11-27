@@ -18,13 +18,7 @@
 							"Controllers": {
 								"type": "array",
 								"items": {
-									"type": "string",
-									"enum": [
-										"Encoder",
-										"Keypad"
-									],
-									"description": "Defines the controller type the action is applicable to. **Keypad** refers to a standard action on a Stream Deck device, e.g. 1 of the 15 buttons on the Stream Deck MK.2, or a pedal on the Stream Deck Pedal, etc., whereas an **Encoder** refers to a dial / touchscreen on the Stream Deck+.",
-									"markdownDescription": "Defines the controller type the action is applicable to. **Keypad** refers to a standard action on a Stream Deck device, e.g. 1 of the 15 buttons on the Stream Deck MK.2, or a pedal on the Stream Deck Pedal, etc., whereas an **Encoder** refers to a dial / touchscreen on the Stream Deck+."
+									"$ref": "#/definitions/Controller"
 								},
 								"minItems": 1,
 								"maxItems": 2,
@@ -505,6 +499,15 @@
 			"additionalProperties": false,
 			"description": "Defines the plugin and available actions, and all information associated with them, including the plugin's entry point, all iconography, action default behavior, etc.",
 			"markdownDescription": "Defines the plugin and available actions, and all information associated with them, including the plugin's entry point, all iconography, action default behavior, etc."
+		},
+		"Controller": {
+			"type": "string",
+			"enum": [
+				"Encoder",
+				"Keypad"
+			],
+			"description": "Defines the controller type the action is applicable to. **Keypad** refers to a standard action on a Stream Deck device, e.g. 1 of the 15 buttons on the Stream Deck MK.2, or a pedal on the Stream Deck Pedal, etc., whereas an **Encoder** refers to a dial / touchscreen on the Stream Deck+.",
+			"markdownDescription": "Defines the controller type the action is applicable to. **Keypad** refers to a standard action on a Stream Deck device, e.g. 1 of the 15 buttons on the Stream Deck MK.2, or a pedal on the Stream Deck Pedal, etc., whereas an **Encoder** refers to a dial / touchscreen on the Stream Deck+."
 		},
 		"DeviceType": {
 			"type": "number",

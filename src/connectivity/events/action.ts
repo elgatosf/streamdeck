@@ -5,12 +5,15 @@ import type { EventIdentifier, PayloadObject } from "./index";
 /**
  * Occurs when the settings associated with an action instance are requested, or when the the settings were updated by the property inspector.
  */
-export type DidReceiveSettings<TSettings extends PayloadObject<TSettings>> = ActionEvent<"didReceiveSettings", MultiActionPayload<TSettings> | SingleActionPayload<TSettings>>;
+export type DidReceiveSettings<TSettings extends PayloadObject<TSettings>> = ActionEventMessage<
+	"didReceiveSettings",
+	MultiActionPayload<TSettings> | SingleActionPayload<TSettings>
+>;
 
 /**
  * Occurs when the user updates an action's title settings in the Stream Deck application.
  */
-export type TitleParametersDidChange<TSettings extends PayloadObject<TSettings>> = ActionEvent<
+export type TitleParametersDidChange<TSettings extends PayloadObject<TSettings>> = ActionEventMessage<
 	"titleParametersDidChange",
 	Omit<SingleActionPayload<TSettings>, "isInMultiAction"> & {
 		/**
@@ -65,13 +68,13 @@ export type TitleParametersDidChange<TSettings extends PayloadObject<TSettings>>
  * page". An action refers to _all_ types of actions, e.g. keys, dials,
  * touchscreens, pedals, etc.
  */
-export type WillAppear<TSettings extends PayloadObject<TSettings>> = ActionEvent<"willAppear", MultiActionPayload<TSettings> | SingleActionPayload<TSettings>>;
+export type WillAppear<TSettings extends PayloadObject<TSettings>> = ActionEventMessage<"willAppear", MultiActionPayload<TSettings> | SingleActionPayload<TSettings>>;
 
 /**
  * Occurs when an action disappears from the Stream Deck due to the user navigating to another page, profile, folder, etc. An action refers to _all_ types of actions, e.g. keys, dials,
  * touchscreens, pedals, etc.
  */
-export type WillDisappear<TSettings extends PayloadObject<TSettings>> = ActionEvent<"willDisappear", MultiActionPayload<TSettings> | SingleActionPayload<TSettings>>;
+export type WillDisappear<TSettings extends PayloadObject<TSettings>> = ActionEventMessage<"willDisappear", MultiActionPayload<TSettings> | SingleActionPayload<TSettings>>;
 
 /**
  * Provide information that identifies an action associated with an event.
@@ -92,7 +95,7 @@ export type ActionIdentifier = {
 /**
  * Provides information for an event relating to an action, e.g. `willAppear`, `keyDown`, etc.
  */
-export type ActionEvent<TEvent extends string, TPayload = void> = DeviceIdentifier &
+export type ActionEventMessage<TEvent extends string, TPayload = void> = DeviceIdentifier &
 	EventIdentifier<TEvent> &
 	(TPayload extends void
 		? ActionIdentifier
