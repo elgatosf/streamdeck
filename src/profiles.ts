@@ -1,5 +1,5 @@
 import { StreamDeckConnection } from "./connectivity/connection";
-import { requiresVersion } from "./version";
+import { requiresVersion } from "./validation";
 
 /**
  * Provides interaction with Stream Deck profiles.

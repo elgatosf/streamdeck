@@ -1,7 +1,18 @@
 import { getConnection } from "../../tests/__mocks__/connection";
+import { Version } from "../common/version";
+
 import { SwitchToProfile } from "../connectivity/commands";
 import { StreamDeckConnection } from "../connectivity/connection";
 import { ProfileClient } from "../profiles";
+import * as ValidationModule from "../validation";
+
+jest.mock("../manifest");
+jest.mock("../validation", () => {
+	return {
+		__esModule: true,
+		...jest.requireActual("../validation")
+	};
+});
 
 describe("ProfileClient", () => {
 	describe("switchToProfile", () => {
@@ -56,11 +67,14 @@ describe("ProfileClient", () => {
 			// Arrange.
 			const { connection } = getConnection(6.4);
 			const profiles = new ProfileClient(connection);
+			const spy = jest.spyOn(ValidationModule, "requiresVersion");
 
 			// Act, assert.
 			expect(() => profiles.switchToProfile("DEV1", "Profile", 1)).toThrow(
-				`[ERR_NOT_SUPPORTED]: Switching to a profile page requires Stream Deck version 6.5 or higher, but current version is 6.4; please update Stream Deck and set the "Software.MinimumVersion" in the plugin's manifest to "6.5" or higher.`
+				`[ERR_NOT_SUPPORTED]: Switching to a profile page requires Stream Deck version 6.5 or higher, but current version is 6.4; please update Stream Deck and the "Software.MinimumVersion" in the plugin's manifest to "6.5" or higher.`
 			);
+			expect(spy).toHaveBeenCalledTimes(1);
+			expect(spy).toHaveBeenCalledWith<[number, Version, string]>(6.5, connection.version, "Switching to a profile page");
 		});
 	});
 });

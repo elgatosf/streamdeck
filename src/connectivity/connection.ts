@@ -7,7 +7,7 @@ import { Command } from "./commands";
 
 import { IDisposable, deferredDisposable } from "../common/disposable";
 import { TypedEventEmitter } from "../common/typed-event-emitter";
-import { Version } from "../version";
+import { Version } from "../common/version";
 import { EventMap } from "./events";
 import { RegistrationParameters } from "./registration";
 

@@ -2,6 +2,7 @@
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 
+import { Version } from "./common/version";
 import { DeviceType } from "./connectivity/device-info";
 
 /**
@@ -414,7 +415,7 @@ export type Manifest = {
 		/**
 		 * Minimum version of the Stream Deck application required for this plugin to run.
 		 */
-		MinimumVersion: "6.4";
+		MinimumVersion: "6.4" | "6.5";
 	};
 
 	/**
@@ -565,6 +566,16 @@ type State = {
 	 */
 	TitleColor?: string;
 };
+
+let softwareMinimumVersion: Version;
+
+/**
+ * Gets the minimum version that this plugin required, as defined within the manifest.
+ * @returns Minimum required version.
+ */
+export function getSoftwareMinimumVersion(): Version {
+	return (softwareMinimumVersion ??= new Version(getManifest().Software.MinimumVersion));
+}
 
 /**
  * Gets the manifest associated with the plugin.

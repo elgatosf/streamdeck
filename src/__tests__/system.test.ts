@@ -1,9 +1,19 @@
 import { getConnection } from "../../tests/__mocks__/connection";
+import { Version } from "../common/version";
 import * as mockEvents from "../connectivity/__mocks__/events";
 import { OpenUrl } from "../connectivity/commands";
 import { StreamDeckConnection } from "../connectivity/connection";
 import { ApplicationDidLaunchEvent, ApplicationDidTerminateEvent, DidReceiveDeepLinkEvent, SystemDidWakeUpEvent } from "../events";
 import { System } from "../system";
+import * as ValidationModule from "../validation";
+
+jest.mock("../manifest");
+jest.mock("../validation", () => {
+	return {
+		__esModule: true,
+		...jest.requireActual("../validation")
+	};
+});
 
 describe("System", () => {
 	/**
@@ -122,11 +132,14 @@ describe("System", () => {
 			// Arrange.
 			const { connection } = getConnection(6.4);
 			const system = new System(connection);
+			const spy = jest.spyOn(ValidationModule, "requiresVersion");
 
 			// Act, assert.
 			expect(() => system.onDidReceiveDeepLink(jest.fn())).toThrow(
-				`[ERR_NOT_SUPPORTED]: Receiving deep-link messages requires Stream Deck version 6.5 or higher, but current version is 6.4; please update Stream Deck and set the "Software.MinimumVersion" in the plugin's manifest to "6.5" or higher.`
+				`[ERR_NOT_SUPPORTED]: Receiving deep-link messages requires Stream Deck version 6.5 or higher, but current version is 6.4; please update Stream Deck and the "Software.MinimumVersion" in the plugin's manifest to "6.5" or higher.`
 			);
+			expect(spy).toHaveBeenCalledTimes(1);
+			expect(spy).toHaveBeenCalledWith<[number, Version, string]>(6.5, connection.version, "Receiving deep-link messages");
 		});
 	});
 

@@ -3,7 +3,7 @@ import type { StreamDeckConnection } from "./connectivity/connection";
 import type { SystemDidWakeUp } from "./connectivity/events";
 import { ApplicationDidLaunchEvent, ApplicationDidTerminateEvent, ApplicationEvent, DidReceiveDeepLinkEvent, Event, SystemDidWakeUpEvent } from "./events";
 import type { Manifest } from "./manifest";
-import { requiresVersion } from "./version";
+import { requiresVersion } from "./validation";
 
 /**
  * Provides events and methods for interacting with the system, e.g. monitoring applications or when the system wakes, etc.

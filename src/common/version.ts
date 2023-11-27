@@ -1,25 +1,4 @@
 /**
- * Validates the {@link appVersion} is at least {@link minimumVersion}; when the version is not fulfilled, an error is thrown with the {@link feature} formatted into the message.
- * @param minimumVersion Minimum required version.
- * @param appVersion Actual application version.
- * @param feature Feature that requires the version.
- */
-export function requiresVersion(minimumVersion: number, appVersion: Version, feature: string): never | void {
-	const minVersion = {
-		major: Math.floor(minimumVersion),
-		minor: (minimumVersion % 1) * 10,
-		patch: 0,
-		build: 0
-	};
-
-	if (appVersion.compareTo(minVersion) === -1) {
-		throw new Error(
-			`[ERR_NOT_SUPPORTED]: ${feature} requires Stream Deck version ${minVersion.major}.${minVersion.minor} or higher, but current version is ${appVersion.major}.${appVersion.minor}; please update Stream Deck and set the "Software.MinimumVersion" in the plugin's manifest to "${minVersion.major}.${minVersion.minor}" or higher.`
-		);
-	}
-}
-
-/**
  * Provides information for a version, as parsed from a string denoted as a collection of numbers separated by a period, for example `1.45.2`, `4.0.2.13098`. Parsing is opinionated
  * and strings should strictly conform to the format `{major}[.{minor}[.{patch}[.{build}]]]`; version numbers that form the version are optional, and when `undefined` will default to
  * 0, for example the `minor`, `patch`, or `build` number may be omitted. **NB** This implementation should be considered fit-for-purpose, and should be used sparing.
@@ -80,11 +59,9 @@ export class Version {
 		return 0;
 	}
 
-	/**
-	 * @inheritdoc
-	 */
+	/** @inheritdoc */
 	public toString(): string {
-		return `${this.major}.${this.minor}.${this.patch}.${this.build}`;
+		return `${this.major}.${this.minor}`;
 	}
 }
 

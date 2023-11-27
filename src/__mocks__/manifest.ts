@@ -1,4 +1,5 @@
-import type { getManifest as __getManifest, Manifest } from "../manifest";
+import { Version } from "../common/version";
+import type { getManifest as __getManifest, getSoftwareMinimumVersion as __getSoftwareMinimumVersion, Manifest } from "../manifest";
 
 /**
  * Mock {@link Manifest}.
@@ -29,10 +30,15 @@ export const manifest: Manifest = {
 	],
 	SDKVersion: 2,
 	Software: {
-		MinimumVersion: "6.4"
+		MinimumVersion: "6.5"
 	},
 	Version: "1.0.0"
 };
+
+/**
+ * Mocked {@link __getSoftwareMinimumVersion}.
+ */
+export const getSoftwareMinimumVersion = jest.fn().mockReturnValue(new Version("6.5"));
 
 /**
  * Mocked {@link __getManifest}.
