@@ -567,6 +567,7 @@ type State = {
 	TitleColor?: string;
 };
 
+let manifest: Omit<Manifest, "$schema">;
 let softwareMinimumVersion: Version;
 
 /**
@@ -579,9 +580,17 @@ export function getSoftwareMinimumVersion(): Version {
 
 /**
  * Gets the manifest associated with the plugin.
- * @returns The manifest; otherwise `undefined` if the file was not found or could not be parsed.
+ * @returns The manifest.
  */
 export function getManifest(): Omit<Manifest, "$schema"> {
+	return (manifest ??= readManifest());
+}
+
+/**
+ * Reads the manifest associated with the plugin from the `manifest.json` file.
+ * @returns The manifest.
+ */
+function readManifest(): Omit<Manifest, "$schema"> {
 	const path = join(process.cwd(), "manifest.json");
 	if (!existsSync(path)) {
 		throw new Error("Failed to read manifest.json as the file does not exist.");
