@@ -2,11 +2,11 @@ import { EventEmitter } from "node:events";
 import WebSocket from "ws";
 
 import { getMockedLogger } from "../../../tests/__mocks__/logging";
+import { registrationParameters } from "../__mocks__/registration";
 import { OpenUrl } from "../commands";
 import { StreamDeckConnection, createConnection } from "../connection";
 import * as api from "../events";
 import { ApplicationDidLaunch } from "../events";
-import { RegistrationParameters } from "../registration";
 
 jest.mock("ws", () => {
 	const MockWebSocket = jest.fn(function () {
@@ -23,9 +23,6 @@ jest.mock("ws", () => {
 	return MockWebSocket;
 });
 
-const mockArgv = ["-port", "12345", "-pluginUUID", "abc123", "-registerEvent", "test_event", "-info", `{"plugin":{"uuid":"com.elgato.test","version":"0.1.0"}}`];
-const regParams = new RegistrationParameters(mockArgv, getMockedLogger().logger);
-
 const originalArgv = process.argv;
 
 describe("StreamDeckConnection", () => {
@@ -40,7 +37,7 @@ describe("StreamDeckConnection", () => {
 		process.argv = originalArgv;
 
 		// Act.
-		createConnection(regParams, getMockedLogger().logger);
+		createConnection(registrationParameters, getMockedLogger().logger);
 
 		// Assert.
 		expect(webSocketSpy).toHaveLength(0);
@@ -52,7 +49,7 @@ describe("StreamDeckConnection", () => {
 	it("Registers on connection", () => {
 		// Arrange.
 		const webSocketSpy = jest.spyOn(WebSocket, "WebSocket");
-		const connection = createConnection(regParams, getMockedLogger().logger);
+		const connection = createConnection(registrationParameters, getMockedLogger().logger);
 
 		// Act.
 		connection.connect();
@@ -65,8 +62,8 @@ describe("StreamDeckConnection", () => {
 		expect(webSocket.send).toBeCalledTimes(1);
 		expect(webSocket.send).toBeCalledWith(
 			JSON.stringify({
-				event: regParams.registerEvent,
-				uuid: regParams.pluginUUID
+				event: registrationParameters.registerEvent,
+				uuid: registrationParameters.pluginUUID
 			})
 		);
 	});
@@ -245,7 +242,7 @@ describe("StreamDeckConnection", () => {
 		const createScopeSpy = jest.spyOn(logger, "createScope");
 
 		// Act.
-		createConnection(regParams, logger);
+		createConnection(registrationParameters, logger);
 
 		// Assert.
 		expect(createScopeSpy).toHaveBeenCalledTimes(1);
@@ -381,7 +378,7 @@ describe("StreamDeckConnection", () => {
 	async function getOpenConnection() {
 		const webSocketSpy = jest.spyOn(WebSocket, "WebSocket");
 		const { logger, scopedLogger } = getMockedLogger();
-		const connection = createConnection(regParams, logger);
+		const connection = createConnection(registrationParameters, logger);
 
 		const connect = connection.connect();
 		webSocketSpy.mock.instances[0].emit("open");

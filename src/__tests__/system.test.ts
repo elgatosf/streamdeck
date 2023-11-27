@@ -70,48 +70,64 @@ describe("System", () => {
 		expect(listener).toHaveBeenCalledTimes(1);
 	});
 
-	/**
-	 * Asserts {@link System.onDidReceiveDeepLink} invokes the listener when the connection emits the `didReceiveDeepLink` event.
-	 */
-	it("Receives onDidReceiveDeepLink", () => {
-		// Arrange.
-		const { connection, emitMessage } = getConnection();
-		const system = new System(connection);
+	describe("onDidReceiveDeepLink", () => {
+		/**
+		 * Asserts {@link System.onDidReceiveDeepLink} invokes the listener when the connection emits the `didReceiveDeepLink` event.
+		 */
+		it("Propagates", () => {
+			// Arrange.
+			const { connection, emitMessage } = getConnection();
+			const system = new System(connection);
 
-		const listener = jest.fn();
-		const emit = () =>
-			emitMessage({
-				event: "didReceiveDeepLink",
-				payload: {
-					url: "/hello/world?foo=bar#heading"
+			const listener = jest.fn();
+			const emit = () =>
+				emitMessage({
+					event: "didReceiveDeepLink",
+					payload: {
+						url: "/hello/world?foo=bar#heading"
+					}
+				});
+
+			// Act.
+			const result = system.onDidReceiveDeepLink(listener);
+			const {
+				payload: { url }
+			} = emit();
+
+			//Assert.
+			expect(listener).toHaveBeenCalledTimes(1);
+			expect(listener).toHaveBeenCalledWith<[DidReceiveDeepLinkEvent]>({
+				type: "didReceiveDeepLink",
+				url: {
+					fragment: "heading",
+					href: url,
+					path: "/hello/world",
+					query: "foo=bar",
+					queryParameters: new URLSearchParams([["foo", "bar"]])
 				}
 			});
 
-		// Act.
-		const result = system.onDidReceiveDeepLink(listener);
-		const {
-			payload: { url }
-		} = emit();
+			// Act (dispose).
+			result.dispose();
+			emit();
 
-		//Assert.
-		expect(listener).toHaveBeenCalledTimes(1);
-		expect(listener).toHaveBeenCalledWith<[DidReceiveDeepLinkEvent]>({
-			type: "didReceiveDeepLink",
-			url: {
-				fragment: "heading",
-				href: url,
-				path: "/hello/world",
-				query: "foo=bar",
-				queryParameters: new URLSearchParams([["foo", "bar"]])
-			}
+			// Assert (dispose).
+			expect(listener).toHaveBeenCalledTimes(1);
 		});
 
-		// Act (dispose).
-		result.dispose();
-		emit();
+		/**
+		 * Asserts {@link System.onDidReceiveDeepLink} throws an error if the Stream Deck version is earlier than 6.5.
+		 */
+		it("Throws pre 6.5 (connection)", () => {
+			// Arrange.
+			const { connection } = getConnection(6.4);
+			const system = new System(connection);
 
-		// Assert (dispose).
-		expect(listener).toHaveBeenCalledTimes(1);
+			// Act, assert.
+			expect(() => system.onDidReceiveDeepLink(jest.fn())).toThrow(
+				`[ERR_NOT_SUPPORTED]: Receiving deep-link messages requires Stream Deck version 6.5 or higher, but current version is 6.4; please update Stream Deck and set the "Software.MinimumVersion" in the plugin's manifest to "6.5" or higher.`
+			);
+		});
 	});
 
 	/**

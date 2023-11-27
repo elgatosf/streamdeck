@@ -3,6 +3,7 @@ import type { StreamDeckConnection } from "./connectivity/connection";
 import type { SystemDidWakeUp } from "./connectivity/events";
 import { ApplicationDidLaunchEvent, ApplicationDidTerminateEvent, ApplicationEvent, DidReceiveDeepLinkEvent, Event, SystemDidWakeUpEvent } from "./events";
 import type { Manifest } from "./manifest";
+import { requiresVersion } from "./version";
 
 /**
  * Provides events and methods for interacting with the system, e.g. monitoring applications or when the system wakes, etc.
@@ -41,6 +42,7 @@ export class System {
 	 * @returns A disposable that, when disposed, removes the listener.
 	 */
 	public onDidReceiveDeepLink(listener: (ev: DidReceiveDeepLinkEvent) => void): IDisposable {
+		requiresVersion(6.5, this.connection.version, "Receiving deep-link messages");
 		return this.connection.addDisposableListener("didReceiveDeepLink", (ev) => listener(new DidReceiveDeepLinkEvent(ev)));
 	}
 

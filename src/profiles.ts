@@ -1,4 +1,5 @@
 import { StreamDeckConnection } from "./connectivity/connection";
+import { requiresVersion } from "./version";
 
 /**
  * Provides interaction with Stream Deck profiles.
@@ -21,6 +22,10 @@ export class ProfileClient {
 	 * @returns `Promise` resolved when the request to switch the `profile` has been sent to Stream Deck.
 	 */
 	public switchToProfile(deviceId: string, profile?: string, page?: number): Promise<void> {
+		if (page !== undefined) {
+			requiresVersion(6.5, this.connection.version, "Switching to a profile page");
+		}
+
 		return this.connection.send({
 			event: "switchToProfile",
 			context: this.connection.registrationParameters.pluginUUID,

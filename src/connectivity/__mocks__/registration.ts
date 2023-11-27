@@ -11,7 +11,7 @@ export const registrationParameters: __RegistrationParameters = {
 			language: "en",
 			platform: "windows",
 			platformVersion: "11",
-			version: "6.4"
+			version: "99.8.6.54321"
 		},
 		colors: {
 			buttonMouseOverBackgroundColor: "#ffffff",
