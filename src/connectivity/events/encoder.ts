@@ -1,20 +1,20 @@
-import type { ActionEvent, Controller, Coordinates, SingleActionPayload } from "./action";
+import type { ActionEventMessage, Controller, Coordinates, SingleActionPayload } from "./action";
 import type { PayloadObject } from "./index";
 
 /**
  * Occurs when the user presses a dial (Stream Deck+).
  */
-export type DialDown<TSettings extends PayloadObject<TSettings>> = ActionEvent<"dialDown", EncoderPayload<TSettings>>;
+export type DialDown<TSettings extends PayloadObject<TSettings>> = ActionEventMessage<"dialDown", EncoderPayload<TSettings>>;
 
 /**
  * Occurs when the user releases a pressed dial (Stream Deck+).
  */
-export type DialUp<TSettings extends PayloadObject<TSettings>> = ActionEvent<"dialUp", EncoderPayload<TSettings>>;
+export type DialUp<TSettings extends PayloadObject<TSettings>> = ActionEventMessage<"dialUp", EncoderPayload<TSettings>>;
 
 /**
  * Occurs when the user rotates a dial (Stream Deck+).
  */
-export type DialRotate<TSettings extends PayloadObject<TSettings>> = ActionEvent<
+export type DialRotate<TSettings extends PayloadObject<TSettings>> = ActionEventMessage<
 	"dialRotate",
 	EncoderPayload<TSettings> & {
 		/**
@@ -32,7 +32,7 @@ export type DialRotate<TSettings extends PayloadObject<TSettings>> = ActionEvent
 /**
  * Occurs when the user taps the touchscreen (Stream Deck+).
  */
-export type TouchTap<TSettings extends PayloadObject<TSettings>> = ActionEvent<
+export type TouchTap<TSettings extends PayloadObject<TSettings>> = ActionEventMessage<
 	"touchTap",
 	EncoderPayload<TSettings> & {
 		/**

@@ -1,19 +1,20 @@
-import { DidReceiveSettings, TitleParametersDidChange, WillAppear, WillDisappear } from "./action";
-import { DeviceDidConnect, DeviceDidDisconnect } from "./device";
-import { DialDown, DialRotate, DialUp, TouchTap } from "./encoder";
-import { KeyDown, KeyUp } from "./keypad";
-import { PropertyInspectorDidAppear, PropertyInspectorDidDisappear, SendToPlugin } from "./property-inspector";
-import { ApplicationDidLaunch, ApplicationDidTerminate, DidReceiveGlobalSettings, SystemDidWakeUp } from "./system";
+import type { DidReceiveSettings, TitleParametersDidChange, WillAppear, WillDisappear } from "./action";
+import type { DeviceDidConnect, DeviceDidDisconnect } from "./device";
+import type { DialDown, DialRotate, DialUp, TouchTap } from "./encoder";
+import type { KeyDown, KeyUp } from "./keypad";
+import type { PropertyInspectorDidAppear, PropertyInspectorDidDisappear, SendToPlugin } from "./property-inspector";
+import type { ApplicationDidLaunch, ApplicationDidTerminate, DidReceiveDeepLink, DidReceiveGlobalSettings, SystemDidWakeUp } from "./system";
 
-export { ActionIdentifier, State } from "./action";
-export { DeviceIdentifier } from "./device";
+export type { ActionIdentifier, State } from "./action";
+export type { DeviceIdentifier } from "./device";
 
-export { DidReceiveSettings, TitleParametersDidChange, WillAppear, WillDisappear } from "./action";
-export { DeviceDidConnect, DeviceDidDisconnect } from "./device";
-export { DialDown, DialRotate, DialUp, TouchTap } from "./encoder";
-export { KeyDown, KeyUp } from "./keypad";
-export { PropertyInspectorDidAppear, PropertyInspectorDidDisappear, SendToPlugin } from "./property-inspector";
-export { ApplicationDidLaunch, ApplicationDidTerminate, DidReceiveGlobalSettings, SystemDidWakeUp } from "./system";
+export { Controller } from "./action";
+export type { Coordinates, DidReceiveSettings, TitleParametersDidChange, WillAppear, WillDisappear } from "./action";
+export type { DeviceDidConnect, DeviceDidDisconnect } from "./device";
+export type { DialDown, DialRotate, DialUp, TouchTap } from "./encoder";
+export type { KeyDown, KeyUp } from "./keypad";
+export type { PropertyInspectorDidAppear, PropertyInspectorDidDisappear, SendToPlugin } from "./property-inspector";
+export type { ApplicationDidLaunch, ApplicationDidTerminate, DidReceiveDeepLink, DidReceiveGlobalSettings, SystemDidWakeUp } from "./system";
 
 /**
  * Represents an event that is emitted by the Stream Deck.
@@ -33,7 +34,7 @@ export type PayloadObject<T extends object> = { [K in keyof T]: T[K] } extends R
 /**
  * Events received by the plugin, from the Stream Deck.
  */
-export type Event<T extends PayloadObject<T> = object> =
+export type EventMessage<T extends PayloadObject<T> = object> =
 	| ApplicationDidLaunch
 	| ApplicationDidTerminate
 	| DeviceDidConnect
@@ -41,6 +42,7 @@ export type Event<T extends PayloadObject<T> = object> =
 	| DialDown<T>
 	| DialRotate<T>
 	| DialUp<T>
+	| DidReceiveDeepLink
 	| DidReceiveGlobalSettings<T>
 	| DidReceiveSettings<T>
 	| KeyDown<T>
@@ -58,5 +60,5 @@ export type Event<T extends PayloadObject<T> = object> =
  * Map of events received by the plugin, from the Stream Deck.
  */
 export type EventMap = {
-	[K in Event["event"]]: Extract<Event, EventIdentifier<K>>;
+	[K in EventMessage["event"]]: Extract<EventMessage, EventIdentifier<K>>;
 };

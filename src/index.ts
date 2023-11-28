@@ -1,5 +1,6 @@
 import { StreamDeck } from "./stream-deck";
 
+export { Action } from "./actions/action";
 export { action } from "./actions/decorators";
 export { SingletonAction } from "./actions/singleton-action";
 export * from "./connectivity/layouts";

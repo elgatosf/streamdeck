@@ -1,8 +1,9 @@
 import type { IDisposable } from "./common/disposable";
 import type { StreamDeckConnection } from "./connectivity/connection";
 import type { SystemDidWakeUp } from "./connectivity/events";
-import { ApplicationDidLaunchEvent, ApplicationDidTerminateEvent, ApplicationEvent, Event, SystemDidWakeUpEvent } from "./events";
+import { ApplicationDidLaunchEvent, ApplicationDidTerminateEvent, ApplicationEvent, DidReceiveDeepLinkEvent, Event, SystemDidWakeUpEvent } from "./events";
 import type { Manifest } from "./manifest";
+import { requiresVersion } from "./validation";
 
 /**
  * Provides events and methods for interacting with the system, e.g. monitoring applications or when the system wakes, etc.
@@ -32,6 +33,17 @@ export class System {
 	 */
 	public onApplicationDidTerminate(listener: (ev: ApplicationDidTerminateEvent) => void): IDisposable {
 		return this.connection.addDisposableListener("applicationDidTerminate", (ev) => listener(new ApplicationEvent(ev)));
+	}
+
+	/**
+	 * Occurs when a deep-link message is routed to the plugin from Stream Deck. One-way deep-link messages can be sent to plugins from external applications using the URL format
+	 * `streamdeck://plugins/message/<PLUGIN_UUID>/{MESSAGE}`.
+	 * @param listener Function to be invoked when the event occurs.
+	 * @returns A disposable that, when disposed, removes the listener.
+	 */
+	public onDidReceiveDeepLink(listener: (ev: DidReceiveDeepLinkEvent) => void): IDisposable {
+		requiresVersion(6.5, this.connection.version, "Receiving deep-link messages");
+		return this.connection.addDisposableListener("didReceiveDeepLink", (ev) => listener(new DidReceiveDeepLinkEvent(ev)));
 	}
 
 	/**

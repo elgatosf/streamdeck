@@ -6,7 +6,7 @@ import { Event } from "./event";
  * Provides information for an event relating to an action.
  */
 export class ActionWithoutPayloadEvent<
-	TSource extends Extract<api.Event, api.ActionIdentifier & api.DeviceIdentifier>,
+	TSource extends Extract<api.EventMessage, api.ActionIdentifier & api.DeviceIdentifier>,
 	TSettings extends api.PayloadObject<TSettings>
 > extends Event<TSource> {
 	/**
@@ -32,7 +32,7 @@ export class ActionWithoutPayloadEvent<
  * Provides information for an event relating to an action.
  */
 export class ActionEvent<
-	TSource extends Extract<api.Event, api.ActionIdentifier & api.DeviceIdentifier> & PayloadEvent<TSource>,
+	TSource extends Extract<api.EventMessage, api.ActionIdentifier & api.DeviceIdentifier> & PayloadEvent<TSource>,
 	TSettings extends api.PayloadObject<TSettings> = ExtractSettings<TSource>
 > extends ActionWithoutPayloadEvent<TSource, TSettings> {
 	/**

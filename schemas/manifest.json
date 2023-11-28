@@ -18,13 +18,7 @@
 							"Controllers": {
 								"type": "array",
 								"items": {
-									"type": "string",
-									"enum": [
-										"Encoder",
-										"Keypad"
-									],
-									"description": "Defines the controller type the action is applicable to. **Keypad** refers to a standard action on a Stream Deck device, e.g. 1 of the 15 buttons on the Stream Deck MK.2, or a pedal on the Stream Deck Pedal, etc., whereas an **Encoder** refers to a dial / touchscreen on the Stream Deck+.",
-									"markdownDescription": "Defines the controller type the action is applicable to. **Keypad** refers to a standard action on a Stream Deck device, e.g. 1 of the 15 buttons on the Stream Deck MK.2, or a pedal on the Stream Deck Pedal, etc., whereas an **Encoder** refers to a dial / touchscreen on the Stream Deck+."
+									"$ref": "#/definitions/Controller"
 								},
 								"minItems": 1,
 								"maxItems": 2,
@@ -98,7 +92,7 @@
 									},
 									"layout": {
 										"type": "string",
-										"description": "Name of a pre-defined layout, or the path to a JSON file that details a custom layout and its components, to be rendered on the action's touchscreen canvas.\n\n**Pre-defined Layouts:**\n- `$X1`, layout with the title at the top and the icon beneath it in the center.\n- `$A0`, layout with the title at the top and a full-width image canvas beneath it in the center.\n- `$A1`, layout with the title at the top, the icon on the left, and text value on the right.\n- `$B1`, layout with the title at the top, the icon on the left, and a text value on the right with a progress bar beneath it.\n- `$B2`, layout with the title at the top, the icon on the left, and a text value on the right with a gradient progress bar beneath it.\n- `$C1`, layout with the title at the top, and two rows that display an icon on the left and progress bar on the right (i.e. a double progress bar layout).\n\n**Examples:**\n- $A1\n- layouts/my-custom-layout.json\n\n**Also see:**\n- `streamDeck.client.setFeedback(...)`\n- `streamDeck.client.setFeedbackLayout(...)`",
+										"description": "Name of a pre-defined layout, or the path to a JSON file that details a custom layout and its components, to be rendered on the action's touchscreen canvas.\n\n**Pre-defined Layouts:**\n- `$X1`, layout with the title at the top and the icon beneath it in the center.\n- `$A0`, layout with the title at the top and a full-width image canvas beneath it in the center.\n- `$A1`, layout with the title at the top, the icon on the left, and text value on the right.\n- `$B1`, layout with the title at the top, the icon on the left, and a text value on the right with a progress bar beneath it.\n- `$B2`, layout with the title at the top, the icon on the left, and a text value on the right with a gradient progress bar beneath it.\n- `$C1`, layout with the title at the top, and two rows that display an icon on the left and progress bar on the right (i.e. a double progress bar layout).\n\n**Examples:**\n- $A1\n- layouts/my-custom-layout.json",
 										"examples": [
 											"$X1",
 											"$A0",
@@ -108,7 +102,7 @@
 											"$C1"
 										],
 										"pattern": "(^(\\$[AB][12])|(\\$[XC]1))$|(^(?!\\/).+\\.[Jj][Ss][Oo][Nn]$)",
-										"markdownDescription": "Name of a pre-defined layout, or the path to a JSON file that details a custom layout and its components, to be rendered on the action's touchscreen canvas.\n\n**Pre-defined Layouts:**\n- `$X1`, layout with the title at the top and the icon beneath it in the center.\n- `$A0`, layout with the title at the top and a full-width image canvas beneath it in the center.\n- `$A1`, layout with the title at the top, the icon on the left, and text value on the right.\n- `$B1`, layout with the title at the top, the icon on the left, and a text value on the right with a progress bar beneath it.\n- `$B2`, layout with the title at the top, the icon on the left, and a text value on the right with a gradient progress bar beneath it.\n- `$C1`, layout with the title at the top, and two rows that display an icon on the left and progress bar on the right (i.e. a double progress bar layout).\n\n**Examples:**\n- $A1\n- layouts/my-custom-layout.json\n\n**Also see:**\n- `streamDeck.client.setFeedback(...)`\n- `streamDeck.client.setFeedbackLayout(...)`"
+										"markdownDescription": "Name of a pre-defined layout, or the path to a JSON file that details a custom layout and its components, to be rendered on the action's touchscreen canvas.\n\n**Pre-defined Layouts:**\n- `$X1`, layout with the title at the top and the icon beneath it in the center.\n- `$A0`, layout with the title at the top and a full-width image canvas beneath it in the center.\n- `$A1`, layout with the title at the top, the icon on the left, and text value on the right.\n- `$B1`, layout with the title at the top, the icon on the left, and a text value on the right with a progress bar beneath it.\n- `$B2`, layout with the title at the top, the icon on the left, and a text value on the right with a gradient progress bar beneath it.\n- `$C1`, layout with the title at the top, and two rows that display an icon on the left and progress bar on the right (i.e. a double progress bar layout).\n\n**Examples:**\n- $A1\n- layouts/my-custom-layout.json"
 									}
 								},
 								"additionalProperties": false,
@@ -117,9 +111,9 @@
 							},
 							"Icon": {
 								"type": "string",
-								"description": "Path to the image, with the **file extension omitted**, that will be displayed next to the action in the Stream Deck application's action list. The image must adhere to the following style guidelines.\n- Be in .PNG or .SVG format.\n- Be provided in two sizes, 20x20 px and 40x40 px (@2x).\n- Be monochromatic, with foreground color of #EFEFEF and a transparent background.\n\n**Examples:**\n- assets/counter\n- imgs/actions/mute\n\n**Also see:**\n- `streamDeck.client.setImage(...)`",
+								"description": "Path to the image, with the **file extension omitted**, that will be displayed next to the action in the Stream Deck application's action list. The image must adhere to the following style guidelines.\n- Be in .PNG or .SVG format.\n- Be provided in two sizes, 20x20 px and 40x40 px (@2x).\n- Be monochromatic, with foreground color of #EFEFEF and a transparent background.\n\n**Examples:**\n- assets/counter\n- imgs/actions/mute",
 								"pattern": "^(?!\\/).+(?<!\\.([Pp][Nn][Gg]|[Ss][Vv][Gg]))$",
-								"markdownDescription": "Path to the image, with the **file extension omitted**, that will be displayed next to the action in the Stream Deck application's action list. The image must adhere to the following style guidelines.\n- Be in .PNG or .SVG format.\n- Be provided in two sizes, 20x20 px and 40x40 px (@2x).\n- Be monochromatic, with foreground color of #EFEFEF and a transparent background.\n\n**Examples:**\n- assets/counter\n- imgs/actions/mute\n\n**Also see:**\n- `streamDeck.client.setImage(...)`"
+								"markdownDescription": "Path to the image, with the **file extension omitted**, that will be displayed next to the action in the Stream Deck application's action list. The image must adhere to the following style guidelines.\n- Be in .PNG or .SVG format.\n- Be provided in two sizes, 20x20 px and 40x40 px (@2x).\n- Be monochromatic, with foreground color of #EFEFEF and a transparent background.\n\n**Examples:**\n- assets/counter\n- imgs/actions/mute"
 							},
 							"Name": {
 								"type": "string",
@@ -188,8 +182,8 @@
 										},
 										"Title": {
 											"type": "string",
-											"description": "Default title to be shown when the action is added to the Stream Deck.\n\n**Also see:**\n- `streamDeck.client.setTitle(...)`",
-											"markdownDescription": "Default title to be shown when the action is added to the Stream Deck.\n\n**Also see:**\n- `streamDeck.client.setTitle(...)`"
+											"description": "Default title to be shown when the action is added to the Stream Deck.",
+											"markdownDescription": "Default title to be shown when the action is added to the Stream Deck."
 										},
 										"TitleAlignment": {
 											"type": "string",
@@ -217,8 +211,8 @@
 								},
 								"minItems": 1,
 								"maxItems": 2,
-								"description": "States the action can be in. When two states are defined the action will act as a toggle, with users being able to select their preferred iconography for each state. **NB.** Automatic toggling of the state on action activation can be disabled by setting `DisableAutomaticStates` to `true`.\n\n**Also see:**\n- `streamDeck.client.setState(...)`",
-								"markdownDescription": "States the action can be in. When two states are defined the action will act as a toggle, with users being able to select their preferred iconography for each state. **NB.** Automatic toggling of the state on action activation can be disabled by setting `DisableAutomaticStates` to `true`.\n\n**Also see:**\n- `streamDeck.client.setState(...)`"
+								"description": "States the action can be in. When two states are defined the action will act as a toggle, with users being able to select their preferred iconography for each state. **NB.** Automatic toggling of the state on action activation can be disabled by setting `DisableAutomaticStates` to `true`.",
+								"markdownDescription": "States the action can be in. When two states are defined the action will act as a toggle, with users being able to select their preferred iconography for each state. **NB.** Automatic toggling of the state on action activation can be disabled by setting `DisableAutomaticStates` to `true`."
 							},
 							"SupportedInMultiActions": {
 								"type": "boolean",
@@ -238,8 +232,8 @@
 							},
 							"UserTitleEnabled": {
 								"type": "boolean",
-								"description": "Determines whether the title field is available to the user when viewing the action's property inspector. Setting this to `false` will disable the user from specifying a title, thus allowing the plugin to have exclusive access to the title. Default is `true`, i.e. the title field is enabled.\n\n**Also see:**\n- `streamDeck.client.setTitle(...)`",
-								"markdownDescription": "Determines whether the title field is available to the user when viewing the action's property inspector. Setting this to `false` will disable the user from specifying a title, thus allowing the plugin to have exclusive access to the title. Default is `true`, i.e. the title field is enabled.\n\n**Also see:**\n- `streamDeck.client.setTitle(...)`"
+								"description": "Determines whether the title field is available to the user when viewing the action's property inspector. Setting this to `false` will disable the user from specifying a title, thus allowing the plugin to have exclusive access to the title. Default is `true`, i.e. the title field is enabled.",
+								"markdownDescription": "Determines whether the title field is available to the user when viewing the action's property inspector. Setting this to `false` will disable the user from specifying a title, thus allowing the plugin to have exclusive access to the title. Default is `true`, i.e. the title field is enabled."
 							},
 							"VisibleInActionsList": {
 								"type": "boolean",
@@ -446,9 +440,9 @@
 				},
 				"PropertyInspectorPath": {
 					"type": "string",
-					"description": "Optional path to the HTML file that represents the property inspector for all actions; this is displayed to the user in the Stream Deck application when they add an action, allowing them to configure the action's settings. **NB.** Path should be relative to the root of the plugin's folder, with no leading slash.\n\n **Examples:**\n- mute.html\n- actions/join-voice-chat/settings.html\n\n**Also see:**\n- `streamDeck.client.sendToPropertyInspector(...)`\n- `streamDeck.client.onSendToPlugin(...)`",
+					"description": "Optional path to the HTML file that represents the property inspector for all actions; this is displayed to the user in the Stream Deck application when they add an action, allowing them to configure the action's settings. **NB.** Path should be relative to the root of the plugin's folder, with no leading slash.\n\n **Examples:**\n- mute.html\n- actions/join-voice-chat/settings.html\n\n**Also see:**\n- `streamDeck.ui.onSendToPlugin(...)`",
 					"pattern": "^(?!\\/).+\\.[Hh][Tt][Mm][Ll]?$",
-					"markdownDescription": "Optional path to the HTML file that represents the property inspector for all actions; this is displayed to the user in the Stream Deck application when they add an action, allowing them to configure the action's settings. **NB.** Path should be relative to the root of the plugin's folder, with no leading slash.\n\n **Examples:**\n- mute.html\n- actions/join-voice-chat/settings.html\n\n**Also see:**\n- `streamDeck.client.sendToPropertyInspector(...)`\n- `streamDeck.client.onSendToPlugin(...)`"
+					"markdownDescription": "Optional path to the HTML file that represents the property inspector for all actions; this is displayed to the user in the Stream Deck application when they add an action, allowing them to configure the action's settings. **NB.** Path should be relative to the root of the plugin's folder, with no leading slash.\n\n **Examples:**\n- mute.html\n- actions/join-voice-chat/settings.html\n\n**Also see:**\n- `streamDeck.ui.onSendToPlugin(...)`"
 				},
 				"SDKVersion": {
 					"type": "number",
@@ -461,7 +455,10 @@
 					"properties": {
 						"MinimumVersion": {
 							"type": "string",
-							"const": "6.4",
+							"enum": [
+								"6.4",
+								"6.5"
+							],
 							"description": "Minimum version of the Stream Deck application required for this plugin to run.",
 							"markdownDescription": "Minimum version of the Stream Deck application required for this plugin to run."
 						}
@@ -502,6 +499,15 @@
 			"additionalProperties": false,
 			"description": "Defines the plugin and available actions, and all information associated with them, including the plugin's entry point, all iconography, action default behavior, etc.",
 			"markdownDescription": "Defines the plugin and available actions, and all information associated with them, including the plugin's entry point, all iconography, action default behavior, etc."
+		},
+		"Controller": {
+			"type": "string",
+			"enum": [
+				"Encoder",
+				"Keypad"
+			],
+			"description": "Defines the controller type the action is applicable to. **Keypad** refers to a standard action on a Stream Deck device, e.g. 1 of the 15 buttons on the Stream Deck MK.2, or a pedal on the Stream Deck Pedal, etc., whereas an **Encoder** refers to a dial / touchscreen on the Stream Deck+.",
+			"markdownDescription": "Defines the controller type the action is applicable to. **Keypad** refers to a standard action on a Stream Deck device, e.g. 1 of the 15 buttons on the Stream Deck MK.2, or a pedal on the Stream Deck Pedal, etc., whereas an **Encoder** refers to a dial / touchscreen on the Stream Deck+."
 		},
 		"DeviceType": {
 			"type": "number",

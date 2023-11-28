@@ -2,7 +2,7 @@ import nodeResolve from "@rollup/plugin-node-resolve";
 import typescript from "@rollup/plugin-typescript";
 import path from "node:path";
 import url from "node:url";
-import { RollupOptions } from "rollup";
+import { NormalizedOutputOptions, OutputBundle, RollupOptions } from "rollup";
 import dts from "rollup-plugin-dts";
 
 const isWatching = !!process.env.ROLLUP_WATCH;
@@ -38,7 +38,23 @@ const config: RollupOptions[] = [
 		output: {
 			file: "dist/index.d.ts"
 		},
-		plugins: [dts()]
+		plugins: [
+			dts(),
+			{
+				name: "NameChecker",
+				generateBundle: function (options: NormalizedOutputOptions, bundle: OutputBundle): void {
+					// Search each file for variable names that resemble possible duplicates, e.g. ActionEvent$1, Event$1.
+					const warnings = new Set(
+						Object.values(bundle).reduce<string[]>((names, file) => ("code" in file ? [...names, ...(file.code.match(/[A-Za-z0-9\-_]+?\$\d/gm) || [])] : names), [])
+					);
+
+					// And warn for each possible duplicate.
+					if (warnings.size) {
+						warnings.forEach((value) => this.warn(`Type was renamed "${value}"`));
+					}
+				}
+			}
+		]
 	}
 ];
 

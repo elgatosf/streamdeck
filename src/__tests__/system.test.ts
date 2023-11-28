@@ -1,9 +1,19 @@
 import { getConnection } from "../../tests/__mocks__/connection";
+import { Version } from "../common/version";
 import * as mockEvents from "../connectivity/__mocks__/events";
 import { OpenUrl } from "../connectivity/commands";
 import { StreamDeckConnection } from "../connectivity/connection";
-import { ApplicationDidLaunchEvent, ApplicationDidTerminateEvent, SystemDidWakeUpEvent } from "../events";
+import { ApplicationDidLaunchEvent, ApplicationDidTerminateEvent, DidReceiveDeepLinkEvent, SystemDidWakeUpEvent } from "../events";
 import { System } from "../system";
+import * as ValidationModule from "../validation";
+
+jest.mock("../manifest");
+jest.mock("../validation", () => {
+	return {
+		__esModule: true,
+		...jest.requireActual("../validation")
+	};
+});
 
 describe("System", () => {
 	/**
@@ -68,6 +78,69 @@ describe("System", () => {
 
 		// Assert (dispose).
 		expect(listener).toHaveBeenCalledTimes(1);
+	});
+
+	describe("onDidReceiveDeepLink", () => {
+		/**
+		 * Asserts {@link System.onDidReceiveDeepLink} invokes the listener when the connection emits the `didReceiveDeepLink` event.
+		 */
+		it("Propagates", () => {
+			// Arrange.
+			const { connection, emitMessage } = getConnection();
+			const system = new System(connection);
+
+			const listener = jest.fn();
+			const emit = () =>
+				emitMessage({
+					event: "didReceiveDeepLink",
+					payload: {
+						url: "/hello/world?foo=bar#heading"
+					}
+				});
+
+			// Act.
+			const result = system.onDidReceiveDeepLink(listener);
+			const {
+				payload: { url }
+			} = emit();
+
+			//Assert.
+			expect(listener).toHaveBeenCalledTimes(1);
+			expect(listener).toHaveBeenCalledWith<[DidReceiveDeepLinkEvent]>({
+				type: "didReceiveDeepLink",
+				url: {
+					fragment: "heading",
+					href: url,
+					path: "/hello/world",
+					query: "foo=bar",
+					queryParameters: new URLSearchParams([["foo", "bar"]])
+				}
+			});
+
+			// Act (dispose).
+			result.dispose();
+			emit();
+
+			// Assert (dispose).
+			expect(listener).toHaveBeenCalledTimes(1);
+		});
+
+		/**
+		 * Asserts {@link System.onDidReceiveDeepLink} throws an error if the Stream Deck version is earlier than 6.5.
+		 */
+		it("Throws pre 6.5 (connection)", () => {
+			// Arrange.
+			const { connection } = getConnection(6.4);
+			const system = new System(connection);
+			const spy = jest.spyOn(ValidationModule, "requiresVersion");
+
+			// Act, assert.
+			expect(() => system.onDidReceiveDeepLink(jest.fn())).toThrow(
+				`[ERR_NOT_SUPPORTED]: Receiving deep-link messages requires Stream Deck version 6.5 or higher, but current version is 6.4; please update Stream Deck and the "Software.MinimumVersion" in the plugin's manifest to "6.5" or higher.`
+			);
+			expect(spy).toHaveBeenCalledTimes(1);
+			expect(spy).toHaveBeenCalledWith<[number, Version, string]>(6.5, connection.version, "Receiving deep-link messages");
+		});
 	});
 
 	/**

@@ -7,6 +7,7 @@ import { Command } from "./commands";
 
 import { IDisposable, deferredDisposable } from "../common/disposable";
 import { TypedEventEmitter } from "../common/typed-event-emitter";
+import { Version } from "../common/version";
 import { EventMap } from "./events";
 import { RegistrationParameters } from "./registration";
 
@@ -29,7 +30,12 @@ export type StreamDeckConnection = TypedEventEmitter<EventMap> & {
 	 * Registration parameters used to establish a connection with the Stream Deck; these are automatically supplied as part of the command line arguments when the plugin is ran by
 	 * the Stream Deck.
 	 */
-	registrationParameters: RegistrationParameters;
+	readonly registrationParameters: RegistrationParameters;
+
+	/**
+	 * Version of Stream Deck this instance is connected to.
+	 */
+	readonly version: Version;
 
 	/**
 	 * Adds the {@link listener} to the connection for the {@link eventName} and returns a disposable that, when disposed, removes the listener.
@@ -58,6 +64,11 @@ export type StreamDeckConnection = TypedEventEmitter<EventMap> & {
  */
 class StreamDeckWebSocketConnection extends EventEmitter implements StreamDeckConnection {
 	/**
+	 * @inheritdoc
+	 */
+	public readonly version: Version;
+
+	/**
 	 * Used to ensure {@link StreamDeckWebSocketConnection.connect} is invoked as a singleton; `false` when a connection is occurring or established.
 	 */
 	private canConnect = true;
@@ -85,6 +96,7 @@ class StreamDeckWebSocketConnection extends EventEmitter implements StreamDeckCo
 	) {
 		super();
 		this.logger = logger.createScope("StreamDeckConnection");
+		this.version = new Version(registrationParameters.info.application.version);
 	}
 
 	/**

@@ -3,7 +3,7 @@ import * as api from "../connectivity/events";
 /**
  * Provides information for events received from Stream Deck.
  */
-export class Event<T extends api.Event> {
+export class Event<T extends api.EventMessage> {
 	/**
 	 * Event that occurred.
 	 */

@@ -15,9 +15,39 @@
 
 ### ⚠️ Breaking Changes
 
-Namespaces have been introduced in place of the previous `streamDeck.client` namespace to provide better natural-grouping of functionality. Additionally, `streamDeck.devices` has been promoted to a namespace to allow for future enhancements, with devices remaining iterable.
+Namespaces have been introduced in place of the previous `streamDeck.client` object to provide better natural-grouping of functionality. Additionally, `streamDeck.devices` has been promoted to a namespace to allow for future enhancements, with devices remaining iterable. For more information, see [migration details](#0-2-0_migration).
 
-Members previously found on `streamDeck.client` have been relocated to the following namespaces:
+### ✨ New
+
+#### Stream Deck 6.5
+
+-   Add support for receiving messages via deep-linking.
+    -   URL format: `streamdeck://plugins/message/<PLUGIN_UUID>/<MESSAGE>`
+    -   Accessible as part of the `system` namespace, `streamDeck.system.onDidReceiveDeepLink`
+-   Add support for switching to a specific profile page when calling `switchToProfile`.
+-   Add `controller` information to `WillAppear` and `WillDisappear` events for multi-actions.
+-   Add support for Node.js plugins with the `.cjs` or `.mjs` file extensions.
+
+#### Node.js SDK
+
+-   Add `profiles`, `settings`, `system`, and `ui` namespaces.
+-   Add `streamDeck.actions.createController(id)` to enable the control of a contextualized action.
+-   Add `streamDeck.devices.getDeviceBy(deviceId)` to enable the selection of a device by identifier.
+-   Add `length`, `forEach`, and `[Symbol.iterator]` to `streamDeck.devices` to enable iteration.
+
+### ♻️ Update
+
+-   Refactor `streamDeck.devices` to namespace.
+-   Update Manifest's JSON schema to support Stream Deck 6.5.
+-   Node.js runtime updated to v20.8.2.
+
+<h3 id="0-2-0_migration">
+	➡️ Migration
+</h3>
+
+> Functionality introduced in Stream Deck 6.5 requires the plugin's manifest to have a `Software.MinimumVersion` of 6.5 or higher.
+
+Members previously accessed directly from `streamDeck.client` have been relocated to the following namespaces:
 
 | Previous `streamDeck.client` Member | New Namespace                             |
 | ----------------------------------- | ----------------------------------------- |
@@ -55,17 +85,6 @@ Members previously found on `streamDeck.client` have been relocated to the follo
 | `showAlert`                         | `streamDeck.actions.createController(id)` |
 | `showOk`                            | `streamDeck.actions.createController(id)` |
 | `switchToProfile`                   | `streamDeck.profiles`                     |
-
-### ✨ New
-
--   Add `profiles`, `settings`, `system`, and `ui` namespaces.
--   Add `streamDeck.actions.createController(id)` to enable the control of a contextualized action.
--   Add `streamDeck.devices.getDeviceBy(deviceId)` to enable the selection of a device by identifier.
--   Add `length`, `forEach`, and `[Symbol.iterator]` to `streamDeck.devices` to enable iteration.
-
-### ♻️ Update
-
--   Refactor `streamDeck.devices` to namespace.
 
 ## 0.1.0
 
