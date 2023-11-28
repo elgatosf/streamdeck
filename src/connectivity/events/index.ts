@@ -5,10 +5,9 @@ import type { KeyDown, KeyUp } from "./keypad";
 import type { PropertyInspectorDidAppear, PropertyInspectorDidDisappear, SendToPlugin } from "./property-inspector";
 import type { ApplicationDidLaunch, ApplicationDidTerminate, DidReceiveDeepLink, DidReceiveGlobalSettings, SystemDidWakeUp } from "./system";
 
-export type { ActionIdentifier, State } from "./action";
+export type { ActionIdentifier, Controller, State } from "./action";
 export type { DeviceIdentifier } from "./device";
 
-export { Controller } from "./action";
 export type { Coordinates, DidReceiveSettings, TitleParametersDidChange, WillAppear, WillDisappear } from "./action";
 export type { DeviceDidConnect, DeviceDidDisconnect } from "./device";
 export type { DialDown, DialRotate, DialUp, TouchTap } from "./encoder";

@@ -1,4 +1,4 @@
-import type { ActionEventMessage, Controller, MultiActionPayload, SingleActionPayload, State } from "./action";
+import type { ActionEventMessage, MultiActionPayload, SingleActionPayload, State } from "./action";
 import type { DialDown, DialUp } from "./encoder";
 import type { PayloadObject } from "./index";
 
@@ -16,7 +16,7 @@ export type KeyUp<TSettings extends PayloadObject<TSettings>> = ActionEventMessa
  * Additional information about a keypad event that occurred.
  */
 type KeypadPayload<TSettings extends PayloadObject<TSettings>> =
-	| SingleActionPayload<TSettings, Controller.Keypad>
+	| SingleActionPayload<TSettings, "Keypad">
 	| (MultiActionPayload<TSettings> & {
 			/**
 			 * Desired state as specified by the user; only applicable to actions that have multiple states defined within the `manifest.json` file, and when this action instance is
