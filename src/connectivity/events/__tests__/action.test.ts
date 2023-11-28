@@ -1,17 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Controller, Coordinates, State, WillAppear, WillDisappear } from "..";
+import { Coordinates, WillAppear, WillDisappear } from "..";
 import { Expect, TypesAreEqual } from "../../../../tests/utils";
 import { Settings } from "../../__mocks__/events";
-
-describe("Controller", () => {
-	/**
-	 * Asserts the values associated with {@link Controller} match Stream Deck values.
-	 */
-	it("should match Stream Deck payload values", () => {
-		expect(Controller.Encoder).toBe("Encoder");
-		expect(Controller.Keypad).toBe("Keypad");
-	});
-});
 
 describe("action event types", () => {
 	/**
@@ -28,10 +18,10 @@ describe("action event types", () => {
 						readonly device: string;
 						readonly payload: {
 							readonly isInMultiAction: false;
-							readonly controller: Controller;
+							readonly controller: "Encoder" | "Keypad";
 							readonly coordinates: Coordinates;
 							settings: Settings;
-							readonly state?: State;
+							readonly state?: 0 | 1;
 						};
 				  }
 				| {
@@ -41,9 +31,9 @@ describe("action event types", () => {
 						readonly device: string;
 						readonly payload: {
 							readonly isInMultiAction: true;
-							readonly controller: Controller.Keypad;
+							readonly controller: "Keypad";
 							settings: Settings;
-							readonly state?: State;
+							readonly state?: 0 | 1;
 						};
 				  }
 			>
@@ -64,10 +54,10 @@ describe("action event types", () => {
 						readonly device: string;
 						readonly payload: {
 							readonly isInMultiAction: false;
-							readonly controller: Controller;
+							readonly controller: "Encoder" | "Keypad";
 							readonly coordinates: Coordinates;
 							settings: Settings;
-							readonly state?: State;
+							readonly state?: 0 | 1;
 						};
 				  }
 				| {
@@ -77,9 +67,9 @@ describe("action event types", () => {
 						readonly device: string;
 						readonly payload: {
 							readonly isInMultiAction: true;
-							readonly controller: Controller.Keypad;
+							readonly controller: "Keypad";
 							settings: Settings;
-							readonly state?: State;
+							readonly state?: 0 | 1;
 						};
 				  }
 			>

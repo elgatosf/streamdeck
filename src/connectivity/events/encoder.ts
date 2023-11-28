@@ -1,4 +1,4 @@
-import type { ActionEventMessage, Controller, Coordinates, SingleActionPayload } from "./action";
+import type { ActionEventMessage, Coordinates, SingleActionPayload } from "./action";
 import type { PayloadObject } from "./index";
 
 /**
@@ -50,7 +50,7 @@ export type TouchTap<TSettings extends PayloadObject<TSettings>> = ActionEventMe
 /**
  * Additional information about the action and event that occurred.
  */
-type EncoderPayload<TSettings extends PayloadObject<TSettings>> = Pick<SingleActionPayload<TSettings, Extract<Controller, "Encoder">>, "controller" | "settings"> & {
+type EncoderPayload<TSettings extends PayloadObject<TSettings>> = Pick<SingleActionPayload<TSettings, "Encoder">, "controller" | "settings"> & {
 	/**
 	 * Coordinates that identify the location of the action.
 	 */
