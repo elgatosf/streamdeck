@@ -196,8 +196,9 @@ export type SetTriggerDescription = ContextualizedCommand<
 >;
 
 /**
- * Switches the pre-defined profile on the specified device. **NB**, plugins can only switch to profiles included as part of the plugin and defined within the manifest, and cannot
- * switch to custom profiles created by users.
+ * Switches to the profile, as distributed by the plugin, on the specified device.
+ *
+ * NB: Plugins may only switch to profiles distributed with the plugin, as defined within the manifest, and cannot access user-defined profiles.
  */
 export type SwitchToProfile = ContextualizedCommand<
 	"switchToProfile",

@@ -136,9 +136,11 @@ export class Action<T extends PayloadObject<T> = object> {
 	}
 
 	/**
-	 * Sets the {@link image} to be display for this action instance. **NB** This will be ignored if the user has chosen a custom image within the Stream Deck application.
+	 * Sets the {@link image} to be display for this action instance.
+	 *
+	 * NB: The image can only be set by the plugin when the the user has not specified a custom image.
 	 * @param image Image to display; this can be either a path to a local file within the plugin's folder, a base64 encoded `string` with the mime type declared (e.g. PNG, JPEG, etc.),
-	 * or an SVG `string`. When {@link image} is `undefined`, the image from the manifest is used.
+	 * or an SVG `string`. When `undefined`, the image from the manifest will be used.
 	 * @param options Additional options that define where and how the image should be rendered.
 	 * @returns `Promise` resolved when the request to set the {@link image} has been sent to Stream Deck.
 	 */
@@ -183,7 +185,9 @@ export class Action<T extends PayloadObject<T> = object> {
 
 	/**
 	 * Sets the {@link title} displayed for this action instance. See also {@link SingletonAction.onTitleParametersDidChange}.
-	 * @param title Title to display; when undefined the title within the manifest will be used. **NB.** the title will only be set if the user has not specified a custom title.
+	 *
+	 * NB: The title can only be set by the plugin when the the user has not specified a custom title.
+	 * @param title Title to display; when `undefined` the title within the manifest will be used.
 	 * @param options Additional options that define where and how the title should be rendered.
 	 * @returns `Promise` resolved when the request to set the {@link title} has been sent to Stream Deck.
 	 */
@@ -201,7 +205,9 @@ export class Action<T extends PayloadObject<T> = object> {
 	/**
 	 * Sets the trigger (interaction) {@link descriptions} associated with this action instance. Descriptions are shown within the Stream Deck application, and informs the user what
 	 * will happen when they interact with the action, e.g. rotate, touch, etc. When {@link descriptions} is `undefined`, the descriptions will be reset to the values provided as part
-	 * of the manifest. **NB** only applies to encoders as part of Stream Deck+ (dials / touchscreens).
+	 * of the manifest.
+	 *
+	 * NB: Applies to encoders (dials / touchscreens) found on Stream Deck+ devices.
 	 * @param descriptions Descriptions that detail the action's interaction.
 	 * @returns `Promise` resolved when the request to set the {@link descriptions} has been sent to Stream Deck.
 	 */

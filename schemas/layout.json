@@ -77,11 +77,11 @@
 									},
 									"bar_bg_c": {
 										"type": "string",
-										"description": "Bar background color represented as a named color, hexadecimal value, or gradient. Default is `darkGray`. **NB** Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)",
+										"description": "Bar background color represented as a named color, hexadecimal value, or gradient. Default is `darkGray`. Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)",
 										"examples": [
 											"darkGray"
 										],
-										"markdownDescription": "Bar background color represented as a named color, hexadecimal value, or gradient. Default is `darkGray`. **NB** Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)"
+										"markdownDescription": "Bar background color represented as a named color, hexadecimal value, or gradient. Default is `darkGray`. Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)"
 									},
 									"bar_border_c": {
 										"type": "string",
@@ -93,11 +93,11 @@
 									},
 									"bar_fill_c": {
 										"type": "string",
-										"description": "Fill color of the bar represented as a named color, hexadecimal value, or gradient. Default is `white`. **NB** Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)",
+										"description": "Fill color of the bar represented as a named color, hexadecimal value, or gradient. Default is `white`. Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)",
 										"examples": [
 											"white"
 										],
-										"markdownDescription": "Fill color of the bar represented as a named color, hexadecimal value, or gradient. Default is `white`. **NB** Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)"
+										"markdownDescription": "Fill color of the bar represented as a named color, hexadecimal value, or gradient. Default is `white`. Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)"
 									},
 									"border_w": {
 										"type": "number",
@@ -141,8 +141,8 @@
 									},
 									"background": {
 										"type": "string",
-										"description": "Background color represented as a named color, hexadecimal value, or gradient. **NB** Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)",
-										"markdownDescription": "Background color represented as a named color, hexadecimal value, or gradient. **NB** Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)"
+										"description": "Background color represented as a named color, hexadecimal value, or gradient. Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)",
+										"markdownDescription": "Background color represented as a named color, hexadecimal value, or gradient. Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)"
 									},
 									"enabled": {
 										"type": "boolean",
@@ -250,11 +250,11 @@
 									},
 									"bar_bg_c": {
 										"type": "string",
-										"description": "Bar background color represented as a named color, hexadecimal value, or gradient. Default is `darkGray`. **NB** Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)",
+										"description": "Bar background color represented as a named color, hexadecimal value, or gradient. Default is `darkGray`. Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)",
 										"examples": [
 											"darkGray"
 										],
-										"markdownDescription": "Bar background color represented as a named color, hexadecimal value, or gradient. Default is `darkGray`. **NB** Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)"
+										"markdownDescription": "Bar background color represented as a named color, hexadecimal value, or gradient. Default is `darkGray`. Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)"
 									},
 									"bar_border_c": {
 										"type": "string",
@@ -266,11 +266,11 @@
 									},
 									"bar_fill_c": {
 										"type": "string",
-										"description": "Fill color of the bar represented as a named color, hexadecimal value, or gradient. Default is `white`. **NB** Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)",
+										"description": "Fill color of the bar represented as a named color, hexadecimal value, or gradient. Default is `white`. Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)",
 										"examples": [
 											"white"
 										],
-										"markdownDescription": "Fill color of the bar represented as a named color, hexadecimal value, or gradient. Default is `white`. **NB** Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)"
+										"markdownDescription": "Fill color of the bar represented as a named color, hexadecimal value, or gradient. Default is `white`. Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)"
 									},
 									"border_w": {
 										"type": "number",
@@ -314,8 +314,8 @@
 									},
 									"background": {
 										"type": "string",
-										"description": "Background color represented as a named color, hexadecimal value, or gradient. **NB** Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)",
-										"markdownDescription": "Background color represented as a named color, hexadecimal value, or gradient. **NB** Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)"
+										"description": "Background color represented as a named color, hexadecimal value, or gradient. Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)",
+										"markdownDescription": "Background color represented as a named color, hexadecimal value, or gradient. Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)"
 									},
 									"enabled": {
 										"type": "boolean",
@@ -420,8 +420,8 @@
 									},
 									"background": {
 										"type": "string",
-										"description": "Background color represented as a named color, hexadecimal value, or gradient. **NB** Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)",
-										"markdownDescription": "Background color represented as a named color, hexadecimal value, or gradient. **NB** Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)"
+										"description": "Background color represented as a named color, hexadecimal value, or gradient. Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)",
+										"markdownDescription": "Background color represented as a named color, hexadecimal value, or gradient. Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)"
 									},
 									"enabled": {
 										"type": "boolean",
@@ -571,8 +571,8 @@
 									},
 									"background": {
 										"type": "string",
-										"description": "Background color represented as a named color, hexadecimal value, or gradient. **NB** Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)",
-										"markdownDescription": "Background color represented as a named color, hexadecimal value, or gradient. **NB** Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)"
+										"description": "Background color represented as a named color, hexadecimal value, or gradient. Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)",
+										"markdownDescription": "Background color represented as a named color, hexadecimal value, or gradient. Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)"
 									},
 									"enabled": {
 										"type": "boolean",

@@ -3,12 +3,16 @@ import type { DialDown, DialUp } from "./encoder";
 import type { PayloadObject } from "./index";
 
 /**
- * Occurs when the user presses a action down. **NB** For dials / touchscreens see {@link DialDown}. Also see {@link KeyUp}.
+ * Occurs when the user presses a action down. Also see {@link KeyUp}.
+ *
+ * NB: For dials / touchscreens see {@link DialDown}.
  */
 export type KeyDown<TSettings extends PayloadObject<TSettings>> = ActionEventMessage<"keyDown", KeypadPayload<TSettings>>;
 
 /**
- * Occurs when the user releases a pressed action. **NB** For dials / touchscreens see {@link DialUp}. Also see {@link KeyDown}.
+ * Occurs when the user releases a pressed action. Also see {@link KeyDown}.
+ *
+ * NB: For dials / touchscreens see {@link DialUp}.
  */
 export type KeyUp<TSettings extends PayloadObject<TSettings>> = ActionEventMessage<"keyUp", KeypadPayload<TSettings>>;
 

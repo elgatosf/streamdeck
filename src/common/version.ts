@@ -1,7 +1,9 @@
 /**
  * Provides information for a version, as parsed from a string denoted as a collection of numbers separated by a period, for example `1.45.2`, `4.0.2.13098`. Parsing is opinionated
  * and strings should strictly conform to the format `{major}[.{minor}[.{patch}[.{build}]]]`; version numbers that form the version are optional, and when `undefined` will default to
- * 0, for example the `minor`, `patch`, or `build` number may be omitted. **NB** This implementation should be considered fit-for-purpose, and should be used sparing.
+ * 0, for example the `minor`, `patch`, or `build` number may be omitted.
+ *
+ * NB: This implementation should be considered fit-for-purpose, and should be used sparing.
  */
 export class Version {
 	/**

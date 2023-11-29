@@ -61,7 +61,9 @@ export class ActionClient {
 	}
 
 	/**
-	 * Occurs when the user presses a dial (Stream Deck+). **NB** For other action types see {@link ActionClient.onKeyDown}. Also see {@link ActionClient.onDialUp}.
+	 * Occurs when the user presses a dial (Stream Deck+). Also see {@link ActionClient.onDialUp}.
+	 *
+	 * NB: For other action types see {@link ActionClient.onKeyDown}.
 	 * @template T The type of settings associated with the action.
 	 * @param listener Function to be invoked when the event occurs.
 	 * @returns A disposable that, when disposed, removes the listener.
@@ -81,7 +83,9 @@ export class ActionClient {
 	}
 
 	/**
-	 * Occurs when the user releases a pressed dial (Stream Deck+). **NB** For other action types see {@link ActionClient.onKeyUp}. Also see {@link ActionClient.onDialDown}.
+	 * Occurs when the user releases a pressed dial (Stream Deck+). Also see {@link ActionClient.onDialDown}.
+	 *
+	 * NB: For other action types see {@link ActionClient.onKeyUp}.
 	 * @template T The type of settings associated with the action.
 	 * @param listener Function to be invoked when the event occurs.
 	 * @returns A disposable that, when disposed, removes the listener.
@@ -91,7 +95,9 @@ export class ActionClient {
 	}
 
 	/**
-	 * Occurs when the user presses a action down. **NB** For dials / touchscreens see {@link ActionClient.onDialDown}. Also see {@link ActionClient.onKeyUp}.
+	 * Occurs when the user presses a action down. Also see {@link ActionClient.onKeyUp}.
+	 *
+	 * NB: For dials / touchscreens see {@link ActionClient.onDialDown}.
 	 * @template T The type of settings associated with the action.
 	 * @param listener Function to be invoked when the event occurs.
 	 * @returns A disposable that, when disposed, removes the listener.
@@ -101,7 +107,9 @@ export class ActionClient {
 	}
 
 	/**
-	 * Occurs when the user releases a pressed action. **NB** For dials / touchscreens see {@link ActionClient.onDialUp}. Also see {@link ActionClient.onKeyDown}.
+	 * Occurs when the user releases a pressed action. Also see {@link ActionClient.onKeyDown}.
+	 *
+	 * NB: For dials / touchscreens see {@link ActionClient.onDialUp}.
 	 * @template T The type of settings associated with the action.
 	 * @param listener Function to be invoked when the event occurs.
 	 * @returns A disposable that, when disposed, removes the listener.

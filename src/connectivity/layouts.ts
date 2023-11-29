@@ -52,8 +52,8 @@ type LayoutItemDefinition<TType extends string, TItem> = TItem & {
  */
 type LayoutItem = {
 	/**
-	 * Background color represented as a named color, hexadecimal value, or gradient. **NB** Gradients can be defined by specifying multiple color-stops separated by commas, in the
-	 * following format `[{offset}:{color}[,]]`.
+	 * Background color represented as a named color, hexadecimal value, or gradient. Gradients can be defined by specifying multiple color-stops separated by commas, in the following
+	 * format `[{offset}:{color}[,]]`.
 	 *
 	 * **Examples:**
 	 * - "pink"
@@ -99,8 +99,8 @@ export type Pixmap = LayoutItem & {
  */
 export type Bar = LayoutItem & {
 	/**
-	 * Bar background color represented as a named color, hexadecimal value, or gradient. Default is `darkGray`. **NB** Gradients can be defined by specifying multiple color-stops
-	 * separated by commas, in the following format `[{offset}:{color}[,]]`.
+	 * Bar background color represented as a named color, hexadecimal value, or gradient. Default is `darkGray`. Gradients can be defined by specifying multiple color-stops separated
+	 * by commas, in the following format `[{offset}:{color}[,]]`.
 	 *
 	 * **Examples:**
 	 * - "pink"
@@ -123,7 +123,7 @@ export type Bar = LayoutItem & {
 	bar_border_c?: string;
 
 	/**
-	 * Fill color of the bar represented as a named color, hexadecimal value, or gradient. Default is `white`. **NB** Gradients can be defined by specifying multiple color-stops separated
+	 * Fill color of the bar represented as a named color, hexadecimal value, or gradient. Default is `white`. Gradients can be defined by specifying multiple color-stops separated
 	 * by commas, in the following format `[{offset}:{color}[,]]`.
 	 *
 	 * **Examples:**
