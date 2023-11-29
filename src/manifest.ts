@@ -57,7 +57,7 @@ export type Manifest = {
 			 * - assets/actions/mute/encoder-icon
 			 * - imgs/join-voice-chat-encoder
 			 */
-			Icon?: ImageFilePathWithoutExtension;
+			Icon?: FilePathWithoutExtension;
 
 			/**
 			 * Background color to display in the Stream Deck application when the action is part of a dial stack, and is the current action. Represented as a hexadecimal value.
@@ -112,7 +112,7 @@ export type Manifest = {
 			 * - assets/backgrounds/main
 			 * - imgs/bright-blue-bg
 			 */
-			background?: ImageFilePathWithoutExtension;
+			background?: FilePathWithoutExtension;
 
 			/**
 			 * Name of a pre-defined layout, or the path to a JSON file that details a custom layout and its components, to be rendered on the action's touchscreen canvas.
@@ -147,7 +147,7 @@ export type Manifest = {
 		 * - assets/counter
 		 * - imgs/actions/mute
 		 */
-		Icon: ImageFilePathWithoutExtension;
+		Icon: FilePathWithoutExtension;
 
 		/**
 		 * Name of the action; this is displayed to the user in the actions list, and is used throughout the Stream Deck application to visually identify the action.
@@ -261,7 +261,7 @@ export type Manifest = {
 	 * - assets/category-icon
 	 * - imgs/category
 	 */
-	CategoryIcon?: ImageFilePathWithoutExtension;
+	CategoryIcon?: FilePathWithoutExtension;
 
 	/**
 	 * Path to the plugin's main entry point; this is executed when the Stream Deck application starts the plugin.
@@ -313,7 +313,7 @@ export type Manifest = {
 	 * assets/plugin-icon
 	 * imgs/plugin
 	 */
-	Icon: ImageFilePathWithoutExtension;
+	Icon: FilePathWithoutExtension;
 
 	/**
 	 * Name of the plugin, e.g. "Wave Link", "Camera Hub", "Control Center", etc.
@@ -449,11 +449,11 @@ export type Manifest = {
 type HtmlFilePath = FilePath<"htm" | "html">;
 
 /**
- * File path that represents an image file relative to the plugin's manifest.
+ * File path that represents a file relative to the plugin's manifest, with the extension omitted.
  * @pattern
- * ^(?!\/).+(?<!\.([Pp][Nn][Gg]|[Ss][Vv][Gg]))$
+ * ^[^.]+$
  */
-type ImageFilePathWithoutExtension = string;
+type FilePathWithoutExtension = string;
 
 /**
  * File path, relative to the manifest's location.
@@ -511,7 +511,7 @@ type ActionState = {
 	 * - assets/counter-key
 	 * - assets/icons/mute
 	 */
-	Image: ImageFilePathWithoutExtension;
+	Image: FilePathWithoutExtension;
 
 	/**
 	 * Path to the image, with the **file extension omitted**, that will be displayed when the action is being viewed as part of a multi-action. The image must adhere to the following
@@ -525,7 +525,7 @@ type ActionState = {
 	 * - assets/counter-key
 	 * - assets/icons/mute
 	 */
-	MultiActionImage?: ImageFilePathWithoutExtension;
+	MultiActionImage?: FilePathWithoutExtension;
 
 	/**
 	 * Name of the state; when multiple states are defined this value is shown to the user when the action is being added to a multi-action. The user is then able to specify which
