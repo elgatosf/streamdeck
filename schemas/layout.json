@@ -561,7 +561,7 @@
 											"fade"
 										],
 										"description": "Defines how overflowing text should be rendered on the layout.\n- clip, truncates the text at the boundary of the element (default).\n- ellipsis, truncates the text prior to the boundary of the element, and adds an ellipsis (…) to the end.\n- fade, applies a fade-gradient over the end of the text.",
-										"default": "clip",
+										"default": "ellipsis",
 										"markdownDescription": "Defines how overflowing text should be rendered on the layout.\n- clip, truncates the text at the boundary of the element (default).\n- ellipsis, truncates the text prior to the boundary of the element, and adds an ellipsis (…) to the end.\n- fade, applies a fade-gradient over the end of the text."
 									},
 									"value": {
