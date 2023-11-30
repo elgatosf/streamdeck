@@ -409,9 +409,19 @@
 						"type": "object",
 						"properties": {
 							"DeviceType": {
-								"$ref": "#/definitions/DeviceType",
-								"description": "Type of device the profile is applicable too, e.g. Stream Deck+, Stream Deck Pedal, etc.",
-								"markdownDescription": "Type of device the profile is applicable too, e.g. Stream Deck+, Stream Deck Pedal, etc."
+								"type": "number",
+								"enum": [
+									0,
+									1,
+									2,
+									3,
+									4,
+									5,
+									6,
+									7
+								],
+								"description": "Type of device the profile is intended for, for example Stream Deck+, Stream Deck Pedal, etc.\n\n**Devices**\n- Stream Deck (0)\n- Stream Deck Mini (1)\n- Stream Deck XL (2)\n- Stream Deck Mobile (3)\n- Corsair GKeys (4)\n- Stream Deck Pedal (5)\n- Corsair Voyager (6)\n- Stream Deck Plus (7)",
+								"markdownDescription": "Type of device the profile is intended for, for example Stream Deck+, Stream Deck Pedal, etc.\n\n**Devices**\n- Stream Deck (0)\n- Stream Deck Mini (1)\n- Stream Deck XL (2)\n- Stream Deck Mobile (3)\n- Corsair GKeys (4)\n- Stream Deck Pedal (5)\n- Corsair Voyager (6)\n- Stream Deck Plus (7)"
 							},
 							"DontAutoSwitchWhenInstalled": {
 								"type": "boolean",
@@ -508,21 +518,6 @@
 			],
 			"description": "Defines the controller type the action is applicable to. **Keypad** refers to a standard action on a Stream Deck device, e.g. 1 of the 15 buttons on the Stream Deck MK.2, or a pedal on the Stream Deck Pedal, etc., whereas an **Encoder** refers to a dial / touchscreen on the Stream Deck+.",
 			"markdownDescription": "Defines the controller type the action is applicable to. **Keypad** refers to a standard action on a Stream Deck device, e.g. 1 of the 15 buttons on the Stream Deck MK.2, or a pedal on the Stream Deck Pedal, etc., whereas an **Encoder** refers to a dial / touchscreen on the Stream Deck+."
-		},
-		"DeviceType": {
-			"type": "number",
-			"enum": [
-				0,
-				1,
-				2,
-				3,
-				4,
-				5,
-				6,
-				7
-			],
-			"description": "Stream Deck device types.",
-			"markdownDescription": "Stream Deck device types."
 		}
 	}
 }

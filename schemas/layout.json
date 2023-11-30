@@ -130,9 +130,16 @@
 										"markdownDescription": "Defines the range of the value the bar represents, e.g. 0-20, 0-100, etc."
 									},
 									"subtype": {
-										"$ref": "#/definitions/BarSubType",
-										"description": "Sub-type used to determine the type of bar to render. Default is  {@link  BarSubType.Groove } .",
-										"markdownDescription": "Sub-type used to determine the type of bar to render. Default is  {@link  BarSubType.Groove } ."
+										"type": "number",
+										"enum": [
+											0,
+											1,
+											2,
+											3,
+											4
+										],
+										"description": "Sub-type used to determine the type of bar to render. Default is  {@link  BarSubType.Groove }  (4).\n\n**Options**\n- Rectangle (0)\n- DoubleRectangle (1)\n- Trapezoid (2)\n- DoubleTrapezoid (3)\n- Groove (4)",
+										"markdownDescription": "Sub-type used to determine the type of bar to render. Default is  {@link  BarSubType.Groove }  (4).\n\n**Options**\n- Rectangle (0)\n- DoubleRectangle (1)\n- Trapezoid (2)\n- DoubleTrapezoid (3)\n- Groove (4)"
 									},
 									"value": {
 										"type": "number",
@@ -303,9 +310,16 @@
 										"markdownDescription": "Defines the range of the value the bar represents, e.g. 0-20, 0-100, etc."
 									},
 									"subtype": {
-										"$ref": "#/definitions/BarSubType",
-										"description": "Sub-type used to determine the type of bar to render. Default is  {@link  BarSubType.Groove } .",
-										"markdownDescription": "Sub-type used to determine the type of bar to render. Default is  {@link  BarSubType.Groove } ."
+										"type": "number",
+										"enum": [
+											0,
+											1,
+											2,
+											3,
+											4
+										],
+										"description": "Sub-type used to determine the type of bar to render. Default is  {@link  BarSubType.Groove }  (4).\n\n**Options**\n- Rectangle (0)\n- DoubleRectangle (1)\n- Trapezoid (2)\n- DoubleTrapezoid (3)\n- Groove (4)",
+										"markdownDescription": "Sub-type used to determine the type of bar to render. Default is  {@link  BarSubType.Groove }  (4).\n\n**Options**\n- Rectangle (0)\n- DoubleRectangle (1)\n- Trapezoid (2)\n- DoubleTrapezoid (3)\n- Groove (4)"
 									},
 									"value": {
 										"type": "number",
@@ -626,18 +640,6 @@
 			"additionalProperties": false,
 			"description": "Defines the structure of a custom layout file.",
 			"markdownDescription": "Defines the structure of a custom layout file."
-		},
-		"BarSubType": {
-			"type": "number",
-			"enum": [
-				0,
-				1,
-				2,
-				3,
-				4
-			],
-			"description": "List of available types that can be applied to  {@link  Bar }  and  {@link  GBar }  to determine their style.",
-			"markdownDescription": "List of available types that can be applied to  {@link  Bar }  and  {@link  GBar }  to determine their style."
 		}
 	}
 }

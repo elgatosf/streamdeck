@@ -158,9 +158,16 @@ export type Bar = LayoutItem & {
 	};
 
 	/**
-	 * Sub-type used to determine the type of bar to render. Default is {@link BarSubType.Groove}.
+	 * Sub-type used to determine the type of bar to render. Default is {@link BarSubType.Groove} (4).
+	 *
+	 * **Options**
+	 * - Rectangle (0)
+	 * - DoubleRectangle (1)
+	 * - Trapezoid (2)
+	 * - DoubleTrapezoid (3)
+	 * - Groove (4)
 	 */
-	subtype?: BarSubType;
+	subtype?: (typeof BarSubType)[keyof typeof BarSubType];
 
 	/**
 	 * Value used to determine how much of the bar is filled. Correlates with the item's `range` if specified in the layout's JSON definition; default range is `0..100`.

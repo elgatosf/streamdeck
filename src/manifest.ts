@@ -380,9 +380,19 @@ export type Manifest = {
 	 */
 	Profiles?: {
 		/**
-		 * Type of device the profile is applicable too, e.g. Stream Deck+, Stream Deck Pedal, etc.
+		 * Type of device the profile is intended for, for example Stream Deck+, Stream Deck Pedal, etc.
+		 *
+		 * **Devices**
+		 * - Stream Deck (0)
+		 * - Stream Deck Mini (1)
+		 * - Stream Deck XL (2)
+		 * - Stream Deck Mobile (3)
+		 * - Corsair GKeys (4)
+		 * - Stream Deck Pedal (5)
+		 * - Corsair Voyager (6)
+		 * - Stream Deck Plus (7)
 		 */
-		DeviceType: DeviceType;
+		DeviceType: (typeof DeviceType)[keyof typeof DeviceType];
 
 		/**
 		 * Determines whether the Stream Deck application should automatically switch to the profile when it is first installed. Default value is `false`.
