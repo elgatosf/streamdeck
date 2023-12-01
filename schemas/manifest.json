@@ -46,9 +46,9 @@
 								"properties": {
 									"Icon": {
 										"type": "string",
-										"description": "Path to the image, with the **file extension omitted**, that will be displayed in the Stream Deck application in the circular canvas that represents the dial of the action. The image must fulfill the following style guidelines.\n- Be in .PNG or .SVG format.\n- Be provided in two sizes, 72x72 px and 144x144 px (@2x).\n\n**NB.** This can be overridden by the user in the Stream Deck application.\n\n**Examples:**\n- assets/actions/mute/encoder-icon\n- imgs/join-voice-chat-encoder",
-										"pattern": "^(?!\\/).+(?<!\\.([Pp][Nn][Gg]|[Ss][Vv][Gg]))$",
-										"markdownDescription": "Path to the image, with the **file extension omitted**, that will be displayed in the Stream Deck application in the circular canvas that represents the dial of the action. The image must fulfill the following style guidelines.\n- Be in .PNG or .SVG format.\n- Be provided in two sizes, 72x72 px and 144x144 px (@2x).\n\n**NB.** This can be overridden by the user in the Stream Deck application.\n\n**Examples:**\n- assets/actions/mute/encoder-icon\n- imgs/join-voice-chat-encoder"
+										"description": "Path to the image, with the **file extension omitted**, that will be displayed in the Stream Deck application in the circular canvas that represents the dial of the action. The image must fulfill the following style guidelines.\n- Be in .PNG or .SVG format.\n- Be provided in two sizes, 72x72 px and 144x144 px (@2x).\n\nNB: Can be overridden by the user in the Stream Deck application.\n\n**Examples:**\n- assets/actions/mute/encoder-icon\n- imgs/join-voice-chat-encoder",
+										"pattern": "^[^.]+$",
+										"markdownDescription": "Path to the image, with the **file extension omitted**, that will be displayed in the Stream Deck application in the circular canvas that represents the dial of the action. The image must fulfill the following style guidelines.\n- Be in .PNG or .SVG format.\n- Be provided in two sizes, 72x72 px and 144x144 px (@2x).\n\nNB: Can be overridden by the user in the Stream Deck application.\n\n**Examples:**\n- assets/actions/mute/encoder-icon\n- imgs/join-voice-chat-encoder"
 									},
 									"StackColor": {
 										"type": "string",
@@ -86,9 +86,9 @@
 									},
 									"background": {
 										"type": "string",
-										"description": "Path to the image, with the **file extension omitted**, that will be displayed on the touchscreen behind the action's layout. The image must fulfill the following style guidelines.\n- Be in .PNG or .SVG format.\n- Be provided in two sizes, 200x100 px and 400x200 px (@2x).\n\n**NB.** This can be overridden by the user in the Stream Deck application\n\n**Examples:**\n- assets/backgrounds/main\n- imgs/bright-blue-bg",
-										"pattern": "^(?!\\/).+(?<!\\.([Pp][Nn][Gg]|[Ss][Vv][Gg]))$",
-										"markdownDescription": "Path to the image, with the **file extension omitted**, that will be displayed on the touchscreen behind the action's layout. The image must fulfill the following style guidelines.\n- Be in .PNG or .SVG format.\n- Be provided in two sizes, 200x100 px and 400x200 px (@2x).\n\n**NB.** This can be overridden by the user in the Stream Deck application\n\n**Examples:**\n- assets/backgrounds/main\n- imgs/bright-blue-bg"
+										"description": "Path to the image, with the **file extension omitted**, that will be displayed on the touchscreen behind the action's layout. The image must fulfill the following style guidelines.\n- Be in .PNG or .SVG format.\n- Be provided in two sizes, 200x100 px and 400x200 px (@2x).\n\nNB: Can be overridden by the user in the Stream Deck application.\n\n**Examples:**\n- assets/backgrounds/main\n- imgs/bright-blue-bg",
+										"pattern": "^[^.]+$",
+										"markdownDescription": "Path to the image, with the **file extension omitted**, that will be displayed on the touchscreen behind the action's layout. The image must fulfill the following style guidelines.\n- Be in .PNG or .SVG format.\n- Be provided in two sizes, 200x100 px and 400x200 px (@2x).\n\nNB: Can be overridden by the user in the Stream Deck application.\n\n**Examples:**\n- assets/backgrounds/main\n- imgs/bright-blue-bg"
 									},
 									"layout": {
 										"type": "string",
@@ -112,7 +112,7 @@
 							"Icon": {
 								"type": "string",
 								"description": "Path to the image, with the **file extension omitted**, that will be displayed next to the action in the Stream Deck application's action list. The image must adhere to the following style guidelines.\n- Be in .PNG or .SVG format.\n- Be provided in two sizes, 20x20 px and 40x40 px (@2x).\n- Be monochromatic, with foreground color of #EFEFEF and a transparent background.\n\n**Examples:**\n- assets/counter\n- imgs/actions/mute",
-								"pattern": "^(?!\\/).+(?<!\\.([Pp][Nn][Gg]|[Ss][Vv][Gg]))$",
+								"pattern": "^[^.]+$",
 								"markdownDescription": "Path to the image, with the **file extension omitted**, that will be displayed next to the action in the Stream Deck application's action list. The image must adhere to the following style guidelines.\n- Be in .PNG or .SVG format.\n- Be provided in two sizes, 20x20 px and 40x40 px (@2x).\n- Be monochromatic, with foreground color of #EFEFEF and a transparent background.\n\n**Examples:**\n- assets/counter\n- imgs/actions/mute"
 							},
 							"Name": {
@@ -122,9 +122,9 @@
 							},
 							"PropertyInspectorPath": {
 								"type": "string",
-								"description": "Optional path to the HTML file that represents the property inspector for this action; this is displayed to the user in the Stream Deck application when they add the action, allowing them to configure the action's settings. When `undefined`, the manifest's top-level `PropertyInspectorPath` is used, otherwise none. **NB.** Path should be relative to the root of the plugin's folder, with no leading slash.\n\n**Examples:**\n- mute.html\n- actions/join-voice-chat/settings.html",
+								"description": "Optional path to the HTML file that represents the property inspector for this action; this is displayed to the user in the Stream Deck application when they add the action, allowing them to configure the action's settings. When `undefined`, the manifest's top-level `PropertyInspectorPath` is used, otherwise none.\n\nNB: Path should be relative to the root of the plugin's folder, with no leading slash.\n\n**Examples:**\n- mute.html\n- actions/join-voice-chat/settings.html",
 								"pattern": "^(?!\\/).+\\.[Hh][Tt][Mm][Ll]?$",
-								"markdownDescription": "Optional path to the HTML file that represents the property inspector for this action; this is displayed to the user in the Stream Deck application when they add the action, allowing them to configure the action's settings. When `undefined`, the manifest's top-level `PropertyInspectorPath` is used, otherwise none. **NB.** Path should be relative to the root of the plugin's folder, with no leading slash.\n\n**Examples:**\n- mute.html\n- actions/join-voice-chat/settings.html"
+								"markdownDescription": "Optional path to the HTML file that represents the property inspector for this action; this is displayed to the user in the Stream Deck application when they add the action, allowing them to configure the action's settings. When `undefined`, the manifest's top-level `PropertyInspectorPath` is used, otherwise none.\n\nNB: Path should be relative to the root of the plugin's folder, with no leading slash.\n\n**Examples:**\n- mute.html\n- actions/join-voice-chat/settings.html"
 							},
 							"States": {
 								"type": "array",
@@ -133,13 +133,13 @@
 									"properties": {
 										"FontFamily": {
 											"type": "string",
-											"description": "Default font-family to be used when rendering the title of this state. **NB.** This can be overridden by the user in the Stream Deck application.",
-											"markdownDescription": "Default font-family to be used when rendering the title of this state. **NB.** This can be overridden by the user in the Stream Deck application."
+											"description": "Default font-family to be used when rendering the title of this state.\n\nNB: Can be overridden by the user in the Stream Deck application.",
+											"markdownDescription": "Default font-family to be used when rendering the title of this state.\n\nNB: Can be overridden by the user in the Stream Deck application."
 										},
 										"FontSize": {
 											"type": "number",
-											"description": "Default font-size to be used when rendering the title of this state. **NB.** This can be overridden by the user in the Stream Deck application.",
-											"markdownDescription": "Default font-size to be used when rendering the title of this state. **NB.** This can be overridden by the user in the Stream Deck application."
+											"description": "Default font-size to be used when rendering the title of this state.\n\nNB: Can be overridden by the user in the Stream Deck application.",
+											"markdownDescription": "Default font-size to be used when rendering the title of this state.\n\nNB: Can be overridden by the user in the Stream Deck application."
 										},
 										"FontStyle": {
 											"type": "string",
@@ -150,25 +150,25 @@
 												"Italic",
 												"Regular"
 											],
-											"description": "Default font-style to be used when rendering the title of this state. **NB.** This can be overridden by the user in the Stream Deck application.",
-											"markdownDescription": "Default font-style to be used when rendering the title of this state. **NB.** This can be overridden by the user in the Stream Deck application."
+											"description": "Default font-style to be used when rendering the title of this state.\n\nNB: Can be overridden by the user in the Stream Deck application.",
+											"markdownDescription": "Default font-style to be used when rendering the title of this state.\n\nNB: Can be overridden by the user in the Stream Deck application."
 										},
 										"FontUnderline": {
 											"type": "boolean",
-											"description": "Determines whether the title associated with this state is underlined by default. **NB.** This can be overridden by the user in the Stream Deck application.",
-											"markdownDescription": "Determines whether the title associated with this state is underlined by default. **NB.** This can be overridden by the user in the Stream Deck application."
+											"description": "Determines whether the title associated with this state is underlined by default.\n\nNB: Can be overridden by the user in the Stream Deck application.",
+											"markdownDescription": "Determines whether the title associated with this state is underlined by default.\n\nNB: Can be overridden by the user in the Stream Deck application."
 										},
 										"Image": {
 											"type": "string",
-											"description": "Path to the image, with the **file extension omitted**, that will be displayed on the Stream Deck when this action's state is active. The image must adhere to the following style guidelines.\n- Be in .PNG or .SVG format.\n- Be provided in two sizes, 72x72 px and 144x144 px (@2x).\n\n**NB.** This can be overridden by the user in the Stream Deck application.\n\n**Examples:**\n- assets/counter-key\n- assets/icons/mute",
-											"pattern": "^(?!\\/).+(?<!\\.([Pp][Nn][Gg]|[Ss][Vv][Gg]))$",
-											"markdownDescription": "Path to the image, with the **file extension omitted**, that will be displayed on the Stream Deck when this action's state is active. The image must adhere to the following style guidelines.\n- Be in .PNG or .SVG format.\n- Be provided in two sizes, 72x72 px and 144x144 px (@2x).\n\n**NB.** This can be overridden by the user in the Stream Deck application.\n\n**Examples:**\n- assets/counter-key\n- assets/icons/mute"
+											"description": "Path to the image, with the **file extension omitted**, that will be displayed on the Stream Deck when this action's state is active. The image must adhere to the following style guidelines.\n- Be in .PNG or .SVG format.\n- Be provided in two sizes, 72x72 px and 144x144 px (@2x).\n\nNB: Can be overridden by the user in the Stream Deck application.\n\n**Examples:**\n- assets/counter-key\n- assets/icons/mute",
+											"pattern": "^[^.]+$",
+											"markdownDescription": "Path to the image, with the **file extension omitted**, that will be displayed on the Stream Deck when this action's state is active. The image must adhere to the following style guidelines.\n- Be in .PNG or .SVG format.\n- Be provided in two sizes, 72x72 px and 144x144 px (@2x).\n\nNB: Can be overridden by the user in the Stream Deck application.\n\n**Examples:**\n- assets/counter-key\n- assets/icons/mute"
 										},
 										"MultiActionImage": {
 											"type": "string",
-											"description": "Path to the image, with the **file extension omitted**, that will be displayed when the action is being viewed as part of a multi-action. The image must adhere to the following style guidelines.\n- Be in .PNG or .SVG format.\n- Be provided in two sizes, 72x72 px and 144x144 px (@2x).\n\n**NB.** This can be overridden by the user in the Stream Deck application.\n\n**Examples:**\n- assets/counter-key\n- assets/icons/mute",
-											"pattern": "^(?!\\/).+(?<!\\.([Pp][Nn][Gg]|[Ss][Vv][Gg]))$",
-											"markdownDescription": "Path to the image, with the **file extension omitted**, that will be displayed when the action is being viewed as part of a multi-action. The image must adhere to the following style guidelines.\n- Be in .PNG or .SVG format.\n- Be provided in two sizes, 72x72 px and 144x144 px (@2x).\n\n**NB.** This can be overridden by the user in the Stream Deck application.\n\n**Examples:**\n- assets/counter-key\n- assets/icons/mute"
+											"description": "Path to the image, with the **file extension omitted**, that will be displayed when the action is being viewed as part of a multi-action. The image must adhere to the following style guidelines.\n- Be in .PNG or .SVG format.\n- Be provided in two sizes, 72x72 px and 144x144 px (@2x).\n\nNB: Can be overridden by the user in the Stream Deck application.\n\n**Examples:**\n- assets/counter-key\n- assets/icons/mute",
+											"pattern": "^[^.]+$",
+											"markdownDescription": "Path to the image, with the **file extension omitted**, that will be displayed when the action is being viewed as part of a multi-action. The image must adhere to the following style guidelines.\n- Be in .PNG or .SVG format.\n- Be provided in two sizes, 72x72 px and 144x144 px (@2x).\n\nNB: Can be overridden by the user in the Stream Deck application.\n\n**Examples:**\n- assets/counter-key\n- assets/icons/mute"
 										},
 										"Name": {
 											"type": "string",
@@ -177,8 +177,8 @@
 										},
 										"ShowTitle": {
 											"type": "boolean",
-											"description": "Determines whether the title should be shown. **NB.** This can be overridden by the user in the Stream Deck application.",
-											"markdownDescription": "Determines whether the title should be shown. **NB.** This can be overridden by the user in the Stream Deck application."
+											"description": "Determines whether the title should be shown.\n\nNB: Can be overridden by the user in the Stream Deck application.",
+											"markdownDescription": "Determines whether the title should be shown.\n\nNB: Can be overridden by the user in the Stream Deck application."
 										},
 										"Title": {
 											"type": "string",
@@ -192,14 +192,14 @@
 												"middle",
 												"top"
 											],
-											"description": "Default title alignment to be used when rendering the title of this state. **NB.** This can be overridden by the user in the Stream Deck application.",
-											"markdownDescription": "Default title alignment to be used when rendering the title of this state. **NB.** This can be overridden by the user in the Stream Deck application."
+											"description": "Default title alignment to be used when rendering the title of this state.\n\nNB: Can be overridden by the user in the Stream Deck application.",
+											"markdownDescription": "Default title alignment to be used when rendering the title of this state.\n\nNB: Can be overridden by the user in the Stream Deck application."
 										},
 										"TitleColor": {
 											"type": "string",
-											"description": "Default title color to be used when rendering the title of this state, represented a hexadecimal value. **NB.** This can be overridden by the user in the Stream Deck application.\n\n**Examples:**\n- #5bcefa\n- #f5a9b8\n- #FFFFFF",
+											"description": "Default title color to be used when rendering the title of this state, represented a hexadecimal value.\n\nNB: Can be overridden by the user in the Stream Deck application.\n\n**Examples:**\n- #5bcefa\n- #f5a9b8\n- #FFFFFF",
 											"pattern": "^#(?:[0-9a-fA-F]{3}){1,2}$",
-											"markdownDescription": "Default title color to be used when rendering the title of this state, represented a hexadecimal value. **NB.** This can be overridden by the user in the Stream Deck application.\n\n**Examples:**\n- #5bcefa\n- #f5a9b8\n- #FFFFFF"
+											"markdownDescription": "Default title color to be used when rendering the title of this state, represented a hexadecimal value.\n\nNB: Can be overridden by the user in the Stream Deck application.\n\n**Examples:**\n- #5bcefa\n- #f5a9b8\n- #FFFFFF"
 										}
 									},
 									"required": [
@@ -211,8 +211,8 @@
 								},
 								"minItems": 1,
 								"maxItems": 2,
-								"description": "States the action can be in. When two states are defined the action will act as a toggle, with users being able to select their preferred iconography for each state. **NB.** Automatic toggling of the state on action activation can be disabled by setting `DisableAutomaticStates` to `true`.",
-								"markdownDescription": "States the action can be in. When two states are defined the action will act as a toggle, with users being able to select their preferred iconography for each state. **NB.** Automatic toggling of the state on action activation can be disabled by setting `DisableAutomaticStates` to `true`."
+								"description": "States the action can be in. When two states are defined the action will act as a toggle, with users being able to select their preferred iconography for each state.\n\nNB: Automatic toggling of the state on action activation can be disabled by setting `DisableAutomaticStates` to `true`.",
+								"markdownDescription": "States the action can be in. When two states are defined the action will act as a toggle, with users being able to select their preferred iconography for each state.\n\nNB: Automatic toggling of the state on action activation can be disabled by setting `DisableAutomaticStates` to `true`."
 							},
 							"SupportedInMultiActions": {
 								"type": "boolean",
@@ -226,9 +226,9 @@
 							},
 							"UUID": {
 								"type": "string",
-								"description": "Unique identifier of the action, represented in reverse-DNS format. This value is supplied by Stream Deck when events are emitted that relate to the action enabling you to identify the source of the event. **NB.** This must be unique, and should be prefixed with the plugin's UUID.\n\n**Allowed characters:**\n- Lowercase alphanumeric characters (a-z, 0-9)\n- Hyphens (-)\n- Underscores (_)\n- Periods (.)\n\n**Examples:**\n- com.elgato.wavelink.toggle-mute\n- com.elgato.discord.join-voice\n- tv.twitch.go-live",
+								"description": "Unique identifier of the action, represented in reverse-DNS format. This value is supplied by Stream Deck when events are emitted that relate to the action enabling you to identify the source of the event.\n\n**Allowed characters:**\n- Lowercase alphanumeric characters (a-z, 0-9)\n- Hyphens (-)\n- Underscores (_)\n- Periods (.)\n\nNB: `UUID` must be unique, and should be prefixed with the plugin's UUID.\n\n\n**Examples:**\n- com.elgato.wavelink.toggle-mute\n- com.elgato.discord.join-voice\n- tv.twitch.go-live",
 								"pattern": "^([a-z0-9\\-_]*[a-z0-9][a-z0-9\\-_]*\\.){2,3}[a-z0-9\\-_]*[a-z0-9][a-z0-9\\-_]*$",
-								"markdownDescription": "Unique identifier of the action, represented in reverse-DNS format. This value is supplied by Stream Deck when events are emitted that relate to the action enabling you to identify the source of the event. **NB.** This must be unique, and should be prefixed with the plugin's UUID.\n\n**Allowed characters:**\n- Lowercase alphanumeric characters (a-z, 0-9)\n- Hyphens (-)\n- Underscores (_)\n- Periods (.)\n\n**Examples:**\n- com.elgato.wavelink.toggle-mute\n- com.elgato.discord.join-voice\n- tv.twitch.go-live"
+								"markdownDescription": "Unique identifier of the action, represented in reverse-DNS format. This value is supplied by Stream Deck when events are emitted that relate to the action enabling you to identify the source of the event.\n\n**Allowed characters:**\n- Lowercase alphanumeric characters (a-z, 0-9)\n- Hyphens (-)\n- Underscores (_)\n- Periods (.)\n\nNB: `UUID` must be unique, and should be prefixed with the plugin's UUID.\n\n\n**Examples:**\n- com.elgato.wavelink.toggle-mute\n- com.elgato.discord.join-voice\n- tv.twitch.go-live"
 							},
 							"UserTitleEnabled": {
 								"type": "boolean",
@@ -283,13 +283,13 @@
 				},
 				"Category": {
 					"type": "string",
-					"description": "Defines the actions list group, providing a natural grouping of the plugin's actions with the Stream Deck application's action list. **NB.** This should be distinctive and synonymous with your plugin, and it is therefore recommended that this be the same value as the plugin's `Name` field. When `undefined`, the actions will be available under the \"Custom\" group.",
-					"markdownDescription": "Defines the actions list group, providing a natural grouping of the plugin's actions with the Stream Deck application's action list. **NB.** This should be distinctive and synonymous with your plugin, and it is therefore recommended that this be the same value as the plugin's `Name` field. When `undefined`, the actions will be available under the \"Custom\" group."
+					"description": "Defines the actions list group, providing a natural grouping of the plugin's actions with the Stream Deck application's action list.\n\nNB: `Category` should be distinctive and synonymous with your plugin, and it is therefore recommended that this be the same value as the plugin's `Name` field. When `undefined`, the actions will be available under the \"Custom\" group.",
+					"markdownDescription": "Defines the actions list group, providing a natural grouping of the plugin's actions with the Stream Deck application's action list.\n\nNB: `Category` should be distinctive and synonymous with your plugin, and it is therefore recommended that this be the same value as the plugin's `Name` field. When `undefined`, the actions will be available under the \"Custom\" group."
 				},
 				"CategoryIcon": {
 					"type": "string",
 					"description": "Path to the image, with the **file extension omitted**, that will be displayed next to the action list group within the Stream Deck application. The icon should accurately represent the plugin, and enable users to quickly identify the plugin. The icon must adhere to the following style guidelines.\n- Be in .PNG or .SVG format.\n- Be provided in two sizes, 28x28 px and 56x56 px (@2x).\n- Be monochromatic, with foreground color of #DFDFDF and a transparent background.\n\n**Examples**:\n- assets/category-icon\n- imgs/category",
-					"pattern": "^(?!\\/).+(?<!\\.([Pp][Nn][Gg]|[Ss][Vv][Gg]))$",
+					"pattern": "^[^.]+$",
 					"markdownDescription": "Path to the image, with the **file extension omitted**, that will be displayed next to the action list group within the Stream Deck application. The icon should accurately represent the plugin, and enable users to quickly identify the plugin. The icon must adhere to the following style guidelines.\n- Be in .PNG or .SVG format.\n- Be provided in two sizes, 28x28 px and 56x56 px (@2x).\n- Be monochromatic, with foreground color of #DFDFDF and a transparent background.\n\n**Examples**:\n- assets/category-icon\n- imgs/category"
 				},
 				"CodePath": {
@@ -331,7 +331,7 @@
 				"Icon": {
 					"type": "string",
 					"description": "Path to the image, with the **file extension omitted**, that will be displayed on the Marketplace. The icon should accurately represent the plugin, stand out, and enable users to quickly identify the plugin. The icon must adhere to the following style guidelines.\n- Be in .PNG or .SVG format.\n- Be provided in two sizes, 288x288 px and 512x512 px (@2x).\n\n**Examples**: assets/plugin-icon imgs/plugin",
-					"pattern": "^(?!\\/).+(?<!\\.([Pp][Nn][Gg]|[Ss][Vv][Gg]))$",
+					"pattern": "^[^.]+$",
 					"markdownDescription": "Path to the image, with the **file extension omitted**, that will be displayed on the Marketplace. The icon should accurately represent the plugin, stand out, and enable users to quickly identify the plugin. The icon must adhere to the following style guidelines.\n- Be in .PNG or .SVG format.\n- Be provided in two sizes, 288x288 px and 512x512 px (@2x).\n\n**Examples**: assets/plugin-icon imgs/plugin"
 				},
 				"Name": {
@@ -344,12 +344,12 @@
 					"properties": {
 						"Debug": {
 							"type": "string",
-							"description": "Command-line arguments supplied to the plugin when run in debug mode. Optionally, the pre-defined values `\"enabled\"` and `\"break\"` run the plugin with a debugger enabled with [`--inspect`](https://nodejs.org/api/cli.html#--inspecthostport) and [`--inspect-brk`](https://nodejs.org/api/cli.html#--inspect-brkhostport) respectively. **NB.** `\"enabled\"` and `\"break\"` will automatically be assigned an available `PORT` by Stream Deck.  Alternatively, if you wish to debug on a pre-defined port, this value can be a set of [command-line arguments](https://nodejs.org/api/cli.html).\n\n**Examples:**\n- `\"enabled\"` results in `--inspect=127.0.0.1:{PORT}`\n- `\"break\"` results in `--inspect-brk=127.0.0.1:{PORT}`\n- `\"--inspect=127.0.0.1:12345\"` runs a local debugger on port `12345`.",
+							"description": "Command-line arguments supplied to the plugin when run in debug mode. Optionally, the pre-defined values `\"enabled\"` and `\"break\"` run the plugin with a debugger enabled with [`--inspect`](https://nodejs.org/api/cli.html#--inspecthostport) and [`--inspect-brk`](https://nodejs.org/api/cli.html#--inspect-brkhostport) respectively.\n\nNB: `\"enabled\"` and `\"break\"` will automatically be assigned an available `PORT` by Stream Deck.  Alternatively, if you wish to debug on a pre-defined port, this value can be a set of [command-line arguments](https://nodejs.org/api/cli.html).\n\n**Examples:**\n- `\"enabled\"` results in `--inspect=127.0.0.1:{PORT}`\n- `\"break\"` results in `--inspect-brk=127.0.0.1:{PORT}`\n- `\"--inspect=127.0.0.1:12345\"` runs a local debugger on port `12345`.",
 							"examples": [
 								"enabled",
 								"break"
 							],
-							"markdownDescription": "Command-line arguments supplied to the plugin when run in debug mode. Optionally, the pre-defined values `\"enabled\"` and `\"break\"` run the plugin with a debugger enabled with [`--inspect`](https://nodejs.org/api/cli.html#--inspecthostport) and [`--inspect-brk`](https://nodejs.org/api/cli.html#--inspect-brkhostport) respectively. **NB.** `\"enabled\"` and `\"break\"` will automatically be assigned an available `PORT` by Stream Deck.  Alternatively, if you wish to debug on a pre-defined port, this value can be a set of [command-line arguments](https://nodejs.org/api/cli.html).\n\n**Examples:**\n- `\"enabled\"` results in `--inspect=127.0.0.1:{PORT}`\n- `\"break\"` results in `--inspect-brk=127.0.0.1:{PORT}`\n- `\"--inspect=127.0.0.1:12345\"` runs a local debugger on port `12345`."
+							"markdownDescription": "Command-line arguments supplied to the plugin when run in debug mode. Optionally, the pre-defined values `\"enabled\"` and `\"break\"` run the plugin with a debugger enabled with [`--inspect`](https://nodejs.org/api/cli.html#--inspecthostport) and [`--inspect-brk`](https://nodejs.org/api/cli.html#--inspect-brkhostport) respectively.\n\nNB: `\"enabled\"` and `\"break\"` will automatically be assigned an available `PORT` by Stream Deck.  Alternatively, if you wish to debug on a pre-defined port, this value can be a set of [command-line arguments](https://nodejs.org/api/cli.html).\n\n**Examples:**\n- `\"enabled\"` results in `--inspect=127.0.0.1:{PORT}`\n- `\"break\"` results in `--inspect-brk=127.0.0.1:{PORT}`\n- `\"--inspect=127.0.0.1:12345\"` runs a local debugger on port `12345`."
 						},
 						"GenerateProfilerOutput": {
 							"type": "boolean",
@@ -367,8 +367,8 @@
 						"Version"
 					],
 					"additionalProperties": false,
-					"description": "Configuration options for Node.js based plugins. **NB.** All Node.js plugins are executed with the following command-line arguments [`--no-addons`](https://nodejs.org/api/cli.html#--no-addons), [`--enable-source-maps`](https://nodejs.org/api/cli.html#--enable-source-maps), and [`--no-global-search-paths`](https://nodejs.org/api/cli.html#--no-global-search-paths).",
-					"markdownDescription": "Configuration options for Node.js based plugins. **NB.** All Node.js plugins are executed with the following command-line arguments [`--no-addons`](https://nodejs.org/api/cli.html#--no-addons), [`--enable-source-maps`](https://nodejs.org/api/cli.html#--enable-source-maps), and [`--no-global-search-paths`](https://nodejs.org/api/cli.html#--no-global-search-paths)."
+					"description": "Configuration options for Node.js based plugins.\n\nNB: All Node.js plugins are executed with the following command-line arguments:\n\n- [`--no-addons`](https://nodejs.org/api/cli.html#--no-addons) (Stream Deck 6.4 only)\n- [`--enable-source-maps`](https://nodejs.org/api/cli.html#--enable-source-maps)\n- [`--no-global-search-paths`](https://nodejs.org/api/cli.html#--no-global-search-paths)",
+					"markdownDescription": "Configuration options for Node.js based plugins.\n\nNB: All Node.js plugins are executed with the following command-line arguments:\n\n- [`--no-addons`](https://nodejs.org/api/cli.html#--no-addons) (Stream Deck 6.4 only)\n- [`--enable-source-maps`](https://nodejs.org/api/cli.html#--enable-source-maps)\n- [`--no-global-search-paths`](https://nodejs.org/api/cli.html#--no-global-search-paths)"
 				},
 				"OS": {
 					"type": "array",
@@ -409,9 +409,19 @@
 						"type": "object",
 						"properties": {
 							"DeviceType": {
-								"$ref": "#/definitions/DeviceType",
-								"description": "Type of device the profile is applicable too, e.g. Stream Deck+, Stream Deck Pedal, etc.",
-								"markdownDescription": "Type of device the profile is applicable too, e.g. Stream Deck+, Stream Deck Pedal, etc."
+								"type": "number",
+								"enum": [
+									0,
+									1,
+									2,
+									3,
+									4,
+									5,
+									6,
+									7
+								],
+								"description": "Type of device the profile is intended for, for example Stream Deck+, Stream Deck Pedal, etc.\n\n**Devices**\n- Stream Deck (0)\n- Stream Deck Mini (1)\n- Stream Deck XL (2)\n- Stream Deck Mobile (3)\n- Corsair GKeys (4)\n- Stream Deck Pedal (5)\n- Corsair Voyager (6)\n- Stream Deck Plus (7)",
+								"markdownDescription": "Type of device the profile is intended for, for example Stream Deck+, Stream Deck Pedal, etc.\n\n**Devices**\n- Stream Deck (0)\n- Stream Deck Mini (1)\n- Stream Deck XL (2)\n- Stream Deck Mobile (3)\n- Corsair GKeys (4)\n- Stream Deck Pedal (5)\n- Corsair Voyager (6)\n- Stream Deck Plus (7)"
 							},
 							"DontAutoSwitchWhenInstalled": {
 								"type": "boolean",
@@ -435,14 +445,14 @@
 						],
 						"additionalProperties": false
 					},
-					"description": "Collection of pre-defined profiles that are distributed with this plugin. Upon installation of the plugin, the user will be prompted to install the profiles. Once installed, the plugin can switch any of the pre-defined profiles. **NB.** It is not yet possible to switch to a user-defined profile.\n\n**Also see:** `streamDeck.profiles.switchToProfile(...)`",
-					"markdownDescription": "Collection of pre-defined profiles that are distributed with this plugin. Upon installation of the plugin, the user will be prompted to install the profiles. Once installed, the plugin can switch any of the pre-defined profiles. **NB.** It is not yet possible to switch to a user-defined profile.\n\n**Also see:** `streamDeck.profiles.switchToProfile(...)`"
+					"description": "Collection of pre-defined profiles that are distributed with this plugin. Upon the plugin switching to the profile, the user will be prompted to install the profiles.\n\nNB: Plugins may only switch to profiles distributed with the plugin, as defined within the manifest, and cannot access user-defined profiles.\n\n**Also see:** `streamDeck.profiles.switchToProfile(...)`",
+					"markdownDescription": "Collection of pre-defined profiles that are distributed with this plugin. Upon the plugin switching to the profile, the user will be prompted to install the profiles.\n\nNB: Plugins may only switch to profiles distributed with the plugin, as defined within the manifest, and cannot access user-defined profiles.\n\n**Also see:** `streamDeck.profiles.switchToProfile(...)`"
 				},
 				"PropertyInspectorPath": {
 					"type": "string",
-					"description": "Optional path to the HTML file that represents the property inspector for all actions; this is displayed to the user in the Stream Deck application when they add an action, allowing them to configure the action's settings. **NB.** Path should be relative to the root of the plugin's folder, with no leading slash.\n\n **Examples:**\n- mute.html\n- actions/join-voice-chat/settings.html\n\n**Also see:**\n- `streamDeck.ui.onSendToPlugin(...)`",
+					"description": "Optional path to the HTML file that represents the property inspector for all actions; this is displayed to the user in the Stream Deck application when they add an action, allowing them to configure the action's settings.\n\nNB: Path should be relative to the root of the plugin's folder, with no leading slash.\n\n **Examples:**\n- mute.html\n- actions/join-voice-chat/settings.html\n\n**Also see:**\n- `streamDeck.ui.onSendToPlugin(...)`",
 					"pattern": "^(?!\\/).+\\.[Hh][Tt][Mm][Ll]?$",
-					"markdownDescription": "Optional path to the HTML file that represents the property inspector for all actions; this is displayed to the user in the Stream Deck application when they add an action, allowing them to configure the action's settings. **NB.** Path should be relative to the root of the plugin's folder, with no leading slash.\n\n **Examples:**\n- mute.html\n- actions/join-voice-chat/settings.html\n\n**Also see:**\n- `streamDeck.ui.onSendToPlugin(...)`"
+					"markdownDescription": "Optional path to the HTML file that represents the property inspector for all actions; this is displayed to the user in the Stream Deck application when they add an action, allowing them to configure the action's settings.\n\nNB: Path should be relative to the root of the plugin's folder, with no leading slash.\n\n **Examples:**\n- mute.html\n- actions/join-voice-chat/settings.html\n\n**Also see:**\n- `streamDeck.ui.onSendToPlugin(...)`"
 				},
 				"SDKVersion": {
 					"type": "number",
@@ -477,11 +487,11 @@
 				},
 				"Version": {
 					"type": "string",
-					"description": "Version of the plugin, represented as a  {@link  https://semver.org semantic version } . **NB.** pre-release values are not currently supported.\n\n**Examples:**\n- 1.0.3 ✅\n- 0.0.99 ✅\n- 2.1.9-beta1 ❌",
+					"description": "Version of the plugin, represented as a  {@link  https://semver.org semantic version }  (excluding pre-release values).\n\n**Examples:**\n- 1.0.3 ✅\n- 0.0.99 ✅\n- 2.1.9-beta1 ❌",
 					"examples": [
 						"1.0.0"
 					],
-					"markdownDescription": "Version of the plugin, represented as a  {@link  https://semver.org semantic version } . **NB.** pre-release values are not currently supported.\n\n**Examples:**\n- 1.0.3 ✅\n- 0.0.99 ✅\n- 2.1.9-beta1 ❌"
+					"markdownDescription": "Version of the plugin, represented as a  {@link  https://semver.org semantic version }  (excluding pre-release values).\n\n**Examples:**\n- 1.0.3 ✅\n- 0.0.99 ✅\n- 2.1.9-beta1 ❌"
 				}
 			},
 			"required": [
@@ -508,21 +518,6 @@
 			],
 			"description": "Defines the controller type the action is applicable to. **Keypad** refers to a standard action on a Stream Deck device, e.g. 1 of the 15 buttons on the Stream Deck MK.2, or a pedal on the Stream Deck Pedal, etc., whereas an **Encoder** refers to a dial / touchscreen on the Stream Deck+.",
 			"markdownDescription": "Defines the controller type the action is applicable to. **Keypad** refers to a standard action on a Stream Deck device, e.g. 1 of the 15 buttons on the Stream Deck MK.2, or a pedal on the Stream Deck Pedal, etc., whereas an **Encoder** refers to a dial / touchscreen on the Stream Deck+."
-		},
-		"DeviceType": {
-			"type": "number",
-			"enum": [
-				0,
-				1,
-				2,
-				3,
-				4,
-				5,
-				6,
-				7
-			],
-			"description": "Stream Deck device types.",
-			"markdownDescription": "Stream Deck device types."
 		}
 	}
 }

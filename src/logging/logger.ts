@@ -95,7 +95,7 @@ export class Logger {
 	}
 
 	/**
-	 * Sets the log-level that determines which logs should be written. **NB.** this level will be inherited by all scoped loggers unless they have log-level explicitly defined.
+	 * Sets the log-level that determines which logs should be written. The specified level will be inherited by all scoped loggers unless they have log-level explicitly defined.
 	 * @param level The log-level that determines which logs should be written; when `undefined`, the level will be inherited from the parent logger, or default to the environment level.
 	 * @returns This instance for chaining.
 	 */

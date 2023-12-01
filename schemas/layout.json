@@ -77,11 +77,11 @@
 									},
 									"bar_bg_c": {
 										"type": "string",
-										"description": "Bar background color represented as a named color, hexadecimal value, or gradient. Default is `darkGray`. **NB** Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)",
+										"description": "Bar background color represented as a named color, hexadecimal value, or gradient. Default is `darkGray`. Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)",
 										"examples": [
 											"darkGray"
 										],
-										"markdownDescription": "Bar background color represented as a named color, hexadecimal value, or gradient. Default is `darkGray`. **NB** Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)"
+										"markdownDescription": "Bar background color represented as a named color, hexadecimal value, or gradient. Default is `darkGray`. Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)"
 									},
 									"bar_border_c": {
 										"type": "string",
@@ -93,11 +93,11 @@
 									},
 									"bar_fill_c": {
 										"type": "string",
-										"description": "Fill color of the bar represented as a named color, hexadecimal value, or gradient. Default is `white`. **NB** Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)",
+										"description": "Fill color of the bar represented as a named color, hexadecimal value, or gradient. Default is `white`. Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)",
 										"examples": [
 											"white"
 										],
-										"markdownDescription": "Fill color of the bar represented as a named color, hexadecimal value, or gradient. Default is `white`. **NB** Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)"
+										"markdownDescription": "Fill color of the bar represented as a named color, hexadecimal value, or gradient. Default is `white`. Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)"
 									},
 									"border_w": {
 										"type": "number",
@@ -130,9 +130,16 @@
 										"markdownDescription": "Defines the range of the value the bar represents, e.g. 0-20, 0-100, etc."
 									},
 									"subtype": {
-										"$ref": "#/definitions/BarSubType",
-										"description": "Sub-type used to determine the type of bar to render. Default is  {@link  BarSubType.Groove } .",
-										"markdownDescription": "Sub-type used to determine the type of bar to render. Default is  {@link  BarSubType.Groove } ."
+										"type": "number",
+										"enum": [
+											0,
+											1,
+											2,
+											3,
+											4
+										],
+										"description": "Sub-type used to determine the type of bar to render. Default is  {@link  BarSubType.Groove }  (4).\n\n**Options**\n- Rectangle (0)\n- DoubleRectangle (1)\n- Trapezoid (2)\n- DoubleTrapezoid (3)\n- Groove (4)",
+										"markdownDescription": "Sub-type used to determine the type of bar to render. Default is  {@link  BarSubType.Groove }  (4).\n\n**Options**\n- Rectangle (0)\n- DoubleRectangle (1)\n- Trapezoid (2)\n- DoubleTrapezoid (3)\n- Groove (4)"
 									},
 									"value": {
 										"type": "number",
@@ -141,8 +148,8 @@
 									},
 									"background": {
 										"type": "string",
-										"description": "Background color represented as a named color, hexadecimal value, or gradient. **NB** Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)",
-										"markdownDescription": "Background color represented as a named color, hexadecimal value, or gradient. **NB** Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)"
+										"description": "Background color represented as a named color, hexadecimal value, or gradient. Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)",
+										"markdownDescription": "Background color represented as a named color, hexadecimal value, or gradient. Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)"
 									},
 									"enabled": {
 										"type": "boolean",
@@ -250,11 +257,11 @@
 									},
 									"bar_bg_c": {
 										"type": "string",
-										"description": "Bar background color represented as a named color, hexadecimal value, or gradient. Default is `darkGray`. **NB** Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)",
+										"description": "Bar background color represented as a named color, hexadecimal value, or gradient. Default is `darkGray`. Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)",
 										"examples": [
 											"darkGray"
 										],
-										"markdownDescription": "Bar background color represented as a named color, hexadecimal value, or gradient. Default is `darkGray`. **NB** Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)"
+										"markdownDescription": "Bar background color represented as a named color, hexadecimal value, or gradient. Default is `darkGray`. Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)"
 									},
 									"bar_border_c": {
 										"type": "string",
@@ -266,11 +273,11 @@
 									},
 									"bar_fill_c": {
 										"type": "string",
-										"description": "Fill color of the bar represented as a named color, hexadecimal value, or gradient. Default is `white`. **NB** Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)",
+										"description": "Fill color of the bar represented as a named color, hexadecimal value, or gradient. Default is `white`. Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)",
 										"examples": [
 											"white"
 										],
-										"markdownDescription": "Fill color of the bar represented as a named color, hexadecimal value, or gradient. Default is `white`. **NB** Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)"
+										"markdownDescription": "Fill color of the bar represented as a named color, hexadecimal value, or gradient. Default is `white`. Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)"
 									},
 									"border_w": {
 										"type": "number",
@@ -303,9 +310,16 @@
 										"markdownDescription": "Defines the range of the value the bar represents, e.g. 0-20, 0-100, etc."
 									},
 									"subtype": {
-										"$ref": "#/definitions/BarSubType",
-										"description": "Sub-type used to determine the type of bar to render. Default is  {@link  BarSubType.Groove } .",
-										"markdownDescription": "Sub-type used to determine the type of bar to render. Default is  {@link  BarSubType.Groove } ."
+										"type": "number",
+										"enum": [
+											0,
+											1,
+											2,
+											3,
+											4
+										],
+										"description": "Sub-type used to determine the type of bar to render. Default is  {@link  BarSubType.Groove }  (4).\n\n**Options**\n- Rectangle (0)\n- DoubleRectangle (1)\n- Trapezoid (2)\n- DoubleTrapezoid (3)\n- Groove (4)",
+										"markdownDescription": "Sub-type used to determine the type of bar to render. Default is  {@link  BarSubType.Groove }  (4).\n\n**Options**\n- Rectangle (0)\n- DoubleRectangle (1)\n- Trapezoid (2)\n- DoubleTrapezoid (3)\n- Groove (4)"
 									},
 									"value": {
 										"type": "number",
@@ -314,8 +328,8 @@
 									},
 									"background": {
 										"type": "string",
-										"description": "Background color represented as a named color, hexadecimal value, or gradient. **NB** Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)",
-										"markdownDescription": "Background color represented as a named color, hexadecimal value, or gradient. **NB** Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)"
+										"description": "Background color represented as a named color, hexadecimal value, or gradient. Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)",
+										"markdownDescription": "Background color represented as a named color, hexadecimal value, or gradient. Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)"
 									},
 									"enabled": {
 										"type": "boolean",
@@ -420,8 +434,8 @@
 									},
 									"background": {
 										"type": "string",
-										"description": "Background color represented as a named color, hexadecimal value, or gradient. **NB** Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)",
-										"markdownDescription": "Background color represented as a named color, hexadecimal value, or gradient. **NB** Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)"
+										"description": "Background color represented as a named color, hexadecimal value, or gradient. Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)",
+										"markdownDescription": "Background color represented as a named color, hexadecimal value, or gradient. Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)"
 									},
 									"enabled": {
 										"type": "boolean",
@@ -561,7 +575,7 @@
 											"fade"
 										],
 										"description": "Defines how overflowing text should be rendered on the layout.\n- clip, truncates the text at the boundary of the element (default).\n- ellipsis, truncates the text prior to the boundary of the element, and adds an ellipsis (…) to the end.\n- fade, applies a fade-gradient over the end of the text.",
-										"default": "clip",
+										"default": "ellipsis",
 										"markdownDescription": "Defines how overflowing text should be rendered on the layout.\n- clip, truncates the text at the boundary of the element (default).\n- ellipsis, truncates the text prior to the boundary of the element, and adds an ellipsis (…) to the end.\n- fade, applies a fade-gradient over the end of the text."
 									},
 									"value": {
@@ -571,8 +585,8 @@
 									},
 									"background": {
 										"type": "string",
-										"description": "Background color represented as a named color, hexadecimal value, or gradient. **NB** Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)",
-										"markdownDescription": "Background color represented as a named color, hexadecimal value, or gradient. **NB** Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)"
+										"description": "Background color represented as a named color, hexadecimal value, or gradient. Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)",
+										"markdownDescription": "Background color represented as a named color, hexadecimal value, or gradient. Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)"
 									},
 									"enabled": {
 										"type": "boolean",
@@ -626,18 +640,6 @@
 			"additionalProperties": false,
 			"description": "Defines the structure of a custom layout file.",
 			"markdownDescription": "Defines the structure of a custom layout file."
-		},
-		"BarSubType": {
-			"type": "number",
-			"enum": [
-				0,
-				1,
-				2,
-				3,
-				4
-			],
-			"description": "List of available types that can be applied to  {@link  Bar }  and  {@link  GBar }  to determine their style.",
-			"markdownDescription": "List of available types that can be applied to  {@link  Bar }  and  {@link  GBar }  to determine their style."
 		}
 	}
 }

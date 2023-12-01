@@ -8,7 +8,7 @@ export type DeviceInfo = {
 	readonly name: string;
 
 	/**
-	 * Number of action slots available to the device. NB. The size denotes keys only.
+	 * Number of action slots, excluding dials / touchscreens, available to the device.
 	 */
 	readonly size: Size;
 

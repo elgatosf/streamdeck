@@ -52,8 +52,8 @@ type LayoutItemDefinition<TType extends string, TItem> = TItem & {
  */
 type LayoutItem = {
 	/**
-	 * Background color represented as a named color, hexadecimal value, or gradient. **NB** Gradients can be defined by specifying multiple color-stops separated by commas, in the
-	 * following format `[{offset}:{color}[,]]`.
+	 * Background color represented as a named color, hexadecimal value, or gradient. Gradients can be defined by specifying multiple color-stops separated by commas, in the following
+	 * format `[{offset}:{color}[,]]`.
 	 *
 	 * **Examples:**
 	 * - "pink"
@@ -99,8 +99,8 @@ export type Pixmap = LayoutItem & {
  */
 export type Bar = LayoutItem & {
 	/**
-	 * Bar background color represented as a named color, hexadecimal value, or gradient. Default is `darkGray`. **NB** Gradients can be defined by specifying multiple color-stops
-	 * separated by commas, in the following format `[{offset}:{color}[,]]`.
+	 * Bar background color represented as a named color, hexadecimal value, or gradient. Default is `darkGray`. Gradients can be defined by specifying multiple color-stops separated
+	 * by commas, in the following format `[{offset}:{color}[,]]`.
 	 *
 	 * **Examples:**
 	 * - "pink"
@@ -123,7 +123,7 @@ export type Bar = LayoutItem & {
 	bar_border_c?: string;
 
 	/**
-	 * Fill color of the bar represented as a named color, hexadecimal value, or gradient. Default is `white`. **NB** Gradients can be defined by specifying multiple color-stops separated
+	 * Fill color of the bar represented as a named color, hexadecimal value, or gradient. Default is `white`. Gradients can be defined by specifying multiple color-stops separated
 	 * by commas, in the following format `[{offset}:{color}[,]]`.
 	 *
 	 * **Examples:**
@@ -158,9 +158,16 @@ export type Bar = LayoutItem & {
 	};
 
 	/**
-	 * Sub-type used to determine the type of bar to render. Default is {@link BarSubType.Groove}.
+	 * Sub-type used to determine the type of bar to render. Default is {@link BarSubType.Groove} (4).
+	 *
+	 * **Options**
+	 * - Rectangle (0)
+	 * - DoubleRectangle (1)
+	 * - Trapezoid (2)
+	 * - DoubleTrapezoid (3)
+	 * - Groove (4)
 	 */
-	subtype?: BarSubType;
+	subtype?: (typeof BarSubType)[keyof typeof BarSubType];
 
 	/**
 	 * Value used to determine how much of the bar is filled. Correlates with the item's `range` if specified in the layout's JSON definition; default range is `0..100`.
@@ -227,7 +234,7 @@ export type Text = LayoutItem & {
 	 * - clip, truncates the text at the boundary of the element (default).
 	 * - ellipsis, truncates the text prior to the boundary of the element, and adds an ellipsis (…) to the end.
 	 * - fade, applies a fade-gradient over the end of the text.
-	 * @default clip
+	 * @default ellipsis
 	 */
 	"text-overflow"?: "clip" | "ellipsis" | "fade";
 

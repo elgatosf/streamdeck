@@ -51,13 +51,13 @@ export type Manifest = {
 			 * - Be in .PNG or .SVG format.
 			 * - Be provided in two sizes, 72x72 px and 144x144 px (@2x).
 			 *
-			 * **NB.** This can be overridden by the user in the Stream Deck application.
+			 * NB: Can be overridden by the user in the Stream Deck application.
 			 *
 			 * **Examples:**
 			 * - assets/actions/mute/encoder-icon
 			 * - imgs/join-voice-chat-encoder
 			 */
-			Icon?: ImageFilePathWithoutExtension;
+			Icon?: FilePathWithoutExtension;
 
 			/**
 			 * Background color to display in the Stream Deck application when the action is part of a dial stack, and is the current action. Represented as a hexadecimal value.
@@ -106,13 +106,13 @@ export type Manifest = {
 			 * - Be in .PNG or .SVG format.
 			 * - Be provided in two sizes, 200x100 px and 400x200 px (@2x).
 			 *
-			 * **NB.** This can be overridden by the user in the Stream Deck application
+			 * NB: Can be overridden by the user in the Stream Deck application.
 			 *
 			 * **Examples:**
 			 * - assets/backgrounds/main
 			 * - imgs/bright-blue-bg
 			 */
-			background?: ImageFilePathWithoutExtension;
+			background?: FilePathWithoutExtension;
 
 			/**
 			 * Name of a pre-defined layout, or the path to a JSON file that details a custom layout and its components, to be rendered on the action's touchscreen canvas.
@@ -147,7 +147,7 @@ export type Manifest = {
 		 * - assets/counter
 		 * - imgs/actions/mute
 		 */
-		Icon: ImageFilePathWithoutExtension;
+		Icon: FilePathWithoutExtension;
 
 		/**
 		 * Name of the action; this is displayed to the user in the actions list, and is used throughout the Stream Deck application to visually identify the action.
@@ -156,8 +156,9 @@ export type Manifest = {
 
 		/**
 		 * Optional path to the HTML file that represents the property inspector for this action; this is displayed to the user in the Stream Deck application when they add the
-		 * action, allowing them to configure the action's settings. When `undefined`, the manifest's top-level `PropertyInspectorPath` is used, otherwise none. **NB.** Path should be
-		 * relative to the root of the plugin's folder, with no leading slash.
+		 * action, allowing them to configure the action's settings. When `undefined`, the manifest's top-level `PropertyInspectorPath` is used, otherwise none.
+		 *
+		 * NB: Path should be relative to the root of the plugin's folder, with no leading slash.
 		 *
 		 * **Examples:**
 		 * - mute.html
@@ -166,8 +167,9 @@ export type Manifest = {
 		PropertyInspectorPath?: HtmlFilePath;
 
 		/**
-		 * States the action can be in. When two states are defined the action will act as a toggle, with users being able to select their preferred iconography for each state. **NB.**
-		 * Automatic toggling of the state on action activation can be disabled by setting `DisableAutomaticStates` to `true`.
+		 * States the action can be in. When two states are defined the action will act as a toggle, with users being able to select their preferred iconography for each state.
+		 *
+		 * NB: Automatic toggling of the state on action activation can be disabled by setting `DisableAutomaticStates` to `true`.
 		 */
 		States: [ActionState, ActionState?];
 
@@ -183,13 +185,16 @@ export type Manifest = {
 
 		/**
 		 * Unique identifier of the action, represented in reverse-DNS format. This value is supplied by Stream Deck when events are emitted that relate to the action enabling you
-		 * to identify the source of the event. **NB.** This must be unique, and should be prefixed with the plugin's UUID.
+		 * to identify the source of the event.
 		 *
 		 * **Allowed characters:**
 		 * - Lowercase alphanumeric characters (a-z, 0-9)
 		 * - Hyphens (-)
 		 * - Underscores (_)
 		 * - Periods (.)
+		 *
+		 * NB: `UUID` must be unique, and should be prefixed with the plugin's UUID.
+		 *
 		 *
 		 * **Examples:**
 		 * - com.elgato.wavelink.toggle-mute
@@ -244,9 +249,10 @@ export type Manifest = {
 	Author: string;
 
 	/**
-	 * Defines the actions list group, providing a natural grouping of the plugin's actions with the Stream Deck application's action list. **NB.** This should be distinctive and
-	 * synonymous with your plugin, and it is therefore recommended that this be the same value as the plugin's `Name` field. When `undefined`, the actions will be available under
-	 * the "Custom" group.
+	 * Defines the actions list group, providing a natural grouping of the plugin's actions with the Stream Deck application's action list.
+	 *
+	 * NB: `Category` should be distinctive and synonymous with your plugin, and it is therefore recommended that this be the same value as the plugin's `Name` field. When `undefined`, the
+	 * actions will be available under the "Custom" group.
 	 */
 	Category?: string;
 
@@ -261,7 +267,7 @@ export type Manifest = {
 	 * - assets/category-icon
 	 * - imgs/category
 	 */
-	CategoryIcon?: ImageFilePathWithoutExtension;
+	CategoryIcon?: FilePathWithoutExtension;
 
 	/**
 	 * Path to the plugin's main entry point; this is executed when the Stream Deck application starts the plugin.
@@ -313,7 +319,7 @@ export type Manifest = {
 	 * assets/plugin-icon
 	 * imgs/plugin
 	 */
-	Icon: ImageFilePathWithoutExtension;
+	Icon: FilePathWithoutExtension;
 
 	/**
 	 * Name of the plugin, e.g. "Wave Link", "Camera Hub", "Control Center", etc.
@@ -321,14 +327,20 @@ export type Manifest = {
 	Name: string;
 
 	/**
-	 * Configuration options for Node.js based plugins. **NB.** All Node.js plugins are executed with the following command-line arguments [`--no-addons`](https://nodejs.org/api/cli.html#--no-addons),
-	 * [`--enable-source-maps`](https://nodejs.org/api/cli.html#--enable-source-maps), and [`--no-global-search-paths`](https://nodejs.org/api/cli.html#--no-global-search-paths).
+	 * Configuration options for Node.js based plugins.
+	 *
+	 * NB: All Node.js plugins are executed with the following command-line arguments:
+	 *
+	 * - [`--no-addons`](https://nodejs.org/api/cli.html#--no-addons) (Stream Deck 6.4 only)
+	 * - [`--enable-source-maps`](https://nodejs.org/api/cli.html#--enable-source-maps)
+	 * - [`--no-global-search-paths`](https://nodejs.org/api/cli.html#--no-global-search-paths)
 	 */
 	Nodejs?: {
 		/**
 		 * Command-line arguments supplied to the plugin when run in debug mode. Optionally, the pre-defined values `"enabled"` and `"break"` run the plugin with a debugger enabled
-		 * with [`--inspect`](https://nodejs.org/api/cli.html#--inspecthostport) and [`--inspect-brk`](https://nodejs.org/api/cli.html#--inspect-brkhostport) respectively. **NB.**
-		 * `"enabled"` and `"break"` will automatically be assigned an available `PORT` by Stream Deck.  Alternatively, if you wish to debug on a pre-defined port, this value can be
+		 * with [`--inspect`](https://nodejs.org/api/cli.html#--inspecthostport) and [`--inspect-brk`](https://nodejs.org/api/cli.html#--inspect-brkhostport) respectively.
+		 *
+		 * NB: `"enabled"` and `"break"` will automatically be assigned an available `PORT` by Stream Deck.  Alternatively, if you wish to debug on a pre-defined port, this value can be
 		 * a set of [command-line arguments](https://nodejs.org/api/cli.html).
 		 *
 		 * **Examples:**
@@ -359,17 +371,28 @@ export type Manifest = {
 	OS: [OS, OS?];
 
 	/**
-	 * Collection of pre-defined profiles that are distributed with this plugin. Upon installation of the plugin, the user will be prompted to install the profiles. Once installed,
-	 * the plugin can switch any of the pre-defined profiles. **NB.** It is not yet possible to switch to a user-defined profile.
+	 * Collection of pre-defined profiles that are distributed with this plugin. Upon the plugin switching to the profile, the user will be prompted to install the profiles.
+	 *
+	 * NB: Plugins may only switch to profiles distributed with the plugin, as defined within the manifest, and cannot access user-defined profiles.
 	 *
 	 * **Also see:**
 	 * `streamDeck.profiles.switchToProfile(...)`
 	 */
 	Profiles?: {
 		/**
-		 * Type of device the profile is applicable too, e.g. Stream Deck+, Stream Deck Pedal, etc.
+		 * Type of device the profile is intended for, for example Stream Deck+, Stream Deck Pedal, etc.
+		 *
+		 * **Devices**
+		 * - Stream Deck (0)
+		 * - Stream Deck Mini (1)
+		 * - Stream Deck XL (2)
+		 * - Stream Deck Mobile (3)
+		 * - Corsair GKeys (4)
+		 * - Stream Deck Pedal (5)
+		 * - Corsair Voyager (6)
+		 * - Stream Deck Plus (7)
 		 */
-		DeviceType: DeviceType;
+		DeviceType: (typeof DeviceType)[keyof typeof DeviceType];
 
 		/**
 		 * Determines whether the Stream Deck application should automatically switch to the profile when it is first installed. Default value is `false`.
@@ -393,7 +416,9 @@ export type Manifest = {
 
 	/**
 	 * Optional path to the HTML file that represents the property inspector for all actions; this is displayed to the user in the Stream Deck application when they add an action,
-	 * allowing them to configure the action's settings. **NB.** Path should be relative to the root of the plugin's folder, with no leading slash.
+	 * allowing them to configure the action's settings.
+	 *
+	 * NB: Path should be relative to the root of the plugin's folder, with no leading slash.
 	 *
 	 *  **Examples:**
 	 * - mute.html
@@ -429,7 +454,7 @@ export type Manifest = {
 	URL?: string;
 
 	/**
-	 * Version of the plugin, represented as a {@link https://semver.org semantic version}. **NB.** pre-release values are not currently supported.
+	 * Version of the plugin, represented as a {@link https://semver.org semantic version} (excluding pre-release values).
 	 *
 	 * **Examples:**
 	 * - 1.0.3 ✅
@@ -449,11 +474,11 @@ export type Manifest = {
 type HtmlFilePath = FilePath<"htm" | "html">;
 
 /**
- * File path that represents an image file relative to the plugin's manifest.
+ * File path that represents a file relative to the plugin's manifest, with the extension omitted.
  * @pattern
- * ^(?!\/).+(?<!\.([Pp][Nn][Gg]|[Ss][Vv][Gg]))$
+ * ^[^.]+$
  */
-type ImageFilePathWithoutExtension = string;
+type FilePathWithoutExtension = string;
 
 /**
  * File path, relative to the manifest's location.
@@ -480,22 +505,30 @@ type OS = {
  */
 type ActionState = {
 	/**
-	 * Default font-family to be used when rendering the title of this state. **NB.** This can be overridden by the user in the Stream Deck application.
+	 * Default font-family to be used when rendering the title of this state.
+	 *
+	 * NB: Can be overridden by the user in the Stream Deck application.
 	 */
 	FontFamily?: string;
 
 	/**
-	 * Default font-size to be used when rendering the title of this state. **NB.** This can be overridden by the user in the Stream Deck application.
+	 * Default font-size to be used when rendering the title of this state.
+	 *
+	 * NB: Can be overridden by the user in the Stream Deck application.
 	 */
 	FontSize?: number;
 
 	/**
-	 * Default font-style to be used when rendering the title of this state. **NB.** This can be overridden by the user in the Stream Deck application.
+	 * Default font-style to be used when rendering the title of this state.
+	 *
+	 * NB: Can be overridden by the user in the Stream Deck application.
 	 */
 	FontStyle?: "" | "Bold Italic" | "Bold" | "Italic" | "Regular";
 
 	/**
-	 * Determines whether the title associated with this state is underlined by default. **NB.** This can be overridden by the user in the Stream Deck application.
+	 * Determines whether the title associated with this state is underlined by default.
+	 *
+	 * NB: Can be overridden by the user in the Stream Deck application.
 	 */
 	FontUnderline?: boolean;
 
@@ -505,13 +538,13 @@ type ActionState = {
 	 * - Be in .PNG or .SVG format.
 	 * - Be provided in two sizes, 72x72 px and 144x144 px (@2x).
 	 *
-	 * **NB.** This can be overridden by the user in the Stream Deck application.
+	 * NB: Can be overridden by the user in the Stream Deck application.
 	 *
 	 * **Examples:**
 	 * - assets/counter-key
 	 * - assets/icons/mute
 	 */
-	Image: ImageFilePathWithoutExtension;
+	Image: FilePathWithoutExtension;
 
 	/**
 	 * Path to the image, with the **file extension omitted**, that will be displayed when the action is being viewed as part of a multi-action. The image must adhere to the following
@@ -519,13 +552,13 @@ type ActionState = {
 	 * - Be in .PNG or .SVG format.
 	 * - Be provided in two sizes, 72x72 px and 144x144 px (@2x).
 	 *
-	 * **NB.** This can be overridden by the user in the Stream Deck application.
+	 * NB: Can be overridden by the user in the Stream Deck application.
 	 *
 	 * **Examples:**
 	 * - assets/counter-key
 	 * - assets/icons/mute
 	 */
-	MultiActionImage?: ImageFilePathWithoutExtension;
+	MultiActionImage?: FilePathWithoutExtension;
 
 	/**
 	 * Name of the state; when multiple states are defined this value is shown to the user when the action is being added to a multi-action. The user is then able to specify which
@@ -534,7 +567,9 @@ type ActionState = {
 	Name?: string;
 
 	/**
-	 * Determines whether the title should be shown. **NB.** This can be overridden by the user in the Stream Deck application.
+	 * Determines whether the title should be shown.
+	 *
+	 * NB: Can be overridden by the user in the Stream Deck application.
 	 */
 	ShowTitle?: boolean;
 
@@ -544,13 +579,16 @@ type ActionState = {
 	Title?: string;
 
 	/**
-	 * Default title alignment to be used when rendering the title of this state. **NB.** This can be overridden by the user in the Stream Deck application.
+	 * Default title alignment to be used when rendering the title of this state.
+	 *
+	 * NB: Can be overridden by the user in the Stream Deck application.
 	 */
 	TitleAlignment?: "bottom" | "middle" | "top";
 
 	/**
-	 * Default title color to be used when rendering the title of this state, represented a hexadecimal value. **NB.** This can be overridden by the user in the Stream Deck
-	 * application.
+	 * Default title color to be used when rendering the title of this state, represented a hexadecimal value.
+	 *
+	 * NB: Can be overridden by the user in the Stream Deck application.
 	 *
 	 * **Examples:**
 	 * - #5bcefa
