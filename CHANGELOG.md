@@ -45,7 +45,7 @@ Namespaces have been introduced in place of the previous `streamDeck.client` obj
 ### 🐞 Fix
 
 -   Correctly validate paths without extensions in manifest JSON schema.
--   Update default `text-overflow` to `ellipsis` in layout JSON schema.
+-   Default `text-overflow` set to `ellipsis` in layout JSON schema.
 
 <h3 id="0-2-0_migration">
 	➡️ Migration
