@@ -38,8 +38,14 @@ Namespaces have been introduced in place of the previous `streamDeck.client` obj
 ### ♻️ Update
 
 -   Refactor `streamDeck.devices` to namespace.
--   Update Manifest's JSON schema to support Stream Deck 6.5.
--   Node.js runtime updated to v20.8.2.
+-   Update manifest JSON schema to support Stream Deck 6.5.
+-   Improve enum support in manifest and layout JSON schemas.
+-   Node.js runtime updated to v20.8.1.
+
+### 🐞 Fix
+
+-   Correctly validate paths without extensions in manifest JSON schema.
+-   Update default `text-overflow` to `ellipsis` in layout JSON schema.
 
 <h3 id="0-2-0_migration">
 	➡️ Migration
