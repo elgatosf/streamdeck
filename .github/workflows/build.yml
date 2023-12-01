@@ -1,0 +1,51 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+name: Build
+
+on:
+  push:
+    branches:
+      - "main"
+    paths-ignore:
+      - "assets/**"
+      - "**.md"
+
+  pull_request:
+    branches:
+      - "main"
+    paths-ignore:
+      - "assets/**"
+      - "**.md"
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  Build:
+    strategy:
+      matrix:
+        node_version: ["20.5.1"]
+        os: ["macos-latest", "windows-latest"]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: "📥 Checkout"
+        uses: actions/checkout@v4
+
+      - name: "🗃️ Setup Node"
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node_version }}
+
+      - name: "📐 Install dependencies"
+        run: npm ci
+
+      - name: "🏗️ Build"
+        run: npm run build
+
+      - name: "🖌️ Lint"
+        run: npm run lint
+
+      - name: "🧪 Test"
+        run: npm run test
