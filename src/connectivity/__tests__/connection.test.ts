@@ -1,5 +1,6 @@
 import { EventEmitter } from "node:events";
 import WebSocket from "ws";
+import type { RegistrationParameters } from "../registration";
 
 import { getMockedLogger } from "../../../tests/__mocks__/logging";
 import { registrationParameters } from "../__mocks__/registration";
