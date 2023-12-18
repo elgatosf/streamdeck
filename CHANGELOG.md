@@ -35,14 +35,14 @@ Namespaces have been introduced in place of the previous `streamDeck.client` obj
 -   Add `streamDeck.devices.getDeviceBy(deviceId)` to enable the selection of a device by identifier.
 -   Add `length`, `forEach`, and `[Symbol.iterator]` to `streamDeck.devices` to enable iteration.
 
-### ♻️ Update
+### ♻️ Improvements
 
 -   Refactor `streamDeck.devices` to namespace.
 -   Update manifest JSON schema to support Stream Deck 6.5.
 -   Improve enum support in manifest and layout JSON schemas.
 -   Node.js runtime updated to v20.8.1.
 
-### 🐞 Fix
+### 🐞 Bug Fixes
 
 -   Correctly validate paths without extensions in manifest JSON schema.
 -   Default `text-overflow` set to `ellipsis` in layout JSON schema.
