@@ -1,14 +1,12 @@
-import { EventEmitter } from "node:events";
 import WebSocket from "ws";
+import { EventEmitter } from "../common/event-emitter";
 
 import { PromiseCompletionSource } from "../common/promises";
 import { Logger } from "../logging";
 import { Command } from "./commands";
 
-import { IDisposable, deferredDisposable } from "../common/disposable";
-import { TypedEventEmitter } from "../common/typed-event-emitter";
 import { Version } from "../common/version";
-import { EventMap } from "./events";
+import { PluginEventMap } from "./events";
 import { RegistrationParameters } from "./registration";
 
 /**
@@ -19,57 +17,25 @@ import { RegistrationParameters } from "./registration";
  * @returns A connection with the Stream Deck, in an idle-unconnected state.
  */
 export function createConnection(registrationParameters: RegistrationParameters, logger: Logger): StreamDeckConnection {
-	return new StreamDeckWebSocketConnection(registrationParameters, logger) as StreamDeckConnection;
+	return new PluginConnection(registrationParameters, logger);
 }
 
 /**
  * Provides a connection between the plugin and the Stream Deck allowing for messages to be sent and received.
  */
-export type StreamDeckConnection = TypedEventEmitter<EventMap> & {
-	/**
-	 * Registration parameters used to establish a connection with the Stream Deck; these are automatically supplied as part of the command line arguments when the plugin is ran by
-	 * the Stream Deck.
-	 */
-	readonly registrationParameters: RegistrationParameters;
-
-	/**
-	 * Version of Stream Deck this instance is connected to.
-	 */
-	readonly version: Version;
-
-	/**
-	 * Adds the {@link listener} to the connection for the {@link eventName} and returns a disposable that, when disposed, removes the listener.
-	 * @param eventName Name of the event the listener is associated to.
-	 * @param listener The event listener.
-	 * @returns A disposable that removes the listener when disposed.
-	 */
-	addDisposableListener<TEventName extends keyof EventMap, TData extends EventMap[TEventName]>(eventName: TEventName, listener: (data: TData) => void): IDisposable;
-
-	/**
-	 * Establishes a connection with the Stream Deck, allowing for the plugin to send and receive messages.
-	 * @returns A promise that is resolved when a connection has been established.
-	 */
-	connect(): Promise<void>;
-
-	/**
-	 * Sends the commands to the Stream Deck, once the connection has been established and the plugin registered.
-	 * @param command Command being sent.
-	 * @returns `Promise` resolved when the command is sent to Stream Deck.
-	 */
-	send(command: Command): Promise<void>;
-};
+export type StreamDeckConnection = PluginConnection;
 
 /**
  * Provides a connection between the plugin and the Stream Deck allowing for messages to be sent and received.
  */
-class StreamDeckWebSocketConnection extends EventEmitter implements StreamDeckConnection {
+class PluginConnection extends EventEmitter<PluginEventMap> {
 	/**
-	 * @inheritdoc
+	 * Version of Stream Deck this instance is connected to.
 	 */
 	public readonly version: Version;
 
 	/**
-	 * Used to ensure {@link StreamDeckWebSocketConnection.connect} is invoked as a singleton; `false` when a connection is occurring or established.
+	 * Used to ensure {@link StreamDeckConnection.connect} is invoked as a singleton; `false` when a connection is occurring or established.
 	 */
 	private canConnect = true;
 
@@ -85,7 +51,7 @@ class StreamDeckWebSocketConnection extends EventEmitter implements StreamDeckCo
 	private readonly logger: Logger;
 
 	/**
-	 * Initializes a new instance of the {@link StreamDeckWebSocketConnection} class.
+	 * Initializes a new instance of the {@link StreamDeckConnection} class.
 	 * @param registrationParameters Registration parameters used to establish a connection with the Stream Deck; these are automatically supplied as part of the command line arguments
 	 * when the plugin is ran by the Stream Deck.
 	 * @param logger Logger responsible for capturing log entries.
@@ -100,15 +66,8 @@ class StreamDeckWebSocketConnection extends EventEmitter implements StreamDeckCo
 	}
 
 	/**
-	 * @inheritdoc
-	 */
-	public addDisposableListener<TEventName extends keyof EventMap, TData extends EventMap[TEventName]>(eventName: TEventName, listener: (data: TData) => void): IDisposable {
-		this.addListener(eventName, listener);
-		return deferredDisposable(() => this.removeListener(eventName, listener));
-	}
-
-	/**
-	 * @inheritdoc
+	 * Establishes a connection with the Stream Deck, allowing for the plugin to send and receive messages.
+	 * @returns A promise that is resolved when a connection has been established.
 	 */
 	public async connect(): Promise<void> {
 		// Ensure we only establish a single connection.
@@ -138,7 +97,9 @@ class StreamDeckWebSocketConnection extends EventEmitter implements StreamDeckCo
 	}
 
 	/**
-	 * @inheritdoc
+	 * Sends the commands to the Stream Deck, once the connection has been established and the plugin registered.
+	 * @param command Command being sent.
+	 * @returns `Promise` resolved when the command is sent to Stream Deck.
 	 */
 	public async send(command: Command): Promise<void> {
 		const connection = await this.connection.promise;
@@ -149,7 +110,7 @@ class StreamDeckWebSocketConnection extends EventEmitter implements StreamDeckCo
 	}
 
 	/**
-	 * Resets the {@link StreamDeckWebSocketConnection.connection}.
+	 * Resets the {@link StreamDeckConnection.connection}.
 	 */
 	private resetConnection(): void {
 		this.canConnect = true;
@@ -159,7 +120,7 @@ class StreamDeckWebSocketConnection extends EventEmitter implements StreamDeckCo
 	}
 
 	/**
-	 * Attempts to emit the {@link data} that was received from the {@link StreamDeckWebSocketConnection.connection}.
+	 * Attempts to emit the {@link data} that was received from the {@link StreamDeckConnection.connection}.
 	 * @param data Event message data received from the Stream Deck.
 	 */
 	private tryEmit(data: WebSocket.RawData): void {

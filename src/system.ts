@@ -22,7 +22,7 @@ export class System {
 	 * @returns A disposable that, when disposed, removes the listener.
 	 */
 	public onApplicationDidLaunch(listener: (ev: ApplicationDidLaunchEvent) => void): IDisposable {
-		return this.connection.addDisposableListener("applicationDidLaunch", (ev) => listener(new ApplicationEvent(ev)));
+		return this.connection.disposableOn("applicationDidLaunch", (ev) => listener(new ApplicationEvent(ev)));
 	}
 
 	/**
@@ -32,7 +32,7 @@ export class System {
 	 * @returns A disposable that, when disposed, removes the listener.
 	 */
 	public onApplicationDidTerminate(listener: (ev: ApplicationDidTerminateEvent) => void): IDisposable {
-		return this.connection.addDisposableListener("applicationDidTerminate", (ev) => listener(new ApplicationEvent(ev)));
+		return this.connection.disposableOn("applicationDidTerminate", (ev) => listener(new ApplicationEvent(ev)));
 	}
 
 	/**
@@ -43,7 +43,7 @@ export class System {
 	 */
 	public onDidReceiveDeepLink(listener: (ev: DidReceiveDeepLinkEvent) => void): IDisposable {
 		requiresVersion(6.5, this.connection.version, "Receiving deep-link messages");
-		return this.connection.addDisposableListener("didReceiveDeepLink", (ev) => listener(new DidReceiveDeepLinkEvent(ev)));
+		return this.connection.disposableOn("didReceiveDeepLink", (ev) => listener(new DidReceiveDeepLinkEvent(ev)));
 	}
 
 	/**
@@ -52,7 +52,7 @@ export class System {
 	 * @returns A disposable that, when disposed, removes the listener.
 	 */
 	public onSystemDidWakeUp(listener: (ev: SystemDidWakeUpEvent) => void): IDisposable {
-		return this.connection.addDisposableListener("systemDidWakeUp", (ev) => listener(new Event<SystemDidWakeUp>(ev)));
+		return this.connection.disposableOn("systemDidWakeUp", (ev) => listener(new Event<SystemDidWakeUp>(ev)));
 	}
 
 	/**
