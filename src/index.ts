@@ -10,4 +10,5 @@ export * from "./events";
 export { LogLevel } from "./logging";
 export { Manifest } from "./manifest";
 
-export default new StreamDeck();
+export const streamDeck = new StreamDeck();
+export default streamDeck;
