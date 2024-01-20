@@ -1,4 +1,4 @@
-import type { DidReceiveGlobalSettings, DidReceiveSettings, State } from "../connectivity/events";
+import type { DidReceiveGlobalSettings, DidReceiveSettings, State } from "./events";
 import type { FeedbackPayload } from "./layout";
 import type { Target } from "./target";
 

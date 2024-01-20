@@ -1,5 +1,5 @@
 import { Action } from "../actions/action";
-import type * as api from "../connectivity/events";
+import type * as api from "../api/events";
 import { Event } from "./event";
 
 /**

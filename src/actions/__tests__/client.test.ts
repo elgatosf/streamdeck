@@ -1,9 +1,9 @@
 import { getConnection } from "../../../tests/__mocks__/connection";
 import { getMockedLogger } from "../../../tests/__mocks__/logging";
 import { manifest as mockedManifest } from "../../__mocks__/manifest";
-import * as mockEvents from "../../connectivity/__mocks__/events";
+import * as mockEvents from "../../api/__mocks__/events";
+import { ActionIdentifier } from "../../api/events";
 import { StreamDeckConnection } from "../../connectivity/connection";
-import { ActionIdentifier } from "../../connectivity/events";
 import {
 	DialDownEvent,
 	DialRotateEvent,

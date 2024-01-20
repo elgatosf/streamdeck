@@ -1,4 +1,4 @@
-import { DeviceType } from "../../api/device";
+import { DeviceType } from "../device";
 import type * as events from "../events";
 
 const action = "com.elgato.test.one";

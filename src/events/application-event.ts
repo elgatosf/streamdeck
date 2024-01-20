@@ -1,4 +1,4 @@
-import { ApplicationDidLaunch, ApplicationDidTerminate } from "../connectivity/events";
+import type { ApplicationDidLaunch, ApplicationDidTerminate } from "../api/events";
 import { Event } from "./event";
 
 /**

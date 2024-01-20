@@ -1,5 +1,5 @@
+import type * as api from "../api/events";
 import type { StreamDeckConnection } from "../connectivity/connection";
-import type * as api from "../connectivity/events";
 
 /**
  * Gets the settings associated with an instance of an action, as identified by the {@link context}. An instance of an action represents a button, dial, pedal, etc.

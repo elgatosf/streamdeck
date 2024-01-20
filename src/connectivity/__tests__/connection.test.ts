@@ -4,9 +4,9 @@ import type { RegistrationParameters } from "../registration";
 
 import { getMockedLogger } from "../../../tests/__mocks__/logging";
 import type { OpenUrl } from "../../api/command";
+import { ApplicationDidLaunch } from "../../api/events";
 import { registrationParameters } from "../__mocks__/registration";
 import { StreamDeckConnection, createConnection } from "../connection";
-import { ApplicationDidLaunch } from "../events";
 
 jest.mock("ws", () => {
 	const MockWebSocket = jest.fn(function () {

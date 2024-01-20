@@ -1,4 +1,4 @@
-import type { DeviceInfo } from "../../api/device";
+import type { DeviceInfo } from "../device";
 import type { EventIdentifier } from "./index";
 
 /**

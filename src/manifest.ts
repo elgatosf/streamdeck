@@ -2,9 +2,9 @@
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 
-import { type DeviceType } from "./api/device";
+import type { DeviceType } from "./api/device";
+import { Controller } from "./api/events";
 import { Version } from "./common/version";
-import { Controller } from "./connectivity/events";
 
 /**
  * Defines the plugin and available actions, and all information associated with them, including the plugin's entry point, all iconography, action default behavior, etc.

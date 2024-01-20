@@ -1,6 +1,6 @@
 import { getConnection } from "../../tests/__mocks__/connection";
 import { Action } from "../actions/action";
-import * as mockEvents from "../connectivity/__mocks__/events";
+import * as mockEvents from "../api/__mocks__/events";
 import { PropertyInspectorDidAppearEvent, PropertyInspectorDidDisappearEvent, SendToPluginEvent } from "../events";
 import { UIClient } from "../ui";
 

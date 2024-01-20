@@ -1,4 +1,5 @@
 import { getConnection } from "../../../tests/__mocks__/connection";
+import * as mockEvents from "../../api/__mocks__/events";
 import type {
 	GetSettings,
 	SendToPropertyInspector,
@@ -12,9 +13,8 @@ import type {
 	ShowAlert,
 	ShowOk
 } from "../../api/command";
+import { ActionIdentifier, DidReceiveGlobalSettings } from "../../api/events";
 import { Target } from "../../api/target";
-import * as mockEvents from "../../connectivity/__mocks__/events";
-import { ActionIdentifier, DidReceiveGlobalSettings } from "../../connectivity/events";
 import { Action } from "../action";
 
 describe("Action", () => {

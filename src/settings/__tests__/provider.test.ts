@@ -1,6 +1,6 @@
 import { getConnection } from "../../../tests/__mocks__/connection";
+import * as mockEvents from "../../api/__mocks__/events";
 import type { GetSettings } from "../../api/command";
-import * as mockEvents from "../../connectivity/__mocks__/events";
 import { SettingsClient } from "../../settings/client";
 import { getSettings } from "../provider";
 

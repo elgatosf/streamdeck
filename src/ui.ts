@@ -1,7 +1,7 @@
 import { Action } from "./actions/action";
+import type * as api from "./api/events";
 import type { IDisposable } from "./common/disposable";
 import type { StreamDeckConnection } from "./connectivity/connection";
-import type * as api from "./connectivity/events";
 import { ActionWithoutPayloadEvent, PropertyInspectorDidAppearEvent, PropertyInspectorDidDisappearEvent, SendToPluginEvent } from "./events";
 
 /**
@@ -21,7 +21,7 @@ export class UIClient {
 	 * @returns A disposable that, when disposed, removes the listener.
 	 */
 	public onPropertyInspectorDidAppear<T extends api.PayloadObject<T> = object>(listener: (ev: PropertyInspectorDidAppearEvent<T>) => void): IDisposable {
-		return this.connection.disposableOn("propertyInspectorDidAppear", (ev: api.PropertyInspectorDidAppear) =>
+		return this.connection.disposableOn("propertyInspectorDidAppear", (ev) =>
 			listener(new ActionWithoutPayloadEvent<api.PropertyInspectorDidAppear, T>(new Action<T>(this.connection, ev), ev))
 		);
 	}
@@ -33,7 +33,7 @@ export class UIClient {
 	 * @returns A disposable that, when disposed, removes the listener.
 	 */
 	public onPropertyInspectorDidDisappear<T extends api.PayloadObject<T> = object>(listener: (ev: PropertyInspectorDidDisappearEvent<T>) => void): IDisposable {
-		return this.connection.disposableOn("propertyInspectorDidDisappear", (ev: api.PropertyInspectorDidDisappear) =>
+		return this.connection.disposableOn("propertyInspectorDidDisappear", (ev) =>
 			listener(new ActionWithoutPayloadEvent<api.PropertyInspectorDidDisappear, T>(new Action<T>(this.connection, ev), ev))
 		);
 	}

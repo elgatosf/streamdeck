@@ -1,8 +1,8 @@
 import { Manifest } from "..";
 import type { SetImage, SetTitle } from "../api/command";
+import type * as api from "../api/events";
 import type { IDisposable } from "../common/disposable";
 import type { StreamDeckConnection } from "../connectivity/connection";
-import type * as api from "../connectivity/events";
 import {
 	ActionEvent,
 	DialDownEvent,

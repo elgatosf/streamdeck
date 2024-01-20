@@ -1,4 +1,4 @@
-import type { DidReceiveDeepLink } from "../connectivity/events/";
+import type { DidReceiveDeepLink } from "../api/events";
 import { Event } from "./event";
 
 /**

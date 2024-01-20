@@ -1,6 +1,6 @@
 import { getConnection } from "../../tests/__mocks__/connection";
+import * as mockEvents from "../api/__mocks__/events";
 import { DeviceType } from "../api/device";
-import * as mockEvents from "../connectivity/__mocks__/events";
 import { Device, DeviceClient } from "../devices";
 import { DeviceDidConnectEvent, DeviceDidDisconnectEvent } from "../events";
 

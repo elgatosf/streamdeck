@@ -5,8 +5,8 @@ import type { Command } from "../api/command";
 import { PromiseCompletionSource } from "../common/promises";
 import { Logger } from "../logging";
 
+import { PluginEventMap } from "../api/events";
 import { Version } from "../common/version";
-import { PluginEventMap } from "./events";
 import { RegistrationParameters } from "./registration";
 
 /**

@@ -1,4 +1,4 @@
-import * as api from "../connectivity/events";
+import * as api from "../api/events";
 import { Device } from "../devices";
 import { ActionEvent, ActionWithoutPayloadEvent } from "./action-event";
 import { ApplicationEvent } from "./application-event";

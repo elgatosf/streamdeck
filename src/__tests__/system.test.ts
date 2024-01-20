@@ -1,7 +1,7 @@
 import { getConnection } from "../../tests/__mocks__/connection";
+import * as mockEvents from "../api/__mocks__/events";
 import { type OpenUrl } from "../api/command";
 import { Version } from "../common/version";
-import * as mockEvents from "../connectivity/__mocks__/events";
 import { StreamDeckConnection } from "../connectivity/connection";
 import { ApplicationDidLaunchEvent, ApplicationDidTerminateEvent, DidReceiveDeepLinkEvent, SystemDidWakeUpEvent } from "../events";
 import { System } from "../system";

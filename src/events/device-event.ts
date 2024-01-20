@@ -1,4 +1,4 @@
-import { DeviceDidConnect, DeviceDidDisconnect } from "../connectivity/events";
+import type { DeviceDidConnect, DeviceDidDisconnect } from "../api/events";
 import { Event } from "./event";
 
 /**
@@ -10,7 +10,10 @@ export class DeviceEvent<T extends DeviceDidConnect | DeviceDidDisconnect, TDevi
 	 * @param source Source of the event, i.e. the original message from Stream Deck.
 	 * @param device Device that event is associated with.
 	 */
-	constructor(source: T, public readonly device: TDevice) {
+	constructor(
+		source: T,
+		public readonly device: TDevice
+	) {
 		super(source);
 	}
 }

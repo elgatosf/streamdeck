@@ -1,7 +1,7 @@
 import { Action } from "../actions/action";
+import type * as api from "../api/events";
 import type { IDisposable } from "../common/disposable";
 import type { StreamDeckConnection } from "../connectivity/connection";
-import type * as api from "../connectivity/events";
 import { ActionEvent, DidReceiveGlobalSettingsEvent, DidReceiveSettingsEvent } from "../events";
 
 /**
