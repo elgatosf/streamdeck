@@ -1,7 +1,6 @@
-import { type FeedbackPayload } from "../api/layout";
-import { type Target } from "../api/target";
-import type { DidReceiveGlobalSettings, DidReceiveSettings } from "./events";
-import { State } from "./events";
+import type { DidReceiveGlobalSettings, DidReceiveSettings, State } from "../connectivity/events";
+import type { FeedbackPayload } from "./layout";
+import type { Target } from "./target";
 
 /**
  * Command sent to Stream Deck.
@@ -28,7 +27,7 @@ type CommandBase<TCommand, TPayload = void> = TPayload extends void
 /**
  * A {@link CommandBase} that is associated with a specific context, e.g. action.
  */
-export type ContextualizedCommand<TCommand, TPayload = void> = CommandBase<TCommand, TPayload> & {
+type ContextualizedCommand<TCommand, TPayload = void> = CommandBase<TCommand, TPayload> & {
 	/**
 	 * Defines the context of the command, e.g. which action instance the command is intended for.
 	 */
@@ -227,7 +226,7 @@ export type SwitchToProfile = ContextualizedCommand<
 export type SendToPropertyInspector = ContextualizedCommand<"sendToPropertyInspector", unknown>;
 
 /**
- * Command sent to Stream Deck.
+ * Command sent to Stream Deck, from the plugin.
  */
 export type Command =
 	| GetGlobalSettings

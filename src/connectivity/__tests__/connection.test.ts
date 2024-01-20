@@ -3,8 +3,8 @@ import WebSocket from "ws";
 import type { RegistrationParameters } from "../registration";
 
 import { getMockedLogger } from "../../../tests/__mocks__/logging";
+import type { OpenUrl } from "../../api/command";
 import { registrationParameters } from "../__mocks__/registration";
-import { OpenUrl } from "../commands";
 import { StreamDeckConnection, createConnection } from "../connection";
 import { ApplicationDidLaunch } from "../events";
 

@@ -1,9 +1,9 @@
 import WebSocket from "ws";
 import { EventEmitter } from "../common/event-emitter";
 
+import type { Command } from "../api/command";
 import { PromiseCompletionSource } from "../common/promises";
 import { Logger } from "../logging";
-import { Command } from "./commands";
 
 import { Version } from "../common/version";
 import { PluginEventMap } from "./events";

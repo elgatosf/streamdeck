@@ -1,5 +1,5 @@
-import { type FeedbackPayload } from "../api/layout";
-import type { SetTriggerDescription } from "../connectivity/commands";
+import type { SetTriggerDescription } from "../api/command";
+import type { FeedbackPayload } from "../api/layout";
 import type { StreamDeckConnection } from "../connectivity/connection";
 import type { ActionIdentifier, PayloadObject, State } from "../connectivity/events";
 import { getSettings } from "../settings/provider";

@@ -1,7 +1,7 @@
 import { getConnection } from "../../tests/__mocks__/connection";
 import { Version } from "../common/version";
 
-import { SwitchToProfile } from "../connectivity/commands";
+import { type SwitchToProfile } from "../api/command";
 import { StreamDeckConnection } from "../connectivity/connection";
 import { ProfileClient } from "../profiles";
 import * as ValidationModule from "../validation";

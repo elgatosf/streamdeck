@@ -1,7 +1,7 @@
 import { getConnection } from "../../../tests/__mocks__/connection";
 import { Action } from "../../actions/action";
+import type { GetGlobalSettings, SetGlobalSettings } from "../../api/command";
 import * as mockEvents from "../../connectivity/__mocks__/events";
-import { GetGlobalSettings, SetGlobalSettings } from "../../connectivity/commands";
 import { StreamDeckConnection } from "../../connectivity/connection";
 import { DidReceiveGlobalSettingsEvent, DidReceiveSettingsEvent } from "../../events";
 import { SettingsClient } from "../../settings/client";

@@ -1,6 +1,6 @@
 import { Manifest } from "..";
+import type { SetImage, SetTitle } from "../api/command";
 import type { IDisposable } from "../common/disposable";
-import type { SetImage, SetTitle } from "../connectivity/commands";
 import type { StreamDeckConnection } from "../connectivity/connection";
 import type * as api from "../connectivity/events";
 import {

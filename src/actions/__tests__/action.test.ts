@@ -1,7 +1,5 @@
 import { getConnection } from "../../../tests/__mocks__/connection";
-import { Target } from "../../api/target";
-import * as mockEvents from "../../connectivity/__mocks__/events";
-import {
+import type {
 	GetSettings,
 	SendToPropertyInspector,
 	SetFeedback,
@@ -13,7 +11,9 @@ import {
 	SetTriggerDescription,
 	ShowAlert,
 	ShowOk
-} from "../../connectivity/commands";
+} from "../../api/command";
+import { Target } from "../../api/target";
+import * as mockEvents from "../../connectivity/__mocks__/events";
 import { ActionIdentifier, DidReceiveGlobalSettings } from "../../connectivity/events";
 import { Action } from "../action";
 
