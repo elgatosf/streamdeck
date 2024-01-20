@@ -1,4 +1,5 @@
 import { getConnection } from "../../../tests/__mocks__/connection";
+import { Target } from "../../api/target";
 import * as mockEvents from "../../connectivity/__mocks__/events";
 import {
 	GetSettings,
@@ -14,7 +15,6 @@ import {
 	ShowOk
 } from "../../connectivity/commands";
 import { ActionIdentifier, DidReceiveGlobalSettings } from "../../connectivity/events";
-import { Target } from "../../connectivity/target";
 import { Action } from "../action";
 
 describe("Action", () => {
