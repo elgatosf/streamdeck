@@ -1,7 +1,7 @@
+import { type FeedbackPayload } from "../api/layout";
 import { type Target } from "../api/target";
 import type { DidReceiveGlobalSettings, DidReceiveSettings } from "./events";
 import { State } from "./events";
-import type { FeedbackPayload } from "./layouts";
 
 /**
  * Command sent to Stream Deck.

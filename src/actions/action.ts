@@ -1,7 +1,7 @@
+import { type FeedbackPayload } from "../api/layout";
 import type { SetTriggerDescription } from "../connectivity/commands";
 import type { StreamDeckConnection } from "../connectivity/connection";
 import type { ActionIdentifier, PayloadObject, State } from "../connectivity/events";
-import type { FeedbackPayload } from "../connectivity/layouts";
 import { getSettings } from "../settings/provider";
 import type { UIClient } from "../ui";
 import type { ImageOptions, TitleOptions } from "./client";

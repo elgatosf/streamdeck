@@ -1,8 +1,7 @@
 /* eslint-disable jsdoc/check-tag-names */
-import type { ActionClient } from "../actions/client";
 
 /**
- * Payload object, used in conjunction with {@link ActionClient.setLayout}, that enables updating items within a layout.
+ * Payload object used to update a Stream Deck encoder's (touchscreen) layout.
  */
 export type FeedbackPayload = Record<string, Partial<Bar> | Partial<GBar> | Partial<Pixmap> | Partial<Text> | number | string>;
 
