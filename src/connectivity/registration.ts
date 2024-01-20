@@ -1,5 +1,5 @@
+import { type DeviceInfo } from "../api/device";
 import { Logger } from "../logging";
-import { DeviceInfo } from "./device-info";
 
 /**
  * Defines the type of argument supplied by Stream Deck.

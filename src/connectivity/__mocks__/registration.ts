@@ -1,4 +1,4 @@
-import { DeviceType } from "../device-info";
+import { DeviceType } from "../../api/device";
 import type { RegistrationParameters as __RegistrationParameters } from "../registration";
 
 /**

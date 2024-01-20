@@ -2,8 +2,8 @@
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 
+import { type DeviceType } from "./api/device";
 import { Version } from "./common/version";
-import { DeviceType } from "./connectivity/device-info";
 import { Controller } from "./connectivity/events";
 
 /**

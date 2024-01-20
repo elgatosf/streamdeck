@@ -1,6 +1,6 @@
+import { type DeviceInfo } from "./api/device";
 import type { IDisposable } from "./common/disposable";
 import type { StreamDeckConnection } from "./connectivity/connection";
-import type { DeviceInfo } from "./connectivity/device-info";
 import { DeviceDidConnectEvent, DeviceDidDisconnectEvent, DeviceEvent } from "./events";
 
 /**

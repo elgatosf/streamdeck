@@ -1,4 +1,4 @@
-import type { DeviceType } from "../device-info";
+import type { DeviceType } from "../../api/device";
 import type { DeviceIdentifier } from "./device";
 import type { EventIdentifier, PayloadObject } from "./index";
 
