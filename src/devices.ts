@@ -85,7 +85,7 @@ export class DeviceClient {
 	 * @returns A disposable that, when disposed, removes the listener.
 	 */
 	public onDeviceDidConnect(listener: (ev: DeviceDidConnectEvent) => void): IDisposable {
-		return this.connection.addDisposableListener("deviceDidConnect", (ev) =>
+		return this.connection.disposableOn("deviceDidConnect", (ev) =>
 			listener(
 				new DeviceEvent(ev, {
 					...ev.deviceInfo,
@@ -101,7 +101,7 @@ export class DeviceClient {
 	 * @returns A disposable that, when disposed, removes the listener.
 	 */
 	public onDeviceDidDisconnect(listener: (ev: DeviceDidDisconnectEvent) => void): IDisposable {
-		return this.connection.addDisposableListener("deviceDidDisconnect", (ev) =>
+		return this.connection.disposableOn("deviceDidDisconnect", (ev) =>
 			listener(
 				new DeviceEvent(ev, {
 					...this.devices.get(ev.device),

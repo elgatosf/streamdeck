@@ -58,6 +58,6 @@ export type EventMessage<T extends PayloadObject<T> = object> =
 /**
  * Map of events received by the plugin, from the Stream Deck.
  */
-export type EventMap = {
-	[K in EventMessage["event"]]: Extract<EventMessage, EventIdentifier<K>>;
+export type PluginEventMap = {
+	[K in EventMessage["event"]]: [event: Extract<EventMessage, EventIdentifier<K>>];
 };

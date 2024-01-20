@@ -36,7 +36,7 @@ export class SettingsClient {
 	 * @returns A disposable that, when disposed, removes the listener.
 	 */
 	public onDidReceiveGlobalSettings<T extends api.PayloadObject<T> = object>(listener: (ev: DidReceiveGlobalSettingsEvent<T>) => void): IDisposable {
-		return this.connection.addDisposableListener("didReceiveGlobalSettings", (ev: api.DidReceiveGlobalSettings<T>) => listener(new DidReceiveGlobalSettingsEvent(ev)));
+		return this.connection.disposableOn("didReceiveGlobalSettings", (ev: api.DidReceiveGlobalSettings<T>) => listener(new DidReceiveGlobalSettingsEvent(ev)));
 	}
 
 	/**
@@ -46,7 +46,7 @@ export class SettingsClient {
 	 * @returns A disposable that, when disposed, removes the listener.
 	 */
 	public onDidReceiveSettings<T extends api.PayloadObject<T> = object>(listener: (ev: DidReceiveSettingsEvent<T>) => void): IDisposable {
-		return this.connection.addDisposableListener("didReceiveSettings", (ev: api.DidReceiveSettings<T>) =>
+		return this.connection.disposableOn("didReceiveSettings", (ev: api.DidReceiveSettings<T>) =>
 			listener(new ActionEvent<api.DidReceiveSettings<T>>(new Action<T>(this.connection, ev), ev))
 		);
 	}

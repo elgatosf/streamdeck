@@ -21,7 +21,7 @@ export class UIClient {
 	 * @returns A disposable that, when disposed, removes the listener.
 	 */
 	public onPropertyInspectorDidAppear<T extends api.PayloadObject<T> = object>(listener: (ev: PropertyInspectorDidAppearEvent<T>) => void): IDisposable {
-		return this.connection.addDisposableListener("propertyInspectorDidAppear", (ev: api.PropertyInspectorDidAppear) =>
+		return this.connection.disposableOn("propertyInspectorDidAppear", (ev: api.PropertyInspectorDidAppear) =>
 			listener(new ActionWithoutPayloadEvent<api.PropertyInspectorDidAppear, T>(new Action<T>(this.connection, ev), ev))
 		);
 	}
@@ -33,7 +33,7 @@ export class UIClient {
 	 * @returns A disposable that, when disposed, removes the listener.
 	 */
 	public onPropertyInspectorDidDisappear<T extends api.PayloadObject<T> = object>(listener: (ev: PropertyInspectorDidDisappearEvent<T>) => void): IDisposable {
-		return this.connection.addDisposableListener("propertyInspectorDidDisappear", (ev: api.PropertyInspectorDidDisappear) =>
+		return this.connection.disposableOn("propertyInspectorDidDisappear", (ev: api.PropertyInspectorDidDisappear) =>
 			listener(new ActionWithoutPayloadEvent<api.PropertyInspectorDidDisappear, T>(new Action<T>(this.connection, ev), ev))
 		);
 	}
@@ -48,7 +48,7 @@ export class UIClient {
 	public onSendToPlugin<TPayload extends api.PayloadObject<TPayload> = object, TSettings extends api.PayloadObject<TSettings> = object>(
 		listener: (ev: SendToPluginEvent<TPayload, TSettings>) => void
 	): IDisposable {
-		return this.connection.addDisposableListener("sendToPlugin", (ev: api.SendToPlugin<TPayload>) =>
+		return this.connection.disposableOn("sendToPlugin", (ev: api.SendToPlugin<TPayload>) =>
 			listener(new SendToPluginEvent<TPayload, TSettings>(new Action<TSettings>(this.connection, ev), ev))
 		);
 	}
