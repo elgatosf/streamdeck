@@ -1,11 +1,12 @@
 import { ActionClient } from "./actions/client";
+import type { Manifest } from "./api/manifest";
 import type { RegistrationInfo } from "./api/registration";
 import { StreamDeckConnection, createConnection } from "./connectivity/connection";
 import { RegistrationParameters } from "./connectivity/registration-parameters";
 import { Device, DeviceClient } from "./devices";
 import { I18nProvider } from "./i18n";
 import { Logger, createLogger } from "./logging";
-import { Manifest, getManifest } from "./manifest";
+import { getManifest } from "./manifest";
 import { ProfileClient } from "./profiles";
 import { SettingsClient } from "./settings/client";
 import { System } from "./system";

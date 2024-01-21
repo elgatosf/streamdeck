@@ -1,8 +1,8 @@
 import type { SystemDidWakeUp } from "./api/events";
+import type { Manifest } from "./api/manifest";
 import type { IDisposable } from "./common/disposable";
 import type { StreamDeckConnection } from "./connectivity/connection";
 import { ApplicationDidLaunchEvent, ApplicationDidTerminateEvent, ApplicationEvent, DidReceiveDeepLinkEvent, Event, SystemDidWakeUpEvent } from "./events";
-import type { Manifest } from "./manifest";
 import { requiresVersion } from "./validation";
 
 /**

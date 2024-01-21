@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 
 import { manifest as mockManifest } from "../__mocks__/manifest";
-import type { Manifest } from "../manifest";
+import type { Manifest } from "../api/manifest";
 
 describe("manifest", () => {
 	let getManifest: typeof import("../manifest").getManifest;

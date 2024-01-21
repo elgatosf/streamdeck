@@ -1,4 +1,4 @@
-import type { Manifest } from "../../manifest";
+import type { Manifest } from "../manifest";
 import type { EventIdentifier, PayloadObject } from "./index";
 
 /**

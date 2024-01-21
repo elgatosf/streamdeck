@@ -1,5 +1,5 @@
+import type { Manifest } from "../api/manifest";
 import { Constructor, Unpack } from "../common/utils";
-import { Manifest } from "../manifest";
 import { SingletonAction } from "./singleton-action";
 
 /**

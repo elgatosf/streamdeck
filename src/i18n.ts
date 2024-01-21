@@ -2,9 +2,9 @@ import file from "node:fs";
 import path from "node:path";
 
 import { Language, supportedLanguages } from "./api/i18n";
+import type { Manifest } from "./api/manifest";
 import { get } from "./common/utils";
 import { Logger } from "./logging";
-import type { Manifest } from "./manifest";
 
 /**
  * Provides locales and translations for internalization.
