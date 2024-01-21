@@ -1,13 +1,13 @@
-import type * as api from "../../api/events";
-import { Action } from "../actions/action";
+import type { ActionIdentifier, DeviceIdentifier, EventMessage, PayloadObject } from "../../api";
+import type { Action } from "../actions/action";
 import { Event } from "./event";
 
 /**
  * Provides information for an event relating to an action.
  */
 export class ActionWithoutPayloadEvent<
-	TSource extends Extract<api.EventMessage, api.ActionIdentifier & api.DeviceIdentifier>,
-	TSettings extends api.PayloadObject<TSettings>
+	TSource extends Extract<EventMessage, ActionIdentifier & DeviceIdentifier>,
+	TSettings extends PayloadObject<TSettings>
 > extends Event<TSource> {
 	/**
 	 * Device identifier the action is associated with.
@@ -32,8 +32,8 @@ export class ActionWithoutPayloadEvent<
  * Provides information for an event relating to an action.
  */
 export class ActionEvent<
-	TSource extends Extract<api.EventMessage, api.ActionIdentifier & api.DeviceIdentifier> & PayloadEvent<TSource>,
-	TSettings extends api.PayloadObject<TSettings> = ExtractSettings<TSource>
+	TSource extends Extract<EventMessage, ActionIdentifier & DeviceIdentifier> & PayloadEvent<TSource>,
+	TSettings extends PayloadObject<TSettings> = ExtractSettings<TSource>
 > extends ActionWithoutPayloadEvent<TSource, TSettings> {
 	/**
 	 * Provides additional information about the event that occurred, e.g. how many `ticks` the dial was rotated, the current `state` of the action, etc.
@@ -75,7 +75,7 @@ type ExtractSettings<T> = ExtractPayload<T> extends {
 	settings: infer TSettings;
 }
 	? TSettings extends object
-		? TSettings extends api.PayloadObject<TSettings>
+		? TSettings extends PayloadObject<TSettings>
 			? TSettings
 			: never
 		: never

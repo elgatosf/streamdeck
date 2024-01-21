@@ -1,6 +1,4 @@
-import type { SetTriggerDescription } from "../../api/command";
-import type { ActionIdentifier, PayloadObject, State } from "../../api/events";
-import type { FeedbackPayload } from "../../api/layout";
+import type { ActionIdentifier, FeedbackPayload, PayloadObject, SetTriggerDescription, State } from "../../api";
 import type { StreamDeckConnection } from "../connectivity/connection";
 import { getSettings } from "../settings/provider";
 import type { UIClient } from "../ui";

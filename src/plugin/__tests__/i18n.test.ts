@@ -2,7 +2,7 @@ import fs, { Dirent } from "node:fs";
 import path from "node:path";
 
 import { getMockedLogger } from "../../../tests/__mocks__/logging";
-import type { Manifest } from "../../api/manifest";
+import type { Manifest } from "../../api";
 import { I18nProvider } from "../i18n";
 import type { Logger } from "../logging";
 

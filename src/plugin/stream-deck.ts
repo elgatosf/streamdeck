@@ -1,5 +1,4 @@
-import type { Manifest } from "../api/manifest";
-import type { RegistrationInfo } from "../api/registration";
+import type { Manifest, RegistrationInfo } from "../api";
 import { ActionClient } from "./actions/client";
 import { StreamDeckConnection, createConnection } from "./connectivity/connection";
 import { RegistrationParameters } from "./connectivity/registration-parameters";

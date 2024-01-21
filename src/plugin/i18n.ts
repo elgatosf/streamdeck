@@ -1,8 +1,7 @@
 import file from "node:fs";
 import path from "node:path";
 
-import { Language, supportedLanguages } from "../api/i18n";
-import type { Manifest } from "../api/manifest";
+import { supportedLanguages, type Language, type Manifest } from "../api";
 import { get } from "./common/utils";
 import { Logger } from "./logging";
 

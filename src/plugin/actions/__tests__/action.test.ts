@@ -1,20 +1,21 @@
 import { getConnection } from "../../../../tests/__mocks__/connection";
+import {
+	Target,
+	type ActionIdentifier,
+	type DidReceiveGlobalSettings,
+	type GetSettings,
+	type SendToPropertyInspector,
+	type SetFeedback,
+	type SetFeedbackLayout,
+	type SetImage,
+	type SetSettings,
+	type SetState,
+	type SetTitle,
+	type SetTriggerDescription,
+	type ShowAlert,
+	type ShowOk
+} from "../../../api";
 import * as mockEvents from "../../../api/__mocks__/events";
-import type {
-	GetSettings,
-	SendToPropertyInspector,
-	SetFeedback,
-	SetFeedbackLayout,
-	SetImage,
-	SetSettings,
-	SetState,
-	SetTitle,
-	SetTriggerDescription,
-	ShowAlert,
-	ShowOk
-} from "../../../api/command";
-import { ActionIdentifier, DidReceiveGlobalSettings } from "../../../api/events";
-import { Target } from "../../../api/target";
 import { Action } from "../action";
 
 describe("Action", () => {

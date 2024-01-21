@@ -1,4 +1,4 @@
-import { RegistrationParameter, type RegistrationInfo } from "../../api/registration";
+import { RegistrationParameter, type RegistrationInfo } from "../../api";
 import { type Logger } from "../logging";
 
 /**

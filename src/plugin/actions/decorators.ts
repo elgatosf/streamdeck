@@ -1,6 +1,6 @@
-import type { Manifest } from "../../api/manifest";
-import { Constructor, Unpack } from "../common/utils";
-import { SingletonAction } from "./singleton-action";
+import type { Manifest } from "../../api";
+import type { Constructor, Unpack } from "../common/utils";
+import type { SingletonAction } from "./singleton-action";
 
 /**
  * Definition used to define an action.

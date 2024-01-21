@@ -1,4 +1,4 @@
-import type { PayloadObject } from "../../api/events";
+import type { PayloadObject } from "../../api";
 import type {
 	DialDownEvent,
 	DialRotateEvent,

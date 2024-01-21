@@ -1,4 +1,4 @@
-import type * as api from "../../api/events";
+import type { DidReceiveSettings, PayloadObject } from "../../api";
 import type { StreamDeckConnection } from "../connectivity/connection";
 
 /**
@@ -8,9 +8,9 @@ import type { StreamDeckConnection } from "../connectivity/connection";
  * @param context Unique identifier of the action instance whose settings are being requested.
  * @returns Promise containing the action instance's settings.
  */
-export function getSettings<T extends api.PayloadObject<T> = object>(connection: StreamDeckConnection, context: string): Promise<T> {
+export function getSettings<T extends PayloadObject<T> = object>(connection: StreamDeckConnection, context: string): Promise<T> {
 	return new Promise((resolve) => {
-		const callback = (ev: api.DidReceiveSettings<T>): void => {
+		const callback = (ev: DidReceiveSettings<T>): void => {
 			if (ev.context == context) {
 				resolve(ev.payload.settings);
 				connection.removeListener("didReceiveSettings", callback);

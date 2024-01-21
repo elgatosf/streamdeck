@@ -1,10 +1,7 @@
 import { StreamDeck } from "./stream-deck";
 
-export { DeviceType } from "../api/device";
+export { DeviceType, Target, type Language, type Manifest, type RegistrationInfo } from "../api";
 export * from "../api/layout";
-export { Manifest } from "../api/manifest";
-export { RegistrationInfo } from "../api/registration";
-export { Target } from "../api/target";
 export { Action } from "./actions/action";
 export { action } from "./actions/decorators";
 export { SingletonAction } from "./actions/singleton-action";

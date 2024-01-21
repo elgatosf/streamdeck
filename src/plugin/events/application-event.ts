@@ -1,4 +1,4 @@
-import type { ApplicationDidLaunch, ApplicationDidTerminate } from "../../api/events";
+import type { ApplicationDidLaunch, ApplicationDidTerminate } from "../../api";
 import { Event } from "./event";
 
 /**

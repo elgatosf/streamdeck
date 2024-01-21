@@ -1,4 +1,4 @@
-import type { EventMessage } from "../../api/events";
+import type { EventMessage } from "../../api";
 
 /**
  * Provides information for events received from Stream Deck.

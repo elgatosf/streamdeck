@@ -1,4 +1,4 @@
-import type * as api from "../../api/events";
+import type { DidReceiveGlobalSettings, DidReceiveSettings, PayloadObject } from "../../api";
 import { Action } from "../actions/action";
 import type { IDisposable } from "../common/disposable";
 import type { StreamDeckConnection } from "../connectivity/connection";
@@ -19,9 +19,9 @@ export class SettingsClient {
 	 * @template T The type of global settings associated with the plugin.
 	 * @returns Promise containing the plugin's global settings.
 	 */
-	public getGlobalSettings<T extends api.PayloadObject<T> = object>(): Promise<T> {
+	public getGlobalSettings<T extends PayloadObject<T> = object>(): Promise<T> {
 		return new Promise((resolve) => {
-			this.connection.once("didReceiveGlobalSettings", (ev: api.DidReceiveGlobalSettings<T>) => resolve(ev.payload.settings));
+			this.connection.once("didReceiveGlobalSettings", (ev: DidReceiveGlobalSettings<T>) => resolve(ev.payload.settings));
 			this.connection.send({
 				event: "getGlobalSettings",
 				context: this.connection.registrationParameters.pluginUUID
@@ -35,8 +35,8 @@ export class SettingsClient {
 	 * @param listener Function to be invoked when the event occurs.
 	 * @returns A disposable that, when disposed, removes the listener.
 	 */
-	public onDidReceiveGlobalSettings<T extends api.PayloadObject<T> = object>(listener: (ev: DidReceiveGlobalSettingsEvent<T>) => void): IDisposable {
-		return this.connection.disposableOn("didReceiveGlobalSettings", (ev: api.DidReceiveGlobalSettings<T>) => listener(new DidReceiveGlobalSettingsEvent(ev)));
+	public onDidReceiveGlobalSettings<T extends PayloadObject<T> = object>(listener: (ev: DidReceiveGlobalSettingsEvent<T>) => void): IDisposable {
+		return this.connection.disposableOn("didReceiveGlobalSettings", (ev: DidReceiveGlobalSettings<T>) => listener(new DidReceiveGlobalSettingsEvent(ev)));
 	}
 
 	/**
@@ -45,9 +45,9 @@ export class SettingsClient {
 	 * @param listener Function to be invoked when the event occurs.
 	 * @returns A disposable that, when disposed, removes the listener.
 	 */
-	public onDidReceiveSettings<T extends api.PayloadObject<T> = object>(listener: (ev: DidReceiveSettingsEvent<T>) => void): IDisposable {
-		return this.connection.disposableOn("didReceiveSettings", (ev: api.DidReceiveSettings<T>) =>
-			listener(new ActionEvent<api.DidReceiveSettings<T>>(new Action<T>(this.connection, ev), ev))
+	public onDidReceiveSettings<T extends PayloadObject<T> = object>(listener: (ev: DidReceiveSettingsEvent<T>) => void): IDisposable {
+		return this.connection.disposableOn("didReceiveSettings", (ev: DidReceiveSettings<T>) =>
+			listener(new ActionEvent<DidReceiveSettings<T>>(new Action<T>(this.connection, ev), ev))
 		);
 	}
 

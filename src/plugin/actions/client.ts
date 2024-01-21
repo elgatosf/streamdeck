@@ -1,6 +1,18 @@
-import { Manifest } from "..";
-import type { SetImage, SetTitle } from "../../api/command";
-import type * as api from "../../api/events";
+import type {
+	DialDown,
+	DialRotate,
+	DialUp,
+	KeyDown,
+	KeyUp,
+	Manifest,
+	PayloadObject,
+	SetImage,
+	SetTitle,
+	TitleParametersDidChange,
+	TouchTap,
+	WillAppear,
+	WillDisappear
+} from "../../api";
 import type { IDisposable } from "../common/disposable";
 import type { StreamDeckConnection } from "../connectivity/connection";
 import {
@@ -53,7 +65,7 @@ export class ActionClient {
 	 * @param id The instance identifier of the action to control; identifiers are supplied as part of events emitted by this client, and are accessible via {@link Action.id}.
 	 * @returns The {@link Action} controller.
 	 */
-	public createController<T extends api.PayloadObject<T> = object>(id: string): Omit<Action<T>, "manifestId"> {
+	public createController<T extends PayloadObject<T> = object>(id: string): Omit<Action<T>, "manifestId"> {
 		return new Action<T>(this.connection, {
 			action: "",
 			context: id
@@ -68,8 +80,8 @@ export class ActionClient {
 	 * @param listener Function to be invoked when the event occurs.
 	 * @returns A disposable that, when disposed, removes the listener.
 	 */
-	public onDialDown<T extends api.PayloadObject<T> = object>(listener: (ev: DialDownEvent<T>) => void): IDisposable {
-		return this.connection.disposableOn("dialDown", (ev: api.DialDown<T>) => listener(new ActionEvent<api.DialDown<T>>(new Action<T>(this.connection, ev), ev)));
+	public onDialDown<T extends PayloadObject<T> = object>(listener: (ev: DialDownEvent<T>) => void): IDisposable {
+		return this.connection.disposableOn("dialDown", (ev: DialDown<T>) => listener(new ActionEvent<DialDown<T>>(new Action<T>(this.connection, ev), ev)));
 	}
 
 	/**
@@ -78,8 +90,8 @@ export class ActionClient {
 	 * @param listener Function to be invoked when the event occurs.
 	 * @returns A disposable that, when disposed, removes the listener.
 	 */
-	public onDialRotate<T extends api.PayloadObject<T> = object>(listener: (ev: DialRotateEvent<T>) => void): IDisposable {
-		return this.connection.disposableOn("dialRotate", (ev: api.DialRotate<T>) => listener(new ActionEvent<api.DialRotate<T>>(new Action<T>(this.connection, ev), ev)));
+	public onDialRotate<T extends PayloadObject<T> = object>(listener: (ev: DialRotateEvent<T>) => void): IDisposable {
+		return this.connection.disposableOn("dialRotate", (ev: DialRotate<T>) => listener(new ActionEvent<DialRotate<T>>(new Action<T>(this.connection, ev), ev)));
 	}
 
 	/**
@@ -90,8 +102,8 @@ export class ActionClient {
 	 * @param listener Function to be invoked when the event occurs.
 	 * @returns A disposable that, when disposed, removes the listener.
 	 */
-	public onDialUp<T extends api.PayloadObject<T> = object>(listener: (ev: DialUpEvent<T>) => void): IDisposable {
-		return this.connection.disposableOn("dialUp", (ev: api.DialUp<T>) => listener(new ActionEvent<api.DialUp<T>>(new Action<T>(this.connection, ev), ev)));
+	public onDialUp<T extends PayloadObject<T> = object>(listener: (ev: DialUpEvent<T>) => void): IDisposable {
+		return this.connection.disposableOn("dialUp", (ev: DialUp<T>) => listener(new ActionEvent<DialUp<T>>(new Action<T>(this.connection, ev), ev)));
 	}
 
 	/**
@@ -102,8 +114,8 @@ export class ActionClient {
 	 * @param listener Function to be invoked when the event occurs.
 	 * @returns A disposable that, when disposed, removes the listener.
 	 */
-	public onKeyDown<T extends api.PayloadObject<T> = object>(listener: (ev: KeyDownEvent<T>) => void): IDisposable {
-		return this.connection.disposableOn("keyDown", (ev: api.KeyDown<T>) => listener(new ActionEvent<api.KeyDown<T>>(new Action<T>(this.connection, ev), ev)));
+	public onKeyDown<T extends PayloadObject<T> = object>(listener: (ev: KeyDownEvent<T>) => void): IDisposable {
+		return this.connection.disposableOn("keyDown", (ev: KeyDown<T>) => listener(new ActionEvent<KeyDown<T>>(new Action<T>(this.connection, ev), ev)));
 	}
 
 	/**
@@ -114,8 +126,8 @@ export class ActionClient {
 	 * @param listener Function to be invoked when the event occurs.
 	 * @returns A disposable that, when disposed, removes the listener.
 	 */
-	public onKeyUp<T extends api.PayloadObject<T> = object>(listener: (ev: KeyUpEvent<T>) => void): IDisposable {
-		return this.connection.disposableOn("keyUp", (ev: api.KeyUp<T>) => listener(new ActionEvent<api.KeyUp<T>>(new Action<T>(this.connection, ev), ev)));
+	public onKeyUp<T extends PayloadObject<T> = object>(listener: (ev: KeyUpEvent<T>) => void): IDisposable {
+		return this.connection.disposableOn("keyUp", (ev: KeyUp<T>) => listener(new ActionEvent<KeyUp<T>>(new Action<T>(this.connection, ev), ev)));
 	}
 
 	/**
@@ -124,9 +136,9 @@ export class ActionClient {
 	 * @param listener Function to be invoked when the event occurs.
 	 * @returns A disposable that, when disposed, removes the listener.
 	 */
-	public onTitleParametersDidChange<T extends api.PayloadObject<T> = object>(listener: (ev: TitleParametersDidChangeEvent<T>) => void): IDisposable {
-		return this.connection.disposableOn("titleParametersDidChange", (ev: api.TitleParametersDidChange<T>) =>
-			listener(new ActionEvent<api.TitleParametersDidChange<T>>(new Action<T>(this.connection, ev), ev))
+	public onTitleParametersDidChange<T extends PayloadObject<T> = object>(listener: (ev: TitleParametersDidChangeEvent<T>) => void): IDisposable {
+		return this.connection.disposableOn("titleParametersDidChange", (ev: TitleParametersDidChange<T>) =>
+			listener(new ActionEvent<TitleParametersDidChange<T>>(new Action<T>(this.connection, ev), ev))
 		);
 	}
 
@@ -136,10 +148,8 @@ export class ActionClient {
 	 * @param listener Function to be invoked when the event occurs.
 	 * @returns A disposable that, when disposed, removes the listener.
 	 */
-	public onTouchTap<TSettings extends api.PayloadObject<TSettings> = object>(listener: (ev: TouchTapEvent<TSettings>) => void): IDisposable {
-		return this.connection.disposableOn("touchTap", (ev: api.TouchTap<TSettings>) =>
-			listener(new ActionEvent<api.TouchTap<TSettings>>(new Action<TSettings>(this.connection, ev), ev))
-		);
+	public onTouchTap<TSettings extends PayloadObject<TSettings> = object>(listener: (ev: TouchTapEvent<TSettings>) => void): IDisposable {
+		return this.connection.disposableOn("touchTap", (ev: TouchTap<TSettings>) => listener(new ActionEvent<TouchTap<TSettings>>(new Action<TSettings>(this.connection, ev), ev)));
 	}
 
 	/**
@@ -149,8 +159,8 @@ export class ActionClient {
 	 * @param listener Function to be invoked when the event occurs.
 	 * @returns A disposable that, when disposed, removes the listener.
 	 */
-	public onWillAppear<T extends api.PayloadObject<T> = object>(listener: (ev: WillAppearEvent<T>) => void): IDisposable {
-		return this.connection.disposableOn("willAppear", (ev: api.WillAppear<T>) => listener(new ActionEvent<api.WillAppear<T>>(new Action<T>(this.connection, ev), ev)));
+	public onWillAppear<T extends PayloadObject<T> = object>(listener: (ev: WillAppearEvent<T>) => void): IDisposable {
+		return this.connection.disposableOn("willAppear", (ev: WillAppear<T>) => listener(new ActionEvent<WillAppear<T>>(new Action<T>(this.connection, ev), ev)));
 	}
 
 	/**
@@ -160,8 +170,8 @@ export class ActionClient {
 	 * @param listener Function to be invoked when the event occurs.
 	 * @returns A disposable that, when disposed, removes the listener.
 	 */
-	public onWillDisappear<T extends api.PayloadObject<T> = object>(listener: (ev: WillDisappearEvent<T>) => void): IDisposable {
-		return this.connection.disposableOn("willDisappear", (ev: api.WillDisappear<T>) => listener(new ActionEvent<api.WillDisappear<T>>(new Action<T>(this.connection, ev), ev)));
+	public onWillDisappear<T extends PayloadObject<T> = object>(listener: (ev: WillDisappearEvent<T>) => void): IDisposable {
+		return this.connection.disposableOn("willDisappear", (ev: WillDisappear<T>) => listener(new ActionEvent<WillDisappear<T>>(new Action<T>(this.connection, ev), ev)));
 	}
 
 	/**
@@ -177,7 +187,7 @@ export class ActionClient {
 	 *
 	 * streamDeck.actions.registerAction(new MyCustomAction());
 	 */
-	public registerAction<TAction extends SingletonAction<TSettings>, TSettings extends api.PayloadObject<TSettings> = object>(action: TAction): void {
+	public registerAction<TAction extends SingletonAction<TSettings>, TSettings extends PayloadObject<TSettings> = object>(action: TAction): void {
 		if (action.manifestId === undefined) {
 			throw new Error("The action's manifestId cannot be undefined.");
 		}
@@ -236,7 +246,7 @@ export type TitleOptions = Omit<SetTitle["payload"], "title">;
 /**
  * Event associated with an {@link Action}.
  */
-type RoutingEvent<T extends api.PayloadObject<T>> = {
+type RoutingEvent<T extends PayloadObject<T>> = {
 	/**
 	 * The {@link Action} the event is associated with.
 	 */

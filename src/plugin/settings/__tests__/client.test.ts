@@ -1,6 +1,6 @@
 import { getConnection } from "../../../../tests/__mocks__/connection";
+import type { GetGlobalSettings, SetGlobalSettings } from "../../../api";
 import * as mockEvents from "../../../api/__mocks__/events";
-import type { GetGlobalSettings, SetGlobalSettings } from "../../../api/command";
 import { Action } from "../../actions/action";
 import { StreamDeckConnection } from "../../connectivity/connection";
 import { DidReceiveGlobalSettingsEvent, DidReceiveSettingsEvent } from "../../events";

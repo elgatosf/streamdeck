@@ -1,4 +1,4 @@
-import type { DeviceDidConnect, DeviceDidDisconnect } from "../../api/events";
+import type { DeviceDidConnect, DeviceDidDisconnect } from "../../api";
 import { Event } from "./event";
 
 /**

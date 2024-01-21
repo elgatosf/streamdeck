@@ -1,7 +1,7 @@
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 
-import { Manifest } from "../api/manifest";
+import { Manifest } from "../api";
 import { Version } from "./common/version";
 
 let manifest: Omit<Manifest, "$schema">;

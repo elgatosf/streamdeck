@@ -1,4 +1,4 @@
-import type * as api from "../api/events";
+import type { PayloadObject, PropertyInspectorDidAppear, PropertyInspectorDidDisappear, SendToPlugin } from "../api";
 import { Action } from "./actions/action";
 import type { IDisposable } from "./common/disposable";
 import type { StreamDeckConnection } from "./connectivity/connection";
@@ -20,9 +20,9 @@ export class UIClient {
 	 * @param listener Function to be invoked when the event occurs.
 	 * @returns A disposable that, when disposed, removes the listener.
 	 */
-	public onPropertyInspectorDidAppear<T extends api.PayloadObject<T> = object>(listener: (ev: PropertyInspectorDidAppearEvent<T>) => void): IDisposable {
+	public onPropertyInspectorDidAppear<T extends PayloadObject<T> = object>(listener: (ev: PropertyInspectorDidAppearEvent<T>) => void): IDisposable {
 		return this.connection.disposableOn("propertyInspectorDidAppear", (ev) =>
-			listener(new ActionWithoutPayloadEvent<api.PropertyInspectorDidAppear, T>(new Action<T>(this.connection, ev), ev))
+			listener(new ActionWithoutPayloadEvent<PropertyInspectorDidAppear, T>(new Action<T>(this.connection, ev), ev))
 		);
 	}
 
@@ -32,9 +32,9 @@ export class UIClient {
 	 * @param listener Function to be invoked when the event occurs.
 	 * @returns A disposable that, when disposed, removes the listener.
 	 */
-	public onPropertyInspectorDidDisappear<T extends api.PayloadObject<T> = object>(listener: (ev: PropertyInspectorDidDisappearEvent<T>) => void): IDisposable {
+	public onPropertyInspectorDidDisappear<T extends PayloadObject<T> = object>(listener: (ev: PropertyInspectorDidDisappearEvent<T>) => void): IDisposable {
 		return this.connection.disposableOn("propertyInspectorDidDisappear", (ev) =>
-			listener(new ActionWithoutPayloadEvent<api.PropertyInspectorDidDisappear, T>(new Action<T>(this.connection, ev), ev))
+			listener(new ActionWithoutPayloadEvent<PropertyInspectorDidDisappear, T>(new Action<T>(this.connection, ev), ev))
 		);
 	}
 
@@ -45,10 +45,10 @@ export class UIClient {
 	 * @param listener Function to be invoked when the event occurs.
 	 * @returns A disposable that, when disposed, removes the listener.
 	 */
-	public onSendToPlugin<TPayload extends api.PayloadObject<TPayload> = object, TSettings extends api.PayloadObject<TSettings> = object>(
+	public onSendToPlugin<TPayload extends PayloadObject<TPayload> = object, TSettings extends PayloadObject<TSettings> = object>(
 		listener: (ev: SendToPluginEvent<TPayload, TSettings>) => void
 	): IDisposable {
-		return this.connection.disposableOn("sendToPlugin", (ev: api.SendToPlugin<TPayload>) =>
+		return this.connection.disposableOn("sendToPlugin", (ev: SendToPlugin<TPayload>) =>
 			listener(new SendToPluginEvent<TPayload, TSettings>(new Action<TSettings>(this.connection, ev), ev))
 		);
 	}

@@ -1,4 +1,4 @@
-import type { Manifest } from "../../api/manifest";
+import type { Manifest } from "../../api";
 import { Version } from "../common/version";
 import type { getManifest as __getManifest, getSoftwareMinimumVersion as __getSoftwareMinimumVersion } from "../manifest";
 
