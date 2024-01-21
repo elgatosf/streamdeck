@@ -10,6 +10,7 @@ describe("Index", () => {
 		// Arrange, act, assert.
 		const index = (await require("../index")) as typeof import("../index");
 		expect(index.default).toBeInstanceOf(StreamDeck);
+		expect(index.default).toStrictEqual(index.streamDeck);
 		expect(StreamDeck).toHaveBeenCalledTimes(1);
 		expect(StreamDeck).toHaveBeenCalledWith();
 	});

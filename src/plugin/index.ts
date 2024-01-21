@@ -1,6 +1,6 @@
 import { StreamDeck } from "./stream-deck";
 
-export { DeviceType, Target, type Language, type Manifest, type RegistrationInfo } from "../api";
+export { DeviceType, Target, type Language, type Manifest, type PayloadObject, type RegistrationInfo } from "../api";
 export * from "../api/layout";
 export { Action } from "./actions/action";
 export { action } from "./actions/decorators";
@@ -9,4 +9,5 @@ export { EventEmitter, EventsOf } from "./common/event-emitter";
 export * from "./events";
 export { LogLevel } from "./logging";
 
-export default new StreamDeck();
+export const streamDeck = new StreamDeck();
+export default streamDeck;
