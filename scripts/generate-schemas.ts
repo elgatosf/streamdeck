@@ -4,7 +4,7 @@ import { Schema, createGenerator } from "ts-json-schema-generator";
 
 // Create a generator so we're able to produce multiple schemas.
 const generator = createGenerator({
-	path: join(__dirname, "../src/index.ts"),
+	path: join(__dirname, "../src/plugin/index.ts"),
 	skipTypeCheck: true,
 	tsconfig: join(__dirname, "../tsconfig.json")
 });

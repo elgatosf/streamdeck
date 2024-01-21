@@ -15,7 +15,7 @@ const banner = `/**!
 
 const config: RollupOptions[] = [
 	{
-		input: "src/index.ts",
+		input: "src/plugin/index.ts",
 		output: {
 			file: "dist/index.js",
 			banner,
@@ -34,7 +34,7 @@ const config: RollupOptions[] = [
 		external: ["ws"]
 	},
 	{
-		input: "src/index.ts",
+		input: "src/plugin/index.ts",
 		output: {
 			file: "dist/index.d.ts"
 		},

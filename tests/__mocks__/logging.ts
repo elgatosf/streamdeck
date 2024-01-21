@@ -1,7 +1,7 @@
-import { Logger, LogLevel } from "../../src/logging";
-import { LoggerOptions } from "../../src/logging/logger";
+import { Logger, LogLevel } from "../../src/plugin/logging";
+import { LoggerOptions } from "../../src/plugin/logging/logger";
 
-jest.mock("../../src/logging");
+jest.mock("../../src/plugin/logging");
 
 /**
  * Creates a new mock {@link Logger}.

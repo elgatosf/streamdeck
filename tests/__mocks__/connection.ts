@@ -1,11 +1,11 @@
 import EventEmitter from "node:events";
 import WebSocket from "ws";
 import { EventMessage } from "../../src/api/events";
-import { registrationParameters } from "../../src/connectivity/__mocks__/registration-parameters";
-import { StreamDeckConnection, createConnection } from "../../src/connectivity/connection";
+import { registrationParameters } from "../../src/plugin/connectivity/__mocks__/registration-parameters";
+import { StreamDeckConnection, createConnection } from "../../src/plugin/connectivity/connection";
 import { getMockedLogger } from "./logging";
 
-jest.mock("../../src/connectivity/registration-parameters");
+jest.mock("../../src/plugin/connectivity/registration-parameters");
 jest.mock("ws", () => {
 	const MockWebSocket = jest.fn(function () {
 		const eventEmitter = new EventEmitter();
