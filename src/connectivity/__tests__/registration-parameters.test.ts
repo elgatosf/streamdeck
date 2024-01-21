@@ -1,6 +1,6 @@
 import { getMockedLogger } from "../../../tests/__mocks__/logging";
 import type { Logger } from "../../logging";
-import { RegistrationParameters } from "../registration";
+import { RegistrationParameters } from "../registration-parameters";
 
 jest.mock("../../logging");
 

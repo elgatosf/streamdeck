@@ -7,7 +7,7 @@ import { Logger } from "../logging";
 
 import { PluginEventMap } from "../api/events";
 import { Version } from "../common/version";
-import { RegistrationParameters } from "./registration";
+import { RegistrationParameters } from "./registration-parameters";
 
 /**
  * Creates a new {@link StreamDeckConnection} capable of connecting and communicating with Stream Deck.

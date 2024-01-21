@@ -1,5 +1,5 @@
 import { DeviceType } from "../../api/device";
-import type { RegistrationParameters as __RegistrationParameters } from "../registration";
+import type { RegistrationParameters as __RegistrationParameters } from "../registration-parameters";
 
 /**
  * Mock {@link __RegistrationParameters}.

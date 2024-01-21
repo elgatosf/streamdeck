@@ -1,6 +1,6 @@
 import { ActionClient } from "../actions/client";
 import { createConnection } from "../connectivity/connection";
-import { RegistrationParameters } from "../connectivity/registration";
+import { RegistrationParameters } from "../connectivity/registration-parameters";
 import { DeviceClient } from "../devices";
 import { I18nProvider } from "../i18n";
 import * as logging from "../logging";
@@ -16,7 +16,7 @@ jest.mock("../actions/client");
 jest.mock("../connectivity/connection", () => {
 	return { createConnection: jest.fn().mockReturnValue({ connect: jest.fn() }) };
 });
-jest.mock("../connectivity/registration");
+jest.mock("../connectivity/registration-parameters");
 jest.mock("../devices");
 jest.mock("../i18n");
 jest.mock("../logging");

@@ -1,6 +1,7 @@
 import { ActionClient } from "./actions/client";
+import type { RegistrationInfo } from "./api/registration";
 import { StreamDeckConnection, createConnection } from "./connectivity/connection";
-import { RegistrationInfo, RegistrationParameters } from "./connectivity/registration";
+import { RegistrationParameters } from "./connectivity/registration-parameters";
 import { Device, DeviceClient } from "./devices";
 import { I18nProvider } from "./i18n";
 import { Logger, createLogger } from "./logging";

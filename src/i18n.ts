@@ -1,8 +1,8 @@
 import file from "node:fs";
 import path from "node:path";
 
+import { Language, supportedLanguages } from "./api/i18n";
 import { get } from "./common/utils";
-import { Language, supportedLanguages } from "./connectivity/registration";
 import { Logger } from "./logging";
 import type { Manifest } from "./manifest";
 
@@ -36,7 +36,11 @@ export class I18nProvider {
 	 * @param manifest Manifest that accompanies the plugin.
 	 * @param logger Logger responsible for capturing log entries.
 	 */
-	constructor(private readonly language: Language, manifest: Manifest, logger: Logger) {
+	constructor(
+		private readonly language: Language,
+		manifest: Manifest,
+		logger: Logger
+	) {
 		this.logger = logger.createScope("I18nProvider");
 		this.loadLocales(manifest);
 	}

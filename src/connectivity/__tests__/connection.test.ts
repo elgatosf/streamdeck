@@ -1,11 +1,11 @@
 import { EventEmitter } from "node:events";
 import WebSocket from "ws";
-import type { RegistrationParameters } from "../registration";
+import type { RegistrationParameters } from "../registration-parameters";
 
 import { getMockedLogger } from "../../../tests/__mocks__/logging";
 import type { OpenUrl } from "../../api/command";
 import { ApplicationDidLaunch } from "../../api/events";
-import { registrationParameters } from "../__mocks__/registration";
+import { registrationParameters } from "../__mocks__/registration-parameters";
 import { StreamDeckConnection, createConnection } from "../connection";
 
 jest.mock("ws", () => {
