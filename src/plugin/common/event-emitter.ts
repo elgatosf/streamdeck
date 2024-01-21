@@ -27,10 +27,7 @@ export class EventEmitter<TMap extends EventMap<TMap>> {
 	 */
 	public disposableOn<TEventName extends keyof EventsOf<TMap>, TArgs extends EventsOf<TMap>[TEventName]>(eventName: TEventName, listener: (...args: TArgs) => void): IDisposable {
 		this.addListener(eventName, listener);
-		return deferredDisposable(() => {
-			console.log("removing");
-			this.removeListener(eventName, listener);
-		});
+		return deferredDisposable(() => this.removeListener(eventName, listener));
 	}
 
 	/**
