@@ -131,10 +131,22 @@ export type Manifest = {
 			 * **Examples:**
 			 * - $A1
 			 * - layouts/my-custom-layout.json
-			 * @examples
-			 * [ "$X1", "$A0", "$A1", "$B1", "$B2", "$C1" ]
+			 * @example
+			 * "$X1"
+			 * @example
+			 * "$A0"
+			 * @example
+			 * "$A1"
+			 * @example
+			 * "$B1"
+			 * @example
+			 * "$B2"
+			 * @example
+			 * "$C1"
+			 * @example
+			 * "custom.json"
 			 * @pattern
-			 * (^(\$[AB][12])|(\$[XC]1))$|(^(?!\/).+\.[Jj][Ss][Oo][Nn]$)
+			 * ^((?![\.]*[\\\/]+).*\.([Jj][Ss][Oo][Nn]))|(\$(X1|A0|A1|B1|B2|C1))$
 			 */
 			layout?: FilePath<"json"> | "$A0" | "$A1" | "$B1" | "$B2" | "$C1" | "$X1";
 		};
