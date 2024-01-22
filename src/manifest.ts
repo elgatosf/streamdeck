@@ -67,10 +67,8 @@ export type Manifest = {
 			 * - #d60270
 			 * - #1f1f1
 			 * - #0038a8
-			 * @pattern
-			 * ^#(?:[0-9a-fA-F]{3}){1,2}$
 			 */
-			StackColor?: string;
+			StackColor?: HexColorString;
 
 			/**
 			 * Descriptions that define the interaction of the action when it is associated with a dial / touchscreen on the Stream Deck+. This information is shown to the user.
@@ -147,6 +145,8 @@ export type Manifest = {
 			 * "custom.json"
 			 * @pattern
 			 * ^((?![\.]*[\\\/]+).*\.([Jj][Ss][Oo][Nn]))|(\$(X1|A0|A1|B1|B2|C1))$
+			 * @errorMessage
+			 * String must be a pre-defined layout, or a .json file located within the plugin's directory
 			 */
 			layout?: FilePath<"json"> | "$A0" | "$A1" | "$B1" | "$B2" | "$C1" | "$X1";
 		};
@@ -217,6 +217,8 @@ export type Manifest = {
 		 * - tv.twitch.go-live
 		 * @pattern
 		 * ^([a-z0-9\-_]+)(\.[a-z0-9\-_]+)+$
+		 * @errorMessage
+		 * String must use reverse DNS format, and must only contain lowercase alphanumeric characters (a-z, 0-9), hyphens (-), underscores (_), and periods (.)
 		 */
 		UUID: string;
 
@@ -486,9 +488,20 @@ export type Manifest = {
 	 * "1.0.0"
 	 * @pattern
 	 * ^\d+(\.\d+){2,3}$
+	 * @errorMessage
+	 * String must be a semantic version (pre-releases are not permitted)
 	 */
 	Version: string;
 };
+
+/**
+ * Color represents as a hexadecimal string.
+ * @pattern
+ * ^#(?:[0-9a-fA-F]{3}){1,2}$
+ * @errorMessage
+ * String must be hexadecimal color.
+ */
+type HexColorString = string;
 
 /**
  * File path that represents an HTML file relative to the plugin's manifest.
@@ -618,10 +631,8 @@ type ActionState = {
 	 * - #5bcefa
 	 * - #f5a9b8
 	 * - #FFFFFF
-	 * @pattern
-	 * ^#(?:[0-9a-fA-F]{3}){1,2}$
 	 */
-	TitleColor?: string;
+	TitleColor?: HexColorString;
 };
 
 let manifest: Omit<Manifest, "$schema">;
