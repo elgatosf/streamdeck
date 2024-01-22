@@ -463,16 +463,18 @@ export type Manifest = {
 	URL?: string;
 
 	/**
-	 * Version of the plugin, represented as a {@link https://semver.org semantic version} (excluding pre-release values).
+	 * Version of the plugin, represented as a semantic version, excluding pre-release values (https://semver.org). The version can also include an optional build number.
 	 *
 	 * **Examples:**
 	 * - 1.0.3 ✅
-	 * - 0.0.99 ✅
+	 * - 0.0.99.123 ✅
 	 * - 2.1.9-beta1 ❌
 	 * @example
 	 * "1.0.0"
+	 * @pattern
+	 * ^\d+(\.\d+){2,3}$
 	 */
-	Version: `${number}.${number}.${number}`;
+	Version: string;
 };
 
 /**

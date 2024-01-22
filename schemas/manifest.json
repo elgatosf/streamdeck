@@ -568,11 +568,12 @@
 				},
 				"Version": {
 					"type": "string",
-					"description": "Version of the plugin, represented as a  {@link  https://semver.org semantic version }  (excluding pre-release values).\n\n**Examples:**\n- 1.0.3 ✅\n- 0.0.99 ✅\n- 2.1.9-beta1 ❌",
+					"description": "Version of the plugin, represented as a semantic version, excluding pre-release values (https://semver.org). The version can also include an optional build number.\n\n**Examples:**\n- 1.0.3 ✅\n- 0.0.99.123 ✅\n- 2.1.9-beta1 ❌",
 					"examples": [
 						"1.0.0"
 					],
-					"markdownDescription": "Version of the plugin, represented as a  {@link  https://semver.org semantic version }  (excluding pre-release values).\n\n**Examples:**\n- 1.0.3 ✅\n- 0.0.99 ✅\n- 2.1.9-beta1 ❌"
+					"pattern": "^\\d+(\\.\\d+){2,3}$",
+					"markdownDescription": "Version of the plugin, represented as a semantic version, excluding pre-release values (https://semver.org). The version can also include an optional build number.\n\n**Examples:**\n- 1.0.3 ✅\n- 0.0.99.123 ✅\n- 2.1.9-beta1 ❌"
 				}
 			},
 			"required": [
