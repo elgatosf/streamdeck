@@ -23,6 +23,7 @@ export type Manifest = {
 		/**
 		 * Defines the controller type the action is applicable to. **Keypad** refers to a standard action on a Stream Deck device, e.g. 1 of the 15 buttons on the Stream Deck MK.2,
 		 * or a pedal on the Stream Deck Pedal, etc., whereas an **Encoder** refers to a dial / touchscreen on the Stream Deck+.
+		 * @uniqueItems
 		 */
 		Controllers?: [Controller, Controller?];
 
