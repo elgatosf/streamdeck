@@ -47,8 +47,16 @@
 									"Icon": {
 										"type": "string",
 										"description": "Path to the image, with the **file extension omitted**, that will be displayed in the Stream Deck application in the circular canvas that represents the dial of the action. The image must fulfill the following style guidelines.\n- Be in .PNG or .SVG format.\n- Be provided in two sizes, 72x72 px and 144x144 px (@2x).\n\nNB: Can be overridden by the user in the Stream Deck application.\n\n**Examples:**\n- assets/actions/mute/encoder-icon\n- imgs/join-voice-chat-encoder",
-										"pattern": "^[^.]+$",
-										"markdownDescription": "Path to the image, with the **file extension omitted**, that will be displayed in the Stream Deck application in the circular canvas that represents the dial of the action. The image must fulfill the following style guidelines.\n- Be in .PNG or .SVG format.\n- Be provided in two sizes, 72x72 px and 144x144 px (@2x).\n\nNB: Can be overridden by the user in the Stream Deck application.\n\n**Examples:**\n- assets/actions/mute/encoder-icon\n- imgs/join-voice-chat-encoder"
+										"filePath": {
+											"extensions": [
+												".gif",
+												".svg",
+												".png"
+											],
+											"includeExtension": false
+										},
+										"markdownDescription": "Path to the image, with the **file extension omitted**, that will be displayed in the Stream Deck application in the circular canvas that represents the dial of the action. The image must fulfill the following style guidelines.\n- Be in .PNG or .SVG format.\n- Be provided in two sizes, 72x72 px and 144x144 px (@2x).\n\nNB: Can be overridden by the user in the Stream Deck application.\n\n**Examples:**\n- assets/actions/mute/encoder-icon\n- imgs/join-voice-chat-encoder",
+										"pattern": "^(?![~\\.]*[\\\\\\/]+)(?!.*\\.(([Gg][Ii][Ff])|([Ss][Vv][Gg])|([Pp][Nn][Gg]))$).*$"
 									},
 									"StackColor": {
 										"type": "string",
@@ -87,8 +95,15 @@
 									"background": {
 										"type": "string",
 										"description": "Path to the image, with the **file extension omitted**, that will be displayed on the touchscreen behind the action's layout. The image must fulfill the following style guidelines.\n- Be in .PNG or .SVG format.\n- Be provided in two sizes, 200x100 px and 400x200 px (@2x).\n\nNB: Can be overridden by the user in the Stream Deck application.\n\n**Examples:**\n- assets/backgrounds/main\n- imgs/bright-blue-bg",
-										"pattern": "^[^.]+$",
-										"markdownDescription": "Path to the image, with the **file extension omitted**, that will be displayed on the touchscreen behind the action's layout. The image must fulfill the following style guidelines.\n- Be in .PNG or .SVG format.\n- Be provided in two sizes, 200x100 px and 400x200 px (@2x).\n\nNB: Can be overridden by the user in the Stream Deck application.\n\n**Examples:**\n- assets/backgrounds/main\n- imgs/bright-blue-bg"
+										"filePath": {
+											"extensions": [
+												".png",
+												".svg"
+											],
+											"includeExtension": false
+										},
+										"markdownDescription": "Path to the image, with the **file extension omitted**, that will be displayed on the touchscreen behind the action's layout. The image must fulfill the following style guidelines.\n- Be in .PNG or .SVG format.\n- Be provided in two sizes, 200x100 px and 400x200 px (@2x).\n\nNB: Can be overridden by the user in the Stream Deck application.\n\n**Examples:**\n- assets/backgrounds/main\n- imgs/bright-blue-bg",
+										"pattern": "^(?![~\\.]*[\\\\\\/]+)(?!.*\\.(([Pp][Nn][Gg])|([Ss][Vv][Gg]))$).*$"
 									},
 									"layout": {
 										"type": "string",
@@ -112,8 +127,16 @@
 							"Icon": {
 								"type": "string",
 								"description": "Path to the image, with the **file extension omitted**, that will be displayed next to the action in the Stream Deck application's action list. The image must adhere to the following style guidelines.\n- Be in .PNG or .SVG format.\n- Be provided in two sizes, 20x20 px and 40x40 px (@2x).\n- Be monochromatic, with foreground color of #EFEFEF and a transparent background.\n\n**Examples:**\n- assets/counter\n- imgs/actions/mute",
-								"pattern": "^[^.]+$",
-								"markdownDescription": "Path to the image, with the **file extension omitted**, that will be displayed next to the action in the Stream Deck application's action list. The image must adhere to the following style guidelines.\n- Be in .PNG or .SVG format.\n- Be provided in two sizes, 20x20 px and 40x40 px (@2x).\n- Be monochromatic, with foreground color of #EFEFEF and a transparent background.\n\n**Examples:**\n- assets/counter\n- imgs/actions/mute"
+								"filePath": {
+									"extensions": [
+										".gif",
+										".svg",
+										".png"
+									],
+									"includeExtension": false
+								},
+								"markdownDescription": "Path to the image, with the **file extension omitted**, that will be displayed next to the action in the Stream Deck application's action list. The image must adhere to the following style guidelines.\n- Be in .PNG or .SVG format.\n- Be provided in two sizes, 20x20 px and 40x40 px (@2x).\n- Be monochromatic, with foreground color of #EFEFEF and a transparent background.\n\n**Examples:**\n- assets/counter\n- imgs/actions/mute",
+								"pattern": "^(?![~\\.]*[\\\\\\/]+)(?!.*\\.(([Gg][Ii][Ff])|([Ss][Vv][Gg])|([Pp][Nn][Gg]))$).*$"
 							},
 							"Name": {
 								"type": "string",
@@ -123,8 +146,15 @@
 							"PropertyInspectorPath": {
 								"type": "string",
 								"description": "Optional path to the HTML file that represents the property inspector for this action; this is displayed to the user in the Stream Deck application when they add the action, allowing them to configure the action's settings. When `undefined`, the manifest's top-level `PropertyInspectorPath` is used, otherwise none.\n\nNB: Path should be relative to the root of the plugin's folder, with no leading slash.\n\n**Examples:**\n- mute.html\n- actions/join-voice-chat/settings.html",
-								"pattern": "^(?!\\/).+\\.[Hh][Tt][Mm][Ll]?$",
-								"markdownDescription": "Optional path to the HTML file that represents the property inspector for this action; this is displayed to the user in the Stream Deck application when they add the action, allowing them to configure the action's settings. When `undefined`, the manifest's top-level `PropertyInspectorPath` is used, otherwise none.\n\nNB: Path should be relative to the root of the plugin's folder, with no leading slash.\n\n**Examples:**\n- mute.html\n- actions/join-voice-chat/settings.html"
+								"filePath": {
+									"extensions": [
+										".htm",
+										".html"
+									],
+									"includeExtension": true
+								},
+								"markdownDescription": "Optional path to the HTML file that represents the property inspector for this action; this is displayed to the user in the Stream Deck application when they add the action, allowing them to configure the action's settings. When `undefined`, the manifest's top-level `PropertyInspectorPath` is used, otherwise none.\n\nNB: Path should be relative to the root of the plugin's folder, with no leading slash.\n\n**Examples:**\n- mute.html\n- actions/join-voice-chat/settings.html",
+								"pattern": "^(?![~\\.]*[\\\\\\/]+).*\\.(([Hh][Tt][Mm])|([Hh][Tt][Mm][Ll]))$"
 							},
 							"States": {
 								"type": "array",
@@ -161,14 +191,30 @@
 										"Image": {
 											"type": "string",
 											"description": "Path to the image, with the **file extension omitted**, that will be displayed on the Stream Deck when this action's state is active. The image must adhere to the following style guidelines.\n- Be in .PNG or .SVG format.\n- Be provided in two sizes, 72x72 px and 144x144 px (@2x).\n\nNB: Can be overridden by the user in the Stream Deck application.\n\n**Examples:**\n- assets/counter-key\n- assets/icons/mute",
-											"pattern": "^[^.]+$",
-											"markdownDescription": "Path to the image, with the **file extension omitted**, that will be displayed on the Stream Deck when this action's state is active. The image must adhere to the following style guidelines.\n- Be in .PNG or .SVG format.\n- Be provided in two sizes, 72x72 px and 144x144 px (@2x).\n\nNB: Can be overridden by the user in the Stream Deck application.\n\n**Examples:**\n- assets/counter-key\n- assets/icons/mute"
+											"filePath": {
+												"extensions": [
+													".gif",
+													".svg",
+													".png"
+												],
+												"includeExtension": false
+											},
+											"markdownDescription": "Path to the image, with the **file extension omitted**, that will be displayed on the Stream Deck when this action's state is active. The image must adhere to the following style guidelines.\n- Be in .PNG or .SVG format.\n- Be provided in two sizes, 72x72 px and 144x144 px (@2x).\n\nNB: Can be overridden by the user in the Stream Deck application.\n\n**Examples:**\n- assets/counter-key\n- assets/icons/mute",
+											"pattern": "^(?![~\\.]*[\\\\\\/]+)(?!.*\\.(([Gg][Ii][Ff])|([Ss][Vv][Gg])|([Pp][Nn][Gg]))$).*$"
 										},
 										"MultiActionImage": {
 											"type": "string",
 											"description": "Path to the image, with the **file extension omitted**, that will be displayed when the action is being viewed as part of a multi-action. The image must adhere to the following style guidelines.\n- Be in .PNG or .SVG format.\n- Be provided in two sizes, 72x72 px and 144x144 px (@2x).\n\nNB: Can be overridden by the user in the Stream Deck application.\n\n**Examples:**\n- assets/counter-key\n- assets/icons/mute",
-											"pattern": "^[^.]+$",
-											"markdownDescription": "Path to the image, with the **file extension omitted**, that will be displayed when the action is being viewed as part of a multi-action. The image must adhere to the following style guidelines.\n- Be in .PNG or .SVG format.\n- Be provided in two sizes, 72x72 px and 144x144 px (@2x).\n\nNB: Can be overridden by the user in the Stream Deck application.\n\n**Examples:**\n- assets/counter-key\n- assets/icons/mute"
+											"filePath": {
+												"extensions": [
+													".gif",
+													".svg",
+													".png"
+												],
+												"includeExtension": false
+											},
+											"markdownDescription": "Path to the image, with the **file extension omitted**, that will be displayed when the action is being viewed as part of a multi-action. The image must adhere to the following style guidelines.\n- Be in .PNG or .SVG format.\n- Be provided in two sizes, 72x72 px and 144x144 px (@2x).\n\nNB: Can be overridden by the user in the Stream Deck application.\n\n**Examples:**\n- assets/counter-key\n- assets/icons/mute",
+											"pattern": "^(?![~\\.]*[\\\\\\/]+)(?!.*\\.(([Gg][Ii][Ff])|([Ss][Vv][Gg])|([Pp][Nn][Gg]))$).*$"
 										},
 										"Name": {
 											"type": "string",
@@ -289,23 +335,36 @@
 				"CategoryIcon": {
 					"type": "string",
 					"description": "Path to the image, with the **file extension omitted**, that will be displayed next to the action list group within the Stream Deck application. The icon should accurately represent the plugin, and enable users to quickly identify the plugin. The icon must adhere to the following style guidelines.\n- Be in .PNG or .SVG format.\n- Be provided in two sizes, 28x28 px and 56x56 px (@2x).\n- Be monochromatic, with foreground color of #DFDFDF and a transparent background.\n\n**Examples**:\n- assets/category-icon\n- imgs/category",
-					"pattern": "^[^.]+$",
-					"markdownDescription": "Path to the image, with the **file extension omitted**, that will be displayed next to the action list group within the Stream Deck application. The icon should accurately represent the plugin, and enable users to quickly identify the plugin. The icon must adhere to the following style guidelines.\n- Be in .PNG or .SVG format.\n- Be provided in two sizes, 28x28 px and 56x56 px (@2x).\n- Be monochromatic, with foreground color of #DFDFDF and a transparent background.\n\n**Examples**:\n- assets/category-icon\n- imgs/category"
+					"filePath": {
+						"extensions": [
+							".svg",
+							".png"
+						],
+						"includeExtension": false
+					},
+					"markdownDescription": "Path to the image, with the **file extension omitted**, that will be displayed next to the action list group within the Stream Deck application. The icon should accurately represent the plugin, and enable users to quickly identify the plugin. The icon must adhere to the following style guidelines.\n- Be in .PNG or .SVG format.\n- Be provided in two sizes, 28x28 px and 56x56 px (@2x).\n- Be monochromatic, with foreground color of #DFDFDF and a transparent background.\n\n**Examples**:\n- assets/category-icon\n- imgs/category",
+					"pattern": "^(?![~\\.]*[\\\\\\/]+)(?!.*\\.(([Ss][Vv][Gg])|([Pp][Nn][Gg]))$).*$"
 				},
 				"CodePath": {
 					"type": "string",
 					"description": "Path to the plugin's main entry point; this is executed when the Stream Deck application starts the plugin.\n\n**Examples**:\n- index.js\n- Counter\n- Counter.exe",
-					"markdownDescription": "Path to the plugin's main entry point; this is executed when the Stream Deck application starts the plugin.\n\n**Examples**:\n- index.js\n- Counter\n- Counter.exe"
+					"filePath": true,
+					"markdownDescription": "Path to the plugin's main entry point; this is executed when the Stream Deck application starts the plugin.\n\n**Examples**:\n- index.js\n- Counter\n- Counter.exe",
+					"pattern": "^(?![~\\.]*[\\\\\\/]+).*$"
 				},
 				"CodePathMac": {
 					"type": "string",
 					"description": "Path to the plugin's entry point specific to macOS; this is executed when the Stream Deck application starts the plugin on macOS.\n\n**Examples:**\n- index.js\n- Counter",
-					"markdownDescription": "Path to the plugin's entry point specific to macOS; this is executed when the Stream Deck application starts the plugin on macOS.\n\n**Examples:**\n- index.js\n- Counter"
+					"filePath": true,
+					"markdownDescription": "Path to the plugin's entry point specific to macOS; this is executed when the Stream Deck application starts the plugin on macOS.\n\n**Examples:**\n- index.js\n- Counter",
+					"pattern": "^(?![~\\.]*[\\\\\\/]+).*$"
 				},
 				"CodePathWin": {
 					"type": "string",
 					"description": "Path to the plugin's entry point specific to Windows; this is executed when the Stream Deck application starts the plugin on Windows.\n\n**Examples:**\n- index.js\n- Counter.exe",
-					"markdownDescription": "Path to the plugin's entry point specific to Windows; this is executed when the Stream Deck application starts the plugin on Windows.\n\n**Examples:**\n- index.js\n- Counter.exe"
+					"filePath": true,
+					"markdownDescription": "Path to the plugin's entry point specific to Windows; this is executed when the Stream Deck application starts the plugin on Windows.\n\n**Examples:**\n- index.js\n- Counter.exe",
+					"pattern": "^(?![~\\.]*[\\\\\\/]+).*$"
 				},
 				"DefaultWindowSize": {
 					"type": "array",
@@ -331,8 +390,16 @@
 				"Icon": {
 					"type": "string",
 					"description": "Path to the image, with the **file extension omitted**, that will be displayed on the Marketplace. The icon should accurately represent the plugin, stand out, and enable users to quickly identify the plugin. The icon must adhere to the following style guidelines.\n- Be in .PNG or .SVG format.\n- Be provided in two sizes, 288x288 px and 512x512 px (@2x).\n\n**Examples**: assets/plugin-icon imgs/plugin",
-					"pattern": "^[^.]+$",
-					"markdownDescription": "Path to the image, with the **file extension omitted**, that will be displayed on the Marketplace. The icon should accurately represent the plugin, stand out, and enable users to quickly identify the plugin. The icon must adhere to the following style guidelines.\n- Be in .PNG or .SVG format.\n- Be provided in two sizes, 288x288 px and 512x512 px (@2x).\n\n**Examples**: assets/plugin-icon imgs/plugin"
+					"filePath": {
+						"extensions": [
+							".gif",
+							".svg",
+							".png"
+						],
+						"includeExtension": false
+					},
+					"markdownDescription": "Path to the image, with the **file extension omitted**, that will be displayed on the Marketplace. The icon should accurately represent the plugin, stand out, and enable users to quickly identify the plugin. The icon must adhere to the following style guidelines.\n- Be in .PNG or .SVG format.\n- Be provided in two sizes, 288x288 px and 512x512 px (@2x).\n\n**Examples**: assets/plugin-icon imgs/plugin",
+					"pattern": "^(?![~\\.]*[\\\\\\/]+)(?!.*\\.(([Gg][Ii][Ff])|([Ss][Vv][Gg])|([Pp][Nn][Gg]))$).*$"
 				},
 				"Name": {
 					"type": "string",
@@ -431,7 +498,14 @@
 							"Name": {
 								"type": "string",
 								"description": "Path to the `.streamDeckProfile`, with the **file extension omitted**, that contains the profiles layout and action settings.\n\n**Examples:**\n- assets/main-profile\n- profiles/super-cool-profile",
-								"markdownDescription": "Path to the `.streamDeckProfile`, with the **file extension omitted**, that contains the profiles layout and action settings.\n\n**Examples:**\n- assets/main-profile\n- profiles/super-cool-profile"
+								"filePath": {
+									"extensions": [
+										".streamDeckProfile"
+									],
+									"includeExtension": false
+								},
+								"markdownDescription": "Path to the `.streamDeckProfile`, with the **file extension omitted**, that contains the profiles layout and action settings.\n\n**Examples:**\n- assets/main-profile\n- profiles/super-cool-profile",
+								"pattern": "^(?![~\\.]*[\\\\\\/]+)(?!.*\\.(([Ss][Tt][Rr][Ee][Aa][Mm][Dd][Ee][Cc][Kk][Pp][Rr][Oo][Ff][Ii][Ll][Ee]))$).*$"
 							},
 							"Readonly": {
 								"type": "boolean",
@@ -451,8 +525,15 @@
 				"PropertyInspectorPath": {
 					"type": "string",
 					"description": "Optional path to the HTML file that represents the property inspector for all actions; this is displayed to the user in the Stream Deck application when they add an action, allowing them to configure the action's settings.\n\nNB: Path should be relative to the root of the plugin's folder, with no leading slash.\n\n **Examples:**\n- mute.html\n- actions/join-voice-chat/settings.html\n\n**Also see:**\n- `streamDeck.ui.onSendToPlugin(...)`",
-					"pattern": "^(?!\\/).+\\.[Hh][Tt][Mm][Ll]?$",
-					"markdownDescription": "Optional path to the HTML file that represents the property inspector for all actions; this is displayed to the user in the Stream Deck application when they add an action, allowing them to configure the action's settings.\n\nNB: Path should be relative to the root of the plugin's folder, with no leading slash.\n\n **Examples:**\n- mute.html\n- actions/join-voice-chat/settings.html\n\n**Also see:**\n- `streamDeck.ui.onSendToPlugin(...)`"
+					"filePath": {
+						"extensions": [
+							".htm",
+							".html"
+						],
+						"includeExtension": true
+					},
+					"markdownDescription": "Optional path to the HTML file that represents the property inspector for all actions; this is displayed to the user in the Stream Deck application when they add an action, allowing them to configure the action's settings.\n\nNB: Path should be relative to the root of the plugin's folder, with no leading slash.\n\n **Examples:**\n- mute.html\n- actions/join-voice-chat/settings.html\n\n**Also see:**\n- `streamDeck.ui.onSendToPlugin(...)`",
+					"pattern": "^(?![~\\.]*[\\\\\\/]+).*\\.(([Hh][Tt][Mm])|([Hh][Tt][Mm][Ll]))$"
 				},
 				"SDKVersion": {
 					"type": "number",

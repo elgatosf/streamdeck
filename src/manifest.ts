@@ -57,7 +57,7 @@ export type Manifest = {
 			 * - assets/actions/mute/encoder-icon
 			 * - imgs/join-voice-chat-encoder
 			 */
-			Icon?: FilePathWithoutExtension;
+			Icon?: ImageFilePath;
 
 			/**
 			 * Background color to display in the Stream Deck application when the action is part of a dial stack, and is the current action. Represented as a hexadecimal value.
@@ -111,8 +111,10 @@ export type Manifest = {
 			 * **Examples:**
 			 * - assets/backgrounds/main
 			 * - imgs/bright-blue-bg
+			 * @filePath
+			 * { extensions: [".png", ".svg"], includeExtension: false }
 			 */
-			background?: FilePathWithoutExtension;
+			background?: string;
 
 			/**
 			 * Name of a pre-defined layout, or the path to a JSON file that details a custom layout and its components, to be rendered on the action's touchscreen canvas.
@@ -147,7 +149,7 @@ export type Manifest = {
 		 * - assets/counter
 		 * - imgs/actions/mute
 		 */
-		Icon: FilePathWithoutExtension;
+		Icon: ImageFilePath;
 
 		/**
 		 * Name of the action; this is displayed to the user in the actions list, and is used throughout the Stream Deck application to visually identify the action.
@@ -266,8 +268,10 @@ export type Manifest = {
 	 * **Examples**:
 	 * - assets/category-icon
 	 * - imgs/category
+	 * @filePath
+	 * { extensions: [".svg", ".png"], includeExtension: false }
 	 */
-	CategoryIcon?: FilePathWithoutExtension;
+	CategoryIcon?: string;
 
 	/**
 	 * Path to the plugin's main entry point; this is executed when the Stream Deck application starts the plugin.
@@ -276,6 +280,7 @@ export type Manifest = {
 	 * - index.js
 	 * - Counter
 	 * - Counter.exe
+	 * @filePath
 	 */
 	CodePath: string;
 
@@ -285,6 +290,7 @@ export type Manifest = {
 	 * **Examples:**
 	 * - index.js
 	 * - Counter
+	 * @filePath
 	 */
 	CodePathMac?: string;
 
@@ -294,6 +300,7 @@ export type Manifest = {
 	 * **Examples:**
 	 * - index.js
 	 * - Counter.exe
+	 * @filePath
 	 */
 	CodePathWin?: string;
 
@@ -319,7 +326,7 @@ export type Manifest = {
 	 * assets/plugin-icon
 	 * imgs/plugin
 	 */
-	Icon: FilePathWithoutExtension;
+	Icon: ImageFilePath;
 
 	/**
 	 * Name of the plugin, e.g. "Wave Link", "Camera Hub", "Control Center", etc.
@@ -405,6 +412,8 @@ export type Manifest = {
 		 * **Examples:**
 		 * - assets/main-profile
 		 * - profiles/super-cool-profile
+		 * @filePath
+		 * { extensions: [".streamDeckProfile"], includeExtension: false }
 		 */
 		Name: string;
 
@@ -468,17 +477,17 @@ export type Manifest = {
 
 /**
  * File path that represents an HTML file relative to the plugin's manifest.
- * @pattern
- * ^(?!\/).+\.[Hh][Tt][Mm][Ll]?$
+ * @filePath
+ * { extensions: [".htm", ".html"], includeExtension: true }
  */
 type HtmlFilePath = FilePath<"htm" | "html">;
 
 /**
- * File path that represents a file relative to the plugin's manifest, with the extension omitted.
- * @pattern
- * ^[^.]+$
+ * File path that represents a file relative to the plugin's manifest, with the extension omitted. When multiple images with the same name are found, they are resolved in order.
+ * @filePath
+ * { extensions: [".gif", ".svg", ".png"], includeExtension: false }
  */
-type FilePathWithoutExtension = string;
+type ImageFilePath = string;
 
 /**
  * File path, relative to the manifest's location.
@@ -544,7 +553,7 @@ type ActionState = {
 	 * - assets/counter-key
 	 * - assets/icons/mute
 	 */
-	Image: FilePathWithoutExtension;
+	Image: ImageFilePath;
 
 	/**
 	 * Path to the image, with the **file extension omitted**, that will be displayed when the action is being viewed as part of a multi-action. The image must adhere to the following
@@ -558,7 +567,7 @@ type ActionState = {
 	 * - assets/counter-key
 	 * - assets/icons/mute
 	 */
-	MultiActionImage?: FilePathWithoutExtension;
+	MultiActionImage?: ImageFilePath;
 
 	/**
 	 * Name of the state; when multiple states are defined this value is shown to the user when the action is being added to a multi-action. The user is then able to specify which
