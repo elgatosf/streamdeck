@@ -274,7 +274,7 @@
 							"UUID": {
 								"type": "string",
 								"description": "Unique identifier of the action, represented in reverse-DNS format. This value is supplied by Stream Deck when events are emitted that relate to the action enabling you to identify the source of the event.\n\n**Allowed characters:**\n- Lowercase alphanumeric characters (a-z, 0-9)\n- Hyphens (-)\n- Underscores (_)\n- Periods (.)\n\nNB: `UUID` must be unique, and should be prefixed with the plugin's UUID.\n\n\n**Examples:**\n- com.elgato.wavelink.toggle-mute\n- com.elgato.discord.join-voice\n- tv.twitch.go-live",
-								"pattern": "^([a-z0-9\\-_]*[a-z0-9][a-z0-9\\-_]*\\.){2,3}[a-z0-9\\-_]*[a-z0-9][a-z0-9\\-_]*$",
+								"pattern": "^([a-z0-9\\-_]+)(\\.[a-z0-9\\-_]+)+$",
 								"markdownDescription": "Unique identifier of the action, represented in reverse-DNS format. This value is supplied by Stream Deck when events are emitted that relate to the action enabling you to identify the source of the event.\n\n**Allowed characters:**\n- Lowercase alphanumeric characters (a-z, 0-9)\n- Hyphens (-)\n- Underscores (_)\n- Periods (.)\n\nNB: `UUID` must be unique, and should be prefixed with the plugin's UUID.\n\n\n**Examples:**\n- com.elgato.wavelink.toggle-mute\n- com.elgato.discord.join-voice\n- tv.twitch.go-live"
 							},
 							"UserTitleEnabled": {

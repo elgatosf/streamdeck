@@ -204,7 +204,7 @@ export type Manifest = {
 		 * - com.elgato.discord.join-voice
 		 * - tv.twitch.go-live
 		 * @pattern
-		 * ^([a-z0-9\-_]*[a-z0-9][a-z0-9\-_]*\.){2,3}[a-z0-9\-_]*[a-z0-9][a-z0-9\-_]*$
+		 * ^([a-z0-9\-_]+)(\.[a-z0-9\-_]+)+$
 		 */
 		UUID: string;
 
