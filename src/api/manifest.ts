@@ -19,6 +19,7 @@ export type Manifest = {
 		/**
 		 * Defines the controller type the action is applicable to. **Keypad** refers to a standard action on a Stream Deck device, e.g. 1 of the 15 buttons on the Stream Deck MK.2,
 		 * or a pedal on the Stream Deck Pedal, etc., whereas an **Encoder** refers to a dial / touchscreen on the Stream Deck+.
+		 * @uniqueItems
 		 */
 		Controllers?: [Controller, Controller?];
 
@@ -53,7 +54,7 @@ export type Manifest = {
 			 * - assets/actions/mute/encoder-icon
 			 * - imgs/join-voice-chat-encoder
 			 */
-			Icon?: FilePathWithoutExtension;
+			Icon?: ImageFilePath;
 
 			/**
 			 * Background color to display in the Stream Deck application when the action is part of a dial stack, and is the current action. Represented as a hexadecimal value.
@@ -62,10 +63,8 @@ export type Manifest = {
 			 * - #d60270
 			 * - #1f1f1
 			 * - #0038a8
-			 * @pattern
-			 * ^#(?:[0-9a-fA-F]{3}){1,2}$
 			 */
-			StackColor?: string;
+			StackColor?: HexColorString;
 
 			/**
 			 * Descriptions that define the interaction of the action when it is associated with a dial / touchscreen on the Stream Deck+. This information is shown to the user.
@@ -107,8 +106,10 @@ export type Manifest = {
 			 * **Examples:**
 			 * - assets/backgrounds/main
 			 * - imgs/bright-blue-bg
+			 * @filePath
+			 * { extensions: [".png", ".svg"], includeExtension: false }
 			 */
-			background?: FilePathWithoutExtension;
+			background?: string;
 
 			/**
 			 * Name of a pre-defined layout, or the path to a JSON file that details a custom layout and its components, to be rendered on the action's touchscreen canvas.
@@ -124,10 +125,24 @@ export type Manifest = {
 			 * **Examples:**
 			 * - $A1
 			 * - layouts/my-custom-layout.json
-			 * @examples
-			 * [ "$X1", "$A0", "$A1", "$B1", "$B2", "$C1" ]
+			 * @example
+			 * "$X1"
+			 * @example
+			 * "$A0"
+			 * @example
+			 * "$A1"
+			 * @example
+			 * "$B1"
+			 * @example
+			 * "$B2"
+			 * @example
+			 * "$C1"
+			 * @example
+			 * "custom.json"
 			 * @pattern
-			 * (^(\$[AB][12])|(\$[XC]1))$|(^(?!\/).+\.[Jj][Ss][Oo][Nn]$)
+			 * ^((?![\.]*[\\\/]+).*\.([Jj][Ss][Oo][Nn]))|(\$(X1|A0|A1|B1|B2|C1))$
+			 * @errorMessage
+			 * String must be a pre-defined layout, or a .json file located within the plugin's directory
 			 */
 			layout?: FilePath<"json"> | "$A0" | "$A1" | "$B1" | "$B2" | "$C1" | "$X1";
 		};
@@ -143,7 +158,7 @@ export type Manifest = {
 		 * - assets/counter
 		 * - imgs/actions/mute
 		 */
-		Icon: FilePathWithoutExtension;
+		Icon: ImageFilePath;
 
 		/**
 		 * Name of the action; this is displayed to the user in the actions list, and is used throughout the Stream Deck application to visually identify the action.
@@ -197,7 +212,9 @@ export type Manifest = {
 		 * - com.elgato.discord.join-voice
 		 * - tv.twitch.go-live
 		 * @pattern
-		 * ^([a-z0-9\-_]*[a-z0-9][a-z0-9\-_]*\.){2,3}[a-z0-9\-_]*[a-z0-9][a-z0-9\-_]*$
+		 * ^([a-z0-9\-_]+)(\.[a-z0-9\-_]+)+$
+		 * @errorMessage
+		 * String must use reverse DNS format, and must only contain lowercase alphanumeric characters (a-z, 0-9), hyphens (-), underscores (_), and periods (.)
 		 */
 		UUID: string;
 
@@ -262,8 +279,10 @@ export type Manifest = {
 	 * **Examples**:
 	 * - assets/category-icon
 	 * - imgs/category
+	 * @filePath
+	 * { extensions: [".svg", ".png"], includeExtension: false }
 	 */
-	CategoryIcon?: FilePathWithoutExtension;
+	CategoryIcon?: string;
 
 	/**
 	 * Path to the plugin's main entry point; this is executed when the Stream Deck application starts the plugin.
@@ -272,6 +291,7 @@ export type Manifest = {
 	 * - index.js
 	 * - Counter
 	 * - Counter.exe
+	 * @filePath
 	 */
 	CodePath: string;
 
@@ -281,6 +301,7 @@ export type Manifest = {
 	 * **Examples:**
 	 * - index.js
 	 * - Counter
+	 * @filePath
 	 */
 	CodePathMac?: string;
 
@@ -290,6 +311,7 @@ export type Manifest = {
 	 * **Examples:**
 	 * - index.js
 	 * - Counter.exe
+	 * @filePath
 	 */
 	CodePathWin?: string;
 
@@ -315,7 +337,7 @@ export type Manifest = {
 	 * assets/plugin-icon
 	 * imgs/plugin
 	 */
-	Icon: FilePathWithoutExtension;
+	Icon: ImageFilePath;
 
 	/**
 	 * Name of the plugin, e.g. "Wave Link", "Camera Hub", "Control Center", etc.
@@ -401,6 +423,8 @@ export type Manifest = {
 		 * **Examples:**
 		 * - assets/main-profile
 		 * - profiles/super-cool-profile
+		 * @filePath
+		 * { extensions: [".streamDeckProfile"], includeExtension: false }
 		 */
 		Name: string;
 
@@ -450,31 +474,44 @@ export type Manifest = {
 	URL?: string;
 
 	/**
-	 * Version of the plugin, represented as a {@link https://semver.org semantic version} (excluding pre-release values).
+	 * Version of the plugin, represented as a semantic version, excluding pre-release values (https://semver.org). The version can also include an optional build number.
 	 *
 	 * **Examples:**
 	 * - 1.0.3 ✅
-	 * - 0.0.99 ✅
+	 * - 0.0.99.123 ✅
 	 * - 2.1.9-beta1 ❌
 	 * @example
 	 * "1.0.0"
+	 * @pattern
+	 * ^\d+(\.\d+){2,3}$
+	 * @errorMessage
+	 * String must be a semantic version (pre-releases are not permitted)
 	 */
-	Version: `${number}.${number}.${number}`;
+	Version: string;
 };
 
 /**
- * File path that represents an HTML file relative to the plugin's manifest.
+ * Color represents as a hexadecimal string.
  * @pattern
- * ^(?!\/).+\.[Hh][Tt][Mm][Ll]?$
+ * ^#(?:[0-9a-fA-F]{3}){1,2}$
+ * @errorMessage
+ * String must be hexadecimal color.
+ */
+type HexColorString = string;
+
+/**
+ * File path that represents an HTML file relative to the plugin's manifest.
+ * @filePath
+ * { extensions: [".htm", ".html"], includeExtension: true }
  */
 type HtmlFilePath = FilePath<"htm" | "html">;
 
 /**
- * File path that represents a file relative to the plugin's manifest, with the extension omitted.
- * @pattern
- * ^[^.]+$
+ * File path that represents a file relative to the plugin's manifest, with the extension omitted. When multiple images with the same name are found, they are resolved in order.
+ * @filePath
+ * { extensions: [".gif", ".svg", ".png"], includeExtension: false }
  */
-type FilePathWithoutExtension = string;
+type ImageFilePath = string;
 
 /**
  * File path, relative to the manifest's location.
@@ -540,7 +577,7 @@ type ActionState = {
 	 * - assets/counter-key
 	 * - assets/icons/mute
 	 */
-	Image: FilePathWithoutExtension;
+	Image: ImageFilePath;
 
 	/**
 	 * Path to the image, with the **file extension omitted**, that will be displayed when the action is being viewed as part of a multi-action. The image must adhere to the following
@@ -554,7 +591,7 @@ type ActionState = {
 	 * - assets/counter-key
 	 * - assets/icons/mute
 	 */
-	MultiActionImage?: FilePathWithoutExtension;
+	MultiActionImage?: ImageFilePath;
 
 	/**
 	 * Name of the state; when multiple states are defined this value is shown to the user when the action is being added to a multi-action. The user is then able to specify which
@@ -590,8 +627,6 @@ type ActionState = {
 	 * - #5bcefa
 	 * - #f5a9b8
 	 * - #FFFFFF
-	 * @pattern
-	 * ^#(?:[0-9a-fA-F]{3}){1,2}$
 	 */
-	TitleColor?: string;
+	TitleColor?: HexColorString;
 };
