@@ -283,10 +283,8 @@ export type Manifest = {
 	 * **Examples**:
 	 * - assets/category-icon
 	 * - imgs/category
-	 * @filePath
-	 * { extensions: [".svg", ".png"], includeExtension: false }
 	 */
-	CategoryIcon?: string;
+	CategoryIcon?: ImageFilePath;
 
 	/**
 	 * Path to the plugin's main entry point; this is executed when the Stream Deck application starts the plugin.
@@ -513,9 +511,16 @@ type HtmlFilePath = FilePath<"htm" | "html">;
 /**
  * File path that represents a file relative to the plugin's manifest, with the extension omitted. When multiple images with the same name are found, they are resolved in order.
  * @filePath
- * { extensions: [".gif", ".svg", ".png"], includeExtension: false }
+ * { extensions: [".svg", ".png"], includeExtension: false }
  */
 type ImageFilePath = string;
+
+/**
+ * File path that represents a file relative to the plugin's manifest, with the extension omitted. When multiple images with the same name are found, they are resolved in order.
+ * @filePath
+ * { extensions: [".gif", ".svg", ".png"], includeExtension: false }
+ */
+type AnimatedImageFilePath = string;
 
 /**
  * File path, relative to the manifest's location.
@@ -572,7 +577,7 @@ type ActionState = {
 	/**
 	 * Path to the image, with the **file extension omitted**, that will be displayed on the Stream Deck when this action's state is active. The image must adhere to the following
 	 * style guidelines.
-	 * - Be in .PNG or .SVG format.
+	 * - Be in .GIF, .PNG or .SVG format.
 	 * - Be provided in two sizes, 72x72 px and 144x144 px (@2x).
 	 *
 	 * NB: Can be overridden by the user in the Stream Deck application.
@@ -581,7 +586,7 @@ type ActionState = {
 	 * - assets/counter-key
 	 * - assets/icons/mute
 	 */
-	Image: ImageFilePath;
+	Image: AnimatedImageFilePath;
 
 	/**
 	 * Path to the image, with the **file extension omitted**, that will be displayed when the action is being viewed as part of a multi-action. The image must adhere to the following

@@ -50,15 +50,14 @@
 										"description": "Path to the image, with the **file extension omitted**, that will be displayed in the Stream Deck application in the circular canvas that represents the dial of the action. The image must fulfill the following style guidelines.\n- Be in .PNG or .SVG format.\n- Be provided in two sizes, 72x72 px and 144x144 px (@2x).\n\nNB: Can be overridden by the user in the Stream Deck application.\n\n**Examples:**\n- assets/actions/mute/encoder-icon\n- imgs/join-voice-chat-encoder",
 										"filePath": {
 											"extensions": [
-												".gif",
 												".svg",
 												".png"
 											],
 											"includeExtension": false
 										},
 										"markdownDescription": "Path to the image, with the **file extension omitted**, that will be displayed in the Stream Deck application in the circular canvas that represents the dial of the action. The image must fulfill the following style guidelines.\n- Be in .PNG or .SVG format.\n- Be provided in two sizes, 72x72 px and 144x144 px (@2x).\n\nNB: Can be overridden by the user in the Stream Deck application.\n\n**Examples:**\n- assets/actions/mute/encoder-icon\n- imgs/join-voice-chat-encoder",
-										"pattern": "^(?![~\\.]*[\\\\\\/]+)(?!.*\\.(([Gg][Ii][Ff])|([Ss][Vv][Gg])|([Pp][Nn][Gg]))$).*$",
-										"errorMessage": "String must be a .gif, .svg, or .png file located within the plugin's directory, with the file extension omitted"
+										"pattern": "^(?![~\\.]*[\\\\\\/]+)(?!.*\\.(([Ss][Vv][Gg])|([Pp][Nn][Gg]))$).*$",
+										"errorMessage": "String must be a .svg, or .png file located within the plugin's directory, with the file extension omitted"
 									},
 									"StackColor": {
 										"type": "string",
@@ -135,15 +134,14 @@
 								"description": "Path to the image, with the **file extension omitted**, that will be displayed next to the action in the Stream Deck application's action list. The image must adhere to the following style guidelines.\n- Be in .PNG or .SVG format.\n- Be provided in two sizes, 20x20 px and 40x40 px (@2x).\n- Be monochromatic, with foreground color of #EFEFEF and a transparent background.\n\n**Examples:**\n- assets/counter\n- imgs/actions/mute",
 								"filePath": {
 									"extensions": [
-										".gif",
 										".svg",
 										".png"
 									],
 									"includeExtension": false
 								},
 								"markdownDescription": "Path to the image, with the **file extension omitted**, that will be displayed next to the action in the Stream Deck application's action list. The image must adhere to the following style guidelines.\n- Be in .PNG or .SVG format.\n- Be provided in two sizes, 20x20 px and 40x40 px (@2x).\n- Be monochromatic, with foreground color of #EFEFEF and a transparent background.\n\n**Examples:**\n- assets/counter\n- imgs/actions/mute",
-								"pattern": "^(?![~\\.]*[\\\\\\/]+)(?!.*\\.(([Gg][Ii][Ff])|([Ss][Vv][Gg])|([Pp][Nn][Gg]))$).*$",
-								"errorMessage": "String must be a .gif, .svg, or .png file located within the plugin's directory, with the file extension omitted"
+								"pattern": "^(?![~\\.]*[\\\\\\/]+)(?!.*\\.(([Ss][Vv][Gg])|([Pp][Nn][Gg]))$).*$",
+								"errorMessage": "String must be a .svg, or .png file located within the plugin's directory, with the file extension omitted"
 							},
 							"Name": {
 								"type": "string",
@@ -198,7 +196,7 @@
 										},
 										"Image": {
 											"type": "string",
-											"description": "Path to the image, with the **file extension omitted**, that will be displayed on the Stream Deck when this action's state is active. The image must adhere to the following style guidelines.\n- Be in .PNG or .SVG format.\n- Be provided in two sizes, 72x72 px and 144x144 px (@2x).\n\nNB: Can be overridden by the user in the Stream Deck application.\n\n**Examples:**\n- assets/counter-key\n- assets/icons/mute",
+											"description": "Path to the image, with the **file extension omitted**, that will be displayed on the Stream Deck when this action's state is active. The image must adhere to the following style guidelines.\n- Be in .GIF, .PNG or .SVG format.\n- Be provided in two sizes, 72x72 px and 144x144 px (@2x).\n\nNB: Can be overridden by the user in the Stream Deck application.\n\n**Examples:**\n- assets/counter-key\n- assets/icons/mute",
 											"filePath": {
 												"extensions": [
 													".gif",
@@ -207,7 +205,7 @@
 												],
 												"includeExtension": false
 											},
-											"markdownDescription": "Path to the image, with the **file extension omitted**, that will be displayed on the Stream Deck when this action's state is active. The image must adhere to the following style guidelines.\n- Be in .PNG or .SVG format.\n- Be provided in two sizes, 72x72 px and 144x144 px (@2x).\n\nNB: Can be overridden by the user in the Stream Deck application.\n\n**Examples:**\n- assets/counter-key\n- assets/icons/mute",
+											"markdownDescription": "Path to the image, with the **file extension omitted**, that will be displayed on the Stream Deck when this action's state is active. The image must adhere to the following style guidelines.\n- Be in .GIF, .PNG or .SVG format.\n- Be provided in two sizes, 72x72 px and 144x144 px (@2x).\n\nNB: Can be overridden by the user in the Stream Deck application.\n\n**Examples:**\n- assets/counter-key\n- assets/icons/mute",
 											"pattern": "^(?![~\\.]*[\\\\\\/]+)(?!.*\\.(([Gg][Ii][Ff])|([Ss][Vv][Gg])|([Pp][Nn][Gg]))$).*$",
 											"errorMessage": "String must be a .gif, .svg, or .png file located within the plugin's directory, with the file extension omitted"
 										},
@@ -216,15 +214,14 @@
 											"description": "Path to the image, with the **file extension omitted**, that will be displayed when the action is being viewed as part of a multi-action. The image must adhere to the following style guidelines.\n- Be in .PNG or .SVG format.\n- Be provided in two sizes, 72x72 px and 144x144 px (@2x).\n\nNB: Can be overridden by the user in the Stream Deck application.\n\n**Examples:**\n- assets/counter-key\n- assets/icons/mute",
 											"filePath": {
 												"extensions": [
-													".gif",
 													".svg",
 													".png"
 												],
 												"includeExtension": false
 											},
 											"markdownDescription": "Path to the image, with the **file extension omitted**, that will be displayed when the action is being viewed as part of a multi-action. The image must adhere to the following style guidelines.\n- Be in .PNG or .SVG format.\n- Be provided in two sizes, 72x72 px and 144x144 px (@2x).\n\nNB: Can be overridden by the user in the Stream Deck application.\n\n**Examples:**\n- assets/counter-key\n- assets/icons/mute",
-											"pattern": "^(?![~\\.]*[\\\\\\/]+)(?!.*\\.(([Gg][Ii][Ff])|([Ss][Vv][Gg])|([Pp][Nn][Gg]))$).*$",
-											"errorMessage": "String must be a .gif, .svg, or .png file located within the plugin's directory, with the file extension omitted"
+											"pattern": "^(?![~\\.]*[\\\\\\/]+)(?!.*\\.(([Ss][Vv][Gg])|([Pp][Nn][Gg]))$).*$",
+											"errorMessage": "String must be a .svg, or .png file located within the plugin's directory, with the file extension omitted"
 										},
 										"Name": {
 											"type": "string",
@@ -408,15 +405,14 @@
 					"description": "Path to the image, with the **file extension omitted**, that will be displayed on the Marketplace. The icon should accurately represent the plugin, stand out, and enable users to quickly identify the plugin. The icon must adhere to the following style guidelines.\n- Be in .PNG or .SVG format.\n- Be provided in two sizes, 288x288 px and 512x512 px (@2x).\n\n**Examples**: assets/plugin-icon imgs/plugin",
 					"filePath": {
 						"extensions": [
-							".gif",
 							".svg",
 							".png"
 						],
 						"includeExtension": false
 					},
 					"markdownDescription": "Path to the image, with the **file extension omitted**, that will be displayed on the Marketplace. The icon should accurately represent the plugin, stand out, and enable users to quickly identify the plugin. The icon must adhere to the following style guidelines.\n- Be in .PNG or .SVG format.\n- Be provided in two sizes, 288x288 px and 512x512 px (@2x).\n\n**Examples**: assets/plugin-icon imgs/plugin",
-					"pattern": "^(?![~\\.]*[\\\\\\/]+)(?!.*\\.(([Gg][Ii][Ff])|([Ss][Vv][Gg])|([Pp][Nn][Gg]))$).*$",
-					"errorMessage": "String must be a .gif, .svg, or .png file located within the plugin's directory, with the file extension omitted"
+					"pattern": "^(?![~\\.]*[\\\\\\/]+)(?!.*\\.(([Ss][Vv][Gg])|([Pp][Nn][Gg]))$).*$",
+					"errorMessage": "String must be a .svg, or .png file located within the plugin's directory, with the file extension omitted"
 				},
 				"Name": {
 					"type": "string",

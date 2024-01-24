@@ -186,6 +186,7 @@ type FilePathOptions =
 			 * Collection of valid file extensions.
 			 */
 			extensions: string[];
+
 			/**
 			 * Determines whether the extension must be present, or omitted, from the file path.
 			 */
