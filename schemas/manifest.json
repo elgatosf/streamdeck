@@ -121,7 +121,7 @@
 											"$C1",
 											"custom.json"
 										],
-										"pattern": "^((?![\\.]*[\\\\\\/]+).*\\.([Jj][Ss][Oo][Nn]))|(\\$(X1|A0|A1|B1|B2|C1))$",
+										"pattern": "^(^(?![\\.]*[\\\\\\/]+).+\\.([Jj][Ss][Oo][Nn])$)|(\\$(X1|A0|A1|B1|B2|C1))$",
 										"errorMessage": "String must be a pre-defined layout, or a .json file located within the plugin's directory",
 										"markdownDescription": "Name of a pre-defined layout, or the path to a JSON file that details a custom layout and its components, to be rendered on the action's touchscreen canvas.\n\n**Pre-defined Layouts:**\n- `$X1`, layout with the title at the top and the icon beneath it in the center.\n- `$A0`, layout with the title at the top and a full-width image canvas beneath it in the center.\n- `$A1`, layout with the title at the top, the icon on the left, and text value on the right.\n- `$B1`, layout with the title at the top, the icon on the left, and a text value on the right with a progress bar beneath it.\n- `$B2`, layout with the title at the top, the icon on the left, and a text value on the right with a gradient progress bar beneath it.\n- `$C1`, layout with the title at the top, and two rows that display an icon on the left and progress bar on the right (i.e. a double progress bar layout).\n\n**Examples:**\n- $A1\n- layouts/my-custom-layout.json"
 									}

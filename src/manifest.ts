@@ -144,7 +144,7 @@ export type Manifest = {
 			 * @example
 			 * "custom.json"
 			 * @pattern
-			 * ^((?![\.]*[\\\/]+).*\.([Jj][Ss][Oo][Nn]))|(\$(X1|A0|A1|B1|B2|C1))$
+			 * ^(^(?![\.]*[\\\/]+).+\.([Jj][Ss][Oo][Nn])$)|(\$(X1|A0|A1|B1|B2|C1))$
 			 * @errorMessage
 			 * String must be a pre-defined layout, or a .json file located within the plugin's directory
 			 */
