@@ -57,7 +57,7 @@
 										},
 										"markdownDescription": "Path to the image, with the **file extension omitted**, that will be displayed in the Stream Deck application in the circular canvas that represents the dial of the action. The image must fulfill the following style guidelines.\n- Be in .PNG or .SVG format.\n- Be provided in two sizes, 72x72 px and 144x144 px (@2x).\n\nNB: Can be overridden by the user in the Stream Deck application.\n\n**Examples:**\n- assets/actions/mute/encoder-icon\n- imgs/join-voice-chat-encoder",
 										"pattern": "^(?![~\\.]*[\\\\\\/]+)(?!.*\\.(([Ss][Vv][Gg])|([Pp][Nn][Gg]))$).*$",
-										"errorMessage": "String must be a .svg, or .png file located within the plugin's directory, with the file extension omitted"
+										"errorMessage": "String must reference .svg, or .png file in the plugin directory, with the file extension omitted."
 									},
 									"StackColor": {
 										"type": "string",
@@ -106,7 +106,7 @@
 										},
 										"markdownDescription": "Path to the image, with the **file extension omitted**, that will be displayed on the touchscreen behind the action's layout. The image must fulfill the following style guidelines.\n- Be in .PNG or .SVG format.\n- Be provided in two sizes, 200x100 px and 400x200 px (@2x).\n\nNB: Can be overridden by the user in the Stream Deck application.\n\n**Examples:**\n- assets/backgrounds/main\n- imgs/bright-blue-bg",
 										"pattern": "^(?![~\\.]*[\\\\\\/]+)(?!.*\\.(([Pp][Nn][Gg])|([Ss][Vv][Gg]))$).*$",
-										"errorMessage": "String must be a .png, or .svg file located within the plugin's directory, with the file extension omitted"
+										"errorMessage": "String must reference .png, or .svg file in the plugin directory, with the file extension omitted."
 									},
 									"layout": {
 										"type": "string",
@@ -121,7 +121,7 @@
 											"custom.json"
 										],
 										"pattern": "^(^(?![\\.]*[\\\\\\/]+).+\\.([Jj][Ss][Oo][Nn])$)|(\\$(X1|A0|A1|B1|B2|C1))$",
-										"errorMessage": "String must be a pre-defined layout, or a .json file located within the plugin's directory",
+										"errorMessage": "String must reference .json file in the plugin directory, or a pre-defined layout.",
 										"markdownDescription": "Name of a pre-defined layout, or the path to a JSON file that details a custom layout and its components, to be rendered on the action's touchscreen canvas.\n\n**Pre-defined Layouts:**\n- `$X1`, layout with the title at the top and the icon beneath it in the center.\n- `$A0`, layout with the title at the top and a full-width image canvas beneath it in the center.\n- `$A1`, layout with the title at the top, the icon on the left, and text value on the right.\n- `$B1`, layout with the title at the top, the icon on the left, and a text value on the right with a progress bar beneath it.\n- `$B2`, layout with the title at the top, the icon on the left, and a text value on the right with a gradient progress bar beneath it.\n- `$C1`, layout with the title at the top, and two rows that display an icon on the left and progress bar on the right (i.e. a double progress bar layout).\n\n**Examples:**\n- $A1\n- layouts/my-custom-layout.json"
 									}
 								},
@@ -141,7 +141,7 @@
 								},
 								"markdownDescription": "Path to the image, with the **file extension omitted**, that will be displayed next to the action in the Stream Deck application's action list. The image must adhere to the following style guidelines.\n- Be in .PNG or .SVG format.\n- Be provided in two sizes, 20x20 px and 40x40 px (@2x).\n- Be monochromatic, with foreground color of #EFEFEF and a transparent background.\n\n**Examples:**\n- assets/counter\n- imgs/actions/mute",
 								"pattern": "^(?![~\\.]*[\\\\\\/]+)(?!.*\\.(([Ss][Vv][Gg])|([Pp][Nn][Gg]))$).*$",
-								"errorMessage": "String must be a .svg, or .png file located within the plugin's directory, with the file extension omitted"
+								"errorMessage": "String must reference .svg, or .png file in the plugin directory, with the file extension omitted."
 							},
 							"Name": {
 								"type": "string",
@@ -160,7 +160,7 @@
 								},
 								"markdownDescription": "Optional path to the HTML file that represents the property inspector for this action; this is displayed to the user in the Stream Deck application when they add the action, allowing them to configure the action's settings. When `undefined`, the manifest's top-level `PropertyInspectorPath` is used, otherwise none.\n\nNB: Path should be relative to the root of the plugin's folder, with no leading slash.\n\n**Examples:**\n- mute.html\n- actions/join-voice-chat/settings.html",
 								"pattern": "^(?![~\\.]*[\\\\\\/]+).*\\.(([Hh][Tt][Mm])|([Hh][Tt][Mm][Ll]))$",
-								"errorMessage": "String must be a .htm, or .html file located within the plugin's directory"
+								"errorMessage": "String must reference .htm, or .html file in the plugin directory."
 							},
 							"States": {
 								"type": "array",
@@ -207,7 +207,7 @@
 											},
 											"markdownDescription": "Path to the image, with the **file extension omitted**, that will be displayed on the Stream Deck when this action's state is active. The image must adhere to the following style guidelines.\n- Be in .GIF, .PNG or .SVG format.\n- Be provided in two sizes, 72x72 px and 144x144 px (@2x).\n\nNB: Can be overridden by the user in the Stream Deck application.\n\n**Examples:**\n- assets/counter-key\n- assets/icons/mute",
 											"pattern": "^(?![~\\.]*[\\\\\\/]+)(?!.*\\.(([Gg][Ii][Ff])|([Ss][Vv][Gg])|([Pp][Nn][Gg]))$).*$",
-											"errorMessage": "String must be a .gif, .svg, or .png file located within the plugin's directory, with the file extension omitted"
+											"errorMessage": "String must reference .gif, .svg, or .png file in the plugin directory, with the file extension omitted."
 										},
 										"MultiActionImage": {
 											"type": "string",
@@ -221,7 +221,7 @@
 											},
 											"markdownDescription": "Path to the image, with the **file extension omitted**, that will be displayed when the action is being viewed as part of a multi-action. The image must adhere to the following style guidelines.\n- Be in .PNG or .SVG format.\n- Be provided in two sizes, 72x72 px and 144x144 px (@2x).\n\nNB: Can be overridden by the user in the Stream Deck application.\n\n**Examples:**\n- assets/counter-key\n- assets/icons/mute",
 											"pattern": "^(?![~\\.]*[\\\\\\/]+)(?!.*\\.(([Ss][Vv][Gg])|([Pp][Nn][Gg]))$).*$",
-											"errorMessage": "String must be a .svg, or .png file located within the plugin's directory, with the file extension omitted"
+											"errorMessage": "String must reference .svg, or .png file in the plugin directory, with the file extension omitted."
 										},
 										"Name": {
 											"type": "string",
@@ -353,7 +353,7 @@
 					},
 					"markdownDescription": "Path to the image, with the **file extension omitted**, that will be displayed next to the action list group within the Stream Deck application. The icon should accurately represent the plugin, and enable users to quickly identify the plugin. The icon must adhere to the following style guidelines.\n- Be in .PNG or .SVG format.\n- Be provided in two sizes, 28x28 px and 56x56 px (@2x).\n- Be monochromatic, with foreground color of #DFDFDF and a transparent background.\n\n**Examples**:\n- assets/category-icon\n- imgs/category",
 					"pattern": "^(?![~\\.]*[\\\\\\/]+)(?!.*\\.(([Ss][Vv][Gg])|([Pp][Nn][Gg]))$).*$",
-					"errorMessage": "String must be a .svg, or .png file located within the plugin's directory, with the file extension omitted"
+					"errorMessage": "String must reference .svg, or .png file in the plugin directory, with the file extension omitted."
 				},
 				"CodePath": {
 					"type": "string",
@@ -361,7 +361,7 @@
 					"filePath": true,
 					"markdownDescription": "Path to the plugin's main entry point; this is executed when the Stream Deck application starts the plugin.\n\n**Examples**:\n- index.js\n- Counter\n- Counter.exe",
 					"pattern": "^(?![~\\.]*[\\\\\\/]+).*$",
-					"errorMessage": "String must be a file located within the plugins's directory"
+					"errorMessage": "String must reference file in the plugin directory."
 				},
 				"CodePathMac": {
 					"type": "string",
@@ -369,7 +369,7 @@
 					"filePath": true,
 					"markdownDescription": "Path to the plugin's entry point specific to macOS; this is executed when the Stream Deck application starts the plugin on macOS.\n\n**Examples:**\n- index.js\n- Counter",
 					"pattern": "^(?![~\\.]*[\\\\\\/]+).*$",
-					"errorMessage": "String must be a file located within the plugins's directory"
+					"errorMessage": "String must reference file in the plugin directory."
 				},
 				"CodePathWin": {
 					"type": "string",
@@ -377,7 +377,7 @@
 					"filePath": true,
 					"markdownDescription": "Path to the plugin's entry point specific to Windows; this is executed when the Stream Deck application starts the plugin on Windows.\n\n**Examples:**\n- index.js\n- Counter.exe",
 					"pattern": "^(?![~\\.]*[\\\\\\/]+).*$",
-					"errorMessage": "String must be a file located within the plugins's directory"
+					"errorMessage": "String must reference file in the plugin directory."
 				},
 				"DefaultWindowSize": {
 					"type": "array",
@@ -412,7 +412,7 @@
 					},
 					"markdownDescription": "Path to the image, with the **file extension omitted**, that will be displayed on the Marketplace. The icon should accurately represent the plugin, stand out, and enable users to quickly identify the plugin. The icon must adhere to the following style guidelines.\n- Be in .PNG or .SVG format.\n- Be provided in two sizes, 288x288 px and 512x512 px (@2x).\n\n**Examples**: assets/plugin-icon imgs/plugin",
 					"pattern": "^(?![~\\.]*[\\\\\\/]+)(?!.*\\.(([Ss][Vv][Gg])|([Pp][Nn][Gg]))$).*$",
-					"errorMessage": "String must be a .svg, or .png file located within the plugin's directory, with the file extension omitted"
+					"errorMessage": "String must reference .svg, or .png file in the plugin directory, with the file extension omitted."
 				},
 				"Name": {
 					"type": "string",
@@ -519,7 +519,7 @@
 								},
 								"markdownDescription": "Path to the `.streamDeckProfile`, with the **file extension omitted**, that contains the profiles layout and action settings.\n\n**Examples:**\n- assets/main-profile\n- profiles/super-cool-profile",
 								"pattern": "^(?![~\\.]*[\\\\\\/]+)(?!.*\\.(([Ss][Tt][Rr][Ee][Aa][Mm][Dd][Ee][Cc][Kk][Pp][Rr][Oo][Ff][Ii][Ll][Ee]))$).*$",
-								"errorMessage": "String must be a .streamDeckProfile file located within the plugin's directory, with the file extension omitted"
+								"errorMessage": "String must reference .streamDeckProfile file in the plugin directory, with the file extension omitted."
 							},
 							"Readonly": {
 								"type": "boolean",
@@ -548,7 +548,7 @@
 					},
 					"markdownDescription": "Optional path to the HTML file that represents the property inspector for all actions; this is displayed to the user in the Stream Deck application when they add an action, allowing them to configure the action's settings.\n\nNB: Path should be relative to the root of the plugin's folder, with no leading slash.\n\n **Examples:**\n- mute.html\n- actions/join-voice-chat/settings.html\n\n**Also see:**\n- `streamDeck.ui.onSendToPlugin(...)`",
 					"pattern": "^(?![~\\.]*[\\\\\\/]+).*\\.(([Hh][Tt][Mm])|([Hh][Tt][Mm][Ll]))$",
-					"errorMessage": "String must be a .htm, or .html file located within the plugin's directory"
+					"errorMessage": "String must reference .htm, or .html file in the plugin directory."
 				},
 				"SDKVersion": {
 					"type": "number",
@@ -588,7 +588,7 @@
 						"1.0.0"
 					],
 					"pattern": "^\\d+(\\.\\d+){2,3}$",
-					"errorMessage": "String must be a semantic version (pre-releases are not permitted)",
+					"errorMessage": "String must be semantic version (pre-releases are not permitted)",
 					"markdownDescription": "Version of the plugin, represented as a semantic version, excluding pre-release values (https://semver.org). The version can also include an optional build number.\n\n**Examples:**\n- 1.0.3 ✅\n- 0.0.99.123 ✅\n- 2.1.9-beta1 ❌"
 				}
 			},

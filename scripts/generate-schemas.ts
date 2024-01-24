@@ -124,19 +124,15 @@ function generatePathPattern(options: FilePathOptions): string {
  */
 function generatePathErrorMessage(options: FilePathOptions): string {
 	if (typeof options === "boolean") {
-		return "String must be a file located within the plugins's directory";
+		return "String must reference file in the plugin directory.";
 	}
 
 	const exts = options.extensions.reduce((prev, current, index) => {
 		return index === 0 ? current : index === options.extensions.length - 1 ? prev + `, or ${current}` : prev + `, ${current}`;
 	}, "");
 
-	const errorMessage = `String must be a ${exts} file located within the plugin's directory`;
-	if (options.includeExtension) {
-		return errorMessage;
-	}
-
-	return `${errorMessage}, with the file extension omitted`;
+	const errorMessage = `String must reference ${exts} file in the plugin directory`;
+	return options.includeExtension ? `${errorMessage}.` : `${errorMessage}, with the file extension omitted.`;
 }
 
 /**

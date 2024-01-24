@@ -146,7 +146,7 @@ export type Manifest = {
 			 * @pattern
 			 * ^(^(?![\.]*[\\\/]+).+\.([Jj][Ss][Oo][Nn])$)|(\$(X1|A0|A1|B1|B2|C1))$
 			 * @errorMessage
-			 * String must be a pre-defined layout, or a .json file located within the plugin's directory
+			 * String must reference .json file in the plugin directory, or a pre-defined layout.
 			 */
 			layout?: FilePath<"json"> | "$A0" | "$A1" | "$B1" | "$B2" | "$C1" | "$X1";
 		};
@@ -487,7 +487,7 @@ export type Manifest = {
 	 * @pattern
 	 * ^\d+(\.\d+){2,3}$
 	 * @errorMessage
-	 * String must be a semantic version (pre-releases are not permitted)
+	 * String must be semantic version (pre-releases are not permitted)
 	 */
 	Version: string;
 };
