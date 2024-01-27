@@ -215,12 +215,8 @@ export type Manifest = {
 		 * - com.elgato.wavelink.toggle-mute
 		 * - com.elgato.discord.join-voice
 		 * - tv.twitch.go-live
-		 * @pattern
-		 * ^([a-z0-9\-_]+)(\.[a-z0-9\-_]+)+$
-		 * @errorMessage
-		 * String must use reverse DNS format, and must only contain lowercase alphanumeric characters (a-z, 0-9), hyphens (-), underscores (_), and periods (.)
 		 */
-		UUID: string;
+		UUID: Identifier;
 
 		/**
 		 * Determines whether the title field is available to the user when viewing the action's property inspector. Setting this to `false` will disable the user from specifying a
@@ -476,6 +472,22 @@ export type Manifest = {
 	URL?: string;
 
 	/**
+	 * Unique identifier of the plugin, represented in reverse-DNS format.
+	 *
+	 * **Allowed characters:**
+	 * - Lowercase alphanumeric characters (a-z, 0-9)
+	 * - Hyphens (-)
+	 * - Underscores (_)
+	 * - Periods (.)
+	 *
+	 * **Examples:**
+	 * - com.elgato.wavelink
+	 * - com.elgato.discord
+	 * - tv.twitch
+	 */
+	UUID: Identifier;
+
+	/**
 	 * Version of the plugin, represented as a semantic version, excluding pre-release values (https://semver.org). The version can also include an optional build number.
 	 *
 	 * **Examples:**
@@ -541,6 +553,15 @@ type OS = {
 	 */
 	Platform: "mac" | "windows";
 };
+
+/**
+ * Unique identifier, in reverse DNS format.
+ * @pattern
+ * ^([a-z0-9\-_]+)(\.[a-z0-9\-_]+)+$
+ * @errorMessage
+ * String must use reverse DNS format, and must only contain lowercase alphanumeric characters (a-z, 0-9), hyphens (-), underscores (_), and periods (.)
+ */
+type Identifier = string;
 
 /**
  * Defines the state of the action; this includes behavior, iconography, typography, etc.

@@ -581,6 +581,13 @@
 					"description": "Link to the plugin's website.\n\n**Examples**:\n- https://elgato.com\n- https://corsair.com",
 					"markdownDescription": "Link to the plugin's website.\n\n**Examples**:\n- https://elgato.com\n- https://corsair.com"
 				},
+				"UUID": {
+					"type": "string",
+					"description": "Unique identifier of the plugin, represented in reverse-DNS format.\n\n**Allowed characters:**\n- Lowercase alphanumeric characters (a-z, 0-9)\n- Hyphens (-)\n- Underscores (_)\n- Periods (.)\n\n**Examples:**\n- com.elgato.wavelink\n- com.elgato.discord\n- tv.twitch",
+					"pattern": "^([a-z0-9\\-_]+)(\\.[a-z0-9\\-_]+)+$",
+					"errorMessage": "String must use reverse DNS format, and must only contain lowercase alphanumeric characters (a-z, 0-9), hyphens (-), underscores (_), and periods (.)",
+					"markdownDescription": "Unique identifier of the plugin, represented in reverse-DNS format.\n\n**Allowed characters:**\n- Lowercase alphanumeric characters (a-z, 0-9)\n- Hyphens (-)\n- Underscores (_)\n- Periods (.)\n\n**Examples:**\n- com.elgato.wavelink\n- com.elgato.discord\n- tv.twitch"
+				},
 				"Version": {
 					"type": "string",
 					"description": "Version of the plugin, represented as a semantic version, excluding pre-release values (https://semver.org). The version can also include an optional build number.\n\n**Examples:**\n- 1.0.3 ✅\n- 0.0.99.123 ✅\n- 2.1.9-beta1 ❌",
@@ -602,6 +609,7 @@
 				"OS",
 				"SDKVersion",
 				"Software",
+				"UUID",
 				"Version"
 			],
 			"additionalProperties": false,
