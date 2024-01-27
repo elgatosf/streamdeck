@@ -57,6 +57,8 @@ export type Manifest = {
 			 * **Examples:**
 			 * - assets/actions/mute/encoder-icon
 			 * - imgs/join-voice-chat-encoder
+			 * @imageDimensions
+			 * [72, 72]
 			 */
 			Icon?: ImageFilePath;
 
@@ -110,6 +112,8 @@ export type Manifest = {
 			 * **Examples:**
 			 * - assets/backgrounds/main
 			 * - imgs/bright-blue-bg
+			 * @imageDimensions
+			 * [200, 100]
 			 * @filePath
 			 * { extensions: [".png", ".svg"], includeExtension: false }
 			 */
@@ -161,6 +165,8 @@ export type Manifest = {
 		 * **Examples:**
 		 * - assets/counter
 		 * - imgs/actions/mute
+		 * @imageDimensions
+		 * [20, 20]
 		 */
 		Icon: ImageFilePath;
 
@@ -279,6 +285,8 @@ export type Manifest = {
 	 * **Examples**:
 	 * - assets/category-icon
 	 * - imgs/category
+	 * @imageDimensions
+	 * [28, 28]
 	 */
 	CategoryIcon?: ImageFilePath;
 
@@ -334,6 +342,8 @@ export type Manifest = {
 	 * **Examples**:
 	 * assets/plugin-icon
 	 * imgs/plugin
+	 * @imageDimensions
+	 * [288, 288]
 	 */
 	Icon: ImageFilePath;
 
@@ -528,13 +538,6 @@ type HtmlFilePath = FilePath<"htm" | "html">;
 type ImageFilePath = string;
 
 /**
- * File path that represents a file relative to the plugin's manifest, with the extension omitted. When multiple images with the same name are found, they are resolved in order.
- * @filePath
- * { extensions: [".gif", ".svg", ".png"], includeExtension: false }
- */
-type AnimatedImageFilePath = string;
-
-/**
  * File path, relative to the manifest's location.
  */
 type FilePath<TExt extends string> = `${string}.${Lowercase<TExt>}`;
@@ -606,8 +609,12 @@ type ActionState = {
 	 * **Examples:**
 	 * - assets/counter-key
 	 * - assets/icons/mute
+	 * @filePath
+	 * { extensions: [".gif", ".svg", ".png"], includeExtension: false }
+	 * @imageDimensions
+	 * [72, 72]
 	 */
-	Image: AnimatedImageFilePath;
+	Image: string;
 
 	/**
 	 * Path to the image, with the **file extension omitted**, that will be displayed when the action is being viewed as part of a multi-action. The image must adhere to the following
@@ -620,6 +627,8 @@ type ActionState = {
 	 * **Examples:**
 	 * - assets/counter-key
 	 * - assets/icons/mute
+	 * @imageDimensions
+	 * [72, 72]
 	 */
 	MultiActionImage?: ImageFilePath;
 
