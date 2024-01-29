@@ -57,6 +57,8 @@ export type Manifest = {
 			 * **Examples:**
 			 * - assets/actions/mute/encoder-icon
 			 * - imgs/join-voice-chat-encoder
+			 * @imageDimensions
+			 * [72, 72]
 			 */
 			Icon?: ImageFilePath;
 
@@ -110,6 +112,8 @@ export type Manifest = {
 			 * **Examples:**
 			 * - assets/backgrounds/main
 			 * - imgs/bright-blue-bg
+			 * @imageDimensions
+			 * [200, 100]
 			 * @filePath
 			 * { extensions: [".png", ".svg"], includeExtension: false }
 			 */
@@ -144,9 +148,9 @@ export type Manifest = {
 			 * @example
 			 * "custom.json"
 			 * @pattern
-			 * ^((?![\.]*[\\\/]+).*\.([Jj][Ss][Oo][Nn]))|(\$(X1|A0|A1|B1|B2|C1))$
+			 * ^(^(?![\.]*[\\\/]+).+\.([Jj][Ss][Oo][Nn])$)|(\$(X1|A0|A1|B1|B2|C1))$
 			 * @errorMessage
-			 * String must be a pre-defined layout, or a .json file located within the plugin's directory
+			 * String must reference .json file in the plugin directory, or a pre-defined layout.
 			 */
 			layout?: FilePath<"json"> | "$A0" | "$A1" | "$B1" | "$B2" | "$C1" | "$X1";
 		};
@@ -161,6 +165,8 @@ export type Manifest = {
 		 * **Examples:**
 		 * - assets/counter
 		 * - imgs/actions/mute
+		 * @imageDimensions
+		 * [20, 20]
 		 */
 		Icon: ImageFilePath;
 
@@ -215,12 +221,8 @@ export type Manifest = {
 		 * - com.elgato.wavelink.toggle-mute
 		 * - com.elgato.discord.join-voice
 		 * - tv.twitch.go-live
-		 * @pattern
-		 * ^([a-z0-9\-_]+)(\.[a-z0-9\-_]+)+$
-		 * @errorMessage
-		 * String must use reverse DNS format, and must only contain lowercase alphanumeric characters (a-z, 0-9), hyphens (-), underscores (_), and periods (.)
 		 */
-		UUID: string;
+		UUID: Identifier;
 
 		/**
 		 * Determines whether the title field is available to the user when viewing the action's property inspector. Setting this to `false` will disable the user from specifying a
@@ -283,10 +285,10 @@ export type Manifest = {
 	 * **Examples**:
 	 * - assets/category-icon
 	 * - imgs/category
-	 * @filePath
-	 * { extensions: [".svg", ".png"], includeExtension: false }
+	 * @imageDimensions
+	 * [28, 28]
 	 */
-	CategoryIcon?: string;
+	CategoryIcon?: ImageFilePath;
 
 	/**
 	 * Path to the plugin's main entry point; this is executed when the Stream Deck application starts the plugin.
@@ -340,6 +342,8 @@ export type Manifest = {
 	 * **Examples**:
 	 * assets/plugin-icon
 	 * imgs/plugin
+	 * @imageDimensions
+	 * [288, 288]
 	 */
 	Icon: ImageFilePath;
 
@@ -478,6 +482,22 @@ export type Manifest = {
 	URL?: string;
 
 	/**
+	 * Unique identifier of the plugin, represented in reverse-DNS format.
+	 *
+	 * **Allowed characters:**
+	 * - Lowercase alphanumeric characters (a-z, 0-9)
+	 * - Hyphens (-)
+	 * - Underscores (_)
+	 * - Periods (.)
+	 *
+	 * **Examples:**
+	 * - com.elgato.wavelink
+	 * - com.elgato.discord
+	 * - tv.twitch
+	 */
+	UUID: Identifier;
+
+	/**
 	 * Version of the plugin, represented as a semantic version, excluding pre-release values (https://semver.org). The version can also include an optional build number.
 	 *
 	 * **Examples:**
@@ -489,7 +509,7 @@ export type Manifest = {
 	 * @pattern
 	 * ^\d+(\.\d+){2,3}$
 	 * @errorMessage
-	 * String must be a semantic version (pre-releases are not permitted)
+	 * String must be semantic version (pre-releases are not permitted)
 	 */
 	Version: string;
 };
@@ -513,7 +533,7 @@ type HtmlFilePath = FilePath<"htm" | "html">;
 /**
  * File path that represents a file relative to the plugin's manifest, with the extension omitted. When multiple images with the same name are found, they are resolved in order.
  * @filePath
- * { extensions: [".gif", ".svg", ".png"], includeExtension: false }
+ * { extensions: [".svg", ".png"], includeExtension: false }
  */
 type ImageFilePath = string;
 
@@ -536,6 +556,15 @@ type OS = {
 	 */
 	Platform: "mac" | "windows";
 };
+
+/**
+ * Unique identifier, in reverse DNS format.
+ * @pattern
+ * ^([a-z0-9\-_]+)(\.[a-z0-9\-_]+)+$
+ * @errorMessage
+ * String must use reverse DNS format, and must only contain lowercase alphanumeric characters (a-z, 0-9), hyphens (-), underscores (_), and periods (.)
+ */
+type Identifier = string;
 
 /**
  * Defines the state of the action; this includes behavior, iconography, typography, etc.
@@ -572,7 +601,7 @@ type ActionState = {
 	/**
 	 * Path to the image, with the **file extension omitted**, that will be displayed on the Stream Deck when this action's state is active. The image must adhere to the following
 	 * style guidelines.
-	 * - Be in .PNG or .SVG format.
+	 * - Be in .GIF, .PNG or .SVG format.
 	 * - Be provided in two sizes, 72x72 px and 144x144 px (@2x).
 	 *
 	 * NB: Can be overridden by the user in the Stream Deck application.
@@ -580,8 +609,12 @@ type ActionState = {
 	 * **Examples:**
 	 * - assets/counter-key
 	 * - assets/icons/mute
+	 * @filePath
+	 * { extensions: [".gif", ".svg", ".png"], includeExtension: false }
+	 * @imageDimensions
+	 * [72, 72]
 	 */
-	Image: ImageFilePath;
+	Image: string;
 
 	/**
 	 * Path to the image, with the **file extension omitted**, that will be displayed when the action is being viewed as part of a multi-action. The image must adhere to the following
@@ -594,6 +627,8 @@ type ActionState = {
 	 * **Examples:**
 	 * - assets/counter-key
 	 * - assets/icons/mute
+	 * @imageDimensions
+	 * [72, 72]
 	 */
 	MultiActionImage?: ImageFilePath;
 

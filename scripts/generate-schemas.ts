@@ -5,7 +5,7 @@ import { Schema, createGenerator } from "ts-json-schema-generator";
 
 // Create a generator so we're able to produce multiple schemas.
 const generator = createGenerator({
-	extraTags: ["errorMessage", "filePath"],
+	extraTags: ["errorMessage", "imageDimensions", "filePath"],
 	path: join(__dirname, "../src/index.ts"),
 	skipTypeCheck: true,
 	tsconfig: join(__dirname, "../tsconfig.json")
@@ -124,19 +124,15 @@ function generatePathPattern(options: FilePathOptions): string {
  */
 function generatePathErrorMessage(options: FilePathOptions): string {
 	if (typeof options === "boolean") {
-		return "String must be a file located within the plugins's directory";
+		return "String must reference file in the plugin directory.";
 	}
 
 	const exts = options.extensions.reduce((prev, current, index) => {
 		return index === 0 ? current : index === options.extensions.length - 1 ? prev + `, or ${current}` : prev + `, ${current}`;
 	}, "");
 
-	const errorMessage = `String must be a ${exts} file located within the plugin's directory`;
-	if (options.includeExtension) {
-		return errorMessage;
-	}
-
-	return `${errorMessage}, with the file extension omitted`;
+	const errorMessage = `String must reference ${exts} file in the plugin directory`;
+	return options.includeExtension ? `${errorMessage}.` : `${errorMessage}, with the file extension omitted.`;
 }
 
 /**
@@ -186,6 +182,7 @@ type FilePathOptions =
 			 * Collection of valid file extensions.
 			 */
 			extensions: string[];
+
 			/**
 			 * Determines whether the extension must be present, or omitted, from the file path.
 			 */
