@@ -20,612 +20,91 @@
 					"items": {
 						"anyOf": [
 							{
-								"type": "object",
-								"additionalProperties": false,
-								"properties": {
-									"key": {
-										"type": "string",
-										"description": "Unique name used to identify the layout item. When calling `setFeedback` this value should be used as the key as part of the object that represents the feedback.",
-										"markdownDescription": "Unique name used to identify the layout item. When calling `setFeedback` this value should be used as the key as part of the object that represents the feedback."
-									},
-									"rect": {
-										"type": "array",
-										"minItems": 4,
-										"items": [
-											{
-												"type": "number",
-												"description": "X coordinate of the rectangle.",
-												"minimum": 0,
-												"maximum": 200,
-												"title": "x",
-												"markdownDescription": "X coordinate of the rectangle."
-											},
-											{
-												"type": "number",
-												"description": "Y coordinate of the rectangle.",
-												"minimum": 0,
-												"maximum": 100,
-												"title": "y",
-												"markdownDescription": "Y coordinate of the rectangle."
-											},
-											{
-												"type": "number",
-												"description": "Width of the rectangle.",
-												"minimum": 0,
-												"maximum": 200,
-												"title": "width",
-												"markdownDescription": "Width of the rectangle."
-											},
-											{
-												"type": "number",
-												"description": "Height of the rectangle.",
-												"minimum": 0,
-												"maximum": 100,
-												"title": "height",
-												"markdownDescription": "Height of the rectangle."
-											}
-										],
-										"maxItems": 4,
-										"description": "Array defining the items coordinates in the format `[x, y, width, height]`; coordinates must be within canvas size of 200 x 100, e.g. [0, 0, 200, 100]. Items with the same `zOrder` must **not** have an overlapping `rect`.",
-										"markdownDescription": "Array defining the items coordinates in the format `[x, y, width, height]`; coordinates must be within canvas size of 200 x 100, e.g. [0, 0, 200, 100]. Items with the same `zOrder` must **not** have an overlapping `rect`."
-									},
-									"type": {
-										"type": "string",
-										"const": "bar",
-										"description": "Type of layout item this instance represents, e.g. \"pixmap\", \"bar\", etc.",
-										"markdownDescription": "Type of layout item this instance represents, e.g. \"pixmap\", \"bar\", etc."
-									},
-									"bar_bg_c": {
-										"type": "string",
-										"description": "Bar background color represented as a named color, hexadecimal value, or gradient. Default is `darkGray`. Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)",
-										"examples": [
-											"darkGray"
-										],
-										"markdownDescription": "Bar background color represented as a named color, hexadecimal value, or gradient. Default is `darkGray`. Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)"
-									},
-									"bar_border_c": {
-										"type": "string",
-										"description": "Border color represented as a named color, or hexadecimal value. Default is `white`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)",
-										"examples": [
-											"white"
-										],
-										"markdownDescription": "Border color represented as a named color, or hexadecimal value. Default is `white`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)"
-									},
-									"bar_fill_c": {
-										"type": "string",
-										"description": "Fill color of the bar represented as a named color, hexadecimal value, or gradient. Default is `white`. Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)",
-										"examples": [
-											"white"
-										],
-										"markdownDescription": "Fill color of the bar represented as a named color, hexadecimal value, or gradient. Default is `white`. Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)"
-									},
-									"border_w": {
-										"type": "number",
-										"description": "Width of the border around the bar, as a whole number. Default is `2`.",
-										"examples": [
-											2
-										],
-										"markdownDescription": "Width of the border around the bar, as a whole number. Default is `2`."
-									},
-									"range": {
-										"type": "object",
+								"if": {
+									"properties": {
+										"type": {
+											"const": "bar",
+											"enum": [
+												"bar",
+												"gbar",
+												"pixmap",
+												"text"
+											]
+										}
+									}
+								},
+								"then": {
+									"$ref": "#/definitions/bar"
+								},
+								"else": {
+									"if": {
 										"properties": {
-											"min": {
-												"type": "number",
-												"description": "Minimum value of the bar.",
-												"markdownDescription": "Minimum value of the bar."
-											},
-											"max": {
-												"type": "number",
-												"description": "Maximum value of the bar.",
-												"markdownDescription": "Maximum value of the bar."
+											"type": {
+												"const": "gbar",
+												"enum": [
+													"bar",
+													"gbar",
+													"pixmap",
+													"text"
+												]
+											}
+										}
+									},
+									"then": {
+										"$ref": "#/definitions/gbar"
+									},
+									"else": {
+										"if": {
+											"properties": {
+												"type": {
+													"const": "pixmap",
+													"enum": [
+														"bar",
+														"gbar",
+														"pixmap",
+														"text"
+													]
+												}
 											}
 										},
-										"required": [
-											"min",
-											"max"
-										],
-										"additionalProperties": false,
-										"description": "Defines the range of the value the bar represents, e.g. 0-20, 0-100, etc.",
-										"markdownDescription": "Defines the range of the value the bar represents, e.g. 0-20, 0-100, etc."
-									},
-									"subtype": {
-										"type": "number",
-										"enum": [
-											0,
-											1,
-											2,
-											3,
-											4
-										],
-										"description": "Sub-type used to determine the type of bar to render. Default is  {@link  BarSubType.Groove }  (4).\n\n**Options**\n- Rectangle (0)\n- DoubleRectangle (1)\n- Trapezoid (2)\n- DoubleTrapezoid (3)\n- Groove (4)",
-										"markdownDescription": "Sub-type used to determine the type of bar to render. Default is  {@link  BarSubType.Groove }  (4).\n\n**Options**\n- Rectangle (0)\n- DoubleRectangle (1)\n- Trapezoid (2)\n- DoubleTrapezoid (3)\n- Groove (4)"
-									},
-									"value": {
-										"type": "number",
-										"description": "Value used to determine how much of the bar is filled. Correlates with the item's `range` if specified in the layout's JSON definition; default range is `0..100`.",
-										"markdownDescription": "Value used to determine how much of the bar is filled. Correlates with the item's `range` if specified in the layout's JSON definition; default range is `0..100`."
-									},
-									"background": {
-										"type": "string",
-										"description": "Background color represented as a named color, hexadecimal value, or gradient. Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)",
-										"markdownDescription": "Background color represented as a named color, hexadecimal value, or gradient. Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)"
-									},
-									"enabled": {
-										"type": "boolean",
-										"description": "Determines whether the item is enabled (i.e. visible); default is `true`.",
-										"markdownDescription": "Determines whether the item is enabled (i.e. visible); default is `true`."
-									},
-									"opacity": {
-										"type": "number",
-										"enum": [
-											0,
-											0.1,
-											0.2,
-											0.3,
-											0.4,
-											0.5,
-											0.6,
-											0.7,
-											0.8,
-											0.9,
-											1
-										],
-										"description": "Defines the opacity of the item being shown based on a single-decimal value ranging from `0..1`, e.g. `0.1`, `0.2`, etc. with `0` being invisible and `1` being fully visible. Default is `1`.",
-										"markdownDescription": "Defines the opacity of the item being shown based on a single-decimal value ranging from `0..1`, e.g. `0.1`, `0.2`, etc. with `0` being invisible and `1` being fully visible. Default is `1`."
-									},
-									"zOrder": {
-										"type": "number",
-										"description": "Z-order of the item, used to layer items within a layout; must be between 0-700. Items with the same `zOrder` must **not** have an overlapping `rect`. Default is `0`.",
-										"minimum": 0,
-										"maximum": 700,
-										"markdownDescription": "Z-order of the item, used to layer items within a layout; must be between 0-700. Items with the same `zOrder` must **not** have an overlapping `rect`. Default is `0`."
-									}
-								},
-								"required": [
-									"key",
-									"rect",
-									"type",
-									"value"
-								],
-								"description": "Extended information used to define a layout item within a layout's JSON file.",
-								"markdownDescription": "Extended information used to define a layout item within a layout's JSON file."
-							},
-							{
-								"type": "object",
-								"additionalProperties": false,
-								"properties": {
-									"key": {
-										"type": "string",
-										"description": "Unique name used to identify the layout item. When calling `setFeedback` this value should be used as the key as part of the object that represents the feedback.",
-										"markdownDescription": "Unique name used to identify the layout item. When calling `setFeedback` this value should be used as the key as part of the object that represents the feedback."
-									},
-									"rect": {
-										"type": "array",
-										"minItems": 4,
-										"items": [
-											{
-												"type": "number",
-												"description": "X coordinate of the rectangle.",
-												"minimum": 0,
-												"maximum": 200,
-												"title": "x",
-												"markdownDescription": "X coordinate of the rectangle."
-											},
-											{
-												"type": "number",
-												"description": "Y coordinate of the rectangle.",
-												"minimum": 0,
-												"maximum": 100,
-												"title": "y",
-												"markdownDescription": "Y coordinate of the rectangle."
-											},
-											{
-												"type": "number",
-												"description": "Width of the rectangle.",
-												"minimum": 0,
-												"maximum": 200,
-												"title": "width",
-												"markdownDescription": "Width of the rectangle."
-											},
-											{
-												"type": "number",
-												"description": "Height of the rectangle.",
-												"minimum": 0,
-												"maximum": 100,
-												"title": "height",
-												"markdownDescription": "Height of the rectangle."
-											}
-										],
-										"maxItems": 4,
-										"description": "Array defining the items coordinates in the format `[x, y, width, height]`; coordinates must be within canvas size of 200 x 100, e.g. [0, 0, 200, 100]. Items with the same `zOrder` must **not** have an overlapping `rect`.",
-										"markdownDescription": "Array defining the items coordinates in the format `[x, y, width, height]`; coordinates must be within canvas size of 200 x 100, e.g. [0, 0, 200, 100]. Items with the same `zOrder` must **not** have an overlapping `rect`."
-									},
-									"type": {
-										"type": "string",
-										"const": "gbar",
-										"description": "Type of layout item this instance represents, e.g. \"pixmap\", \"bar\", etc.",
-										"markdownDescription": "Type of layout item this instance represents, e.g. \"pixmap\", \"bar\", etc."
-									},
-									"bar_h": {
-										"type": "number",
-										"description": "Height of the bar's indicator. Default is `10`.",
-										"examples": [
-											10
-										],
-										"markdownDescription": "Height of the bar's indicator. Default is `10`."
-									},
-									"bar_bg_c": {
-										"type": "string",
-										"description": "Bar background color represented as a named color, hexadecimal value, or gradient. Default is `darkGray`. Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)",
-										"examples": [
-											"darkGray"
-										],
-										"markdownDescription": "Bar background color represented as a named color, hexadecimal value, or gradient. Default is `darkGray`. Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)"
-									},
-									"bar_border_c": {
-										"type": "string",
-										"description": "Border color represented as a named color, or hexadecimal value. Default is `white`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)",
-										"examples": [
-											"white"
-										],
-										"markdownDescription": "Border color represented as a named color, or hexadecimal value. Default is `white`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)"
-									},
-									"bar_fill_c": {
-										"type": "string",
-										"description": "Fill color of the bar represented as a named color, hexadecimal value, or gradient. Default is `white`. Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)",
-										"examples": [
-											"white"
-										],
-										"markdownDescription": "Fill color of the bar represented as a named color, hexadecimal value, or gradient. Default is `white`. Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)"
-									},
-									"border_w": {
-										"type": "number",
-										"description": "Width of the border around the bar, as a whole number. Default is `2`.",
-										"examples": [
-											2
-										],
-										"markdownDescription": "Width of the border around the bar, as a whole number. Default is `2`."
-									},
-									"range": {
-										"type": "object",
-										"properties": {
-											"min": {
-												"type": "number",
-												"description": "Minimum value of the bar.",
-												"markdownDescription": "Minimum value of the bar."
-											},
-											"max": {
-												"type": "number",
-												"description": "Maximum value of the bar.",
-												"markdownDescription": "Maximum value of the bar."
-											}
+										"then": {
+											"$ref": "#/definitions/pixmap"
 										},
-										"required": [
-											"min",
-											"max"
-										],
-										"additionalProperties": false,
-										"description": "Defines the range of the value the bar represents, e.g. 0-20, 0-100, etc.",
-										"markdownDescription": "Defines the range of the value the bar represents, e.g. 0-20, 0-100, etc."
-									},
-									"subtype": {
-										"type": "number",
-										"enum": [
-											0,
-											1,
-											2,
-											3,
-											4
-										],
-										"description": "Sub-type used to determine the type of bar to render. Default is  {@link  BarSubType.Groove }  (4).\n\n**Options**\n- Rectangle (0)\n- DoubleRectangle (1)\n- Trapezoid (2)\n- DoubleTrapezoid (3)\n- Groove (4)",
-										"markdownDescription": "Sub-type used to determine the type of bar to render. Default is  {@link  BarSubType.Groove }  (4).\n\n**Options**\n- Rectangle (0)\n- DoubleRectangle (1)\n- Trapezoid (2)\n- DoubleTrapezoid (3)\n- Groove (4)"
-									},
-									"value": {
-										"type": "number",
-										"description": "Value used to determine how much of the bar is filled. Correlates with the item's `range` if specified in the layout's JSON definition; default range is `0..100`.",
-										"markdownDescription": "Value used to determine how much of the bar is filled. Correlates with the item's `range` if specified in the layout's JSON definition; default range is `0..100`."
-									},
-									"background": {
-										"type": "string",
-										"description": "Background color represented as a named color, hexadecimal value, or gradient. Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)",
-										"markdownDescription": "Background color represented as a named color, hexadecimal value, or gradient. Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)"
-									},
-									"enabled": {
-										"type": "boolean",
-										"description": "Determines whether the item is enabled (i.e. visible); default is `true`.",
-										"markdownDescription": "Determines whether the item is enabled (i.e. visible); default is `true`."
-									},
-									"opacity": {
-										"type": "number",
-										"enum": [
-											0,
-											0.1,
-											0.2,
-											0.3,
-											0.4,
-											0.5,
-											0.6,
-											0.7,
-											0.8,
-											0.9,
-											1
-										],
-										"description": "Defines the opacity of the item being shown based on a single-decimal value ranging from `0..1`, e.g. `0.1`, `0.2`, etc. with `0` being invisible and `1` being fully visible. Default is `1`.",
-										"markdownDescription": "Defines the opacity of the item being shown based on a single-decimal value ranging from `0..1`, e.g. `0.1`, `0.2`, etc. with `0` being invisible and `1` being fully visible. Default is `1`."
-									},
-									"zOrder": {
-										"type": "number",
-										"description": "Z-order of the item, used to layer items within a layout; must be between 0-700. Items with the same `zOrder` must **not** have an overlapping `rect`. Default is `0`.",
-										"minimum": 0,
-										"maximum": 700,
-										"markdownDescription": "Z-order of the item, used to layer items within a layout; must be between 0-700. Items with the same `zOrder` must **not** have an overlapping `rect`. Default is `0`."
-									}
-								},
-								"required": [
-									"key",
-									"rect",
-									"type",
-									"value"
-								],
-								"description": "Extended information used to define a layout item within a layout's JSON file.",
-								"markdownDescription": "Extended information used to define a layout item within a layout's JSON file."
-							},
-							{
-								"type": "object",
-								"additionalProperties": false,
-								"properties": {
-									"key": {
-										"type": "string",
-										"description": "Unique name used to identify the layout item. When calling `setFeedback` this value should be used as the key as part of the object that represents the feedback.",
-										"markdownDescription": "Unique name used to identify the layout item. When calling `setFeedback` this value should be used as the key as part of the object that represents the feedback."
-									},
-									"rect": {
-										"type": "array",
-										"minItems": 4,
-										"items": [
-											{
-												"type": "number",
-												"description": "X coordinate of the rectangle.",
-												"minimum": 0,
-												"maximum": 200,
-												"title": "x",
-												"markdownDescription": "X coordinate of the rectangle."
+										"else": {
+											"if": {
+												"properties": {
+													"type": {
+														"const": "text",
+														"enum": [
+															"bar",
+															"gbar",
+															"pixmap",
+															"text"
+														]
+													}
+												}
 											},
-											{
-												"type": "number",
-												"description": "Y coordinate of the rectangle.",
-												"minimum": 0,
-												"maximum": 100,
-												"title": "y",
-												"markdownDescription": "Y coordinate of the rectangle."
+											"then": {
+												"$ref": "#/definitions/text"
 											},
-											{
-												"type": "number",
-												"description": "Width of the rectangle.",
-												"minimum": 0,
-												"maximum": 200,
-												"title": "width",
-												"markdownDescription": "Width of the rectangle."
-											},
-											{
-												"type": "number",
-												"description": "Height of the rectangle.",
-												"minimum": 0,
-												"maximum": 100,
-												"title": "height",
-												"markdownDescription": "Height of the rectangle."
+											"else": {
+												"type": "object",
+												"additionalProperties": false,
+												"properties": {
+													"type": {
+														"type": "string",
+														"enum": [
+															"bar",
+															"gbar",
+															"pixmap",
+															"text"
+														]
+													}
+												}
 											}
-										],
-										"maxItems": 4,
-										"description": "Array defining the items coordinates in the format `[x, y, width, height]`; coordinates must be within canvas size of 200 x 100, e.g. [0, 0, 200, 100]. Items with the same `zOrder` must **not** have an overlapping `rect`.",
-										"markdownDescription": "Array defining the items coordinates in the format `[x, y, width, height]`; coordinates must be within canvas size of 200 x 100, e.g. [0, 0, 200, 100]. Items with the same `zOrder` must **not** have an overlapping `rect`."
-									},
-									"type": {
-										"type": "string",
-										"const": "pixmap",
-										"description": "Type of layout item this instance represents, e.g. \"pixmap\", \"bar\", etc.",
-										"markdownDescription": "Type of layout item this instance represents, e.g. \"pixmap\", \"bar\", etc."
-									},
-									"value": {
-										"type": "string",
-										"description": "Image to render; this can be either a path to a local file within the plugin's folder, a base64 encoded `string` with the mime type declared (e.g. PNG, JPEG, etc.), or an SVG `string`.\n\n**Examples:**\n- \"imgs/Logo.png\"\n- \"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MHB0IiBoZWlnaHQ9…\"",
-										"markdownDescription": "Image to render; this can be either a path to a local file within the plugin's folder, a base64 encoded `string` with the mime type declared (e.g. PNG, JPEG, etc.), or an SVG `string`.\n\n**Examples:**\n- \"imgs/Logo.png\"\n- \"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MHB0IiBoZWlnaHQ9…\""
-									},
-									"background": {
-										"type": "string",
-										"description": "Background color represented as a named color, hexadecimal value, or gradient. Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)",
-										"markdownDescription": "Background color represented as a named color, hexadecimal value, or gradient. Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)"
-									},
-									"enabled": {
-										"type": "boolean",
-										"description": "Determines whether the item is enabled (i.e. visible); default is `true`.",
-										"markdownDescription": "Determines whether the item is enabled (i.e. visible); default is `true`."
-									},
-									"opacity": {
-										"type": "number",
-										"enum": [
-											0,
-											0.1,
-											0.2,
-											0.3,
-											0.4,
-											0.5,
-											0.6,
-											0.7,
-											0.8,
-											0.9,
-											1
-										],
-										"description": "Defines the opacity of the item being shown based on a single-decimal value ranging from `0..1`, e.g. `0.1`, `0.2`, etc. with `0` being invisible and `1` being fully visible. Default is `1`.",
-										"markdownDescription": "Defines the opacity of the item being shown based on a single-decimal value ranging from `0..1`, e.g. `0.1`, `0.2`, etc. with `0` being invisible and `1` being fully visible. Default is `1`."
-									},
-									"zOrder": {
-										"type": "number",
-										"description": "Z-order of the item, used to layer items within a layout; must be between 0-700. Items with the same `zOrder` must **not** have an overlapping `rect`. Default is `0`.",
-										"minimum": 0,
-										"maximum": 700,
-										"markdownDescription": "Z-order of the item, used to layer items within a layout; must be between 0-700. Items with the same `zOrder` must **not** have an overlapping `rect`. Default is `0`."
+										}
 									}
-								},
-								"required": [
-									"key",
-									"rect",
-									"type"
-								],
-								"description": "Extended information used to define a layout item within a layout's JSON file.",
-								"markdownDescription": "Extended information used to define a layout item within a layout's JSON file."
-							},
-							{
-								"type": "object",
-								"additionalProperties": false,
-								"properties": {
-									"key": {
-										"type": "string",
-										"description": "Unique name used to identify the layout item. When calling `setFeedback` this value should be used as the key as part of the object that represents the feedback.",
-										"markdownDescription": "Unique name used to identify the layout item. When calling `setFeedback` this value should be used as the key as part of the object that represents the feedback."
-									},
-									"rect": {
-										"type": "array",
-										"minItems": 4,
-										"items": [
-											{
-												"type": "number",
-												"description": "X coordinate of the rectangle.",
-												"minimum": 0,
-												"maximum": 200,
-												"title": "x",
-												"markdownDescription": "X coordinate of the rectangle."
-											},
-											{
-												"type": "number",
-												"description": "Y coordinate of the rectangle.",
-												"minimum": 0,
-												"maximum": 100,
-												"title": "y",
-												"markdownDescription": "Y coordinate of the rectangle."
-											},
-											{
-												"type": "number",
-												"description": "Width of the rectangle.",
-												"minimum": 0,
-												"maximum": 200,
-												"title": "width",
-												"markdownDescription": "Width of the rectangle."
-											},
-											{
-												"type": "number",
-												"description": "Height of the rectangle.",
-												"minimum": 0,
-												"maximum": 100,
-												"title": "height",
-												"markdownDescription": "Height of the rectangle."
-											}
-										],
-										"maxItems": 4,
-										"description": "Array defining the items coordinates in the format `[x, y, width, height]`; coordinates must be within canvas size of 200 x 100, e.g. [0, 0, 200, 100]. Items with the same `zOrder` must **not** have an overlapping `rect`.",
-										"markdownDescription": "Array defining the items coordinates in the format `[x, y, width, height]`; coordinates must be within canvas size of 200 x 100, e.g. [0, 0, 200, 100]. Items with the same `zOrder` must **not** have an overlapping `rect`."
-									},
-									"type": {
-										"type": "string",
-										"const": "text",
-										"description": "Type of layout item this instance represents, e.g. \"pixmap\", \"bar\", etc.",
-										"markdownDescription": "Type of layout item this instance represents, e.g. \"pixmap\", \"bar\", etc."
-									},
-									"alignment": {
-										"type": "string",
-										"enum": [
-											"center",
-											"left",
-											"right"
-										],
-										"description": "Alignment of the text. Default is `\"center\"`. **Note**, when the `key` of this layout item is set to `\"title\"` within the layout's JSON definition, these values will be ignored in favour of the user's preferred title settings, as set in property inspector.",
-										"markdownDescription": "Alignment of the text. Default is `\"center\"`. **Note**, when the `key` of this layout item is set to `\"title\"` within the layout's JSON definition, these values will be ignored in favour of the user's preferred title settings, as set in property inspector."
-									},
-									"color": {
-										"type": "string",
-										"description": "Color of the font represented as a named color, or hexadecimal value. Default is `white`. **Note**, when the `key` of this layout item is set to `\"title\"` within the layout's JSON definition, these values will be ignored in favour of the user's preferred title settings, as set in property inspector.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)",
-										"markdownDescription": "Color of the font represented as a named color, or hexadecimal value. Default is `white`. **Note**, when the `key` of this layout item is set to `\"title\"` within the layout's JSON definition, these values will be ignored in favour of the user's preferred title settings, as set in property inspector.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)"
-									},
-									"font": {
-										"type": "object",
-										"properties": {
-											"size": {
-												"type": "number",
-												"description": "Size of the font. **Note**, when the `key` of this layout item is set to `\"title\"` within the layout's JSON definition, this value will be ignored in favour of the user's preferred title settings, as set in property inspector.",
-												"markdownDescription": "Size of the font. **Note**, when the `key` of this layout item is set to `\"title\"` within the layout's JSON definition, this value will be ignored in favour of the user's preferred title settings, as set in property inspector."
-											},
-											"weight": {
-												"type": "number",
-												"description": "Weight of the font; value must be a whole `number` in the range of `100..1000`. **Note**, when the `key` of this layout item is set to `\"title\"` within the layout's JSON definition, this value will be ignored in favour of the user's preferred title settings, as set in property inspector.",
-												"minimum": 100,
-												"maximum": 1000,
-												"markdownDescription": "Weight of the font; value must be a whole `number` in the range of `100..1000`. **Note**, when the `key` of this layout item is set to `\"title\"` within the layout's JSON definition, this value will be ignored in favour of the user's preferred title settings, as set in property inspector."
-											}
-										},
-										"additionalProperties": false,
-										"description": "Defines how the font should be rendered. **Note**, when the `key` of this layout item is set to `\"title\"` within the layout's JSON definition, these values will be ignored in favour of the user's preferred title settings, as set in property inspector.",
-										"markdownDescription": "Defines how the font should be rendered. **Note**, when the `key` of this layout item is set to `\"title\"` within the layout's JSON definition, these values will be ignored in favour of the user's preferred title settings, as set in property inspector."
-									},
-									"text-overflow": {
-										"type": "string",
-										"enum": [
-											"clip",
-											"ellipsis",
-											"fade"
-										],
-										"description": "Defines how overflowing text should be rendered on the layout.\n- clip, truncates the text at the boundary of the element (default).\n- ellipsis, truncates the text prior to the boundary of the element, and adds an ellipsis (…) to the end.\n- fade, applies a fade-gradient over the end of the text.",
-										"default": "ellipsis",
-										"markdownDescription": "Defines how overflowing text should be rendered on the layout.\n- clip, truncates the text at the boundary of the element (default).\n- ellipsis, truncates the text prior to the boundary of the element, and adds an ellipsis (…) to the end.\n- fade, applies a fade-gradient over the end of the text."
-									},
-									"value": {
-										"type": "string",
-										"description": "Text to be displayed.",
-										"markdownDescription": "Text to be displayed."
-									},
-									"background": {
-										"type": "string",
-										"description": "Background color represented as a named color, hexadecimal value, or gradient. Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)",
-										"markdownDescription": "Background color represented as a named color, hexadecimal value, or gradient. Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)"
-									},
-									"enabled": {
-										"type": "boolean",
-										"description": "Determines whether the item is enabled (i.e. visible); default is `true`.",
-										"markdownDescription": "Determines whether the item is enabled (i.e. visible); default is `true`."
-									},
-									"opacity": {
-										"type": "number",
-										"enum": [
-											0,
-											0.1,
-											0.2,
-											0.3,
-											0.4,
-											0.5,
-											0.6,
-											0.7,
-											0.8,
-											0.9,
-											1
-										],
-										"description": "Defines the opacity of the item being shown based on a single-decimal value ranging from `0..1`, e.g. `0.1`, `0.2`, etc. with `0` being invisible and `1` being fully visible. Default is `1`.",
-										"markdownDescription": "Defines the opacity of the item being shown based on a single-decimal value ranging from `0..1`, e.g. `0.1`, `0.2`, etc. with `0` being invisible and `1` being fully visible. Default is `1`."
-									},
-									"zOrder": {
-										"type": "number",
-										"description": "Z-order of the item, used to layer items within a layout; must be between 0-700. Items with the same `zOrder` must **not** have an overlapping `rect`. Default is `0`.",
-										"minimum": 0,
-										"maximum": 700,
-										"markdownDescription": "Z-order of the item, used to layer items within a layout; must be between 0-700. Items with the same `zOrder` must **not** have an overlapping `rect`. Default is `0`."
-									}
-								},
-								"required": [
-									"key",
-									"rect",
-									"type"
-								],
-								"description": "Extended information used to define a layout item within a layout's JSON file.",
-								"markdownDescription": "Extended information used to define a layout item within a layout's JSON file."
+								}
 							}
 						]
 					},
@@ -640,6 +119,614 @@
 			"additionalProperties": false,
 			"description": "Defines the structure of a custom layout file.",
 			"markdownDescription": "Defines the structure of a custom layout file."
+		},
+		"bar": {
+			"type": "object",
+			"additionalProperties": false,
+			"properties": {
+				"key": {
+					"type": "string",
+					"description": "Unique name used to identify the layout item. When calling `setFeedback` this value should be used as the key as part of the object that represents the feedback.",
+					"markdownDescription": "Unique name used to identify the layout item. When calling `setFeedback` this value should be used as the key as part of the object that represents the feedback."
+				},
+				"rect": {
+					"type": "array",
+					"minItems": 4,
+					"items": [
+						{
+							"type": "number",
+							"description": "X coordinate of the rectangle.",
+							"minimum": 0,
+							"maximum": 200,
+							"title": "x",
+							"markdownDescription": "X coordinate of the rectangle."
+						},
+						{
+							"type": "number",
+							"description": "Y coordinate of the rectangle.",
+							"minimum": 0,
+							"maximum": 100,
+							"title": "y",
+							"markdownDescription": "Y coordinate of the rectangle."
+						},
+						{
+							"type": "number",
+							"description": "Width of the rectangle.",
+							"minimum": 0,
+							"maximum": 200,
+							"title": "width",
+							"markdownDescription": "Width of the rectangle."
+						},
+						{
+							"type": "number",
+							"description": "Height of the rectangle.",
+							"minimum": 0,
+							"maximum": 100,
+							"title": "height",
+							"markdownDescription": "Height of the rectangle."
+						}
+					],
+					"maxItems": 4,
+					"description": "Array defining the items coordinates in the format `[x, y, width, height]`; coordinates must be within canvas size of 200 x 100, e.g. [0, 0, 200, 100]. Items with the same `zOrder` must **not** have an overlapping `rect`.",
+					"markdownDescription": "Array defining the items coordinates in the format `[x, y, width, height]`; coordinates must be within canvas size of 200 x 100, e.g. [0, 0, 200, 100]. Items with the same `zOrder` must **not** have an overlapping `rect`."
+				},
+				"type": {
+					"type": "string",
+					"const": "bar",
+					"description": "Type of layout item this instance represents, e.g. \"pixmap\", \"bar\", etc.",
+					"markdownDescription": "Type of layout item this instance represents, e.g. \"pixmap\", \"bar\", etc."
+				},
+				"bar_bg_c": {
+					"type": "string",
+					"description": "Bar background color represented as a named color, hexadecimal value, or gradient. Default is `darkGray`. Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)",
+					"examples": [
+						"darkGray"
+					],
+					"markdownDescription": "Bar background color represented as a named color, hexadecimal value, or gradient. Default is `darkGray`. Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)"
+				},
+				"bar_border_c": {
+					"type": "string",
+					"description": "Border color represented as a named color, or hexadecimal value. Default is `white`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)",
+					"examples": [
+						"white"
+					],
+					"markdownDescription": "Border color represented as a named color, or hexadecimal value. Default is `white`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)"
+				},
+				"bar_fill_c": {
+					"type": "string",
+					"description": "Fill color of the bar represented as a named color, hexadecimal value, or gradient. Default is `white`. Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)",
+					"examples": [
+						"white"
+					],
+					"markdownDescription": "Fill color of the bar represented as a named color, hexadecimal value, or gradient. Default is `white`. Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)"
+				},
+				"border_w": {
+					"type": "number",
+					"description": "Width of the border around the bar, as a whole number. Default is `2`.",
+					"examples": [
+						2
+					],
+					"markdownDescription": "Width of the border around the bar, as a whole number. Default is `2`."
+				},
+				"range": {
+					"type": "object",
+					"properties": {
+						"min": {
+							"type": "number",
+							"description": "Minimum value of the bar.",
+							"markdownDescription": "Minimum value of the bar."
+						},
+						"max": {
+							"type": "number",
+							"description": "Maximum value of the bar.",
+							"markdownDescription": "Maximum value of the bar."
+						}
+					},
+					"required": [
+						"min",
+						"max"
+					],
+					"additionalProperties": false,
+					"description": "Defines the range of the value the bar represents, e.g. 0-20, 0-100, etc.",
+					"markdownDescription": "Defines the range of the value the bar represents, e.g. 0-20, 0-100, etc."
+				},
+				"subtype": {
+					"type": "number",
+					"enum": [
+						0,
+						1,
+						2,
+						3,
+						4
+					],
+					"description": "Sub-type used to determine the type of bar to render. Default is  {@link  BarSubType.Groove }  (4).\n\n**Options**\n- Rectangle (0)\n- DoubleRectangle (1)\n- Trapezoid (2)\n- DoubleTrapezoid (3)\n- Groove (4)",
+					"markdownDescription": "Sub-type used to determine the type of bar to render. Default is  {@link  BarSubType.Groove }  (4).\n\n**Options**\n- Rectangle (0)\n- DoubleRectangle (1)\n- Trapezoid (2)\n- DoubleTrapezoid (3)\n- Groove (4)"
+				},
+				"value": {
+					"type": "number",
+					"description": "Value used to determine how much of the bar is filled. Correlates with the item's `range` if specified in the layout's JSON definition; default range is `0..100`.",
+					"markdownDescription": "Value used to determine how much of the bar is filled. Correlates with the item's `range` if specified in the layout's JSON definition; default range is `0..100`."
+				},
+				"background": {
+					"type": "string",
+					"description": "Background color represented as a named color, hexadecimal value, or gradient. Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)",
+					"markdownDescription": "Background color represented as a named color, hexadecimal value, or gradient. Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)"
+				},
+				"enabled": {
+					"type": "boolean",
+					"description": "Determines whether the item is enabled (i.e. visible); default is `true`.",
+					"markdownDescription": "Determines whether the item is enabled (i.e. visible); default is `true`."
+				},
+				"opacity": {
+					"type": "number",
+					"enum": [
+						0,
+						0.1,
+						0.2,
+						0.3,
+						0.4,
+						0.5,
+						0.6,
+						0.7,
+						0.8,
+						0.9,
+						1
+					],
+					"description": "Defines the opacity of the item being shown based on a single-decimal value ranging from `0..1`, e.g. `0.1`, `0.2`, etc. with `0` being invisible and `1` being fully visible. Default is `1`.",
+					"markdownDescription": "Defines the opacity of the item being shown based on a single-decimal value ranging from `0..1`, e.g. `0.1`, `0.2`, etc. with `0` being invisible and `1` being fully visible. Default is `1`."
+				},
+				"zOrder": {
+					"type": "number",
+					"description": "Z-order of the item, used to layer items within a layout; must be between 0-700. Items with the same `zOrder` must **not** have an overlapping `rect`. Default is `0`.",
+					"minimum": 0,
+					"maximum": 700,
+					"markdownDescription": "Z-order of the item, used to layer items within a layout; must be between 0-700. Items with the same `zOrder` must **not** have an overlapping `rect`. Default is `0`."
+				}
+			},
+			"required": [
+				"key",
+				"rect",
+				"type",
+				"value"
+			],
+			"description": "Extended information used to define a layout item within a layout's JSON file.",
+			"markdownDescription": "Extended information used to define a layout item within a layout's JSON file."
+		},
+		"gbar": {
+			"type": "object",
+			"additionalProperties": false,
+			"properties": {
+				"key": {
+					"type": "string",
+					"description": "Unique name used to identify the layout item. When calling `setFeedback` this value should be used as the key as part of the object that represents the feedback.",
+					"markdownDescription": "Unique name used to identify the layout item. When calling `setFeedback` this value should be used as the key as part of the object that represents the feedback."
+				},
+				"rect": {
+					"type": "array",
+					"minItems": 4,
+					"items": [
+						{
+							"type": "number",
+							"description": "X coordinate of the rectangle.",
+							"minimum": 0,
+							"maximum": 200,
+							"title": "x",
+							"markdownDescription": "X coordinate of the rectangle."
+						},
+						{
+							"type": "number",
+							"description": "Y coordinate of the rectangle.",
+							"minimum": 0,
+							"maximum": 100,
+							"title": "y",
+							"markdownDescription": "Y coordinate of the rectangle."
+						},
+						{
+							"type": "number",
+							"description": "Width of the rectangle.",
+							"minimum": 0,
+							"maximum": 200,
+							"title": "width",
+							"markdownDescription": "Width of the rectangle."
+						},
+						{
+							"type": "number",
+							"description": "Height of the rectangle.",
+							"minimum": 0,
+							"maximum": 100,
+							"title": "height",
+							"markdownDescription": "Height of the rectangle."
+						}
+					],
+					"maxItems": 4,
+					"description": "Array defining the items coordinates in the format `[x, y, width, height]`; coordinates must be within canvas size of 200 x 100, e.g. [0, 0, 200, 100]. Items with the same `zOrder` must **not** have an overlapping `rect`.",
+					"markdownDescription": "Array defining the items coordinates in the format `[x, y, width, height]`; coordinates must be within canvas size of 200 x 100, e.g. [0, 0, 200, 100]. Items with the same `zOrder` must **not** have an overlapping `rect`."
+				},
+				"type": {
+					"type": "string",
+					"const": "gbar",
+					"description": "Type of layout item this instance represents, e.g. \"pixmap\", \"bar\", etc.",
+					"markdownDescription": "Type of layout item this instance represents, e.g. \"pixmap\", \"bar\", etc."
+				},
+				"bar_h": {
+					"type": "number",
+					"description": "Height of the bar's indicator. Default is `10`.",
+					"examples": [
+						10
+					],
+					"markdownDescription": "Height of the bar's indicator. Default is `10`."
+				},
+				"bar_bg_c": {
+					"type": "string",
+					"description": "Bar background color represented as a named color, hexadecimal value, or gradient. Default is `darkGray`. Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)",
+					"examples": [
+						"darkGray"
+					],
+					"markdownDescription": "Bar background color represented as a named color, hexadecimal value, or gradient. Default is `darkGray`. Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)"
+				},
+				"bar_border_c": {
+					"type": "string",
+					"description": "Border color represented as a named color, or hexadecimal value. Default is `white`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)",
+					"examples": [
+						"white"
+					],
+					"markdownDescription": "Border color represented as a named color, or hexadecimal value. Default is `white`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)"
+				},
+				"bar_fill_c": {
+					"type": "string",
+					"description": "Fill color of the bar represented as a named color, hexadecimal value, or gradient. Default is `white`. Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)",
+					"examples": [
+						"white"
+					],
+					"markdownDescription": "Fill color of the bar represented as a named color, hexadecimal value, or gradient. Default is `white`. Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)"
+				},
+				"border_w": {
+					"type": "number",
+					"description": "Width of the border around the bar, as a whole number. Default is `2`.",
+					"examples": [
+						2
+					],
+					"markdownDescription": "Width of the border around the bar, as a whole number. Default is `2`."
+				},
+				"range": {
+					"type": "object",
+					"properties": {
+						"min": {
+							"type": "number",
+							"description": "Minimum value of the bar.",
+							"markdownDescription": "Minimum value of the bar."
+						},
+						"max": {
+							"type": "number",
+							"description": "Maximum value of the bar.",
+							"markdownDescription": "Maximum value of the bar."
+						}
+					},
+					"required": [
+						"min",
+						"max"
+					],
+					"additionalProperties": false,
+					"description": "Defines the range of the value the bar represents, e.g. 0-20, 0-100, etc.",
+					"markdownDescription": "Defines the range of the value the bar represents, e.g. 0-20, 0-100, etc."
+				},
+				"subtype": {
+					"type": "number",
+					"enum": [
+						0,
+						1,
+						2,
+						3,
+						4
+					],
+					"description": "Sub-type used to determine the type of bar to render. Default is  {@link  BarSubType.Groove }  (4).\n\n**Options**\n- Rectangle (0)\n- DoubleRectangle (1)\n- Trapezoid (2)\n- DoubleTrapezoid (3)\n- Groove (4)",
+					"markdownDescription": "Sub-type used to determine the type of bar to render. Default is  {@link  BarSubType.Groove }  (4).\n\n**Options**\n- Rectangle (0)\n- DoubleRectangle (1)\n- Trapezoid (2)\n- DoubleTrapezoid (3)\n- Groove (4)"
+				},
+				"value": {
+					"type": "number",
+					"description": "Value used to determine how much of the bar is filled. Correlates with the item's `range` if specified in the layout's JSON definition; default range is `0..100`.",
+					"markdownDescription": "Value used to determine how much of the bar is filled. Correlates with the item's `range` if specified in the layout's JSON definition; default range is `0..100`."
+				},
+				"background": {
+					"type": "string",
+					"description": "Background color represented as a named color, hexadecimal value, or gradient. Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)",
+					"markdownDescription": "Background color represented as a named color, hexadecimal value, or gradient. Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)"
+				},
+				"enabled": {
+					"type": "boolean",
+					"description": "Determines whether the item is enabled (i.e. visible); default is `true`.",
+					"markdownDescription": "Determines whether the item is enabled (i.e. visible); default is `true`."
+				},
+				"opacity": {
+					"type": "number",
+					"enum": [
+						0,
+						0.1,
+						0.2,
+						0.3,
+						0.4,
+						0.5,
+						0.6,
+						0.7,
+						0.8,
+						0.9,
+						1
+					],
+					"description": "Defines the opacity of the item being shown based on a single-decimal value ranging from `0..1`, e.g. `0.1`, `0.2`, etc. with `0` being invisible and `1` being fully visible. Default is `1`.",
+					"markdownDescription": "Defines the opacity of the item being shown based on a single-decimal value ranging from `0..1`, e.g. `0.1`, `0.2`, etc. with `0` being invisible and `1` being fully visible. Default is `1`."
+				},
+				"zOrder": {
+					"type": "number",
+					"description": "Z-order of the item, used to layer items within a layout; must be between 0-700. Items with the same `zOrder` must **not** have an overlapping `rect`. Default is `0`.",
+					"minimum": 0,
+					"maximum": 700,
+					"markdownDescription": "Z-order of the item, used to layer items within a layout; must be between 0-700. Items with the same `zOrder` must **not** have an overlapping `rect`. Default is `0`."
+				}
+			},
+			"required": [
+				"key",
+				"rect",
+				"type",
+				"value"
+			],
+			"description": "Extended information used to define a layout item within a layout's JSON file.",
+			"markdownDescription": "Extended information used to define a layout item within a layout's JSON file."
+		},
+		"pixmap": {
+			"type": "object",
+			"additionalProperties": false,
+			"properties": {
+				"key": {
+					"type": "string",
+					"description": "Unique name used to identify the layout item. When calling `setFeedback` this value should be used as the key as part of the object that represents the feedback.",
+					"markdownDescription": "Unique name used to identify the layout item. When calling `setFeedback` this value should be used as the key as part of the object that represents the feedback."
+				},
+				"rect": {
+					"type": "array",
+					"minItems": 4,
+					"items": [
+						{
+							"type": "number",
+							"description": "X coordinate of the rectangle.",
+							"minimum": 0,
+							"maximum": 200,
+							"title": "x",
+							"markdownDescription": "X coordinate of the rectangle."
+						},
+						{
+							"type": "number",
+							"description": "Y coordinate of the rectangle.",
+							"minimum": 0,
+							"maximum": 100,
+							"title": "y",
+							"markdownDescription": "Y coordinate of the rectangle."
+						},
+						{
+							"type": "number",
+							"description": "Width of the rectangle.",
+							"minimum": 0,
+							"maximum": 200,
+							"title": "width",
+							"markdownDescription": "Width of the rectangle."
+						},
+						{
+							"type": "number",
+							"description": "Height of the rectangle.",
+							"minimum": 0,
+							"maximum": 100,
+							"title": "height",
+							"markdownDescription": "Height of the rectangle."
+						}
+					],
+					"maxItems": 4,
+					"description": "Array defining the items coordinates in the format `[x, y, width, height]`; coordinates must be within canvas size of 200 x 100, e.g. [0, 0, 200, 100]. Items with the same `zOrder` must **not** have an overlapping `rect`.",
+					"markdownDescription": "Array defining the items coordinates in the format `[x, y, width, height]`; coordinates must be within canvas size of 200 x 100, e.g. [0, 0, 200, 100]. Items with the same `zOrder` must **not** have an overlapping `rect`."
+				},
+				"type": {
+					"type": "string",
+					"const": "pixmap",
+					"description": "Type of layout item this instance represents, e.g. \"pixmap\", \"bar\", etc.",
+					"markdownDescription": "Type of layout item this instance represents, e.g. \"pixmap\", \"bar\", etc."
+				},
+				"value": {
+					"type": "string",
+					"description": "Image to render; this can be either a path to a local file within the plugin's folder, a base64 encoded `string` with the mime type declared (e.g. PNG, JPEG, etc.), or an SVG `string`.\n\n**Examples:**\n- \"imgs/Logo.png\"\n- \"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MHB0IiBoZWlnaHQ9…\"",
+					"markdownDescription": "Image to render; this can be either a path to a local file within the plugin's folder, a base64 encoded `string` with the mime type declared (e.g. PNG, JPEG, etc.), or an SVG `string`.\n\n**Examples:**\n- \"imgs/Logo.png\"\n- \"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MHB0IiBoZWlnaHQ9…\""
+				},
+				"background": {
+					"type": "string",
+					"description": "Background color represented as a named color, hexadecimal value, or gradient. Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)",
+					"markdownDescription": "Background color represented as a named color, hexadecimal value, or gradient. Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)"
+				},
+				"enabled": {
+					"type": "boolean",
+					"description": "Determines whether the item is enabled (i.e. visible); default is `true`.",
+					"markdownDescription": "Determines whether the item is enabled (i.e. visible); default is `true`."
+				},
+				"opacity": {
+					"type": "number",
+					"enum": [
+						0,
+						0.1,
+						0.2,
+						0.3,
+						0.4,
+						0.5,
+						0.6,
+						0.7,
+						0.8,
+						0.9,
+						1
+					],
+					"description": "Defines the opacity of the item being shown based on a single-decimal value ranging from `0..1`, e.g. `0.1`, `0.2`, etc. with `0` being invisible and `1` being fully visible. Default is `1`.",
+					"markdownDescription": "Defines the opacity of the item being shown based on a single-decimal value ranging from `0..1`, e.g. `0.1`, `0.2`, etc. with `0` being invisible and `1` being fully visible. Default is `1`."
+				},
+				"zOrder": {
+					"type": "number",
+					"description": "Z-order of the item, used to layer items within a layout; must be between 0-700. Items with the same `zOrder` must **not** have an overlapping `rect`. Default is `0`.",
+					"minimum": 0,
+					"maximum": 700,
+					"markdownDescription": "Z-order of the item, used to layer items within a layout; must be between 0-700. Items with the same `zOrder` must **not** have an overlapping `rect`. Default is `0`."
+				}
+			},
+			"required": [
+				"key",
+				"rect",
+				"type"
+			],
+			"description": "Extended information used to define a layout item within a layout's JSON file.",
+			"markdownDescription": "Extended information used to define a layout item within a layout's JSON file."
+		},
+		"text": {
+			"type": "object",
+			"additionalProperties": false,
+			"properties": {
+				"key": {
+					"type": "string",
+					"description": "Unique name used to identify the layout item. When calling `setFeedback` this value should be used as the key as part of the object that represents the feedback.",
+					"markdownDescription": "Unique name used to identify the layout item. When calling `setFeedback` this value should be used as the key as part of the object that represents the feedback."
+				},
+				"rect": {
+					"type": "array",
+					"minItems": 4,
+					"items": [
+						{
+							"type": "number",
+							"description": "X coordinate of the rectangle.",
+							"minimum": 0,
+							"maximum": 200,
+							"title": "x",
+							"markdownDescription": "X coordinate of the rectangle."
+						},
+						{
+							"type": "number",
+							"description": "Y coordinate of the rectangle.",
+							"minimum": 0,
+							"maximum": 100,
+							"title": "y",
+							"markdownDescription": "Y coordinate of the rectangle."
+						},
+						{
+							"type": "number",
+							"description": "Width of the rectangle.",
+							"minimum": 0,
+							"maximum": 200,
+							"title": "width",
+							"markdownDescription": "Width of the rectangle."
+						},
+						{
+							"type": "number",
+							"description": "Height of the rectangle.",
+							"minimum": 0,
+							"maximum": 100,
+							"title": "height",
+							"markdownDescription": "Height of the rectangle."
+						}
+					],
+					"maxItems": 4,
+					"description": "Array defining the items coordinates in the format `[x, y, width, height]`; coordinates must be within canvas size of 200 x 100, e.g. [0, 0, 200, 100]. Items with the same `zOrder` must **not** have an overlapping `rect`.",
+					"markdownDescription": "Array defining the items coordinates in the format `[x, y, width, height]`; coordinates must be within canvas size of 200 x 100, e.g. [0, 0, 200, 100]. Items with the same `zOrder` must **not** have an overlapping `rect`."
+				},
+				"type": {
+					"type": "string",
+					"const": "text",
+					"description": "Type of layout item this instance represents, e.g. \"pixmap\", \"bar\", etc.",
+					"markdownDescription": "Type of layout item this instance represents, e.g. \"pixmap\", \"bar\", etc."
+				},
+				"alignment": {
+					"type": "string",
+					"enum": [
+						"center",
+						"left",
+						"right"
+					],
+					"description": "Alignment of the text. Default is `\"center\"`. **Note**, when the `key` of this layout item is set to `\"title\"` within the layout's JSON definition, these values will be ignored in favour of the user's preferred title settings, as set in property inspector.",
+					"markdownDescription": "Alignment of the text. Default is `\"center\"`. **Note**, when the `key` of this layout item is set to `\"title\"` within the layout's JSON definition, these values will be ignored in favour of the user's preferred title settings, as set in property inspector."
+				},
+				"color": {
+					"type": "string",
+					"description": "Color of the font represented as a named color, or hexadecimal value. Default is `white`. **Note**, when the `key` of this layout item is set to `\"title\"` within the layout's JSON definition, these values will be ignored in favour of the user's preferred title settings, as set in property inspector.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)",
+					"markdownDescription": "Color of the font represented as a named color, or hexadecimal value. Default is `white`. **Note**, when the `key` of this layout item is set to `\"title\"` within the layout's JSON definition, these values will be ignored in favour of the user's preferred title settings, as set in property inspector.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)"
+				},
+				"font": {
+					"type": "object",
+					"properties": {
+						"size": {
+							"type": "number",
+							"description": "Size of the font. **Note**, when the `key` of this layout item is set to `\"title\"` within the layout's JSON definition, this value will be ignored in favour of the user's preferred title settings, as set in property inspector.",
+							"markdownDescription": "Size of the font. **Note**, when the `key` of this layout item is set to `\"title\"` within the layout's JSON definition, this value will be ignored in favour of the user's preferred title settings, as set in property inspector."
+						},
+						"weight": {
+							"type": "number",
+							"description": "Weight of the font; value must be a whole `number` in the range of `100..1000`. **Note**, when the `key` of this layout item is set to `\"title\"` within the layout's JSON definition, this value will be ignored in favour of the user's preferred title settings, as set in property inspector.",
+							"minimum": 100,
+							"maximum": 1000,
+							"markdownDescription": "Weight of the font; value must be a whole `number` in the range of `100..1000`. **Note**, when the `key` of this layout item is set to `\"title\"` within the layout's JSON definition, this value will be ignored in favour of the user's preferred title settings, as set in property inspector."
+						}
+					},
+					"additionalProperties": false,
+					"description": "Defines how the font should be rendered. **Note**, when the `key` of this layout item is set to `\"title\"` within the layout's JSON definition, these values will be ignored in favour of the user's preferred title settings, as set in property inspector.",
+					"markdownDescription": "Defines how the font should be rendered. **Note**, when the `key` of this layout item is set to `\"title\"` within the layout's JSON definition, these values will be ignored in favour of the user's preferred title settings, as set in property inspector."
+				},
+				"text-overflow": {
+					"type": "string",
+					"enum": [
+						"clip",
+						"ellipsis",
+						"fade"
+					],
+					"description": "Defines how overflowing text should be rendered on the layout.\n- clip, truncates the text at the boundary of the element (default).\n- ellipsis, truncates the text prior to the boundary of the element, and adds an ellipsis (…) to the end.\n- fade, applies a fade-gradient over the end of the text.",
+					"default": "ellipsis",
+					"markdownDescription": "Defines how overflowing text should be rendered on the layout.\n- clip, truncates the text at the boundary of the element (default).\n- ellipsis, truncates the text prior to the boundary of the element, and adds an ellipsis (…) to the end.\n- fade, applies a fade-gradient over the end of the text."
+				},
+				"value": {
+					"type": "string",
+					"description": "Text to be displayed.",
+					"markdownDescription": "Text to be displayed."
+				},
+				"background": {
+					"type": "string",
+					"description": "Background color represented as a named color, hexadecimal value, or gradient. Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)",
+					"markdownDescription": "Background color represented as a named color, hexadecimal value, or gradient. Gradients can be defined by specifying multiple color-stops separated by commas, in the following format `[{offset}:{color}[,]]`.\n\n**Examples:**\n- \"pink\"\n- \"#204cfe\" (Elgato blue)\n- \"0:#ff0000,0.5:yellow,1:#00ff00\" (Gradient)"
+				},
+				"enabled": {
+					"type": "boolean",
+					"description": "Determines whether the item is enabled (i.e. visible); default is `true`.",
+					"markdownDescription": "Determines whether the item is enabled (i.e. visible); default is `true`."
+				},
+				"opacity": {
+					"type": "number",
+					"enum": [
+						0,
+						0.1,
+						0.2,
+						0.3,
+						0.4,
+						0.5,
+						0.6,
+						0.7,
+						0.8,
+						0.9,
+						1
+					],
+					"description": "Defines the opacity of the item being shown based on a single-decimal value ranging from `0..1`, e.g. `0.1`, `0.2`, etc. with `0` being invisible and `1` being fully visible. Default is `1`.",
+					"markdownDescription": "Defines the opacity of the item being shown based on a single-decimal value ranging from `0..1`, e.g. `0.1`, `0.2`, etc. with `0` being invisible and `1` being fully visible. Default is `1`."
+				},
+				"zOrder": {
+					"type": "number",
+					"description": "Z-order of the item, used to layer items within a layout; must be between 0-700. Items with the same `zOrder` must **not** have an overlapping `rect`. Default is `0`.",
+					"minimum": 0,
+					"maximum": 700,
+					"markdownDescription": "Z-order of the item, used to layer items within a layout; must be between 0-700. Items with the same `zOrder` must **not** have an overlapping `rect`. Default is `0`."
+				}
+			},
+			"required": [
+				"key",
+				"rect",
+				"type"
+			],
+			"description": "Extended information used to define a layout item within a layout's JSON file.",
+			"markdownDescription": "Extended information used to define a layout item within a layout's JSON file."
 		}
 	}
 }
