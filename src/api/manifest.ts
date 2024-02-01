@@ -556,9 +556,9 @@ type OS = {
 /**
  * Unique identifier, in reverse DNS format.
  * @pattern
- * ^([a-z0-9\-_]+)(\.[a-z0-9\-_]+)+$
+ * ^([a-z0-9\-]+)(\.[a-z0-9\-]+)+$
  * @errorMessage
- * String must use reverse DNS format, and must only contain lowercase alphanumeric characters (a-z, 0-9), hyphens (-), underscores (_), and periods (.)
+ * String must only contain alphanumeric characters (A-z, 0-9), hyphens (-), and periods (.), and be in reverse DNS format
  */
 type Identifier = string;
 
