@@ -31,6 +31,10 @@ export type Layout = {
 type LayoutItemDefinition<TType extends string, TItem> = TItem & {
 	/**
 	 * Unique name used to identify the layout item. When calling `setFeedback` this value should be used as the key as part of the object that represents the feedback.
+	 * @pattern
+	 * ^[A-Za-z0-9\-_]+$
+	 * @errorMessage
+	 * String must only contain alphanumeric characters (A-z, 0-9), hyphens (-), and underscores (_)
 	 */
 	key: string;
 
