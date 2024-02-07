@@ -3,7 +3,7 @@
 ## {version}
 
 ⚠️ Breaking change
-✨ Add
+✨ New
 🐞 Fix
 ♻️ Refactor / Enhance / Update
 
@@ -11,7 +11,33 @@
 
 # Change Log
 
-## 0.2.0 (Pending)
+## 0.3.0
+
+### ✨ New
+
+-   Add cross-compatible event emitter with type support.
+-   Add pattern validation for manifest's `Version`.
+-   Add validation of colors defined within the manifest.
+
+### 🐞 Fix
+
+-   Fix `PayloadObject` not being exported; enables inheritance of actions.
+-   Fix manifest layout not allowing `$A0` as a pre-defined value.
+
+### ♻️ Update
+
+-   Update manifest file path validation to prevent referencing a file outside of the plugin directory.
+-   Update manifest file path validation to allow periods.
+-   Update manifest UUID validation to allow more than 3 segments.
+-   Update manifest UUID validation to prevent underscores.
+-   Update documentation of `Actions[].Image` to reflect support for .gif files.
+-   Update default export to be named (improving VSCode intellisense).
+
+### 🗑️ Remove
+
+-   Remove `$A2` incorrectly being listed as a pre-defined layout.
+
+## 0.2.0
 
 ### ⚠️ Breaking Changes
 
