@@ -24,21 +24,21 @@ const config: RollupOptions[] = [
 				return url.pathToFileURL(path.resolve(path.dirname(sourcemapPath), relativeSourcePath)).href;
 			}
 		},
+		external: ["ws", "@elgato/schemas/streamdeck/plugins"],
 		plugins: [
 			typescript({
 				tsconfig: "tsconfig.build.json",
 				mapRoot: isWatching ? "./" : undefined
 			}),
 			nodeResolve()
-		],
-		external: ["ws"]
+		]
 	},
 	{
 		input: "src/plugin/index.ts",
-		external: ["@elgato/schemas/streamdeck/plugins"],
 		output: {
 			file: "dist/index.d.ts"
 		},
+		external: ["@elgato/schemas/streamdeck/plugins"],
 		plugins: [
 			dts(),
 			{
