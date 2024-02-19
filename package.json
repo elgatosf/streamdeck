@@ -71,6 +71,7 @@
 		"typescript": "^5.2.2"
 	},
 	"dependencies": {
+		"@elgato/schemas": "^0.1.2",
 		"ws": "^8.14.2"
 	}
 }

@@ -1,8 +1,14 @@
+import { Manifest as ManifestSchema } from "@elgato/schemas/streamdeck/plugins";
+
 export * from "./command";
-export { DeviceType } from "./device";
+export * from "./device";
 export * from "./events";
-export { Language, supportedLanguages } from "./i18n";
+export * from "./i18n";
 export * from "./layout";
-export { Manifest } from "./manifest";
-export { RegistrationInfo, RegistrationParameter } from "./registration";
-export { Target } from "./target";
+export * from "./registration";
+export * from "./target";
+
+/**
+ * Defines the plugin and available actions, and all information associated with them, including the plugin's entry point, all iconography, action default behavior, etc.
+ */
+export type Manifest = Omit<ManifestSchema, "$schema">;
