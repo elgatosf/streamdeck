@@ -1,18 +1,4 @@
-import type {
-	DialDown,
-	DialRotate,
-	DialUp,
-	KeyDown,
-	KeyUp,
-	Manifest,
-	PayloadObject,
-	SetImage,
-	SetTitle,
-	TitleParametersDidChange,
-	TouchTap,
-	WillAppear,
-	WillDisappear
-} from "../../api";
+import type { DialDown, DialRotate, DialUp, KeyDown, KeyUp, Manifest, PayloadObject, TitleParametersDidChange, TouchTap, WillAppear, WillDisappear } from "../../api";
 import type { IDisposable } from "../common/disposable";
 import type { StreamDeckConnection } from "../connectivity/connection";
 import {
@@ -232,16 +218,6 @@ export class ActionClient {
 		addEventListener(action.manifestId, this.uiClient, (emitter) => emitter.onSendToPlugin, action.onSendToPlugin);
 	}
 }
-
-/**
- * Options that define how to render an image associated with an action.
- */
-export type ImageOptions = Omit<SetImage["payload"], "image">;
-
-/**
- * Options that define how to render a title associated with an action.
- */
-export type TitleOptions = Omit<SetTitle["payload"], "title">;
 
 /**
  * Event associated with an {@link Action}.

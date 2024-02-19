@@ -1,4 +1,4 @@
-import type { DidReceiveGlobalSettings, PayloadObject } from "../../api/events";
+import type { DidReceiveGlobalSettings, PayloadObject } from "../../api";
 import { Event } from "./event";
 
 /**

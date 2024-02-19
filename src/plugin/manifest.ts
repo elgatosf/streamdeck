@@ -4,7 +4,7 @@ import { join } from "node:path";
 import { Manifest } from "../api";
 import { Version } from "./common/version";
 
-let manifest: Omit<Manifest, "$schema">;
+let manifest: Manifest;
 let softwareMinimumVersion: Version;
 
 /**
@@ -19,7 +19,7 @@ export function getSoftwareMinimumVersion(): Version {
  * Gets the manifest associated with the plugin.
  * @returns The manifest.
  */
-export function getManifest(): Omit<Manifest, "$schema"> {
+export function getManifest(): Manifest {
 	return (manifest ??= readManifest());
 }
 
@@ -27,7 +27,7 @@ export function getManifest(): Omit<Manifest, "$schema"> {
  * Reads the manifest associated with the plugin from the `manifest.json` file.
  * @returns The manifest.
  */
-function readManifest(): Omit<Manifest, "$schema"> {
+function readManifest(): Manifest {
 	const path = join(process.cwd(), "manifest.json");
 	if (!existsSync(path)) {
 		throw new Error("Failed to read manifest.json as the file does not exist.");

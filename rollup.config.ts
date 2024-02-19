@@ -35,6 +35,7 @@ const config: RollupOptions[] = [
 	},
 	{
 		input: "src/plugin/index.ts",
+		external: ["@elgato/schemas/streamdeck/plugins"],
 		output: {
 			file: "dist/index.d.ts"
 		},

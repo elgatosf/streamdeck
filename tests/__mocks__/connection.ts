@@ -1,6 +1,6 @@
 import EventEmitter from "node:events";
 import WebSocket from "ws";
-import { EventMessage } from "../../src/api/events";
+import { EventMessage } from "../../src/api";
 import { registrationParameters } from "../../src/plugin/connectivity/__mocks__/registration-parameters";
 import { StreamDeckConnection, createConnection } from "../../src/plugin/connectivity/connection";
 import { getMockedLogger } from "./logging";

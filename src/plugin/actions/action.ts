@@ -1,8 +1,7 @@
-import type { ActionIdentifier, FeedbackPayload, PayloadObject, SetTriggerDescription, State } from "../../api";
+import type { ActionIdentifier, FeedbackPayload, PayloadObject, SetImage, SetTitle, SetTriggerDescription, State } from "../../api";
 import type { StreamDeckConnection } from "../connectivity/connection";
 import { getSettings } from "../settings/provider";
 import type { UIClient } from "../ui";
-import type { ImageOptions, TitleOptions } from "./client";
 import type { SingletonAction } from "./singleton-action";
 
 /**
@@ -209,7 +208,7 @@ export class Action<T extends PayloadObject<T> = object> {
 	 * @param descriptions Descriptions that detail the action's interaction.
 	 * @returns `Promise` resolved when the request to set the {@link descriptions} has been sent to Stream Deck.
 	 */
-	public setTriggerDescription(descriptions?: SetTriggerDescription["payload"]): Promise<void> {
+	public setTriggerDescription(descriptions?: TriggerDescriptionOptions): Promise<void> {
 		return this.connection.send({
 			event: "setTriggerDescription",
 			context: this.id,
@@ -240,3 +239,18 @@ export class Action<T extends PayloadObject<T> = object> {
 		});
 	}
 }
+
+/**
+ * Options that define how to render an image associated with an action.
+ */
+export type ImageOptions = Omit<SetImage["payload"], "image">;
+
+/**
+ * Options that define how to render a title associated with an action.
+ */
+export type TitleOptions = Omit<SetTitle["payload"], "title">;
+
+/**
+ * Options that define the trigger descriptions associated with an action.
+ */
+export type TriggerDescriptionOptions = SetTriggerDescription["payload"];
