@@ -9,17 +9,15 @@
 	},
 	"types": "./dist/index.d.ts",
 	"files": [
-		"dist/**/*.d.ts",
-		"dist/**/*.js",
-		"schemas/**/*.json"
+		"./dist/index.js",
+		"./dist/index.d.ts"
 	],
 	"scripts": {
 		"build": "rm -rf ./dist && rollup --config rollup.config.ts --configPlugin typescript",
-		"build:schemas": "node -r @swc-node/register ./scripts/generate-schemas.ts",
 		"watch": "rollup --config rollup.config.ts --configPlugin typescript --watch",
 		"lint": "eslint . --ext .ts --max-warnings 0",
 		"lint:fix": "prettier --config .prettierrc src/**/*.ts --write",
-		"preversion": "npm run build && npm test && npm run build:schemas && npm run lint",
+		"preversion": "npm run build && npm test && npm run lint",
 		"test": "jest",
 		"test:coverage": "jest --coverage",
 		"test:watch": "jest --watch"
@@ -49,7 +47,6 @@
 	"devDependencies": {
 		"@rollup/plugin-node-resolve": "^15.2.2",
 		"@rollup/plugin-typescript": "^11.1.5",
-		"@swc-node/register": "^1.6.8",
 		"@swc/core": "^1.3.92",
 		"@swc/jest": "^0.2.29",
 		"@trivago/prettier-plugin-sort-imports": "^4.2.1",
@@ -67,7 +64,6 @@
 		"prettier": "^3.0.3",
 		"rollup": "^4.0.2",
 		"rollup-plugin-dts": "^6.1.0",
-		"ts-json-schema-generator": "^1.3.0",
 		"typescript": "^5.2.2"
 	},
 	"dependencies": {
