@@ -11,6 +11,20 @@
 
 # Change Log
 
+## vNext
+
+### ⚠️ Breaking Changes
+
+JSON schemas have been relocated to a dedicated schemas package, [`@elgato/schemas`](https://www.npmjs.com/package/@elgato/schemas).
+
+### ♻️ Update
+
+-   Update layout and manifest references to propagate from `@elgato/schemas`.
+
+### 🗑️ Remove
+
+-   Remove layout and manifest JSON schemas.
+
 ## 0.3.0
 
 ### ✨ New
