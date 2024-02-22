@@ -1,4 +1,4 @@
-import type { DeviceType } from "../device";
+import type { Controller, DeviceType } from "@elgato/schemas/streamdeck/plugins";
 import type { DeviceIdentifier } from "./device";
 import type { EventIdentifier, PayloadObject } from "./index";
 
@@ -159,12 +159,6 @@ type ActionPayload<TSettings extends PayloadObject<TSettings>> = {
 	 */
 	readonly state?: State;
 };
-
-/**
- * Defines the controller type the action is applicable to. **Keypad** refers to a standard action on a Stream Deck device, e.g. 1 of the 15 buttons on the Stream Deck MK.2, or a pedal
- * on the Stream Deck Pedal, etc., whereas an **Encoder** refers to a dial / touchscreen on the Stream Deck+.
- */
-export type Controller = "Encoder" | "Keypad";
 
 /**
  * Coordinates that identify the location of an action.
