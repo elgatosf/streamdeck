@@ -1,33 +1,22 @@
 # yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
-name: Build
+name: Release
 
 on:
   push:
-    branches:
-      - "main"
-    paths-ignore:
-      - "assets/**"
-      - "**.md"
-
-  pull_request:
-    branches:
-      - "main"
-    paths-ignore:
-      - "assets/**"
-      - "**.md"
+    tags:
+      - "*"
 
 defaults:
   run:
     shell: bash
 
 jobs:
-  Build:
-    strategy:
-      matrix:
-        node_version: ["20.5.1", "20.8.1"]
-        os: ["macos-latest", "windows-latest"]
+  Release:
+    runs-on: "windows-latest"
 
-    runs-on: ${{ matrix.os }}
+    permissions:
+      contents: read
+      id-token: write
 
     steps:
       - name: "📥 Checkout"
@@ -36,7 +25,8 @@ jobs:
       - name: "🗃️ Setup Node"
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node_version }}
+          node-version: "20.8.1"
+          registry-url: "https://registry.npmjs.org"
 
       - name: "📐 Install dependencies"
         run: npm ci
@@ -49,3 +39,8 @@ jobs:
 
       - name: "🧪 Test"
         run: npm run test
+
+      - name: "📤 Publish"
+        run: npm publish --provenance --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
