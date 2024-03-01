@@ -19,10 +19,10 @@ export {
 	Target,
 	Text
 } from "../api";
+export { EventEmitter, EventsOf } from "../common/event-emitter";
 export { Action, ImageOptions, TitleOptions, TriggerDescriptionOptions } from "./actions/action";
 export { action } from "./actions/decorators";
 export { SingletonAction } from "./actions/singleton-action";
-export { EventEmitter, EventsOf } from "./common/event-emitter";
 export * from "./events";
 export { LogLevel } from "./logging";
 

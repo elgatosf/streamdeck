@@ -1,4 +1,4 @@
-import type { ActionIdentifier, DeviceIdentifier, EventMessage, PayloadObject } from "../../api";
+import type { ActionIdentifier, DeviceIdentifier, PayloadObject, PluginEvent } from "../../api";
 import type { Action } from "../actions/action";
 import { Event } from "./event";
 
@@ -6,7 +6,7 @@ import { Event } from "./event";
  * Provides information for an event relating to an action.
  */
 export class ActionWithoutPayloadEvent<
-	TSource extends Extract<EventMessage, ActionIdentifier & DeviceIdentifier>,
+	TSource extends Extract<PluginEvent, ActionIdentifier & DeviceIdentifier>,
 	TSettings extends PayloadObject<TSettings>
 > extends Event<TSource> {
 	/**
@@ -32,7 +32,7 @@ export class ActionWithoutPayloadEvent<
  * Provides information for an event relating to an action.
  */
 export class ActionEvent<
-	TSource extends Extract<EventMessage, ActionIdentifier & DeviceIdentifier> & PayloadEvent<TSource>,
+	TSource extends Extract<PluginEvent, ActionIdentifier & DeviceIdentifier> & PayloadEvent<TSource>,
 	TSettings extends PayloadObject<TSettings> = ExtractSettings<TSource>
 > extends ActionWithoutPayloadEvent<TSource, TSettings> {
 	/**
