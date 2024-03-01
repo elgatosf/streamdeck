@@ -8,16 +8,16 @@
 			"es2022",
 			"esnext.disposable"
 		],
-		"module": "ES2022",
+		"module": "es2022",
 		"moduleResolution": "Bundler"
 	},
 	"include": [
-		"scripts/**/*.ts",
-		"src/**/*.ts",
+		"src/",
 		"rollup.config.ts",
-		"tests/**/*.ts"
+		"tests/"
 	],
 	"exclude": [
-		"node_modules"
+		"src/ui",
+		"node_modules/"
 	]
 }
