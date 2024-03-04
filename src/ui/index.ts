@@ -1,5 +1,9 @@
 import { ConnectElgatoStreamDeckSocketFn } from "../api";
 import { connection } from "./connection";
+import * as settings from "./settings";
+
+export { ActionInfo, ConnectElgatoStreamDeckSocketFn, RegistrationInfo } from "../api";
+export * from "./events";
 
 declare global {
 	interface Window {
@@ -26,4 +30,11 @@ window.connectElgatoStreamDeckSocket = async (port: string, uuid: string, event:
 	console.log("Done");
 };
 
-export { ActionInfo, ConnectElgatoStreamDeckSocketFn, RegistrationInfo } from "../api";
+const streamDeck = {
+	/**
+	 * Provides management of settings associated with the Stream Deck plugin.
+	 */
+	settings
+};
+
+export default streamDeck;

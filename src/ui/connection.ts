@@ -1,4 +1,4 @@
-import type { UIEventMap } from "../api";
+import type { UICommand, UIEventMap } from "../api";
 import { EventEmitter } from "../common/event-emitter";
 import { PromiseCompletionSource } from "../common/promises";
 
@@ -36,6 +36,18 @@ class UIConnection extends EventEmitter<UIEventMap> {
 		}
 
 		await this.connection.promise;
+	}
+
+	/**
+	 * Sends the commands to the Stream Deck, once the connection has been established and the UI is registered.
+	 * @param command Command being sent.
+	 * @returns `Promise` resolved when the command is sent to Stream Deck.
+	 */
+	public async send(command: UICommand): Promise<void> {
+		const connection = await this.connection.promise;
+		const message = JSON.stringify(command);
+
+		connection.send(message);
 	}
 
 	/**

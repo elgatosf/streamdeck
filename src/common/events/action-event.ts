@@ -1,5 +1,4 @@
 import type { ActionIdentifier, DeviceIdentifier, PayloadObject, PluginEvent } from "../../api";
-import type { Action } from "../actions/action";
 import { Event } from "./event";
 
 /**
@@ -7,6 +6,7 @@ import { Event } from "./event";
  */
 export class ActionWithoutPayloadEvent<
 	TSource extends Extract<PluginEvent, ActionIdentifier & DeviceIdentifier>,
+	TAction,
 	TSettings extends PayloadObject<TSettings>
 > extends Event<TSource> {
 	/**
@@ -20,7 +20,7 @@ export class ActionWithoutPayloadEvent<
 	 * @param source Source of the event, i.e. the original message from Stream Deck.
 	 */
 	constructor(
-		public readonly action: Action<TSettings>,
+		public readonly action: TAction,
 		source: TSource
 	) {
 		super(source);
@@ -33,8 +33,9 @@ export class ActionWithoutPayloadEvent<
  */
 export class ActionEvent<
 	TSource extends Extract<PluginEvent, ActionIdentifier & DeviceIdentifier> & PayloadEvent<TSource>,
+	TAction,
 	TSettings extends PayloadObject<TSettings> = ExtractSettings<TSource>
-> extends ActionWithoutPayloadEvent<TSource, TSettings> {
+> extends ActionWithoutPayloadEvent<TSource, TAction, TSettings> {
 	/**
 	 * Provides additional information about the event that occurred, e.g. how many `ticks` the dial was rotated, the current `state` of the action, etc.
 	 */
@@ -45,7 +46,7 @@ export class ActionEvent<
 	 * @param action Action that raised the event.
 	 * @param source Source of the event, i.e. the original message from Stream Deck.
 	 */
-	constructor(action: Action<TSettings>, source: TSource) {
+	constructor(action: TAction, source: TSource) {
 		super(action, source);
 		this.payload = source.payload;
 	}

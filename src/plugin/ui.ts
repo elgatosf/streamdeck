@@ -1,8 +1,9 @@
 import type { PayloadObject, PropertyInspectorDidAppear, PropertyInspectorDidDisappear, SendToPlugin } from "../api";
 import type { IDisposable } from "../common/disposable";
+import { ActionWithoutPayloadEvent } from "../common/events";
 import { Action } from "./actions/action";
 import type { StreamDeckConnection } from "./connectivity/connection";
-import { ActionWithoutPayloadEvent, PropertyInspectorDidAppearEvent, PropertyInspectorDidDisappearEvent, SendToPluginEvent } from "./events";
+import { PropertyInspectorDidAppearEvent, PropertyInspectorDidDisappearEvent, SendToPluginEvent } from "./events";
 
 /**
  * Client responsible for interacting with the Stream Deck UI (aka property inspector).
@@ -22,7 +23,7 @@ export class UIClient {
 	 */
 	public onPropertyInspectorDidAppear<T extends PayloadObject<T> = object>(listener: (ev: PropertyInspectorDidAppearEvent<T>) => void): IDisposable {
 		return this.connection.disposableOn("propertyInspectorDidAppear", (ev) =>
-			listener(new ActionWithoutPayloadEvent<PropertyInspectorDidAppear, T>(new Action<T>(this.connection, ev), ev))
+			listener(new ActionWithoutPayloadEvent<PropertyInspectorDidAppear, Action<T>, T>(new Action<T>(this.connection, ev), ev))
 		);
 	}
 
@@ -34,7 +35,7 @@ export class UIClient {
 	 */
 	public onPropertyInspectorDidDisappear<T extends PayloadObject<T> = object>(listener: (ev: PropertyInspectorDidDisappearEvent<T>) => void): IDisposable {
 		return this.connection.disposableOn("propertyInspectorDidDisappear", (ev) =>
-			listener(new ActionWithoutPayloadEvent<PropertyInspectorDidDisappear, T>(new Action<T>(this.connection, ev), ev))
+			listener(new ActionWithoutPayloadEvent<PropertyInspectorDidDisappear, Action<T>, T>(new Action<T>(this.connection, ev), ev))
 		);
 	}
 

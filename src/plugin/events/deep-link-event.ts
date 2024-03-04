@@ -1,5 +1,5 @@
 import type { DidReceiveDeepLink } from "../../api";
-import { Event } from "./event";
+import { Event } from "../../common/events";
 
 /**
  * Event information received from Stream Deck as part of a deep-link message being routed to the plugin.

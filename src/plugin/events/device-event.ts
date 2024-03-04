@@ -1,5 +1,5 @@
 import type { DeviceDidConnect, DeviceDidDisconnect } from "../../api";
-import { Event } from "./event";
+import { Event } from "../../common/events";
 
 /**
  * Provides information for events relating to a device.

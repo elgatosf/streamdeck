@@ -228,7 +228,7 @@ export type SendToPropertyInspector = ContextualizedCommand<"sendToPropertyInspe
 /**
  * Command sent to Stream Deck, from the plugin.
  */
-export type Command =
+export type PluginCommand =
 	| GetGlobalSettings
 	| GetSettings
 	| LogMessage
@@ -245,3 +245,8 @@ export type Command =
 	| ShowAlert
 	| ShowOk
 	| SwitchToProfile;
+
+/**
+ * Command sent to Stream Deck, from the property inspector.
+ */
+export type UICommand = GetGlobalSettings | GetSettings | SetGlobalSettings | SetSettings;

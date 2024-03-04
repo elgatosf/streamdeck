@@ -1,6 +1,6 @@
 import type { PayloadObject, SendToPlugin } from "../../api";
+import { Event } from "../../common/events";
 import type { Action } from "../actions/action";
-import { Event } from "./event";
 
 /**
  * Provides information for an event trigger by a message being sent to the plugin, from the property inspector.

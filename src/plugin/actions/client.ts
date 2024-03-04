@@ -1,8 +1,8 @@
 import type { DialDown, DialRotate, DialUp, KeyDown, KeyUp, Manifest, PayloadObject, TitleParametersDidChange, TouchTap, WillAppear, WillDisappear } from "../../api";
 import type { IDisposable } from "../../common/disposable";
+import { ActionEvent } from "../../common/events";
 import type { StreamDeckConnection } from "../connectivity/connection";
 import {
-	ActionEvent,
 	DialDownEvent,
 	DialRotateEvent,
 	DialUpEvent,
@@ -67,7 +67,7 @@ export class ActionClient {
 	 * @returns A disposable that, when disposed, removes the listener.
 	 */
 	public onDialDown<T extends PayloadObject<T> = object>(listener: (ev: DialDownEvent<T>) => void): IDisposable {
-		return this.connection.disposableOn("dialDown", (ev: DialDown<T>) => listener(new ActionEvent<DialDown<T>>(new Action<T>(this.connection, ev), ev)));
+		return this.connection.disposableOn("dialDown", (ev: DialDown<T>) => listener(new ActionEvent<DialDown<T>, Action<T>>(new Action<T>(this.connection, ev), ev)));
 	}
 
 	/**
@@ -77,7 +77,7 @@ export class ActionClient {
 	 * @returns A disposable that, when disposed, removes the listener.
 	 */
 	public onDialRotate<T extends PayloadObject<T> = object>(listener: (ev: DialRotateEvent<T>) => void): IDisposable {
-		return this.connection.disposableOn("dialRotate", (ev: DialRotate<T>) => listener(new ActionEvent<DialRotate<T>>(new Action<T>(this.connection, ev), ev)));
+		return this.connection.disposableOn("dialRotate", (ev: DialRotate<T>) => listener(new ActionEvent<DialRotate<T>, Action<T>>(new Action<T>(this.connection, ev), ev)));
 	}
 
 	/**
@@ -89,7 +89,7 @@ export class ActionClient {
 	 * @returns A disposable that, when disposed, removes the listener.
 	 */
 	public onDialUp<T extends PayloadObject<T> = object>(listener: (ev: DialUpEvent<T>) => void): IDisposable {
-		return this.connection.disposableOn("dialUp", (ev: DialUp<T>) => listener(new ActionEvent<DialUp<T>>(new Action<T>(this.connection, ev), ev)));
+		return this.connection.disposableOn("dialUp", (ev: DialUp<T>) => listener(new ActionEvent<DialUp<T>, Action<T>>(new Action<T>(this.connection, ev), ev)));
 	}
 
 	/**
@@ -101,7 +101,7 @@ export class ActionClient {
 	 * @returns A disposable that, when disposed, removes the listener.
 	 */
 	public onKeyDown<T extends PayloadObject<T> = object>(listener: (ev: KeyDownEvent<T>) => void): IDisposable {
-		return this.connection.disposableOn("keyDown", (ev: KeyDown<T>) => listener(new ActionEvent<KeyDown<T>>(new Action<T>(this.connection, ev), ev)));
+		return this.connection.disposableOn("keyDown", (ev: KeyDown<T>) => listener(new ActionEvent<KeyDown<T>, Action<T>>(new Action<T>(this.connection, ev), ev)));
 	}
 
 	/**
@@ -113,7 +113,7 @@ export class ActionClient {
 	 * @returns A disposable that, when disposed, removes the listener.
 	 */
 	public onKeyUp<T extends PayloadObject<T> = object>(listener: (ev: KeyUpEvent<T>) => void): IDisposable {
-		return this.connection.disposableOn("keyUp", (ev: KeyUp<T>) => listener(new ActionEvent<KeyUp<T>>(new Action<T>(this.connection, ev), ev)));
+		return this.connection.disposableOn("keyUp", (ev: KeyUp<T>) => listener(new ActionEvent<KeyUp<T>, Action<T>>(new Action<T>(this.connection, ev), ev)));
 	}
 
 	/**
@@ -124,7 +124,7 @@ export class ActionClient {
 	 */
 	public onTitleParametersDidChange<T extends PayloadObject<T> = object>(listener: (ev: TitleParametersDidChangeEvent<T>) => void): IDisposable {
 		return this.connection.disposableOn("titleParametersDidChange", (ev: TitleParametersDidChange<T>) =>
-			listener(new ActionEvent<TitleParametersDidChange<T>>(new Action<T>(this.connection, ev), ev))
+			listener(new ActionEvent<TitleParametersDidChange<T>, Action<T>>(new Action<T>(this.connection, ev), ev))
 		);
 	}
 
@@ -135,7 +135,9 @@ export class ActionClient {
 	 * @returns A disposable that, when disposed, removes the listener.
 	 */
 	public onTouchTap<TSettings extends PayloadObject<TSettings> = object>(listener: (ev: TouchTapEvent<TSettings>) => void): IDisposable {
-		return this.connection.disposableOn("touchTap", (ev: TouchTap<TSettings>) => listener(new ActionEvent<TouchTap<TSettings>>(new Action<TSettings>(this.connection, ev), ev)));
+		return this.connection.disposableOn("touchTap", (ev: TouchTap<TSettings>) =>
+			listener(new ActionEvent<TouchTap<TSettings>, Action<TSettings>>(new Action<TSettings>(this.connection, ev), ev))
+		);
 	}
 
 	/**
@@ -146,7 +148,7 @@ export class ActionClient {
 	 * @returns A disposable that, when disposed, removes the listener.
 	 */
 	public onWillAppear<T extends PayloadObject<T> = object>(listener: (ev: WillAppearEvent<T>) => void): IDisposable {
-		return this.connection.disposableOn("willAppear", (ev: WillAppear<T>) => listener(new ActionEvent<WillAppear<T>>(new Action<T>(this.connection, ev), ev)));
+		return this.connection.disposableOn("willAppear", (ev: WillAppear<T>) => listener(new ActionEvent<WillAppear<T>, Action<T>>(new Action<T>(this.connection, ev), ev)));
 	}
 
 	/**
@@ -157,7 +159,7 @@ export class ActionClient {
 	 * @returns A disposable that, when disposed, removes the listener.
 	 */
 	public onWillDisappear<T extends PayloadObject<T> = object>(listener: (ev: WillDisappearEvent<T>) => void): IDisposable {
-		return this.connection.disposableOn("willDisappear", (ev: WillDisappear<T>) => listener(new ActionEvent<WillDisappear<T>>(new Action<T>(this.connection, ev), ev)));
+		return this.connection.disposableOn("willDisappear", (ev: WillDisappear<T>) => listener(new ActionEvent<WillDisappear<T>, Action<T>>(new Action<T>(this.connection, ev), ev)));
 	}
 
 	/**

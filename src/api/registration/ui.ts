@@ -23,13 +23,13 @@ export type ActionInfo<T = unknown> = ActionIdentifier &
 			 * Settings associated with the action instance.
 			 */
 			settings: T;
-		} & (ActionPayload<"Encoder"> | ActionPayload<"Keypad">);
+		} & (ActionInfoPayload<"Encoder"> | ActionInfoPayload<"Keypad">);
 	};
 
 /**
  * Payload information for the action associated with the UI.
  */
-type ActionPayload<T extends Controller> = T extends "Keypad"
+type ActionInfoPayload<T extends Controller> = T extends "Keypad"
 	? {
 			/**
 			 * Coordinates that identify the location of an action.
