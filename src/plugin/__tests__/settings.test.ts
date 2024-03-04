@@ -1,10 +1,10 @@
-import { getConnection } from "../../../../tests/__mocks__/connection";
-import type { GetGlobalSettings, SetGlobalSettings } from "../../../api";
-import * as mockEvents from "../../../api/__mocks__/events";
-import { Action } from "../../actions/action";
-import { StreamDeckConnection } from "../../connectivity/connection";
-import { DidReceiveGlobalSettingsEvent, DidReceiveSettingsEvent } from "../../events";
-import { SettingsClient } from "../../settings/client";
+import { getConnection } from "../../../tests/__mocks__/connection";
+import type { GetGlobalSettings, SetGlobalSettings } from "../../api";
+import * as mockEvents from "../../api/__mocks__/events";
+import { Action } from "../actions/action";
+import { StreamDeckConnection } from "../connectivity/connection";
+import { DidReceiveGlobalSettingsEvent, DidReceiveSettingsEvent } from "../events";
+import { SettingsClient } from "../settings";
 
 describe("SettingsClient", () => {
 	/**

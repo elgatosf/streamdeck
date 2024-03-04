@@ -1,9 +1,9 @@
-import type { DidReceiveGlobalSettings, DidReceiveSettings, PayloadObject } from "../../api";
-import { getGlobalSettings } from "../../common/settings-provider";
-import { Action } from "../actions/action";
-import type { IDisposable } from "../common/disposable";
-import type { StreamDeckConnection } from "../connectivity/connection";
-import { ActionEvent, DidReceiveGlobalSettingsEvent, DidReceiveSettingsEvent } from "../events";
+import type { DidReceiveGlobalSettings, DidReceiveSettings, PayloadObject } from "../api";
+import { getGlobalSettings } from "../common/settings-provider";
+import { Action } from "./actions/action";
+import type { IDisposable } from "./common/disposable";
+import type { StreamDeckConnection } from "./connectivity/connection";
+import { ActionEvent, DidReceiveGlobalSettingsEvent, DidReceiveSettingsEvent } from "./events";
 
 /**
  * Provides management of settings associated with the Stream Deck plugin.

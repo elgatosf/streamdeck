@@ -14,7 +14,7 @@ import {
 	WillDisappearEvent
 } from "../events";
 import type { Logger } from "../logging";
-import type { SettingsClient } from "../settings/client";
+import type { SettingsClient } from "../settings";
 import type { UIClient } from "../ui";
 import { Action } from "./action";
 import type { SingletonAction } from "./singleton-action";

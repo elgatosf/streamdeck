@@ -19,7 +19,7 @@ import {
 	WillAppearEvent,
 	WillDisappearEvent
 } from "../../events";
-import { SettingsClient } from "../../settings/client";
+import { SettingsClient } from "../../settings";
 import { UIClient } from "../../ui";
 import { Action } from "../action";
 import { ActionClient } from "../client";

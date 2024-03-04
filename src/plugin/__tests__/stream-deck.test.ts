@@ -7,7 +7,7 @@ import * as logging from "../logging";
 import { createLogger } from "../logging";
 import { getManifest } from "../manifest";
 import { ProfileClient } from "../profiles";
-import { SettingsClient } from "../settings/client";
+import { SettingsClient } from "../settings";
 import { StreamDeck } from "../stream-deck";
 import { System } from "../system";
 import { UIClient } from "../ui";
@@ -22,7 +22,7 @@ jest.mock("../i18n");
 jest.mock("../logging");
 jest.mock("../manifest");
 jest.mock("../profiles");
-jest.mock("../settings/client");
+jest.mock("../settings");
 jest.mock("../system");
 jest.mock("../ui");
 
