@@ -1,4 +1,5 @@
-import { ConnectElgatoStreamDeckSocketFn } from "../api";
+import { ConnectElgatoStreamDeckSocketFn, type ActionInfo, type RegistrationInfo } from "../api";
+import type { IDisposable } from "../common/disposable";
 import { connection } from "./connection";
 import * as settings from "./settings";
 
@@ -27,6 +28,15 @@ window.connectElgatoStreamDeckSocket = async (port: string, uuid: string, event:
 };
 
 const streamDeck = {
+	/**
+	 * Occurs when the UI connects to the Stream Deck.
+	 * @param listener Event handler function.
+	 * @returns A disposable that removes the listener when disposed.
+	 */
+	onDidConnect: (listener: (info: RegistrationInfo, actionInfo: ActionInfo) => void): IDisposable => {
+		return connection.disposableOn("connected", listener);
+	},
+
 	/**
 	 * Provides management of settings associated with the Stream Deck plugin.
 	 */
