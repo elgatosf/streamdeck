@@ -1,40 +1,31 @@
-import type { ActionIdentifier, PayloadObject } from "../../api";
-import { connection } from "../connection";
+import type { PayloadObject } from "../api";
 
 /**
  * Provides a contextualized instance of an {@link Action}, allowing for direct communication with the Stream Deck.
  * @template T The type of settings associated with the action.
  */
-export class Action<T extends PayloadObject<T> = object> {
+export type Action<T extends PayloadObject<T>> = {
 	/**
 	 * Unique identifier of the instance of the action; this can be used to update the action on the Stream Deck, e.g. its title, settings, etc.
 	 */
-	public readonly id: string;
+	readonly id: string;
 
 	/**
 	 * Unique identifier (UUID) of the action as defined within the plugin's manifest's actions collection.
 	 */
-	public readonly manifestId: string;
+	readonly manifestId: string;
 
 	/**
-	 * Initializes a new instance of the {@see Action} class.
-	 * @param source Source of the action.
+	 * Gets the settings associated this action instance. See also {@link Action.setSettings}.
+	 * @template U The type of settings associated with the action.
+	 * @returns Promise containing the action instance's settings.
 	 */
-	constructor(source: ActionIdentifier) {
-		this.id = source.context;
-		this.manifestId = source.action;
-	}
+	getSettings<U extends PayloadObject<U> = T>(): Promise<U>;
 
 	/**
 	 * Sets the {@link settings} associated with this action instance. Use in conjunction with {@link Action.getSettings}.
 	 * @param settings Settings to persist.
 	 * @returns `Promise` resolved when the {@link settings} are sent to Stream Deck.
 	 */
-	public setSettings(settings: T): Promise<void> {
-		return connection.send({
-			event: "setSettings",
-			context: this.id,
-			payload: settings
-		});
-	}
-}
+	setSettings(settings: T): Promise<void>;
+};

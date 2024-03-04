@@ -1,5 +1,4 @@
-import type { DidReceiveGlobalSettings, DidReceiveSettings, GetGlobalSettings, GetSettings, PayloadObject, PluginEventMap } from "../api";
-import type { EventEmitter } from "./event-emitter";
+import type { DidReceiveGlobalSettings, DidReceiveSettings, GetGlobalSettings, GetSettings, PayloadObject } from "../api";
 
 /**
  * Gets the global settings associated with the plugin.
@@ -8,7 +7,7 @@ import type { EventEmitter } from "./event-emitter";
  * @param context Context of the requester.
  * @returns Promise containing the plugin's global settings.
  */
-export function getGlobalSettings<T extends PayloadObject<T> = object>(connection: ISettingsConnection, context: string): Promise<T> {
+export function getGlobalSettings<T extends PayloadObject<T> = object>(connection: SettingsConnection, context: string): Promise<T> {
 	return new Promise((resolve) => {
 		connection.once("didReceiveGlobalSettings", (ev: DidReceiveGlobalSettings<T>) => resolve(ev.payload.settings));
 		connection.send({
@@ -25,7 +24,7 @@ export function getGlobalSettings<T extends PayloadObject<T> = object>(connectio
  * @param context Unique identifier of the action instance whose settings are being requested.
  * @returns Promise containing the action instance's settings.
  */
-export function getSettings<T extends PayloadObject<T> = object>(connection: ISettingsConnection, context: string): Promise<T> {
+export function getSettings<T extends PayloadObject<T> = object>(connection: SettingsConnection, context: string): Promise<T> {
 	return new Promise((resolve) => {
 		const callback = (ev: DidReceiveSettings<T>): void => {
 			if (ev.context == context) {
@@ -43,18 +42,12 @@ export function getSettings<T extends PayloadObject<T> = object>(connection: ISe
 }
 
 /**
- * Instance capable of requesting settings.
+ * A connection capable of retrieving settings.
  */
-type SettingsRequester = {
-	/**
-	 * Sends the commands to the requester.
-	 * @param command Command being sent.
-	 * @returns `Promise` resolved when the request has been sent.
-	 */
-	send(command: GetGlobalSettings | GetSettings): Promise<void>;
+type SettingsConnection = {
+	on<T extends PayloadObject<T>>(eventName: DidReceiveSettings<T>["event"], listener: (...args: [DidReceiveSettings<T>]) => void): void;
+	once<T extends PayloadObject<T>>(eventName: DidReceiveGlobalSettings<T>["event"], listener: (...args: [DidReceiveGlobalSettings<T>]) => void): void;
+	removeListener<T extends PayloadObject<T>>(eventName: DidReceiveSettings<T>["event"], listener: (...args: [DidReceiveSettings<T>]) => void): void;
+	send(command: GetSettings): Promise<void>;
+	send(command: GetGlobalSettings): Promise<void>;
 };
-
-/**
- * Connection with Stream Deck that is capable of interacting with settings.
- */
-type ISettingsConnection = EventEmitter<PluginEventMap> & SettingsRequester;

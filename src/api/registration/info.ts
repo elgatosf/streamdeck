@@ -2,7 +2,7 @@ import type { DeviceInfo } from "../device";
 import type { Language } from "../i18n";
 
 /**
- * Object containing information about the Stream Deck application, the plugin, the user's operating system, user's Stream Deck devices, etc.
+ * Information about the Stream Deck application, the plugin, the user's operating system, user's Stream Deck devices, etc.
  */
 export type RegistrationInfo = {
 	/**

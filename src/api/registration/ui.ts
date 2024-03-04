@@ -11,7 +11,7 @@ import type { ActionIdentifier, Controller, Coordinates, DeviceIdentifier } from
 export type ConnectElgatoStreamDeckSocketFn = (port: string, uuid: string, event: string, info: string, actionInfo: string) => Promise<void> | void;
 
 /**
- * Provide information for the action associated with the UI.
+ * Information about the action associated with the UI.
  */
 export type ActionInfo<T = unknown> = ActionIdentifier &
 	DeviceIdentifier & {

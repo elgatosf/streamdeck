@@ -23,11 +23,7 @@ declare global {
  * @inheritdoc
  */
 window.connectElgatoStreamDeckSocket = async (port: string, uuid: string, event: string, info: string, actionInfo: string): Promise<void> => {
-	console.log("Connecting");
-	await connection.connect(port, uuid, event);
-	console.log(JSON.parse(info));
-	console.log(JSON.parse(actionInfo));
-	console.log("Done");
+	await connection.connect(port, uuid, event, JSON.parse(info), JSON.parse(actionInfo));
 };
 
 const streamDeck = {

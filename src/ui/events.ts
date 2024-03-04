@@ -1,6 +1,6 @@
 import type { DidReceiveSettings, PayloadObject } from "../api";
 import type { ActionEvent } from "../common/events";
-import type { Action } from "./actions/action";
+import type { Action } from "./action";
 
 export { DidReceiveGlobalSettingsEvent } from "../common/events";
 

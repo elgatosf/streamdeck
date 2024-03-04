@@ -1,4 +1,4 @@
-import type { DidReceiveGlobalSettings, DidReceiveSettings, State } from "./events";
+import type { ActionIdentifier, DidReceiveGlobalSettings, DidReceiveSettings, State } from "./events";
 import type { FeedbackPayload } from "./layout";
 import type { Target } from "./target";
 
@@ -249,4 +249,4 @@ export type PluginCommand =
 /**
  * Command sent to Stream Deck, from the property inspector.
  */
-export type UICommand = GetGlobalSettings | GetSettings | SetGlobalSettings | SetSettings;
+export type UICommand = GetGlobalSettings | SetGlobalSettings | (ActionIdentifier & GetSettings) | (ActionIdentifier & SetSettings);
