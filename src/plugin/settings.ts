@@ -1,7 +1,7 @@
 import type { DidReceiveGlobalSettings, DidReceiveSettings, PayloadObject } from "../api";
+import type { IDisposable } from "../common/disposable";
 import { getGlobalSettings } from "../common/settings-provider";
 import { Action } from "./actions/action";
-import type { IDisposable } from "./common/disposable";
 import type { StreamDeckConnection } from "./connectivity/connection";
 import { ActionEvent, DidReceiveGlobalSettingsEvent, DidReceiveSettingsEvent } from "./events";
 

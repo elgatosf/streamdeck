@@ -1,6 +1,6 @@
 import type { PayloadObject, PropertyInspectorDidAppear, PropertyInspectorDidDisappear, SendToPlugin } from "../api";
+import type { IDisposable } from "../common/disposable";
 import { Action } from "./actions/action";
-import type { IDisposable } from "./common/disposable";
 import type { StreamDeckConnection } from "./connectivity/connection";
 import { ActionWithoutPayloadEvent, PropertyInspectorDidAppearEvent, PropertyInspectorDidDisappearEvent, SendToPluginEvent } from "./events";
 

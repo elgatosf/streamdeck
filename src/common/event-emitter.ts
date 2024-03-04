@@ -1,4 +1,4 @@
-import { deferredDisposable, type IDisposable } from "../plugin/common/disposable";
+import { deferredDisposable, type IDisposable } from "./disposable";
 
 /**
  * An event emitter that enables the listening for, and emitting of, events.

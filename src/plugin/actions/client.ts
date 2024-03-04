@@ -1,5 +1,5 @@
 import type { DialDown, DialRotate, DialUp, KeyDown, KeyUp, Manifest, PayloadObject, TitleParametersDidChange, TouchTap, WillAppear, WillDisappear } from "../../api";
-import type { IDisposable } from "../common/disposable";
+import type { IDisposable } from "../../common/disposable";
 import type { StreamDeckConnection } from "../connectivity/connection";
 import {
 	ActionEvent,

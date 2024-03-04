@@ -1,5 +1,5 @@
 import type { Manifest, SystemDidWakeUp } from "../api";
-import type { IDisposable } from "./common/disposable";
+import type { IDisposable } from "../common/disposable";
 import type { StreamDeckConnection } from "./connectivity/connection";
 import { ApplicationDidLaunchEvent, ApplicationDidTerminateEvent, ApplicationEvent, DidReceiveDeepLinkEvent, Event, SystemDidWakeUpEvent } from "./events";
 import { requiresVersion } from "./validation";
