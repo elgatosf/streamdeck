@@ -1,4 +1,5 @@
 import type { DidReceiveGlobalSettings, DidReceiveSettings, PayloadObject } from "../../api";
+import { getGlobalSettings } from "../../common/settings-provider";
 import { Action } from "../actions/action";
 import type { IDisposable } from "../common/disposable";
 import type { StreamDeckConnection } from "../connectivity/connection";
@@ -20,13 +21,7 @@ export class SettingsClient {
 	 * @returns Promise containing the plugin's global settings.
 	 */
 	public getGlobalSettings<T extends PayloadObject<T> = object>(): Promise<T> {
-		return new Promise((resolve) => {
-			this.connection.once("didReceiveGlobalSettings", (ev: DidReceiveGlobalSettings<T>) => resolve(ev.payload.settings));
-			this.connection.send({
-				event: "getGlobalSettings",
-				context: this.connection.registrationParameters.pluginUUID
-			});
-		});
+		return getGlobalSettings(this.connection, this.connection.registrationParameters.pluginUUID);
 	}
 
 	/**

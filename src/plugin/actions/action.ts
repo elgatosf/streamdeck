@@ -1,6 +1,6 @@
 import type { ActionIdentifier, FeedbackPayload, PayloadObject, SetImage, SetTitle, SetTriggerDescription, State } from "../../api";
+import { getSettings } from "../../common/settings-provider";
 import type { StreamDeckConnection } from "../connectivity/connection";
-import { getSettings } from "../settings/provider";
 import type { UIClient } from "../ui";
 import type { SingletonAction } from "./singleton-action";
 

@@ -59,9 +59,7 @@ export type PluginEvent<T extends PayloadObject<T> = object> =
 /**
  * Map of events received by the plugin, from Stream Deck.
  */
-export type PluginEventMap = {
-	[K in PluginEvent["event"]]: [event: Extract<PluginEvent, EventIdentifier<K>>];
-};
+export type PluginEventMap = EventMap<PluginEvent>;
 
 /**
  * Events received by the UI, from Stream Deck.
@@ -71,6 +69,11 @@ export type UIEvent<T extends PayloadObject<T> = object> = DidReceiveGlobalSetti
 /**
  * Map of events received by the UI, from Stream Deck.
  */
-export type UIEventMap = {
-	[K in UIEvent["event"]]: [event: Extract<UIEvent, EventIdentifier<K>>];
+export type UIEventMap = EventMap<UIEvent>;
+
+/**
+ * Constructs an event map from {@template T}.
+ */
+export type EventMap<T extends EventIdentifier<string>> = {
+	[K in T["event"]]: [event: Extract<T, EventIdentifier<K>>];
 };
