@@ -2,6 +2,7 @@ import { ConnectElgatoStreamDeckSocketFn, type ActionInfo, type RegistrationInfo
 import type { IDisposable } from "../common/disposable";
 import { connection } from "./connection";
 import * as settings from "./settings";
+import * as system from "./system";
 
 export { ActionInfo, ConnectElgatoStreamDeckSocketFn, RegistrationInfo } from "../api";
 export * from "./events";
@@ -40,7 +41,12 @@ const streamDeck = {
 	/**
 	 * Provides management of settings associated with the Stream Deck plugin.
 	 */
-	settings
+	settings,
+
+	/**
+	 * Provides events and methods for interacting with the system.
+	 */
+	system
 };
 
 export default streamDeck;

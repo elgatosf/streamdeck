@@ -249,4 +249,4 @@ export type PluginCommand =
 /**
  * Command sent to Stream Deck, from the property inspector.
  */
-export type UICommand = GetGlobalSettings | SetGlobalSettings | (ActionIdentifier & GetSettings) | (ActionIdentifier & SetSettings);
+export type UICommand = GetGlobalSettings | OpenUrl | SetGlobalSettings | (ActionIdentifier & GetSettings) | (ActionIdentifier & SetSettings);
