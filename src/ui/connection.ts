@@ -63,7 +63,6 @@ class UIConnection extends EventEmitter<ExtendedUIEventMap> {
 	 * @returns `Promise` resolved when the command is sent to Stream Deck.
 	 */
 	public async send(command: UICommand): Promise<void> {
-		console.log(command);
 		const connection = await this.connection.promise;
 		const message = JSON.stringify(command);
 

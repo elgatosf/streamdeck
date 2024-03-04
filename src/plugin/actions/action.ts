@@ -1,5 +1,4 @@
-import type { ActionIdentifier, FeedbackPayload, PayloadObject, SetImage, SetTitle, SetTriggerDescription, State } from "../../api";
-import { getSettings } from "../../common/settings-provider";
+import type { ActionIdentifier, DidReceiveSettings, FeedbackPayload, PayloadObject, SetImage, SetTitle, SetTriggerDescription, State } from "../../api";
 import type { StreamDeckConnection } from "../connectivity/connection";
 import type { UIClient } from "../ui";
 import type { SingletonAction } from "./singleton-action";
@@ -38,7 +37,20 @@ export class Action<T extends PayloadObject<T> = object> {
 	 * @returns Promise containing the action instance's settings.
 	 */
 	public getSettings<U extends PayloadObject<U> = T>(): Promise<U> {
-		return getSettings<U>(this.connection, this.id);
+		return new Promise((resolve) => {
+			const callback = (ev: DidReceiveSettings<U>): void => {
+				if (ev.context == this.id) {
+					resolve(ev.payload.settings);
+					this.connection.removeListener("didReceiveSettings", callback);
+				}
+			};
+
+			this.connection.on("didReceiveSettings", callback);
+			this.connection.send({
+				event: "getSettings",
+				context: this.id
+			});
+		});
 	}
 
 	/**
