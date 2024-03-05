@@ -1,10 +1,11 @@
 import { ConnectElgatoStreamDeckSocketFn, type ActionInfo, type RegistrationInfo } from "../api";
 import type { IDisposable } from "../common/disposable";
 import { connection } from "./connection";
+import * as plugin from "./plugin";
 import * as settings from "./settings";
 import * as system from "./system";
 
-export { ActionInfo, ConnectElgatoStreamDeckSocketFn, RegistrationInfo } from "../api";
+export { ActionInfo, ConnectElgatoStreamDeckSocketFn, PayloadObject, RegistrationInfo } from "../api";
 export * from "./events";
 
 declare global {
@@ -37,6 +38,11 @@ const streamDeck = {
 	onDidConnect: (listener: (info: RegistrationInfo, actionInfo: ActionInfo) => void): IDisposable => {
 		return connection.disposableOn("connected", listener);
 	},
+
+	/**
+	 * Provides interaction with the plugin.
+	 */
+	plugin,
 
 	/**
 	 * Provides management of settings associated with the Stream Deck plugin.

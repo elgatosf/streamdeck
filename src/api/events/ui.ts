@@ -13,16 +13,21 @@ export type PropertyInspectorDidAppear = ActionEventMessage<"propertyInspectorDi
 export type PropertyInspectorDidDisappear = ActionEventMessage<"propertyInspectorDidDisappear">;
 
 /**
- * Occurs when a payload was received from the UI.
+ * Message sent between the plugin and it's respective UI.
  */
-export type DidReceivePropertyInspectorMessage<TPayload extends PayloadObject<TPayload>> = Omit<ActionEventMessage<"sendToPlugin">, keyof DeviceIdentifier> & {
+type PluginMessage<TEvent extends string, TPayload extends PayloadObject<TPayload>> = Omit<ActionEventMessage<TEvent>, keyof DeviceIdentifier> & {
 	/**
-	 * Payload sent from the UI.
+	 * Payload sent between the plugin and it's UI.
 	 */
 	readonly payload: TPayload;
 };
 
 /**
+ * Occurs when a payload was received from the UI.
+ */
+export type DidReceivePropertyInspectorMessage<TPayload extends PayloadObject<TPayload>> = PluginMessage<"sendToPlugin", TPayload>;
+
+/**
  * Occurs when a message was received from the plugin.
  */
-export type DidReceivePluginMessage<TPayload extends PayloadObject<TPayload>> = ActionEventMessage<"sendToPropertyInspector", TPayload>;
+export type DidReceivePluginMessage<TPayload extends PayloadObject<TPayload>> = PluginMessage<"sendToPropertyInspector", TPayload>;

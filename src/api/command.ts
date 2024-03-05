@@ -11,7 +11,7 @@ type CommandBase<TCommand, TPayload = void> = TPayload extends void
 			 * Name of the command, used to identify the request.
 			 */
 			event: TCommand;
-	  }
+		}
 	: {
 			/**
 			 * Name of the command, used to identify the request.
@@ -22,7 +22,7 @@ type CommandBase<TCommand, TPayload = void> = TPayload extends void
 			 * Additional information supplied as part of the command.
 			 */
 			payload: TPayload;
-	  };
+		};
 
 /**
  * A {@link CommandBase} that is associated with a specific context, e.g. action.
@@ -221,9 +221,14 @@ export type SwitchToProfile = ContextualizedCommand<
 };
 
 /**
- * Sends the payload to the property inspector.
+ * Sends a message to the property inspector.
  */
 export type SendToPropertyInspector = ContextualizedCommand<"sendToPropertyInspector", unknown>;
+
+/**
+ * Sends a message to the plugin.
+ */
+export type SendToPlugin = ActionIdentifier & CommandBase<"sendToPlugin", unknown>;
 
 /**
  * Command sent to Stream Deck, from the plugin.
@@ -249,4 +254,4 @@ export type PluginCommand =
 /**
  * Command sent to Stream Deck, from the property inspector.
  */
-export type UICommand = GetGlobalSettings | OpenUrl | SetGlobalSettings | (ActionIdentifier & GetSettings) | (ActionIdentifier & SetSettings);
+export type UICommand = GetGlobalSettings | OpenUrl | SendToPlugin | SetGlobalSettings | (ActionIdentifier & GetSettings) | (ActionIdentifier & SetSettings);
