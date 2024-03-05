@@ -55,7 +55,7 @@ export class Action<T extends PayloadObject<T> = object> {
 
 	/**
 	 * Sends the {@link payload} to the current property inspector associated with this action instance. The plugin can also receive information from the property inspector via
-	 * {@link UIClient.onSendToPlugin} and {@link SingletonAction.onSendToPlugin} allowing for bi-directional communication.
+	 * {@link UIClient.onDidReceivePropertyInspectorMessage} and {@link SingletonAction.onDidReceivePropertyInspectorMessage} allowing for bi-directional communication.
 	 * @template T The type of the payload received from the property inspector.
 	 * @param payload Payload to send to the property inspector.
 	 * @returns `Promise` resolved when {@link payload} has been sent to the property inspector.

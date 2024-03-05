@@ -3,7 +3,7 @@ import type { DeviceDidConnect, DeviceDidDisconnect } from "./device";
 import type { DialDown, DialRotate, DialUp, TouchTap } from "./encoder";
 import type { KeyDown, KeyUp } from "./keypad";
 import type { ApplicationDidLaunch, ApplicationDidTerminate, DidReceiveDeepLink, DidReceiveGlobalSettings, SystemDidWakeUp } from "./system";
-import type { DidReceivePayloadFromPlugin, PropertyInspectorDidAppear, PropertyInspectorDidDisappear, SendToPlugin } from "./ui";
+import type { DidReceivePluginMessage, DidReceivePropertyInspectorMessage, PropertyInspectorDidAppear, PropertyInspectorDidDisappear } from "./ui";
 
 export { Controller } from "@elgato/schemas/streamdeck/plugins";
 export { ActionIdentifier, State } from "./action";
@@ -14,7 +14,7 @@ export { DeviceDidConnect, DeviceDidDisconnect } from "./device";
 export { DialDown, DialRotate, DialUp, TouchTap } from "./encoder";
 export { KeyDown, KeyUp } from "./keypad";
 export { ApplicationDidLaunch, ApplicationDidTerminate, DidReceiveDeepLink, DidReceiveGlobalSettings, SystemDidWakeUp } from "./system";
-export { DidReceivePayloadFromPlugin, PropertyInspectorDidAppear, PropertyInspectorDidDisappear, SendToPlugin } from "./ui";
+export { DidReceivePluginMessage, DidReceivePropertyInspectorMessage, PropertyInspectorDidAppear, PropertyInspectorDidDisappear } from "./ui";
 
 /**
  * Represents an event that is emitted by Stream Deck.
@@ -44,12 +44,12 @@ export type PluginEvent<T extends PayloadObject<T> = object> =
 	| DialUp<T>
 	| DidReceiveDeepLink
 	| DidReceiveGlobalSettings<T>
+	| DidReceivePropertyInspectorMessage<T>
 	| DidReceiveSettings<T>
 	| KeyDown<T>
 	| KeyUp<T>
 	| PropertyInspectorDidAppear
 	| PropertyInspectorDidDisappear
-	| SendToPlugin<T>
 	| SystemDidWakeUp
 	| TitleParametersDidChange<T>
 	| TouchTap<T>
@@ -66,7 +66,7 @@ export type PluginEventMap = {
 /**
  * Events received by the UI, from Stream Deck.
  */
-export type UIEvent<T extends PayloadObject<T> = object> = DidReceiveGlobalSettings<T> | DidReceivePayloadFromPlugin<T> | DidReceiveSettings<T>;
+export type UIEvent<T extends PayloadObject<T> = object> = DidReceiveGlobalSettings<T> | DidReceivePluginMessage<T> | DidReceiveSettings<T>;
 
 /**
  * Map of events received by the UI, from Stream Deck.

@@ -1,7 +1,7 @@
 import { getConnection } from "../../../tests/__mocks__/connection";
 import * as mockEvents from "../../api/__mocks__/events";
 import { Action } from "../actions/action";
-import { PropertyInspectorDidAppearEvent, PropertyInspectorDidDisappearEvent, SendToPluginEvent } from "../events";
+import { DidReceivePropertyInspectorMessageEvent, PropertyInspectorDidAppearEvent, PropertyInspectorDidDisappearEvent } from "../events";
 import { UIClient } from "../ui";
 
 describe("UIClient", () => {
@@ -68,7 +68,7 @@ describe("UIClient", () => {
 	});
 
 	/**
-	 * Asserts {@link UIClient.onSendToPlugin} invokes the listener when the connection emits the `sendToPlugin` event.
+	 * Asserts {@link UIClient.onDidReceivePropertyInspectorMessage} invokes the listener when the connection emits the `sendToPlugin` event.
 	 */
 	it("Receives onSendToPlugin", () => {
 		// Arrange.
@@ -76,15 +76,15 @@ describe("UIClient", () => {
 		const client = new UIClient(connection);
 
 		const listener = jest.fn();
-		const emit = () => emitMessage(mockEvents.sendToPlugin);
+		const emit = () => emitMessage(mockEvents.didReceivePropertyInspectorMessage);
 
 		// Act.
-		const result = client.onSendToPlugin(listener);
+		const result = client.onDidReceivePropertyInspectorMessage(listener);
 		const { action, context, payload } = emit();
 
 		// Assert.
 		expect(listener).toHaveBeenCalledTimes(1);
-		expect(listener).toHaveBeenCalledWith<[SendToPluginEvent<mockEvents.Settings, never>]>({
+		expect(listener).toHaveBeenCalledWith<[DidReceivePropertyInspectorMessageEvent<mockEvents.Settings, never>]>({
 			action: new Action(connection, { action, context }),
 			payload,
 			type: "sendToPlugin"

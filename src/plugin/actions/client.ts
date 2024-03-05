@@ -217,7 +217,7 @@ export class ActionClient {
 
 		addEventListener(action.manifestId, this.uiClient, (emitter) => emitter.onPropertyInspectorDidAppear, action.onPropertyInspectorDidAppear);
 		addEventListener(action.manifestId, this.uiClient, (emitter) => emitter.onPropertyInspectorDidDisappear, action.onPropertyInspectorDidDisappear);
-		addEventListener(action.manifestId, this.uiClient, (emitter) => emitter.onSendToPlugin, action.onSendToPlugin);
+		addEventListener(action.manifestId, this.uiClient, (emitter) => emitter.onDidReceivePropertyInspectorMessage, action.onDidReceivePropertyInspectorMessage);
 	}
 }
 
