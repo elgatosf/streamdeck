@@ -38,11 +38,11 @@ class UIConnection extends EventEmitter<ExtendedUIEventMap> {
 			webSocket.onmessage = (ev: MessageEvent<string>): void => this.tryEmit(ev);
 			webSocket.onopen = (): void => {
 				webSocket.send(JSON.stringify({ event, uuid }));
-
-				this.info.setResult({ uuid, info, actionInfo });
 				this.connection.setResult(webSocket);
 
+				// As the emitter does not awaiter listeners, we are safe from dead-locking against the listener calling `getInfo()`.
 				this.emit("connected", info, actionInfo);
+				this.info.setResult({ uuid, info, actionInfo });
 			};
 		}
 
