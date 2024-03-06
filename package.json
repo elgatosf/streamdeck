@@ -13,13 +13,13 @@
 	],
 	"exports": {
 		".": {
-			"node": {
-				"default": "./dist/index.js",
-				"types": "./dist/index.d.ts"
+			"browser": {
+				"default": "./dist/browser.js",
+				"types": "./dist/browser.d.ts"
 			},
 			"default": {
-				"default": "./dist/ui.js",
-				"types": "./dist/ui.d.ts"
+				"default": "./dist/index.js",
+				"types": "./dist/index.d.ts"
 			}
 		}
 	},

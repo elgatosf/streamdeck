@@ -75,4 +75,4 @@ function getOptions(input: string, output: string): RollupOptions[] {
 	];
 }
 
-export default [...getOptions("src/plugin/index.ts", "index.js"), ...getOptions("src/ui/index.ts", "ui.js")];
+export default [...getOptions("src/plugin/index.ts", "index.js"), ...getOptions("src/ui/index.ts", "browser.js")];
