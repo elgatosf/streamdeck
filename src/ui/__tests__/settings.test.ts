@@ -1,8 +1,9 @@
 import type { DidReceiveGlobalSettingsEvent, DidReceiveSettingsEvent } from "..";
-import type { ActionIdentifier, DidReceiveSettings, SetGlobalSettings, SetSettings } from "../../api";
+import type { ActionIdentifier, DidReceiveGlobalSettings, DidReceiveSettings, GetGlobalSettings, SetGlobalSettings, SetSettings } from "../../api";
 import { actionInfo, registrationInfo } from "../../api/registration/__mocks__";
+import { PromiseCompletionSource } from "../../common/promises";
 import { connection, type ConnectionInfo } from "../connection";
-import { getSettings, onDidReceiveGlobalSettings, onDidReceiveSettings, setGlobalSettings, setSettings } from "../settings";
+import { getGlobalSettings, getSettings, onDidReceiveGlobalSettings, onDidReceiveSettings, setGlobalSettings, setSettings } from "../settings";
 
 jest.mock("../connection");
 
@@ -22,23 +23,66 @@ describe("settings", () => {
 	afterEach(() => jest.clearAllMocks());
 
 	/**
-	 * Asserts {@link onDidReceiveGlobalSettings} is invoked when `didReceiveGlobalSettings` is emitted.
+	 * Asserts {@link getGlobalSettings} sends the command, and awaits the settings.
 	 */
-	test("onDidReceiveGlobalSettings", async () => {
+	it("Can getGlobalSettings", async () => {
 		// Arrange.
-		const listener = jest.fn();
-		const spyOnDisposableOn = jest.spyOn(connection, "disposableOn");
+		const sendAwaiter = new PromiseCompletionSource<boolean>();
+		const spyOnSend = jest.spyOn(connection, "send").mockImplementation(() => {
+			sendAwaiter.setResult(true);
+			return Promise.resolve();
+		});
 
 		// Act.
-		const disposable = onDidReceiveGlobalSettings(listener);
+		const settings = getGlobalSettings<Settings>();
+
+		// Assert.
+		await sendAwaiter.promise;
+		expect(spyOnSend).toHaveBeenCalledTimes(1);
+		expect(spyOnSend).toHaveBeenLastCalledWith({
+			event: "getGlobalSettings",
+			context: uuid
+		} satisfies GetGlobalSettings);
+
+		expect(Promise.race([settings, false])).resolves.toBe(false);
+
+		// Act (Event).
 		connection.emit("didReceiveGlobalSettings", {
 			event: "didReceiveGlobalSettings",
 			payload: {
 				settings: {
-					message: "Hello world"
+					message: "Testing getGlobalSettings"
 				}
 			}
+		} satisfies DidReceiveGlobalSettings<Settings>);
+		await settings;
+
+		// Assert (Event).
+		expect(settings).resolves.toEqual<Settings>({
+			message: "Testing getGlobalSettings"
 		});
+	});
+
+	/**
+	 * Asserts {@link onDidReceiveGlobalSettings} is invoked when `didReceiveGlobalSettings` is emitted.
+	 */
+	it("Receives onDidReceiveGlobalSettings", async () => {
+		// Arrange.
+		const listener = jest.fn();
+		const spyOnDisposableOn = jest.spyOn(connection, "disposableOn");
+
+		const ev: DidReceiveGlobalSettings<Settings> = {
+			event: "didReceiveGlobalSettings",
+			payload: {
+				settings: {
+					message: "Testing didReceiveGlobalSettings"
+				}
+			}
+		};
+
+		// Act.
+		const disposable = onDidReceiveGlobalSettings(listener);
+		connection.emit("didReceiveGlobalSettings", ev);
 
 		// Assert.
 		expect(spyOnDisposableOn).toHaveBeenCalledTimes(1);
@@ -46,21 +90,14 @@ describe("settings", () => {
 		expect(listener).toHaveBeenCalledTimes(1);
 		expect(listener).toHaveBeenCalledWith<[DidReceiveGlobalSettingsEvent<Settings>]>({
 			settings: {
-				message: "Hello world"
+				message: "Testing didReceiveGlobalSettings"
 			},
 			type: "didReceiveGlobalSettings"
 		});
 
 		// Act (dispose).
 		disposable.dispose();
-		connection.emit("didReceiveGlobalSettings", {
-			event: "didReceiveGlobalSettings",
-			payload: {
-				settings: {
-					message: "Hello world"
-				}
-			}
-		});
+		connection.emit("didReceiveGlobalSettings", ev);
 
 		// Assert(dispose).
 		expect(listener).toHaveBeenCalledTimes(1);
@@ -69,7 +106,7 @@ describe("settings", () => {
 	/**
 	 * Asserts {@link onDidReceiveSettings} is invoked when `onDidReceiveSettings` is emitted.
 	 */
-	test("onDidReceiveSettings", async () => {
+	it("Receives onDidReceiveSettings", async () => {
 		// Arrange.
 		const listener = jest.fn();
 		const spyOnDisposableOn = jest.spyOn(connection, "disposableOn");
@@ -87,7 +124,7 @@ describe("settings", () => {
 				},
 				isInMultiAction: false,
 				settings: {
-					message: "Hello world"
+					message: "Testing onDidReceiveSettings"
 				}
 			}
 		};
@@ -123,11 +160,11 @@ describe("settings", () => {
 	/**
 	 * Asserts {@link setGlobalSettings} sends the command to the {@link connection}.
 	 */
-	test("setGlobalSettings", async () => {
+	it("Sends setGlobalSettings", async () => {
 		// Arrange, act.
 		const spyOnSend = jest.spyOn(connection, "send");
 		await setGlobalSettings({
-			message: "Hello world"
+			message: "Testing setGlobalSettings"
 		});
 
 		// Assert.
@@ -136,7 +173,7 @@ describe("settings", () => {
 			context: uuid,
 			event: "setGlobalSettings",
 			payload: {
-				message: "Hello world"
+				message: "Testing setGlobalSettings"
 			}
 		});
 	});
@@ -144,11 +181,11 @@ describe("settings", () => {
 	/**
 	 * Asserts {@link setSettings} sends the command to the {@link connection}.
 	 */
-	test("setSettings", async () => {
+	it("Sends setSettings", async () => {
 		// Arrange, act.
 		const spyOnSend = jest.spyOn(connection, "send");
 		await setSettings({
-			message: "Hello world"
+			message: "Testing setSettings"
 		});
 
 		// Assert.
@@ -158,7 +195,7 @@ describe("settings", () => {
 			context: uuid,
 			event: "setSettings",
 			payload: {
-				message: "Hello world"
+				message: "Testing setSettings"
 			}
 		});
 	});
