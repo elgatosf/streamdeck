@@ -11,7 +11,7 @@ type CommandBase<TCommand, TPayload = void> = TPayload extends void
 			 * Name of the command, used to identify the request.
 			 */
 			event: TCommand;
-		}
+	  }
 	: {
 			/**
 			 * Name of the command, used to identify the request.
@@ -22,7 +22,7 @@ type CommandBase<TCommand, TPayload = void> = TPayload extends void
 			 * Additional information supplied as part of the command.
 			 */
 			payload: TPayload;
-		};
+	  };
 
 /**
  * A {@link CommandBase} that is associated with a specific context, e.g. action.
@@ -40,9 +40,19 @@ type ContextualizedCommand<TCommand, TPayload = void> = CommandBase<TCommand, TP
 export type SetSettings = ContextualizedCommand<"setSettings", unknown>;
 
 /**
+ * Sets the settings associated with an instance of an action.
+ */
+export type UISetSettings = ActionIdentifier & SetSettings;
+
+/**
  * Gets the settings associated with an instance of an action. Causes {@link DidReceiveSettings} to be emitted.
  */
 export type GetSettings = ContextualizedCommand<"getSettings">;
+
+/**
+ * Gets the settings associated with an instance of an action. Causes {@link DidReceiveSettings} to be emitted.
+ */
+export type UIGetSettings = ActionIdentifier & GetSettings;
 
 /**
  * Sets the global settings associated with the plugin.
@@ -254,4 +264,4 @@ export type PluginCommand =
 /**
  * Command sent to Stream Deck, from the property inspector.
  */
-export type UICommand = GetGlobalSettings | OpenUrl | SendToPlugin | SetGlobalSettings | (ActionIdentifier & GetSettings) | (ActionIdentifier & SetSettings);
+export type UICommand = GetGlobalSettings | OpenUrl | SendToPlugin | SetGlobalSettings | UIGetSettings | UISetSettings;

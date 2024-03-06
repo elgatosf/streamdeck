@@ -1,5 +1,5 @@
 import type { DidReceiveGlobalSettingsEvent, DidReceiveSettingsEvent } from "..";
-import type { ActionIdentifier, DidReceiveGlobalSettings, DidReceiveSettings, GetGlobalSettings, SetGlobalSettings, SetSettings } from "../../api";
+import type { DidReceiveGlobalSettings, DidReceiveSettings, GetGlobalSettings, SetGlobalSettings, UIGetSettings, UISetSettings } from "../../api";
 import { actionInfo, registrationInfo } from "../../api/registration/__mocks__";
 import { PromiseCompletionSource } from "../../common/promises";
 import { connection, type ConnectionInfo } from "../connection";
@@ -60,6 +60,57 @@ describe("settings", () => {
 		// Assert (Event).
 		expect(settings).resolves.toEqual<Settings>({
 			message: "Testing getGlobalSettings"
+		});
+	});
+
+	/**
+	 * Asserts {@link getSettings} sends the command, and awaits the settings.
+	 */
+	it("Can getSettings", async () => {
+		// Arrange.
+		const sendAwaiter = new PromiseCompletionSource<boolean>();
+		const spyOnSend = jest.spyOn(connection, "send").mockImplementation(() => {
+			sendAwaiter.setResult(true);
+			return Promise.resolve();
+		});
+
+		// Act.
+		const settings = getSettings<Settings>();
+
+		// Assert.
+		await sendAwaiter.promise;
+		expect(spyOnSend).toHaveBeenCalledTimes(1);
+		expect(spyOnSend).toHaveBeenLastCalledWith({
+			event: "getSettings",
+			action: actionInfo.action,
+			context: uuid
+		} satisfies UIGetSettings);
+
+		expect(Promise.race([settings, false])).resolves.toBe(false);
+
+		// Act (Event).
+		connection.emit("didReceiveSettings", {
+			event: "didReceiveSettings",
+			action: actionInfo.action,
+			context: "abc123",
+			device: "dev123",
+			payload: {
+				controller: "Encoder",
+				coordinates: {
+					column: 1,
+					row: 0
+				},
+				isInMultiAction: false,
+				settings: {
+					message: "Testing getSettings"
+				}
+			}
+		} satisfies DidReceiveSettings<Settings>);
+		await settings;
+
+		// Assert (Event).
+		expect(settings).resolves.toEqual<Settings>({
+			message: "Testing getSettings"
 		});
 	});
 
@@ -190,7 +241,7 @@ describe("settings", () => {
 
 		// Assert.
 		expect(spyOnSend).toHaveBeenCalledTimes(1);
-		expect(spyOnSend).toHaveBeenCalledWith<[ActionIdentifier & SetSettings]>({
+		expect(spyOnSend).toHaveBeenCalledWith<[UISetSettings]>({
 			action: actionInfo.action,
 			context: uuid,
 			event: "setSettings",
