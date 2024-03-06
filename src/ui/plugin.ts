@@ -11,7 +11,7 @@ import { getSettings, setSettings } from "./settings";
  * @param listener Function to be invoked when the event occurs.
  * @returns A disposable that, when disposed, removes the listener.
  */
-export function onDidPluginMessage<TPayload extends PayloadObject<TPayload> = object, TSettings extends PayloadObject<TSettings> = object>(
+export function onDidReceivePluginMessage<TPayload extends PayloadObject<TPayload> = object, TSettings extends PayloadObject<TSettings> = object>(
 	listener: (ev: DidReceivePluginMessageEvent<TPayload, TSettings>) => void
 ): IDisposable {
 	return connection.disposableOn("sendToPropertyInspector", (ev: DidReceivePluginMessage<TPayload>) =>
@@ -29,7 +29,7 @@ export function onDidPluginMessage<TPayload extends PayloadObject<TPayload> = ob
 }
 
 /**
- * Sends the {@link payload} to the plugin. The property inspector can also receive information from the plugin via {@link onDidPluginMessage} allowing for bi-directional
+ * Sends the {@link payload} to the plugin. The property inspector can also receive information from the plugin via {@link onDidReceivePluginMessage} allowing for bi-directional
  * communication.
  * @template T The type of the payload received from the property inspector.
  * @param payload Payload to send to the property inspector.
