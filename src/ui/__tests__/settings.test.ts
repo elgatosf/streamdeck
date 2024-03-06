@@ -1,15 +1,15 @@
-import type { DidReceiveGlobalSettingsEvent } from "..";
-import type { ActionIdentifier, SetGlobalSettings, SetSettings } from "../../api";
+import type { DidReceiveGlobalSettingsEvent, DidReceiveSettingsEvent } from "..";
+import type { ActionIdentifier, DidReceiveSettings, SetGlobalSettings, SetSettings } from "../../api";
 import { actionInfo, registrationInfo } from "../../api/registration/__mocks__";
 import { connection, type ConnectionInfo } from "../connection";
-import { onDidReceiveGlobalSettings, setGlobalSettings, setSettings } from "../settings";
+import { getSettings, onDidReceiveGlobalSettings, onDidReceiveSettings, setGlobalSettings, setSettings } from "../settings";
 
 jest.mock("../connection");
 
 describe("settings", () => {
 	const uuid = "abc123xyz";
 
-	beforeEach(() => {
+	beforeEach(async () => {
 		jest.spyOn(connection, "getInfo").mockReturnValue(
 			Promise.resolve<ConnectionInfo>({
 				actionInfo,
@@ -19,7 +19,7 @@ describe("settings", () => {
 		);
 	});
 
-	afterEach(() => jest.resetAllMocks());
+	afterEach(() => jest.clearAllMocks());
 
 	/**
 	 * Asserts {@link onDidReceiveGlobalSettings} is invoked when `didReceiveGlobalSettings` is emitted.
@@ -28,9 +28,9 @@ describe("settings", () => {
 		// Arrange.
 		const listener = jest.fn();
 		const spyOnDisposableOn = jest.spyOn(connection, "disposableOn");
-		const disposable = onDidReceiveGlobalSettings(listener);
 
 		// Act.
+		const disposable = onDidReceiveGlobalSettings(listener);
 		connection.emit("didReceiveGlobalSettings", {
 			event: "didReceiveGlobalSettings",
 			payload: {
@@ -61,6 +61,60 @@ describe("settings", () => {
 				}
 			}
 		});
+
+		// Assert(dispose).
+		expect(listener).toHaveBeenCalledTimes(1);
+	});
+
+	/**
+	 * Asserts {@link onDidReceiveSettings} is invoked when `onDidReceiveSettings` is emitted.
+	 */
+	test("onDidReceiveSettings", async () => {
+		// Arrange.
+		const listener = jest.fn();
+		const spyOnDisposableOn = jest.spyOn(connection, "disposableOn");
+
+		const ev: DidReceiveSettings<Settings> = {
+			event: "didReceiveSettings",
+			action: "com.elgato.test.action",
+			context: "abc123",
+			device: "dev123",
+			payload: {
+				controller: "Keypad",
+				coordinates: {
+					column: 2,
+					row: 2
+				},
+				isInMultiAction: false,
+				settings: {
+					message: "Hello world"
+				}
+			}
+		};
+
+		// Act.
+		const disposable = onDidReceiveSettings(listener);
+		connection.emit("didReceiveSettings", ev);
+
+		// Assert.
+		expect(spyOnDisposableOn).toHaveBeenCalledTimes(1);
+		expect(spyOnDisposableOn).toHaveBeenCalledWith("didReceiveSettings", expect.any(Function));
+		expect(listener).toHaveBeenCalledTimes(1);
+		expect(listener).toHaveBeenCalledWith<[DidReceiveSettingsEvent<Settings>]>({
+			action: {
+				id: ev.context,
+				manifestId: ev.action,
+				getSettings,
+				setSettings
+			},
+			deviceId: ev.device,
+			payload: ev.payload,
+			type: "didReceiveSettings"
+		});
+
+		// Act (dispose).
+		disposable.dispose();
+		connection.emit("didReceiveSettings", ev);
 
 		// Assert(dispose).
 		expect(listener).toHaveBeenCalledTimes(1);
