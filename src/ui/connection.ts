@@ -84,7 +84,7 @@ class UIConnection extends EventEmitter<ExtendedUIEventMap> {
 /**
  * Information about the connection with Stream Deck.
  */
-type ConnectionInfo = {
+export type ConnectionInfo = {
 	/**
 	 * Unique identifier of the UI.
 	 */
