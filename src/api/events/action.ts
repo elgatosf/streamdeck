@@ -163,7 +163,7 @@ type ActionPayload<TSettings extends PayloadObject<TSettings>> = {
 /**
  * Coordinates that identify the location of an action.
  */
-export type Coordinates<TRow = number> = {
+export type Coordinates = {
 	/**
 	 * Column the action instance is located in, indexed from 0.
 	 */
@@ -173,7 +173,7 @@ export type Coordinates<TRow = number> = {
 	 * Row the action instance is located on, indexed from 0. *NB* When the device is {@link DeviceType.StreamDeckPlus} the row can be 0 for keys (`Keypad`), and will _always_ be 0
 	 * for dials (`Encoder`); to differentiate between actions types, cross-check the value of `controller` found on {@link WillAppear.payload}.
 	 */
-	readonly row: TRow;
+	readonly row: number;
 };
 
 /**
