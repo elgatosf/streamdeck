@@ -7,7 +7,7 @@ jest.spyOn(connection, "getInfo").mockReturnValue(
 	Promise.resolve<ConnectionInfo>({
 		actionInfo,
 		info: registrationInfo,
-		uuid: "abc123xyz"
+		uuid: "abc123"
 	})
 );
 
