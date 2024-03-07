@@ -13,19 +13,28 @@
 
 ## vNext
 
-### ⚠️ Breaking Changes
+### ✨ New
 
--   `streamDeck.ui.onSendToPlugin` renamed to `streamDeck.ui.onDidReceivePropertyInspectorMessage`.
--   `SendToPluginEvent<T>` renamed to `DidReceivePropertyInspectorPayloadEvent<T>`.
--   JSON schemas have been relocated to a dedicated schemas package, [`@elgato/schemas`](https://www.npmjs.com/package/@elgato/schemas).
+-   Package can now be imported in both Node.js and the browser (in the scope of a property inspector).
+-   Add support for property inspector.
+    -   Add `streamDeck.onDidConnect` event listener.
+    -   Add `streamDeck.settings` namespace for interacting with settings.
+    -   Add `streamDeck.system` namespace for system-related operations.
+    -   Add `streamDeck.plugin` namespace for bi-direction communication with the plugin and the UI.
+
+### 🐞 Fix
+
+-   `Coordinates` type could erroneously have a non-number type for `row`.
 
 ### ♻️ Update
 
--   Update layout and manifest references to propagate from `@elgato/schemas`.
+-   Update layout and manifest references to propagate from [`@elgato/schemas`](https://github.com/elgatosf/schemas).
 
-### 🗑️ Remove
+### ➡️ Migration
 
--   Remove layout and manifest JSON schemas.
+-   `streamDeck.ui.onSendToPlugin` renamed to `streamDeck.ui.onDidReceivePropertyInspectorMessage`.
+-   `SendToPluginEvent<T>` renamed to `DidReceivePropertyInspectorPayloadEvent<T>`.
+-   JSON schemas have been relocated to a dedicated schemas package, [`@elgato/schemas`](https://github.com/elgatosf/schemas).
 
 ## 0.3.0
 
