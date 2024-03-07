@@ -18,15 +18,15 @@ declare global {
 		 * @param info Information about the Stream Deck application and operating system.
 		 * @param actionInfo Information about the action the UI is associated with.
 		 */
-		connectElgatoStreamDeckSocket?: ConnectElgatoStreamDeckSocketFn;
+		connectElgatoStreamDeckSocket: ConnectElgatoStreamDeckSocketFn;
 	}
 }
 
 /**
  * @inheritdoc
  */
-window.connectElgatoStreamDeckSocket = async (port: string, uuid: string, event: string, info: string, actionInfo: string): Promise<void> => {
-	await connection.connect(port, uuid, event, JSON.parse(info), JSON.parse(actionInfo));
+window.connectElgatoStreamDeckSocket = (port: string, uuid: string, event: string, info: string, actionInfo: string): Promise<void> => {
+	return connection.connect(port, uuid, event, JSON.parse(info), JSON.parse(actionInfo));
 };
 
 const streamDeck = {
