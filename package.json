@@ -7,11 +7,22 @@
 	"engines": {
 		"node": "^20.5.1"
 	},
-	"types": "./dist/index.d.ts",
 	"files": [
-		"./dist/index.js",
-		"./dist/index.d.ts"
+		"./dist/*.js",
+		"./dist/*.d.ts"
 	],
+	"exports": {
+		".": {
+			"browser": {
+				"default": "./dist/browser.js",
+				"types": "./dist/browser.d.ts"
+			},
+			"default": {
+				"default": "./dist/index.js",
+				"types": "./dist/index.d.ts"
+			}
+		}
+	},
 	"scripts": {
 		"build": "rm -rf ./dist && rollup --config rollup.config.ts --configPlugin typescript",
 		"watch": "rollup --config rollup.config.ts --configPlugin typescript --watch",
@@ -61,6 +72,8 @@
 		"eslint-plugin-jsdoc": "^46.8.2",
 		"eslint-plugin-prettier": "^5.0.0",
 		"jest": "^29.7.0",
+		"jest-environment-jsdom": "^29.7.0",
+		"jest-websocket-mock": "^2.5.0",
 		"prettier": "^3.0.3",
 		"rollup": "^4.0.2",
 		"rollup-plugin-dts": "^6.1.0",

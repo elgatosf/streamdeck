@@ -59,5 +59,5 @@ type EncoderPayload<TSettings extends PayloadObject<TSettings>> = Pick<SingleAct
 	/**
 	 * Coordinates that identify the location of the action.
 	 */
-	readonly coordinates: Coordinates<0>;
+	readonly coordinates: Coordinates;
 };

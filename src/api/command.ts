@@ -1,4 +1,4 @@
-import type { DidReceiveGlobalSettings, DidReceiveSettings, State } from "./events";
+import type { ActionIdentifier, DidReceiveGlobalSettings, DidReceiveSettings, State } from "./events";
 import type { FeedbackPayload } from "./layout";
 import type { Target } from "./target";
 
@@ -40,9 +40,19 @@ type ContextualizedCommand<TCommand, TPayload = void> = CommandBase<TCommand, TP
 export type SetSettings = ContextualizedCommand<"setSettings", unknown>;
 
 /**
+ * Sets the settings associated with an instance of an action.
+ */
+export type UISetSettings = ActionIdentifier & SetSettings;
+
+/**
  * Gets the settings associated with an instance of an action. Causes {@link DidReceiveSettings} to be emitted.
  */
 export type GetSettings = ContextualizedCommand<"getSettings">;
+
+/**
+ * Gets the settings associated with an instance of an action. Causes {@link DidReceiveSettings} to be emitted.
+ */
+export type UIGetSettings = ActionIdentifier & GetSettings;
 
 /**
  * Sets the global settings associated with the plugin.
@@ -221,14 +231,19 @@ export type SwitchToProfile = ContextualizedCommand<
 };
 
 /**
- * Sends the payload to the property inspector.
+ * Sends a message to the property inspector.
  */
 export type SendToPropertyInspector = ContextualizedCommand<"sendToPropertyInspector", unknown>;
 
 /**
+ * Sends a message to the plugin.
+ */
+export type SendToPlugin = ActionIdentifier & CommandBase<"sendToPlugin", unknown>;
+
+/**
  * Command sent to Stream Deck, from the plugin.
  */
-export type Command =
+export type PluginCommand =
 	| GetGlobalSettings
 	| GetSettings
 	| LogMessage
@@ -245,3 +260,8 @@ export type Command =
 	| ShowAlert
 	| ShowOk
 	| SwitchToProfile;
+
+/**
+ * Command sent to Stream Deck, from the property inspector.
+ */
+export type UICommand = GetGlobalSettings | OpenUrl | SendToPlugin | SetGlobalSettings | UIGetSettings | UISetSettings;

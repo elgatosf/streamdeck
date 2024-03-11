@@ -273,7 +273,6 @@ describe("EventEmitter", () => {
 			const order: unknown[] = [];
 			on.mockImplementation(() => {
 				order.push(on);
-				console.log("ON");
 			});
 			prepend.mockImplementation(() => order.push(prepend));
 

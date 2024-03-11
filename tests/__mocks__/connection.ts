@@ -1,6 +1,6 @@
 import EventEmitter from "node:events";
 import WebSocket from "ws";
-import { EventMessage } from "../../src/api";
+import { PluginEvent } from "../../src/api";
 import { registrationParameters } from "../../src/plugin/connectivity/__mocks__/registration-parameters";
 import { StreamDeckConnection, createConnection } from "../../src/plugin/connectivity/connection";
 import { getMockedLogger } from "./logging";
@@ -54,7 +54,7 @@ export function getConnection(version: number = 99.9) {
 		 * @param ev Event to emit; this is serialized to JSON and then emitted.
 		 * @returns The original {@link ev}.
 		 */
-		emitMessage: <T extends EventMessage>(ev: T): T => {
+		emitMessage: <T extends PluginEvent>(ev: T): T => {
 			webSocket.emit("message", JSON.stringify(ev));
 			return ev;
 		}

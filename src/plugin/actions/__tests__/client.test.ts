@@ -8,18 +8,18 @@ import {
 	DialDownEvent,
 	DialRotateEvent,
 	DialUpEvent,
+	DidReceivePropertyInspectorMessageEvent,
 	DidReceiveSettingsEvent,
 	KeyDownEvent,
 	KeyUpEvent,
 	PropertyInspectorDidAppearEvent,
 	PropertyInspectorDidDisappearEvent,
-	SendToPluginEvent,
 	TitleParametersDidChangeEvent,
 	TouchTapEvent,
 	WillAppearEvent,
 	WillDisappearEvent
 } from "../../events";
-import { SettingsClient } from "../../settings/client";
+import { SettingsClient } from "../../settings";
 import { UIClient } from "../../ui";
 import { Action } from "../action";
 import { ActionClient } from "../client";
@@ -521,6 +521,39 @@ describe("ActionClient", () => {
 		});
 
 		/**
+		 * Asserts {@link ActionClient.registerAction} route {@link UIClient.onDidReceivePropertyInspectorMessage} to the action.
+		 */
+		it("Routes onDidReceivePropertyInspectorMessage", () => {
+			// Arrange.
+			const { connection, settingsClient, uiClient, logger, emitMessage } = getParameters();
+			const client = new ActionClient(connection, mockedManifest, settingsClient, uiClient, logger);
+
+			const action: SingletonAction = {
+				manifestId,
+				onDidReceivePropertyInspectorMessage: jest.fn()
+			};
+
+			// Act.
+			client.registerAction(action);
+
+			const { payload, context } = emitMessage({
+				...mockEvents.didReceivePropertyInspectorMessage,
+				action: manifestId
+			});
+
+			emitMessage(mockEvents.didReceivePropertyInspectorMessage);
+
+			// Assert.
+			expect(action.onDidReceivePropertyInspectorMessage).toHaveBeenCalledTimes(1);
+			expect((action.onDidReceivePropertyInspectorMessage as jest.Mock).mock.contexts[0]).toStrictEqual(action);
+			expect(action.onDidReceivePropertyInspectorMessage).toHaveBeenCalledWith<[DidReceivePropertyInspectorMessageEvent<mockEvents.Settings, never>]>({
+				action: new Action(connection, { action: manifestId, context }),
+				payload,
+				type: "sendToPlugin"
+			});
+		});
+
+		/**
 		 * Asserts {@link ActionClient.registerAction} route {@link SettingsClient.onDidReceiveSettings} to the action.
 		 */
 		it("Routes onDidReceiveSettings", () => {
@@ -685,39 +718,6 @@ describe("ActionClient", () => {
 				action: new Action(connection, { action: manifestId, context }),
 				deviceId: device,
 				type: "propertyInspectorDidDisappear"
-			});
-		});
-
-		/**
-		 * Asserts {@link ActionClient.registerAction} route {@link UIClient.onSendToPlugin} to the action.
-		 */
-		it("Routes onSendToPlugin", () => {
-			// Arrange.
-			const { connection, settingsClient, uiClient, logger, emitMessage } = getParameters();
-			const client = new ActionClient(connection, mockedManifest, settingsClient, uiClient, logger);
-
-			const action: SingletonAction = {
-				manifestId,
-				onSendToPlugin: jest.fn()
-			};
-
-			// Act.
-			client.registerAction(action);
-
-			const { payload, context } = emitMessage({
-				...mockEvents.sendToPlugin,
-				action: manifestId
-			});
-
-			emitMessage(mockEvents.sendToPlugin);
-
-			// Assert.
-			expect(action.onSendToPlugin).toHaveBeenCalledTimes(1);
-			expect((action.onSendToPlugin as jest.Mock).mock.contexts[0]).toStrictEqual(action);
-			expect(action.onSendToPlugin).toHaveBeenCalledWith<[SendToPluginEvent<mockEvents.Settings, never>]>({
-				action: new Action(connection, { action: manifestId, context }),
-				payload,
-				type: "sendToPlugin"
 			});
 		});
 

@@ -1,0 +1,88 @@
+import type { DidReceivePluginMessageEvent } from "..";
+import type { DidReceivePluginMessage, SendToPlugin } from "../../api";
+import { actionInfo } from "../../api/registration/__mocks__";
+import { connection } from "../connection";
+import { onDidReceivePluginMessage, sendToPlugin } from "../plugin";
+import { getSettings, setSettings } from "../settings";
+
+jest.mock("../connection");
+
+describe("plugin", () => {
+	let uuid!: string;
+	beforeAll(async () => ({ uuid } = await connection.getInfo()));
+
+	/**
+	 * Asserts {@link onDidReceivePluginMessage} is invoked when `sendToPropertyInspector` is emitted.
+	 */
+	it("receives onDidReceivePluginMessage", async () => {
+		// Arrange.
+		const listener = jest.fn();
+		const spyOnDisposableOn = jest.spyOn(connection, "disposableOn");
+
+		const ev: DidReceivePluginMessage<PayloadOrSettings> = {
+			action: "com.elgato.test.one",
+			context: "action123",
+			event: "sendToPropertyInspector",
+			payload: {
+				message: "Testing onDidReceivePluginMessage"
+			}
+		};
+
+		// Act.
+		const disposable = onDidReceivePluginMessage(listener);
+		connection.emit("sendToPropertyInspector", ev);
+
+		// Assert.
+		expect(spyOnDisposableOn).toHaveBeenCalledTimes(1);
+		expect(spyOnDisposableOn).toHaveBeenCalledWith("sendToPropertyInspector", expect.any(Function));
+		expect(listener).toHaveBeenCalledTimes(1);
+		expect(listener).toHaveBeenCalledWith<[DidReceivePluginMessageEvent<PayloadOrSettings, PayloadOrSettings>]>({
+			action: {
+				id: "action123",
+				manifestId: "com.elgato.test.one",
+				getSettings,
+				setSettings
+			},
+			payload: {
+				message: "Testing onDidReceivePluginMessage"
+			},
+			type: "sendToPropertyInspector"
+		});
+
+		// Act (dispose).
+		disposable.dispose();
+		connection.emit("sendToPropertyInspector", ev);
+
+		// Assert(dispose).
+		expect(listener).toHaveBeenCalledTimes(1);
+	});
+
+	/**
+	 * Asserts {@link sendToPlugin} sends the command to the {@link connection}.
+	 */
+	it("sends sendToPlugin", async () => {
+		// Arrange, act.
+		const spyOnSend = jest.spyOn(connection, "send");
+		await sendToPlugin({
+			message: "Testing sendToPlugin"
+		});
+
+		// Assert.
+		expect(spyOnSend).toHaveBeenCalledTimes(1);
+		expect(spyOnSend).toHaveBeenCalledWith<[SendToPlugin]>({
+			action: actionInfo.action,
+			context: uuid,
+			event: "sendToPlugin",
+			payload: {
+				message: "Testing sendToPlugin"
+			}
+		});
+	});
+});
+
+/**
+ * Mock payload or settings.
+ */
+type PayloadOrSettings = {
+	message: string;
+};

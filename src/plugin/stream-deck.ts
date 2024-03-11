@@ -7,7 +7,7 @@ import { I18nProvider } from "./i18n";
 import { Logger, createLogger } from "./logging";
 import { getManifest } from "./manifest";
 import { ProfileClient } from "./profiles";
-import { SettingsClient } from "./settings/client";
+import { SettingsClient } from "./settings";
 import { System } from "./system";
 import { UIClient } from "./ui";
 

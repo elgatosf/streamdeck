@@ -28,6 +28,14 @@
 				"SwitchCase": 1
 			}
 		],
+		"jsdoc/check-tag-names": [
+			"warn",
+			{
+				"definedTags": [
+					"jest-environment"
+				]
+			}
+		],
 		"jsdoc/no-undefined-types": 1,
 		"jsdoc/require-jsdoc": [
 			"warn",
