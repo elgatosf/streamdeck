@@ -5,7 +5,7 @@ import { PromiseCompletionSource } from "../common/promises";
 /**
  * Connection used by the UI to communicate with the plugin, and Stream Deck.
  */
-class UIConnection extends EventEmitter<ExtendedUIEventMap> {
+class Connection extends EventEmitter<ExtendedUIEventMap> {
 	/**
 	 * Determines whether the connection can connect;
 	 */
@@ -17,7 +17,7 @@ class UIConnection extends EventEmitter<ExtendedUIEventMap> {
 	private readonly connection = new PromiseCompletionSource<WebSocket>();
 
 	/**
-	 * Underlying connection information set when a connection is established.
+	 * Underlying connection information provided to the plugin to establish a connection with Stream Deck.
 	 */
 	private readonly info = new PromiseCompletionSource<ConnectionInfo>();
 
@@ -59,7 +59,7 @@ class UIConnection extends EventEmitter<ExtendedUIEventMap> {
 	}
 
 	/**
-	 * Sends the commands to the Stream Deck, once the connection has been established and the UI is registered.
+	 * Sends the commands to the Stream Deck, once the connection has been established and registered.
 	 * @param command Command being sent.
 	 * @returns `Promise` resolved when the command is sent to Stream Deck.
 	 */
@@ -71,8 +71,8 @@ class UIConnection extends EventEmitter<ExtendedUIEventMap> {
 	}
 
 	/**
-	 * Attempts to emit the {@link ev} that was received from the {@link UIConnection.connection}.
-	 * @param ev Event message data received from the Stream Deck.
+	 * Attempts to emit the {@link ev} that was received from the {@link Connection.connection}.
+	 * @param ev Event message data received from Stream Deck.
 	 */
 	private tryEmit(ev: MessageEvent<string>): void {
 		const message = JSON.parse(ev.data);
@@ -112,4 +112,4 @@ type ExtendedUIEventMap = UIEventMap & {
 	connected: [info: RegistrationInfo, actionInfo: ActionInfo];
 };
 
-export const connection = new UIConnection();
+export const connection = new Connection();
