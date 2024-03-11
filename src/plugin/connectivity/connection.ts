@@ -1,10 +1,10 @@
 import WebSocket from "ws";
-import { EventEmitter } from "../common/event-emitter";
+import { EventEmitter } from "../../common/event-emitter";
 
-import { PromiseCompletionSource } from "../common/promises";
+import { PromiseCompletionSource } from "../../common/promises";
 import { Logger } from "../logging";
 
-import type { Command, PluginEventMap } from "../../api";
+import type { PluginCommand, PluginEventMap } from "../../api";
 import { Version } from "../common/version";
 import { RegistrationParameters } from "./registration-parameters";
 
@@ -96,11 +96,11 @@ class PluginConnection extends EventEmitter<PluginEventMap> {
 	}
 
 	/**
-	 * Sends the commands to the Stream Deck, once the connection has been established and the plugin registered.
+	 * Sends the commands to the Stream Deck, once the connection has been established and the plugin is registered.
 	 * @param command Command being sent.
 	 * @returns `Promise` resolved when the command is sent to Stream Deck.
 	 */
-	public async send(command: Command): Promise<void> {
+	public async send(command: PluginCommand): Promise<void> {
 		const connection = await this.connection.promise;
 		const message = JSON.stringify(command);
 

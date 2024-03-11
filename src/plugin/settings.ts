@@ -1,8 +1,9 @@
-import type { DidReceiveGlobalSettings, DidReceiveSettings, PayloadObject } from "../../api";
-import { Action } from "../actions/action";
+import type { DidReceiveGlobalSettings, DidReceiveSettings, PayloadObject } from "../api";
 import type { IDisposable } from "../common/disposable";
-import type { StreamDeckConnection } from "../connectivity/connection";
-import { ActionEvent, DidReceiveGlobalSettingsEvent, DidReceiveSettingsEvent } from "../events";
+import { ActionEvent } from "../common/events";
+import { Action } from "./actions/action";
+import type { StreamDeckConnection } from "./connectivity/connection";
+import { DidReceiveGlobalSettingsEvent, DidReceiveSettingsEvent } from "./events";
 
 /**
  * Provides management of settings associated with the Stream Deck plugin.
@@ -47,7 +48,7 @@ export class SettingsClient {
 	 */
 	public onDidReceiveSettings<T extends PayloadObject<T> = object>(listener: (ev: DidReceiveSettingsEvent<T>) => void): IDisposable {
 		return this.connection.disposableOn("didReceiveSettings", (ev: DidReceiveSettings<T>) =>
-			listener(new ActionEvent<DidReceiveSettings<T>>(new Action<T>(this.connection, ev), ev))
+			listener(new ActionEvent<DidReceiveSettings<T>, Action<T>>(new Action<T>(this.connection, ev), ev))
 		);
 	}
 

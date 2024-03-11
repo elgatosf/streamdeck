@@ -181,9 +181,9 @@ export const propertyInspectorDidDisappear: events.PropertyInspectorDidDisappear
 };
 
 /**
- * Mocked {@link events.SendToPlugin} message.
+ * Mocked {@link events.DidReceivePropertyInspectorMessage} message.
  */
-export const sendToPlugin: events.SendToPlugin<Settings> = {
+export const didReceivePropertyInspectorMessage: events.DidReceivePropertyInspectorMessage<Settings> = {
 	action,
 	context,
 	event: "sendToPlugin",

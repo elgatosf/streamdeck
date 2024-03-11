@@ -1,0 +1,21 @@
+{
+	"compilerOptions": {
+		"customConditions": [
+			"browser"
+		],
+		"esModuleInterop": true,
+		"forceConsistentCasingInFileNames": true,
+		"lib": [
+			"dom",
+			"es2022"
+		],
+		"module": "es2022",
+		"moduleResolution": "Bundler",
+		"skipLibCheck": true,
+		"strict": true,
+		"target": "es2022",
+	},
+	"include": [
+		"./"
+	]
+}

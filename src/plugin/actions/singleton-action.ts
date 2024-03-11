@@ -3,12 +3,12 @@ import type {
 	DialDownEvent,
 	DialRotateEvent,
 	DialUpEvent,
+	DidReceivePropertyInspectorMessageEvent,
 	DidReceiveSettingsEvent,
 	KeyDownEvent,
 	KeyUpEvent,
 	PropertyInspectorDidAppearEvent,
 	PropertyInspectorDidDisappearEvent,
-	SendToPluginEvent,
 	TitleParametersDidChangeEvent,
 	TouchTapEvent,
 	WillAppearEvent,
@@ -51,6 +51,12 @@ export class SingletonAction<T extends PayloadObject<T> = object> {
 	public onDialUp?(ev: DialUpEvent<T>): Promise<void> | void;
 
 	/**
+	 * Occurs when a message was sent to the plugin _from_ the property inspector. The plugin can also send messages _to_ the property inspector using {@link Action.sendToPropertyInspector}.
+	 * @param listener Function to be invoked when the event occurs.
+	 */
+	public onDidReceivePropertyInspectorMessage?(ev: DidReceivePropertyInspectorMessageEvent<object, T>): Promise<void> | void;
+
+	/**
 	 * Occurs when the settings associated with an action instance are requested using {@link Action.getSettings}, or when the the settings were updated by the property inspector.
 	 * @param listener Function to be invoked when the event occurs.
 	 */
@@ -83,12 +89,6 @@ export class SingletonAction<T extends PayloadObject<T> = object> {
 	 * @param listener Function to be invoked when the event occurs.
 	 */
 	public onPropertyInspectorDidDisappear?(ev: PropertyInspectorDidDisappearEvent<T>): Promise<void> | void;
-
-	/**
-	 * Occurs when a message was sent to the plugin _from_ the property inspector. The plugin can also send messages _to_ the property inspector using {@link Action.sendToPropertyInspector}.
-	 * @param listener Function to be invoked when the event occurs.
-	 */
-	public onSendToPlugin?(ev: SendToPluginEvent<object, T>): Promise<void> | void;
 
 	/**
 	 * Occurs when the user updates an action's title settings in the Stream Deck application. Also see {@link Action.setTitle}.
