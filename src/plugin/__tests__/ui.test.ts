@@ -1,100 +1,122 @@
-import { getConnection } from "../../../tests/__mocks__/connection";
-import * as mockEvents from "../../api/__mocks__/events";
+import type { DidReceivePropertyInspectorMessage, PropertyInspectorDidAppear, PropertyInspectorDidDisappear } from "../../api";
+import { Settings } from "../../api/__mocks__/events";
 import { Action } from "../actions/action";
-import { DidReceivePropertyInspectorMessageEvent, PropertyInspectorDidAppearEvent, PropertyInspectorDidDisappearEvent } from "../events";
-import { UIClient } from "../ui";
+import { connection } from "../connection";
+import { DidReceivePropertyInspectorMessageEvent, PropertyInspectorDidAppearEvent, type PropertyInspectorDidDisappearEvent } from "../events";
+import { onDidReceivePropertyInspectorMessage, onPropertyInspectorDidAppear, onPropertyInspectorDidDisappear } from "../ui";
 
-describe("UIClient", () => {
+jest.mock("../connection");
+
+describe("ui", () => {
 	/**
-	 * Asserts {@link UIClient.onPropertyInspectorDidAppear} invokes the listener when the connection emits the `propertyInspectorDidAppear` event.
+	 * Asserts {@link onPropertyInspectorDidAppear} is invoked when `propertyInspectorDidAppear` is emitted.
 	 */
-	it("Receives onPropertyInspectorDidAppear", () => {
-		// Arrange.
-		const { connection, emitMessage } = getConnection();
-		const client = new UIClient(connection);
-
+	it("receives onPropertyInspectorDidAppear", () => {
+		// Arrange
 		const listener = jest.fn();
-		const emit = () => emitMessage(mockEvents.propertyInspectorDidAppear);
+		const spyOnDisposableOn = jest.spyOn(connection, "disposableOn");
+		const ev = {
+			action: "com.elgato.test.one",
+			context: "context123",
+			device: "device123",
+			event: "propertyInspectorDidAppear"
+		} satisfies PropertyInspectorDidAppear;
 
-		// Act.
-		const result = client.onPropertyInspectorDidAppear(listener);
-		const { action, context, device } = emit();
+		// Act (emit).
+		const disposable = onPropertyInspectorDidAppear(listener);
+		connection.emit("propertyInspectorDidAppear", ev);
 
-		// Assert.
+		// Assert (emit).
+		expect(spyOnDisposableOn).toHaveBeenCalledTimes(1);
+		expect(spyOnDisposableOn).toHaveBeenCalledWith(ev.event, expect.any(Function));
 		expect(listener).toHaveBeenCalledTimes(1);
-		expect(listener).toHaveBeenCalledWith<[PropertyInspectorDidAppearEvent<never>]>({
-			action: new Action(connection, { action, context }),
-			deviceId: device,
+		expect(listener).toHaveBeenCalledWith<[PropertyInspectorDidAppearEvent<Settings>]>({
+			action: new Action(ev),
+			deviceId: ev.device,
 			type: "propertyInspectorDidAppear"
 		});
 
 		// Act (dispose).
-		result.dispose();
-		emit();
+		disposable.dispose();
+		connection.emit(ev.event, ev as any);
 
-		// Assert (dispose).
+		// Assert(dispose).
 		expect(listener).toHaveBeenCalledTimes(1);
 	});
 
 	/**
-	 * Asserts {@link UIClient.onPropertyInspectorDidDisappear} invokes the listener when the connection emits the `propertyInspectorDidDisappear` event.
+	 * Asserts {@link onPropertyInspectorDidDisappear} is invoked when `propertyInspectorDidDisappear` is emitted.
 	 */
-	it("Receives onPropertyInspectorDidDisappear", () => {
-		// Arrange.
-		const { connection, emitMessage } = getConnection();
-		const client = new UIClient(connection);
-
+	it("receives onPropertyInspectorDidDisappear", () => {
+		// Arrange
 		const listener = jest.fn();
-		const emit = () => emitMessage(mockEvents.propertyInspectorDidDisappear);
+		const spyOnDisposableOn = jest.spyOn(connection, "disposableOn");
+		const ev = {
+			action: "com.elgato.test.one",
+			context: "context123",
+			device: "device123",
+			event: "propertyInspectorDidDisappear"
+		} satisfies PropertyInspectorDidDisappear;
 
-		// Act.
-		const result = client.onPropertyInspectorDidDisappear(listener);
-		const { action, context, device } = emit();
+		// Act (emit).
+		const disposable = onPropertyInspectorDidDisappear(listener);
+		connection.emit("propertyInspectorDidDisappear", ev);
 
-		// Assert.
+		// Assert (emit).
+		expect(spyOnDisposableOn).toHaveBeenCalledTimes(1);
+		expect(spyOnDisposableOn).toHaveBeenCalledWith(ev.event, expect.any(Function));
 		expect(listener).toHaveBeenCalledTimes(1);
-		expect(listener).toHaveBeenCalledWith<[PropertyInspectorDidDisappearEvent<never>]>({
-			action: new Action(connection, { action, context }),
-			deviceId: device,
+		expect(listener).toHaveBeenCalledWith<[PropertyInspectorDidDisappearEvent<Settings>]>({
+			action: new Action(ev),
+			deviceId: ev.device,
 			type: "propertyInspectorDidDisappear"
 		});
 
 		// Act (dispose).
-		result.dispose();
-		emit();
+		disposable.dispose();
+		connection.emit(ev.event, ev as any);
 
-		// Assert (dispose).
+		// Assert(dispose).
 		expect(listener).toHaveBeenCalledTimes(1);
 	});
 
 	/**
-	 * Asserts {@link UIClient.onDidReceivePropertyInspectorMessage} invokes the listener when the connection emits the `sendToPlugin` event.
+	 * Asserts {@link onDidReceivePropertyInspectorMessage} is invoked when `sendToPlugin` is emitted.
 	 */
-	it("Receives onSendToPlugin", () => {
-		// Arrange.
-		const { connection, emitMessage } = getConnection();
-		const client = new UIClient(connection);
-
+	it("receives onDidReceivePropertyInspectorMessage", () => {
+		// Arrange
 		const listener = jest.fn();
-		const emit = () => emitMessage(mockEvents.didReceivePropertyInspectorMessage);
+		const spyOnDisposableOn = jest.spyOn(connection, "disposableOn");
+		const ev = {
+			action: "com.elgato.test.one",
+			context: "context123",
+			event: "sendToPlugin",
+			payload: {
+				name: "Hello world"
+			}
+		} satisfies DidReceivePropertyInspectorMessage<Settings>;
 
-		// Act.
-		const result = client.onDidReceivePropertyInspectorMessage(listener);
-		const { action, context, payload } = emit();
+		// Act (emit).
+		const disposable = onDidReceivePropertyInspectorMessage(listener);
+		connection.emit("sendToPlugin", ev);
 
-		// Assert.
+		// Assert (emit).
+		expect(spyOnDisposableOn).toHaveBeenCalledTimes(1);
+		expect(spyOnDisposableOn).toHaveBeenCalledWith(ev.event, expect.any(Function));
 		expect(listener).toHaveBeenCalledTimes(1);
-		expect(listener).toHaveBeenCalledWith<[DidReceivePropertyInspectorMessageEvent<mockEvents.Settings, never>]>({
-			action: new Action(connection, { action, context }),
-			payload,
+		expect(listener).toHaveBeenCalledWith<[DidReceivePropertyInspectorMessageEvent<Settings, Settings>]>({
+			action: new Action(ev),
+			payload: {
+				name: "Hello world"
+			},
 			type: "sendToPlugin"
 		});
 
 		// Act (dispose).
-		result.dispose();
-		emit();
+		disposable.dispose();
+		connection.emit(ev.event, ev as any);
 
-		// Assert (dispose).
+		// Assert(dispose).
 		expect(listener).toHaveBeenCalledTimes(1);
 	});
 });
