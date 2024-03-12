@@ -1,6 +1,6 @@
 import type { ActionIdentifier, DidReceiveSettings, FeedbackPayload, PayloadObject, SetImage, SetTitle, SetTriggerDescription, State } from "../../api";
-import type { StreamDeckConnection } from "../connectivity/connection";
-import type { UIClient } from "../ui";
+import { connection } from "../connection";
+import type { onDidReceivePropertyInspectorMessage } from "../ui";
 import type { SingletonAction } from "./singleton-action";
 
 /**
@@ -20,13 +20,9 @@ export class Action<T extends PayloadObject<T> = object> {
 
 	/**
 	 * Initializes a new instance of the {@see Action} class.
-	 * @param connection Connection with Stream Deck.
 	 * @param source Source of the action.
 	 */
-	constructor(
-		private readonly connection: StreamDeckConnection,
-		source: ActionIdentifier
-	) {
+	constructor(source: ActionIdentifier) {
 		this.id = source.context;
 		this.manifestId = source.action;
 	}
@@ -41,12 +37,12 @@ export class Action<T extends PayloadObject<T> = object> {
 			const callback = (ev: DidReceiveSettings<U>): void => {
 				if (ev.context == this.id) {
 					resolve(ev.payload.settings);
-					this.connection.removeListener("didReceiveSettings", callback);
+					connection.removeListener("didReceiveSettings", callback);
 				}
 			};
 
-			this.connection.on("didReceiveSettings", callback);
-			this.connection.send({
+			connection.on("didReceiveSettings", callback);
+			connection.send({
 				event: "getSettings",
 				context: this.id
 			});
@@ -55,13 +51,13 @@ export class Action<T extends PayloadObject<T> = object> {
 
 	/**
 	 * Sends the {@link payload} to the current property inspector associated with this action instance. The plugin can also receive information from the property inspector via
-	 * {@link UIClient.onDidReceivePropertyInspectorMessage} and {@link SingletonAction.onDidReceivePropertyInspectorMessage} allowing for bi-directional communication.
+	 * {@link onDidReceivePropertyInspectorMessage} and {@link SingletonAction.onDidReceivePropertyInspectorMessage} allowing for bi-directional communication.
 	 * @template T The type of the payload received from the property inspector.
 	 * @param payload Payload to send to the property inspector.
 	 * @returns `Promise` resolved when {@link payload} has been sent to the property inspector.
 	 */
 	public sendToPropertyInspector<T extends PayloadObject<T> = object>(payload: T): Promise<void> {
-		return this.connection.send({
+		return connection.send({
 			event: "sendToPropertyInspector",
 			context: this.id,
 			payload
@@ -121,7 +117,7 @@ export class Action<T extends PayloadObject<T> = object> {
 	 * @returns `Promise` resolved when the request to set the {@link feedback} has been sent to Stream Deck.
 	 */
 	public setFeedback(feedback: FeedbackPayload): Promise<void> {
-		return this.connection.send({
+		return connection.send({
 			event: "setFeedback",
 			context: this.id,
 			payload: feedback
@@ -135,7 +131,7 @@ export class Action<T extends PayloadObject<T> = object> {
 	 * @returns `Promise` resolved when the new layout has been sent to Stream Deck.
 	 */
 	public setFeedbackLayout(layout: string): Promise<void> {
-		return this.connection.send({
+		return connection.send({
 			event: "setFeedbackLayout",
 			context: this.id,
 			payload: {
@@ -154,7 +150,7 @@ export class Action<T extends PayloadObject<T> = object> {
 	 * @returns `Promise` resolved when the request to set the {@link image} has been sent to Stream Deck.
 	 */
 	public setImage(image?: string, options?: ImageOptions): Promise<void> {
-		return this.connection.send({
+		return connection.send({
 			event: "setImage",
 			context: this.id,
 			payload: {
@@ -170,7 +166,7 @@ export class Action<T extends PayloadObject<T> = object> {
 	 * @returns `Promise` resolved when the {@link settings} are sent to Stream Deck.
 	 */
 	public setSettings(settings: T): Promise<void> {
-		return this.connection.send({
+		return connection.send({
 			event: "setSettings",
 			context: this.id,
 			payload: settings
@@ -183,7 +179,7 @@ export class Action<T extends PayloadObject<T> = object> {
 	 * @returns `Promise` resolved when the request to set the state of an action instance has been sent to Stream Deck.
 	 */
 	public setState(state: State): Promise<void> {
-		return this.connection.send({
+		return connection.send({
 			event: "setState",
 			context: this.id,
 			payload: {
@@ -201,7 +197,7 @@ export class Action<T extends PayloadObject<T> = object> {
 	 * @returns `Promise` resolved when the request to set the {@link title} has been sent to Stream Deck.
 	 */
 	public setTitle(title?: string, options?: TitleOptions): Promise<void> {
-		return this.connection.send({
+		return connection.send({
 			event: "setTitle",
 			context: this.id,
 			payload: {
@@ -221,7 +217,7 @@ export class Action<T extends PayloadObject<T> = object> {
 	 * @returns `Promise` resolved when the request to set the {@link descriptions} has been sent to Stream Deck.
 	 */
 	public setTriggerDescription(descriptions?: TriggerDescriptionOptions): Promise<void> {
-		return this.connection.send({
+		return connection.send({
 			event: "setTriggerDescription",
 			context: this.id,
 			payload: descriptions || {}
@@ -233,7 +229,7 @@ export class Action<T extends PayloadObject<T> = object> {
 	 * @returns `Promise` resolved when the request to show an alert has been sent to Stream Deck.
 	 */
 	public showAlert(): Promise<void> {
-		return this.connection.send({
+		return connection.send({
 			event: "showAlert",
 			context: this.id
 		});
@@ -245,7 +241,7 @@ export class Action<T extends PayloadObject<T> = object> {
 	 * @returns `Promise` resolved when the request to show an "OK" has been sent to Stream Deck.
 	 */
 	public showOk(): Promise<void> {
-		return this.connection.send({
+		return connection.send({
 			event: "showOk",
 			context: this.id
 		});

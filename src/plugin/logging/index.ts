@@ -8,24 +8,23 @@ import { Logger } from "./logger";
 
 export { LogLevel } from "./log-level";
 export { Logger } from "./logger";
+export { logger };
 
 /**
  * Create the default {@link Logger} for the current plugin based on its environment.
  * @returns The default {@link Logger}.
  */
-export function createLogger(): Logger {
-	const target = new FileTarget({
-		dest: path.join(cwd(), "logs"),
-		fileName: getPluginUUID(),
-		maxFileCount: 10,
-		maxSize: 50 * 1024 * 1024
-	});
 
-	const logger = new Logger({
-		level: isDebugMode() ? LogLevel.DEBUG : LogLevel.INFO,
-		target
-	});
+const target = new FileTarget({
+	dest: path.join(cwd(), "logs"),
+	fileName: getPluginUUID(),
+	maxFileCount: 10,
+	maxSize: 50 * 1024 * 1024
+});
 
-	process.once("uncaughtException", (err) => logger.error("Process encountered uncaught exception", err));
-	return logger;
-}
+const logger = new Logger({
+	level: isDebugMode() ? LogLevel.DEBUG : LogLevel.INFO,
+	target
+});
+
+process.once("uncaughtException", (err) => logger.error("Process encountered uncaught exception", err));

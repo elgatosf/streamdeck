@@ -1,4 +1,5 @@
-import { StreamDeck } from "./stream-deck";
+import type { Manifest, RegistrationInfo } from "../api";
+import { getManifest } from "./manifest";
 
 export {
 	Bar,
@@ -26,5 +27,85 @@ export { SingletonAction } from "./actions/singleton-action";
 export * from "./events";
 export { LogLevel } from "./logging";
 
-export const streamDeck = new StreamDeck();
+import * as actions from "./actions";
+import { connection } from "./connection";
+import { DeviceCollection } from "./devices";
+import { I18nProvider } from "./i18n";
+import { logger } from "./logging";
+import * as profiles from "./profiles";
+import * as settings from "./settings";
+import * as system from "./system";
+import * as ui from "./ui";
+
+let i18n: I18nProvider | undefined;
+
+export const streamDeck = {
+	/**
+	 * Namespace for event listeners and functionality relating to Stream Deck actions.
+	 */
+	actions,
+
+	/**
+	 * Namespace for interacting with Stream Deck devices.
+	 */
+	devices: new DeviceCollection(),
+
+	/**
+	 * Namespace for internalization, including translations, see {@link https://docs.elgato.com/sdk/plugins/localization}.
+	 * @returns Internalization provider.
+	 */
+	get i18n(): I18nProvider {
+		return (i18n ??= new I18nProvider(this.info.application.language, this.manifest, this.logger));
+	},
+
+	/**
+	 * Registration and application information provided by Stream Deck during initialization.
+	 * @returns Registration information.
+	 */
+	get info(): Omit<RegistrationInfo, "devices"> {
+		return connection.registrationParameters.info;
+	},
+
+	/**
+	 * Logger responsible for capturing log messages.
+	 */
+	logger,
+
+	/**
+	 * Manifest associated with the plugin, as defined within the `manifest.json` file.
+	 * @returns The manifest.
+	 */
+	get manifest(): Manifest {
+		return getManifest();
+	},
+
+	/**
+	 * Namespace for Stream Deck profiles.
+	 */
+	profiles,
+
+	/**
+	 * Namespace for persisting settings within Stream Deck.
+	 */
+	settings,
+
+	/**
+	 * Namespace for interacting with, and receiving events from, the system the plugin is running on.
+	 */
+	system,
+
+	/**
+	 * Namespace for interacting with UI (property inspector) associated with the plugin.
+	 */
+	ui,
+
+	/**
+	 * Connects the plugin to the Stream Deck.
+	 * @returns A promise resolved when a connection has been established.
+	 */
+	connect(): Promise<void> {
+		return connection.connect();
+	}
+};
+
 export default streamDeck;
