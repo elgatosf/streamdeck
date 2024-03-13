@@ -154,8 +154,7 @@ export function registerAction<TAction extends SingletonAction<TSettings>, TSett
 	}
 
 	if (!manifest.Actions.some((a) => a.UUID === action.manifestId)) {
-		//this.logger.warn(`Failed to route action: manifestId (UUID) ${action.manifestId} was not found in the manifest.`);
-		return;
+		throw new Error(`The action's manifestId was not found within the manifest: ${action.manifestId}`);
 	}
 
 	// Routes an event to the action, when the applicable listener is defined on the action.
