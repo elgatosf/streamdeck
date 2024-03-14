@@ -43,8 +43,6 @@ describe("I18nProvider", () => {
 		jest.spyOn(process, "cwd").mockReturnValue(mockedCwd);
 	});
 
-	afterEach(() => jest.restoreAllMocks());
-
 	/**
 	 * Asserts {@link I18nProvider} uses a scoped {@link Logger}.
 	 */
