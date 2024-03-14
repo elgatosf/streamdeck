@@ -6,7 +6,7 @@ import { DeviceDidConnectEvent, DeviceDidDisconnectEvent, DeviceEvent } from "./
 /**
  * Collection of tracked Stream Deck devices.
  */
-export class DeviceCollection {
+class DeviceCollection {
 	/**
 	 * Collection of tracked Stream Deck devices.
 	 */
@@ -112,6 +112,16 @@ export class DeviceCollection {
 		);
 	}
 }
+
+/**
+ * Collection of tracked Stream Deck devices.
+ */
+export const devices = new DeviceCollection();
+
+/**
+ * Collection of tracked Stream Deck devices.
+ */
+export { type DeviceCollection };
 
 /**
  * Provides information about a device.
