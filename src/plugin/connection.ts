@@ -4,6 +4,7 @@ import { RegistrationParameter } from "../api";
 import { EventEmitter } from "../common/event-emitter";
 import { PromiseCompletionSource } from "../common/promises";
 import { Version } from "./common/version";
+import { logger } from "./logging";
 
 /**
  * Provides a connection between the plugin and the Stream Deck allowing for messages to be sent and received.
@@ -55,8 +56,8 @@ class Connection extends EventEmitter<ExtendedEventMap> {
 			this.canConnect = false;
 
 			const webSocket = new WebSocket(`ws://127.0.0.1:${this.registrationParameters.port}`);
-			webSocket.on("message", (data) => this.tryEmit(data));
-			webSocket.once("open", () => {
+			webSocket.onmessage = (ev: WebSocket.MessageEvent): void => this.tryEmit(ev);
+			webSocket.onopen = (): void => {
 				webSocket.send(
 					JSON.stringify({
 						event: this.registrationParameters.registerEvent,
@@ -67,7 +68,7 @@ class Connection extends EventEmitter<ExtendedEventMap> {
 				// Web socket established a connection with the Stream Deck and the plugin was registered.
 				this.connection.setResult(webSocket);
 				this.emit("connected", this.registrationParameters.info);
-			});
+			};
 		}
 
 		await this.connection.promise;
@@ -97,24 +98,30 @@ class Connection extends EventEmitter<ExtendedEventMap> {
 			registerEvent: undefined
 		};
 
+		const scopedLogger = logger.createScope("RegistrationParameters");
+
 		for (let i = 0; i < process.argv.length - 1; i++) {
 			const param = process.argv[i];
 			const value = process.argv[++i];
 
 			switch (param) {
 				case RegistrationParameter.Port:
+					scopedLogger.debug(`port=${value}`);
 					params.port = value;
 					break;
 
 				case RegistrationParameter.PluginUUID:
+					scopedLogger.debug(`pluginUUID=${value}`);
 					params.pluginUUID = value;
 					break;
 
 				case RegistrationParameter.RegisterEvent:
+					scopedLogger.debug(`registerEvent=${value}`);
 					params.registerEvent = value;
 					break;
 
 				case RegistrationParameter.Info:
+					scopedLogger.debug(`info=${value}`);
 					params.info = JSON.parse(value);
 					break;
 
@@ -147,8 +154,8 @@ class Connection extends EventEmitter<ExtendedEventMap> {
 	 * Attempts to emit the {@link ev} that was received from the {@link Connection.connection}.
 	 * @param ev Event message data received from Stream Deck.
 	 */
-	private tryEmit(ev: WebSocket.RawData): void {
-		const message = JSON.parse(ev.toString());
+	private tryEmit(ev: WebSocket.MessageEvent): void {
+		const message = JSON.parse(ev.data.toString());
 		if (message.event) {
 			this.emit(message.event, message);
 		}
