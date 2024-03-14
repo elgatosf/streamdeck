@@ -32,7 +32,6 @@ class Connection extends EventEmitter<ExtendedUIEventMap> {
 	 */
 	public async connect(port: string, uuid: string, event: string, info: RegistrationInfo, actionInfo: ActionInfo): Promise<void> {
 		if (this.canConnect) {
-			console.log(`uuid: ${uuid}`);
 			this.canConnect = false;
 
 			const webSocket = new WebSocket(`ws://127.0.0.1:${port}`);
