@@ -36,7 +36,7 @@ describe("connection", () => {
 	});
 
 	describe("WebSocket", () => {
-		let server!: WebSocketServer;
+		let server: WebSocketServer;
 
 		// Setup the mock server.
 		beforeEach(async () => {

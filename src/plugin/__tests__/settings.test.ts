@@ -5,8 +5,9 @@ import { connection } from "../connection";
 import type { DidReceiveGlobalSettingsEvent, DidReceiveSettingsEvent } from "../events";
 import { getGlobalSettings, onDidReceiveGlobalSettings, onDidReceiveSettings, setGlobalSettings } from "../settings";
 
-jest.mock("../manifest");
 jest.mock("../connection");
+jest.mock("../logging");
+jest.mock("../manifest");
 
 describe("settings", () => {
 	describe("sending", () => {

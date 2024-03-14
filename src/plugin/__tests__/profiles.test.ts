@@ -4,6 +4,7 @@ import { connection } from "../connection";
 import { switchToProfile } from "../profiles";
 
 jest.mock("../connection");
+jest.mock("../logging");
 jest.mock("../manifest");
 
 describe("profiles", () => {

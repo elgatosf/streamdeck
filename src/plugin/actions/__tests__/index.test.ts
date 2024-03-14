@@ -49,8 +49,9 @@ import type { onDidReceiveSettings } from "../../settings";
 import type { onDidReceivePropertyInspectorMessage, onPropertyInspectorDidAppear, onPropertyInspectorDidDisappear } from "../../ui";
 import { Action } from "../action";
 
-jest.mock("../../manifest");
 jest.mock("../../connection");
+jest.mock("../../logging");
+jest.mock("../../manifest");
 
 describe("actions", () => {
 	/**

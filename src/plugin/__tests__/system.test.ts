@@ -5,6 +5,7 @@ import { ApplicationDidLaunchEvent, ApplicationDidTerminateEvent, DidReceiveDeep
 import { onApplicationDidLaunch, onApplicationDidTerminate, onDidReceiveDeepLink, onSystemDidWakeUp, openUrl } from "../system";
 
 jest.mock("../connection");
+jest.mock("../logging");
 jest.mock("../manifest");
 
 describe("system", () => {

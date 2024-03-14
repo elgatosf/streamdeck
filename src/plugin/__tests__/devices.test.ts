@@ -4,6 +4,7 @@ import { type connection as Connection } from "../connection";
 import { type Device, type DeviceCollection } from "../devices";
 
 jest.mock("../connection");
+jest.mock("../logging");
 jest.mock("../manifest");
 
 describe("devices", () => {
