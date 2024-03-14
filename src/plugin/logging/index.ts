@@ -8,13 +8,8 @@ import { Logger } from "./logger";
 
 export { LogLevel } from "./log-level";
 export { Logger } from "./logger";
-export { logger };
 
-/**
- * Create the default {@link Logger} for the current plugin based on its environment.
- * @returns The default {@link Logger}.
- */
-
+// Log all entires to a log file.
 const target = new FileTarget({
 	dest: path.join(cwd(), "logs"),
 	fileName: getPluginUUID(),
@@ -22,7 +17,11 @@ const target = new FileTarget({
 	maxSize: 50 * 1024 * 1024
 });
 
-const logger = new Logger({
+/**
+ * The default {@link Logger} for the current plugin based on its environment.
+ * @returns The default {@link Logger}.
+ */
+export const logger = new Logger({
 	level: isDebugMode() ? LogLevel.DEBUG : LogLevel.INFO,
 	target
 });
