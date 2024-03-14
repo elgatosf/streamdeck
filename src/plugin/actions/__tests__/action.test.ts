@@ -17,6 +17,7 @@ import { Settings } from "../../../api/__mocks__/events";
 import { connection } from "../../connection";
 import { Action } from "../action";
 
+jest.mock("../../logging");
 jest.mock("../../manifest");
 jest.mock("../../connection");
 

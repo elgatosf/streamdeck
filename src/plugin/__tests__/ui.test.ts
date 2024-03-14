@@ -6,6 +6,8 @@ import { DidReceivePropertyInspectorMessageEvent, PropertyInspectorDidAppearEven
 import { onDidReceivePropertyInspectorMessage, onPropertyInspectorDidAppear, onPropertyInspectorDidDisappear } from "../ui";
 
 jest.mock("../connection");
+jest.mock("../logging");
+jest.mock("../manifest");
 
 describe("ui", () => {
 	/**
