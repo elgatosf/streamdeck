@@ -1,6 +1,20 @@
-import type { ActionInfo, RegistrationInfo, UICommand, UIEventMap } from "../api";
+import type { ActionInfo, ConnectElgatoStreamDeckSocketFn, RegistrationInfo, UICommand, UIEventMap } from "../api";
 import { EventEmitter } from "../common/event-emitter";
 import { PromiseCompletionSource } from "../common/promises";
+
+declare global {
+	interface Window {
+		/**
+		 * Connects to the Stream Deck, enabling the UI to interact with the plugin, and access the Stream Deck API.
+		 * @param port Port to be used when connecting to Stream Deck.
+		 * @param uuid Identifies the UI; this must be provided when establishing the connection with Stream Deck.
+		 * @param event Name of the event that identifies the registration procedure; this must be provided when establishing the connection with Stream Deck.
+		 * @param info Information about the Stream Deck application and operating system.
+		 * @param actionInfo Information about the action the UI is associated with.
+		 */
+		connectElgatoStreamDeckSocket: ConnectElgatoStreamDeckSocketFn;
+	}
+}
 
 /**
  * Connection used by the UI to communicate with the plugin, and Stream Deck.
@@ -22,31 +36,14 @@ class Connection extends EventEmitter<ExtendedUIEventMap> {
 	private readonly info = new PromiseCompletionSource<ConnectionInfo>();
 
 	/**
-	 * Establishes a connection with Stream Deck, allowing for the UI to send and receive messages.
-	 * @param port Port to be used when connecting to Stream Deck.
-	 * @param uuid Identifies the UI; this must be provided when establishing the connection with Stream Deck.
-	 * @param event Name of the event that identifies the registration procedure; this must be provided when establishing the connection with Stream Deck.
-	 * @param info Information about the Stream Deck application, the plugin, the user's operating system, user's Stream Deck devices, etc.
-	 * @param actionInfo Information for the action associated with the UI.
-	 * @returns A promise that is resolved when a connection has been established.
+	 * Initializes a new instance of the {@link Connection} class.
 	 */
-	public async connect(port: string, uuid: string, event: string, info: RegistrationInfo, actionInfo: ActionInfo): Promise<void> {
-		if (this.canConnect) {
-			this.canConnect = false;
+	constructor() {
+		super();
 
-			const webSocket = new WebSocket(`ws://127.0.0.1:${port}`);
-			webSocket.onmessage = (ev: MessageEvent<string>): void => this.tryEmit(ev);
-			webSocket.onopen = (): void => {
-				webSocket.send(JSON.stringify({ event, uuid }));
-				this.connection.setResult(webSocket);
-
-				// As the emitter does not awaiter listeners, we are safe from dead-locking against the listener calling `getInfo()`.
-				this.emit("connected", info, actionInfo);
-				this.info.setResult({ uuid, info, actionInfo });
-			};
-		}
-
-		await this.connection.promise;
+		window.connectElgatoStreamDeckSocket = (port: string, uuid: string, event: string, info: string, actionInfo: string): Promise<void> => {
+			return this.connect(port, uuid, event, JSON.parse(info), JSON.parse(actionInfo));
+		};
 	}
 
 	/**
@@ -67,6 +64,34 @@ class Connection extends EventEmitter<ExtendedUIEventMap> {
 		const message = JSON.stringify(command);
 
 		connection.send(message);
+	}
+
+	/**
+	 * Establishes a connection with Stream Deck, allowing for the UI to send and receive messages.
+	 * @param port Port to be used when connecting to Stream Deck.
+	 * @param uuid Identifies the UI; this must be provided when establishing the connection with Stream Deck.
+	 * @param event Name of the event that identifies the registration procedure; this must be provided when establishing the connection with Stream Deck.
+	 * @param info Information about the Stream Deck application, the plugin, the user's operating system, user's Stream Deck devices, etc.
+	 * @param actionInfo Information for the action associated with the UI.
+	 * @returns A promise that is resolved when a connection has been established.
+	 */
+	private async connect(port: string, uuid: string, event: string, info: RegistrationInfo, actionInfo: ActionInfo): Promise<void> {
+		if (this.canConnect) {
+			this.canConnect = false;
+
+			const webSocket = new WebSocket(`ws://127.0.0.1:${port}`);
+			webSocket.onmessage = (ev: MessageEvent<string>): void => this.tryEmit(ev);
+			webSocket.onopen = (): void => {
+				webSocket.send(JSON.stringify({ event, uuid }));
+				this.connection.setResult(webSocket);
+
+				// As the emitter does not awaiter listeners, we are safe from dead-locking against the listener calling `getInfo()`.
+				this.emit("connected", info, actionInfo);
+				this.info.setResult({ uuid, info, actionInfo });
+			};
+		}
+
+		await this.connection.promise;
 	}
 
 	/**

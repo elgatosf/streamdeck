@@ -11,31 +11,6 @@ import * as system from "../system";
 
 jest.mock("../connection");
 
-describe("connectElgatoStreamDeckSocket", () => {
-	/**
-	 * Asserts `connectElgatoStreamDeckSocket` is set on the `window`.
-	 */
-	it("should exist on the window", () => {
-		// Arrange, act, assert.
-		expect(window.connectElgatoStreamDeckSocket).not.toBeUndefined();
-	});
-
-	/**
-	 * Asserts `connectElgatoStreamDeckSocket` sends a connection request to the underlying connection.
-	 */
-	it("should establish the connection", async () => {
-		// Arrange.
-		const spyOnConnect = jest.spyOn(connection, "connect");
-
-		// Act.
-		await window.connectElgatoStreamDeckSocket("123", "abc123", "registerEvent", JSON.stringify(registrationInfo), JSON.stringify(actionInfo));
-
-		// Assert.
-		expect(spyOnConnect).toHaveBeenCalledTimes(1);
-		expect(spyOnConnect).toHaveBeenCalledWith<Parameters<(typeof connection)["connect"]>>("123", "abc123", "registerEvent", registrationInfo, actionInfo);
-	});
-});
-
 describe("streamDeck", () => {
 	/**
 	 * Asserts the default export contains the required namespaces.

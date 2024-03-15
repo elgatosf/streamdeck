@@ -25,6 +25,14 @@ describe("connection", () => {
 	afterEach(() => WebSocketServer.clean());
 
 	/**
+	 * Asserts `connectElgatoStreamDeckSocket` is set on the `window`.
+	 */
+	it("connectElgatoStreamDeckSocket should exist on the window", () => {
+		// Arrange, act, assert.
+		expect(window.connectElgatoStreamDeckSocket).not.toBeUndefined();
+	});
+
+	/**
 	 * Asserts the connection registers with the web sockets using the provided event and identifier.
 	 */
 	it("registers", async () => {
@@ -33,7 +41,7 @@ describe("connection", () => {
 		const uuid = "123_registers";
 
 		// Act.
-		await connection.connect(port, uuid, event, registrationInfo, actionInfo);
+		await window.connectElgatoStreamDeckSocket(port, uuid, event, JSON.stringify(registrationInfo), JSON.stringify(actionInfo));
 
 		// Assert
 		await expect(server).toReceiveMessage({ event, uuid });
@@ -49,7 +57,7 @@ describe("connection", () => {
 
 		// Act.
 		connection.on("connected", connectedSpy);
-		await connection.connect(port, uuid, "register", registrationInfo, actionInfo);
+		await window.connectElgatoStreamDeckSocket(port, uuid, "register", JSON.stringify(registrationInfo), JSON.stringify(actionInfo));
 
 		// Assert
 		await connection.getInfo();
@@ -63,14 +71,14 @@ describe("connection", () => {
 	it("resolve info", async () => {
 		// Arrange.
 		const uuid = "123-resolve-info";
-		await connection.connect(port, uuid, "register", registrationInfo, actionInfo);
+		await window.connectElgatoStreamDeckSocket(port, uuid, "register", JSON.stringify(registrationInfo), JSON.stringify(actionInfo));
 
 		// Act.
 		const info = await connection.getInfo();
 
 		// Assert
-		expect(info.actionInfo).toBe(actionInfo);
-		expect(info.info).toBe(registrationInfo);
+		expect(info.actionInfo).toEqual(actionInfo);
+		expect(info.info).toEqual(registrationInfo);
 		expect(info.uuid).toBe(uuid);
 	});
 
@@ -81,7 +89,7 @@ describe("connection", () => {
 		// Arrange.
 		const event = "register";
 		const uuid = "123-sends";
-		await connection.connect(port, uuid, event, registrationInfo, actionInfo);
+		await window.connectElgatoStreamDeckSocket(port, uuid, event, JSON.stringify(registrationInfo), JSON.stringify(actionInfo));
 
 		// Act.
 		await connection.send({
@@ -117,7 +125,7 @@ describe("connection", () => {
 		const listener = jest.fn();
 		connection.on("didReceiveGlobalSettings", listener);
 
-		await connection.connect(port, "123-propagate-messages", "register", registrationInfo, actionInfo);
+		await window.connectElgatoStreamDeckSocket(port, "123-propagate-messages", "register", JSON.stringify(registrationInfo), JSON.stringify(actionInfo));
 
 		// Act.
 		server.send({

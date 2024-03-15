@@ -1,3 +1,7 @@
+/**
+ * @jest-environment jsdom
+ */
+
 import type { OpenUrl } from "../../api";
 import { connection } from "../connection";
 import { openUrl } from "../system";

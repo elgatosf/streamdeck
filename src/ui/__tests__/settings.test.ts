@@ -1,3 +1,7 @@
+/**
+ * @jest-environment jsdom
+ */
+
 import type { DidReceiveGlobalSettingsEvent, DidReceiveSettingsEvent } from "..";
 import type { DidReceiveGlobalSettings, DidReceiveSettings, GetGlobalSettings, SetGlobalSettings, UIGetSettings, UISetSettings } from "../../api";
 import { actionInfo } from "../../api/registration/__mocks__";
