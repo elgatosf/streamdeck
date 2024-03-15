@@ -2,23 +2,23 @@ import type { Manifest, RegistrationInfo } from "../api";
 import { getManifest } from "./manifest";
 
 export {
-	Bar,
 	BarSubType,
-	Controller,
-	Coordinates,
-	DeviceInfo,
 	DeviceType,
-	FeedbackPayload,
-	GBar,
-	Language,
-	Manifest,
-	PayloadObject,
-	Pixmap,
-	RegistrationInfo,
-	Size,
-	State,
 	Target,
-	Text
+	type Bar,
+	type Controller,
+	type Coordinates,
+	type DeviceInfo,
+	type FeedbackPayload,
+	type GBar,
+	type Language,
+	type Manifest,
+	type PayloadObject,
+	type Pixmap,
+	type RegistrationInfo,
+	type Size,
+	type State,
+	type Text
 } from "../api";
 export { EventEmitter, EventsOf } from "../common/event-emitter";
 export { Action, ImageOptions, TitleOptions, TriggerDescriptionOptions } from "./actions/action";
