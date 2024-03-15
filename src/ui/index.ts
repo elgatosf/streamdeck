@@ -5,7 +5,7 @@ import * as plugin from "./plugin";
 import * as settings from "./settings";
 import * as system from "./system";
 
-export { ActionInfo, ConnectElgatoStreamDeckSocketFn, PayloadObject, RegistrationInfo } from "../api";
+export { type ActionInfo, type ConnectElgatoStreamDeckSocketFn, type PayloadObject, type RegistrationInfo } from "../api";
 export * from "./events";
 
 declare global {

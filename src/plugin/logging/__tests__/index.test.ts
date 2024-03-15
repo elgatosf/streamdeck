@@ -101,4 +101,21 @@ describe("createLogger", () => {
 		expect(spyOnLogger).toHaveBeenCalledTimes(1);
 		expect(spyOnLogger).toHaveBeenCalledWith<[string, Error]>("Process encountered uncaught exception", err);
 	});
+
+	/**
+	 * Asserts the exports of "../logger".
+	 */
+	describe("exports", () => {
+		test("LogLevel", async () => {
+			// Arrange, act, assert.
+			const { LogLevel } = await require("../index");
+			expect(LogLevel).toBe(LogLevel);
+		});
+
+		test("Logger", async () => {
+			// Arrange, act, assert.
+			const { Logger } = await require("../index");
+			expect(Logger).toBe(Logger);
+		});
+	});
 });

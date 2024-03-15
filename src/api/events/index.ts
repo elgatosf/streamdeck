@@ -5,16 +5,16 @@ import type { KeyDown, KeyUp } from "./keypad";
 import type { ApplicationDidLaunch, ApplicationDidTerminate, DidReceiveDeepLink, DidReceiveGlobalSettings, SystemDidWakeUp } from "./system";
 import type { DidReceivePluginMessage, DidReceivePropertyInspectorMessage, PropertyInspectorDidAppear, PropertyInspectorDidDisappear } from "./ui";
 
-export { Controller } from "@elgato/schemas/streamdeck/plugins";
-export { ActionIdentifier, State } from "./action";
-export { DeviceIdentifier } from "./device";
+export { type Controller } from "@elgato/schemas/streamdeck/plugins";
+export { type ActionIdentifier, type State } from "./action";
+export { type DeviceIdentifier } from "./device";
 
-export { Coordinates, DidReceiveSettings, TitleParametersDidChange, WillAppear, WillDisappear } from "./action";
-export { DeviceDidConnect, DeviceDidDisconnect } from "./device";
-export { DialDown, DialRotate, DialUp, TouchTap } from "./encoder";
-export { KeyDown, KeyUp } from "./keypad";
-export { ApplicationDidLaunch, ApplicationDidTerminate, DidReceiveDeepLink, DidReceiveGlobalSettings, SystemDidWakeUp } from "./system";
-export { DidReceivePluginMessage, DidReceivePropertyInspectorMessage, PropertyInspectorDidAppear, PropertyInspectorDidDisappear } from "./ui";
+export { type Coordinates, type DidReceiveSettings, type TitleParametersDidChange, type WillAppear, type WillDisappear } from "./action";
+export { type DeviceDidConnect, type DeviceDidDisconnect } from "./device";
+export { type DialDown, type DialRotate, type DialUp, type TouchTap } from "./encoder";
+export { type KeyDown, type KeyUp } from "./keypad";
+export { type ApplicationDidLaunch, type ApplicationDidTerminate, type DidReceiveDeepLink, type DidReceiveGlobalSettings, type SystemDidWakeUp } from "./system";
+export { type DidReceivePluginMessage, type DidReceivePropertyInspectorMessage, type PropertyInspectorDidAppear, type PropertyInspectorDidDisappear } from "./ui";
 
 /**
  * Represents an event that is emitted by Stream Deck.

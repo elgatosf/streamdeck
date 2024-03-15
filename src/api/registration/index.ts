@@ -1,3 +1,3 @@
-export { RegistrationInfo } from "./info";
+export { type RegistrationInfo } from "./info";
 export { RegistrationParameter } from "./parameters";
-export { ActionInfo, ConnectElgatoStreamDeckSocketFn } from "./ui";
+export { type ActionInfo, type ConnectElgatoStreamDeckSocketFn } from "./ui";
