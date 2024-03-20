@@ -3,7 +3,6 @@ import type { ConnectionInfo } from "../connection";
 
 const { connection } = jest.requireActual<typeof import("../connection")>("../connection");
 
-jest.spyOn(connection, "connect").mockReturnValue(Promise.resolve());
 jest.spyOn(connection, "getInfo").mockReturnValue(
 	Promise.resolve<ConnectionInfo>({
 		actionInfo,

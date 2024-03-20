@@ -1,127 +1,156 @@
-import { getConnection } from "../../../tests/__mocks__/connection";
-import type { GetGlobalSettings, SetGlobalSettings } from "../../api";
-import * as mockEvents from "../../api/__mocks__/events";
+import type { DidReceiveGlobalSettings, DidReceiveSettings, GetGlobalSettings, SetGlobalSettings } from "../../api";
+import { type Settings } from "../../api/__mocks__/events";
 import { Action } from "../actions/action";
-import { StreamDeckConnection } from "../connectivity/connection";
-import { DidReceiveGlobalSettingsEvent, DidReceiveSettingsEvent } from "../events";
-import { SettingsClient } from "../settings";
+import { connection } from "../connection";
+import type { DidReceiveGlobalSettingsEvent, DidReceiveSettingsEvent } from "../events";
+import { getGlobalSettings, onDidReceiveGlobalSettings, onDidReceiveSettings, setGlobalSettings } from "../settings";
 
-describe("SettingsClient", () => {
-	/**
-	 * Asserts {@link SettingsClient.getGlobalSettings} sends the command, and awaits the settings.
-	 */
-	it("Can getGlobalSettings", async () => {
-		// Arrange.
-		const { connection, emitMessage } = getConnection();
-		const client = new SettingsClient(connection);
+jest.mock("../connection");
+jest.mock("../logging");
+jest.mock("../manifest");
 
-		// Act (Command).
-		const settings = client.getGlobalSettings<mockEvents.Settings>();
+describe("settings", () => {
+	describe("sending", () => {
+		/**
+		 * Asserts {@link getGlobalSettings} sends the command to the {@link connection}, and await the settings.
+		 */
+		it("getGlobalSettings", async () => {
+			// Arrange, act (Command).
+			const settings = getGlobalSettings<Settings>();
 
-		// Assert (Command).
-		expect(connection.send).toHaveBeenCalledTimes(1);
-		expect(connection.send).toHaveBeenLastCalledWith({
-			event: "getGlobalSettings",
-			context: connection.registrationParameters.pluginUUID
-		} as GetGlobalSettings);
+			// Assert (Command).
+			expect(connection.send).toHaveBeenCalledTimes(1);
+			expect(connection.send).toHaveBeenLastCalledWith({
+				event: "getGlobalSettings",
+				context: connection.registrationParameters.pluginUUID
+			} as GetGlobalSettings);
 
-		expect(Promise.race([settings, false])).resolves.toBe(false);
+			expect(Promise.race([settings, false])).resolves.toBe(false);
 
-		// Act (Event).
-		emitMessage(mockEvents.didReceiveGlobalSettings);
-		await settings;
+			// Act (Event).
+			connection.emit("didReceiveGlobalSettings", {
+				event: "didReceiveGlobalSettings",
+				payload: {
+					settings: {
+						name: "Elgato"
+					}
+				}
+			});
+			await settings;
 
-		// Assert (Event).
-		expect(settings).resolves.toEqual<mockEvents.Settings>({
-			name: "Elgato"
-		});
-	});
-
-	/**
-	 * Asserts {@link SettingsClient.onDidReceiveGlobalSettings} invokes the listener when the connection emits the `didReceiveGlobalSettings` event.
-	 */
-	it("Receives onDidReceiveGlobalSettings", () => {
-		// Arrange.
-		const { connection, emitMessage } = getConnection();
-		const client = new SettingsClient(connection);
-
-		const listener = jest.fn();
-		const emit = () => emitMessage(mockEvents.didReceiveGlobalSettings);
-
-		// Act.
-		const result = client.onDidReceiveGlobalSettings(listener);
-		const {
-			payload: { settings: globalSettings }
-		} = emit();
-
-		// Assert.
-		expect(listener).toHaveBeenCalledTimes(1);
-		expect(listener).toHaveBeenCalledWith<[DidReceiveGlobalSettingsEvent<mockEvents.Settings>]>({
-			settings: globalSettings,
-			type: "didReceiveGlobalSettings"
-		});
-
-		// Act (dispose).
-		result.dispose();
-		emit();
-
-		// Assert (dispose).
-		expect(listener).toHaveBeenCalledTimes(1);
-	});
-
-	/**
-	 * Asserts {@link SettingsClient.onDidReceiveSettings} invokes the listener when the connection emits the `didReceiveSettings` event.
-	 */
-	it("Receives onDidReceiveSettings", () => {
-		// Arrange.
-		const { connection, emitMessage } = getConnection();
-		const client = new SettingsClient(connection);
-
-		const listener = jest.fn();
-		const emit = () => emitMessage(mockEvents.didReceiveSettings);
-
-		// Act.
-		const result = client.onDidReceiveSettings(listener);
-		const { action, context, device, payload } = emit();
-
-		// Assert.
-		expect(listener).toHaveBeenCalledTimes(1);
-		expect(listener).toHaveBeenCalledWith<[DidReceiveSettingsEvent<mockEvents.Settings>]>({
-			action: new Action(connection, { action, context }),
-			deviceId: device,
-			payload,
-			type: "didReceiveSettings"
-		});
-
-		// Act (dispose).
-		result.dispose();
-		emit();
-
-		// Assert (dispose).
-		expect(listener).toHaveBeenCalledTimes(1);
-	});
-
-	/**
-	 * Asserts {@link SettingsClient.setGlobalSettings} sends the command to the underlying {@link StreamDeckConnection}.
-	 */
-	it("Sends setGlobalSettings", async () => {
-		// Arrange.
-		const { connection } = getConnection();
-		const client = new SettingsClient(connection);
-
-		// Act.
-		await client.setGlobalSettings({
-			name: "Elgato"
-		});
-
-		// Assert.
-		expect(connection.send).toHaveBeenCalledTimes(1);
-		expect(connection.send).toHaveBeenCalledWith<[SetGlobalSettings]>({
-			event: "setGlobalSettings",
-			context: connection.registrationParameters.pluginUUID,
-			payload: {
+			// Assert (Event).
+			expect(settings).resolves.toEqual<Settings>({
 				name: "Elgato"
-			}
+			});
+		});
+
+		/**
+		 * Asserts {@link setGlobalSettings} sends the command to the {@link connection}.
+		 */
+		it("setGlobalSettings", async () => {
+			// Arrange, act.
+			await setGlobalSettings({
+				name: "Elgato"
+			});
+
+			// Assert.
+			expect(connection.send).toHaveBeenCalledTimes(1);
+			expect(connection.send).toHaveBeenCalledWith<[SetGlobalSettings]>({
+				event: "setGlobalSettings",
+				context: connection.registrationParameters.pluginUUID,
+				payload: {
+					name: "Elgato"
+				}
+			});
+		});
+	});
+
+	describe("receiving", () => {
+		/**
+		 * Asserts {@link onDidReceiveGlobalSettings} is invoked when `didReceiveGlobalSettings` is emitted.
+		 */
+		it("onDidReceiveGlobalSettings", () => {
+			// Arrange
+			const listener = jest.fn();
+			const spyOnDisposableOn = jest.spyOn(connection, "disposableOn");
+			const ev = {
+				event: "didReceiveGlobalSettings",
+				payload: {
+					settings: {
+						name: "Elgato"
+					}
+				}
+			} satisfies DidReceiveGlobalSettings<Settings>;
+
+			// Act (emit).
+			const disposable = onDidReceiveGlobalSettings(listener);
+			connection.emit("didReceiveGlobalSettings", ev);
+
+			// Assert (emit).
+			expect(spyOnDisposableOn).toHaveBeenCalledTimes(1);
+			expect(spyOnDisposableOn).toHaveBeenCalledWith(ev.event, expect.any(Function));
+			expect(listener).toHaveBeenCalledTimes(1);
+			expect(listener).toHaveBeenCalledWith<[DidReceiveGlobalSettingsEvent<Settings>]>({
+				settings: {
+					name: "Elgato"
+				},
+				type: "didReceiveGlobalSettings"
+			});
+
+			// Act (dispose).
+			disposable.dispose();
+			connection.emit(ev.event, ev as any);
+
+			// Assert(dispose).
+			expect(listener).toHaveBeenCalledTimes(1);
+		});
+
+		/**
+		 * Asserts {@link onDidReceiveSettings} is invoked when `didReceiveSettings` is emitted.
+		 */
+		it("onDidReceiveSettings", () => {
+			// Arrange
+			const listener = jest.fn();
+			const spyOnDisposableOn = jest.spyOn(connection, "disposableOn");
+			const ev = {
+				action: "com.elgato.test.one",
+				context: "context123",
+				device: "device123",
+				event: "didReceiveSettings",
+				payload: {
+					controller: "Keypad",
+					coordinates: {
+						column: 0,
+						row: 0
+					},
+					isInMultiAction: false,
+					settings: {
+						name: "Elgato"
+					}
+				}
+			} satisfies DidReceiveSettings<Settings>;
+
+			// Act (emit).
+			const disposable = onDidReceiveSettings(listener);
+			connection.emit("didReceiveSettings", ev);
+
+			// Assert (emit).
+			expect(spyOnDisposableOn).toHaveBeenCalledTimes(1);
+			expect(spyOnDisposableOn).toHaveBeenCalledWith(ev.event, expect.any(Function));
+			expect(listener).toHaveBeenCalledTimes(1);
+			expect(listener).toHaveBeenCalledWith<[DidReceiveSettingsEvent<Settings>]>({
+				action: new Action(ev),
+				deviceId: ev.device,
+				payload: ev.payload,
+				type: "didReceiveSettings"
+			});
+
+			// Act (dispose).
+			disposable.dispose();
+			connection.emit(ev.event, ev as any);
+
+			// Assert(dispose).
+			expect(listener).toHaveBeenCalledTimes(1);
 		});
 	});
 });

@@ -1,3 +1,4 @@
+import type streamDeck from "../";
 import type { PayloadObject } from "../../api";
 import type {
 	DialDownEvent,
@@ -14,9 +15,7 @@ import type {
 	WillAppearEvent,
 	WillDisappearEvent
 } from "../events";
-import type { UIClient } from "../ui";
 import type { Action } from "./action";
-import type { ActionClient } from "./client";
 
 /**
  * Provides the main bridge between the plugin and the Stream Deck allowing the plugin to send requests and receive events, e.g. when the user presses an action.
@@ -29,9 +28,9 @@ export class SingletonAction<T extends PayloadObject<T> = object> {
 	public readonly manifestId: string | undefined;
 
 	/**
-	 * Occurs when the user presses a dial (Stream Deck+). Also see {@link ActionClient.onDialUp}.
+	 * Occurs when the user presses a dial (Stream Deck+). Also see {@link streamDeck.actions.onDialUp}.
 	 *
-	 * NB: For other action types see {@link ActionClient.onKeyDown}.
+	 * NB: For other action types see {@link streamDeck.actions.onKeyDown}.
 	 * @param listener Function to be invoked when the event occurs.
 	 */
 	public onDialDown?(ev: DialDownEvent<T>): Promise<void> | void;
@@ -43,9 +42,9 @@ export class SingletonAction<T extends PayloadObject<T> = object> {
 	public onDialRotate?(ev: DialRotateEvent<T>): Promise<void> | void;
 
 	/**
-	 * Occurs when the user releases a pressed dial (Stream Deck+). Also see {@link ActionClient.onDialDown}.
+	 * Occurs when the user releases a pressed dial (Stream Deck+). Also see {@link streamDeck.actions.onDialDown}.
 	 *
-	 * NB: For other action types see {@link ActionClient.onKeyUp}.
+	 * NB: For other action types see {@link streamDeck.actions.onKeyUp}.
 	 * @param listener Function to be invoked when the event occurs.
 	 */
 	public onDialUp?(ev: DialUpEvent<T>): Promise<void> | void;
@@ -63,29 +62,29 @@ export class SingletonAction<T extends PayloadObject<T> = object> {
 	public onDidReceiveSettings?(ev: DidReceiveSettingsEvent<T>): Promise<void> | void;
 
 	/**
-	 * Occurs when the user presses a action down. Also see {@link ActionClient.onKeyUp}.
+	 * Occurs when the user presses a action down. Also see {@link streamDeck.actions.onKeyUp}.
 	 *
-	 * NB: For dials / touchscreens see {@link ActionClient.onDialDown}.
+	 * NB: For dials / touchscreens see {@link streamDeck.actions.onDialDown}.
 	 * @param listener Function to be invoked when the event occurs.
 	 */
 	public onKeyDown?(ev: KeyDownEvent<T>): Promise<void> | void;
 
 	/**
-	 * Occurs when the user releases a pressed action. Also see {@link ActionClient.onKeyDown}.
+	 * Occurs when the user releases a pressed action. Also see {@link streamDeck.actions.onKeyDown}.
 	 *
-	 * NB: For dials / touchscreens see {@link ActionClient.onDialUp}.
+	 * NB: For dials / touchscreens see {@link streamDeck.actions.onDialUp}.
 	 * @param listener Function to be invoked when the event occurs.
 	 */
 	public onKeyUp?(ev: KeyUpEvent<T>): Promise<void> | void;
 
 	/**
-	 * Occurs when the property inspector associated with the action becomes visible, i.e. the user selected an action in the Stream Deck application. Also see {@link UIClient.onPropertyInspectorDidDisappear}.
+	 * Occurs when the property inspector associated with the action becomes visible, i.e. the user selected an action in the Stream Deck application. Also see {@link streamDeck.ui.onPropertyInspectorDidDisappear}.
 	 * @param listener Function to be invoked when the event occurs.
 	 */
 	public onPropertyInspectorDidAppear?(ev: PropertyInspectorDidAppearEvent<T>): Promise<void> | void;
 
 	/**
-	 * Occurs when the property inspector associated with the action becomes invisible, i.e. the user unselected the action in the Stream Deck application. Also see {@link UIClient.onPropertyInspectorDidAppear}.
+	 * Occurs when the property inspector associated with the action becomes invisible, i.e. the user unselected the action in the Stream Deck application. Also see {@link streamDeck.ui.onPropertyInspectorDidAppear}.
 	 * @param listener Function to be invoked when the event occurs.
 	 */
 	public onPropertyInspectorDidDisappear?(ev: PropertyInspectorDidDisappearEvent<T>): Promise<void> | void;

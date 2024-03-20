@@ -1,27 +1,28 @@
 import { type DeviceInfo } from "../api/device";
 import type { IDisposable } from "../common/disposable";
-import type { StreamDeckConnection } from "./connectivity/connection";
+import { connection } from "./connection";
 import { DeviceDidConnectEvent, DeviceDidDisconnectEvent, DeviceEvent } from "./events";
 
 /**
- * Provides monitoring of Stream Deck devices.
+ * Collection of tracked Stream Deck devices.
  */
-export class DeviceClient {
+class DeviceCollection {
 	/**
 	 * Collection of tracked Stream Deck devices.
 	 */
 	private readonly devices = new Map<string, Device>();
 
 	/**
-	 * Initializes a new instance of the {@link DeviceClient} class.
-	 * @param connection Connection with Stream Deck.
+	 * Initializes a new instance of the {@link DeviceCollection} class.
 	 */
-	constructor(private readonly connection: StreamDeckConnection) {
+	constructor() {
 		// Add the devices based on the registration parameters.
-		connection.registrationParameters.info.devices.forEach((dev) => {
-			this.devices.set(dev.id, {
-				...dev,
-				isConnected: false
+		connection.once("connected", (info) => {
+			info.devices.forEach((dev) => {
+				this.devices.set(dev.id, {
+					...dev,
+					isConnected: false
+				});
 			});
 		});
 
@@ -80,12 +81,12 @@ export class DeviceClient {
 	}
 
 	/**
-	 * Occurs when a Stream Deck device is connected. Also see {@link DeviceClient.onDeviceDidConnect}.
+	 * Occurs when a Stream Deck device is connected. Also see {@link DeviceCollection.onDeviceDidConnect}.
 	 * @param listener Function to be invoked when the event occurs.
 	 * @returns A disposable that, when disposed, removes the listener.
 	 */
 	public onDeviceDidConnect(listener: (ev: DeviceDidConnectEvent) => void): IDisposable {
-		return this.connection.disposableOn("deviceDidConnect", (ev) =>
+		return connection.disposableOn("deviceDidConnect", (ev) =>
 			listener(
 				new DeviceEvent(ev, {
 					...ev.deviceInfo,
@@ -96,12 +97,12 @@ export class DeviceClient {
 	}
 
 	/**
-	 * Occurs when a Stream Deck device is disconnected. Also see {@link DeviceClient.onDeviceDidDisconnect}.
+	 * Occurs when a Stream Deck device is disconnected. Also see {@link DeviceCollection.onDeviceDidDisconnect}.
 	 * @param listener Function to be invoked when the event occurs.
 	 * @returns A disposable that, when disposed, removes the listener.
 	 */
 	public onDeviceDidDisconnect(listener: (ev: DeviceDidDisconnectEvent) => void): IDisposable {
-		return this.connection.disposableOn("deviceDidDisconnect", (ev) =>
+		return connection.disposableOn("deviceDidDisconnect", (ev) =>
 			listener(
 				new DeviceEvent(ev, {
 					...this.devices.get(ev.device),
@@ -111,6 +112,16 @@ export class DeviceClient {
 		);
 	}
 }
+
+/**
+ * Collection of tracked Stream Deck devices.
+ */
+export const devices = new DeviceCollection();
+
+/**
+ * Collection of tracked Stream Deck devices.
+ */
+export { type DeviceCollection };
 
 /**
  * Provides information about a device.

@@ -8,6 +8,7 @@ const config = {
 	coverageReporters: ["json-summary", "text"],
 	globalSetup: "./tests/__setup__/global.ts",
 	maxWorkers: 1,
+	modulePathIgnorePatterns: ["<rootDir>/src/.+/__mocks__/.*"],
 	verbose: true,
 	roots: ["src"],
 	transform: {

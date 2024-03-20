@@ -1,3 +1,7 @@
+/**
+ * @jest-environment jsdom
+ */
+
 import type { DidReceiveGlobalSettingsEvent, DidReceiveSettingsEvent } from "..";
 import type { DidReceiveGlobalSettings, DidReceiveSettings, GetGlobalSettings, SetGlobalSettings, UIGetSettings, UISetSettings } from "../../api";
 import { actionInfo } from "../../api/registration/__mocks__";
@@ -202,14 +206,13 @@ describe("settings", () => {
 	 */
 	it("sends setGlobalSettings", async () => {
 		// Arrange, act.
-		const spyOnSend = jest.spyOn(connection, "send");
 		await setGlobalSettings({
 			message: "Testing setGlobalSettings"
 		});
 
 		// Assert.
-		expect(spyOnSend).toHaveBeenCalledTimes(1);
-		expect(spyOnSend).toHaveBeenCalledWith<[SetGlobalSettings]>({
+		expect(connection.send).toHaveBeenCalledTimes(1);
+		expect(connection.send).toHaveBeenCalledWith<[SetGlobalSettings]>({
 			context: uuid,
 			event: "setGlobalSettings",
 			payload: {
@@ -223,14 +226,13 @@ describe("settings", () => {
 	 */
 	it("sends setSettings", async () => {
 		// Arrange, act.
-		const spyOnSend = jest.spyOn(connection, "send");
 		await setSettings({
 			message: "Testing setSettings"
 		});
 
 		// Assert.
-		expect(spyOnSend).toHaveBeenCalledTimes(1);
-		expect(spyOnSend).toHaveBeenCalledWith<[UISetSettings]>({
+		expect(connection.send).toHaveBeenCalledTimes(1);
+		expect(connection.send).toHaveBeenCalledWith<[UISetSettings]>({
 			action: actionInfo.action,
 			context: uuid,
 			event: "setSettings",

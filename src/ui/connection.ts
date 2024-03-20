@@ -1,11 +1,25 @@
-import type { ActionInfo, RegistrationInfo, UICommand, UIEventMap } from "../api";
+import type { ActionInfo, ConnectElgatoStreamDeckSocketFn, RegistrationInfo, UICommand, UIEventMap } from "../api";
 import { EventEmitter } from "../common/event-emitter";
 import { PromiseCompletionSource } from "../common/promises";
+
+declare global {
+	interface Window {
+		/**
+		 * Connects to the Stream Deck, enabling the UI to interact with the plugin, and access the Stream Deck API.
+		 * @param port Port to be used when connecting to Stream Deck.
+		 * @param uuid Identifies the UI; this must be provided when establishing the connection with Stream Deck.
+		 * @param event Name of the event that identifies the registration procedure; this must be provided when establishing the connection with Stream Deck.
+		 * @param info Information about the Stream Deck application and operating system.
+		 * @param actionInfo Information about the action the UI is associated with.
+		 */
+		connectElgatoStreamDeckSocket: ConnectElgatoStreamDeckSocketFn;
+	}
+}
 
 /**
  * Connection used by the UI to communicate with the plugin, and Stream Deck.
  */
-class UIConnection extends EventEmitter<ExtendedUIEventMap> {
+class Connection extends EventEmitter<ExtendedUIEventMap> {
 	/**
 	 * Determines whether the connection can connect;
 	 */
@@ -17,9 +31,40 @@ class UIConnection extends EventEmitter<ExtendedUIEventMap> {
 	private readonly connection = new PromiseCompletionSource<WebSocket>();
 
 	/**
-	 * Underlying connection information set when a connection is established.
+	 * Underlying connection information provided to the plugin to establish a connection with Stream Deck.
 	 */
 	private readonly info = new PromiseCompletionSource<ConnectionInfo>();
+
+	/**
+	 * Initializes a new instance of the {@link Connection} class.
+	 */
+	constructor() {
+		super();
+
+		window.connectElgatoStreamDeckSocket = (port: string, uuid: string, event: string, info: string, actionInfo: string): Promise<void> => {
+			return this.connect(port, uuid, event, JSON.parse(info), JSON.parse(actionInfo));
+		};
+	}
+
+	/**
+	 * Gets the connection's information.
+	 * @returns The information used to establish the connection.
+	 */
+	public async getInfo(): Promise<ConnectionInfo> {
+		return this.info.promise;
+	}
+
+	/**
+	 * Sends the commands to the Stream Deck, once the connection has been established and registered.
+	 * @param command Command being sent.
+	 * @returns `Promise` resolved when the command is sent to Stream Deck.
+	 */
+	public async send(command: UICommand): Promise<void> {
+		const connection = await this.connection.promise;
+		const message = JSON.stringify(command);
+
+		connection.send(message);
+	}
 
 	/**
 	 * Establishes a connection with Stream Deck, allowing for the UI to send and receive messages.
@@ -30,9 +75,8 @@ class UIConnection extends EventEmitter<ExtendedUIEventMap> {
 	 * @param actionInfo Information for the action associated with the UI.
 	 * @returns A promise that is resolved when a connection has been established.
 	 */
-	public async connect(port: string, uuid: string, event: string, info: RegistrationInfo, actionInfo: ActionInfo): Promise<void> {
+	private async connect(port: string, uuid: string, event: string, info: RegistrationInfo, actionInfo: ActionInfo): Promise<void> {
 		if (this.canConnect) {
-			console.log(`uuid: ${uuid}`);
 			this.canConnect = false;
 
 			const webSocket = new WebSocket(`ws://127.0.0.1:${port}`);
@@ -51,28 +95,8 @@ class UIConnection extends EventEmitter<ExtendedUIEventMap> {
 	}
 
 	/**
-	 * Gets the connection's information.
-	 * @returns The information used to establish the connection.
-	 */
-	public async getInfo(): Promise<ConnectionInfo> {
-		return this.info.promise;
-	}
-
-	/**
-	 * Sends the commands to the Stream Deck, once the connection has been established and the UI is registered.
-	 * @param command Command being sent.
-	 * @returns `Promise` resolved when the command is sent to Stream Deck.
-	 */
-	public async send(command: UICommand): Promise<void> {
-		const connection = await this.connection.promise;
-		const message = JSON.stringify(command);
-
-		connection.send(message);
-	}
-
-	/**
-	 * Attempts to emit the {@link ev} that was received from the {@link UIConnection.connection}.
-	 * @param ev Event message data received from the Stream Deck.
+	 * Attempts to emit the {@link ev} that was received from the {@link Connection.connection}.
+	 * @param ev Event message data received from Stream Deck.
 	 */
 	private tryEmit(ev: MessageEvent<string>): void {
 		const message = JSON.parse(ev.data);
@@ -112,4 +136,4 @@ type ExtendedUIEventMap = UIEventMap & {
 	connected: [info: RegistrationInfo, actionInfo: ActionInfo];
 };
 
-export const connection = new UIConnection();
+export const connection = new Connection();

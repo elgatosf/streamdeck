@@ -1,3 +1,7 @@
+/**
+ * @jest-environment jsdom
+ */
+
 import type { DidReceivePluginMessageEvent } from "..";
 import type { DidReceivePluginMessage, SendToPlugin } from "../../api";
 import { actionInfo } from "../../api/registration/__mocks__";
@@ -62,14 +66,13 @@ describe("plugin", () => {
 	 */
 	it("sends sendToPlugin", async () => {
 		// Arrange, act.
-		const spyOnSend = jest.spyOn(connection, "send");
 		await sendToPlugin({
 			message: "Testing sendToPlugin"
 		});
 
 		// Assert.
-		expect(spyOnSend).toHaveBeenCalledTimes(1);
-		expect(spyOnSend).toHaveBeenCalledWith<[SendToPlugin]>({
+		expect(connection.send).toHaveBeenCalledTimes(1);
+		expect(connection.send).toHaveBeenCalledWith<[SendToPlugin]>({
 			action: actionInfo.action,
 			context: uuid,
 			event: "sendToPlugin",

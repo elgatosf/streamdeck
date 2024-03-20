@@ -1,10 +1,12 @@
 import fs, { Dirent } from "node:fs";
 import path from "node:path";
-
-import { getMockedLogger } from "../../../tests/__mocks__/logging";
 import type { Manifest } from "../../api";
 import { I18nProvider } from "../i18n";
-import type { Logger } from "../logging";
+import { logger } from "../logging";
+import { LogLevel } from "../logging/log-level";
+import { Logger } from "../logging/logger";
+
+jest.mock("../logging");
 
 describe("I18nProvider", () => {
 	/**
@@ -29,18 +31,26 @@ describe("I18nProvider", () => {
 		manifestOnly: "Manifest"
 	} as unknown as Manifest;
 
-	beforeEach(() => jest.spyOn(process, "cwd").mockReturnValue(mockedCwd));
-	afterEach(() => jest.restoreAllMocks());
+	let scopedLogger!: Logger;
+
+	beforeEach(() => {
+		scopedLogger = new Logger({
+			level: LogLevel.TRACE,
+			target: { write: jest.fn }
+		});
+
+		jest.spyOn(logger, "createScope").mockReturnValue(scopedLogger);
+		jest.spyOn(process, "cwd").mockReturnValue(mockedCwd);
+	});
 
 	/**
 	 * Asserts {@link I18nProvider} uses a scoped {@link Logger}.
 	 */
-	it("Creates a scoped logger", () => {
+	it("creates a scoped logger", () => {
 		// Arrange.
 		jest.spyOn(fs, "readdirSync").mockReturnValueOnce([] as unknown[] as Dirent[]);
 		jest.spyOn(fs, "readFileSync").mockImplementation(() => "{}");
 
-		const { logger } = getMockedLogger();
 		const createScopeSpy = jest.spyOn(logger, "createScope");
 
 		// Act.
@@ -54,12 +64,10 @@ describe("I18nProvider", () => {
 	/**
 	 * Asserts {@link I18nProvider} only reads from known languages.
 	 */
-	it("Only reads recognized languages", () => {
+	it("only reads recognized languages", () => {
 		// Arrange.
 		jest.spyOn(fs, "readdirSync").mockReturnValueOnce(["de.json", "en.json", "es.json", "fr.json", "ja.json", "zh_CN.json", "other.json"] as unknown[] as Dirent[]);
 		const readFileSyncSpy = jest.spyOn(fs, "readFileSync").mockImplementation(() => "{}");
-
-		const { logger } = getMockedLogger();
 
 		// Act.
 		new I18nProvider("en", mockedManifest, logger);
@@ -81,12 +89,11 @@ describe("I18nProvider", () => {
 	/**
 	 * Asserts {@link I18nProvider} merges the manifest (resources) into the custom English resources.
 	 */
-	it("Merges manifest into English", () => {
+	it("merges manifest into English", () => {
 		// Arrange.
 		jest.spyOn(fs, "readdirSync").mockReturnValue(["de.json", "en.json", "fr.json"] as unknown[] as Dirent[]);
 		jest.spyOn(fs, "readFileSync").mockImplementation((path) => JSON.stringify(mockedResources.get(path as string)));
 
-		const { logger } = getMockedLogger();
 		const i18n = new I18nProvider("en", mockedManifest, logger);
 
 		// Act.
@@ -101,12 +108,11 @@ describe("I18nProvider", () => {
 	/**
 	 * Asserts {@link I18nProvider} correctly resorts to default language.
 	 */
-	it("Falls back to the default language", () => {
+	it("falls back to the default language", () => {
 		// Arrange.
 		jest.spyOn(fs, "readdirSync").mockReturnValue(["de.json", "en.json", "fr.json"] as unknown[] as Dirent[]);
 		jest.spyOn(fs, "readFileSync").mockImplementation((path) => JSON.stringify(mockedResources.get(path as string)));
 
-		const { logger } = getMockedLogger();
 		const i18n = new I18nProvider("de", mockedManifest, logger);
 
 		// Act.
@@ -123,12 +129,12 @@ describe("I18nProvider", () => {
 	/**
 	 * Asserts {@link I18nProvider} returns an empty string when the resource could not be found in either the current resource, or the default.
 	 */
-	it("Returns empty string for unknown key (logMissingKey: true)", () => {
+	it("returns empty string for unknown key (logMissingKey: true)", () => {
 		// Arrange.
 		jest.spyOn(fs, "readdirSync").mockReturnValue([]);
 		jest.spyOn(fs, "readFileSync").mockReturnValue("{}");
+		const spyOnWarn = jest.spyOn(scopedLogger, "warn");
 
-		const { logger, scopedLogger } = getMockedLogger();
 		const i18n = new I18nProvider("en", mockedManifest, logger);
 
 		// Act.
@@ -137,19 +143,19 @@ describe("I18nProvider", () => {
 
 		// Assert.
 		expect(result).toBe("");
-		expect(scopedLogger.warn).toHaveBeenCalledTimes(1);
-		expect(scopedLogger.warn).toHaveBeenCalledWith("Missing translation: hello");
+		expect(spyOnWarn).toHaveBeenCalledTimes(1);
+		expect(spyOnWarn).toHaveBeenCalledWith("Missing translation: hello");
 	});
 
 	/**
 	 * Asserts {@link I18nProvider} returns an empty string when the resource could not be found in either the current resource, or the default.
 	 */
-	it("Returns empty string for unknown key (logMissingKey: false)", () => {
+	it("returns empty string for unknown key (logMissingKey: false)", () => {
 		// Arrange.
 		jest.spyOn(fs, "readdirSync").mockReturnValue([]);
 		jest.spyOn(fs, "readFileSync").mockReturnValue("{}");
+		const spyOnWarn = jest.spyOn(scopedLogger, "warn");
 
-		const { logger, scopedLogger } = getMockedLogger();
 		const i18n = new I18nProvider("en", mockedManifest, logger);
 
 		// Act.
@@ -158,30 +164,30 @@ describe("I18nProvider", () => {
 
 		// Assert.
 		expect(result).toBe("");
-		expect(scopedLogger.warn).toHaveBeenCalledTimes(0);
+		expect(spyOnWarn).toHaveBeenCalledTimes(0);
 	});
 
 	/**
 	 * Asserts {@link I18nProvider} logs to the scoped-logger when a resource file could not be parsed.
 	 */
-	it("Logs when a resource file could not be parsed.", () => {
+	it("logs when a resource file could not be parsed.", () => {
 		// Arrange.
 		jest.spyOn(fs, "readdirSync").mockReturnValue(["en.json"] as unknown[] as Dirent[]);
 		jest.spyOn(fs, "readFileSync").mockReturnValue("{INVALID}");
-		const { logger, scopedLogger } = getMockedLogger();
+		const spyOnError = jest.spyOn(scopedLogger, "error");
 
 		// Act.
 		new I18nProvider("en", mockedManifest, logger);
 
 		// Assert.
-		expect(scopedLogger.error).toHaveBeenCalledTimes(1);
-		expect(scopedLogger.error).toHaveBeenCalledWith("Failed to load translations from en.json", expect.any(Error));
+		expect(spyOnError).toHaveBeenCalledTimes(1);
+		expect(spyOnError).toHaveBeenCalledWith("Failed to load translations from en.json", expect.any(Error));
 	});
 
 	/**
 	 * Asserts {@link I18nProvider} is capable of reading from nested properties.
 	 */
-	it("Translates nested properties", () => {
+	it("translates nested properties", () => {
 		// Arrange.
 		jest.spyOn(fs, "readdirSync").mockReturnValue(["en.json"] as unknown[] as Dirent[]);
 		jest.spyOn(fs, "readFileSync").mockReturnValue(
@@ -192,7 +198,6 @@ describe("I18nProvider", () => {
 			})
 		);
 
-		const { logger } = getMockedLogger();
 		const i18n = new I18nProvider("en", mockedManifest, logger);
 
 		// Act.

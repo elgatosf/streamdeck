@@ -1,187 +1,177 @@
-import { getConnection } from "../../../tests/__mocks__/connection";
-import type { OpenUrl } from "../../api";
-import * as mockEvents from "../../api/__mocks__/events";
+import type { ApplicationDidLaunch, ApplicationDidTerminate, DidReceiveDeepLink, OpenUrl, SystemDidWakeUp } from "../../api";
 import { Version } from "../common/version";
-import { StreamDeckConnection } from "../connectivity/connection";
+import { connection } from "../connection";
 import { ApplicationDidLaunchEvent, ApplicationDidTerminateEvent, DidReceiveDeepLinkEvent, SystemDidWakeUpEvent } from "../events";
-import { System } from "../system";
-import * as ValidationModule from "../validation";
+import { onApplicationDidLaunch, onApplicationDidTerminate, onDidReceiveDeepLink, onSystemDidWakeUp, openUrl } from "../system";
 
+jest.mock("../connection");
+jest.mock("../logging");
 jest.mock("../manifest");
-jest.mock("../validation", () => {
-	return {
-		__esModule: true,
-		...jest.requireActual("../validation")
-	};
-});
 
-describe("System", () => {
+describe("system", () => {
 	/**
-	 * Asserts {@link System.onApplicationDidLaunch} invokes the listener when the connection emits the `applicationDidLaunch` event.
+	 * Asserts {@link onApplicationDidLaunch} is invoked when `applicationDidLaunch` is emitted.
 	 */
-	it("Receives onApplicationDidLaunch", () => {
-		// Arrange.
-		const { connection, emitMessage } = getConnection();
-		const system = new System(connection);
-
+	it("receives onApplicationDidLaunch", () => {
+		// Arrange
 		const listener = jest.fn();
-		const emit = () => emitMessage(mockEvents.applicationDidLaunch);
+		const spyOnDisposableOn = jest.spyOn(connection, "disposableOn");
+		const ev = {
+			event: "applicationDidLaunch",
+			payload: {
+				application: "notepad.exe"
+			}
+		} satisfies ApplicationDidLaunch;
 
-		// Act.
-		const result = system.onApplicationDidLaunch(listener);
-		const {
-			payload: { application }
-		} = emit();
+		// Act (emit).
+		const disposable = onApplicationDidLaunch(listener);
+		connection.emit("applicationDidLaunch", ev);
 
-		//Assert.
+		// Assert (emit).
+		expect(spyOnDisposableOn).toHaveBeenCalledTimes(1);
+		expect(spyOnDisposableOn).toHaveBeenCalledWith(ev.event, expect.any(Function));
 		expect(listener).toHaveBeenCalledTimes(1);
 		expect(listener).toHaveBeenCalledWith<[ApplicationDidLaunchEvent]>({
-			application,
+			application: "notepad.exe",
 			type: "applicationDidLaunch"
 		});
 
 		// Act (dispose).
-		result.dispose();
-		emit();
+		disposable.dispose();
+		connection.emit(ev.event, ev as any);
 
-		// Assert (dispose).
+		// Assert(dispose).
 		expect(listener).toHaveBeenCalledTimes(1);
 	});
 
 	/**
-	 * Asserts {@link System.onApplicationDidTerminate} invokes the listener when the connection emits the `applicationDidTerminate` event.
+	 * Asserts {@link onApplicationDidTerminate} is invoked when `onApplicationDidTerminate` is emitted.
 	 */
-	it("Receives onApplicationDidTerminate", () => {
-		// Arrange.
-		const { connection, emitMessage } = getConnection();
-		const system = new System(connection);
-
+	it("receives onApplicationDidTerminate", () => {
+		// Arrange
 		const listener = jest.fn();
-		const emit = () => emitMessage(mockEvents.applicationDidTerminate);
+		const spyOnDisposableOn = jest.spyOn(connection, "disposableOn");
+		const ev = {
+			event: "applicationDidTerminate",
+			payload: {
+				application: "notepad.exe"
+			}
+		} satisfies ApplicationDidTerminate;
 
-		// Act.
-		const result = system.onApplicationDidTerminate(listener);
-		const {
-			payload: { application }
-		} = emit();
+		// Act (emit).
+		const disposable = onApplicationDidTerminate(listener);
+		connection.emit("applicationDidTerminate", ev);
 
-		//Assert.
+		// Assert (emit).
+		expect(spyOnDisposableOn).toHaveBeenCalledTimes(1);
+		expect(spyOnDisposableOn).toHaveBeenCalledWith(ev.event, expect.any(Function));
 		expect(listener).toHaveBeenCalledTimes(1);
 		expect(listener).toHaveBeenCalledWith<[ApplicationDidTerminateEvent]>({
-			application,
+			application: "notepad.exe",
 			type: "applicationDidTerminate"
 		});
 
 		// Act (dispose).
-		result.dispose();
-		emit();
+		disposable.dispose();
+		connection.emit(ev.event, ev as any);
 
-		// Assert (dispose).
+		// Assert(dispose).
 		expect(listener).toHaveBeenCalledTimes(1);
 	});
 
 	describe("onDidReceiveDeepLink", () => {
 		/**
-		 * Asserts {@link System.onDidReceiveDeepLink} invokes the listener when the connection emits the `didReceiveDeepLink` event.
+		 * Asserts {@link onDidReceiveDeepLink} is invoked when `didReceiveDeepLink` is emitted.
 		 */
-		it("Propagates", () => {
-			// Arrange.
-			const { connection, emitMessage } = getConnection();
-			const system = new System(connection);
-
+		it("propagates", () => {
+			// Arrange
 			const listener = jest.fn();
-			const emit = () =>
-				emitMessage({
-					event: "didReceiveDeepLink",
-					payload: {
-						url: "/hello/world?foo=bar#heading"
-					}
-				});
+			const spyOnDisposableOn = jest.spyOn(connection, "disposableOn");
+			const ev = {
+				event: "didReceiveDeepLink",
+				payload: {
+					url: "/hello/world?foo=bar#heading"
+				}
+			} satisfies DidReceiveDeepLink;
 
-			// Act.
-			const result = system.onDidReceiveDeepLink(listener);
-			const {
-				payload: { url }
-			} = emit();
+			// Act (emit).
+			const disposable = onDidReceiveDeepLink(listener);
+			connection.emit("didReceiveDeepLink", ev);
 
-			//Assert.
+			// Assert (emit).
+			expect(spyOnDisposableOn).toHaveBeenCalledTimes(1);
+			expect(spyOnDisposableOn).toHaveBeenCalledWith(ev.event, expect.any(Function));
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[DidReceiveDeepLinkEvent]>({
-				type: "didReceiveDeepLink",
 				url: {
 					fragment: "heading",
-					href: url,
+					href: ev.payload.url,
 					path: "/hello/world",
 					query: "foo=bar",
 					queryParameters: new URLSearchParams([["foo", "bar"]])
-				}
+				},
+				type: "didReceiveDeepLink"
 			});
 
 			// Act (dispose).
-			result.dispose();
-			emit();
+			disposable.dispose();
+			connection.emit(ev.event, ev as any);
 
-			// Assert (dispose).
+			// Assert(dispose).
 			expect(listener).toHaveBeenCalledTimes(1);
 		});
 
 		/**
-		 * Asserts {@link System.onDidReceiveDeepLink} throws an error if the Stream Deck version is earlier than 6.5.
+		 * Asserts {@link onDidReceiveDeepLink} throws an error if the Stream Deck version is earlier than 6.5.
 		 */
-		it("Throws pre 6.5 (connection)", () => {
+		it("validates requires 6.5 (connection)", () => {
 			// Arrange.
-			const { connection } = getConnection(6.4);
-			const system = new System(connection);
-			const spy = jest.spyOn(ValidationModule, "requiresVersion");
+			jest.spyOn(connection, "version", "get").mockReturnValueOnce(new Version("6.4"));
 
 			// Act, assert.
-			expect(() => system.onDidReceiveDeepLink(jest.fn())).toThrow(
+			expect(() => onDidReceiveDeepLink(jest.fn())).toThrow(
 				`[ERR_NOT_SUPPORTED]: Receiving deep-link messages requires Stream Deck version 6.5 or higher, but current version is 6.4; please update Stream Deck and the "Software.MinimumVersion" in the plugin's manifest to "6.5" or higher.`
 			);
-			expect(spy).toHaveBeenCalledTimes(1);
-			expect(spy).toHaveBeenCalledWith<[number, Version, string]>(6.5, connection.version, "Receiving deep-link messages");
 		});
 	});
 
 	/**
-	 * Asserts {@link System.onSystemDidWakeUp} invokes the listener when the connection emits the `systemDidWakeUp` event.
+	 * Asserts {@link onSystemDidWakeUp} is invoked when `systemDidWakeUp` is emitted.
 	 */
 	it("Receives onSystemDidWakeUp", () => {
-		// Arrange.
-		const { connection, emitMessage } = getConnection();
-		const system = new System(connection);
-
+		// Arrange
 		const listener = jest.fn();
-		const emit = () => emitMessage(mockEvents.systemDidWakeUp);
+		const spyOnDisposableOn = jest.spyOn(connection, "disposableOn");
+		const ev = {
+			event: "systemDidWakeUp"
+		} satisfies SystemDidWakeUp;
 
-		// Act.
-		const result = system.onSystemDidWakeUp(listener);
-		emit();
+		// Act (emit).
+		const disposable = onSystemDidWakeUp(listener);
+		connection.emit("systemDidWakeUp", ev);
 
-		// Assert.
+		// Assert (emit).
+		expect(spyOnDisposableOn).toHaveBeenCalledTimes(1);
+		expect(spyOnDisposableOn).toHaveBeenCalledWith(ev.event, expect.any(Function));
 		expect(listener).toHaveBeenCalledTimes(1);
 		expect(listener).toHaveBeenCalledWith<[SystemDidWakeUpEvent]>({
 			type: "systemDidWakeUp"
 		});
 
 		// Act (dispose).
-		result.dispose();
-		emit();
+		disposable.dispose();
+		connection.emit(ev.event, ev as any);
 
-		// Assert (dispose).
+		// Assert(dispose).
 		expect(listener).toHaveBeenCalledTimes(1);
 	});
 
 	/**
-	 * Asserts {@link System.openUrl} sends the command to the underlying {@link StreamDeckConnection}.
+	 * Asserts {@link openUrl} sends the command to the {@link connection}.
 	 */
-	it("Sends openUrl", async () => {
-		// Arrange.
-		const { connection } = getConnection();
-		const system = new System(connection);
-
-		// Act.
-		await system.openUrl("https://www.elgato.com");
+	it("sends", async () => {
+		// Arrange, act.
+		await openUrl("https://www.elgato.com");
 
 		// Assert.
 		expect(connection.send).toHaveBeenCalledTimes(1);
