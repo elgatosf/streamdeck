@@ -1,5 +1,6 @@
-import type { DidReceiveGlobalSettings, DidReceiveSettings, PayloadObject } from "../api";
+import type { DidReceiveGlobalSettings, DidReceiveSettings } from "../api";
 import type { IDisposable } from "../common/disposable";
+import type { JsonObject } from "../common/json";
 import { connection } from "./connection";
 import type { DidReceiveGlobalSettingsEvent, DidReceiveSettingsEvent } from "./events";
 
@@ -8,7 +9,7 @@ import type { DidReceiveGlobalSettingsEvent, DidReceiveSettingsEvent } from "./e
  * @template T The type of global settings associated with the plugin.
  * @returns Promise containing the plugin's global settings.
  */
-export async function getGlobalSettings<T extends PayloadObject<T> = object>(): Promise<T> {
+export async function getGlobalSettings<T extends JsonObject = JsonObject>(): Promise<T> {
 	const { uuid } = await connection.getInfo();
 
 	return new Promise((resolve) => {
@@ -25,7 +26,7 @@ export async function getGlobalSettings<T extends PayloadObject<T> = object>(): 
  * @template T The type of settings associated with the action.
  * @returns Promise containing the action instance's settings.
  */
-export async function getSettings<T extends PayloadObject<T> = object>(): Promise<T> {
+export async function getSettings<T extends JsonObject = JsonObject>(): Promise<T> {
 	const {
 		uuid,
 		actionInfo: { action }
@@ -47,7 +48,7 @@ export async function getSettings<T extends PayloadObject<T> = object>(): Promis
  * @param listener Function to be invoked when the event occurs.
  * @returns A disposable that, when disposed, removes the listener.
  */
-export function onDidReceiveGlobalSettings<T extends PayloadObject<T> = object>(listener: (ev: DidReceiveGlobalSettingsEvent<T>) => void): IDisposable {
+export function onDidReceiveGlobalSettings<T extends JsonObject = JsonObject>(listener: (ev: DidReceiveGlobalSettingsEvent<T>) => void): IDisposable {
 	return connection.disposableOn("didReceiveGlobalSettings", (ev: DidReceiveGlobalSettings<T>) =>
 		listener({
 			settings: ev.payload.settings,
@@ -62,7 +63,7 @@ export function onDidReceiveGlobalSettings<T extends PayloadObject<T> = object>(
  * @param listener Function to be invoked when the event occurs.
  * @returns A disposable that, when disposed, removes the listener.
  */
-export function onDidReceiveSettings<T extends PayloadObject<T> = object>(listener: (ev: DidReceiveSettingsEvent<T>) => void): IDisposable {
+export function onDidReceiveSettings<T extends JsonObject = JsonObject>(listener: (ev: DidReceiveSettingsEvent<T>) => void): IDisposable {
 	return connection.disposableOn("didReceiveSettings", (ev: DidReceiveSettings<T>) =>
 		listener({
 			action: {
@@ -89,7 +90,7 @@ export function onDidReceiveSettings<T extends PayloadObject<T> = object>(listen
  *   connectedDate: new Date()
  * })
  */
-export async function setGlobalSettings<T extends PayloadObject<T>>(settings: T): Promise<void> {
+export async function setGlobalSettings<T extends JsonObject>(settings: T): Promise<void> {
 	const { uuid } = await connection.getInfo();
 	return connection.send({
 		event: "setGlobalSettings",
@@ -103,7 +104,7 @@ export async function setGlobalSettings<T extends PayloadObject<T>>(settings: T)
  * @param settings Settings to persist.
  * @returns `Promise` resolved when the {@link settings} are sent to Stream Deck.
  */
-export async function setSettings<T extends PayloadObject<T>>(settings: T): Promise<void> {
+export async function setSettings<T extends JsonObject>(settings: T): Promise<void> {
 	const {
 		uuid,
 		actionInfo: { action }

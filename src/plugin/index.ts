@@ -13,7 +13,6 @@ export {
 	type GBar,
 	type Language,
 	type Manifest,
-	type PayloadObject,
 	type Pixmap,
 	type RegistrationInfo,
 	type Size,
@@ -21,6 +20,7 @@ export {
 	type Text
 } from "../api";
 export { EventEmitter, EventsOf } from "../common/event-emitter";
+export type { JsonObject, JsonPrimitive, JsonValue } from "../common/json";
 export { Action, ImageOptions, TitleOptions, TriggerDescriptionOptions } from "./actions/action";
 export { action } from "./actions/decorators";
 export { SingletonAction } from "./actions/singleton-action";

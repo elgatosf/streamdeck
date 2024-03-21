@@ -1,4 +1,5 @@
-import type { DidReceivePluginMessage, PayloadObject } from "../api";
+import type { JsonObject, JsonValue } from ".";
+import type { DidReceivePluginMessage } from "../api";
 import type { IDisposable } from "../common/disposable";
 import { connection } from "./connection";
 import type { DidReceivePluginMessageEvent } from "./events";
@@ -11,7 +12,7 @@ import { getSettings, setSettings } from "./settings";
  * @param listener Function to be invoked when the event occurs.
  * @returns A disposable that, when disposed, removes the listener.
  */
-export function onDidReceivePluginMessage<TPayload extends PayloadObject<TPayload> = object, TSettings extends PayloadObject<TSettings> = object>(
+export function onDidReceivePluginMessage<TPayload extends JsonValue = JsonValue, TSettings extends JsonObject = JsonObject>(
 	listener: (ev: DidReceivePluginMessageEvent<TPayload, TSettings>) => void
 ): IDisposable {
 	return connection.disposableOn("sendToPropertyInspector", (ev: DidReceivePluginMessage<TPayload>) =>
@@ -35,7 +36,7 @@ export function onDidReceivePluginMessage<TPayload extends PayloadObject<TPayloa
  * @param payload Payload to send to the property inspector.
  * @returns `Promise` resolved when {@link payload} has been sent to the property inspector.
  */
-export async function sendToPlugin<T extends PayloadObject<T> = object>(payload: T): Promise<void> {
+export async function sendToPlugin<T extends JsonValue = JsonValue>(payload: T): Promise<void> {
 	const {
 		uuid,
 		actionInfo: { action }

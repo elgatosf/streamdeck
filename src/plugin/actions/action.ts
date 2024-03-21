@@ -1,4 +1,5 @@
-import type { ActionIdentifier, DidReceiveSettings, FeedbackPayload, PayloadObject, SetImage, SetTitle, SetTriggerDescription, State } from "../../api";
+import type { JsonObject, JsonValue } from "..";
+import type { ActionIdentifier, DidReceiveSettings, FeedbackPayload, SetImage, SetTitle, SetTriggerDescription, State } from "../../api";
 import { connection } from "../connection";
 import type { onDidReceivePropertyInspectorMessage } from "../ui";
 import type { SingletonAction } from "./singleton-action";
@@ -7,7 +8,7 @@ import type { SingletonAction } from "./singleton-action";
  * Provides a contextualized instance of an {@link Action}, allowing for direct communication with the Stream Deck.
  * @template T The type of settings associated with the action.
  */
-export class Action<T extends PayloadObject<T> = object> {
+export class Action<T extends JsonObject = JsonObject> {
 	/**
 	 * Unique identifier of the instance of the action; this can be used to update the action on the Stream Deck, e.g. its title, settings, etc.
 	 */
@@ -32,7 +33,7 @@ export class Action<T extends PayloadObject<T> = object> {
 	 * @template U The type of settings associated with the action.
 	 * @returns Promise containing the action instance's settings.
 	 */
-	public getSettings<U extends PayloadObject<U> = T>(): Promise<U> {
+	public getSettings<U extends JsonObject = T>(): Promise<U> {
 		return new Promise((resolve) => {
 			const callback = (ev: DidReceiveSettings<U>): void => {
 				if (ev.context == this.id) {
@@ -56,7 +57,7 @@ export class Action<T extends PayloadObject<T> = object> {
 	 * @param payload Payload to send to the property inspector.
 	 * @returns `Promise` resolved when {@link payload} has been sent to the property inspector.
 	 */
-	public sendToPropertyInspector<T extends PayloadObject<T> = object>(payload: T): Promise<void> {
+	public sendToPropertyInspector<T extends JsonValue = JsonValue>(payload: T): Promise<void> {
 		return connection.send({
 			event: "sendToPropertyInspector",
 			context: this.id,

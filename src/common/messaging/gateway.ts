@@ -1,5 +1,5 @@
 import type { DidReceivePluginMessage, DidReceivePropertyInspectorMessage } from "../../api";
-import type { JsonCompatible, JsonValue } from "../json";
+import type { JsonValue } from "../json";
 import { isRequest, isResponse, type RawMessageRequest, type RawMessageResponse, type StatusCode } from "./message";
 import { MessageResponseBuilder } from "./responder";
 
@@ -37,21 +37,21 @@ export class MessageGateway<TAction> {
 	 * @param options Request options.
 	 * @returns The response.
 	 */
-	public async fetch<T extends JsonCompatible<T> = JsonValue>(options: MessageRequestOptions): Promise<MessageResponse<T>>;
+	public async fetch<T extends JsonValue = JsonValue>(options: MessageRequestOptions): Promise<MessageResponse<T>>;
 	/**
 	 * Sends a request to the specified {@link path}.
 	 * @param path Path of the request.
 	 * @param body Optional body of the request.
 	 * @returns The response.
 	 */
-	public async fetch<T extends JsonCompatible<T> = JsonValue>(path: string, body?: JsonValue): Promise<MessageResponse<T>>;
+	public async fetch<T extends JsonValue = JsonValue>(path: string, body?: JsonValue): Promise<MessageResponse<T>>;
 	/**
 	 * Sends a request to the specified {@link path}.
 	 * @param request URL of the request.
 	 * @param bodyOrUndefined Request body, or moot when constructing the request with {@link MessageRequestOptions}.
 	 * @returns The response.
 	 */
-	public async fetch<T extends JsonCompatible<T> = JsonValue>(request: MessageRequestOptions | string, bodyOrUndefined?: JsonValue): Promise<MessageResponse<T>> {
+	public async fetch<T extends JsonValue = JsonValue>(request: MessageRequestOptions | string, bodyOrUndefined?: JsonValue): Promise<MessageResponse<T>> {
 		const id = crypto.randomUUID();
 		const { body, path, timeout = DEFAULT_TIMEOUT, unidirectional = false } = typeof request === "string" ? { body: bodyOrUndefined, path: request } : request;
 
@@ -98,9 +98,10 @@ export class MessageGateway<TAction> {
 	 * @param path Resource used to identify the route.
 	 * @param handler Handler that will be invoked when a message is indented for the {@link path}.
 	 * @param options Optional routing configuration.
+	 * @template TBody The body type.
 	 * @returns This instance with the route registered.
 	 */
-	public route<TBody extends JsonCompatible<TBody> = JsonValue>(path: string, handler: MessageHandler<TAction, TBody>, options?: RouteConfiguration<TAction>): this {
+	public route<TBody extends JsonValue = JsonValue>(path: string, handler: MessageHandler<TAction, TBody>, options?: RouteConfiguration<TAction>): this {
 		this.routes.push({
 			handler: handler as MessageHandler<TAction, JsonValue>,
 			options: { filter: () => true, ...options },
@@ -123,7 +124,7 @@ export class MessageGateway<TAction> {
 			path: source.path,
 			unidirectional: source.unidirectional,
 			body: source.body
-		} satisfies MessageRequest<TAction, JsonValue>;
+		};
 
 		const routes = this.routes.filter((r) => r.path === source.path && r.options.filter(req));
 
@@ -180,7 +181,7 @@ export class MessageGateway<TAction> {
 /**
  * Message request, received from the client.
  */
-export type MessageRequest<TAction, TBody extends JsonCompatible<TBody> = JsonValue> = Omit<RawMessageRequest, "__type" | "body" | "id"> & {
+export type MessageRequest<TAction, TBody extends JsonValue = JsonValue> = Omit<RawMessageRequest, "__type" | "body" | "id"> & {
 	/**
 	 * Action associated with the request.
 	 */
@@ -220,7 +221,7 @@ export type MessageRequestOptions = {
 /**
  * Message response, received from the server.
  */
-class MessageResponse<TBody extends JsonCompatible<TBody> = JsonValue> {
+class MessageResponse<TBody extends JsonValue = JsonValue> {
 	/**
 	 * Body of the response.
 	 */
@@ -264,7 +265,7 @@ export type ActionProvider<T> = (source: DidReceivePluginMessage<JsonValue> | Di
 /**
  * Function responsible for handling a request, and providing a response.
  */
-export type MessageHandler<TAction, TBody extends JsonCompatible<TBody> = JsonValue> = (
+export type MessageHandler<TAction, TBody extends JsonValue = JsonValue> = (
 	request: MessageRequest<TAction, TBody>,
 	response: MessageResponseBuilder
 ) => JsonValue | Promise<JsonValue | void> | void;
@@ -272,7 +273,7 @@ export type MessageHandler<TAction, TBody extends JsonCompatible<TBody> = JsonVa
 /**
  * Defines a messenger route.
  */
-type Route<TAction, TBody extends JsonCompatible<TBody> = JsonValue> = {
+type Route<TAction, TBody extends JsonValue = JsonValue> = {
 	/**
 	 * The handler function.
 	 */
@@ -291,11 +292,11 @@ type Route<TAction, TBody extends JsonCompatible<TBody> = JsonValue> = {
 /**
  * Configuration that defines the route.
  */
-export type RouteConfiguration<TAction, TBody extends JsonCompatible<TBody> = JsonValue> = {
+export type RouteConfiguration<TAction, TBody extends JsonValue = JsonValue> = {
 	/**
 	 * Optional filter used to determine if a message can be routed; when `true`, the route handler will be called.
 	 * @param action Action associated with the message.
 	 * @returns Should return `true` when the request can be handled; otherwise `false`.
 	 */
-	filter?: (request: MessageRequest<TAction, JsonValue>) => boolean;
+	filter?: (request: MessageRequest<TAction, TBody>) => boolean;
 };

@@ -1,5 +1,6 @@
-import type { DidReceivePluginMessage, DidReceiveSettings, PayloadObject } from "../api";
+import type { DidReceivePluginMessage, DidReceiveSettings } from "../api";
 import type { ActionEvent, Event } from "../common/events";
+import type { JsonObject, JsonValue } from "../common/json";
 import type { Action } from "./action";
 
 export { DidReceiveGlobalSettingsEvent } from "../common/events";
@@ -7,7 +8,7 @@ export { DidReceiveGlobalSettingsEvent } from "../common/events";
 /**
  * Event information received from Stream Deck when the plugin sends a message to the UI.
  */
-export type DidReceivePluginMessageEvent<TPayload extends PayloadObject<TPayload>, TSettings extends PayloadObject<TSettings>> = Event<DidReceivePluginMessage<object>> & {
+export type DidReceivePluginMessageEvent<TPayload extends JsonValue, TSettings extends JsonObject> = Event<DidReceivePluginMessage<TPayload>> & {
 	/**
 	 * Action that raised the event.
 	 */
@@ -22,4 +23,4 @@ export type DidReceivePluginMessageEvent<TPayload extends PayloadObject<TPayload
 /**
  * Event information received from Stream Deck when the UI receives settings.
  */
-export type DidReceiveSettingsEvent<TSettings extends PayloadObject<TSettings>> = ActionEvent<DidReceiveSettings<TSettings>, Action<TSettings>>;
+export type DidReceiveSettingsEvent<TSettings extends JsonObject> = ActionEvent<DidReceiveSettings<TSettings>, Action<TSettings>>;

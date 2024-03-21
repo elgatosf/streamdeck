@@ -1,25 +1,25 @@
+import type { JsonObject } from "../../common/json";
 import type { ActionEventMessage, MultiActionPayload, SingleActionPayload, State } from "./action";
 import type { DialDown, DialUp } from "./encoder";
-import type { PayloadObject } from "./index";
 
 /**
  * Occurs when the user presses a action down. Also see {@link KeyUp}.
  *
  * NB: For dials / touchscreens see {@link DialDown}.
  */
-export type KeyDown<TSettings extends PayloadObject<TSettings>> = ActionEventMessage<"keyDown", KeypadPayload<TSettings>>;
+export type KeyDown<TSettings extends JsonObject> = ActionEventMessage<"keyDown", KeypadPayload<TSettings>>;
 
 /**
  * Occurs when the user releases a pressed action. Also see {@link KeyDown}.
  *
  * NB: For dials / touchscreens see {@link DialUp}.
  */
-export type KeyUp<TSettings extends PayloadObject<TSettings>> = ActionEventMessage<"keyUp", KeypadPayload<TSettings>>;
+export type KeyUp<TSettings extends JsonObject> = ActionEventMessage<"keyUp", KeypadPayload<TSettings>>;
 
 /**
  * Additional information about a keypad event that occurred.
  */
-type KeypadPayload<TSettings extends PayloadObject<TSettings>> =
+type KeypadPayload<TSettings extends JsonObject> =
 	| SingleActionPayload<TSettings, "Keypad">
 	| (MultiActionPayload<TSettings> & {
 			/**

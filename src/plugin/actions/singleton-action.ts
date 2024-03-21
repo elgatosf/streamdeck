@@ -1,5 +1,5 @@
 import type streamDeck from "../";
-import type { PayloadObject } from "../../api";
+import type { JsonObject, JsonValue } from "../../common/json";
 import type {
 	DialDownEvent,
 	DialRotateEvent,
@@ -21,7 +21,7 @@ import type { Action } from "./action";
  * Provides the main bridge between the plugin and the Stream Deck allowing the plugin to send requests and receive events, e.g. when the user presses an action.
  * @template T The type of settings associated with the action.
  */
-export class SingletonAction<T extends PayloadObject<T> = object> {
+export class SingletonAction<T extends JsonObject = JsonObject> {
 	/**
 	 * The universally-unique value that identifies the action within the manifest.
 	 */
@@ -53,7 +53,7 @@ export class SingletonAction<T extends PayloadObject<T> = object> {
 	 * Occurs when a message was sent to the plugin _from_ the property inspector. The plugin can also send messages _to_ the property inspector using {@link Action.sendToPropertyInspector}.
 	 * @param listener Function to be invoked when the event occurs.
 	 */
-	public onDidReceivePropertyInspectorMessage?(ev: DidReceivePropertyInspectorMessageEvent<object, T>): Promise<void> | void;
+	public onDidReceivePropertyInspectorMessage?(ev: DidReceivePropertyInspectorMessageEvent<JsonValue, T>): Promise<void> | void;
 
 	/**
 	 * Occurs when the settings associated with an action instance are requested using {@link Action.getSettings}, or when the the settings were updated by the property inspector.

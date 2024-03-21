@@ -5,7 +5,8 @@ import * as plugin from "./plugin";
 import * as settings from "./settings";
 import * as system from "./system";
 
-export { type ActionInfo, type ConnectElgatoStreamDeckSocketFn, type PayloadObject, type RegistrationInfo } from "../api";
+export { type ActionInfo, type ConnectElgatoStreamDeckSocketFn, type RegistrationInfo } from "../api";
+export { type JsonObject, type JsonPrimitive, type JsonValue } from "../common/json";
 export * from "./events";
 
 const streamDeck = {

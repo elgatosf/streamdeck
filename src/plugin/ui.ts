@@ -1,6 +1,7 @@
-import type { DidReceivePropertyInspectorMessage, PayloadObject, PropertyInspectorDidAppear, PropertyInspectorDidDisappear } from "../api";
+import type { DidReceivePropertyInspectorMessage, PropertyInspectorDidAppear, PropertyInspectorDidDisappear } from "../api";
 import type { IDisposable } from "../common/disposable";
 import { ActionWithoutPayloadEvent } from "../common/events";
+import type { JsonObject, JsonValue } from "../common/json";
 import { Action } from "./actions/action";
 import { connection } from "./connection";
 import { DidReceivePropertyInspectorMessageEvent, PropertyInspectorDidAppearEvent, PropertyInspectorDidDisappearEvent } from "./events";
@@ -12,7 +13,7 @@ import { DidReceivePropertyInspectorMessageEvent, PropertyInspectorDidAppearEven
  * @param listener Function to be invoked when the event occurs.
  * @returns A disposable that, when disposed, removes the listener.
  */
-export function onDidReceivePropertyInspectorMessage<TPayload extends PayloadObject<TPayload> = object, TSettings extends PayloadObject<TSettings> = object>(
+export function onDidReceivePropertyInspectorMessage<TPayload extends JsonValue = JsonValue, TSettings extends JsonObject = JsonObject>(
 	listener: (ev: DidReceivePropertyInspectorMessageEvent<TPayload, TSettings>) => void
 ): IDisposable {
 	return connection.disposableOn("sendToPlugin", (ev: DidReceivePropertyInspectorMessage<TPayload>) =>
@@ -26,8 +27,8 @@ export function onDidReceivePropertyInspectorMessage<TPayload extends PayloadObj
  * @param listener Function to be invoked when the event occurs.
  * @returns A disposable that, when disposed, removes the listener.
  */
-export function onPropertyInspectorDidAppear<T extends PayloadObject<T> = object>(listener: (ev: PropertyInspectorDidAppearEvent<T>) => void): IDisposable {
-	return connection.disposableOn("propertyInspectorDidAppear", (ev) => listener(new ActionWithoutPayloadEvent<PropertyInspectorDidAppear, Action<T>, T>(new Action<T>(ev), ev)));
+export function onPropertyInspectorDidAppear<T extends JsonObject = JsonObject>(listener: (ev: PropertyInspectorDidAppearEvent<T>) => void): IDisposable {
+	return connection.disposableOn("propertyInspectorDidAppear", (ev) => listener(new ActionWithoutPayloadEvent<PropertyInspectorDidAppear, Action<T>>(new Action<T>(ev), ev)));
 }
 
 /**
@@ -36,8 +37,6 @@ export function onPropertyInspectorDidAppear<T extends PayloadObject<T> = object
  * @param listener Function to be invoked when the event occurs.
  * @returns A disposable that, when disposed, removes the listener.
  */
-export function onPropertyInspectorDidDisappear<T extends PayloadObject<T> = object>(listener: (ev: PropertyInspectorDidDisappearEvent<T>) => void): IDisposable {
-	return connection.disposableOn("propertyInspectorDidDisappear", (ev) =>
-		listener(new ActionWithoutPayloadEvent<PropertyInspectorDidDisappear, Action<T>, T>(new Action<T>(ev), ev))
-	);
+export function onPropertyInspectorDidDisappear<T extends JsonObject = JsonObject>(listener: (ev: PropertyInspectorDidDisappearEvent<T>) => void): IDisposable {
+	return connection.disposableOn("propertyInspectorDidDisappear", (ev) => listener(new ActionWithoutPayloadEvent<PropertyInspectorDidDisappear, Action<T>>(new Action<T>(ev), ev)));
 }
