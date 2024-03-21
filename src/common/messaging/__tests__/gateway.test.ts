@@ -1,11 +1,11 @@
 import type { DidReceivePropertyInspectorMessage } from "../../../api";
 import { type Action } from "../../../plugin/actions/action";
 import type { JsonValue } from "../../json";
-import { MessengerHost, type MessageRequest } from "../host";
+import { MessageGateway, type MessageRequest } from "../gateway";
 import type { RawMessageRequest } from "../message";
 import { MessageResponseBuilder } from "../responder";
 
-describe("MessengerHost", () => {
+describe("MessageGateway", () => {
 	it("must provide sender action", async () => {
 		// Arrange.
 		type MockAction = Pick<Action, "id" | "manifestId">;
@@ -15,7 +15,7 @@ describe("MessengerHost", () => {
 			manifestId: "com.elgato.test.one"
 		});
 		const handler = jest.fn();
-		const messenger = new MessengerHost<MockAction>(proxy, provider);
+		const messenger = new MessageGateway<MockAction>(proxy, provider);
 		messenger.route("/test", handler);
 
 		// Act.
@@ -53,13 +53,13 @@ describe("MessengerHost", () => {
 	});
 
 	/**
-	 * Asserts {@link MessengerHost.process} correctly handles unexpected data structures.
+	 * Asserts {@link MessageGateway.process} correctly handles unexpected data structures.
 	 */
 	it("must not process unknown payloads", async () => {
 		// Arrange.
 		const proxy = jest.fn();
 		const provider = jest.fn();
-		const messenger = new MessengerHost<object>(proxy, provider);
+		const messenger = new MessageGateway<object>(proxy, provider);
 
 		// Act.
 		// @ts-expect-error type checking should also occur within `process`.
@@ -74,7 +74,7 @@ describe("MessengerHost", () => {
 	describe("handlers", () => {
 		it("must execute in order", async () => {
 			const proxy = jest.fn();
-			const messenger = new MessengerHost<object>(proxy, jest.fn());
+			const messenger = new MessageGateway<object>(proxy, jest.fn());
 			const order: string[] = [];
 			const handlers = [
 				() => {
@@ -109,14 +109,14 @@ describe("MessengerHost", () => {
 	});
 
 	describe("fetch e2e", () => {
-		let host!: MessengerHost<object>;
-		let server!: MessengerHost<object>;
+		let client!: MessageGateway<object>;
+		let server!: MessageGateway<object>;
 		let cascade!: (message: string) => void;
 
 		beforeEach(() => {
 			cascade = jest.fn();
 
-			host = new MessengerHost(async (value) => {
+			client = new MessageGateway(async (value) => {
 				try {
 					await server.process({
 						action: "com.elgato.test.one",
@@ -132,8 +132,8 @@ describe("MessengerHost", () => {
 				}
 			}, jest.fn());
 
-			server = new MessengerHost<object>(async (value) => {
-				await host.process({
+			server = new MessageGateway<object>(async (value) => {
+				await client.process({
 					action: "com.elgato.test.one",
 					context: "abc123",
 					event: "sendToPropertyInspector",
@@ -169,7 +169,7 @@ describe("MessengerHost", () => {
 			 */
 			it("200 on success", async () => {
 				// Arrange, act.
-				const { body, ok, status } = await host.fetch<MockData>("/test");
+				const { body, ok, status } = await client.fetch<MockData>("/test");
 
 				// Assert.
 				expect(status).toBe(200);
@@ -182,7 +182,7 @@ describe("MessengerHost", () => {
 			 */
 			it("202 on unidirectional request", async () => {
 				// Arrange, act.
-				const { body, ok, status } = await host.fetch({
+				const { body, ok, status } = await client.fetch({
 					path: "/test",
 					unidirectional: true
 				});
@@ -198,7 +198,7 @@ describe("MessengerHost", () => {
 			 */
 			it("500 on error", async () => {
 				// Arrange, act.
-				const { body, ok, status } = await host.fetch("/error");
+				const { body, ok, status } = await client.fetch("/error");
 
 				// Assert.
 				expect(status).toBe(500);
@@ -211,7 +211,7 @@ describe("MessengerHost", () => {
 			 */
 			it("202 on error (unidirectional request)", async () => {
 				// Arrange, act.
-				const { body, ok, status } = await host.fetch({
+				const { body, ok, status } = await client.fetch({
 					path: "/error",
 					unidirectional: true
 				});
@@ -232,7 +232,7 @@ describe("MessengerHost", () => {
 				const spyOnClearTimeout = jest.spyOn(global, "clearTimeout");
 
 				// Act.
-				const res = host.fetch({
+				const res = client.fetch({
 					path: "/test",
 					timeout: 1
 				});
@@ -257,7 +257,7 @@ describe("MessengerHost", () => {
 			 */
 			it("501 on unknown routes", async () => {
 				// Arrange, act.
-				const { body, ok, status } = await host.fetch("/unknown");
+				const { body, ok, status } = await client.fetch("/unknown");
 
 				// Assert.
 				expect(status).toBe(501);
@@ -270,7 +270,7 @@ describe("MessengerHost", () => {
 			 */
 			it("501 on unknown routes (unidirectional request)", async () => {
 				// Arrange, act.
-				const { body, ok, status } = await host.fetch({
+				const { body, ok, status } = await client.fetch({
 					path: "/unknown",
 					unidirectional: true
 				});
@@ -283,11 +283,11 @@ describe("MessengerHost", () => {
 		});
 
 		/**
-		 * Asserts {@link MessengerHost.fetch} executes all paths, but does not respond more than once.
+		 * Asserts {@link MessageGateway.fetch} executes all paths, but does not respond more than once.
 		 */
 		it("should execute all, but return after the first", async () => {
 			// Arrange, act.
-			const { body, ok, status } = await host.fetch("/cascade");
+			const { body, ok, status } = await client.fetch("/cascade");
 
 			// Assert.
 			expect(status).toBe(200);

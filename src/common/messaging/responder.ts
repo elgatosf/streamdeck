@@ -1,5 +1,5 @@
 import type { JsonValue } from "../json";
-import type { OutboundMessageProxy } from "./host";
+import type { OutboundMessageProxy } from "./gateway";
 import type { RawMessageRequest, RawMessageResponse, StatusCode } from "./message";
 
 /**

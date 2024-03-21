@@ -9,9 +9,9 @@ import { MessageResponseBuilder } from "./responder";
 const DEFAULT_TIMEOUT = 5000;
 
 /**
- * Messenger host responsible for sending, routing, and receiving requests and responses.
+ * Message gateway responsible for sending, routing, and receiving requests and responses.
  */
-export class MessengerHost<TAction> {
+export class MessageGateway<TAction> {
 	/**
 	 * Requests with pending responses.
 	 */
@@ -23,7 +23,7 @@ export class MessengerHost<TAction> {
 	private readonly routes: Route<TAction>[] = [];
 
 	/**
-	 * Initializes a new instance of the {@link MessengerHost} class.
+	 * Initializes a new instance of the {@link MessageGateway} class.
 	 * @param proxy Proxy capable of sending messages to the plugin / property inspector.
 	 * @param actionProvider Action provider responsible for retrieving actions associated with source messages.
 	 */
@@ -99,13 +99,8 @@ export class MessengerHost<TAction> {
 	 * @param handler Handler that will be invoked when a message is indented for the {@link path}.
 	 * @param options Optional routing configuration.
 	 * @returns This instance with the route registered.
-	 * @example
-	 * mapRoute("/get-lights", async (req, res) => {
-	 *   const lights = await lightService.getLights();
-	 *   res.send(lights);
-	 * });
 	 */
-	public route<TBody extends JsonCompatible<TBody> = JsonValue>(path: string, handler: MessageHandler<TAction, TBody>, options?: RoutingConfiguration<TAction>): this {
+	public route<TBody extends JsonCompatible<TBody> = JsonValue>(path: string, handler: MessageHandler<TAction, TBody>, options?: RouteConfiguration<TAction>): this {
 		this.routes.push({
 			handler: handler as MessageHandler<TAction, JsonValue>,
 			options: { filter: () => true, ...options },
@@ -257,9 +252,9 @@ class MessageResponse<TBody extends JsonCompatible<TBody> = JsonValue> {
 export { type MessageResponse };
 
 /**
- * Proxy capable of sending messages to the plugin / property inspector.
+ * Proxy capable of sending a payload to the plugin / property inspector.
  */
-export type OutboundMessageProxy = (value: unknown) => Promise<void> | void;
+export type OutboundMessageProxy = (payload: JsonValue) => Promise<void> | void;
 
 /**
  * Gets the action from the specified source.
@@ -286,7 +281,7 @@ type Route<TAction, TBody extends JsonCompatible<TBody> = JsonValue> = {
 	/**
 	 * Routing configuration.
 	 */
-	options: Required<RoutingConfiguration<TAction, TBody>>;
+	options: Required<RouteConfiguration<TAction, TBody>>;
 	/**
 	 * The path of the route, for example "/get-lights".
 	 */
@@ -296,7 +291,7 @@ type Route<TAction, TBody extends JsonCompatible<TBody> = JsonValue> = {
 /**
  * Configuration that defines the route.
  */
-type RoutingConfiguration<TAction, TBody extends JsonCompatible<TBody> = JsonValue> = {
+export type RouteConfiguration<TAction, TBody extends JsonCompatible<TBody> = JsonValue> = {
 	/**
 	 * Optional filter used to determine if a message can be routed; when `true`, the route handler will be called.
 	 * @param action Action associated with the message.
