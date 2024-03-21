@@ -4,7 +4,7 @@ import type { JsonObject } from "../common/json";
  * Provides a contextualized instance of an {@link Action}, allowing for direct communication with the Stream Deck.
  * @template T The type of settings associated with the action.
  */
-export type Action<T extends JsonObject> = {
+export type Action<T extends JsonObject = JsonObject> = {
 	/**
 	 * Unique identifier of the instance of the action; this can be used to update the action on the Stream Deck, e.g. its title, settings, etc.
 	 */
