@@ -2,9 +2,59 @@ import type { DidReceivePropertyInspectorMessage, PropertyInspectorDidAppear, Pr
 import type { IDisposable } from "../common/disposable";
 import { ActionWithoutPayloadEvent } from "../common/events";
 import type { JsonObject, JsonValue } from "../common/json";
+import { MessageGateway, type MessageHandler, type MessageRequestOptions, type MessageResponse, type RouteConfiguration } from "../common/messaging";
 import { Action } from "./actions/action";
 import { connection } from "./connection";
 import { DidReceivePropertyInspectorMessageEvent, PropertyInspectorDidAppearEvent, PropertyInspectorDidDisappearEvent } from "./events";
+
+let current: string | undefined;
+
+/**
+ * The gateway responsible for communicating with the property inspector, sending and receiving requests and responses.
+ */
+const gateway = new MessageGateway<Action>(
+	async (payload: JsonValue) => {
+		if (!current) {
+			return false;
+		}
+
+		await connection.send({
+			context: current,
+			event: "sendToPropertyInspector",
+			payload
+		});
+
+		return true;
+	},
+	(source) => new Action(source)
+);
+
+connection.on("propertyInspectorDidAppear", (ev) => (current = ev.context));
+connection.on("propertyInspectorDidDisappear", () => (current = undefined));
+connection.on("sendToPlugin", (ev) => gateway.process(ev));
+
+/**
+ * Sends the {@link request} to the property inspector; the property inspector can listen to requests using `streamDeck.plugin.route(string, handler, options)`.
+ * @param request The request.
+ * @returns The response.
+ */
+export function fetch<T extends JsonValue = JsonValue>(request: MessageRequestOptions): Promise<MessageResponse<T>>;
+/**
+ * Sends the request to the property inspector; the property inspector can listen to requests using `streamDeck.plugin.route(string, handler, options)`.
+ * @param path Path of the request.
+ * @param body Optional body sent with the request.
+ * @returns The response.
+ */
+export function fetch<T extends JsonValue = JsonValue>(path: string, body?: JsonValue): Promise<MessageResponse<T>>;
+/**
+ * Sends the {@link requestOrPath} to the property inspector; the property inspector can listen to requests using `streamDeck.plugin.route(string, handler, options)`.
+ * @param requestOrPath The request, or the path of the request.
+ * @param bodyOrUndefined Request body, or moot when constructing the request with {@link MessageRequestOptions}.
+ * @returns The response.
+ */
+export function fetch<T extends JsonValue = JsonValue>(requestOrPath: MessageRequestOptions | string, bodyOrUndefined?: JsonValue): Promise<MessageResponse<T>> {
+	return typeof requestOrPath === "string" ? gateway.fetch(requestOrPath, bodyOrUndefined) : gateway.fetch(requestOrPath);
+}
 
 /**
  * Occurs when a message was sent to the plugin _from_ the property inspector. The plugin can also send messages _to_ the property inspector using {@link Action.sendToPropertyInspector}.
@@ -16,9 +66,9 @@ import { DidReceivePropertyInspectorMessageEvent, PropertyInspectorDidAppearEven
 export function onDidReceivePropertyInspectorMessage<TPayload extends JsonValue = JsonValue, TSettings extends JsonObject = JsonObject>(
 	listener: (ev: DidReceivePropertyInspectorMessageEvent<TPayload, TSettings>) => void
 ): IDisposable {
-	return connection.disposableOn("sendToPlugin", (ev: DidReceivePropertyInspectorMessage<TPayload>) =>
-		listener(new DidReceivePropertyInspectorMessageEvent<TPayload, TSettings>(new Action<TSettings>(ev), ev))
-	);
+	return gateway.disposableOn("unhandledMessage", (ev) => {
+		listener(new DidReceivePropertyInspectorMessageEvent<TPayload, TSettings>(new Action<TSettings>(ev), ev as DidReceivePropertyInspectorMessage<TPayload>));
+	});
 }
 
 /**
@@ -39,4 +89,14 @@ export function onPropertyInspectorDidAppear<T extends JsonObject = JsonObject>(
  */
 export function onPropertyInspectorDidDisappear<T extends JsonObject = JsonObject>(listener: (ev: PropertyInspectorDidDisappearEvent<T>) => void): IDisposable {
 	return connection.disposableOn("propertyInspectorDidDisappear", (ev) => listener(new ActionWithoutPayloadEvent<PropertyInspectorDidDisappear, Action<T>>(new Action<T>(ev), ev)));
+}
+
+/**
+ * Maps the specified {@link path} to the {@link handler}, allowing for requests from the property inspector.
+ * @param path Path used to identify the route.
+ * @param handler Handler to be invoked when the request is received.
+ * @param options Optional routing configuration.
+ */
+export function route<TBody extends JsonValue = JsonValue>(path: string, handler: MessageHandler<Action, TBody>, options?: RouteConfiguration<Action>): void {
+	gateway.route(path, handler, options);
 }

@@ -21,6 +21,7 @@ export {
 } from "../api";
 export { EventEmitter, EventsOf } from "../common/event-emitter";
 export type { JsonObject, JsonPrimitive, JsonValue } from "../common/json";
+export { type MessageHandler, type MessageRequest, type MessageRequestOptions, type MessageResponse, type RouteConfiguration, type StatusCode } from "../common/messaging";
 export { Action, ImageOptions, TitleOptions, TriggerDescriptionOptions } from "./actions/action";
 export { action } from "./actions/decorators";
 export { SingletonAction } from "./actions/singleton-action";

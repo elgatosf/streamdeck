@@ -150,20 +150,6 @@ describe("MessageGateway", () => {
 		});
 	});
 
-	it("supports destructing for fetch and route", async () => {
-		// Arrange.
-		const proxy = jest.fn();
-		const gateway = new MessageGateway<object>(proxy, jest.fn());
-
-		// Act.
-		const { fetch, route } = gateway;
-
-		// Assert.
-		expect(async () => await fetch("/")).not.toThrow();
-		expect(() => route("/", () => {})).not.toThrow();
-		expect(proxy).toHaveBeenCalledTimes(1);
-	});
-
 	it("must execute handlers in order", async () => {
 		const proxy = jest.fn();
 		const gateway = new MessageGateway<object>(proxy, jest.fn());

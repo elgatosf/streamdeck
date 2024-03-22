@@ -33,33 +33,30 @@ export class MessageGateway<TAction> extends EventEmitter<MessageGatewayEventMap
 		private readonly actionProvider: ActionProvider<TAction>
 	) {
 		super();
-
-		this.fetch = this.fetch.bind(this);
-		this.route = this.route.bind(this);
 	}
 
 	/**
-	 * Sends a request with the specified {@link options}.
-	 * @param options Request options.
+	 * Sends the {@link request} to the server; the server should be listening on {@link MessageGateway.route}.
+	 * @param request The request.
 	 * @returns The response.
 	 */
-	public async fetch<T extends JsonValue = JsonValue>(options: MessageRequestOptions): Promise<MessageResponse<T>>;
+	public async fetch<T extends JsonValue = JsonValue>(request: MessageRequestOptions): Promise<MessageResponse<T>>;
 	/**
-	 * Sends a request to the specified {@link path}.
+	 * Sends the request to the server; the server should be listening on {@link MessageGateway.route}.
 	 * @param path Path of the request.
-	 * @param body Optional body of the request.
+	 * @param body Optional body sent with the request.
 	 * @returns The response.
 	 */
 	public async fetch<T extends JsonValue = JsonValue>(path: string, body?: JsonValue): Promise<MessageResponse<T>>;
 	/**
-	 * Sends a request to the specified {@link path}.
-	 * @param request URL of the request.
+	 * Sends the {@link requestOrPath} to the server; the server should be listening on {@link MessageGateway.route}.
+	 * @param requestOrPath The request, or the path of the request.
 	 * @param bodyOrUndefined Request body, or moot when constructing the request with {@link MessageRequestOptions}.
 	 * @returns The response.
 	 */
-	public async fetch<T extends JsonValue = JsonValue>(request: MessageRequestOptions | string, bodyOrUndefined?: JsonValue): Promise<MessageResponse<T>> {
+	public async fetch<T extends JsonValue = JsonValue>(requestOrPath: MessageRequestOptions | string, bodyOrUndefined?: JsonValue): Promise<MessageResponse<T>> {
 		const id = crypto.randomUUID();
-		const { body, path, timeout = DEFAULT_TIMEOUT, unidirectional = false } = typeof request === "string" ? { body: bodyOrUndefined, path: request } : request;
+		const { body, path, timeout = DEFAULT_TIMEOUT, unidirectional = false } = typeof requestOrPath === "string" ? { body: bodyOrUndefined, path: requestOrPath } : requestOrPath;
 
 		// Initialize the response handler.
 		const response = new Promise<MessageResponse<T>>((resolve) => {
@@ -107,11 +104,10 @@ export class MessageGateway<TAction> extends EventEmitter<MessageGatewayEventMap
 	}
 
 	/**
-	 * Maps the specified {@link path} to the {@link handler}.
-	 * @param path Resource used to identify the route.
-	 * @param handler Handler that will be invoked when a message is indented for the {@link path}.
+	 * Maps the specified {@link path} to the {@link handler}, allowing for requests from the client.
+	 * @param path Path used to identify the route.
+	 * @param handler Handler to be invoked when the request is received.
 	 * @param options Optional routing configuration.
-	 * @template TBody The body type.
 	 * @returns This instance with the route registered.
 	 */
 	public route<TBody extends JsonValue = JsonValue>(path: string, handler: MessageHandler<TAction, TBody>, options?: RouteConfiguration<TAction>): this {

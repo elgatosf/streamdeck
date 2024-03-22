@@ -7,6 +7,7 @@ import * as system from "./system";
 
 export { type ActionInfo, type ConnectElgatoStreamDeckSocketFn, type RegistrationInfo } from "../api";
 export { type JsonObject, type JsonPrimitive, type JsonValue } from "../common/json";
+export { type MessageHandler, type MessageRequest, type MessageRequestOptions, type MessageResponse, type RouteConfiguration, type StatusCode } from "../common/messaging";
 export * from "./events";
 
 const streamDeck = {
