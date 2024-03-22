@@ -31,6 +31,11 @@ class Connection extends EventEmitter<ExtendedEventMap> {
 	private connection = new PromiseCompletionSource<WebSocket>();
 
 	/**
+	 * Logger scoped to the connection.
+	 */
+	private readonly logger = logger.createScope("Connection");
+
+	/**
 	 * Underlying connection information provided to the plugin to establish a connection with Stream Deck.
 	 * @returns The registration parameters.
 	 */
@@ -83,6 +88,7 @@ class Connection extends EventEmitter<ExtendedEventMap> {
 		const connection = await this.connection.promise;
 		const message = JSON.stringify(command);
 
+		this.logger.trace(message);
 		connection.send(message);
 	}
 
@@ -155,9 +161,16 @@ class Connection extends EventEmitter<ExtendedEventMap> {
 	 * @param ev Event message data received from Stream Deck.
 	 */
 	private tryEmit(ev: WebSocket.MessageEvent): void {
-		const message = JSON.parse(ev.data.toString());
-		if (message.event) {
-			this.emit(message.event, message);
+		try {
+			const message = JSON.parse(ev.data.toString());
+			if (message.event) {
+				this.logger.trace(ev.data.toString());
+				this.emit(message.event, message);
+			} else {
+				this.logger.warn(`Received unknown message: ${ev.data}`);
+			}
+		} catch (err) {
+			this.logger.error(`Failed to parse message: ${ev.data}`, err);
 		}
 	}
 }
