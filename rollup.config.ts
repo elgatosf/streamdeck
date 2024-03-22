@@ -18,33 +18,28 @@ const banner = `/**!
  * @param output Name of the output file.
  * @returns Rollup configuration for the specified input.
  */
-function getOptions(input: string, output: string): RollupOptions[] {
+function config(input: string, output: string): RollupOptions {
 	const outputFileWithoutExtension = join("dist", `${parse(output).name}`);
 
-	return [
-		/**
-		 * Main build.
-		 */
-		{
-			input,
-			output: {
-				file: `${outputFileWithoutExtension}.js`,
-				banner,
-				sourcemap: isWatching,
-				sourcemapPathTransform: (relativeSourcePath: string, sourcemapPath: string): string => {
-					return url.pathToFileURL(resolve(dirname(sourcemapPath), relativeSourcePath)).href;
-				}
-			},
-			external: ["ws", "@elgato/schemas/streamdeck/plugins"],
-			plugins: [
-				typescript({
-					tsconfig: join(dirname(input), "tsconfig.json"),
-					mapRoot: isWatching ? "./" : undefined
-				}),
-				nodeResolve()
-			]
-		}
-	];
+	return {
+		input,
+		output: {
+			file: `${outputFileWithoutExtension}.js`,
+			banner,
+			sourcemap: isWatching,
+			sourcemapPathTransform: (relativeSourcePath: string, sourcemapPath: string): string => {
+				return url.pathToFileURL(resolve(dirname(sourcemapPath), relativeSourcePath)).href;
+			}
+		},
+		external: ["ws", "@elgato/schemas/streamdeck/plugins"],
+		plugins: [
+			typescript({
+				tsconfig: join(dirname(input), "tsconfig.json"),
+				mapRoot: isWatching ? "./" : undefined
+			}),
+			nodeResolve()
+		]
+	};
 }
 
-export default [...getOptions("src/plugin/index.ts", "index.js"), ...getOptions("src/ui/index.ts", "browser.js")];
+export default [config("src/plugin/index.ts", "index.js"), config("src/ui/index.ts", "browser.js")];
