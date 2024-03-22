@@ -3,7 +3,7 @@ import type { JsonValue } from "../json";
 /**
  * Determines whether the specified {@link value} is a {@link RawMessageResponse}.
  * @param value Value.
- * @returns `true` when the value of a {@link RawMessageResponse; otherwise `false`.
+ * @returns `true` when the value of a {@link RawMessageResponse}; otherwise `false`.
  */
 export function isRequest(value: unknown): value is RawMessageRequest {
 	return isMessage(value, "request") && has(value, "unidirectional", "boolean");

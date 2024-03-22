@@ -19,7 +19,7 @@ describe("MessageGateway", () => {
 		messenger.route("/test", handler);
 
 		// Act.
-		const handled = await messenger.process({
+		await messenger.process({
 			action: "com.elgato.test.one",
 			context: "abc123",
 			event: "sendToPlugin",
@@ -34,7 +34,6 @@ describe("MessageGateway", () => {
 			}
 		} satisfies DidReceivePropertyInspectorMessage<RawMessageRequest>);
 
-		expect(handled).toBe(true);
 		expect(handler).toHaveBeenCalledTimes(1);
 		expect(handler).toHaveBeenCalledWith<[MessageRequest<MockAction>, MessageResponseBuilder]>(
 			{
@@ -63,12 +62,77 @@ describe("MessageGateway", () => {
 
 		// Act.
 		// @ts-expect-error type checking should also occur within `process`.
-		const actual = await messenger.process(true);
+		await messenger.process(true);
 
 		// Assert.
-		expect(actual).toBe(false);
 		expect(proxy).toHaveBeenCalledTimes(0);
 		expect(provider).toHaveBeenCalledTimes(0);
+	});
+
+	/**
+	 * Asserts {@link MessageGateway} emits `unknownRequest` when the message is not associated with a route.
+	 */
+	it("emits unknownRequest for unknown routes", async () => {
+		// Arrange.
+		const listener = jest.fn();
+		const messenger = new MessageGateway<object>(jest.fn(), jest.fn());
+
+		// Act.
+		messenger.on("unhandledRequest", listener);
+
+		await messenger.process({
+			action: "com.elgato.test.one",
+			context: "abc123",
+			event: "sendToPlugin",
+			payload: {
+				__type: "request",
+				id: "abc123",
+				path: "/",
+				unidirectional: false
+			}
+		} satisfies DidReceivePropertyInspectorMessage<RawMessageRequest>);
+
+		// Assert.
+		expect(listener).toHaveBeenCalledTimes(1);
+		expect(listener).toHaveBeenLastCalledWith({
+			action: "com.elgato.test.one",
+			context: "abc123",
+			event: "sendToPlugin",
+			payload: {
+				__type: "request",
+				id: "abc123",
+				path: "/",
+				unidirectional: false
+			}
+		});
+	});
+
+	/**
+	 * Asserts {@link MessageGateway} emits `unknownMessage` when the message is not associated with a route.
+	 */
+	it("emits unknownMessage for payloads that aren't requests", async () => {
+		// Arrange.
+		const listener = jest.fn();
+		const messenger = new MessageGateway<object>(jest.fn(), jest.fn());
+
+		// Act.
+		messenger.on("unhandledMessage", listener);
+
+		await messenger.process({
+			action: "com.elgato.test.one",
+			context: "abc123",
+			event: "sendToPlugin",
+			payload: true
+		});
+
+		// Assert.
+		expect(listener).toHaveBeenCalledTimes(1);
+		expect(listener).toHaveBeenLastCalledWith({
+			action: "com.elgato.test.one",
+			context: "abc123",
+			event: "sendToPlugin",
+			payload: true
+		});
 	});
 
 	describe("handlers", () => {

@@ -1,4 +1,5 @@
 import type { DidReceivePluginMessage, DidReceivePropertyInspectorMessage } from "../../api";
+import { EventEmitter } from "../event-emitter";
 import type { JsonValue } from "../json";
 import { isRequest, isResponse, type RawMessageRequest, type RawMessageResponse, type StatusCode } from "./message";
 import { MessageResponseBuilder } from "./responder";
@@ -11,7 +12,7 @@ const DEFAULT_TIMEOUT = 5000;
 /**
  * Message gateway responsible for sending, routing, and receiving requests and responses.
  */
-export class MessageGateway<TAction> {
+export class MessageGateway<TAction> extends EventEmitter<MessageGatewayEventMap> {
 	/**
 	 * Requests with pending responses.
 	 */
@@ -30,7 +31,9 @@ export class MessageGateway<TAction> {
 	constructor(
 		private readonly proxy: OutboundMessageProxy,
 		private readonly actionProvider: ActionProvider<TAction>
-	) {}
+	) {
+		super();
+	}
 
 	/**
 	 * Sends a request with the specified {@link options}.
@@ -78,19 +81,23 @@ export class MessageGateway<TAction> {
 	 * @param message Message to process.
 	 * @returns `true` when the {@link message} was processed by this instance; otherwise `false`.
 	 */
-	public process(message: DidReceivePluginMessage<JsonValue> | DidReceivePropertyInspectorMessage<JsonValue>): Promise<boolean> {
+	public async process(message: DidReceivePluginMessage<JsonValue> | DidReceivePropertyInspectorMessage<JsonValue>): Promise<void> {
 		// Server-side handling.
 		if (isRequest(message.payload)) {
 			const action = this.actionProvider(message);
-			return this.handleRequest(action, message.payload);
+			if (!(await this.handleRequest(action, message.payload))) {
+				this.emit("unhandledRequest", message as DidReceivePluginMessage<RawMessageRequest> | DidReceivePropertyInspectorMessage<RawMessageRequest>);
+			}
+
+			return;
 		}
 
 		// Client-side handling
 		if (isResponse(message.payload)) {
-			return Promise.resolve(this.handleResponse(message.payload));
+			this.handleResponse(message.payload);
 		}
 
-		return Promise.resolve(false);
+		this.emit("unhandledMessage", message);
 	}
 
 	/**
@@ -130,7 +137,8 @@ export class MessageGateway<TAction> {
 
 		// When there are no applicable routes, return not-handled.
 		if (routes.length === 0) {
-			res.send(501);
+			await res.send(501);
+			return false;
 		}
 
 		// When the request is unidirectional, send a 202 status.
@@ -177,6 +185,26 @@ export class MessageGateway<TAction> {
 		return false;
 	}
 }
+
+/**
+ * Represents a message received from the plugin or the property inspector.
+ */
+type PluginOrPropertyInspectorMessage<T extends JsonValue> = DidReceivePluginMessage<T> | DidReceivePropertyInspectorMessage<T>;
+
+/**
+ * Event map for {@link MessageGateway}.
+ */
+type MessageGatewayEventMap = {
+	/**
+	 * Occurs when attempting to process a message that cannot be handled by the gateway.
+	 */
+	unhandledMessage: [message: PluginOrPropertyInspectorMessage<JsonValue>];
+
+	/**
+	 * Occurs when attempting to process a message that represents a request, but cannot be routed.
+	 */
+	unhandledRequest: [message: PluginOrPropertyInspectorMessage<RawMessageRequest>];
+};
 
 /**
  * Message request, received from the client.
