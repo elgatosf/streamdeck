@@ -33,6 +33,9 @@ export class MessageGateway<TAction> extends EventEmitter<MessageGatewayEventMap
 		private readonly actionProvider: ActionProvider<TAction>
 	) {
 		super();
+
+		this.fetch = this.fetch.bind(this);
+		this.route = this.route.bind(this);
 	}
 
 	/**
@@ -71,7 +74,12 @@ export class MessageGateway<TAction> extends EventEmitter<MessageGatewayEventMap
 
 		// Start the timeout, and send the request.
 		const timeoutMonitor = setTimeout(() => this.handleResponse({ __type: "response", id, path, status: 408 }), timeout);
-		await this.proxy({ __type: "request", body, id, path, unidirectional } satisfies RawMessageRequest);
+		const accepted = await this.proxy({ __type: "request", body, id, path, unidirectional } satisfies RawMessageRequest);
+
+		// When the server did not accept the request, return a 406.
+		if (!accepted) {
+			this.handleResponse({ __type: "response", id, path, status: 406 });
+		}
 
 		return response;
 	}
@@ -82,19 +90,17 @@ export class MessageGateway<TAction> extends EventEmitter<MessageGatewayEventMap
 	 * @returns `true` when the {@link message} was processed by this instance; otherwise `false`.
 	 */
 	public async process(message: DidReceivePluginMessage<JsonValue> | DidReceivePropertyInspectorMessage<JsonValue>): Promise<void> {
-		// Server-side handling.
 		if (isRequest(message.payload)) {
+			// Server-side handling.
 			const action = this.actionProvider(message);
-			if (!(await this.handleRequest(action, message.payload))) {
-				this.emit("unhandledRequest", message as DidReceivePluginMessage<RawMessageRequest> | DidReceivePropertyInspectorMessage<RawMessageRequest>);
+			if (await this.handleRequest(action, message.payload)) {
+				return;
 			}
 
+			this.emit("unhandledRequest", message as DidReceivePluginMessage<RawMessageRequest> | DidReceivePropertyInspectorMessage<RawMessageRequest>);
+		} else if (isResponse(message.payload) && this.handleResponse(message.payload)) {
+			// Response handled successfully.
 			return;
-		}
-
-		// Client-side handling
-		if (isResponse(message.payload)) {
-			this.handleResponse(message.payload);
 		}
 
 		this.emit("unhandledMessage", message);
@@ -282,8 +288,10 @@ export { type MessageResponse };
 
 /**
  * Proxy capable of sending a payload to the plugin / property inspector.
+ * @param payload Payload to be sent to the server.
+ * @returns `true` when the server was able to accept the response; otherwise `false`.
  */
-export type OutboundMessageProxy = (payload: JsonValue) => Promise<void> | void;
+export type OutboundMessageProxy = (payload: JsonValue) => Promise<boolean> | boolean;
 
 /**
  * Gets the action from the specified source.

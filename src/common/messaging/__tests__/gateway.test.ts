@@ -15,11 +15,11 @@ describe("MessageGateway", () => {
 			manifestId: "com.elgato.test.one"
 		});
 		const handler = jest.fn();
-		const messenger = new MessageGateway<MockAction>(proxy, provider);
-		messenger.route("/test", handler);
+		const gateway = new MessageGateway<MockAction>(proxy, provider);
+		gateway.route("/test", handler);
 
 		// Act.
-		await messenger.process({
+		await gateway.process({
 			action: "com.elgato.test.one",
 			context: "abc123",
 			event: "sendToPlugin",
@@ -58,11 +58,11 @@ describe("MessageGateway", () => {
 		// Arrange.
 		const proxy = jest.fn();
 		const provider = jest.fn();
-		const messenger = new MessageGateway<object>(proxy, provider);
+		const gateway = new MessageGateway<object>(proxy, provider);
 
 		// Act.
 		// @ts-expect-error type checking should also occur within `process`.
-		await messenger.process(true);
+		await gateway.process(true);
 
 		// Assert.
 		expect(proxy).toHaveBeenCalledTimes(0);
@@ -72,15 +72,17 @@ describe("MessageGateway", () => {
 	/**
 	 * Asserts {@link MessageGateway} emits `unknownRequest` when the message is not associated with a route.
 	 */
-	it("emits unknownRequest for unknown routes", async () => {
+	it("emits unknownRequest and unknownRequest for unknown routes", async () => {
 		// Arrange.
-		const listener = jest.fn();
-		const messenger = new MessageGateway<object>(jest.fn(), jest.fn());
+		const unknownMessageFn = jest.fn();
+		const unknownRequestFn = jest.fn();
+		const gateway = new MessageGateway<object>(jest.fn(), jest.fn());
 
 		// Act.
-		messenger.on("unhandledRequest", listener);
+		gateway.on("unhandledMessage", unknownMessageFn);
+		gateway.on("unhandledRequest", unknownRequestFn);
 
-		await messenger.process({
+		await gateway.process({
 			action: "com.elgato.test.one",
 			context: "abc123",
 			event: "sendToPlugin",
@@ -93,8 +95,21 @@ describe("MessageGateway", () => {
 		} satisfies DidReceivePropertyInspectorMessage<RawMessageRequest>);
 
 		// Assert.
-		expect(listener).toHaveBeenCalledTimes(1);
-		expect(listener).toHaveBeenLastCalledWith({
+		expect(unknownRequestFn).toHaveBeenCalledTimes(1);
+		expect(unknownRequestFn).toHaveBeenLastCalledWith({
+			action: "com.elgato.test.one",
+			context: "abc123",
+			event: "sendToPlugin",
+			payload: {
+				__type: "request",
+				id: "abc123",
+				path: "/",
+				unidirectional: false
+			}
+		});
+
+		expect(unknownMessageFn).toHaveBeenCalledTimes(1);
+		expect(unknownMessageFn).toHaveBeenLastCalledWith({
 			action: "com.elgato.test.one",
 			context: "abc123",
 			event: "sendToPlugin",
@@ -113,12 +128,12 @@ describe("MessageGateway", () => {
 	it("emits unknownMessage for payloads that aren't requests", async () => {
 		// Arrange.
 		const listener = jest.fn();
-		const messenger = new MessageGateway<object>(jest.fn(), jest.fn());
+		const gateway = new MessageGateway<object>(jest.fn(), jest.fn());
 
 		// Act.
-		messenger.on("unhandledMessage", listener);
+		gateway.on("unhandledMessage", listener);
 
-		await messenger.process({
+		await gateway.process({
 			action: "com.elgato.test.one",
 			context: "abc123",
 			event: "sendToPlugin",
@@ -135,41 +150,70 @@ describe("MessageGateway", () => {
 		});
 	});
 
-	describe("handlers", () => {
-		it("must execute in order", async () => {
-			const proxy = jest.fn();
-			const messenger = new MessageGateway<object>(proxy, jest.fn());
-			const order: string[] = [];
-			const handlers = [
-				() => {
-					order.push("First");
-				},
-				() => {
-					order.push("Second");
+	it("supports destructing for fetch and route", async () => {
+		// Arrange.
+		const proxy = jest.fn();
+		const gateway = new MessageGateway<object>(proxy, jest.fn());
+
+		// Act.
+		const { fetch, route } = gateway;
+
+		// Assert.
+		expect(async () => await fetch("/")).not.toThrow();
+		expect(() => route("/", () => {})).not.toThrow();
+		expect(proxy).toHaveBeenCalledTimes(1);
+	});
+
+	it("must execute handlers in order", async () => {
+		const proxy = jest.fn();
+		const gateway = new MessageGateway<object>(proxy, jest.fn());
+		const order: string[] = [];
+		const handlers = [
+			() => {
+				order.push("First");
+			},
+			() => {
+				order.push("Second");
+			}
+		];
+
+		// Act.
+		gateway.route("/test", handlers[0]);
+		gateway.route("/test", handlers[1]);
+		await gateway.process({
+			action: "com.elgato.test.one",
+			context: "abc123",
+			event: "sendToPlugin",
+			payload: {
+				__type: "request",
+				id: "12345",
+				path: "/test",
+				unidirectional: false,
+				body: {
+					name: "Elgato"
 				}
-			];
-
-			// Act.
-			messenger.route("/test", handlers[0]);
-			messenger.route("/test", handlers[1]);
-			await messenger.process({
-				action: "com.elgato.test.one",
-				context: "abc123",
-				event: "sendToPlugin",
-				payload: {
-					__type: "request",
-					id: "12345",
-					path: "/test",
-					unidirectional: false,
-					body: {
-						name: "Elgato"
-					}
-				} satisfies RawMessageRequest
-			});
-
-			// Assert
-			expect(order).toEqual(["First", "Second"]);
+			} satisfies RawMessageRequest
 		});
+
+		// Assert
+		expect(order).toEqual(["First", "Second"]);
+	});
+
+	/**
+	 * Asserts {@link MessageGateway} returns a 406 when the proxy did not accept the payload.
+	 */
+	it("must return 406 when the payload could not be sent to the server", async () => {
+		// Arrange.
+		const proxy = jest.fn().mockReturnValue(false);
+		const gateway = new MessageGateway<object>(proxy, jest.fn());
+
+		// Act.
+		const res = await gateway.fetch("/");
+
+		// Assert.
+		expect(res.status).toBe(406);
+		expect(res.ok).toBe(false);
+		expect(res.body).toBeUndefined();
 	});
 
 	describe("fetch e2e", () => {
@@ -194,6 +238,8 @@ describe("MessageGateway", () => {
 						throw err;
 					}
 				}
+
+				return true;
 			}, jest.fn());
 
 			server = new MessageGateway<object>(async (value) => {
@@ -203,6 +249,8 @@ describe("MessageGateway", () => {
 					event: "sendToPropertyInspector",
 					payload: value as JsonValue
 				});
+
+				return true;
 			}, jest.fn())
 				.route("/test", (req, res) => {
 					res.success({
