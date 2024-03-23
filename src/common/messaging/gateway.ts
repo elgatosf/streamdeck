@@ -259,6 +259,12 @@ class MessageResponse<TBody extends JsonValue = JsonValue> {
 
 	/**
 	 * Status of the response.
+	 * - `200` the request was successful.
+	 * - `202` the request was unidirectional, and does not have a response.
+	 * - `406` the request could not be accepted by the server.
+	 * - `408` the request timed-out.
+	 * - `500` the request failed.
+	 * - `501` the request is not implemented by the server, and could not be fulfilled.
 	 */
 	public readonly status: StatusCode;
 

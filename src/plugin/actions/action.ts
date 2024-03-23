@@ -2,30 +2,20 @@ import type { JsonObject, JsonValue } from "..";
 import type { ActionIdentifier, DidReceiveSettings, FeedbackPayload, SetImage, SetTitle, SetTriggerDescription, State } from "../../api";
 import { connection } from "../connection";
 import type { onDidReceivePropertyInspectorMessage } from "../ui";
+import { ActionContext } from "./context";
 import type { SingletonAction } from "./singleton-action";
 
 /**
  * Provides a contextualized instance of an {@link Action}, allowing for direct communication with the Stream Deck.
  * @template T The type of settings associated with the action.
  */
-export class Action<T extends JsonObject = JsonObject> {
-	/**
-	 * Unique identifier of the instance of the action; this can be used to update the action on the Stream Deck, e.g. its title, settings, etc.
-	 */
-	public readonly id: string;
-
-	/**
-	 * Unique identifier (UUID) of the action as defined within the plugin's manifest's actions collection.
-	 */
-	public readonly manifestId: string;
-
+export class Action<T extends JsonObject = JsonObject> extends ActionContext {
 	/**
 	 * Initializes a new instance of the {@see Action} class.
 	 * @param source Source of the action.
 	 */
 	constructor(source: ActionIdentifier) {
-		this.id = source.context;
-		this.manifestId = source.action;
+		super(source);
 	}
 
 	/**

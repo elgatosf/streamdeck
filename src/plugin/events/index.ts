@@ -17,7 +17,7 @@ import type {
 	WillAppear,
 	WillDisappear
 } from "../../api";
-import { Event, type ActionEvent, type ActionWithoutPayloadEvent } from "../../common/events";
+import { ActionWithoutPayloadEvent, Event, type ActionEvent } from "../../common/events";
 import type { JsonObject } from "../../common/json";
 import type { Action } from "../actions/action";
 import type { Device } from "../devices";
