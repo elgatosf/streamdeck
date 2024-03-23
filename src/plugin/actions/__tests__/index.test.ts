@@ -46,7 +46,7 @@ import { Settings } from "../../../api/__mocks__/events";
 import { connection } from "../../connection";
 import { getManifest } from "../../manifest";
 import type { onDidReceiveSettings } from "../../settings";
-import type { onDidReceivePropertyInspectorMessage, onPropertyInspectorDidAppear, onPropertyInspectorDidDisappear } from "../../ui";
+import type { UIController } from "../../ui";
 import { Action } from "../action";
 
 jest.mock("../../connection");
@@ -664,7 +664,7 @@ describe("actions", () => {
 		});
 
 		/**
-		 * Asserts {@link onDidReceivePropertyInspectorMessage} is routed to the action when `sendToPlugin` is emitted.
+		 * Asserts {@link UIController.onDidReceivePropertyInspectorMessage} is routed to the action when `sendToPlugin` is emitted.
 		 */
 		it("routes onDidReceivePropertyInspectorMessage", () => {
 			// Arrange
@@ -824,7 +824,7 @@ describe("actions", () => {
 		});
 
 		/**
-		 * Asserts {@link onPropertyInspectorDidAppear} is routed to the action when `propertyInspectorDidAppear` is emitted.
+		 * Asserts {@link UIController.onPropertyInspectorDidAppear} is routed to the action when `propertyInspectorDidAppear` is emitted.
 		 */
 		it("routes onPropertyInspectorDidAppear", () => {
 			// Arrange
@@ -854,7 +854,7 @@ describe("actions", () => {
 		});
 
 		/**
-		 * Asserts {@link onPropertyInspectorDidDisappear} is routed to the action when `propertyInspectorDidDisappear` is emitted.
+		 * Asserts {@link UIController.onPropertyInspectorDidDisappear} is routed to the action when `propertyInspectorDidDisappear` is emitted.
 		 */
 		it("routes onPropertyInspectorDidDisappear", () => {
 			// Arrange

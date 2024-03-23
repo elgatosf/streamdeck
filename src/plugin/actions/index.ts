@@ -16,7 +16,7 @@ import {
 } from "../events";
 import { getManifest } from "../manifest";
 import { onDidReceiveSettings } from "../settings";
-import { onDidReceivePropertyInspectorMessage, onPropertyInspectorDidAppear, onPropertyInspectorDidDisappear } from "../ui";
+import { ui } from "../ui";
 import { Action } from "./action";
 import type { SingletonAction } from "./singleton-action";
 
@@ -180,12 +180,12 @@ export function registerAction<TAction extends SingletonAction<TSettings>, TSett
 	route(onDialDown, action.onDialDown);
 	route(onDialUp, action.onDialUp);
 	route(onDialRotate, action.onDialRotate);
-	route(onDidReceivePropertyInspectorMessage, action.onDidReceivePropertyInspectorMessage);
+	route(ui.onMessage, action.onDidReceivePropertyInspectorMessage);
 	route(onDidReceiveSettings, action.onDidReceiveSettings);
 	route(onKeyDown, action.onKeyDown);
 	route(onKeyUp, action.onKeyUp);
-	route(onPropertyInspectorDidAppear, action.onPropertyInspectorDidAppear);
-	route(onPropertyInspectorDidDisappear, action.onPropertyInspectorDidDisappear);
+	route(ui.onDidAppear, action.onPropertyInspectorDidAppear);
+	route(ui.onDidDisappear, action.onPropertyInspectorDidDisappear);
 	route(onTitleParametersDidChange, action.onTitleParametersDidChange);
 	route(onTouchTap, action.onTouchTap);
 	route(onWillAppear, action.onWillAppear);

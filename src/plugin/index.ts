@@ -37,7 +37,7 @@ import { logger, type Logger } from "./logging";
 import * as profiles from "./profiles";
 import * as settings from "./settings";
 import * as system from "./system";
-import * as ui from "./ui";
+import { ui, type UIController } from "./ui";
 
 let i18n: I18nProvider | undefined;
 
@@ -118,7 +118,7 @@ export const streamDeck = {
 	 * Namespace for interacting with UI (property inspector) associated with the plugin.
 	 * @returns UI namespace.
 	 */
-	get ui(): typeof ui {
+	get ui(): UIController {
 		return ui;
 	},
 

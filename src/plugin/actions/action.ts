@@ -1,7 +1,7 @@
 import type { JsonObject, JsonValue } from "..";
 import type { ActionIdentifier, DidReceiveSettings, FeedbackPayload, SetImage, SetTitle, SetTriggerDescription, State } from "../../api";
 import { connection } from "../connection";
-import type { onDidReceivePropertyInspectorMessage } from "../ui";
+import { type UIController } from "../ui";
 import { ActionContext } from "./context";
 import type { SingletonAction } from "./singleton-action";
 
@@ -42,7 +42,7 @@ export class Action<T extends JsonObject = JsonObject> extends ActionContext {
 
 	/**
 	 * Sends the {@link payload} to the current property inspector associated with this action instance. The plugin can also receive information from the property inspector via
-	 * {@link onDidReceivePropertyInspectorMessage} and {@link SingletonAction.onDidReceivePropertyInspectorMessage} allowing for bi-directional communication.
+	 * {@link UIController.onDidReceivePropertyInspectorMessage} and {@link SingletonAction.onDidReceivePropertyInspectorMessage} allowing for bi-directional communication.
 	 * @template T The type of the payload received from the property inspector.
 	 * @param payload Payload to send to the property inspector.
 	 * @returns `Promise` resolved when {@link payload} has been sent to the property inspector.
