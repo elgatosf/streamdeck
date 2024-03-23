@@ -9,24 +9,23 @@
 	},
 	"files": [
 		"./dist/*.js",
-		"./dist/types/**/*.d.ts"
+		"./dist/*.d.ts"
 	],
 	"exports": {
 		".": {
 			"browser": {
 				"default": "./dist/browser.js",
-				"types": "./dist/types/ui/index.d.ts"
+				"types": "./dist/browser.d.ts"
 			},
 			"default": {
 				"default": "./dist/index.js",
-				"types": "./dist/types/plugin/index.d.ts"
+				"types": "./dist/index.d.ts"
 			}
 		}
 	},
 	"scripts": {
-		"build": "rm -rf ./dist && rollup --config rollup.config.ts --configPlugin typescript && npm run build:types",
-		"build:types": "tsc --project tsconfig.types.json",
-		"watch": "rollup --config rollup.config.ts --configPlugin typescript --watch --watch.onEnd=\"npm run build:types\"",
+		"build": "rm -rf ./dist && rollup --config rollup.config.ts --configPlugin typescript",
+		"watch": "rollup --config rollup.config.ts --configPlugin typescript --watch",
 		"lint": "eslint . --ext .ts --max-warnings 0",
 		"lint:fix": "prettier --config .prettierrc src/**/*.ts --write",
 		"preversion": "npm run build && npm test && npm run lint",
@@ -77,6 +76,7 @@
 		"jest-websocket-mock": "^2.5.0",
 		"prettier": "^3.0.3",
 		"rollup": "^4.0.2",
+		"rollup-plugin-dts": "^6.1.0",
 		"typescript": "^5.2.2"
 	},
 	"dependencies": {
