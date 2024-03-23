@@ -20,7 +20,7 @@ export {
 	type Text
 } from "../api";
 export { EventEmitter, EventsOf } from "../common/event-emitter";
-export type { JsonObject, JsonPrimitive, JsonValue } from "../common/json";
+export { type JsonObject, type JsonPrimitive, type JsonValue } from "../common/json";
 export { type MessageHandler, type MessageRequest, type MessageRequestOptions, type MessageResponse, type RouteConfiguration, type StatusCode } from "../common/messaging";
 export { Action, ImageOptions, TitleOptions, TriggerDescriptionOptions } from "./actions/action";
 export { action } from "./actions/decorators";

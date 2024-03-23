@@ -1,7 +1,7 @@
 import { type ActionInfo, type RegistrationInfo } from "../api";
 import type { IDisposable } from "../common/disposable";
 import { connection } from "./connection";
-import * as plugin from "./plugin";
+import { plugin } from "./plugin";
 import * as settings from "./settings";
 import * as system from "./system";
 

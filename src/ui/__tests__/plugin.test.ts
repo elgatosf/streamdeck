@@ -2,11 +2,14 @@
  * @jest-environment jsdom
  */
 
-import type { DidReceivePluginMessageEvent } from "..";
+import type { DidReceivePluginMessageEvent, MessageRequest } from "..";
 import type { DidReceivePluginMessage, SendToPlugin } from "../../api";
 import { actionInfo } from "../../api/registration/__mocks__";
+import type { RawMessageRequest } from "../../common/messaging/message";
+import { MessageResponseBuilder } from "../../common/messaging/responder";
+import type { Action } from "../action";
 import { connection } from "../connection";
-import { onDidReceivePluginMessage, sendToPlugin } from "../plugin";
+import { plugin, router, type PluginController } from "../plugin";
 import { getSettings, setSettings } from "../settings";
 
 jest.mock("../connection");
@@ -15,10 +18,83 @@ describe("plugin", () => {
 	let uuid!: string;
 	beforeAll(async () => ({ uuid } = await connection.getInfo()));
 
+	describe("fetch", () => {
+		beforeAll(() => jest.useFakeTimers());
+		afterAll(() => jest.useRealTimers());
+
+		const mockUUID = "ab038da2-77b0-441b-a4f5-c8d33f17a7a2";
+		beforeEach(() => (global.crypto.randomUUID = () => mockUUID));
+
+		/**
+		 * Asserts {@link PluginController.fetch} forwards the path/body to {@link router.fetch}.
+		 */
+		test("path and body", async () => {
+			// Arrange.
+			const spyOnSend = jest.spyOn(connection, "send");
+
+			// Act.
+			const req = plugin.fetch("/outbound/path-and-body", { name: "Elgato" });
+			jest.runAllTimers();
+			await req;
+
+			// Assert.
+			expect(spyOnSend).toHaveBeenCalledTimes(1);
+			expect(spyOnSend).toHaveBeenCalledWith<[SendToPlugin<RawMessageRequest>]>({
+				action: actionInfo.action,
+				context: uuid,
+				event: "sendToPlugin",
+				payload: {
+					__type: "request",
+					id: mockUUID,
+					path: "/outbound/path-and-body",
+					unidirectional: false,
+					body: {
+						name: "Elgato"
+					}
+				}
+			});
+		});
+
+		/**
+		 * Asserts {@link PluginController.fetch} forwards the request {@link router.fetch}.
+		 */
+		test("request", async () => {
+			// Arrange.
+			const spyOnSend = jest.spyOn(connection, "send");
+
+			// Act.
+			const req = plugin.fetch({
+				path: "/outbound/request",
+				body: { name: "Elgato" },
+				timeout: 1000,
+				unidirectional: true
+			});
+			jest.runAllTimers();
+			await req;
+
+			// Assert.
+			expect(spyOnSend).toHaveBeenCalledTimes(1);
+			expect(spyOnSend).toHaveBeenCalledWith<[SendToPlugin<RawMessageRequest>]>({
+				action: actionInfo.action,
+				context: uuid,
+				event: "sendToPlugin",
+				payload: {
+					__type: "request",
+					id: mockUUID,
+					path: "/outbound/request",
+					unidirectional: true,
+					body: {
+						name: "Elgato"
+					}
+				}
+			});
+		});
+	});
+
 	/**
-	 * Asserts {@link onDidReceivePluginMessage} is invoked when `sendToPropertyInspector` is emitted.
+	 * Asserts {@link PluginController.onMessage} is invoked when `sendToPropertyInspector` is emitted.
 	 */
-	it("receives onDidReceivePluginMessage", async () => {
+	it("receives onMessage", async () => {
 		// Arrange.
 		const listener = jest.fn();
 		const ev: DidReceivePluginMessage<PayloadOrSettings> = {
@@ -26,12 +102,12 @@ describe("plugin", () => {
 			context: "action123",
 			event: "sendToPropertyInspector",
 			payload: {
-				message: "Testing onDidReceivePluginMessage"
+				message: "Testing onMessage"
 			}
 		};
 
 		// Act.
-		const disposable = onDidReceivePluginMessage(listener);
+		const disposable = plugin.onMessage(listener);
 		connection.emit("sendToPropertyInspector", ev);
 
 		// Assert.
@@ -44,7 +120,7 @@ describe("plugin", () => {
 				setSettings
 			},
 			payload: {
-				message: "Testing onDidReceivePluginMessage"
+				message: "Testing onMessage"
 			},
 			type: "sendToPropertyInspector"
 		});
@@ -58,11 +134,74 @@ describe("plugin", () => {
 	});
 
 	/**
-	 * Asserts {@link sendToPlugin} sends the command to the {@link connection}.
+	 * Asserts {@link PluginController.registerRoute} registers the route with the router.
+	 */
+	it("registerRoute", () => {
+		// Arrange.
+		const spyOnRoute = jest.spyOn(router, "route");
+		const handler = jest.fn();
+		const options = {
+			filter: () => true
+		};
+
+		// Act.
+		plugin.registerRoute("/register", handler, options);
+
+		// Assert.
+		expect(spyOnRoute).toHaveBeenCalledTimes(1);
+		expect(spyOnRoute).toHaveBeenCalledWith("/register", handler, options);
+	});
+
+	/**
+	 * Asserts {@link router} routes the request with a construct action.
+	 */
+	it("receives request", () => {
+		// Arrange.
+		const listener = jest.fn();
+		plugin.registerRoute("/receive", listener);
+
+		// Act.
+		connection.emit("sendToPropertyInspector", {
+			action: actionInfo.action,
+			context: uuid,
+			event: "sendToPropertyInspector",
+			payload: {
+				__type: "request",
+				id: "abc123",
+				path: "/receive",
+				unidirectional: false,
+				body: {
+					name: "Elgato"
+				}
+			}
+		} satisfies DidReceivePluginMessage<RawMessageRequest>);
+
+		// Assert.
+		expect(listener).toHaveBeenCalledTimes(1);
+		expect(listener).toHaveBeenCalledWith<[MessageRequest<Action>, MessageResponseBuilder]>(
+			{
+				action: {
+					id: uuid,
+					manifestId: actionInfo.action,
+					getSettings,
+					setSettings
+				},
+				path: "/receive",
+				unidirectional: false,
+				body: {
+					name: "Elgato"
+				}
+			},
+			expect.any(MessageResponseBuilder)
+		);
+	});
+
+	/**
+	 * Asserts {@link PluginController.sendMessage} sends the command to the {@link connection}.
 	 */
 	it("sends sendToPlugin", async () => {
 		// Arrange, act.
-		await sendToPlugin({
+		await plugin.sendMessage({
 			message: "Testing sendToPlugin"
 		});
 

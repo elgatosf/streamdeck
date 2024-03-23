@@ -82,7 +82,7 @@ describe("PropertyInspector", () => {
 		/**
 		 * Asserts {@link PropertyInspector.fetch} forwards the path/body to {@link router.fetch}.
 		 */
-		test("string and body", async () => {
+		test("path and body", async () => {
 			// Arrange.
 			const spyOnFetch = jest.spyOn(router, "fetch");
 			const pi = new PropertyInspector({
@@ -205,44 +205,83 @@ describe("router", () => {
 	});
 
 	describe("outbound messages", () => {
-		/**
-		 * Asserts {@link router} outbound requests, i.e. `fetch`, are proxy'd to the current property inspector.
-		 */
-		test("with ui", async () => {
-			// Arrange.
-			connection.emit("propertyInspectorDidAppear", {
-				action: "com.elgato.test.one",
-				context: "proxy-outbound-message-with-ui",
-				device: "dev123",
-				event: "propertyInspectorDidAppear"
-			});
+		describe("with ui", () => {
+			beforeAll(() => jest.useFakeTimers());
+			afterAll(() => jest.useRealTimers());
 
-			const spyOnSend = jest.spyOn(connection, "send");
+			/**
+			 * Asserts {@link PropertyInspector.fetch} forwards the path/body to {@link router.fetch}.
+			 */
+			test("path and body", async () => {
+				// Arrange.
+				const spyOnSend = jest.spyOn(connection, "send");
+				connection.emit("propertyInspectorDidAppear", {
+					action: "com.elgato.test.one",
+					context: "proxy-outbound-message-with-path-and-body",
+					device: "dev123",
+					event: "propertyInspectorDidAppear"
+				});
 
-			// Act.
-			await router.fetch({
-				path: "/test",
-				body: {
-					name: "Elgato"
-				},
-				unidirectional: true,
-				timeout: 1
-			});
+				// Act.
+				const req = router.fetch("/outbound/path-and-body", { name: "Elgato" });
+				jest.runAllTimers();
+				await req;
 
-			// Assert.
-			expect(spyOnSend).toHaveBeenCalledTimes(1);
-			expect(spyOnSend).toHaveBeenCalledWith<[SendToPropertyInspector<RawMessageRequest>]>({
-				context: "proxy-outbound-message-with-ui",
-				event: "sendToPropertyInspector",
-				payload: {
-					__type: "request",
-					id: expect.any(String),
-					path: "/test",
-					unidirectional: true,
-					body: {
-						name: "Elgato"
+				// Assert.
+				expect(spyOnSend).toHaveBeenCalledTimes(1);
+				expect(spyOnSend).toHaveBeenCalledWith<[SendToPropertyInspector<RawMessageRequest>]>({
+					context: "proxy-outbound-message-with-path-and-body",
+					event: "sendToPropertyInspector",
+					payload: {
+						__type: "request",
+						id: expect.any(String),
+						path: "/outbound/path-and-body",
+						unidirectional: false,
+						body: {
+							name: "Elgato"
+						}
 					}
-				}
+				});
+			});
+
+			/**
+			 * Asserts {@link PropertyInspector.fetch} forwards the request {@link router.fetch}.
+			 */
+			test("request", async () => {
+				// Arrange.
+				const spyOnSend = jest.spyOn(connection, "send");
+				connection.emit("propertyInspectorDidAppear", {
+					action: "com.elgato.test.one",
+					context: "proxy-outbound-message-with-path-and-body",
+					device: "dev123",
+					event: "propertyInspectorDidAppear"
+				});
+
+				// Act.
+				const req = router.fetch({
+					path: "/outbound/request",
+					body: { name: "Elgato" },
+					timeout: 1000,
+					unidirectional: true
+				});
+				jest.runAllTimers();
+				await req;
+
+				// Assert.
+				expect(spyOnSend).toHaveBeenCalledTimes(1);
+				expect(spyOnSend).toHaveBeenCalledWith<[SendToPropertyInspector<RawMessageRequest>]>({
+					context: "proxy-outbound-message-with-path-and-body",
+					event: "sendToPropertyInspector",
+					payload: {
+						__type: "request",
+						id: expect.any(String),
+						path: "/outbound/request",
+						unidirectional: true,
+						body: {
+							name: "Elgato"
+						}
+					}
+				});
 			});
 		});
 

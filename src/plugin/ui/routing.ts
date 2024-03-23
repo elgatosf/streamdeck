@@ -5,6 +5,8 @@ import { Action } from "../actions/action";
 import { ActionContext } from "../actions/context";
 import { connection } from "../connection";
 
+let currentUI: PropertyInspector | undefined;
+
 /**
  * Router responsible for communicating with the property inspector.
  */
@@ -20,13 +22,11 @@ const router = new MessageGateway<Action>(
 	(source) => new Action(source)
 );
 
-export { router };
-
-let currentUI: PropertyInspector | undefined;
-
 connection.on("propertyInspectorDidAppear", (ev) => (currentUI = new PropertyInspector(ev)));
 connection.on("propertyInspectorDidDisappear", () => (currentUI = undefined));
 connection.on("sendToPlugin", (ev) => router.process(ev));
+
+export { router };
 
 /**
  * Gets the current property inspector.
@@ -55,26 +55,42 @@ export class PropertyInspector extends ActionContext implements Pick<MessageGate
 	}
 
 	/**
-	 * Sends the {@link request} to the server; the server should be listening on {@link MessageGateway.route}.
+	 * Sends a fetch request to the property inspector; the property inspector can listen for requests by registering routes.
+	 * ```ts
+	 * // Within the property inspector.
+	 * streamDeck.plugin.registerRoute(path, handler, options)
+	 * ```
 	 * @param request The request.
 	 * @returns The response.
 	 */
 	public async fetch<T extends JsonValue = JsonValue>(request: MessageRequestOptions): Promise<MessageResponse<T>>;
 	/**
-	 * Sends the request to the server; the server should be listening on {@link MessageGateway.route}.
+	 * Sends a fetch request to the property inspector; the property inspector can listen for requests by registering routes.
+	 * ```ts
+	 * // Within the property inspector.
+	 * streamDeck.plugin.registerRoute(path, handler, options)
+	 * ```
 	 * @param path Path of the request.
 	 * @param body Optional body sent with the request.
 	 * @returns The response.
 	 */
 	public async fetch<T extends JsonValue = JsonValue>(path: string, body?: JsonValue): Promise<MessageResponse<T>>;
 	/**
-	 * Sends the {@link requestOrPath} to the server; the server should be listening on {@link MessageGateway.route}.
+	 * Sends a fetch request to the property inspector; the property inspector can listen for requests by registering routes.
+	 * ```ts
+	 * // Within the property inspector.
+	 * streamDeck.plugin.registerRoute(path, handler, options)
+	 * ```
 	 * @param requestOrPath The request, or the path of the request.
 	 * @param bodyOrUndefined Request body, or moot when constructing the request with {@link MessageRequestOptions}.
 	 * @returns The response.
 	 */
 	public async fetch<T extends JsonValue = JsonValue>(requestOrPath: MessageRequestOptions | string, bodyOrUndefined?: JsonValue): Promise<MessageResponse<T>> {
-		return typeof requestOrPath === "string" ? router.fetch(requestOrPath, bodyOrUndefined) : router.fetch(requestOrPath);
+		if (typeof requestOrPath === "string") {
+			return router.fetch(requestOrPath, bodyOrUndefined);
+		} else {
+			return router.fetch(requestOrPath);
+		}
 	}
 
 	/**

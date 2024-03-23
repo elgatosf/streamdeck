@@ -8,7 +8,7 @@ import { ActionWithoutPayloadEvent, DidReceivePropertyInspectorMessageEvent, typ
 import { getCurrentUI, router, type PropertyInspector } from "./routing";
 
 /**
- * Controller responsible for interacting with the user interface associated with the plugin.
+ * Controller responsible for interacting with the property inspector associated with the plugin.
  */
 class UIController {
 	/**
@@ -42,7 +42,8 @@ class UIController {
 	}
 
 	/**
-	 * Occurs when a message was sent to the plugin _from_ the property inspector. The plugin can also send messages _to_ the property inspector using {@link Action.sendToPropertyInspector}.
+	 * Occurs when a message was sent to the plugin _from_ the property inspector. The plugin can also send messages _to_ the property inspector using {@link UIController.current.sendMessage}
+	 * or {@link Action.sendToPropertyInspector}.
 	 * @template TPayload The type of the payload received from the property inspector.
 	 * @template TSettings The type of settings associated with the action.
 	 * @param listener Function to be invoked when the event occurs.
@@ -57,7 +58,7 @@ class UIController {
 	}
 
 	/**
-	 * Creates a request route, mapping the {@link path} to the {@link handler}. The UI can then send requests to the handler using `streamDeck.plugin.fetch(path)`.
+	 * Creates a request route, mapping the path to the handler. The property inspector can then send requests to the handler using `streamDeck.plugin.fetch(path)`.
 	 * @param path Path that identifies the route.
 	 * @param handler Handler to be invoked when a matching request is received.
 	 * @param options Optional routing configuration.

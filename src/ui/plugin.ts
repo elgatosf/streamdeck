@@ -7,92 +7,118 @@ import type { DidReceivePluginMessageEvent } from "./events";
 import { getSettings, setSettings } from "./settings";
 
 /**
- * The gateway responsible for communicating with the plugin, sending and receiving requests and responses.
+ * Router responsible for communicating with the plugin.
  */
-const gateway = new MessageGateway<Action>(
+const router = new MessageGateway<Action>(
 	async (payload: JsonValue) => {
-		await sendToPlugin(payload);
+		await plugin.sendMessage(payload);
 		return true;
 	},
 	({ context: id, action: manifestId }) => ({ id, manifestId, getSettings, setSettings }) satisfies Action
 );
 
-connection.on("sendToPropertyInspector", (ev) => gateway.process(ev));
+connection.on("sendToPropertyInspector", (ev) => router.process(ev));
 
 /**
- * Sends a fetch request to the **plugin**; the plugin can map requests using `streamDeck.ui.route(path, handler, options)`.
- * @param request The request.
- * @returns The response.
+ * Controller responsible for interacting with the plugin associated with the property inspector.
  */
-export function fetch<T extends JsonValue = JsonValue>(request: MessageRequestOptions): Promise<MessageResponse<T>>;
-/**
- * Sends a fetch request to the **plugin**; the plugin can map requests using `streamDeck.ui.route(path, handler, options)`.
- * @param path Path of the request.
- * @param body Optional body sent with the request.
- * @returns The response.
- */
-export function fetch<T extends JsonValue = JsonValue>(path: string, body?: JsonValue): Promise<MessageResponse<T>>;
-/**
- * Sends a fetch request to the **plugin**; the plugin can map requests using `streamDeck.ui.route(path, handler, options)`.
- * @param requestOrPath The request, or the path of the request.
- * @param bodyOrUndefined Request body, or moot when constructing the request with {@link MessageRequestOptions}.
- * @returns The response.
- */
-export function fetch<T extends JsonValue = JsonValue>(requestOrPath: MessageRequestOptions | string, bodyOrUndefined?: JsonValue): Promise<MessageResponse<T>> {
-	return typeof requestOrPath === "string" ? gateway.fetch(requestOrPath, bodyOrUndefined) : gateway.fetch(requestOrPath);
-}
+class PluginController {
+	/**
+	 * Sends a fetch request to the plugin; the plugin can listen for requests by registering routes.
+	 * ```ts
+	 * // Within the plugin.
+	 * streamDeck.ui.registerRoute(path, handler, options)
+	 * ```
+	 * @param request The request.
+	 * @returns The response.
+	 */
+	public async fetch<T extends JsonValue = JsonValue>(request: MessageRequestOptions): Promise<MessageResponse<T>>;
+	/**
+	 * Sends a fetch request to the plugin; the plugin can listen for requests by registering routes.
+	 * ```ts
+	 * // Within the plugin.
+	 * streamDeck.ui.registerRoute(path, handler, options)
+	 * ```
+	 * @param path Path of the request.
+	 * @param body Optional body sent with the request.
+	 * @returns The response.
+	 */
+	public async fetch<T extends JsonValue = JsonValue>(path: string, body?: JsonValue): Promise<MessageResponse<T>>;
+	/**
+	 * Sends a fetch request to the plugin; the plugin can listen for requests by registering routes.
+	 * ```ts
+	 * // Within the plugin.
+	 * streamDeck.ui.registerRoute(path, handler, options)
+	 * ```
+	 * @param requestOrPath The request, or the path of the request.
+	 * @param bodyOrUndefined Request body, or moot when constructing the request with {@link MessageRequestOptions}.
+	 * @returns The response.
+	 */
+	public async fetch<T extends JsonValue = JsonValue>(requestOrPath: MessageRequestOptions | string, bodyOrUndefined?: JsonValue): Promise<MessageResponse<T>> {
+		if (typeof requestOrPath === "string") {
+			return router.fetch(requestOrPath, bodyOrUndefined);
+		} else {
+			return router.fetch(requestOrPath);
+		}
+	}
 
-/**
- * Occurs when a message was sent to the property inspector _from_ the plugin. The property inspector can also send messages _to_ the plugin using {@link sendToPlugin}.
- * @template TPayload The type of the payload received from the property inspector.
- * @template TSettings The type of settings associated with the action.
- * @param listener Function to be invoked when the event occurs.
- * @returns A disposable that, when disposed, removes the listener.
- */
-export function onDidReceivePluginMessage<TPayload extends JsonValue = JsonValue, TSettings extends JsonObject = JsonObject>(
-	listener: (ev: DidReceivePluginMessageEvent<TPayload, TSettings>) => void
-): IDisposable {
-	return gateway.disposableOn("unhandledMessage", (ev) => {
-		listener({
-			action: {
-				id: ev.context,
-				manifestId: ev.action,
-				getSettings,
-				setSettings
-			},
-			payload: ev.payload as TPayload,
-			type: "sendToPropertyInspector"
+	/**
+	 * Occurs when a message was sent to the property inspector _from_ the plugin. The property inspector can also send messages _to_ the plugin using {@link PluginController.sendMessage}.
+	 * @template TPayload The type of the payload received from the property inspector.
+	 * @template TSettings The type of settings associated with the action.
+	 * @param listener Function to be invoked when the event occurs.
+	 * @returns A disposable that, when disposed, removes the listener.
+	 */
+	public onMessage<TPayload extends JsonValue = JsonValue, TSettings extends JsonObject = JsonObject>(
+		listener: (ev: DidReceivePluginMessageEvent<TPayload, TSettings>) => void
+	): IDisposable {
+		return router.disposableOn("unhandledMessage", (ev) => {
+			listener({
+				action: {
+					id: ev.context,
+					manifestId: ev.action,
+					getSettings,
+					setSettings
+				},
+				payload: ev.payload as TPayload,
+				type: "sendToPropertyInspector"
+			});
 		});
-	});
+	}
+
+	/**
+	 * Creates a request route, mapping the path to the handler. The plugin can then send requests to the handler using `streamDeck.ui.fetch(path)`.
+	 * @param path Path that identifies the route.
+	 * @param handler Handler to be invoked when a matching request is received.
+	 * @param options Optional routing configuration.
+	 * @example
+	 * streamDeck.plugin.onRequest("/populate-dropdowns", async (req, res) => {
+	 *   // handler
+	 * });
+	 */
+	public registerRoute<T extends JsonValue = JsonValue>(path: string, handler: MessageHandler<Action, T>, options?: RouteConfiguration<Action>): void {
+		router.route(path, handler, options);
+	}
+
+	/**
+	 * Sends a message to the plugin.
+	 * @param payload Payload to send.
+	 * @returns Promise completed when the message was sent.
+	 */
+	public async sendMessage(payload: JsonValue): Promise<void> {
+		const {
+			uuid,
+			actionInfo: { action }
+		} = await connection.getInfo();
+
+		return connection.send({
+			event: "sendToPlugin",
+			action,
+			context: uuid,
+			payload
+		});
+	}
 }
 
-/**
- * Maps fetch requests from the **plugin**.
- * @param path Path of the route.
- * @param handler Handler to be invoked, responsible for returning a response to the property inspector.
- * @param options Optional routing configuration.
- */
-export function route<TBody extends JsonValue = JsonValue>(path: string, handler: MessageHandler<Action, TBody>, options?: RouteConfiguration<Action>): void {
-	gateway.route(path, handler, options);
-}
-
-/**
- * Sends the {@link payload} to the plugin. The property inspector can also receive information from the plugin via {@link onDidReceivePluginMessage} allowing for bi-directional
- * communication.
- * @template T The type of the payload received from the property inspector.
- * @param payload Payload to send to the property inspector.
- * @returns `Promise` resolved when {@link payload} has been sent to the property inspector.
- */
-export async function sendToPlugin<T extends JsonValue = JsonValue>(payload: T): Promise<void> {
-	const {
-		uuid,
-		actionInfo: { action }
-	} = await connection.getInfo();
-
-	return connection.send({
-		event: "sendToPlugin",
-		action,
-		context: uuid,
-		payload
-	});
-}
+export const plugin = new PluginController();
+export { router, type PluginController };
