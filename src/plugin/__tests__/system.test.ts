@@ -15,7 +15,6 @@ describe("system", () => {
 	it("receives onApplicationDidLaunch", () => {
 		// Arrange
 		const listener = jest.fn();
-		const spyOnDisposableOn = jest.spyOn(connection, "disposableOn");
 		const ev = {
 			event: "applicationDidLaunch",
 			payload: {
@@ -28,8 +27,6 @@ describe("system", () => {
 		connection.emit("applicationDidLaunch", ev);
 
 		// Assert (emit).
-		expect(spyOnDisposableOn).toHaveBeenCalledTimes(1);
-		expect(spyOnDisposableOn).toHaveBeenCalledWith(ev.event, expect.any(Function));
 		expect(listener).toHaveBeenCalledTimes(1);
 		expect(listener).toHaveBeenCalledWith<[ApplicationDidLaunchEvent]>({
 			application: "notepad.exe",
@@ -50,7 +47,6 @@ describe("system", () => {
 	it("receives onApplicationDidTerminate", () => {
 		// Arrange
 		const listener = jest.fn();
-		const spyOnDisposableOn = jest.spyOn(connection, "disposableOn");
 		const ev = {
 			event: "applicationDidTerminate",
 			payload: {
@@ -63,8 +59,6 @@ describe("system", () => {
 		connection.emit("applicationDidTerminate", ev);
 
 		// Assert (emit).
-		expect(spyOnDisposableOn).toHaveBeenCalledTimes(1);
-		expect(spyOnDisposableOn).toHaveBeenCalledWith(ev.event, expect.any(Function));
 		expect(listener).toHaveBeenCalledTimes(1);
 		expect(listener).toHaveBeenCalledWith<[ApplicationDidTerminateEvent]>({
 			application: "notepad.exe",
@@ -86,7 +80,6 @@ describe("system", () => {
 		it("propagates", () => {
 			// Arrange
 			const listener = jest.fn();
-			const spyOnDisposableOn = jest.spyOn(connection, "disposableOn");
 			const ev = {
 				event: "didReceiveDeepLink",
 				payload: {
@@ -99,8 +92,6 @@ describe("system", () => {
 			connection.emit("didReceiveDeepLink", ev);
 
 			// Assert (emit).
-			expect(spyOnDisposableOn).toHaveBeenCalledTimes(1);
-			expect(spyOnDisposableOn).toHaveBeenCalledWith(ev.event, expect.any(Function));
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[DidReceiveDeepLinkEvent]>({
 				url: {
@@ -141,7 +132,6 @@ describe("system", () => {
 	it("Receives onSystemDidWakeUp", () => {
 		// Arrange
 		const listener = jest.fn();
-		const spyOnDisposableOn = jest.spyOn(connection, "disposableOn");
 		const ev = {
 			event: "systemDidWakeUp"
 		} satisfies SystemDidWakeUp;
@@ -151,8 +141,6 @@ describe("system", () => {
 		connection.emit("systemDidWakeUp", ev);
 
 		// Assert (emit).
-		expect(spyOnDisposableOn).toHaveBeenCalledTimes(1);
-		expect(spyOnDisposableOn).toHaveBeenCalledWith(ev.event, expect.any(Function));
 		expect(listener).toHaveBeenCalledTimes(1);
 		expect(listener).toHaveBeenCalledWith<[SystemDidWakeUpEvent]>({
 			type: "systemDidWakeUp"

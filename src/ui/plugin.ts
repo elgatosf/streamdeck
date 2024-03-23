@@ -20,20 +20,20 @@ const gateway = new MessageGateway<Action>(
 connection.on("sendToPropertyInspector", (ev) => gateway.process(ev));
 
 /**
- * Sends the {@link request} to the plugin; the plugin can listen to requests using `streamDeck.ui.route(string, handler, options)`.
+ * Sends a fetch request to the **plugin**; the plugin can map requests using `streamDeck.ui.route(path, handler, options)`.
  * @param request The request.
  * @returns The response.
  */
 export function fetch<T extends JsonValue = JsonValue>(request: MessageRequestOptions): Promise<MessageResponse<T>>;
 /**
- * Sends the request to the plugin; the plugin can listen to requests using `streamDeck.ui.route(string, handler, options)`.
+ * Sends a fetch request to the **plugin**; the plugin can map requests using `streamDeck.ui.route(path, handler, options)`.
  * @param path Path of the request.
  * @param body Optional body sent with the request.
  * @returns The response.
  */
 export function fetch<T extends JsonValue = JsonValue>(path: string, body?: JsonValue): Promise<MessageResponse<T>>;
 /**
- * Sends the {@link requestOrPath} to the plugin; the plugin can listen to requests using `streamDeck.ui.route(string, handler, options)`.
+ * Sends a fetch request to the **plugin**; the plugin can map requests using `streamDeck.ui.route(path, handler, options)`.
  * @param requestOrPath The request, or the path of the request.
  * @param bodyOrUndefined Request body, or moot when constructing the request with {@link MessageRequestOptions}.
  * @returns The response.
@@ -67,9 +67,9 @@ export function onDidReceivePluginMessage<TPayload extends JsonValue = JsonValue
 }
 
 /**
- * Maps the specified {@link path} to the {@link handler}, allowing for requests from the plugin.
- * @param path Path used to identify the route.
- * @param handler Handler to be invoked when the request is received.
+ * Maps fetch requests from the **plugin**.
+ * @param path Path of the route.
+ * @param handler Handler to be invoked, responsible for returning a response to the property inspector.
  * @param options Optional routing configuration.
  */
 export function route<TBody extends JsonValue = JsonValue>(path: string, handler: MessageHandler<Action, TBody>, options?: RouteConfiguration<Action>): void {

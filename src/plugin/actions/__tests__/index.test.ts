@@ -76,7 +76,6 @@ describe("actions", () => {
 		it("receives onDialDown", () => {
 			// Arrange.
 			const listener = jest.fn();
-			const spyOnDisposableOn = jest.spyOn(connection, "disposableOn");
 			const ev = {
 				action: "com.elgato.test.one",
 				context: "context123",
@@ -99,8 +98,6 @@ describe("actions", () => {
 			connection.emit("dialDown", ev);
 
 			// Assert (emit).
-			expect(spyOnDisposableOn).toHaveBeenCalledTimes(1);
-			expect(spyOnDisposableOn).toHaveBeenCalledWith(ev.event, expect.any(Function));
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[DialDownEvent<Settings>]>({
 				action: new Action(ev),
@@ -123,7 +120,6 @@ describe("actions", () => {
 		it("receives onDialRotate", () => {
 			// Arrange.
 			const listener = jest.fn();
-			const spyOnDisposableOn = jest.spyOn(connection, "disposableOn");
 			const ev = {
 				action: "com.elgato.test.one",
 				context: "context123",
@@ -148,8 +144,6 @@ describe("actions", () => {
 			connection.emit("dialRotate", ev);
 
 			// Assert (emit).
-			expect(spyOnDisposableOn).toHaveBeenCalledTimes(1);
-			expect(spyOnDisposableOn).toHaveBeenCalledWith(ev.event, expect.any(Function));
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[DialRotateEvent<Settings>]>({
 				action: new Action(ev),
@@ -172,7 +166,6 @@ describe("actions", () => {
 		it("receives onDialUp", () => {
 			// Arrange.
 			const listener = jest.fn();
-			const spyOnDisposableOn = jest.spyOn(connection, "disposableOn");
 			const ev = {
 				action: "com.elgato.test.one",
 				context: "context123",
@@ -195,8 +188,6 @@ describe("actions", () => {
 			connection.emit("dialUp", ev);
 
 			// Assert (emit).
-			expect(spyOnDisposableOn).toHaveBeenCalledTimes(1);
-			expect(spyOnDisposableOn).toHaveBeenCalledWith(ev.event, expect.any(Function));
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[DialUpEvent<Settings>]>({
 				action: new Action(ev),
@@ -219,7 +210,6 @@ describe("actions", () => {
 		it("receives onKeyDown", () => {
 			// Arrange.
 			const listener = jest.fn();
-			const spyOnDisposableOn = jest.spyOn(connection, "disposableOn");
 			const ev = {
 				action: "com.elgato.test.one",
 				context: "context123",
@@ -243,8 +233,6 @@ describe("actions", () => {
 			connection.emit("keyDown", ev);
 
 			// Assert (emit).
-			expect(spyOnDisposableOn).toHaveBeenCalledTimes(1);
-			expect(spyOnDisposableOn).toHaveBeenCalledWith(ev.event, expect.any(Function));
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[KeyDownEvent<Settings>]>({
 				action: new Action(ev),
@@ -267,7 +255,6 @@ describe("actions", () => {
 		it("receives onKeyUp", () => {
 			// Arrange.
 			const listener = jest.fn();
-			const spyOnDisposableOn = jest.spyOn(connection, "disposableOn");
 			const ev = {
 				action: "com.elgato.test.one",
 				context: "context123",
@@ -291,8 +278,6 @@ describe("actions", () => {
 			connection.emit("keyUp", ev);
 
 			// Assert (emit).
-			expect(spyOnDisposableOn).toHaveBeenCalledTimes(1);
-			expect(spyOnDisposableOn).toHaveBeenCalledWith(ev.event, expect.any(Function));
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[KeyUpEvent<Settings>]>({
 				action: new Action(ev),
@@ -315,7 +300,6 @@ describe("actions", () => {
 		it("receives onTitleParametersDidChange", () => {
 			// Arrange.
 			const listener = jest.fn();
-			const spyOnDisposableOn = jest.spyOn(connection, "disposableOn");
 			const ev = {
 				action: "com.elgato.test.one",
 				context: "context123",
@@ -348,8 +332,6 @@ describe("actions", () => {
 			connection.emit("titleParametersDidChange", ev);
 
 			// Assert (emit).
-			expect(spyOnDisposableOn).toHaveBeenCalledTimes(1);
-			expect(spyOnDisposableOn).toHaveBeenCalledWith(ev.event, expect.any(Function));
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[TitleParametersDidChangeEvent<Settings>]>({
 				action: new Action(ev),
@@ -372,7 +354,6 @@ describe("actions", () => {
 		it("receives onTouchTap", () => {
 			// Arrange.
 			const listener = jest.fn();
-			const spyOnDisposableOn = jest.spyOn(connection, "disposableOn");
 			const ev = {
 				action: "com.elgato.test.one",
 				context: "context123",
@@ -397,8 +378,6 @@ describe("actions", () => {
 			connection.emit("touchTap", ev);
 
 			// Assert (emit).
-			expect(spyOnDisposableOn).toHaveBeenCalledTimes(1);
-			expect(spyOnDisposableOn).toHaveBeenCalledWith(ev.event, expect.any(Function));
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[TouchTapEvent<Settings>]>({
 				action: new Action(ev),
@@ -421,7 +400,6 @@ describe("actions", () => {
 		it("receives onWillAppear", () => {
 			// Arrange.
 			const listener = jest.fn();
-			const spyOnDisposableOn = jest.spyOn(connection, "disposableOn");
 			const ev = {
 				action: "com.elgato.test.one",
 				context: "context123",
@@ -445,8 +423,6 @@ describe("actions", () => {
 			connection.emit("willAppear", ev);
 
 			// Assert (emit).
-			expect(spyOnDisposableOn).toHaveBeenCalledTimes(1);
-			expect(spyOnDisposableOn).toHaveBeenCalledWith(ev.event, expect.any(Function));
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[WillAppearEvent<Settings>]>({
 				action: new Action(ev),
@@ -469,7 +445,6 @@ describe("actions", () => {
 		it("receives onWillAppear", () => {
 			// Arrange.
 			const listener = jest.fn();
-			const spyOnDisposableOn = jest.spyOn(connection, "disposableOn");
 			const ev = {
 				action: "com.elgato.test.one",
 				context: "context123",
@@ -493,8 +468,6 @@ describe("actions", () => {
 			connection.emit("willDisappear", ev);
 
 			// Assert (emit).
-			expect(spyOnDisposableOn).toHaveBeenCalledTimes(1);
-			expect(spyOnDisposableOn).toHaveBeenCalledWith(ev.event, expect.any(Function));
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[WillDisappearEvent<Settings>]>({
 				action: new Action(ev),

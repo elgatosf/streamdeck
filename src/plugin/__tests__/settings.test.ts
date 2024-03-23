@@ -72,7 +72,6 @@ describe("settings", () => {
 		it("onDidReceiveGlobalSettings", () => {
 			// Arrange
 			const listener = jest.fn();
-			const spyOnDisposableOn = jest.spyOn(connection, "disposableOn");
 			const ev = {
 				event: "didReceiveGlobalSettings",
 				payload: {
@@ -87,8 +86,6 @@ describe("settings", () => {
 			connection.emit("didReceiveGlobalSettings", ev);
 
 			// Assert (emit).
-			expect(spyOnDisposableOn).toHaveBeenCalledTimes(1);
-			expect(spyOnDisposableOn).toHaveBeenCalledWith(ev.event, expect.any(Function));
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[DidReceiveGlobalSettingsEvent<Settings>]>({
 				settings: {
@@ -111,7 +108,6 @@ describe("settings", () => {
 		it("onDidReceiveSettings", () => {
 			// Arrange
 			const listener = jest.fn();
-			const spyOnDisposableOn = jest.spyOn(connection, "disposableOn");
 			const ev = {
 				action: "com.elgato.test.one",
 				context: "context123",
@@ -135,8 +131,6 @@ describe("settings", () => {
 			connection.emit("didReceiveSettings", ev);
 
 			// Assert (emit).
-			expect(spyOnDisposableOn).toHaveBeenCalledTimes(1);
-			expect(spyOnDisposableOn).toHaveBeenCalledWith(ev.event, expect.any(Function));
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[DidReceiveSettingsEvent<Settings>]>({
 				action: new Action(ev),

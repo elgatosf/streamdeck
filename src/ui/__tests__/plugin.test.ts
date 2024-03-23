@@ -21,8 +21,6 @@ describe("plugin", () => {
 	it("receives onDidReceivePluginMessage", async () => {
 		// Arrange.
 		const listener = jest.fn();
-		const spyOnDisposableOn = jest.spyOn(connection, "disposableOn");
-
 		const ev: DidReceivePluginMessage<PayloadOrSettings> = {
 			action: "com.elgato.test.one",
 			context: "action123",
@@ -37,8 +35,6 @@ describe("plugin", () => {
 		connection.emit("sendToPropertyInspector", ev);
 
 		// Assert.
-		expect(spyOnDisposableOn).toHaveBeenCalledTimes(1);
-		expect(spyOnDisposableOn).toHaveBeenCalledWith("sendToPropertyInspector", expect.any(Function));
 		expect(listener).toHaveBeenCalledTimes(1);
 		expect(listener).toHaveBeenCalledWith<[DidReceivePluginMessageEvent<PayloadOrSettings, PayloadOrSettings>]>({
 			action: {

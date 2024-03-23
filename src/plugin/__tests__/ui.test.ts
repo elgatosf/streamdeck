@@ -16,7 +16,6 @@ describe("ui", () => {
 	it("receives onPropertyInspectorDidAppear", () => {
 		// Arrange
 		const listener = jest.fn();
-		const spyOnDisposableOn = jest.spyOn(connection, "disposableOn");
 		const ev = {
 			action: "com.elgato.test.one",
 			context: "context123",
@@ -29,8 +28,6 @@ describe("ui", () => {
 		connection.emit("propertyInspectorDidAppear", ev);
 
 		// Assert (emit).
-		expect(spyOnDisposableOn).toHaveBeenCalledTimes(1);
-		expect(spyOnDisposableOn).toHaveBeenCalledWith(ev.event, expect.any(Function));
 		expect(listener).toHaveBeenCalledTimes(1);
 		expect(listener).toHaveBeenCalledWith<[PropertyInspectorDidAppearEvent<Settings>]>({
 			action: new Action(ev),
@@ -52,7 +49,6 @@ describe("ui", () => {
 	it("receives onPropertyInspectorDidDisappear", () => {
 		// Arrange
 		const listener = jest.fn();
-		const spyOnDisposableOn = jest.spyOn(connection, "disposableOn");
 		const ev = {
 			action: "com.elgato.test.one",
 			context: "context123",
@@ -65,8 +61,6 @@ describe("ui", () => {
 		connection.emit("propertyInspectorDidDisappear", ev);
 
 		// Assert (emit).
-		expect(spyOnDisposableOn).toHaveBeenCalledTimes(1);
-		expect(spyOnDisposableOn).toHaveBeenCalledWith(ev.event, expect.any(Function));
 		expect(listener).toHaveBeenCalledTimes(1);
 		expect(listener).toHaveBeenCalledWith<[PropertyInspectorDidDisappearEvent<Settings>]>({
 			action: new Action(ev),
@@ -83,12 +77,11 @@ describe("ui", () => {
 	});
 
 	/**
-	 * Asserts {@link onDidReceivePropertyInspectorMessage} is invoked when `sendToPlugin` is emitted.
+	 * Asserts {@link onDidReceivePropertyInspectorMessage} is invoked when `sendToPlugin` is emitted for an unknown route.
 	 */
 	it("receives onDidReceivePropertyInspectorMessage", () => {
 		// Arrange
 		const listener = jest.fn();
-		const spyOnDisposableOn = jest.spyOn(connection, "disposableOn");
 		const ev = {
 			action: "com.elgato.test.one",
 			context: "context123",
@@ -103,8 +96,6 @@ describe("ui", () => {
 		connection.emit("sendToPlugin", ev);
 
 		// Assert (emit).
-		expect(spyOnDisposableOn).toHaveBeenCalledTimes(1);
-		expect(spyOnDisposableOn).toHaveBeenCalledWith(ev.event, expect.any(Function));
 		expect(listener).toHaveBeenCalledTimes(1);
 		expect(listener).toHaveBeenCalledWith<[DidReceivePropertyInspectorMessageEvent<Settings, Settings>]>({
 			action: new Action(ev),
