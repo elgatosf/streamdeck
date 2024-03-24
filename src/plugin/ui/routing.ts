@@ -60,9 +60,9 @@ export function route<TBody extends JsonValue = JsonValue, TSettings extends Jso
  * Wraps {@link MessageHandler} to provide scoped request, with a dynamic return type.
  * @param request Request received from the property inspector.
  * @param responder Responder responsible for responding to the request.
- * @template TBody Body type sent with the request.
- * @template TSettings Settings type associated with the action.
- * @template TResult Result type of the request handler.
+ * @template TBody The type of the request body.
+ * @template TSettings The type of the action's settings.
+ * @template TResult The type of the result of the request handler.
  */
 type RoutedMessageHandler<TBody extends JsonValue, TSettings extends JsonObject, TResult> = (
 	request?: ScopedMessageRequest<TBody, TSettings>,

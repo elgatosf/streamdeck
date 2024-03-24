@@ -190,6 +190,7 @@ export class MessageGateway<TAction> extends EventEmitter<MessageGatewayEventMap
 
 /**
  * Represents a message received from the plugin or the property inspector.
+ * @template T The type of the payload.
  */
 type PluginOrPropertyInspectorMessage<T extends JsonValue> = DidReceivePluginMessage<T> | DidReceivePropertyInspectorMessage<T>;
 
@@ -210,6 +211,8 @@ type MessageGatewayEventMap = {
 
 /**
  * Message request, received from the client.
+ * @template TAction The type of the action that sent the request.
+ * @template TBody The type of the request body.
  */
 export type MessageRequest<TAction, TBody extends JsonValue = JsonValue> = Omit<RawMessageRequest, "__type" | "body" | "id"> & {
 	/**

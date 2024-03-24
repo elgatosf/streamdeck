@@ -8,7 +8,7 @@ export { route } from "./routing";
 
 /**
  * Message request received from the property inspector.
- * @template TBody Body type sent with the request.
- * @template TSettings Settings type associated with the action.
+ * @template TBody The type of the request body.
+ * @template TSettings The type of the action's settings.
  */
 export type MessageRequest<TBody extends JsonValue = JsonValue, TSettings extends JsonObject = JsonObject> = InternalMessageRequest<Action<TSettings>, TBody>;

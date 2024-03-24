@@ -36,7 +36,8 @@ class PluginController {
 	 * // Within the plugin.
 	 * streamDeck.ui.registerRoute(path, handler, options)
 	 * ```
-	 * @param request The request.
+	 * @template T The type of the request body.
+	 * @param request The request to send to the plugin.
 	 * @returns The response.
 	 */
 	public async fetch<T extends JsonValue = JsonValue>(request: MessageRequestOptions): Promise<MessageResponse<T>>;
@@ -46,7 +47,8 @@ class PluginController {
 	 * // Within the plugin.
 	 * streamDeck.ui.registerRoute(path, handler, options)
 	 * ```
-	 * @param path Path of the request.
+	 * @template T The type of the request body.
+	 * @param path Path of the request being sent to the plugin.
 	 * @param body Optional body sent with the request.
 	 * @returns The response.
 	 */
@@ -57,6 +59,7 @@ class PluginController {
 	 * // Within the plugin.
 	 * streamDeck.ui.registerRoute(path, handler, options)
 	 * ```
+	 * @template T The type of the request body.
 	 * @param requestOrPath The request, or the path of the request.
 	 * @param bodyOrUndefined Request body, or moot when constructing the request with {@link MessageRequestOptions}.
 	 * @returns The response.
@@ -132,7 +135,7 @@ export { router, type PluginController };
 
 /**
  * Message request received from the property inspector.
- * @template TBody Body type sent with the request.
- * @template TSettings Settings type associated with the action.
+ * @template TBody The type of the request body.
+ * @template TSettings The type of the action's settings.
  */
 export type MessageRequest<TBody extends JsonValue = JsonValue, TSettings extends JsonObject = JsonObject> = InternalMessageRequest<Action<TSettings>, TBody>;

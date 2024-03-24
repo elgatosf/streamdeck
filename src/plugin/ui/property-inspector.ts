@@ -33,7 +33,8 @@ export class PropertyInspector extends ActionContext implements Pick<MessageGate
 	 * // Within the property inspector.
 	 * streamDeck.plugin.registerRoute(path, handler, options)
 	 * ```
-	 * @param request The request.
+	 * @template T The type of the request body.
+	 * @param request The request being sent to the property inspector.
 	 * @returns The response.
 	 */
 	public async fetch<T extends JsonValue = JsonValue>(request: MessageRequestOptions): Promise<MessageResponse<T>>;
@@ -43,7 +44,8 @@ export class PropertyInspector extends ActionContext implements Pick<MessageGate
 	 * // Within the property inspector.
 	 * streamDeck.plugin.registerRoute(path, handler, options)
 	 * ```
-	 * @param path Path of the request.
+	 * @template T The type of the request body.
+	 * @param path Path of the request being sent to the property inspector.
 	 * @param body Optional body sent with the request.
 	 * @returns The response.
 	 */
@@ -54,6 +56,7 @@ export class PropertyInspector extends ActionContext implements Pick<MessageGate
 	 * // Within the property inspector.
 	 * streamDeck.plugin.registerRoute(path, handler, options)
 	 * ```
+	 * @template T The type of the request body.
 	 * @param requestOrPath The request, or the path of the request.
 	 * @param bodyOrUndefined Request body, or moot when constructing the request with {@link MessageRequestOptions}.
 	 * @returns The response.
