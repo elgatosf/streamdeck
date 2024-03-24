@@ -28,7 +28,7 @@ export { SingletonAction } from "./actions/singleton-action";
 export { Device } from "./devices";
 export * from "./events";
 export { LogLevel } from "./logging";
-export { route, type MessageRequest } from "./ui";
+export { route, type MessageRequest, type PropertyInspector } from "./ui";
 
 import * as actions from "./actions";
 import { connection } from "./connection";

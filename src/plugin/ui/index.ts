@@ -3,6 +3,7 @@ import type { MessageRequest as InternalMessageRequest } from "../../common/mess
 import type { Action } from "../actions/action";
 
 export { ui, type UIController } from "./controller";
+export { type PropertyInspector } from "./property-inspector";
 export { route } from "./routing";
 
 /**
