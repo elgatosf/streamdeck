@@ -1,6 +1,13 @@
 import type { JsonObject, JsonValue } from ".";
 import type { IDisposable } from "../common/disposable";
-import { MessageGateway, type MessageHandler, type MessageRequestOptions, type MessageResponse, type RouteConfiguration } from "../common/messaging";
+import {
+	MessageGateway,
+	type MessageRequest as InternalMessageRequest,
+	type MessageHandler,
+	type MessageRequestOptions,
+	type MessageResponse,
+	type RouteConfiguration
+} from "../common/messaging";
 import type { Action } from "./action";
 import { connection } from "./connection";
 import type { DidReceivePluginMessageEvent } from "./events";
@@ -122,3 +129,10 @@ class PluginController {
 
 export const plugin = new PluginController();
 export { router, type PluginController };
+
+/**
+ * Message request received from the property inspector.
+ * @template TBody Body type sent with the request.
+ * @template TSettings Settings type associated with the action.
+ */
+export type MessageRequest<TBody extends JsonValue = JsonValue, TSettings extends JsonObject = JsonObject> = InternalMessageRequest<Action<TSettings>, TBody>;

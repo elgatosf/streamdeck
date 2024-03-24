@@ -1,7 +1,7 @@
 import { Action, JsonValue, MessageRequest, MessageRequestOptions } from "../..";
 import type { DidReceivePropertyInspectorMessage, SendToPropertyInspector } from "../../../api";
 import type { RawMessageRequest } from "../../../common/messaging/message";
-import { MessageResponseBuilder } from "../../../common/messaging/responder";
+import { MessageResponder } from "../../../common/messaging/responder";
 import { connection } from "../../connection";
 import { PropertyInspector, getCurrentUI, router } from "../routing";
 
@@ -190,7 +190,7 @@ describe("router", () => {
 			expect(spyOnProcess).toBeCalledTimes(1);
 			expect(spyOnProcess).toHaveBeenCalledWith(ev);
 			expect(listener).toHaveBeenCalledTimes(1);
-			expect(listener).toHaveBeenCalledWith<[MessageRequest<Action>, MessageResponseBuilder]>(
+			expect(listener).toHaveBeenCalledWith<[MessageRequest, MessageResponder]>(
 				{
 					action: new Action(ev),
 					path: "/test",
@@ -199,7 +199,7 @@ describe("router", () => {
 						name: "Elgato"
 					}
 				},
-				expect.any(MessageResponseBuilder)
+				expect.any(MessageResponder)
 			);
 		});
 	});

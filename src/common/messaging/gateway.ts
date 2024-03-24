@@ -2,7 +2,7 @@ import type { DidReceivePluginMessage, DidReceivePropertyInspectorMessage } from
 import { EventEmitter } from "../event-emitter";
 import type { JsonValue } from "../json";
 import { isRequest, isResponse, type RawMessageRequest, type RawMessageResponse, type StatusCode } from "./message";
-import { MessageResponseBuilder } from "./responder";
+import { MessageResponder } from "./responder";
 
 /**
  * Default request timeout.
@@ -127,7 +127,7 @@ export class MessageGateway<TAction> extends EventEmitter<MessageGatewayEventMap
 	 * @returns `true` when the request was handled; otherwise `false`.
 	 */
 	private async handleRequest(action: TAction, source: RawMessageRequest): Promise<boolean> {
-		const res = new MessageResponseBuilder(source, this.proxy);
+		const res = new MessageResponder(source, this.proxy);
 		const req: MessageRequest<TAction, JsonValue> = {
 			action,
 			path: source.path,
@@ -305,7 +305,7 @@ export type ActionProvider<T> = (source: DidReceivePluginMessage<JsonValue> | Di
  */
 export type MessageHandler<TAction, TBody extends JsonValue = JsonValue> = (
 	request: MessageRequest<TAction, TBody>,
-	response: MessageResponseBuilder
+	response: MessageResponder
 ) => JsonValue | Promise<JsonValue | void> | void;
 
 /**

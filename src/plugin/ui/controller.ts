@@ -62,13 +62,19 @@ class UIController {
 	 * @param path Path that identifies the route.
 	 * @param handler Handler to be invoked when a matching request is received.
 	 * @param options Optional routing configuration.
+	 * @template TBody Body type sent with the request.
+	 * @template TSettings Settings type associated with the action.
 	 * @example
 	 * streamDeck.ui.onRequest("/toggle-light", async (req, res) => {
 	 *   await lightService.toggle(req.body.lightId);
 	 *   res.success();
 	 * });
 	 */
-	public registerRoute<T extends JsonValue = JsonValue>(path: string, handler: MessageHandler<Action, T>, options?: RouteConfiguration<Action>): void {
+	public registerRoute<TBody extends JsonValue = JsonValue, TSettings extends JsonObject = JsonObject>(
+		path: string,
+		handler: MessageHandler<Action<TSettings>, TBody>,
+		options?: RouteConfiguration<Action>
+	): void {
 		router.route(path, handler, options);
 	}
 }

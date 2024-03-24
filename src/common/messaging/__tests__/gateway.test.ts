@@ -3,7 +3,7 @@ import { type Action } from "../../../plugin/actions/action";
 import type { JsonValue } from "../../json";
 import { MessageGateway, type MessageRequest } from "../gateway";
 import type { RawMessageRequest } from "../message";
-import { MessageResponseBuilder } from "../responder";
+import { MessageResponder } from "../responder";
 
 describe("MessageGateway", () => {
 	it("must provide sender action", async () => {
@@ -35,7 +35,7 @@ describe("MessageGateway", () => {
 		} satisfies DidReceivePropertyInspectorMessage<RawMessageRequest>);
 
 		expect(handler).toHaveBeenCalledTimes(1);
-		expect(handler).toHaveBeenCalledWith<[MessageRequest<MockAction>, MessageResponseBuilder]>(
+		expect(handler).toHaveBeenCalledWith<[MessageRequest<MockAction>, MessageResponder]>(
 			{
 				action: {
 					id: "abc123",
@@ -47,7 +47,7 @@ describe("MessageGateway", () => {
 					name: "Elgato"
 				}
 			},
-			expect.any(MessageResponseBuilder)
+			expect.any(MessageResponder)
 		);
 	});
 

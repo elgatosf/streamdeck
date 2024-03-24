@@ -1,14 +1,14 @@
 import type { RawMessageResponse } from "../message";
-import { MessageResponseBuilder } from "../responder";
+import { MessageResponder } from "../responder";
 
-describe("MessageResponseBuilder", () => {
+describe("MessageResponder", () => {
 	/**
-	 * Asserts {@link MessageResponseBuilder.send} sends a `200` with the optional body.
+	 * Asserts {@link MessageResponder.send} sends a `200` with the optional body.
 	 */
 	it("should send 200 with success", async () => {
 		// Arrange.
 		const proxy = jest.fn();
-		const res = new MessageResponseBuilder(
+		const res = new MessageResponder(
 			{
 				__type: "request",
 				id: "abc123",
@@ -33,12 +33,12 @@ describe("MessageResponseBuilder", () => {
 	});
 
 	/**
-	 * Asserts {@link MessageResponseBuilder.fail} sends a `500` with the optional body.
+	 * Asserts {@link MessageResponder.fail} sends a `500` with the optional body.
 	 */
 	it("should send 500 with fail", async () => {
 		// Arrange.
 		const proxy = jest.fn();
-		const res = new MessageResponseBuilder(
+		const res = new MessageResponder(
 			{
 				__type: "request",
 				id: "abc123",
@@ -66,12 +66,12 @@ describe("MessageResponseBuilder", () => {
 	});
 
 	/**
-	 * Asserts {@link MessageResponseBuilder.send} sends a status.
+	 * Asserts {@link MessageResponder.send} sends a status.
 	 */
 	it("send status", async () => {
 		// Arrange.
 		const proxy = jest.fn();
-		const res = new MessageResponseBuilder(
+		const res = new MessageResponder(
 			{
 				__type: "request",
 				id: "abc123",
@@ -100,7 +100,7 @@ describe("MessageResponseBuilder", () => {
 	it("can respond when unidirectional", async () => {
 		// Arrange.
 		const proxy = jest.fn();
-		const res = new MessageResponseBuilder(
+		const res = new MessageResponder(
 			{
 				__type: "request",
 				id: "abc123",
@@ -129,7 +129,7 @@ describe("MessageResponseBuilder", () => {
 	it("down not respond more than once", async () => {
 		// Arrange.
 		const proxy = jest.fn();
-		const res = new MessageResponseBuilder(
+		const res = new MessageResponder(
 			{
 				__type: "request",
 				id: "abc123",

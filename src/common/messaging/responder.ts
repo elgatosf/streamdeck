@@ -3,16 +3,16 @@ import type { OutboundMessageProxy } from "./gateway";
 import type { RawMessageRequest, RawMessageResponse, StatusCode } from "./message";
 
 /**
- * Message response builder responsible for responding to a request.
+ * Message responder responsible for responding to a request.
  */
-export class MessageResponseBuilder {
+export class MessageResponder {
 	/**
 	 * Indicates whether a response has already been sent in relation to the response.
 	 */
 	private _responded = false;
 
 	/**
-	 * Initializes a new instance of the {@link MessageResponseBuilder} class.
+	 * Initializes a new instance of the {@link MessageResponder} class.
 	 * @param request The request the response is associated with.
 	 * @param proxy Proxy responsible for forwarding the response to the client.
 	 */
