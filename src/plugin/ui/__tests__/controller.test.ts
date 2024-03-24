@@ -4,6 +4,7 @@ import { Action } from "../../actions/action";
 import { connection } from "../../connection";
 import { DidReceivePropertyInspectorMessageEvent, PropertyInspectorDidAppearEvent, type PropertyInspectorDidDisappearEvent } from "../../events";
 import { ui } from "../controller";
+import { PropertyInspector } from "../property-inspector";
 import * as Routing from "../routing";
 
 jest.mock("../routing");
@@ -17,7 +18,7 @@ describe("UIController", () => {
 	 */
 	it("gets current", () => {
 		// Arrange.
-		const pi = new Routing.PropertyInspector({
+		const pi = new PropertyInspector(Routing.router, {
 			action: "com.elgato.test.one",
 			context: "abc123",
 			device: "dev123"
