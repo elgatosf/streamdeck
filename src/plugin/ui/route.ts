@@ -1,8 +1,7 @@
-import type { MessageRequest as ScopedMessageRequest } from ".";
 import type { JsonObject, JsonValue } from "../../common/json";
-import { type MessageHandler, type MessageResponder } from "../../common/messaging";
-import { Action } from "../actions/action";
+import { type MessageResponder } from "../../common/messaging";
 import type { SingletonAction } from "../actions/singleton-action";
+import type { MessageHandler, MessageRequest } from "./message";
 import { router } from "./router";
 
 /**
@@ -11,13 +10,13 @@ import { router } from "./router";
  * @param path Path of the request.
  * @returns The decorator factory.
  */
-export function route<TBody extends JsonValue = JsonValue, TSettings extends JsonObject = JsonObject, TResult extends ReturnType<MessageHandler<Action, TBody>> = undefined>(
+export function route<TBody extends JsonValue = JsonValue, TSettings extends JsonObject = JsonObject, TResult extends ReturnType<MessageHandler<TBody, TSettings>> = undefined>(
 	path: string
-): (target: MessageHandler<Action<TSettings>, TBody>, context: ClassMethodDecoratorContext<SingletonAction>) => RoutedMessageHandler<TBody, TSettings, TResult> | void {
-	return function (target: MessageHandler<Action<TSettings>, TBody>, context: ClassMethodDecoratorContext<SingletonAction>): void {
+): (target: MessageHandler<TBody, TSettings>, context: ClassMethodDecoratorContext<SingletonAction>) => OptionalParameterMessageHandler<TBody, TSettings, TResult> | void {
+	return function (target: MessageHandler<TBody, TSettings>, context: ClassMethodDecoratorContext<SingletonAction>): void {
 		context.addInitializer(function () {
 			router.route(path, target.bind(this), {
-				filter: (req) => req.action.manifestId === this.manifestId
+				filter: (source) => source.manifestId === this.manifestId
 			});
 		});
 	};
@@ -31,7 +30,7 @@ export function route<TBody extends JsonValue = JsonValue, TSettings extends Jso
  * @template TSettings The type of the action's settings.
  * @template TResult The type of the result of the request handler.
  */
-type RoutedMessageHandler<TBody extends JsonValue, TSettings extends JsonObject, TResult> = (
-	request?: ScopedMessageRequest<TBody, TSettings>,
+type OptionalParameterMessageHandler<TBody extends JsonValue, TSettings extends JsonObject, TResult> = (
+	request?: MessageRequest<TBody, TSettings>,
 	responder?: MessageResponder
 ) => TResult;

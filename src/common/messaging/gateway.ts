@@ -110,9 +110,9 @@ export class MessageGateway<TAction> extends EventEmitter<MessageGatewayEventMap
 	 * @param options Optional routing configuration.
 	 * @returns This instance with the route registered.
 	 */
-	public route<TBody extends JsonValue = JsonValue>(path: string, handler: MessageHandler<TAction, TBody>, options?: RouteConfiguration<TAction>): this {
+	public route<TBody extends JsonValue = JsonValue>(path: string, handler: UnscopedMessageHandler<TAction, TBody>, options?: RouteConfiguration<TAction>): this {
 		this.routes.push({
-			handler: handler as MessageHandler<TAction, JsonValue>,
+			handler: handler as UnscopedMessageHandler<TAction, JsonValue>,
 			options: { filter: () => true, ...options },
 			path
 		});
@@ -128,14 +128,14 @@ export class MessageGateway<TAction> extends EventEmitter<MessageGatewayEventMap
 	 */
 	private async handleRequest(action: TAction, source: RawMessageRequest): Promise<boolean> {
 		const res = new MessageResponder(source, this.proxy);
-		const req: GatewayMessageRequest<TAction, JsonValue> = {
+		const req: UnscopedMessageRequest<TAction, JsonValue> = {
 			action,
 			path: source.path,
 			unidirectional: source.unidirectional,
 			body: source.body
 		};
 
-		const routes = this.routes.filter((r) => r.path === source.path && r.options.filter(req));
+		const routes = this.routes.filter((r) => r.path === source.path && r.options.filter(action));
 
 		// When there are no applicable routes, return not-handled.
 		if (routes.length === 0) {
@@ -208,24 +208,6 @@ type MessageGatewayEventMap = {
 	 */
 	unhandledRequest: [message: PluginOrPropertyInspectorMessage<RawMessageRequest>];
 };
-
-/**
- * Message request, received from the client.
- * @template TAction The type of the action that sent the request.
- * @template TBody The type of the request body.
- */
-export type GatewayMessageRequest<TAction, TBody extends JsonValue = JsonValue> = Omit<RawMessageRequest, "__type" | "body" | "id"> & {
-	/**
-	 * Action associated with the request.
-	 */
-	readonly action: TAction;
-
-	/**
-	 * Body of the request.
-	 */
-	readonly body?: TBody;
-};
-
 /**
  * Message request options associated with a request to be sent to the server.
  */
@@ -304,10 +286,27 @@ export type OutboundMessageProxy = (payload: JsonValue) => Promise<boolean> | bo
 export type ActionProvider<T> = (source: DidReceivePluginMessage<JsonValue> | DidReceivePropertyInspectorMessage<JsonValue>) => T;
 
 /**
+ * Message request, received from the client.
+ * @template TAction The type of the action that sent the request.
+ * @template TBody The type of the request body.
+ */
+export type UnscopedMessageRequest<TAction, TBody extends JsonValue = JsonValue> = Omit<RawMessageRequest, "__type" | "body" | "id"> & {
+	/**
+	 * Action associated with the request.
+	 */
+	readonly action: TAction;
+
+	/**
+	 * Body of the request.
+	 */
+	readonly body?: TBody;
+};
+
+/**
  * Function responsible for handling a request, and providing a response.
  */
-export type MessageHandler<TAction, TBody extends JsonValue = JsonValue> = (
-	request: GatewayMessageRequest<TAction, TBody>,
+export type UnscopedMessageHandler<TAction, TBody extends JsonValue = JsonValue> = (
+	request: UnscopedMessageRequest<TAction, TBody>,
 	response: MessageResponder
 ) => JsonValue | Promise<JsonValue | void> | void;
 
@@ -318,12 +317,12 @@ type Route<TAction, TBody extends JsonValue = JsonValue> = {
 	/**
 	 * The handler function.
 	 */
-	handler: MessageHandler<TAction, TBody>;
+	handler: UnscopedMessageHandler<TAction, TBody>;
 
 	/**
 	 * Routing configuration.
 	 */
-	options: Required<RouteConfiguration<TAction, TBody>>;
+	options: Required<RouteConfiguration<TAction>>;
 	/**
 	 * The path of the route, for example "/get-lights".
 	 */
@@ -333,11 +332,11 @@ type Route<TAction, TBody extends JsonValue = JsonValue> = {
 /**
  * Configuration that defines the route.
  */
-export type RouteConfiguration<TAction, TBody extends JsonValue = JsonValue> = {
+export type RouteConfiguration<TAction> = {
 	/**
 	 * Optional filter used to determine if a message can be routed; when `true`, the route handler will be called.
 	 * @param action Action associated with the message.
 	 * @returns Should return `true` when the request can be handled; otherwise `false`.
 	 */
-	filter?: (request: GatewayMessageRequest<TAction, TBody>) => boolean;
+	filter?: (source: TAction) => boolean;
 };

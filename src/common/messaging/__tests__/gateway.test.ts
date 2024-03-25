@@ -1,7 +1,7 @@
 import type { DidReceivePropertyInspectorMessage } from "../../../api";
 import { type Action } from "../../../plugin/actions/action";
 import type { JsonValue } from "../../json";
-import { MessageGateway, type GatewayMessageRequest } from "../gateway";
+import { MessageGateway, type UnscopedMessageRequest } from "../gateway";
 import type { RawMessageRequest } from "../message";
 import { MessageResponder } from "../responder";
 
@@ -35,7 +35,7 @@ describe("MessageGateway", () => {
 		} satisfies DidReceivePropertyInspectorMessage<RawMessageRequest>);
 
 		expect(handler).toHaveBeenCalledTimes(1);
-		expect(handler).toHaveBeenCalledWith<[GatewayMessageRequest<MockAction>, MessageResponder]>(
+		expect(handler).toHaveBeenCalledWith<[UnscopedMessageRequest<MockAction>, MessageResponder]>(
 			{
 				action: {
 					id: "abc123",

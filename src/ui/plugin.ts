@@ -1,6 +1,14 @@
 import type { JsonObject, JsonValue } from ".";
 import type { IDisposable } from "../common/disposable";
-import { MessageGateway, type GatewayMessageRequest, type MessageHandler, type MessageRequestOptions, type MessageResponse, type RouteConfiguration } from "../common/messaging";
+import {
+	MessageGateway,
+	type MessageRequestOptions,
+	type MessageResponder,
+	type MessageResponse,
+	type RouteConfiguration,
+	type UnscopedMessageHandler,
+	type UnscopedMessageRequest
+} from "../common/messaging";
 import type { Action } from "./action";
 import { connection } from "./connection";
 import type { DidReceivePluginMessageEvent } from "./events";
@@ -90,16 +98,22 @@ class PluginController {
 	}
 
 	/**
-	 * Creates a request route, mapping the path to the handler. The plugin can then send requests to the handler using `streamDeck.ui.fetch(path)`.
+	 * Creates a request route, mapping the path to the handler. The plugin can then send requests to the handler using `streamDeck.ui.current.fetch(path)`.
+	 * @template TBody The type of the request body.
+	 * @template TSettings The type of the action's settings.
 	 * @param path Path that identifies the route.
 	 * @param handler Handler to be invoked when a matching request is received.
 	 * @param options Optional routing configuration.
 	 * @example
-	 * streamDeck.plugin.onRequest("/populate-dropdowns", async (req, res) => {
+	 * streamDeck.plugin.registerRoute("/populate-dropdowns", async (req, res) => {
 	 *   // handler
 	 * });
 	 */
-	public registerRoute<T extends JsonValue = JsonValue>(path: string, handler: MessageHandler<Action, T>, options?: RouteConfiguration<Action>): void {
+	public registerRoute<TBody extends JsonValue = JsonValue, TSettings extends JsonObject = JsonObject>(
+		path: string,
+		handler: MessageHandler<TBody, TSettings>,
+		options?: RouteConfiguration<Action>
+	): void {
 		router.route(path, handler, options);
 	}
 
@@ -127,8 +141,20 @@ export const plugin = new PluginController();
 export { router, type PluginController };
 
 /**
- * Message request received from the property inspector.
+ * Message request received from the plugin.
  * @template TBody The type of the request body.
  * @template TSettings The type of the action's settings.
  */
-export type MessageRequest<TBody extends JsonValue = JsonValue, TSettings extends JsonObject = JsonObject> = GatewayMessageRequest<Action<TSettings>, TBody>;
+export type MessageRequest<TBody extends JsonValue = JsonValue, TSettings extends JsonObject = JsonObject> = UnscopedMessageRequest<Action<TSettings>, TBody>;
+
+/**
+ * Function responsible for handling requests received from the plugin.
+ * @param request Request received from the plugin
+ * @param responder Optional responder capable of sending a response; when no response is sent, a `200` is returned.
+ * @template TBody The type of the request body.
+ * @template TSettings The type of the action's settings.
+ */
+export type MessageHandler<TBody extends JsonValue = JsonValue, TSettings extends JsonObject = JsonObject> = (
+	request: MessageRequest<TBody, TSettings>,
+	responder: MessageResponder
+) => ReturnType<UnscopedMessageHandler<Action<TSettings>, TBody>>;

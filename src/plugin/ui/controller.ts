@@ -1,10 +1,11 @@
 import type { DidReceivePropertyInspectorMessage, PropertyInspectorDidAppear, PropertyInspectorDidDisappear } from "../../api";
 import type { IDisposable } from "../../common/disposable";
 import type { JsonObject, JsonValue } from "../../common/json";
-import type { MessageHandler, RouteConfiguration } from "../../common/messaging";
+import type { RouteConfiguration } from "../../common/messaging";
 import { Action } from "../actions/action";
 import { connection } from "../connection";
 import { ActionWithoutPayloadEvent, DidReceivePropertyInspectorMessageEvent, type PropertyInspectorDidAppearEvent, type PropertyInspectorDidDisappearEvent } from "../events";
+import { type MessageHandler } from "./message";
 import { type PropertyInspector } from "./property-inspector";
 import { getCurrentUI, router } from "./router";
 
@@ -60,20 +61,20 @@ class UIController {
 
 	/**
 	 * Creates a request route, mapping the path to the handler. The property inspector can then send requests to the handler using `streamDeck.plugin.fetch(path)`.
+	 * @template TBody The type of the request body.
+	 * @template TSettings The type of the action's settings.
 	 * @param path Path that identifies the route.
 	 * @param handler Handler to be invoked when a matching request is received.
 	 * @param options Optional routing configuration.
-	 * @template TBody Body type sent with the request.
-	 * @template TSettings Settings type associated with the action.
 	 * @example
-	 * streamDeck.ui.onRequest("/toggle-light", async (req, res) => {
+	 * streamDeck.ui.registerRoute("/toggle-light", async (req, res) => {
 	 *   await lightService.toggle(req.body.lightId);
 	 *   res.success();
 	 * });
 	 */
 	public registerRoute<TBody extends JsonValue = JsonValue, TSettings extends JsonObject = JsonObject>(
 		path: string,
-		handler: MessageHandler<Action<TSettings>, TBody>,
+		handler: MessageHandler<TBody, TSettings>,
 		options?: RouteConfiguration<Action>
 	): void {
 		router.route(path, handler, options);
