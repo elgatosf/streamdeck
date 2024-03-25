@@ -3,7 +3,7 @@ import type { JsonValue } from "../../../common/json";
 import type { MessageRequestOptions } from "../../../common/messaging";
 import { connection } from "../../connection";
 import { PropertyInspector } from "../property-inspector";
-import { router } from "../routing";
+import { router } from "../router";
 
 jest.mock("../../connection");
 jest.mock("../../logging");

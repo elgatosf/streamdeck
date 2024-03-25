@@ -5,7 +5,8 @@ import type { MessageHandler, RouteConfiguration } from "../../common/messaging"
 import { Action } from "../actions/action";
 import { connection } from "../connection";
 import { ActionWithoutPayloadEvent, DidReceivePropertyInspectorMessageEvent, type PropertyInspectorDidAppearEvent, type PropertyInspectorDidDisappearEvent } from "../events";
-import { getCurrentUI, router, type PropertyInspector } from "./routing";
+import { type PropertyInspector } from "./property-inspector";
+import { getCurrentUI, router } from "./router";
 
 /**
  * Controller responsible for interacting with the property inspector associated with the plugin.

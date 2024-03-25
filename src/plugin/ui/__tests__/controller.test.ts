@@ -5,7 +5,7 @@ import { connection } from "../../connection";
 import { DidReceivePropertyInspectorMessageEvent, PropertyInspectorDidAppearEvent, type PropertyInspectorDidDisappearEvent } from "../../events";
 import { ui } from "../controller";
 import { PropertyInspector } from "../property-inspector";
-import * as Routing from "../routing";
+import * as RouterModule from "../router";
 
 jest.mock("../routing");
 jest.mock("../../connection");
@@ -18,13 +18,13 @@ describe("UIController", () => {
 	 */
 	it("gets current", () => {
 		// Arrange.
-		const pi = new PropertyInspector(Routing.router, {
+		const pi = new PropertyInspector(RouterModule.router, {
 			action: "com.elgato.test.one",
 			context: "abc123",
 			device: "dev123"
 		});
 
-		const spyOnGetCurrentUI = jest.spyOn(Routing, "getCurrentUI").mockReturnValue(pi);
+		const spyOnGetCurrentUI = jest.spyOn(RouterModule, "getCurrentUI").mockReturnValue(pi);
 
 		// Act.
 		const current = ui.current;
@@ -142,7 +142,7 @@ describe("UIController", () => {
 	 */
 	it("registerRoute", () => {
 		// Arrange.
-		const spyOnRoute = jest.spyOn(Routing.router, "route");
+		const spyOnRoute = jest.spyOn(RouterModule.router, "route");
 		const handler = jest.fn();
 		const options = {
 			filter: () => true

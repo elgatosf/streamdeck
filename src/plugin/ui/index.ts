@@ -4,7 +4,7 @@ import type { Action } from "../actions/action";
 
 export { ui, type UIController } from "./controller";
 export { type PropertyInspector } from "./property-inspector";
-export { route } from "./routing";
+export { route } from "./route";
 
 /**
  * Message request received from the property inspector.

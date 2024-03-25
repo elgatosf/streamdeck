@@ -1,42 +1,9 @@
 import type { MessageRequest as ScopedMessageRequest } from ".";
 import type { JsonObject, JsonValue } from "../../common/json";
-import { MessageGateway, type MessageHandler, type MessageResponder } from "../../common/messaging";
+import { type MessageHandler, type MessageResponder } from "../../common/messaging";
 import { Action } from "../actions/action";
 import type { SingletonAction } from "../actions/singleton-action";
-import { connection } from "../connection";
-import { PropertyInspector } from "./property-inspector";
-
-let current: PropertyInspector | undefined;
-
-/**
- * Gets the current property inspector.
- * @returns The property inspector; otherwise `undefined`.
- */
-export function getCurrentUI(): PropertyInspector | undefined {
-	return current;
-}
-
-/**
- * Router responsible for communicating with the property inspector.
- */
-const router = new MessageGateway<Action>(
-	async (payload: JsonValue) => {
-		const current = getCurrentUI();
-		if (current) {
-			await current.sendMessage(payload);
-			return true;
-		}
-
-		return false;
-	},
-	(source) => new Action(source)
-);
-
-connection.on("propertyInspectorDidAppear", (ev) => (current = new PropertyInspector(router, ev)));
-connection.on("propertyInspectorDidDisappear", () => (current = undefined));
-connection.on("sendToPlugin", (ev) => router.process(ev));
-
-export { router };
+import { router } from "./router";
 
 /**
  * Register the function as a request route. Fetch requests from the property inspector to the specified path will be routed to the function when sent from a property inspector

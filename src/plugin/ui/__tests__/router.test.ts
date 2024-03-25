@@ -4,7 +4,7 @@ import type { RawMessageRequest } from "../../../common/messaging/message";
 import { MessageResponder } from "../../../common/messaging/responder";
 import { connection } from "../../connection";
 import { PropertyInspector } from "../property-inspector";
-import { getCurrentUI, router } from "../routing";
+import { getCurrentUI, router } from "../router";
 
 jest.mock("../../connection");
 jest.mock("../../logging");
