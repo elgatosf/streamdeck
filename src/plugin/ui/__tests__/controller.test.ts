@@ -7,7 +7,7 @@ import { ui } from "../controller";
 import { PropertyInspector } from "../property-inspector";
 import * as RouterModule from "../router";
 
-jest.mock("../routing");
+jest.mock("../router");
 jest.mock("../../connection");
 jest.mock("../../logging");
 jest.mock("../../manifest");
