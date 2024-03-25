@@ -7,7 +7,6 @@ import type { DidReceivePluginMessage, SendToPlugin } from "../../api";
 import { actionInfo } from "../../api/registration/__mocks__";
 import type { RawMessageRequest } from "../../common/messaging/message";
 import { MessageResponder } from "../../common/messaging/responder";
-import type { Action } from "../action";
 import { connection } from "../connection";
 import { plugin, router, type PluginController } from "../plugin";
 import { getSettings, setSettings } from "../settings";
@@ -178,7 +177,7 @@ describe("plugin", () => {
 
 		// Assert.
 		expect(listener).toHaveBeenCalledTimes(1);
-		expect(listener).toHaveBeenCalledWith<[MessageRequest<Action>, MessageResponder]>(
+		expect(listener).toHaveBeenCalledWith<[MessageRequest, MessageResponder]>(
 			{
 				action: {
 					id: uuid,
