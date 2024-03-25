@@ -128,7 +128,7 @@ export class MessageGateway<TAction> extends EventEmitter<MessageGatewayEventMap
 	 */
 	private async handleRequest(action: TAction, source: RawMessageRequest): Promise<boolean> {
 		const res = new MessageResponder(source, this.proxy);
-		const req: MessageRequest<TAction, JsonValue> = {
+		const req: GatewayMessageRequest<TAction, JsonValue> = {
 			action,
 			path: source.path,
 			unidirectional: source.unidirectional,
@@ -214,7 +214,7 @@ type MessageGatewayEventMap = {
  * @template TAction The type of the action that sent the request.
  * @template TBody The type of the request body.
  */
-export type MessageRequest<TAction, TBody extends JsonValue = JsonValue> = Omit<RawMessageRequest, "__type" | "body" | "id"> & {
+export type GatewayMessageRequest<TAction, TBody extends JsonValue = JsonValue> = Omit<RawMessageRequest, "__type" | "body" | "id"> & {
 	/**
 	 * Action associated with the request.
 	 */
@@ -307,7 +307,7 @@ export type ActionProvider<T> = (source: DidReceivePluginMessage<JsonValue> | Di
  * Function responsible for handling a request, and providing a response.
  */
 export type MessageHandler<TAction, TBody extends JsonValue = JsonValue> = (
-	request: MessageRequest<TAction, TBody>,
+	request: GatewayMessageRequest<TAction, TBody>,
 	response: MessageResponder
 ) => JsonValue | Promise<JsonValue | void> | void;
 
@@ -339,5 +339,5 @@ export type RouteConfiguration<TAction, TBody extends JsonValue = JsonValue> = {
 	 * @param action Action associated with the message.
 	 * @returns Should return `true` when the request can be handled; otherwise `false`.
 	 */
-	filter?: (request: MessageRequest<TAction, TBody>) => boolean;
+	filter?: (request: GatewayMessageRequest<TAction, TBody>) => boolean;
 };

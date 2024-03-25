@@ -1,5 +1,5 @@
 import type { JsonObject, JsonValue } from "../../common/json";
-import type { MessageRequest as InternalMessageRequest } from "../../common/messaging";
+import type { GatewayMessageRequest } from "../../common/messaging";
 import type { Action } from "../actions/action";
 
 export { ui, type UIController } from "./controller";
@@ -11,4 +11,4 @@ export { route } from "./route";
  * @template TBody The type of the request body.
  * @template TSettings The type of the action's settings.
  */
-export type MessageRequest<TBody extends JsonValue = JsonValue, TSettings extends JsonObject = JsonObject> = InternalMessageRequest<Action<TSettings>, TBody>;
+export type MessageRequest<TBody extends JsonValue = JsonValue, TSettings extends JsonObject = JsonObject> = GatewayMessageRequest<Action<TSettings>, TBody>;

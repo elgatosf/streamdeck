@@ -1,13 +1,6 @@
 import type { JsonObject, JsonValue } from ".";
 import type { IDisposable } from "../common/disposable";
-import {
-	MessageGateway,
-	type MessageRequest as InternalMessageRequest,
-	type MessageHandler,
-	type MessageRequestOptions,
-	type MessageResponse,
-	type RouteConfiguration
-} from "../common/messaging";
+import { MessageGateway, type GatewayMessageRequest, type MessageHandler, type MessageRequestOptions, type MessageResponse, type RouteConfiguration } from "../common/messaging";
 import type { Action } from "./action";
 import { connection } from "./connection";
 import type { DidReceivePluginMessageEvent } from "./events";
@@ -138,4 +131,4 @@ export { router, type PluginController };
  * @template TBody The type of the request body.
  * @template TSettings The type of the action's settings.
  */
-export type MessageRequest<TBody extends JsonValue = JsonValue, TSettings extends JsonObject = JsonObject> = InternalMessageRequest<Action<TSettings>, TBody>;
+export type MessageRequest<TBody extends JsonValue = JsonValue, TSettings extends JsonObject = JsonObject> = GatewayMessageRequest<Action<TSettings>, TBody>;
