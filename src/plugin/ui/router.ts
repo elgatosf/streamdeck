@@ -32,8 +32,6 @@ const router = new MessageGateway<Action>(
 
 connection.on("propertyInspectorDidAppear", (ev) => (current = new PropertyInspector(router, ev)));
 connection.on("propertyInspectorDidDisappear", () => (current = undefined));
-connection.on("sendToPlugin", (ev) => {
-	router.process(ev);
-});
+connection.on("sendToPlugin", (ev) => router.process(ev));
 
 export { router };

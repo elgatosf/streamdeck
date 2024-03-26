@@ -4,7 +4,7 @@ import type { JsonObject, JsonValue } from "../../common/json";
 import type { RouteConfiguration } from "../../common/messaging";
 import { Action } from "../actions/action";
 import { connection } from "../connection";
-import { ActionWithoutPayloadEvent, DidReceivePropertyInspectorMessageEvent, type PropertyInspectorDidAppearEvent, type PropertyInspectorDidDisappearEvent } from "../events";
+import { ActionWithoutPayloadEvent, SendToPluginEvent, type PropertyInspectorDidAppearEvent, type PropertyInspectorDidDisappearEvent } from "../events";
 import { type MessageHandler } from "./message";
 import { type PropertyInspector } from "./property-inspector";
 import { getCurrentUI, router } from "./router";
@@ -51,16 +51,16 @@ class UIController {
 	 * @param listener Function to be invoked when the event occurs.
 	 * @returns A disposable that, when disposed, removes the listener.
 	 */
-	public onMessage<TPayload extends JsonValue = JsonValue, TSettings extends JsonObject = JsonObject>(
-		listener: (ev: DidReceivePropertyInspectorMessageEvent<TPayload, TSettings>) => void
+	public onSendToPlugin<TPayload extends JsonValue = JsonValue, TSettings extends JsonObject = JsonObject>(
+		listener: (ev: SendToPluginEvent<TPayload, TSettings>) => void
 	): IDisposable {
 		return router.disposableOn("unhandledMessage", (ev) => {
-			listener(new DidReceivePropertyInspectorMessageEvent<TPayload, TSettings>(new Action<TSettings>(ev), ev as DidReceivePropertyInspectorMessage<TPayload>));
+			listener(new SendToPluginEvent<TPayload, TSettings>(new Action<TSettings>(ev), ev as DidReceivePropertyInspectorMessage<TPayload>));
 		});
 	}
 
 	/**
-	 * Creates a request route, mapping the path to the handler. The property inspector can then send requests to the handler using `streamDeck.plugin.fetch(path)`.
+	 * Registers the function as a route, exposing it to the property inspector via `streamDeck.plugin.fetch(path)`.
 	 * @template TBody The type of the request body.
 	 * @template TSettings The type of the action's settings.
 	 * @param path Path that identifies the route.

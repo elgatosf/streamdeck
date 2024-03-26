@@ -26,7 +26,7 @@ import { DeviceEvent } from "./device-event";
 
 export { DidReceiveGlobalSettingsEvent } from "../../common/events";
 export { DidReceiveDeepLinkEvent } from "./deep-link-event";
-export { DidReceivePropertyInspectorMessageEvent } from "./ui-message-event";
+export { SendToPluginEvent } from "./ui-message-event";
 export { ActionEvent, ActionWithoutPayloadEvent, ApplicationEvent, DeviceEvent, Event };
 
 /**

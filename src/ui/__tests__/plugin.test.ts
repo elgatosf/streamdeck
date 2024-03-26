@@ -2,7 +2,7 @@
  * @jest-environment jsdom
  */
 
-import type { DidReceivePluginMessageEvent, MessageRequest } from "..";
+import type { MessageRequest, SendToPropertyInspectorEvent } from "..";
 import type { DidReceivePluginMessage, SendToPlugin } from "../../api";
 import { actionInfo } from "../../api/registration/__mocks__";
 import type { RawMessageRequest } from "../../common/messaging/message";
@@ -93,7 +93,7 @@ describe("plugin", () => {
 	/**
 	 * Asserts {@link PluginController.onMessage} is invoked when `sendToPropertyInspector` is emitted.
 	 */
-	it("receives onMessage", async () => {
+	it("receives onSendToPropertyInspector", async () => {
 		// Arrange.
 		const listener = jest.fn();
 		const ev: DidReceivePluginMessage<PayloadOrSettings> = {
@@ -106,12 +106,12 @@ describe("plugin", () => {
 		};
 
 		// Act.
-		const disposable = plugin.onMessage(listener);
+		const disposable = plugin.onSendToPropertyInspector(listener);
 		connection.emit("sendToPropertyInspector", ev);
 
 		// Assert.
 		expect(listener).toHaveBeenCalledTimes(1);
-		expect(listener).toHaveBeenCalledWith<[DidReceivePluginMessageEvent<PayloadOrSettings, PayloadOrSettings>]>({
+		expect(listener).toHaveBeenCalledWith<[SendToPropertyInspectorEvent<PayloadOrSettings, PayloadOrSettings>]>({
 			action: {
 				id: "action123",
 				manifestId: "com.elgato.test.one",

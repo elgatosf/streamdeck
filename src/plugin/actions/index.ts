@@ -180,7 +180,7 @@ export function registerAction<TAction extends SingletonAction<TSettings>, TSett
 	route(onDialDown, action.onDialDown);
 	route(onDialUp, action.onDialUp);
 	route(onDialRotate, action.onDialRotate);
-	route(ui.onMessage, action.onDidReceivePropertyInspectorMessage);
+	route(ui.onSendToPlugin, action.onSendToPlugin);
 	route(onDidReceiveSettings, action.onDidReceiveSettings);
 	route(onKeyDown, action.onKeyDown);
 	route(onKeyUp, action.onKeyUp);

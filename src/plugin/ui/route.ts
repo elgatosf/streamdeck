@@ -5,9 +5,8 @@ import type { MessageHandler, MessageRequest } from "./message";
 import { router } from "./router";
 
 /**
- * Register the function as a request route. Fetch requests from the property inspector to the specified path will be routed to the function when sent from a property inspector
- * associated with this action type.
- * @param path Path of the request.
+ * Registers the function as a route, exposing it to the property inspector via `streamDeck.plugin.fetch(path)`.
+ * @param path Path that identifies the route.
  * @returns The decorator factory.
  */
 export function route<TBody extends JsonValue = JsonValue, TSettings extends JsonObject = JsonObject, TResult extends ReturnType<MessageHandler<TBody, TSettings>> = undefined>(

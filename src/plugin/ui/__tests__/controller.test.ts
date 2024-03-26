@@ -2,7 +2,7 @@ import type { DidReceivePropertyInspectorMessage, PropertyInspectorDidAppear, Pr
 import { Settings } from "../../../api/__mocks__/events";
 import { Action } from "../../actions/action";
 import { connection } from "../../connection";
-import { DidReceivePropertyInspectorMessageEvent, PropertyInspectorDidAppearEvent, type PropertyInspectorDidDisappearEvent } from "../../events";
+import { PropertyInspectorDidAppearEvent, SendToPluginEvent, type PropertyInspectorDidDisappearEvent } from "../../events";
 import { ui } from "../controller";
 import { PropertyInspector } from "../property-inspector";
 import * as RouterModule from "../router";
@@ -103,7 +103,7 @@ describe("UIController", () => {
 	/**
 	 * Asserts {@link ui.onMessage} is invoked when `sendToPlugin` is emitted for an unknown route.
 	 */
-	it("receives onMessage", () => {
+	it("receives onSendToPlugin", () => {
 		// Arrange
 		const listener = jest.fn();
 		const ev = {
@@ -116,12 +116,12 @@ describe("UIController", () => {
 		} satisfies DidReceivePropertyInspectorMessage<Settings>;
 
 		// Act (emit).
-		const disposable = ui.onMessage(listener);
+		const disposable = ui.onSendToPlugin(listener);
 		connection.emit("sendToPlugin", ev);
 
 		// Assert (emit).
 		expect(listener).toHaveBeenCalledTimes(1);
-		expect(listener).toHaveBeenCalledWith<[DidReceivePropertyInspectorMessageEvent<Settings, Settings>]>({
+		expect(listener).toHaveBeenCalledWith<[SendToPluginEvent<Settings, Settings>]>({
 			action: new Action(ev),
 			payload: {
 				name: "Hello world"

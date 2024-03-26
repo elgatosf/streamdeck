@@ -1,5 +1,5 @@
-import type { JsonObject, JsonValue } from ".";
 import type { IDisposable } from "../common/disposable";
+import type { JsonObject, JsonValue } from "../common/json";
 import {
 	MessageGateway,
 	type MessageRequestOptions,
@@ -11,7 +11,7 @@ import {
 } from "../common/messaging";
 import type { Action } from "./action";
 import { connection } from "./connection";
-import type { DidReceivePluginMessageEvent } from "./events";
+import type { SendToPropertyInspectorEvent } from "./events";
 import { getSettings, setSettings } from "./settings";
 
 /**
@@ -80,8 +80,8 @@ class PluginController {
 	 * @param listener Function to be invoked when the event occurs.
 	 * @returns A disposable that, when disposed, removes the listener.
 	 */
-	public onMessage<TPayload extends JsonValue = JsonValue, TSettings extends JsonObject = JsonObject>(
-		listener: (ev: DidReceivePluginMessageEvent<TPayload, TSettings>) => void
+	public onSendToPropertyInspector<TPayload extends JsonValue = JsonValue, TSettings extends JsonObject = JsonObject>(
+		listener: (ev: SendToPropertyInspectorEvent<TPayload, TSettings>) => void
 	): IDisposable {
 		return router.disposableOn("unhandledMessage", (ev) => {
 			listener({
@@ -98,7 +98,7 @@ class PluginController {
 	}
 
 	/**
-	 * Creates a request route, mapping the path to the handler. The plugin can then send requests to the handler using `streamDeck.ui.current.fetch(path)`.
+	 * Registers the function as a route, exposing it to the plugin via `streamDeck.ui.current.fetch(path)`.
 	 * @template TBody The type of the request body.
 	 * @template TSettings The type of the action's settings.
 	 * @param path Path that identifies the route.

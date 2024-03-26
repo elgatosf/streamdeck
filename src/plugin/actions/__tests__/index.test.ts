@@ -15,12 +15,12 @@ import type {
 	DialDownEvent,
 	DialRotateEvent,
 	DialUpEvent,
-	DidReceivePropertyInspectorMessageEvent,
 	DidReceiveSettingsEvent,
 	KeyDownEvent,
 	KeyUpEvent,
 	PropertyInspectorDidAppearEvent,
 	PropertyInspectorDidDisappearEvent,
+	SendToPluginEvent,
 	SingletonAction,
 	TitleParametersDidChangeEvent,
 	TouchTapEvent,
@@ -664,9 +664,9 @@ describe("actions", () => {
 		});
 
 		/**
-		 * Asserts {@link UIController.onDidReceivePropertyInspectorMessage} is routed to the action when `sendToPlugin` is emitted.
+		 * Asserts {@link UIController.sendToPlugin} is routed to the action when `sendToPlugin` is emitted.
 		 */
-		it("routes onDidReceivePropertyInspectorMessage", () => {
+		it("routes sendToPlugin", () => {
 			// Arrange
 			const listener = jest.fn();
 			const ev = {
@@ -681,14 +681,14 @@ describe("actions", () => {
 			// Act.
 			registerAction({
 				manifestId,
-				onDidReceivePropertyInspectorMessage: listener
+				onSendToPlugin: listener
 			});
 
 			connection.emit("sendToPlugin", ev);
 
 			// Assert.
 			expect(listener).toHaveBeenCalledTimes(1);
-			expect(listener).toHaveBeenCalledWith<[DidReceivePropertyInspectorMessageEvent<Settings, Settings>]>({
+			expect(listener).toHaveBeenCalledWith<[SendToPluginEvent<Settings, Settings>]>({
 				action: new Action(ev),
 				payload: {
 					name: "Hello world"
