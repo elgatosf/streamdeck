@@ -20,7 +20,7 @@ import { getSettings, setSettings } from "./settings";
  */
 const router = new MessageGateway<Action>(
 	async (payload: JsonValue) => {
-		await plugin.sendMessage(payload);
+		await sendPayload(payload);
 		return true;
 	},
 	({ context: id, action: manifestId }) => ({ id, manifestId, getSettings, setSettings }) satisfies Action
@@ -75,7 +75,7 @@ class PluginController {
 	}
 
 	/**
-	 * Occurs when a message was sent to the property inspector _from_ the plugin. The property inspector can also send messages _to_ the plugin using {@link PluginController.sendMessage}.
+	 * Occurs when a message was sent to the property inspector _from_ the plugin. The property inspector can also send messages _to_ the plugin using {@link PluginController.sendToPlugin}.
 	 * @deprecated Consider using {@link streamDeck.plugin.registerRoute} to receive requests from the plugin.
 	 * @template TPayload The type of the payload received from the property inspector.
 	 * @template TSettings The type of settings associated with the action.
@@ -107,8 +107,9 @@ class PluginController {
 	 * @param handler Handler to be invoked when a matching request is received.
 	 * @param options Optional routing configuration.
 	 * @example
-	 * streamDeck.plugin.registerRoute("/populate-dropdowns", async (req, res) => {
-	 *   // handler
+	 * streamDeck.plugin.registerRoute("/set-text", async (req, res) => {
+	 *   // Set the value of the text field in the property inspector.
+	 *   document.querySelector("#text-field").value = req.body.value;
 	 * });
 	 */
 	public registerRoute<TBody extends JsonValue = JsonValue, TSettings extends JsonObject = JsonObject>(
@@ -120,23 +121,33 @@ class PluginController {
 	}
 
 	/**
-	 * Sends a message to the plugin.
+	 * Sends a payload to the plugin.
+	 * @deprecated Consider using {@link streamDeck.plugin.fetch} to send requests to the plugin.
 	 * @param payload Payload to send.
 	 * @returns Promise completed when the message was sent.
 	 */
-	public async sendMessage(payload: JsonValue): Promise<void> {
-		const {
-			uuid,
-			actionInfo: { action }
-		} = await connection.getInfo();
-
-		return connection.send({
-			event: "sendToPlugin",
-			action,
-			context: uuid,
-			payload
-		});
+	public async sendToPlugin(payload: JsonValue): Promise<void> {
+		return sendPayload(payload);
 	}
+}
+
+/**
+ * Sends a payload to the plugin.
+ * @param payload Payload to send.
+ * @returns Promise completed when the message was sent.
+ */
+async function sendPayload(payload: JsonValue): Promise<void> {
+	const {
+		uuid,
+		actionInfo: { action }
+	} = await connection.getInfo();
+
+	return connection.send({
+		event: "sendToPlugin",
+		action,
+		context: uuid,
+		payload
+	});
 }
 
 export const plugin = new PluginController();

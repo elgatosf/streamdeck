@@ -196,11 +196,11 @@ describe("plugin", () => {
 	});
 
 	/**
-	 * Asserts {@link PluginController.sendMessage} sends the command to the {@link connection}.
+	 * Asserts {@link PluginController.sendToPlugin} sends the command to the {@link connection}.
 	 */
 	it("sends sendToPlugin", async () => {
 		// Arrange, act.
-		await plugin.sendMessage({
+		await plugin.sendToPlugin({
 			message: "Testing sendToPlugin"
 		});
 
