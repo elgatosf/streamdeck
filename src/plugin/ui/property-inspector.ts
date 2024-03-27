@@ -31,34 +31,40 @@ export class PropertyInspector extends ActionContext implements Pick<MessageGate
 
 	/**
 	 * Sends a fetch request to the property inspector; the property inspector can listen for requests by registering routes.
-	 * ```ts
-	 * // Within the property inspector.
-	 * streamDeck.plugin.registerRoute(path, handler, options)
-	 * ```
-	 * @template T The type of the request body.
+	 * @template T The type of the response body.
 	 * @param request The request being sent to the property inspector.
 	 * @returns The response.
+	 * @example
+	 * // Within the property inspector, setup the route.
+	 * streamDeck.plugin.registerRoute("/show-dialog", () => {
+	 *   showDialog();
+	 * });
+	 *
+	 * // Within the plugin, send a fetch request to the current property inspector.
+	 * streamDeck.ui.current.fetch({
+	 *   path: "/show-dialog"
+	 * });
 	 */
 	public async fetch<T extends JsonValue = JsonValue>(request: MessageRequestOptions): Promise<MessageResponse<T>>;
 	/**
 	 * Sends a fetch request to the property inspector; the property inspector can listen for requests by registering routes.
-	 * ```ts
-	 * // Within the property inspector.
-	 * streamDeck.plugin.registerRoute(path, handler, options)
-	 * ```
-	 * @template T The type of the request body.
+	 * @template T The type of the response body.
 	 * @param path Path of the request being sent to the property inspector.
 	 * @param body Optional body sent with the request.
 	 * @returns The response.
+	 * @example
+	 * // Within the property inspector, setup the route.
+	 * streamDeck.plugin.registerRoute("/show-dialog", () => {
+	 *   showDialog();
+	 * });
+	 *
+	 * // Within the plugin, send a fetch request to the current property inspector.
+	 * streamDeck.ui.current.fetch("/show-dialog");
 	 */
 	public async fetch<T extends JsonValue = JsonValue>(path: string, body?: JsonValue): Promise<MessageResponse<T>>;
 	/**
 	 * Sends a fetch request to the property inspector; the property inspector can listen for requests by registering routes.
-	 * ```ts
-	 * // Within the property inspector.
-	 * streamDeck.plugin.registerRoute(path, handler, options)
-	 * ```
-	 * @template T The type of the request body.
+	 * @template T The type of the response body.
 	 * @param requestOrPath The request, or the path of the request.
 	 * @param bodyOrUndefined Request body, or moot when constructing the request with {@link MessageRequestOptions}.
 	 * @returns The response.

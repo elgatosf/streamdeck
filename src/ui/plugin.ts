@@ -34,34 +34,46 @@ connection.on("sendToPropertyInspector", (ev) => router.process(ev));
 class PluginController {
 	/**
 	 * Sends a fetch request to the plugin; the plugin can listen for requests by registering routes.
-	 * ```ts
-	 * // Within the plugin.
-	 * streamDeck.ui.registerRoute(path, handler, options)
-	 * ```
-	 * @template T The type of the request body.
+	 * @template T The type of the response body.
 	 * @param request The request to send to the plugin.
 	 * @returns The response.
+	 * @example
+	 * // Within the plugin, setup the route.
+	 * streamDeck.ui.registerRoute("/get-names", () => {
+	 *   return ["Mario", "Luigi", "Peach"];
+	 * });
+	 *
+	 * // Within the property inspector, send a fetch request to the plugin.
+	 * const res = await streamDeck.plugin.fetch({
+	 *   path: "/get-names"
+	 * });
+	 *
+	 * // res.body = ["Mario", "Luigi", "Peach"]
 	 */
 	public async fetch<T extends JsonValue = JsonValue>(request: MessageRequestOptions): Promise<MessageResponse<T>>;
 	/**
 	 * Sends a fetch request to the plugin; the plugin can listen for requests by registering routes.
-	 * ```ts
-	 * // Within the plugin.
-	 * streamDeck.ui.registerRoute(path, handler, options)
-	 * ```
-	 * @template T The type of the request body.
+	 * @template T The type of the response body.
 	 * @param path Path of the request being sent to the plugin.
 	 * @param body Optional body sent with the request.
+	 * @example
+	 * // Within the plugin, setup the route.
+	 * streamDeck.ui.registerRoute("/get-names", () => {
+	 *   return ["Mario", "Luigi", "Peach"];
+	 * });
+	 *
+	 * // Within the property inspector, send a fetch request to the plugin.
+	 * const res = await streamDeck.plugin.fetch({
+	 *   path: "/get-names"
+	 * });
+	 *
+	 * // res.body = ["Mario", "Luigi", "Peach"]
 	 * @returns The response.
 	 */
 	public async fetch<T extends JsonValue = JsonValue>(path: string, body?: JsonValue): Promise<MessageResponse<T>>;
 	/**
 	 * Sends a fetch request to the plugin; the plugin can listen for requests by registering routes.
-	 * ```ts
-	 * // Within the plugin.
-	 * streamDeck.ui.registerRoute(path, handler, options)
-	 * ```
-	 * @template T The type of the request body.
+	 * @template T The type of the response body.
 	 * @param requestOrPath The request, or the path of the request.
 	 * @param bodyOrUndefined Request body, or moot when constructing the request with {@link MessageRequestOptions}.
 	 * @returns The response.
