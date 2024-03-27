@@ -1,7 +1,7 @@
 import type { JsonObject, JsonValue } from "..";
+import type streamDeck from "../";
 import type { ActionIdentifier, DidReceiveSettings, FeedbackPayload, SetImage, SetTitle, SetTriggerDescription, State } from "../../api";
 import { connection } from "../connection";
-import { type UIController } from "../ui";
 import { ActionContext } from "./context";
 import type { SingletonAction } from "./singleton-action";
 
@@ -41,13 +41,13 @@ export class Action<T extends JsonObject = JsonObject> extends ActionContext {
 	}
 
 	/**
-	 * Sends the {@link payload} to the current property inspector associated with this action instance. The plugin can also receive information from the property inspector via
-	 * {@link UIController.onSendToPlugin} and {@link SingletonAction.onSendToPlugin} allowing for bi-directional communication.
-	 * @template T The type of the payload received from the property inspector.
+	 * Sends the {@link payload} to the property inspector. The plugin can also receive information from the property inspector via {@link streamDeck.ui.onSendToPlugin} and {@link SingletonAction.onSendToPlugin}
+	 * allowing for bi-directional communication.
+	 * @deprecated Consider using {@link streamDeck.ui.current.fetch} to send requests to the property inspector.
 	 * @param payload Payload to send to the property inspector.
 	 * @returns `Promise` resolved when {@link payload} has been sent to the property inspector.
 	 */
-	public sendToPropertyInspector<T extends JsonValue = JsonValue>(payload: T): Promise<void> {
+	public sendToPropertyInspector(payload: JsonValue): Promise<void> {
 		return connection.send({
 			event: "sendToPropertyInspector",
 			context: this.id,

@@ -80,9 +80,9 @@ describe("PropertyInspector", () => {
 	});
 
 	/**
-	 * Asserts {@link PropertyInspector.sendMessage} sends the event to the {@link connection}.
+	 * Asserts {@link PropertyInspector.sendToPropertyInspector} sends the event to the {@link connection}.
 	 */
-	it("sends messages", async () => {
+	it("sends payloads (legacy)", async () => {
 		// Arrange.
 		const spyOnSend = jest.spyOn(connection, "send");
 		const pi = new PropertyInspector(router, {
@@ -92,7 +92,7 @@ describe("PropertyInspector", () => {
 		});
 
 		// Act.
-		await pi.sendMessage({ message: "Hello world" });
+		await pi.sendToPropertyInspector({ message: "Hello world" });
 
 		// Assert.
 		expect(spyOnSend).toBeCalledTimes(1);

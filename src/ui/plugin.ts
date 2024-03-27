@@ -9,6 +9,7 @@ import {
 	type UnscopedMessageHandler,
 	type UnscopedMessageRequest
 } from "../common/messaging";
+import type streamDeck from "./";
 import type { Action } from "./action";
 import { connection } from "./connection";
 import type { SendToPropertyInspectorEvent } from "./events";
@@ -75,6 +76,7 @@ class PluginController {
 
 	/**
 	 * Occurs when a message was sent to the property inspector _from_ the plugin. The property inspector can also send messages _to_ the plugin using {@link PluginController.sendMessage}.
+	 * @deprecated Consider using {@link streamDeck.plugin.registerRoute} to receive requests from the plugin.
 	 * @template TPayload The type of the payload received from the property inspector.
 	 * @template TSettings The type of settings associated with the action.
 	 * @param listener Function to be invoked when the event occurs.

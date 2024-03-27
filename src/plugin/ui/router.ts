@@ -21,7 +21,12 @@ const router = new MessageGateway<Action>(
 	async (payload: JsonValue) => {
 		const current = getCurrentUI();
 		if (current) {
-			await current.sendMessage(payload);
+			await connection.send({
+				event: "sendToPropertyInspector",
+				context: current.id,
+				payload
+			});
+
 			return true;
 		}
 

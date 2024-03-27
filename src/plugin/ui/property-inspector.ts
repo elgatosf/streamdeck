@@ -1,8 +1,10 @@
+import type streamDeck from "../";
 import type { ActionIdentifier, DeviceIdentifier } from "../../api";
 import type { JsonValue } from "../../common/json";
 import type { MessageGateway, MessageRequestOptions, MessageResponse } from "../../common/messaging";
 import type { Action } from "../actions/action";
 import { ActionContext } from "../actions/context";
+import type { SingletonAction } from "../actions/singleton-action";
 import { connection } from "../connection";
 
 /**
@@ -70,11 +72,14 @@ export class PropertyInspector extends ActionContext implements Pick<MessageGate
 	}
 
 	/**
-	 * Sends a message to the property inspector.
-	 * @param payload Payload to send.
-	 * @returns Promise completed when the message was sent.
+	 * Sends the {@link payload} to the property inspector. The plugin can also receive information from the property inspector via {@link streamDeck.ui.onSendToPlugin} and {@link SingletonAction.onSendToPlugin}
+	 * allowing for bi-directional communication.
+	 * @deprecated Consider using {@link streamDeck.ui.current.fetch} to send requests to the property inspector.
+	 * @template T The type of the payload received from the property inspector.
+	 * @param payload Payload to send to the property inspector.
+	 * @returns `Promise` resolved when {@link payload} has been sent to the property inspector.
 	 */
-	public sendMessage(payload: JsonValue): Promise<void> {
+	public sendToPropertyInspector(payload: JsonValue): Promise<void> {
 		return connection.send({
 			event: "sendToPropertyInspector",
 			context: this.id,
