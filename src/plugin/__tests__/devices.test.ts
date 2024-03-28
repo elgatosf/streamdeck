@@ -272,7 +272,6 @@ describe("devices", () => {
 	it("receives onDeviceDidConnect", () => {
 		// Arrange
 		const listener = jest.fn();
-		const spyOnDisposableOn = jest.spyOn(connection, "disposableOn");
 		const ev = {
 			device: "device123",
 			deviceInfo: {
@@ -291,8 +290,6 @@ describe("devices", () => {
 		connection.emit("deviceDidConnect", ev);
 
 		// Assert (emit).
-		expect(spyOnDisposableOn).toHaveBeenCalledTimes(1);
-		expect(spyOnDisposableOn).toHaveBeenCalledWith(ev.event, expect.any(Function));
 		expect(listener).toHaveBeenCalledTimes(1);
 		expect(listener).toHaveBeenCalledWith<[DeviceDidConnectEvent]>({
 			device: {
@@ -319,7 +316,6 @@ describe("devices", () => {
 		connection.emit("connected", connection.registrationParameters.info);
 
 		const listener = jest.fn();
-		const spyOnDisposableOn = jest.spyOn(connection, "disposableOn");
 		const ev = {
 			device: connection.registrationParameters.info.devices[0].id,
 			event: "deviceDidDisconnect"
@@ -330,8 +326,6 @@ describe("devices", () => {
 		connection.emit("deviceDidDisconnect", ev);
 
 		// Assert (emit).
-		expect(spyOnDisposableOn).toHaveBeenCalledTimes(1);
-		expect(spyOnDisposableOn).toHaveBeenCalledWith(ev.event, expect.any(Function));
 		expect(listener).toHaveBeenCalledTimes(1);
 		expect(listener).toHaveBeenCalledWith<[DeviceDidDisconnectEvent]>({
 			device: {

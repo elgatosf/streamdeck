@@ -32,7 +32,7 @@ describe("index", () => {
 		const profiles = await require("../profiles");
 		const settings = await require("../settings");
 		const system = await require("../system");
-		const ui = await require("../ui");
+		const { ui } = await require("../ui");
 
 		// Act, assert.
 		expect(streamDeck.actions).toBe(actions);

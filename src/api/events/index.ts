@@ -1,3 +1,4 @@
+import type { JsonObject, JsonValue } from "../../common/json";
 import type { DidReceiveSettings, TitleParametersDidChange, WillAppear, WillDisappear } from "./action";
 import type { DeviceDidConnect, DeviceDidDisconnect } from "./device";
 import type { DialDown, DialRotate, DialUp, TouchTap } from "./encoder";
@@ -27,34 +28,29 @@ export type EventIdentifier<TEvent> = {
 };
 
 /**
- * Represents an object sent as part of Stream Deck's API.
- */
-export type PayloadObject<T extends object> = { [K in keyof T]: T[K] } extends RelativeIndexable<unknown> ? never : { [K in keyof T]: T[K] };
-
-/**
  * Events received by the plugin, from Stream Deck.
  */
-export type PluginEvent<T extends PayloadObject<T> = object> =
+export type PluginEvent =
 	| ApplicationDidLaunch
 	| ApplicationDidTerminate
 	| DeviceDidConnect
 	| DeviceDidDisconnect
-	| DialDown<T>
-	| DialRotate<T>
-	| DialUp<T>
+	| DialDown<JsonObject>
+	| DialRotate<JsonObject>
+	| DialUp<JsonObject>
 	| DidReceiveDeepLink
-	| DidReceiveGlobalSettings<T>
-	| DidReceivePropertyInspectorMessage<T>
-	| DidReceiveSettings<T>
-	| KeyDown<T>
-	| KeyUp<T>
+	| DidReceiveGlobalSettings<JsonObject>
+	| DidReceivePropertyInspectorMessage<JsonValue>
+	| DidReceiveSettings<JsonObject>
+	| KeyDown<JsonObject>
+	| KeyUp<JsonObject>
 	| PropertyInspectorDidAppear
 	| PropertyInspectorDidDisappear
 	| SystemDidWakeUp
-	| TitleParametersDidChange<T>
-	| TouchTap<T>
-	| WillAppear<T>
-	| WillDisappear<T>;
+	| TitleParametersDidChange<JsonObject>
+	| TouchTap<JsonObject>
+	| WillAppear<JsonObject>
+	| WillDisappear<JsonObject>;
 
 /**
  * Map of events received by the plugin, from Stream Deck.
@@ -66,7 +62,7 @@ export type PluginEventMap = {
 /**
  * Events received by the UI, from Stream Deck.
  */
-export type UIEvent<T extends PayloadObject<T> = object> = DidReceiveGlobalSettings<T> | DidReceivePluginMessage<T> | DidReceiveSettings<T>;
+export type UIEvent = DidReceiveGlobalSettings<JsonObject> | DidReceivePluginMessage<JsonValue> | DidReceiveSettings<JsonObject>;
 
 /**
  * Map of events received by the UI, from Stream Deck.

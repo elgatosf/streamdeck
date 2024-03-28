@@ -13,7 +13,6 @@ export {
 	type GBar,
 	type Language,
 	type Manifest,
-	type PayloadObject,
 	type Pixmap,
 	type RegistrationInfo,
 	type Size,
@@ -21,12 +20,15 @@ export {
 	type Text
 } from "../api";
 export { EventEmitter, EventsOf } from "../common/event-emitter";
+export { type JsonObject, type JsonPrimitive, type JsonValue } from "../common/json";
+export { type MessageRequestOptions, type MessageResponder, type MessageResponse, type RouteConfiguration, type StatusCode } from "../common/messaging";
 export { Action, ImageOptions, TitleOptions, TriggerDescriptionOptions } from "./actions/action";
 export { action } from "./actions/decorators";
 export { SingletonAction } from "./actions/singleton-action";
 export { Device } from "./devices";
 export * from "./events";
 export { LogLevel } from "./logging";
+export { route, type MessageRequest, type PropertyInspector } from "./ui";
 
 import * as actions from "./actions";
 import { connection } from "./connection";
@@ -36,7 +38,7 @@ import { logger, type Logger } from "./logging";
 import * as profiles from "./profiles";
 import * as settings from "./settings";
 import * as system from "./system";
-import * as ui from "./ui";
+import { ui, type UIController } from "./ui";
 
 let i18n: I18nProvider | undefined;
 
@@ -117,7 +119,7 @@ export const streamDeck = {
 	 * Namespace for interacting with UI (property inspector) associated with the plugin.
 	 * @returns UI namespace.
 	 */
-	get ui(): typeof ui {
+	get ui(): UIController {
 		return ui;
 	},
 

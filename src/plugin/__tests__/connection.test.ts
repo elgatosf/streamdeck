@@ -1,6 +1,6 @@
 import { type WS as WebSocketServer } from "jest-websocket-mock";
 import type { RegistrationInfo } from "..";
-import type { DidReceiveGlobalSettings } from "../../api";
+import type { ApplicationDidLaunch, DidReceiveGlobalSettings, OpenUrl } from "../../api";
 import type { Settings } from "../../api/__mocks__/events";
 import { registrationInfo } from "../../api/registration/__mocks__";
 import { type connection as Connection } from "../connection";
@@ -18,14 +18,21 @@ const info = ["-info", `{"plugin":{"uuid":"com.elgato.test","version":"0.1.0"}}`
 const originalArgv = process.argv;
 
 describe("connection", () => {
-	let connection!: typeof Connection;
 	let logger!: Logger;
+	let connection!: typeof Connection;
+	let connectionLogger: Logger;
 
 	// Re-import the connection to ensure a fresh state.
 	beforeEach(async () => {
-		({ connection } = await require("../connection"));
-		({ logger } = await require("../logging"));
+		connectionLogger = new Logger({
+			level: LogLevel.TRACE,
+			target: { write: jest.fn() }
+		});
 
+		({ logger } = await require("../logging"));
+		jest.spyOn(logger, "createScope").mockReturnValueOnce(connectionLogger);
+
+		({ connection } = await require("../connection"));
 		process.argv = [...port, ...pluginUUID, ...registerEvent, ...info];
 	});
 
@@ -134,6 +141,96 @@ describe("connection", () => {
 						name: "Elgato"
 					}
 				}
+			});
+		});
+
+		describe("logging", () => {
+			/**
+			 * Asserts {@link Connection} traces messages sent to the server.
+			 */
+			it("traces send", async () => {
+				// Arrange.
+				const spyOnTrace = jest.spyOn(connectionLogger, "trace");
+				await connection.connect();
+
+				// Act.
+				await connection.send({
+					event: "openUrl",
+					payload: {
+						url: "https://www.elgato.com"
+					}
+				});
+
+				// Assert.
+				expect(spyOnTrace).toHaveBeenCalledTimes(1);
+				expect(spyOnTrace).toHaveBeenCalledWith(
+					JSON.stringify({
+						event: "openUrl",
+						payload: {
+							url: "https://www.elgato.com"
+						}
+					} satisfies OpenUrl)
+				);
+			});
+
+			/**
+			 * Asserts {@link Connection} traces valid messages received from the server.
+			 */
+			it("traces emit", async () => {
+				// Arrange.
+				const spyOnTrace = jest.spyOn(connectionLogger, "trace");
+				await connection.connect();
+
+				// Act.
+				server.send({
+					event: "applicationDidLaunch",
+					payload: {
+						application: "elgato"
+					}
+				} satisfies ApplicationDidLaunch);
+
+				// Assert.
+				expect(spyOnTrace).toHaveBeenCalledTimes(1);
+				expect(spyOnTrace).toHaveBeenCalledWith(
+					JSON.stringify({
+						event: "applicationDidLaunch",
+						payload: {
+							application: "elgato"
+						}
+					} satisfies ApplicationDidLaunch)
+				);
+			});
+
+			it("warns for unknown message", async () => {
+				// Arrange.
+				const spyOnWarn = jest.spyOn(connectionLogger, "warn");
+				await connection.connect();
+
+				// Act.
+				server.send({ foo: "bar" });
+
+				// Assert.
+				expect(spyOnWarn).toHaveBeenCalledTimes(1);
+				expect(spyOnWarn).toHaveBeenCalledWith(`Received unknown message: ${JSON.stringify({ foo: "bar" })}`);
+			});
+
+			it("errors invalid JSON", async () => {
+				// Arrange.
+				const origSerializer = server.serializer;
+				server.serializer = () => "{ invalid }";
+
+				const spyOnError = jest.spyOn(connectionLogger, "error");
+				await connection.connect();
+
+				// Act.
+				server.send("{ invalid }");
+
+				// Assert.
+				expect(spyOnError).toHaveBeenCalledTimes(1);
+				expect(spyOnError).toHaveBeenCalledWith(`Failed to parse message: { invalid }`, expect.any(Error));
+
+				// Clean-up
+				server.serializer = origSerializer;
 			});
 		});
 	});

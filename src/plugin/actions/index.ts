@@ -1,6 +1,7 @@
-import type { DialDown, DialRotate, DialUp, KeyDown, KeyUp, PayloadObject, TitleParametersDidChange, TouchTap, WillAppear, WillDisappear } from "../../api";
+import type { DialDown, DialRotate, DialUp, KeyDown, KeyUp, TitleParametersDidChange, TouchTap, WillAppear, WillDisappear } from "../../api";
 import type { IDisposable } from "../../common/disposable";
 import { ActionEvent } from "../../common/events";
+import type { JsonObject } from "../../common/json";
 import { connection } from "../connection";
 import {
 	DialDownEvent,
@@ -15,7 +16,7 @@ import {
 } from "../events";
 import { getManifest } from "../manifest";
 import { onDidReceiveSettings } from "../settings";
-import { onDidReceivePropertyInspectorMessage, onPropertyInspectorDidAppear, onPropertyInspectorDidDisappear } from "../ui";
+import { ui } from "../ui";
 import { Action } from "./action";
 import type { SingletonAction } from "./singleton-action";
 
@@ -26,7 +27,7 @@ const manifest = getManifest();
  * @param id The instance identifier of the action to control; identifiers are supplied as part of events emitted by this client, and are accessible via {@link Action.id}.
  * @returns The {@link Action} controller.
  */
-export function createController<T extends PayloadObject<T> = object>(id: string): Omit<Action<T>, "manifestId"> {
+export function createController<T extends JsonObject = JsonObject>(id: string): Omit<Action<T>, "manifestId"> {
 	return new Action<T>({
 		action: "",
 		context: id
@@ -41,7 +42,7 @@ export function createController<T extends PayloadObject<T> = object>(id: string
  * @param listener Function to be invoked when the event occurs.
  * @returns A disposable that, when disposed, removes the listener.
  */
-export function onDialDown<T extends PayloadObject<T> = object>(listener: (ev: DialDownEvent<T>) => void): IDisposable {
+export function onDialDown<T extends JsonObject = JsonObject>(listener: (ev: DialDownEvent<T>) => void): IDisposable {
 	return connection.disposableOn("dialDown", (ev: DialDown<T>) => listener(new ActionEvent<DialDown<T>, Action<T>>(new Action<T>(ev), ev)));
 }
 
@@ -51,7 +52,7 @@ export function onDialDown<T extends PayloadObject<T> = object>(listener: (ev: D
  * @param listener Function to be invoked when the event occurs.
  * @returns A disposable that, when disposed, removes the listener.
  */
-export function onDialRotate<T extends PayloadObject<T> = object>(listener: (ev: DialRotateEvent<T>) => void): IDisposable {
+export function onDialRotate<T extends JsonObject = JsonObject>(listener: (ev: DialRotateEvent<T>) => void): IDisposable {
 	return connection.disposableOn("dialRotate", (ev: DialRotate<T>) => listener(new ActionEvent<DialRotate<T>, Action<T>>(new Action<T>(ev), ev)));
 }
 
@@ -63,7 +64,7 @@ export function onDialRotate<T extends PayloadObject<T> = object>(listener: (ev:
  * @param listener Function to be invoked when the event occurs.
  * @returns A disposable that, when disposed, removes the listener.
  */
-export function onDialUp<T extends PayloadObject<T> = object>(listener: (ev: DialUpEvent<T>) => void): IDisposable {
+export function onDialUp<T extends JsonObject = JsonObject>(listener: (ev: DialUpEvent<T>) => void): IDisposable {
 	return connection.disposableOn("dialUp", (ev: DialUp<T>) => listener(new ActionEvent<DialUp<T>, Action<T>>(new Action<T>(ev), ev)));
 }
 
@@ -75,7 +76,7 @@ export function onDialUp<T extends PayloadObject<T> = object>(listener: (ev: Dia
  * @param listener Function to be invoked when the event occurs.
  * @returns A disposable that, when disposed, removes the listener.
  */
-export function onKeyDown<T extends PayloadObject<T> = object>(listener: (ev: KeyDownEvent<T>) => void): IDisposable {
+export function onKeyDown<T extends JsonObject = JsonObject>(listener: (ev: KeyDownEvent<T>) => void): IDisposable {
 	return connection.disposableOn("keyDown", (ev: KeyDown<T>) => listener(new ActionEvent<KeyDown<T>, Action<T>>(new Action<T>(ev), ev)));
 }
 
@@ -87,7 +88,7 @@ export function onKeyDown<T extends PayloadObject<T> = object>(listener: (ev: Ke
  * @param listener Function to be invoked when the event occurs.
  * @returns A disposable that, when disposed, removes the listener.
  */
-export function onKeyUp<T extends PayloadObject<T> = object>(listener: (ev: KeyUpEvent<T>) => void): IDisposable {
+export function onKeyUp<T extends JsonObject = JsonObject>(listener: (ev: KeyUpEvent<T>) => void): IDisposable {
 	return connection.disposableOn("keyUp", (ev: KeyUp<T>) => listener(new ActionEvent<KeyUp<T>, Action<T>>(new Action<T>(ev), ev)));
 }
 
@@ -97,7 +98,7 @@ export function onKeyUp<T extends PayloadObject<T> = object>(listener: (ev: KeyU
  * @param listener Function to be invoked when the event occurs.
  * @returns A disposable that, when disposed, removes the listener.
  */
-export function onTitleParametersDidChange<T extends PayloadObject<T> = object>(listener: (ev: TitleParametersDidChangeEvent<T>) => void): IDisposable {
+export function onTitleParametersDidChange<T extends JsonObject = JsonObject>(listener: (ev: TitleParametersDidChangeEvent<T>) => void): IDisposable {
 	return connection.disposableOn("titleParametersDidChange", (ev: TitleParametersDidChange<T>) =>
 		listener(new ActionEvent<TitleParametersDidChange<T>, Action<T>>(new Action<T>(ev), ev))
 	);
@@ -109,8 +110,8 @@ export function onTitleParametersDidChange<T extends PayloadObject<T> = object>(
  * @param listener Function to be invoked when the event occurs.
  * @returns A disposable that, when disposed, removes the listener.
  */
-export function onTouchTap<TSettings extends PayloadObject<TSettings> = object>(listener: (ev: TouchTapEvent<TSettings>) => void): IDisposable {
-	return connection.disposableOn("touchTap", (ev: TouchTap<TSettings>) => listener(new ActionEvent<TouchTap<TSettings>, Action<TSettings>>(new Action<TSettings>(ev), ev)));
+export function onTouchTap<T extends JsonObject = JsonObject>(listener: (ev: TouchTapEvent<T>) => void): IDisposable {
+	return connection.disposableOn("touchTap", (ev: TouchTap<T>) => listener(new ActionEvent<TouchTap<T>, Action<T>>(new Action<T>(ev), ev)));
 }
 
 /**
@@ -120,7 +121,7 @@ export function onTouchTap<TSettings extends PayloadObject<TSettings> = object>(
  * @param listener Function to be invoked when the event occurs.
  * @returns A disposable that, when disposed, removes the listener.
  */
-export function onWillAppear<T extends PayloadObject<T> = object>(listener: (ev: WillAppearEvent<T>) => void): IDisposable {
+export function onWillAppear<T extends JsonObject = JsonObject>(listener: (ev: WillAppearEvent<T>) => void): IDisposable {
 	return connection.disposableOn("willAppear", (ev: WillAppear<T>) => listener(new ActionEvent<WillAppear<T>, Action<T>>(new Action<T>(ev), ev)));
 }
 
@@ -131,7 +132,7 @@ export function onWillAppear<T extends PayloadObject<T> = object>(listener: (ev:
  * @param listener Function to be invoked when the event occurs.
  * @returns A disposable that, when disposed, removes the listener.
  */
-export function onWillDisappear<T extends PayloadObject<T> = object>(listener: (ev: WillDisappearEvent<T>) => void): IDisposable {
+export function onWillDisappear<T extends JsonObject = JsonObject>(listener: (ev: WillDisappearEvent<T>) => void): IDisposable {
 	return connection.disposableOn("willDisappear", (ev: WillDisappear<T>) => listener(new ActionEvent<WillDisappear<T>, Action<T>>(new Action<T>(ev), ev)));
 }
 
@@ -148,7 +149,7 @@ export function onWillDisappear<T extends PayloadObject<T> = object>(listener: (
  *
  * streamDeck.actions.registerAction(new MyCustomAction());
  */
-export function registerAction<TAction extends SingletonAction<TSettings>, TSettings extends PayloadObject<TSettings> = object>(action: TAction): void {
+export function registerAction<TAction extends SingletonAction<TSettings>, TSettings extends JsonObject = JsonObject>(action: TAction): void {
 	if (action.manifestId === undefined) {
 		throw new Error("The action's manifestId cannot be undefined.");
 	}
@@ -179,12 +180,12 @@ export function registerAction<TAction extends SingletonAction<TSettings>, TSett
 	route(onDialDown, action.onDialDown);
 	route(onDialUp, action.onDialUp);
 	route(onDialRotate, action.onDialRotate);
-	route(onDidReceivePropertyInspectorMessage, action.onDidReceivePropertyInspectorMessage);
+	route(ui.onSendToPlugin, action.onSendToPlugin);
 	route(onDidReceiveSettings, action.onDidReceiveSettings);
 	route(onKeyDown, action.onKeyDown);
 	route(onKeyUp, action.onKeyUp);
-	route(onPropertyInspectorDidAppear, action.onPropertyInspectorDidAppear);
-	route(onPropertyInspectorDidDisappear, action.onPropertyInspectorDidDisappear);
+	route(ui.onDidAppear, action.onPropertyInspectorDidAppear);
+	route(ui.onDidDisappear, action.onPropertyInspectorDidDisappear);
 	route(onTitleParametersDidChange, action.onTitleParametersDidChange);
 	route(onTouchTap, action.onTouchTap);
 	route(onWillAppear, action.onWillAppear);
@@ -194,7 +195,7 @@ export function registerAction<TAction extends SingletonAction<TSettings>, TSett
 /**
  * Event associated with an {@link Action}.
  */
-type RoutingEvent<T extends PayloadObject<T>> = {
+type RoutingEvent<T extends JsonObject> = {
 	/**
 	 * The {@link Action} the event is associated with.
 	 */

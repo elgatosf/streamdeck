@@ -1,6 +1,7 @@
-import type { DidReceiveGlobalSettings, DidReceiveSettings, PayloadObject } from "../api";
+import type { DidReceiveGlobalSettings, DidReceiveSettings } from "../api";
 import type { IDisposable } from "../common/disposable";
 import { ActionEvent } from "../common/events";
+import type { JsonObject } from "../common/json";
 import { Action } from "./actions/action";
 import { connection } from "./connection";
 import { DidReceiveGlobalSettingsEvent, DidReceiveSettingsEvent } from "./events";
@@ -10,7 +11,7 @@ import { DidReceiveGlobalSettingsEvent, DidReceiveSettingsEvent } from "./events
  * @template T The type of global settings associated with the plugin.
  * @returns Promise containing the plugin's global settings.
  */
-export function getGlobalSettings<T extends PayloadObject<T> = object>(): Promise<T> {
+export function getGlobalSettings<T extends JsonObject = JsonObject>(): Promise<T> {
 	return new Promise((resolve) => {
 		connection.once("didReceiveGlobalSettings", (ev: DidReceiveGlobalSettings<T>) => resolve(ev.payload.settings));
 		connection.send({
@@ -26,7 +27,7 @@ export function getGlobalSettings<T extends PayloadObject<T> = object>(): Promis
  * @param listener Function to be invoked when the event occurs.
  * @returns A disposable that, when disposed, removes the listener.
  */
-export function onDidReceiveGlobalSettings<T extends PayloadObject<T> = object>(listener: (ev: DidReceiveGlobalSettingsEvent<T>) => void): IDisposable {
+export function onDidReceiveGlobalSettings<T extends JsonObject = JsonObject>(listener: (ev: DidReceiveGlobalSettingsEvent<T>) => void): IDisposable {
 	return connection.disposableOn("didReceiveGlobalSettings", (ev: DidReceiveGlobalSettings<T>) => listener(new DidReceiveGlobalSettingsEvent(ev)));
 }
 
@@ -36,7 +37,7 @@ export function onDidReceiveGlobalSettings<T extends PayloadObject<T> = object>(
  * @param listener Function to be invoked when the event occurs.
  * @returns A disposable that, when disposed, removes the listener.
  */
-export function onDidReceiveSettings<T extends PayloadObject<T> = object>(listener: (ev: DidReceiveSettingsEvent<T>) => void): IDisposable {
+export function onDidReceiveSettings<T extends JsonObject = JsonObject>(listener: (ev: DidReceiveSettingsEvent<T>) => void): IDisposable {
 	return connection.disposableOn("didReceiveSettings", (ev: DidReceiveSettings<T>) => listener(new ActionEvent<DidReceiveSettings<T>, Action<T>>(new Action<T>(ev), ev)));
 }
 

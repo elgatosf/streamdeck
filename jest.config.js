@@ -19,6 +19,10 @@ const config = {
 					parser: {
 						syntax: "typescript",
 						decorators: true
+					},
+					transform: {
+						// Stage 3 decorators (https://swc.rs/docs/configuration/compilation#jsctransformdecoratorversion)
+						decoratorVersion: "2022-03"
 					}
 				}
 			}
