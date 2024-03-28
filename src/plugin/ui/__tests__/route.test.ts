@@ -1,6 +1,7 @@
 import { Action, action, type JsonObject, type MessageRequest } from "../..";
 import type { PluginCommand, SendToPropertyInspector } from "../../../api";
 import { MessageGateway, MessageResponder } from "../../../common/messaging";
+import { PromiseCompletionSource } from "../../../common/promises";
 import { SingletonAction } from "../../actions/singleton-action";
 import { connection } from "../../connection";
 import { route } from "../route";
@@ -21,16 +22,21 @@ describe("route", () => {
 		beforeEach(() => initialize(ev.action));
 
 		/**
-		 * Asserts {@link route} with a synchronous result.
+		 * Asserts {@link route} with an asynchronous result.
 		 */
-		test("sync", async () => {
-			// Arrange, act.
-			const action = new ActionWithRoutes();
+		test("async", async () => {
+			// Arrange.
+			const awaiter = new PromiseCompletionSource();
+			const action = new ActionWithRoutes("sync");
+			action.spyOnGetCharacters.mockImplementation(() => awaiter.setResult(true));
+
+			// Act.
 			const res = await piRouter.fetch("/characters", {
 				game: "World of Warcraft"
 			});
 
 			// Assert.
+			await awaiter.promise;
 			expect(action.spyOnGetCharacters).toHaveBeenCalledTimes(1);
 			expect(action.spyOnGetCharacters).toHaveBeenLastCalledWith<[MessageRequest<Filter>, MessageResponder]>(
 				{
@@ -50,16 +56,21 @@ describe("route", () => {
 		});
 
 		/**
-		 * Asserts {@link route} with an asynchronous result.
+		 * Asserts {@link route} with a synchronous result.
 		 */
-		test("async", async () => {
+		test("sync", async () => {
 			// Arrange, act.
-			const action = new ActionWithRoutes();
+			const awaiter = new PromiseCompletionSource();
+			const action = new ActionWithRoutes("sync");
+			action.spyOnGetCharactersSync.mockImplementation(() => awaiter.setResult(true));
+
+			// Act.
 			const res = await piRouter.fetch("/characters-sync", {
 				game: "Mario World"
 			});
 
 			// Assert.
+			await awaiter.promise;
 			expect(action.spyOnGetCharactersSync).toHaveBeenCalledTimes(1);
 			expect(action.spyOnGetCharactersSync).toHaveBeenLastCalledWith<[MessageRequest<Filter>, MessageResponder]>(
 				{
@@ -83,7 +94,7 @@ describe("route", () => {
 		 */
 		test("void", async () => {
 			// Arrange, act.
-			const action = new ActionWithRoutes();
+			const action = new ActionWithRoutes("void");
 			const res = await piRouter.fetch("/save");
 
 			// Assert.
@@ -108,11 +119,11 @@ describe("route", () => {
 		beforeEach(() => initialize("com.other"));
 
 		/**
-		 * Asserts {@link route} with a synchronous result.
+		 * Asserts {@link route} with an asynchronous result.
 		 */
-		test("sync", async () => {
+		test("async", async () => {
 			// Arrange, act.
-			const action = new ActionWithRoutes();
+			const action = new ActionWithRoutes("async");
 			const res = await piRouter.fetch("/characters", {
 				game: "World of Warcraft"
 			});
@@ -125,11 +136,11 @@ describe("route", () => {
 		});
 
 		/**
-		 * Asserts {@link route} with an asynchronous result.
+		 * Asserts {@link route} with a synchronous result.
 		 */
-		test("async", async () => {
+		test("sync", async () => {
 			// Arrange, act.
-			const action = new ActionWithRoutes();
+			const action = new ActionWithRoutes("sync");
 			const res = await piRouter.fetch("/characters-sync", {
 				game: "Mario World"
 			});
@@ -146,7 +157,7 @@ describe("route", () => {
 		 */
 		test("void", async () => {
 			// Arrange, act.
-			const action = new ActionWithRoutes();
+			const action = new ActionWithRoutes("void");
 			const res = await piRouter.fetch("/save");
 
 			// Assert.
@@ -209,6 +220,11 @@ class ActionWithRoutes extends SingletonAction {
 	public spyOnGetCharactersSync = jest.fn();
 	public spyOnSave = jest.fn();
 
+	constructor(private readonly id: string) {
+		super();
+		console.log(id);
+	}
+
 	/**
 	 * Mock route with an asynchronous result.
 	 * @param req The request.
@@ -217,6 +233,7 @@ class ActionWithRoutes extends SingletonAction {
 	 */
 	@route("/characters")
 	public getCharacters(req: MessageRequest, res: MessageResponder): Promise<string[]> {
+		console.log("Called spy async");
 		this.spyOnGetCharacters(req, res);
 		return Promise.resolve(["Anduin", "Sylvanas", "Thrall"]);
 	}
@@ -229,6 +246,7 @@ class ActionWithRoutes extends SingletonAction {
 	 */
 	@route("/characters-sync")
 	public getCharactersSync(req: MessageRequest, res: MessageResponder): string[] {
+		console.log("Called spy sync");
 		this.spyOnGetCharactersSync(req, res);
 		return ["Mario", "Luigi", "Peach"];
 	}

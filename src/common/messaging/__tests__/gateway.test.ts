@@ -150,7 +150,11 @@ describe("MessageGateway", () => {
 		});
 	});
 
+	/**
+	 * Asserts {@link MessageGateway} executes route handlers in order.
+	 */
 	it("must execute handlers in order", async () => {
+		// Arrange
 		const proxy = jest.fn();
 		const gateway = new MessageGateway<object>(proxy, jest.fn());
 		const order: string[] = [];
@@ -202,6 +206,38 @@ describe("MessageGateway", () => {
 		expect(res.body).toBeUndefined();
 	});
 
+	/**
+	 * Asserts the disposable of {@link MessageGateway.route} can remove the route.
+	 */
+	it("can remove routes", async () => {
+		// Arrange.
+		const proxy = jest.fn();
+		const listener = jest.fn();
+		const gateway = new MessageGateway<object>(proxy, jest.fn());
+		const ev = {
+			action: "com.elgato.test.one",
+			context: "abc123",
+			event: "sendToPlugin",
+			payload: {
+				__type: "request",
+				id: "12345",
+				path: "/test",
+				unidirectional: false
+			}
+		} satisfies DidReceivePropertyInspectorMessage<RawMessageRequest>;
+
+		const disposable = gateway.route("/test", listener);
+
+		// Act, assert.
+		await gateway.process(ev);
+		expect(listener).toHaveBeenCalledTimes(1);
+
+		// Act, assert (dispose).
+		disposable.dispose();
+		await gateway.process(ev);
+		expect(listener).toHaveBeenCalledTimes(1); // Should still be 1.
+	});
+
 	describe("fetch e2e", () => {
 		let client!: MessageGateway<object>;
 		let server!: MessageGateway<object>;
@@ -237,23 +273,31 @@ describe("MessageGateway", () => {
 				});
 
 				return true;
-			}, jest.fn())
-				.route("/test", (req, res) => {
-					res.success({
-						name: "Elgato"
-					});
-				})
-				.route("/error", () => {
-					throw new SafeError();
-				})
-				.route("/cascade", () => {
-					cascade("First");
-					return true;
-				})
-				.route("/cascade", () => {
-					cascade("Second");
-					return false;
+			}, jest.fn());
+
+			server.route("/async", () => {
+				return Promise.resolve(["Mario", "Luigi", "Peach"]);
+			});
+
+			server.route("/test", (req, res) => {
+				res.success({
+					name: "Elgato"
 				});
+			});
+
+			server.route("/error", () => {
+				throw new SafeError();
+			});
+
+			server.route("/cascade", () => {
+				cascade("First");
+				return true;
+			});
+
+			server.route("/cascade", () => {
+				cascade("Second");
+				return false;
+			});
 		});
 
 		afterEach(() => jest.resetAllMocks());
@@ -289,6 +333,19 @@ describe("MessageGateway", () => {
 				expect(status).toBe(202);
 				expect(ok).toBeTruthy();
 				expect(body).toBeUndefined();
+			});
+
+			/**
+			 * Asserts the response contains the data of a handler that returns a promise.
+			 */
+			it("data with promise result", async () => {
+				// Arrange, act.
+				const { body, ok, status } = await client.fetch<MockData>("/async");
+
+				// Assert.
+				expect(status).toBe(200);
+				expect(ok).toBeTruthy();
+				expect(body).toEqual(["Mario", "Luigi", "Peach"]);
 			});
 
 			/**

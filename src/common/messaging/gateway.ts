@@ -1,4 +1,5 @@
 import type { DidReceivePluginMessage, DidReceivePropertyInspectorMessage } from "../../api";
+import { IDisposable } from "../disposable";
 import { EventEmitter } from "../event-emitter";
 import type { JsonValue } from "../json";
 import { isRequest, isResponse, type RawMessageRequest, type RawMessageResponse, type StatusCode } from "./message";
@@ -21,7 +22,7 @@ export class MessageGateway<TAction> extends EventEmitter<MessageGatewayEventMap
 	/**
 	 * Registered routes, and their respective handlers.
 	 */
-	private readonly routes: Route<TAction>[] = [];
+	private readonly routes = new EventEmitter();
 
 	/**
 	 * Initializes a new instance of the {@link MessageGateway} class.
@@ -108,16 +109,28 @@ export class MessageGateway<TAction> extends EventEmitter<MessageGatewayEventMap
 	 * @param path Path used to identify the route.
 	 * @param handler Handler to be invoked when the request is received.
 	 * @param options Optional routing configuration.
-	 * @returns This instance with the route registered.
+	 * @returns Disposable capable of removing the route handler.
 	 */
-	public route<TBody extends JsonValue = JsonValue>(path: string, handler: UnscopedMessageHandler<TAction, TBody>, options?: RouteConfiguration<TAction>): this {
-		this.routes.push({
-			handler: handler as UnscopedMessageHandler<TAction, JsonValue>,
-			options: { filter: () => true, ...options },
-			path
-		});
+	public route<TBody extends JsonValue = JsonValue>(path: string, handler: UnscopedMessageHandler<TAction, TBody>, options?: RouteConfiguration<TAction>): IDisposable {
+		options = { filter: () => true, ...options };
 
-		return this;
+		return this.routes.disposableOn(path, async (ev: InternalRouteHandlerEventArgs<TAction, TBody>) => {
+			if (options?.filter && options.filter(ev.request.action)) {
+				ev.routed();
+
+				try {
+					// Invoke the handler; when data was returned, propagate it as part of the response (if there wasn't already a response).
+					const result = await handler(ev.request, ev.responder);
+					if (result !== undefined) {
+						await ev.responder.send(200, result);
+					}
+				} catch (err) {
+					// Respond with an error before throwing.
+					await ev.responder.send(500);
+					throw err;
+				}
+			}
+		});
 	}
 
 	/**
@@ -127,46 +140,42 @@ export class MessageGateway<TAction> extends EventEmitter<MessageGatewayEventMap
 	 * @returns `true` when the request was handled; otherwise `false`.
 	 */
 	private async handleRequest(action: TAction, source: RawMessageRequest): Promise<boolean> {
-		const res = new MessageResponder(source, this.proxy);
-		const req: UnscopedMessageRequest<TAction, JsonValue> = {
+		const responder = new MessageResponder(source, this.proxy);
+		const request: UnscopedMessageRequest<TAction, JsonValue> = {
 			action,
 			path: source.path,
 			unidirectional: source.unidirectional,
 			body: source.body
 		};
 
-		const routes = this.routes.filter((r) => r.path === source.path && r.options.filter(action));
+		// Get handlers of the path, and invoke them; filtering is applied by the handlers themselves
+		let routed = false;
+		const routes = this.routes.listeners(source.path) as ((ev: InternalRouteHandlerEventArgs<TAction>) => Promise<void>)[];
 
-		// When there are no applicable routes, return not-handled.
-		if (routes.length === 0) {
-			await res.send(501);
-			return false;
-		}
+		for (const route of routes) {
+			await route({
+				request,
+				responder,
+				routed: async (): Promise<void> => {
+					// Flags the path as handled, sending an immediate 202 if the request was unidirectional.
+					if (request.unidirectional) {
+						await responder.send(202);
+					}
 
-		// When the request is unidirectional, send a 202 status.
-		if (source.unidirectional) {
-			await res.send(202);
-		}
-
-		try {
-			// Route the request to the handlers in order they were registered, stopping if we have a response.
-			for (const route of routes) {
-				const result = await route.handler(req, res);
-
-				// When the handler has a result, respond.
-				if (result !== undefined) {
-					await res.send(200, result);
+					routed = true;
 				}
-			}
-
-			await res.send(200);
-		} catch (err) {
-			// Respond with an error before throwing.
-			await res.send(500);
-			throw err;
+			});
 		}
 
-		return true;
+		// The request was successfully routed, so fallback to a 200.
+		if (routed) {
+			await responder.send(200);
+			return true;
+		}
+
+		// When there were no applicable routes, return not-handled.
+		await responder.send(501);
+		return false;
 	}
 
 	/**
@@ -311,25 +320,6 @@ export type UnscopedMessageHandler<TAction, TBody extends JsonValue = JsonValue>
 ) => JsonValue | Promise<JsonValue | void> | void;
 
 /**
- * Defines a messenger route.
- */
-type Route<TAction, TBody extends JsonValue = JsonValue> = {
-	/**
-	 * The handler function.
-	 */
-	handler: UnscopedMessageHandler<TAction, TBody>;
-
-	/**
-	 * Routing configuration.
-	 */
-	options: Required<RouteConfiguration<TAction>>;
-	/**
-	 * The path of the route, for example "/get-lights".
-	 */
-	path: string;
-};
-
-/**
  * Configuration that defines the route.
  */
 export type RouteConfiguration<TAction> = {
@@ -339,4 +329,24 @@ export type RouteConfiguration<TAction> = {
 	 * @returns Should return `true` when the request can be handled; otherwise `false`.
 	 */
 	filter?: (source: TAction) => boolean;
+};
+
+/**
+ * Event arguments provided to the internal handler for a route.
+ */
+type InternalRouteHandlerEventArgs<TAction, TBody extends JsonValue = JsonValue> = {
+	/**
+	 * Request received from the client.
+	 */
+	request: UnscopedMessageRequest<TAction, TBody>;
+
+	/**
+	 * Responder capable of sending a response to the client.
+	 */
+	responder: MessageResponder;
+
+	/**
+	 * Indicates the listener is able to handle the request based on its configuration.
+	 */
+	routed(): Promise<void>;
 };

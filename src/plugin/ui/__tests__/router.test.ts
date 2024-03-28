@@ -115,7 +115,7 @@ describe("router", () => {
 			} satisfies DidReceivePropertyInspectorMessage<RawMessageRequest>;
 
 			const listener = jest.fn();
-			router.route("/test", listener);
+			const disposable = router.route("/test", listener);
 
 			// Act.
 			connection.emit("sendToPlugin", ev);
@@ -135,6 +135,11 @@ describe("router", () => {
 				},
 				expect.any(MessageResponder)
 			);
+
+			// Act, assert (dispose).
+			disposable.dispose();
+			connection.emit("sendToPlugin", ev);
+			expect(listener).toHaveBeenCalledTimes(1);
 		});
 	});
 

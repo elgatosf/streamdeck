@@ -68,6 +68,7 @@ class UIController {
 	 * @param path Path that identifies the route.
 	 * @param handler Handler to be invoked when a matching request is received.
 	 * @param options Optional routing configuration.
+	 * @returns Disposable capable of removing the route handler.
 	 * @example
 	 * streamDeck.ui.registerRoute("/toggle-light", async (req, res) => {
 	 *   await lightService.toggle(req.body.lightId);
@@ -78,8 +79,8 @@ class UIController {
 		path: string,
 		handler: MessageHandler<TBody, TSettings>,
 		options?: RouteConfiguration<Action>
-	): void {
-		router.route(path, handler, options);
+	): IDisposable {
+		return router.route(path, handler, options);
 	}
 }
 

@@ -157,10 +157,7 @@ describe("plugin", () => {
 	it("receives request", () => {
 		// Arrange.
 		const listener = jest.fn();
-		plugin.registerRoute("/receive", listener);
-
-		// Act.
-		connection.emit("sendToPropertyInspector", {
+		const ev = {
 			action: actionInfo.action,
 			context: uuid,
 			event: "sendToPropertyInspector",
@@ -173,7 +170,11 @@ describe("plugin", () => {
 					name: "Elgato"
 				}
 			}
-		} satisfies DidReceivePluginMessage<RawMessageRequest>);
+		} satisfies DidReceivePluginMessage<RawMessageRequest>;
+
+		// Act.
+		const disposable = plugin.registerRoute("/receive", listener);
+		connection.emit("sendToPropertyInspector", ev);
 
 		// Assert.
 		expect(listener).toHaveBeenCalledTimes(1);
@@ -193,6 +194,11 @@ describe("plugin", () => {
 			},
 			expect.any(MessageResponder)
 		);
+
+		// Act, assert (disposable).
+		disposable.dispose();
+		connection.emit("sendToPropertyInspector", ev);
+		expect(listener).toHaveBeenCalledTimes(1); // Should still be 1.
 	});
 
 	/**
