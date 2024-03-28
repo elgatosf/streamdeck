@@ -27,7 +27,7 @@ describe("route", () => {
 		test("async", async () => {
 			// Arrange.
 			const awaiter = new PromiseCompletionSource();
-			const action = new ActionWithRoutes("sync");
+			const action = new ActionWithRoutes();
 			action.spyOnGetCharacters.mockImplementation(() => awaiter.setResult(true));
 
 			// Act.
@@ -61,7 +61,7 @@ describe("route", () => {
 		test("sync", async () => {
 			// Arrange, act.
 			const awaiter = new PromiseCompletionSource();
-			const action = new ActionWithRoutes("sync");
+			const action = new ActionWithRoutes();
 			action.spyOnGetCharactersSync.mockImplementation(() => awaiter.setResult(true));
 
 			// Act.
@@ -94,7 +94,7 @@ describe("route", () => {
 		 */
 		test("void", async () => {
 			// Arrange, act.
-			const action = new ActionWithRoutes("void");
+			const action = new ActionWithRoutes();
 			const res = await piRouter.fetch("/save");
 
 			// Assert.
@@ -123,7 +123,7 @@ describe("route", () => {
 		 */
 		test("async", async () => {
 			// Arrange, act.
-			const action = new ActionWithRoutes("async");
+			const action = new ActionWithRoutes();
 			const res = await piRouter.fetch("/characters", {
 				game: "World of Warcraft"
 			});
@@ -140,7 +140,7 @@ describe("route", () => {
 		 */
 		test("sync", async () => {
 			// Arrange, act.
-			const action = new ActionWithRoutes("sync");
+			const action = new ActionWithRoutes();
 			const res = await piRouter.fetch("/characters-sync", {
 				game: "Mario World"
 			});
@@ -157,7 +157,7 @@ describe("route", () => {
 		 */
 		test("void", async () => {
 			// Arrange, act.
-			const action = new ActionWithRoutes("void");
+			const action = new ActionWithRoutes();
 			const res = await piRouter.fetch("/save");
 
 			// Assert.
@@ -219,11 +219,6 @@ class ActionWithRoutes extends SingletonAction {
 	public spyOnGetCharacters = jest.fn();
 	public spyOnGetCharactersSync = jest.fn();
 	public spyOnSave = jest.fn();
-
-	constructor(private readonly id: string) {
-		super();
-		console.log(id);
-	}
 
 	/**
 	 * Mock route with an asynchronous result.
