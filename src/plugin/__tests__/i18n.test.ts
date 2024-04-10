@@ -1,6 +1,5 @@
 import fs, { Dirent } from "node:fs";
 import path from "node:path";
-import type { Manifest } from "../../api";
 import { I18nProvider } from "../i18n";
 import { logger } from "../logging";
 import { LogLevel } from "../logging/log-level";
@@ -13,23 +12,20 @@ describe("I18nProvider", () => {
 	 * Defines a set of mock resources.
 	 */
 	type MockTranslations = {
-		greeting?: string;
-		manifestOnly?: string;
-		englishOnly?: string;
-		frenchOnly?: string;
-		germanOnly?: string;
+		Localization: {
+			greeting?: string;
+			manifestOnly?: string;
+			englishOnly?: string;
+			frenchOnly?: string;
+			germanOnly?: string;
+		};
 	};
 
 	const mockedCwd = "c:\\temp";
 	const mockedResources = new Map<string, MockTranslations>();
-	mockedResources.set("de.json", { greeting: "Hello welt", germanOnly: "German" });
-	mockedResources.set("en.json", { greeting: "Hello world", englishOnly: "English" });
-	mockedResources.set("fr.json", { greeting: "Bonjour le monde", frenchOnly: "French" });
-
-	const mockedManifest = {
-		greeting: "This should never be used",
-		manifestOnly: "Manifest"
-	} as unknown as Manifest;
+	mockedResources.set("de.json", { Localization: { greeting: "Hello welt", germanOnly: "German" } });
+	mockedResources.set("en.json", { Localization: { greeting: "Hello world", englishOnly: "English" } });
+	mockedResources.set("fr.json", { Localization: { greeting: "Bonjour le monde", frenchOnly: "French" } });
 
 	let scopedLogger!: Logger;
 
@@ -54,7 +50,7 @@ describe("I18nProvider", () => {
 		const createScopeSpy = jest.spyOn(logger, "createScope");
 
 		// Act.
-		new I18nProvider("en", mockedManifest, logger);
+		new I18nProvider("en", logger);
 
 		// Assert.
 		expect(createScopeSpy).toHaveBeenCalledTimes(1);
@@ -70,7 +66,7 @@ describe("I18nProvider", () => {
 		const readFileSyncSpy = jest.spyOn(fs, "readFileSync").mockImplementation(() => "{}");
 
 		// Act.
-		new I18nProvider("en", mockedManifest, logger);
+		new I18nProvider("en", logger);
 
 		// Assert.
 		expect(readFileSyncSpy).toHaveBeenCalledTimes(6);
@@ -87,25 +83,6 @@ describe("I18nProvider", () => {
 	});
 
 	/**
-	 * Asserts {@link I18nProvider} merges the manifest (resources) into the custom English resources.
-	 */
-	it("merges manifest into English", () => {
-		// Arrange.
-		jest.spyOn(fs, "readdirSync").mockReturnValue(["de.json", "en.json", "fr.json"] as unknown[] as Dirent[]);
-		jest.spyOn(fs, "readFileSync").mockImplementation((path) => JSON.stringify(mockedResources.get(path as string)));
-
-		const i18n = new I18nProvider("en", mockedManifest, logger);
-
-		// Act.
-		const greeting = i18n.translate("greeting");
-		const manifestOnly = i18n.translate("manifestOnly");
-
-		// Assert.
-		expect(greeting).toBe("Hello world");
-		expect(manifestOnly).toBe("Manifest");
-	});
-
-	/**
 	 * Asserts {@link I18nProvider} correctly resorts to default language.
 	 */
 	it("falls back to the default language", () => {
@@ -113,17 +90,15 @@ describe("I18nProvider", () => {
 		jest.spyOn(fs, "readdirSync").mockReturnValue(["de.json", "en.json", "fr.json"] as unknown[] as Dirent[]);
 		jest.spyOn(fs, "readFileSync").mockImplementation((path) => JSON.stringify(mockedResources.get(path as string)));
 
-		const i18n = new I18nProvider("de", mockedManifest, logger);
+		const i18n = new I18nProvider("de", logger);
 
 		// Act.
 		const greeting = i18n.translate("greeting");
 		const englishOnly = i18n.translate("englishOnly");
-		const manifestOnly = i18n.translate("manifestOnly");
 
 		// Assert.
 		expect(greeting).toBe("Hello welt");
 		expect(englishOnly).toBe("English");
-		expect(manifestOnly).toBe("Manifest");
 	});
 
 	/**
@@ -135,7 +110,7 @@ describe("I18nProvider", () => {
 		jest.spyOn(fs, "readFileSync").mockReturnValue("{}");
 		const spyOnWarn = jest.spyOn(scopedLogger, "warn");
 
-		const i18n = new I18nProvider("en", mockedManifest, logger);
+		const i18n = new I18nProvider("en", logger);
 
 		// Act.
 		i18n.logMissingKey = true;
@@ -156,7 +131,7 @@ describe("I18nProvider", () => {
 		jest.spyOn(fs, "readFileSync").mockReturnValue("{}");
 		const spyOnWarn = jest.spyOn(scopedLogger, "warn");
 
-		const i18n = new I18nProvider("en", mockedManifest, logger);
+		const i18n = new I18nProvider("en", logger);
 
 		// Act.
 		i18n.logMissingKey = false;
@@ -177,7 +152,7 @@ describe("I18nProvider", () => {
 		const spyOnError = jest.spyOn(scopedLogger, "error");
 
 		// Act.
-		new I18nProvider("en", mockedManifest, logger);
+		new I18nProvider("en", logger);
 
 		// Assert.
 		expect(spyOnError).toHaveBeenCalledTimes(1);
@@ -192,13 +167,15 @@ describe("I18nProvider", () => {
 		jest.spyOn(fs, "readdirSync").mockReturnValue(["en.json"] as unknown[] as Dirent[]);
 		jest.spyOn(fs, "readFileSync").mockReturnValue(
 			JSON.stringify({
-				parent: {
-					child: "Hello world"
+				Localization: {
+					parent: {
+						child: "Hello world"
+					}
 				}
 			})
 		);
 
-		const i18n = new I18nProvider("en", mockedManifest, logger);
+		const i18n = new I18nProvider("en", logger);
 
 		// Act.
 		const result = i18n.translate("parent.child");

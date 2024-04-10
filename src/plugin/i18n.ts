@@ -1,7 +1,7 @@
 import file from "node:fs";
 import path from "node:path";
 
-import { supportedLanguages, type Language, type Manifest } from "../api";
+import { supportedLanguages, type Language } from "../api";
 import { get } from "./common/utils";
 import { Logger } from "./logging";
 
@@ -32,16 +32,14 @@ export class I18nProvider {
 	/**
 	 * Initializes a new instance of the {@link I18nProvider} class.
 	 * @param language The default language to be used when retrieving translations for a given key.
-	 * @param manifest Manifest that accompanies the plugin.
 	 * @param logger Logger responsible for capturing log entries.
 	 */
 	constructor(
 		private readonly language: Language,
-		manifest: Manifest,
 		logger: Logger
 	) {
 		this.logger = logger.createScope("I18nProvider");
-		this.loadLocales(manifest);
+		this.loadLocales();
 	}
 
 	/**
@@ -62,9 +60,8 @@ export class I18nProvider {
 
 	/**
 	 * Loads all known locales from the current working directory.
-	 * @param manifest Manifest that accompanies the plugin.
 	 */
-	private loadLocales(manifest: Manifest): void {
+	private loadLocales(): void {
 		for (const filePath of file.readdirSync(process.cwd())) {
 			const { ext, name } = path.parse(filePath);
 			const lng = name as Language;
@@ -76,12 +73,6 @@ export class I18nProvider {
 				}
 			}
 		}
-
-		// Merge the manifest into the default language, prioritizing explicitly defined resources.
-		this.locales.set(I18nProvider.DEFAULT_LANGUAGE, {
-			...manifest,
-			...(this.locales.get(I18nProvider.DEFAULT_LANGUAGE) || {})
-		});
 	}
 
 	/**
@@ -105,6 +96,8 @@ export class I18nProvider {
 	 * @returns The resource; otherwise the default language's resource, or `undefined`.
 	 */
 	private translateOrDefault(key: string, language: Language = this.language): string | undefined {
+		key = `Localization.${key}`;
+
 		// When the language and default are the same, only check the language.
 		if (language === I18nProvider.DEFAULT_LANGUAGE) {
 			return get(key, this.locales.get(language))?.toString();
