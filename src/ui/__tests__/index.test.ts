@@ -5,7 +5,7 @@
 import streamDeck from "../";
 import { actionInfo, registrationInfo } from "../../api/registration/__mocks__";
 import { connection } from "../connection";
-import * as plugin from "../plugin";
+import { plugin } from "../plugin";
 import * as settings from "../settings";
 import * as system from "../system";
 

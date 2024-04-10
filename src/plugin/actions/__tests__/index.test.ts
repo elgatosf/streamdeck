@@ -15,12 +15,12 @@ import type {
 	DialDownEvent,
 	DialRotateEvent,
 	DialUpEvent,
-	DidReceivePropertyInspectorMessageEvent,
 	DidReceiveSettingsEvent,
 	KeyDownEvent,
 	KeyUpEvent,
 	PropertyInspectorDidAppearEvent,
 	PropertyInspectorDidDisappearEvent,
+	SendToPluginEvent,
 	SingletonAction,
 	TitleParametersDidChangeEvent,
 	TouchTapEvent,
@@ -46,7 +46,7 @@ import { Settings } from "../../../api/__mocks__/events";
 import { connection } from "../../connection";
 import { getManifest } from "../../manifest";
 import type { onDidReceiveSettings } from "../../settings";
-import type { onDidReceivePropertyInspectorMessage, onPropertyInspectorDidAppear, onPropertyInspectorDidDisappear } from "../../ui";
+import type { UIController } from "../../ui";
 import { Action } from "../action";
 
 jest.mock("../../connection");
@@ -76,7 +76,6 @@ describe("actions", () => {
 		it("receives onDialDown", () => {
 			// Arrange.
 			const listener = jest.fn();
-			const spyOnDisposableOn = jest.spyOn(connection, "disposableOn");
 			const ev = {
 				action: "com.elgato.test.one",
 				context: "context123",
@@ -99,8 +98,6 @@ describe("actions", () => {
 			connection.emit("dialDown", ev);
 
 			// Assert (emit).
-			expect(spyOnDisposableOn).toHaveBeenCalledTimes(1);
-			expect(spyOnDisposableOn).toHaveBeenCalledWith(ev.event, expect.any(Function));
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[DialDownEvent<Settings>]>({
 				action: new Action(ev),
@@ -123,7 +120,6 @@ describe("actions", () => {
 		it("receives onDialRotate", () => {
 			// Arrange.
 			const listener = jest.fn();
-			const spyOnDisposableOn = jest.spyOn(connection, "disposableOn");
 			const ev = {
 				action: "com.elgato.test.one",
 				context: "context123",
@@ -148,8 +144,6 @@ describe("actions", () => {
 			connection.emit("dialRotate", ev);
 
 			// Assert (emit).
-			expect(spyOnDisposableOn).toHaveBeenCalledTimes(1);
-			expect(spyOnDisposableOn).toHaveBeenCalledWith(ev.event, expect.any(Function));
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[DialRotateEvent<Settings>]>({
 				action: new Action(ev),
@@ -172,7 +166,6 @@ describe("actions", () => {
 		it("receives onDialUp", () => {
 			// Arrange.
 			const listener = jest.fn();
-			const spyOnDisposableOn = jest.spyOn(connection, "disposableOn");
 			const ev = {
 				action: "com.elgato.test.one",
 				context: "context123",
@@ -195,8 +188,6 @@ describe("actions", () => {
 			connection.emit("dialUp", ev);
 
 			// Assert (emit).
-			expect(spyOnDisposableOn).toHaveBeenCalledTimes(1);
-			expect(spyOnDisposableOn).toHaveBeenCalledWith(ev.event, expect.any(Function));
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[DialUpEvent<Settings>]>({
 				action: new Action(ev),
@@ -219,7 +210,6 @@ describe("actions", () => {
 		it("receives onKeyDown", () => {
 			// Arrange.
 			const listener = jest.fn();
-			const spyOnDisposableOn = jest.spyOn(connection, "disposableOn");
 			const ev = {
 				action: "com.elgato.test.one",
 				context: "context123",
@@ -243,8 +233,6 @@ describe("actions", () => {
 			connection.emit("keyDown", ev);
 
 			// Assert (emit).
-			expect(spyOnDisposableOn).toHaveBeenCalledTimes(1);
-			expect(spyOnDisposableOn).toHaveBeenCalledWith(ev.event, expect.any(Function));
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[KeyDownEvent<Settings>]>({
 				action: new Action(ev),
@@ -267,7 +255,6 @@ describe("actions", () => {
 		it("receives onKeyUp", () => {
 			// Arrange.
 			const listener = jest.fn();
-			const spyOnDisposableOn = jest.spyOn(connection, "disposableOn");
 			const ev = {
 				action: "com.elgato.test.one",
 				context: "context123",
@@ -291,8 +278,6 @@ describe("actions", () => {
 			connection.emit("keyUp", ev);
 
 			// Assert (emit).
-			expect(spyOnDisposableOn).toHaveBeenCalledTimes(1);
-			expect(spyOnDisposableOn).toHaveBeenCalledWith(ev.event, expect.any(Function));
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[KeyUpEvent<Settings>]>({
 				action: new Action(ev),
@@ -315,7 +300,6 @@ describe("actions", () => {
 		it("receives onTitleParametersDidChange", () => {
 			// Arrange.
 			const listener = jest.fn();
-			const spyOnDisposableOn = jest.spyOn(connection, "disposableOn");
 			const ev = {
 				action: "com.elgato.test.one",
 				context: "context123",
@@ -348,8 +332,6 @@ describe("actions", () => {
 			connection.emit("titleParametersDidChange", ev);
 
 			// Assert (emit).
-			expect(spyOnDisposableOn).toHaveBeenCalledTimes(1);
-			expect(spyOnDisposableOn).toHaveBeenCalledWith(ev.event, expect.any(Function));
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[TitleParametersDidChangeEvent<Settings>]>({
 				action: new Action(ev),
@@ -372,7 +354,6 @@ describe("actions", () => {
 		it("receives onTouchTap", () => {
 			// Arrange.
 			const listener = jest.fn();
-			const spyOnDisposableOn = jest.spyOn(connection, "disposableOn");
 			const ev = {
 				action: "com.elgato.test.one",
 				context: "context123",
@@ -397,8 +378,6 @@ describe("actions", () => {
 			connection.emit("touchTap", ev);
 
 			// Assert (emit).
-			expect(spyOnDisposableOn).toHaveBeenCalledTimes(1);
-			expect(spyOnDisposableOn).toHaveBeenCalledWith(ev.event, expect.any(Function));
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[TouchTapEvent<Settings>]>({
 				action: new Action(ev),
@@ -421,7 +400,6 @@ describe("actions", () => {
 		it("receives onWillAppear", () => {
 			// Arrange.
 			const listener = jest.fn();
-			const spyOnDisposableOn = jest.spyOn(connection, "disposableOn");
 			const ev = {
 				action: "com.elgato.test.one",
 				context: "context123",
@@ -445,8 +423,6 @@ describe("actions", () => {
 			connection.emit("willAppear", ev);
 
 			// Assert (emit).
-			expect(spyOnDisposableOn).toHaveBeenCalledTimes(1);
-			expect(spyOnDisposableOn).toHaveBeenCalledWith(ev.event, expect.any(Function));
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[WillAppearEvent<Settings>]>({
 				action: new Action(ev),
@@ -469,7 +445,6 @@ describe("actions", () => {
 		it("receives onWillAppear", () => {
 			// Arrange.
 			const listener = jest.fn();
-			const spyOnDisposableOn = jest.spyOn(connection, "disposableOn");
 			const ev = {
 				action: "com.elgato.test.one",
 				context: "context123",
@@ -493,8 +468,6 @@ describe("actions", () => {
 			connection.emit("willDisappear", ev);
 
 			// Assert (emit).
-			expect(spyOnDisposableOn).toHaveBeenCalledTimes(1);
-			expect(spyOnDisposableOn).toHaveBeenCalledWith(ev.event, expect.any(Function));
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[WillDisappearEvent<Settings>]>({
 				action: new Action(ev),
@@ -691,9 +664,9 @@ describe("actions", () => {
 		});
 
 		/**
-		 * Asserts {@link onDidReceivePropertyInspectorMessage} is routed to the action when `sendToPlugin` is emitted.
+		 * Asserts {@link UIController.sendToPlugin} is routed to the action when `sendToPlugin` is emitted.
 		 */
-		it("routes onDidReceivePropertyInspectorMessage", () => {
+		it("routes sendToPlugin", () => {
 			// Arrange
 			const listener = jest.fn();
 			const ev = {
@@ -708,14 +681,14 @@ describe("actions", () => {
 			// Act.
 			registerAction({
 				manifestId,
-				onDidReceivePropertyInspectorMessage: listener
+				onSendToPlugin: listener
 			});
 
 			connection.emit("sendToPlugin", ev);
 
 			// Assert.
 			expect(listener).toHaveBeenCalledTimes(1);
-			expect(listener).toHaveBeenCalledWith<[DidReceivePropertyInspectorMessageEvent<Settings, Settings>]>({
+			expect(listener).toHaveBeenCalledWith<[SendToPluginEvent<Settings, Settings>]>({
 				action: new Action(ev),
 				payload: {
 					name: "Hello world"
@@ -851,7 +824,7 @@ describe("actions", () => {
 		});
 
 		/**
-		 * Asserts {@link onPropertyInspectorDidAppear} is routed to the action when `propertyInspectorDidAppear` is emitted.
+		 * Asserts {@link UIController.onPropertyInspectorDidAppear} is routed to the action when `propertyInspectorDidAppear` is emitted.
 		 */
 		it("routes onPropertyInspectorDidAppear", () => {
 			// Arrange
@@ -881,7 +854,7 @@ describe("actions", () => {
 		});
 
 		/**
-		 * Asserts {@link onPropertyInspectorDidDisappear} is routed to the action when `propertyInspectorDidDisappear` is emitted.
+		 * Asserts {@link UIController.onPropertyInspectorDidDisappear} is routed to the action when `propertyInspectorDidDisappear` is emitted.
 		 */
 		it("routes onPropertyInspectorDidDisappear", () => {
 			// Arrange

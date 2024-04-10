@@ -1,19 +1,17 @@
 import type { Controller, DeviceType } from "@elgato/schemas/streamdeck/plugins";
+import type { JsonObject } from "../../common/json";
 import type { DeviceIdentifier } from "./device";
-import type { EventIdentifier, PayloadObject } from "./index";
+import type { EventIdentifier } from "./index";
 
 /**
  * Occurs when the settings associated with an action instance are requested, or when the the settings were updated by the property inspector.
  */
-export type DidReceiveSettings<TSettings extends PayloadObject<TSettings>> = ActionEventMessage<
-	"didReceiveSettings",
-	MultiActionPayload<TSettings> | SingleActionPayload<TSettings>
->;
+export type DidReceiveSettings<TSettings extends JsonObject> = ActionEventMessage<"didReceiveSettings", MultiActionPayload<TSettings> | SingleActionPayload<TSettings>>;
 
 /**
  * Occurs when the user updates an action's title settings in the Stream Deck application.
  */
-export type TitleParametersDidChange<TSettings extends PayloadObject<TSettings>> = ActionEventMessage<
+export type TitleParametersDidChange<TSettings extends JsonObject> = ActionEventMessage<
 	"titleParametersDidChange",
 	Omit<SingleActionPayload<TSettings>, "isInMultiAction"> & {
 		/**
@@ -68,13 +66,13 @@ export type TitleParametersDidChange<TSettings extends PayloadObject<TSettings>>
  * page". An action refers to _all_ types of actions, e.g. keys, dials,
  * touchscreens, pedals, etc.
  */
-export type WillAppear<TSettings extends PayloadObject<TSettings>> = ActionEventMessage<"willAppear", MultiActionPayload<TSettings> | SingleActionPayload<TSettings>>;
+export type WillAppear<TSettings extends JsonObject> = ActionEventMessage<"willAppear", MultiActionPayload<TSettings> | SingleActionPayload<TSettings>>;
 
 /**
  * Occurs when an action disappears from the Stream Deck due to the user navigating to another page, profile, folder, etc. An action refers to _all_ types of actions, e.g. keys, dials,
  * touchscreens, pedals, etc.
  */
-export type WillDisappear<TSettings extends PayloadObject<TSettings>> = ActionEventMessage<"willDisappear", MultiActionPayload<TSettings> | SingleActionPayload<TSettings>>;
+export type WillDisappear<TSettings extends JsonObject> = ActionEventMessage<"willDisappear", MultiActionPayload<TSettings> | SingleActionPayload<TSettings>>;
 
 /**
  * Provide information that identifies an action associated with an event.
@@ -109,7 +107,7 @@ export type ActionEventMessage<TEvent extends string, TPayload = void> = DeviceI
 /**
  * Additional information about the action and event that occurred as part of a single-action event.
  */
-export type SingleActionPayload<TSettings extends PayloadObject<TSettings>, TController extends Controller = Controller> = ActionPayload<TSettings> & {
+export type SingleActionPayload<TSettings extends JsonObject, TController extends Controller = Controller> = ActionPayload<TSettings> & {
 	/**
 	 * Coordinates that identify the location of an action.
 	 */
@@ -130,7 +128,7 @@ export type SingleActionPayload<TSettings extends PayloadObject<TSettings>, TCon
 /**
  * Additional information about the action and event that occurred as part of a multi-action event.
  */
-export type MultiActionPayload<TSettings extends PayloadObject<TSettings>> = ActionPayload<TSettings> & {
+export type MultiActionPayload<TSettings extends JsonObject> = ActionPayload<TSettings> & {
 	/**
 	 * Defines the controller type the action is applicable to. **Keypad** refers to a standard action on a Stream Deck device, e.g. 1 of the 15 buttons on the Stream Deck MK.2,
 	 * or a pedal on the Stream Deck Pedal, etc., whereas an **Encoder** refers to a dial / touchscreen on the Stream Deck+.
@@ -148,11 +146,11 @@ export type MultiActionPayload<TSettings extends PayloadObject<TSettings>> = Act
 /**
  * Base payload provided as part of events received, relating to an action.
  */
-type ActionPayload<TSettings extends PayloadObject<TSettings>> = {
+type ActionPayload<TSettings extends JsonObject> = {
 	/**
 	 * Settings associated with the action instance.
 	 */
-	settings: PayloadObject<TSettings>;
+	settings: TSettings;
 
 	/**
 	 * Current state of the action; only applicable to actions that have multiple states defined within the `manifest.json` file.

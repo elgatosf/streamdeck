@@ -1,5 +1,5 @@
+import type { JsonObject } from "../../common/json";
 import type { ActionEventMessage, Coordinates, SingleActionPayload } from "./action";
-import type { PayloadObject } from "./index";
 import type { KeyDown, KeyUp } from "./keypad";
 
 /**
@@ -7,19 +7,19 @@ import type { KeyDown, KeyUp } from "./keypad";
  *
  * NB: For other action types see {@link KeyDown}.
  */
-export type DialDown<TSettings extends PayloadObject<TSettings>> = ActionEventMessage<"dialDown", EncoderPayload<TSettings>>;
+export type DialDown<TSettings extends JsonObject> = ActionEventMessage<"dialDown", EncoderPayload<TSettings>>;
 
 /**
  * Occurs when the user releases a pressed dial (Stream Deck+).Also see {@link DialDown}.
  *
  * NB: For other action types see {@link KeyUp}.
  */
-export type DialUp<TSettings extends PayloadObject<TSettings>> = ActionEventMessage<"dialUp", EncoderPayload<TSettings>>;
+export type DialUp<TSettings extends JsonObject> = ActionEventMessage<"dialUp", EncoderPayload<TSettings>>;
 
 /**
  * Occurs when the user rotates a dial (Stream Deck+).
  */
-export type DialRotate<TSettings extends PayloadObject<TSettings>> = ActionEventMessage<
+export type DialRotate<TSettings extends JsonObject> = ActionEventMessage<
 	"dialRotate",
 	EncoderPayload<TSettings> & {
 		/**
@@ -37,7 +37,7 @@ export type DialRotate<TSettings extends PayloadObject<TSettings>> = ActionEvent
 /**
  * Occurs when the user taps the touchscreen (Stream Deck+).
  */
-export type TouchTap<TSettings extends PayloadObject<TSettings>> = ActionEventMessage<
+export type TouchTap<TSettings extends JsonObject> = ActionEventMessage<
 	"touchTap",
 	EncoderPayload<TSettings> & {
 		/**
@@ -55,7 +55,7 @@ export type TouchTap<TSettings extends PayloadObject<TSettings>> = ActionEventMe
 /**
  * Additional information about the action and event that occurred.
  */
-type EncoderPayload<TSettings extends PayloadObject<TSettings>> = Pick<SingleActionPayload<TSettings, "Encoder">, "controller" | "settings"> & {
+type EncoderPayload<TSettings extends JsonObject> = Pick<SingleActionPayload<TSettings, "Encoder">, "controller" | "settings"> & {
 	/**
 	 * Coordinates that identify the location of the action.
 	 */

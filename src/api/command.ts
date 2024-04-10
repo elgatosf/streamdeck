@@ -1,3 +1,4 @@
+import type { JsonValue } from "../plugin";
 import type { ActionIdentifier, DidReceiveGlobalSettings, DidReceiveSettings, State } from "./events";
 import type { FeedbackPayload } from "./layout";
 import type { Target } from "./target";
@@ -233,12 +234,12 @@ export type SwitchToProfile = ContextualizedCommand<
 /**
  * Sends a message to the property inspector.
  */
-export type SendToPropertyInspector = ContextualizedCommand<"sendToPropertyInspector", unknown>;
+export type SendToPropertyInspector<TPayload extends JsonValue = JsonValue> = ContextualizedCommand<"sendToPropertyInspector", TPayload>;
 
 /**
  * Sends a message to the plugin.
  */
-export type SendToPlugin = ActionIdentifier & CommandBase<"sendToPlugin", unknown>;
+export type SendToPlugin<TPayload extends JsonValue = JsonValue> = ActionIdentifier & CommandBase<"sendToPlugin", TPayload>;
 
 /**
  * Command sent to Stream Deck, from the plugin.

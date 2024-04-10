@@ -1,10 +1,11 @@
-import type { DidReceiveGlobalSettings, PayloadObject } from "../../api";
+import type { DidReceiveGlobalSettings } from "../../api";
+import type { JsonObject } from "../json";
 import { Event } from "./event";
 
 /**
  * Provides event information for when the plugin received the global settings.
  */
-export class DidReceiveGlobalSettingsEvent<T extends PayloadObject<T>> extends Event<DidReceiveGlobalSettings<T>> {
+export class DidReceiveGlobalSettingsEvent<T extends JsonObject> extends Event<DidReceiveGlobalSettings<T>> {
 	/**
 	 * Settings associated with the event.
 	 */
