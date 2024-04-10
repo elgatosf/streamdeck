@@ -127,9 +127,9 @@ describe("I18nProvider", () => {
 	});
 
 	/**
-	 * Asserts {@link I18nProvider} returns an empty string when the resource could not be found in either the current resource, or the default.
+	 * Asserts {@link I18nProvider} returns the key when the resource could not be found in either the current resource, or the default.
 	 */
-	it("returns empty string for unknown key (logMissingKey: true)", () => {
+	it("returns the key for an unknown resource (logMissingKey: true)", () => {
 		// Arrange.
 		jest.spyOn(fs, "readdirSync").mockReturnValue([]);
 		jest.spyOn(fs, "readFileSync").mockReturnValue("{}");
@@ -142,15 +142,15 @@ describe("I18nProvider", () => {
 		const result = i18n.translate("hello");
 
 		// Assert.
-		expect(result).toBe("");
+		expect(result).toBe("hello");
 		expect(spyOnWarn).toHaveBeenCalledTimes(1);
 		expect(spyOnWarn).toHaveBeenCalledWith("Missing translation: hello");
 	});
 
 	/**
-	 * Asserts {@link I18nProvider} returns an empty string when the resource could not be found in either the current resource, or the default.
+	 * Asserts {@link I18nProvider} returns the key when the resource could not be found in either the current resource, or the default.
 	 */
-	it("returns empty string for unknown key (logMissingKey: false)", () => {
+	it("returns the key for an unknown resource (logMissingKey: false)", () => {
 		// Arrange.
 		jest.spyOn(fs, "readdirSync").mockReturnValue([]);
 		jest.spyOn(fs, "readFileSync").mockReturnValue("{}");
@@ -163,7 +163,7 @@ describe("I18nProvider", () => {
 		const result = i18n.translate("hello");
 
 		// Assert.
-		expect(result).toBe("");
+		expect(result).toBe("hello");
 		expect(spyOnWarn).toHaveBeenCalledTimes(0);
 	});
 

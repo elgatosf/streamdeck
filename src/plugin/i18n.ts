@@ -57,7 +57,7 @@ export class I18nProvider {
 			this.logger.warn(`Missing translation: ${key}`);
 		}
 
-		return translation || "";
+		return translation || key;
 	}
 
 	/**
