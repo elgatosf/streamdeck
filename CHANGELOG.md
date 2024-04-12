@@ -26,6 +26,7 @@
 
 -   `Coordinates` type could erroneously have a non-number type for `row`.
 -   Fix support for allowed types within payloads.
+-   Fix localization lookup.
 
 ### ♻️ Update
 
@@ -33,6 +34,7 @@
 
 ### ➡️ Migration
 
+-   Localizations keys are now indexed from the `Localization` node within the translation file.
 -   `PayloadObject<T>` replaced with `JsonObject`.
 -   JSON schemas have been relocated to a dedicated schemas package, [`@elgato/schemas`](https://github.com/elgatosf/schemas).
 
