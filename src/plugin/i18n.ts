@@ -21,12 +21,30 @@ export class I18nProvider {
 	private static readonly DEFAULT_LANGUAGE: Language = "en";
 
 	/**
-	 * Private backing field for {@link locales}.
+	 * Private backing field for {@link I18nProvider.locales}.
 	 */
 	private _locales: Map<Language, JsonObject> | undefined;
 
 	/**
+	 * Logger scoped to this class.
+	 */
+	private readonly logger: Logger;
+
+	/**
+	 * Initializes a new instance of the {@link I18nProvider} class.
+	 * @param language The default language to be used when retrieving translations for a given key.
+	 * @param logger Logger responsible for capturing log entries.
+	 */
+	constructor(
+		private readonly language: Language,
+		logger: Logger
+	) {
+		this.logger = logger.createScope("I18nProvider");
+	}
+
+	/**
 	 * Collection of loaded locales and their translations.
+	 * @returns The locales that contains the translations.
 	 */
 	private get locales(): Map<Language, JsonObject> {
 		if (this._locales !== undefined) {
@@ -47,23 +65,6 @@ export class I18nProvider {
 		}
 
 		return (this._locales = locales);
-	}
-
-	/**
-	 * Logger scoped to this class.
-	 */
-	private readonly logger: Logger;
-
-	/**
-	 * Initializes a new instance of the {@link I18nProvider} class.
-	 * @param language The default language to be used when retrieving translations for a given key.
-	 * @param logger Logger responsible for capturing log entries.
-	 */
-	constructor(
-		private readonly language: Language,
-		logger: Logger
-	) {
-		this.logger = logger.createScope("I18nProvider");
 	}
 
 	/**

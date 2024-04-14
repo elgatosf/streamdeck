@@ -228,7 +228,6 @@ class ActionWithRoutes extends SingletonAction {
 	 */
 	@route("/characters")
 	public getCharacters(req: MessageRequest, res: MessageResponder): Promise<string[]> {
-		console.log("Called spy async");
 		this.spyOnGetCharacters(req, res);
 		return Promise.resolve(["Anduin", "Sylvanas", "Thrall"]);
 	}
@@ -241,7 +240,6 @@ class ActionWithRoutes extends SingletonAction {
 	 */
 	@route("/characters-sync")
 	public getCharactersSync(req: MessageRequest, res: MessageResponder): string[] {
-		console.log("Called spy sync");
 		this.spyOnGetCharactersSync(req, res);
 		return ["Mario", "Luigi", "Peach"];
 	}
