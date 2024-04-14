@@ -39,6 +39,8 @@ describe("I18nProvider", () => {
 		jest.spyOn(process, "cwd").mockReturnValue(mockedCwd);
 	});
 
+	afterEach(() => jest.resetAllMocks());
+
 	/**
 	 * Asserts {@link I18nProvider} uses a scoped {@link Logger}.
 	 */
@@ -66,7 +68,8 @@ describe("I18nProvider", () => {
 		const readFileSyncSpy = jest.spyOn(fs, "readFileSync").mockImplementation(() => "{}");
 
 		// Act.
-		new I18nProvider("en", logger);
+		const i18n = new I18nProvider("en", logger);
+		i18n.translate("test");
 
 		// Assert.
 		expect(readFileSyncSpy).toHaveBeenCalledTimes(6);
@@ -152,7 +155,8 @@ describe("I18nProvider", () => {
 		const spyOnError = jest.spyOn(scopedLogger, "error");
 
 		// Act.
-		new I18nProvider("en", logger);
+		const i18n = new I18nProvider("en", logger);
+		i18n.translate("test");
 
 		// Assert.
 		expect(spyOnError).toHaveBeenCalledTimes(1);

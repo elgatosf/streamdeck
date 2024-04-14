@@ -2,6 +2,7 @@ import file from "node:fs";
 import path from "node:path";
 
 import { supportedLanguages, type Language } from "../api";
+import { JsonObject } from "../common/json";
 import { get } from "./common/utils";
 import { Logger } from "./logging";
 
@@ -20,9 +21,33 @@ export class I18nProvider {
 	private static readonly DEFAULT_LANGUAGE: Language = "en";
 
 	/**
+	 * Private backing field for {@link locales}.
+	 */
+	private _locales: Map<Language, JsonObject> | undefined;
+
+	/**
 	 * Collection of loaded locales and their translations.
 	 */
-	private readonly locales = new Map<Language, unknown>();
+	private get locales(): Map<Language, JsonObject> {
+		if (this._locales !== undefined) {
+			return this._locales;
+		}
+
+		const locales = new Map<Language, JsonObject>();
+		for (const filePath of file.readdirSync(process.cwd())) {
+			const { ext, name } = path.parse(filePath);
+			const lng = name as Language;
+
+			if (ext.toLowerCase() == ".json" && supportedLanguages.includes(lng)) {
+				const contents = this.readFile(filePath);
+				if (contents !== undefined) {
+					locales.set(lng, contents);
+				}
+			}
+		}
+
+		return (this._locales = locales);
+	}
 
 	/**
 	 * Logger scoped to this class.
@@ -39,7 +64,6 @@ export class I18nProvider {
 		logger: Logger
 	) {
 		this.logger = logger.createScope("I18nProvider");
-		this.loadLocales();
 	}
 
 	/**
@@ -59,28 +83,11 @@ export class I18nProvider {
 	}
 
 	/**
-	 * Loads all known locales from the current working directory.
-	 */
-	private loadLocales(): void {
-		for (const filePath of file.readdirSync(process.cwd())) {
-			const { ext, name } = path.parse(filePath);
-			const lng = name as Language;
-
-			if (ext.toLowerCase() == ".json" && supportedLanguages.includes(lng)) {
-				const contents = this.readFile(filePath);
-				if (contents !== undefined) {
-					this.locales.set(lng, contents);
-				}
-			}
-		}
-	}
-
-	/**
 	 * Reads the contents of the {@link filePath} and parses it as JSON.
 	 * @param filePath File path to read.
 	 * @returns Parsed object; otherwise `undefined`.
 	 */
-	private readFile(filePath: string): unknown | undefined {
+	private readFile(filePath: string): JsonObject | undefined {
 		try {
 			const contents = file.readFileSync(filePath, { flag: "r" })?.toString();
 			return JSON.parse(contents);
