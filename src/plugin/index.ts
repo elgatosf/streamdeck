@@ -64,7 +64,7 @@ export const streamDeck = {
 	 * @returns Internalization provider.
 	 */
 	get i18n(): I18nProvider {
-		return (i18n ??= new I18nProvider(this.info.application.language, this.manifest, this.logger));
+		return (i18n ??= new I18nProvider(this.info.application.language, this.logger));
 	},
 
 	/**

@@ -1,7 +1,8 @@
 import file from "node:fs";
 import path from "node:path";
 
-import { supportedLanguages, type Language, type Manifest } from "../api";
+import { supportedLanguages, type Language } from "../api";
+import { JsonObject } from "../common/json";
 import { get } from "./common/utils";
 import { Logger } from "./logging";
 
@@ -20,9 +21,9 @@ export class I18nProvider {
 	private static readonly DEFAULT_LANGUAGE: Language = "en";
 
 	/**
-	 * Collection of loaded locales and their translations.
+	 * Private backing field for {@link I18nProvider.locales}.
 	 */
-	private readonly locales = new Map<Language, unknown>();
+	private _locales: Map<Language, JsonObject> | undefined;
 
 	/**
 	 * Logger scoped to this class.
@@ -32,16 +33,38 @@ export class I18nProvider {
 	/**
 	 * Initializes a new instance of the {@link I18nProvider} class.
 	 * @param language The default language to be used when retrieving translations for a given key.
-	 * @param manifest Manifest that accompanies the plugin.
 	 * @param logger Logger responsible for capturing log entries.
 	 */
 	constructor(
 		private readonly language: Language,
-		manifest: Manifest,
 		logger: Logger
 	) {
 		this.logger = logger.createScope("I18nProvider");
-		this.loadLocales(manifest);
+	}
+
+	/**
+	 * Collection of loaded locales and their translations.
+	 * @returns The locales that contains the translations.
+	 */
+	private get locales(): Map<Language, JsonObject> {
+		if (this._locales !== undefined) {
+			return this._locales;
+		}
+
+		const locales = new Map<Language, JsonObject>();
+		for (const filePath of file.readdirSync(process.cwd())) {
+			const { ext, name } = path.parse(filePath);
+			const lng = name as Language;
+
+			if (ext.toLowerCase() == ".json" && supportedLanguages.includes(lng)) {
+				const contents = this.readFile(filePath);
+				if (contents !== undefined) {
+					locales.set(lng, contents);
+				}
+			}
+		}
+
+		return (this._locales = locales);
 	}
 
 	/**
@@ -57,31 +80,7 @@ export class I18nProvider {
 			this.logger.warn(`Missing translation: ${key}`);
 		}
 
-		return translation || "";
-	}
-
-	/**
-	 * Loads all known locales from the current working directory.
-	 * @param manifest Manifest that accompanies the plugin.
-	 */
-	private loadLocales(manifest: Manifest): void {
-		for (const filePath of file.readdirSync(process.cwd())) {
-			const { ext, name } = path.parse(filePath);
-			const lng = name as Language;
-
-			if (ext.toLowerCase() == ".json" && supportedLanguages.includes(lng)) {
-				const contents = this.readFile(filePath);
-				if (contents !== undefined) {
-					this.locales.set(lng, contents);
-				}
-			}
-		}
-
-		// Merge the manifest into the default language, prioritizing explicitly defined resources.
-		this.locales.set(I18nProvider.DEFAULT_LANGUAGE, {
-			...manifest,
-			...(this.locales.get(I18nProvider.DEFAULT_LANGUAGE) || {})
-		});
+		return translation || key;
 	}
 
 	/**
@@ -89,7 +88,7 @@ export class I18nProvider {
 	 * @param filePath File path to read.
 	 * @returns Parsed object; otherwise `undefined`.
 	 */
-	private readFile(filePath: string): unknown | undefined {
+	private readFile(filePath: string): JsonObject | undefined {
 		try {
 			const contents = file.readFileSync(filePath, { flag: "r" })?.toString();
 			return JSON.parse(contents);
@@ -105,6 +104,8 @@ export class I18nProvider {
 	 * @returns The resource; otherwise the default language's resource, or `undefined`.
 	 */
 	private translateOrDefault(key: string, language: Language = this.language): string | undefined {
+		key = `Localization.${key}`;
+
 		// When the language and default are the same, only check the language.
 		if (language === I18nProvider.DEFAULT_LANGUAGE) {
 			return get(key, this.locales.get(language))?.toString();
