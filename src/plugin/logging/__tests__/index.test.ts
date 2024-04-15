@@ -1,5 +1,6 @@
 import path from "node:path";
 import { LogLevel, type LoggerOptions } from "../../../common/logging";
+import { ConsoleTarget } from "../../../common/logging/console-target";
 import { type FileTargetOptions } from "../file-target";
 
 jest.mock("../file-target");
@@ -40,7 +41,7 @@ describe("createLogger", () => {
 			expect(Logger).toHaveBeenCalledWith<[LoggerOptions]>({
 				isDebugMode: true,
 				level: LogLevel.DEBUG,
-				targets: [spyOnFileTarget.mock.instances[0]]
+				targets: [expect.any(ConsoleTarget), spyOnFileTarget.mock.instances[0]]
 			});
 		});
 
