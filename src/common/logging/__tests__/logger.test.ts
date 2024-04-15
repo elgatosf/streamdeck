@@ -1,6 +1,6 @@
-import { LogLevel } from "../log-level";
-import { LogEntry, LogTarget } from "../log-target";
+import { LogLevel } from "../level";
 import { Logger, LoggerOptions } from "../logger";
+import { LogEntry, LogTarget } from "../target";
 
 describe("Logger", () => {
 	/**
@@ -25,98 +25,38 @@ describe("Logger", () => {
 		expect(options.level).toBe(LogLevel.ERROR);
 		expect(options.target.write).toHaveBeenCalledTimes(1);
 		expect(options.target.write).toHaveBeenCalledWith<[LogEntry]>({
+			data: ["Hello world"],
 			level: LogLevel.INFO,
-			message: "Hello world"
+			scope: ""
 		});
 	});
 
 	/**
-	 * Asserts {@link Logger} correctly formats an empty name when writing messages.
+	 * Asserts {@link Logger} correctly supplies all log entry data.
 	 */
-	describe("Formats with unscoped log entires", () => {
-		it.each([[undefined], [""], ["    "]])("When scope is '%s'", (scope) => {
-			// Arrange.
-			const target = { write: jest.fn() };
-			const logger = new Logger({
-				isDebugMode: true,
-				level: LogLevel.TRACE,
-				scope,
-				target
-			});
-
-			// Act.
-			logger.error("Log error", new Error("error"));
-			logger.warn("Log warn", new Error("warn"));
-			logger.info("Log info", new Error("info"));
-			logger.debug("Log debug", new Error("debug"));
-			logger.trace("Log trace", new Error("trace"));
-
-			// Assert.
-			expect(target.write).toHaveBeenCalledTimes(5);
-			expect(target.write).toHaveBeenNthCalledWith<[LogEntry]>(1, {
-				level: LogLevel.ERROR,
-				message: "Log error",
-				error: expect.objectContaining({
-					message: "error"
-				})
-			});
-
-			expect(target.write).toHaveBeenNthCalledWith<[LogEntry]>(2, {
-				level: LogLevel.WARN,
-				message: "Log warn",
-				error: expect.objectContaining({
-					message: "warn"
-				})
-			});
-
-			expect(target.write).toHaveBeenNthCalledWith<[LogEntry]>(3, {
-				level: LogLevel.INFO,
-				message: "Log info",
-				error: expect.objectContaining({
-					message: "info"
-				})
-			});
-
-			expect(target.write).toHaveBeenNthCalledWith<[LogEntry]>(4, {
-				level: LogLevel.DEBUG,
-				message: "Log debug",
-				error: expect.objectContaining({
-					message: "debug"
-				})
-			});
-
-			expect(target.write).toHaveBeenNthCalledWith<[LogEntry]>(5, {
-				level: LogLevel.TRACE,
-				message: "Log trace",
-				error: expect.objectContaining({
-					message: "trace"
-				})
-			});
-		});
-	});
-
-	/**
-	 * Asserts {@link Logger} correctly formats scoped entries.
-	 */
-	describe("Formats scoped log entries", () => {
+	describe("Supplies all log entry data", () => {
 		it.each([
 			{
+				scopes: [],
+				scope: ""
+			},
+			{
 				scopes: ["Foo "],
-				expectedPrefix: "Foo: "
+				scope: "Foo"
 			},
 			{
 				scopes: ["Foo", "  "],
-				expectedPrefix: "Foo: "
+				scope: "Foo"
 			},
 			{
 				scopes: [" Hello", "World"],
-				expectedPrefix: "Hello->World: "
+				scope: "Hello->World"
 			},
 			{
 				scopes: ["One", " Two ", "Three"],
-				expectedPrefix: "One->Two->Three: "
+				scope: "One->Two->Three"
 			}
-		])("When scopes are $scopes", ({ scopes, expectedPrefix }) => {
+		])("When scopes are $scopes", ({ scopes, scope }) => {
 			// Arrange.
 			const target = { write: jest.fn() };
 			const parent = new Logger({
@@ -138,42 +78,57 @@ describe("Logger", () => {
 			expect(target.write).toHaveBeenCalledTimes(5);
 			expect(target.write).toHaveBeenNthCalledWith<[LogEntry]>(1, {
 				level: LogLevel.ERROR,
-				message: `${expectedPrefix}Log error`,
-				error: expect.objectContaining({
-					message: "error"
-				})
+				data: [
+					"Log error",
+					expect.objectContaining({
+						message: "error"
+					})
+				],
+				scope
 			});
 
 			expect(target.write).toHaveBeenNthCalledWith<[LogEntry]>(2, {
 				level: LogLevel.WARN,
-				message: `${expectedPrefix}Log warn`,
-				error: expect.objectContaining({
-					message: "warn"
-				})
+				data: [
+					"Log warn",
+					expect.objectContaining({
+						message: "warn"
+					})
+				],
+				scope
 			});
 
 			expect(target.write).toHaveBeenNthCalledWith<[LogEntry]>(3, {
 				level: LogLevel.INFO,
-				message: `${expectedPrefix}Log info`,
-				error: expect.objectContaining({
-					message: "info"
-				})
+				data: [
+					"Log info",
+					expect.objectContaining({
+						message: "info"
+					})
+				],
+				scope
 			});
 
 			expect(target.write).toHaveBeenNthCalledWith<[LogEntry]>(4, {
 				level: LogLevel.DEBUG,
-				message: `${expectedPrefix}Log debug`,
-				error: expect.objectContaining({
-					message: "debug"
-				})
+				data: [
+					"Log debug",
+					expect.objectContaining({
+						message: "debug"
+					})
+				],
+				scope
 			});
 
 			expect(target.write).toHaveBeenNthCalledWith<[LogEntry]>(5, {
 				level: LogLevel.TRACE,
-				message: `${expectedPrefix}Log trace`,
-				error: expect.objectContaining({
-					message: "trace"
-				})
+				data: [
+					"Log trace",
+					expect.objectContaining({
+						message: "trace"
+					})
+				],
+				scope
 			});
 		});
 	});
@@ -423,7 +378,8 @@ describe("Logger", () => {
 					expect(options.target.write).toHaveBeenCalledTimes(1);
 					expect(options.target.write).toHaveBeenCalledWith<[LogEntry]>({
 						level: LogLevel.WARN,
-						message: `Log level cannot be set to ${LogLevel[level]} whilst not in debug mode.`
+						data: [`Log level cannot be set to ${LogLevel[level]} whilst not in debug mode.`],
+						scope: ""
 					});
 				}
 			});
@@ -455,7 +411,8 @@ describe("Logger", () => {
 					expect(options.target.write).toHaveBeenCalledTimes(1);
 					expect(options.target.write).toHaveBeenCalledWith<[LogEntry]>({
 						level: LogLevel.WARN,
-						message: `Log level cannot be set to ${LogLevel[level]} whilst not in debug mode.`
+						data: [`Log level cannot be set to ${LogLevel[level]} whilst not in debug mode.`],
+						scope: ""
 					});
 				}
 			});

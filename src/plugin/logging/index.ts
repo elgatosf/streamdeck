@@ -4,6 +4,7 @@ import { cwd } from "node:process";
 import { LogLevel, Logger } from "../../common/logging";
 import { getPluginUUID, isDebugMode } from "../common/utils";
 import { FileTarget } from "./file-target";
+import { format } from "./node-util-formatter";
 
 export { LogLevel, Logger } from "../../common/logging";
 
@@ -11,6 +12,7 @@ export { LogLevel, Logger } from "../../common/logging";
 const target = new FileTarget({
 	dest: path.join(cwd(), "logs"),
 	fileName: getPluginUUID(),
+	format,
 	maxFileCount: 10,
 	maxSize: 50 * 1024 * 1024
 });

@@ -1,5 +1,5 @@
-import { LogLevel } from "./log-level";
-import type { LogTarget } from "./log-target";
+import { LogLevel } from "./level";
+import type { LogEntryData, LogTarget } from "./target";
 
 /**
  * Logger capable of forwarding messages to a {@link LogTarget}.
@@ -26,7 +26,7 @@ export class Logger {
 	 */
 	constructor(opts: LoggerOptions) {
 		this.options = { ...opts };
-		this.scope = this.options.scope === undefined || this.options.scope.trim() === "" ? "" : `${this.options.scope}: `;
+		this.scope = this.options.scope === undefined || this.options.scope.trim() === "" ? "" : this.options.scope;
 
 		if (typeof this.options.level !== "function") {
 			this.setLevel(this.options.level);
@@ -64,33 +64,30 @@ export class Logger {
 	}
 
 	/**
-	 * Writes a debug log {@link message}.
-	 * @param message Message to write to the log.
-	 * @param error Optional error to log with the {@link message}.
+	 * Writes the arguments as a debug log entry.
+	 * @param data Message or data to log.
 	 * @returns This instance for chaining.
 	 */
-	public debug(message: string, error?: Error | unknown): this {
-		return this.log(LogLevel.DEBUG, message, error);
+	public debug(...data: LogEntryData): this {
+		return this.log(LogLevel.DEBUG, ...data);
 	}
 
 	/**
-	 * Writes an error log {@link message}.
-	 * @param message Message to write to the log.
-	 * @param error Optional error to log with the {@link message}.
+	 * Writes the arguments as error log entry.
+	 * @param data Message or data to log.
 	 * @returns This instance for chaining.
 	 */
-	public error(message: string, error?: Error | unknown): this {
-		return this.log(LogLevel.ERROR, message, error);
+	public error(...data: LogEntryData): this {
+		return this.log(LogLevel.ERROR, ...data);
 	}
 
 	/**
-	 * Writes an info log {@link message}.
-	 * @param message Message to write to the log.
-	 * @param error Optional error to log with the {@link message}.
+	 * Writes the arguments as an info log entry.
+	 * @param data Message or data to log.
 	 * @returns This instance for chaining.
 	 */
-	public info(message: string, error?: Error | unknown): this {
-		return this.log(LogLevel.INFO, message, error);
+	public info(...data: LogEntryData): this {
+		return this.log(LogLevel.INFO, ...data);
 	}
 
 	/**
@@ -110,39 +107,32 @@ export class Logger {
 	}
 
 	/**
-	 * Write a trace log {@link message}.
-	 * @param message Message to write to the log.
-	 * @param error Optional error to log with the {@link message}.
+	 * Writes the arguments as a trace log entry.
+	 * @param data Message or data to log.
 	 * @returns This instance for chaining.
 	 */
-	public trace(message: string, error?: Error | unknown): this {
-		return this.log(LogLevel.TRACE, message, error);
+	public trace(...data: LogEntryData): this {
+		return this.log(LogLevel.TRACE, ...data);
 	}
 
 	/**
-	 * Writes a warning log {@link message}.
-	 * @param message Message to write to the log.
-	 * @param error Optional error to log with the {@link message}.
+	 * Writes the arguments as a warning log entry.
+	 * @param data Message or data to log.
 	 * @returns This instance for chaining.
 	 */
-	public warn(message: string, error?: Error | unknown): this {
-		return this.log(LogLevel.WARN, message, error);
+	public warn(...data: LogEntryData): this {
+		return this.log(LogLevel.WARN, ...data);
 	}
 
 	/**
-	 * Writes a log {@link message} with the specified {@link level}.
+	 * Writes a log entry.
 	 * @param level Log level of the message, printed as part of the overall log message.
-	 * @param message Message to write to the log.
-	 * @param error Optional error to log with the {@link message}.
+	 * @param data Message or data to log.
 	 * @returns This instance for chaining.
 	 */
-	private log(level: LogLevel, message: string, error?: Error | unknown): this {
+	private log(level: LogLevel, ...data: LogEntryData): this {
 		if (level <= this.level) {
-			this.options.target.write({
-				level,
-				message: `${this.scope}${message}`,
-				error
-			});
+			this.options.target.write({ data, level, scope: this.scope });
 		}
 
 		return this;

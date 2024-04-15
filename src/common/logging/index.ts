@@ -1,3 +1,3 @@
-export * from "./log-level";
-export * from "./log-target";
+export * from "./level";
 export * from "./logger";
+export * from "./target";
