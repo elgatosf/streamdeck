@@ -32,7 +32,7 @@ describe("I18nProvider", () => {
 		scopedLogger = new Logger({
 			isDebugMode: false,
 			level: LogLevel.TRACE,
-			target: { write: jest.fn }
+			targets: [{ write: jest.fn }]
 		});
 
 		jest.spyOn(logger, "createScope").mockReturnValue(scopedLogger);

@@ -11,7 +11,7 @@ describe("Logger", () => {
 		const options: LoggerOptions = {
 			isDebugMode: false,
 			level: LogLevel.ERROR,
-			target: { write: jest.fn() }
+			targets: [{ write: jest.fn() }]
 		};
 
 		const logger = new Logger(options);
@@ -23,12 +23,43 @@ describe("Logger", () => {
 		// Assert
 		expect(logger.level).toBe(LogLevel.INFO);
 		expect(options.level).toBe(LogLevel.ERROR);
-		expect(options.target.write).toHaveBeenCalledTimes(1);
-		expect(options.target.write).toHaveBeenCalledWith<[LogEntry]>({
+		expect(options.targets[0].write).toHaveBeenCalledTimes(1);
+		expect(options.targets[0].write).toHaveBeenCalledWith<[LogEntry]>({
 			data: ["Hello world"],
 			level: LogLevel.INFO,
 			scope: ""
 		});
+	});
+
+	/**
+	 * Asserts {@link Logger.write} logs to all targets
+	 */
+	it("writes to all targets", () => {
+		// Arrange.
+		const options: LoggerOptions = {
+			isDebugMode: false,
+			level: LogLevel.INFO,
+			targets: [{ write: jest.fn() }, { write: jest.fn() }, { write: jest.fn() }]
+		};
+
+		const logger = new Logger(options);
+
+		// Act.
+		logger.info("Hello world");
+
+		// Assert
+		const entry: LogEntry = {
+			data: ["Hello world"],
+			level: LogLevel.INFO,
+			scope: ""
+		};
+
+		expect(options.targets[0].write).toBeCalledTimes(1);
+		expect(options.targets[0].write).toHaveBeenCalledWith(entry);
+		expect(options.targets[1].write).toBeCalledTimes(1);
+		expect(options.targets[1].write).toHaveBeenCalledWith(entry);
+		expect(options.targets[2].write).toBeCalledTimes(1);
+		expect(options.targets[2].write).toHaveBeenCalledWith(entry);
 	});
 
 	/**
@@ -62,7 +93,7 @@ describe("Logger", () => {
 			const parent = new Logger({
 				isDebugMode: true,
 				level: LogLevel.TRACE,
-				target
+				targets: [target]
 			});
 
 			const logger = scopes.reduce((prev, current) => prev.createScope(current), parent);
@@ -200,7 +231,7 @@ describe("Logger", () => {
 			const logger = new Logger({
 				isDebugMode: true,
 				level,
-				target
+				targets: [target]
 			});
 
 			// Act.
@@ -220,7 +251,7 @@ describe("Logger", () => {
 			const parent = new Logger({
 				isDebugMode: false,
 				level: LogLevel.ERROR,
-				target: { write: jest.fn() }
+				targets: [{ write: jest.fn() }]
 			});
 
 			// Act.
@@ -245,7 +276,7 @@ describe("Logger", () => {
 			const parent = new Logger({
 				isDebugMode: false,
 				level: LogLevel.ERROR,
-				target: { write: jest.fn() }
+				targets: [{ write: jest.fn() }]
 			});
 
 			// Act.
@@ -269,7 +300,7 @@ describe("Logger", () => {
 			const parent = new Logger({
 				isDebugMode: false,
 				level: LogLevel.ERROR,
-				target: { write: jest.fn() }
+				targets: [{ write: jest.fn() }]
 			});
 
 			// Act (1).
@@ -363,7 +394,7 @@ describe("Logger", () => {
 				const options: LoggerOptions = {
 					isDebugMode,
 					level,
-					target: { write: jest.fn() }
+					targets: [{ write: jest.fn() }]
 				};
 
 				// Act.
@@ -373,10 +404,10 @@ describe("Logger", () => {
 				expect(logger.level).toBe(expected);
 
 				if (level === expected) {
-					expect(options.target.write).toHaveBeenCalledTimes(0);
+					expect(options.targets[0].write).toHaveBeenCalledTimes(0);
 				} else {
-					expect(options.target.write).toHaveBeenCalledTimes(1);
-					expect(options.target.write).toHaveBeenCalledWith<[LogEntry]>({
+					expect(options.targets[0].write).toHaveBeenCalledTimes(1);
+					expect(options.targets[0].write).toHaveBeenCalledWith<[LogEntry]>({
 						level: LogLevel.WARN,
 						data: [`Log level cannot be set to ${LogLevel[level]} whilst not in debug mode.`],
 						scope: ""
@@ -394,7 +425,7 @@ describe("Logger", () => {
 				const options: LoggerOptions = {
 					isDebugMode,
 					level: LogLevel.ERROR,
-					target: { write: jest.fn() }
+					targets: [{ write: jest.fn() }]
 				};
 
 				const logger = new Logger(options);
@@ -406,10 +437,10 @@ describe("Logger", () => {
 				expect(logger.level).toBe(expected);
 
 				if (level === expected) {
-					expect(options.target.write).toHaveBeenCalledTimes(0);
+					expect(options.targets[0].write).toHaveBeenCalledTimes(0);
 				} else {
-					expect(options.target.write).toHaveBeenCalledTimes(1);
-					expect(options.target.write).toHaveBeenCalledWith<[LogEntry]>({
+					expect(options.targets[0].write).toHaveBeenCalledTimes(1);
+					expect(options.targets[0].write).toHaveBeenCalledWith<[LogEntry]>({
 						level: LogLevel.WARN,
 						data: [`Log level cannot be set to ${LogLevel[level]} whilst not in debug mode.`],
 						scope: ""

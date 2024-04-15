@@ -132,7 +132,7 @@ export class Logger {
 	 */
 	private log(level: LogLevel, ...data: LogEntryData): this {
 		if (level <= this.level) {
-			this.options.target.write({ data, level, scope: this.scope });
+			this.options.targets.forEach((t) => t.write({ data, level, scope: this.scope }));
 		}
 
 		return this;
@@ -159,7 +159,7 @@ export type LoggerOptions = {
 	scope?: string;
 
 	/**
-	 * Log target that defines where log messages will be written.
+	 * Log targets where logs will be written to.
 	 */
-	target: LogTarget;
+	targets: LogTarget[];
 };

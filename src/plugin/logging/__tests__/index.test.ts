@@ -40,7 +40,7 @@ describe("createLogger", () => {
 			expect(Logger).toHaveBeenCalledWith<[LoggerOptions]>({
 				isDebugMode: true,
 				level: LogLevel.DEBUG,
-				target: spyOnFileTarget.mock.instances[0]
+				targets: [spyOnFileTarget.mock.instances[0]]
 			});
 		});
 
@@ -60,7 +60,7 @@ describe("createLogger", () => {
 			expect(Logger).toHaveBeenCalledWith<[LoggerOptions]>({
 				isDebugMode: false,
 				level: LogLevel.INFO,
-				target: spyOnFileTarget.mock.instances[0]
+				targets: [spyOnFileTarget.mock.instances[0]]
 			});
 		});
 	});

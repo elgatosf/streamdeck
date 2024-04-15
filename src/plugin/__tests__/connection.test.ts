@@ -26,7 +26,7 @@ describe("connection", () => {
 		connectionLogger = new Logger({
 			isDebugMode: false,
 			level: LogLevel.TRACE,
-			target: { write: jest.fn() }
+			targets: [{ write: jest.fn() }]
 		});
 
 		({ logger } = await require("../logging"));
@@ -301,7 +301,7 @@ describe("connection", () => {
 			const scopedLogger = new Logger({
 				isDebugMode: false,
 				level: LogLevel.TRACE,
-				target: { write: jest.fn() }
+				targets: [{ write: jest.fn() }]
 			});
 
 			jest.spyOn(logger, "createScope").mockReturnValueOnce(scopedLogger);

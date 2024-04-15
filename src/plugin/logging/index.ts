@@ -9,7 +9,7 @@ import { format } from "./node-util-formatter";
 export { LogLevel, Logger } from "../../common/logging";
 
 // Log all entires to a log file.
-const target = new FileTarget({
+const fileTarget = new FileTarget({
 	dest: path.join(cwd(), "logs"),
 	fileName: getPluginUUID(),
 	format,
@@ -24,7 +24,7 @@ const target = new FileTarget({
 export const logger = new Logger({
 	isDebugMode: isDebugMode(),
 	level: isDebugMode() ? LogLevel.DEBUG : LogLevel.INFO,
-	target
+	targets: [fileTarget]
 });
 
 process.once("uncaughtException", (err) => logger.error("Process encountered uncaught exception", err));
