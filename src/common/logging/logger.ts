@@ -1,4 +1,3 @@
-import { isDebugMode } from "../common/utils";
 import { LogLevel } from "./log-level";
 import type { LogTarget } from "./log-target";
 
@@ -100,7 +99,7 @@ export class Logger {
 	 * @returns This instance for chaining.
 	 */
 	public setLevel(level?: LogLevel): this {
-		if ((level === LogLevel.DEBUG || level === LogLevel.TRACE) && !isDebugMode()) {
+		if ((level === LogLevel.DEBUG || level === LogLevel.TRACE) && !this.options.isDebugMode) {
 			this._level = LogLevel.INFO;
 			this.warn(`Log level cannot be set to ${LogLevel[level]} whilst not in debug mode.`);
 		} else {
@@ -155,7 +154,12 @@ export class Logger {
  */
 export type LoggerOptions = {
 	/**
-	 * Minimum log-level required for a log message to be written.
+	 * Indicates whether the current context is running in debug mode.
+	 */
+	isDebugMode: boolean;
+
+	/**
+	 * Determines the minimum level of logs that can be written.
 	 */
 	level: LogLevel | (() => LogLevel);
 

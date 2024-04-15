@@ -2,8 +2,8 @@ import fs, { Dirent } from "node:fs";
 import { EOL } from "node:os";
 import path from "node:path";
 
+import { LogLevel } from "../../../common/logging";
 import { FileTarget, FileTargetOptions } from "../file-target";
-import { LogLevel } from "../log-level";
 
 jest.mock("node:fs");
 

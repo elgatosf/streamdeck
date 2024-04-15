@@ -2,8 +2,7 @@ import fs, { Dirent } from "node:fs";
 import { EOL } from "node:os";
 import path from "node:path";
 
-import { LogLevel } from "./log-level";
-import type { LogEntry, LogTarget } from "./log-target";
+import { LogLevel, type LogEntry, type LogTarget } from "../../common/logging";
 
 /**
  * Provides a {@link LogTarget} capable of logging to a local file system.

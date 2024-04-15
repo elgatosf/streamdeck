@@ -1,19 +1,15 @@
-import * as utils from "../../common/utils";
 import { LogLevel } from "../log-level";
 import { LogEntry, LogTarget } from "../log-target";
 import { Logger, LoggerOptions } from "../logger";
 
-jest.mock("../../common/utils");
-
 describe("Logger", () => {
-	afterEach(() => jest.resetAllMocks());
-
 	/**
 	 * Asserts the {@link Logger} clones options on construction.
 	 */
 	it("Clones options on construction", () => {
 		// Arrange.
 		const options: LoggerOptions = {
+			isDebugMode: false,
 			level: LogLevel.ERROR,
 			target: { write: jest.fn() }
 		};
@@ -40,10 +36,9 @@ describe("Logger", () => {
 	describe("Formats with unscoped log entires", () => {
 		it.each([[undefined], [""], ["    "]])("When scope is '%s'", (scope) => {
 			// Arrange.
-			jest.spyOn(utils, "isDebugMode").mockReturnValue(true);
-
 			const target = { write: jest.fn() };
 			const logger = new Logger({
+				isDebugMode: true,
 				level: LogLevel.TRACE,
 				scope,
 				target
@@ -123,10 +118,9 @@ describe("Logger", () => {
 			}
 		])("When scopes are $scopes", ({ scopes, expectedPrefix }) => {
 			// Arrange.
-			jest.spyOn(utils, "isDebugMode").mockReturnValue(true);
-
 			const target = { write: jest.fn() };
 			const parent = new Logger({
+				isDebugMode: true,
 				level: LogLevel.TRACE,
 				target
 			});
@@ -247,10 +241,9 @@ describe("Logger", () => {
 		 */
 		function verify(act: (logger: Logger) => void, expectLog: boolean) {
 			// Arrange.
-			jest.spyOn(utils, "isDebugMode").mockReturnValue(true);
-
 			const target = { write: jest.fn() };
 			const logger = new Logger({
+				isDebugMode: true,
 				level,
 				target
 			});
@@ -270,6 +263,7 @@ describe("Logger", () => {
 		it("Inherited by scoped loggers", () => {
 			// Arrange.
 			const parent = new Logger({
+				isDebugMode: false,
 				level: LogLevel.ERROR,
 				target: { write: jest.fn() }
 			});
@@ -294,6 +288,7 @@ describe("Logger", () => {
 		it("Inherited from parents with defined log-level", () => {
 			// Arrange.
 			const parent = new Logger({
+				isDebugMode: false,
 				level: LogLevel.ERROR,
 				target: { write: jest.fn() }
 			});
@@ -317,6 +312,7 @@ describe("Logger", () => {
 		it("Defaults when set to undefined", () => {
 			// Arrange.
 			const parent = new Logger({
+				isDebugMode: false,
 				level: LogLevel.ERROR,
 				target: { write: jest.fn() }
 			});
@@ -409,9 +405,8 @@ describe("Logger", () => {
 		describe("Construction", () => {
 			it.each(testCases)("$name when isDebugMode is $isDebugMode", ({ level, expected, isDebugMode }) => {
 				// Arrange.
-				jest.spyOn(utils, "isDebugMode").mockReturnValue(isDebugMode);
-
 				const options: LoggerOptions = {
+					isDebugMode,
 					level,
 					target: { write: jest.fn() }
 				};
@@ -440,9 +435,8 @@ describe("Logger", () => {
 		describe("setLevel", () => {
 			it.each(testCases)("$name when isDebugMode is $isDebugMode", ({ level, expected, isDebugMode }) => {
 				// Arrange.
-				jest.spyOn(utils, "isDebugMode").mockReturnValue(isDebugMode);
-
 				const options: LoggerOptions = {
+					isDebugMode,
 					level: LogLevel.ERROR,
 					target: { write: jest.fn() }
 				};

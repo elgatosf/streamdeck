@@ -1,13 +1,11 @@
 import path from "node:path";
 import { cwd } from "node:process";
 
+import { LogLevel, Logger } from "../../common/logging";
 import { getPluginUUID, isDebugMode } from "../common/utils";
 import { FileTarget } from "./file-target";
-import { LogLevel } from "./log-level";
-import { Logger } from "./logger";
 
-export { LogLevel } from "./log-level";
-export { Logger } from "./logger";
+export { LogLevel, Logger } from "../../common/logging";
 
 // Log all entires to a log file.
 const target = new FileTarget({
@@ -22,6 +20,7 @@ const target = new FileTarget({
  * @returns The default {@link Logger}.
  */
 export const logger = new Logger({
+	isDebugMode: isDebugMode(),
 	level: isDebugMode() ? LogLevel.DEBUG : LogLevel.INFO,
 	target
 });

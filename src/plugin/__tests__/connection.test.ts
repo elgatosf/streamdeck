@@ -3,9 +3,8 @@ import type { RegistrationInfo } from "..";
 import type { ApplicationDidLaunch, DidReceiveGlobalSettings, OpenUrl } from "../../api";
 import type { Settings } from "../../api/__mocks__/events";
 import { registrationInfo } from "../../api/registration/__mocks__";
+import { LogLevel, Logger } from "../../common/logging";
 import { type connection as Connection } from "../connection";
-import { LogLevel } from "../logging/log-level";
-import { Logger } from "../logging/logger";
 
 jest.mock("ws");
 jest.mock("../logging");
@@ -25,6 +24,7 @@ describe("connection", () => {
 	// Re-import the connection to ensure a fresh state.
 	beforeEach(async () => {
 		connectionLogger = new Logger({
+			isDebugMode: false,
 			level: LogLevel.TRACE,
 			target: { write: jest.fn() }
 		});
@@ -299,6 +299,7 @@ describe("connection", () => {
 		it("logs arguments", () => {
 			// Arrange
 			const scopedLogger = new Logger({
+				isDebugMode: false,
 				level: LogLevel.TRACE,
 				target: { write: jest.fn() }
 			});

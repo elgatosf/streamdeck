@@ -1,7 +1,7 @@
-import { LogLevel } from "../log-level";
-import { Logger, type LoggerOptions } from "../logger";
+import { LogLevel, Logger, type LoggerOptions } from "../../../common/logging";
 
 const options: LoggerOptions = {
+	isDebugMode: false,
 	level: LogLevel.TRACE,
 	target: { write: jest.fn() }
 };
