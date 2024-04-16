@@ -44,7 +44,7 @@ describe("FileTarget", () => {
 		expect(fs.openSync).toHaveBeenCalledTimes(1);
 		expect(fs.openSync).toHaveBeenNthCalledWith(1, path.join(options.dest, "com.elgato.test.0.log"), "a");
 		expect(fs.writeSync).toHaveBeenCalledTimes(1);
-		expect(fs.writeSync).toHaveBeenCalledWith(mockedFileDescriptor, "Hello world");
+		expect(fs.writeSync).toHaveBeenCalledWith(mockedFileDescriptor, "Hello world\n");
 		expect(fs.closeSync).toHaveBeenCalledTimes(1);
 		expect(fs.closeSync).toHaveBeenCalledWith(mockedFileDescriptor);
 	});

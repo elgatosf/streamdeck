@@ -8,7 +8,7 @@ describe("ConsoleTarget", () => {
 	it("Error writes to error", () => {
 		// Arrange.
 		const target = new ConsoleTarget();
-		const spyOnConsoleError = jest.spyOn(console, "error");
+		const spyOnConsoleError = jest.spyOn(console, "error").mockImplementationOnce(() => jest.fn());
 
 		// Act.
 		target.write({
@@ -28,7 +28,7 @@ describe("ConsoleTarget", () => {
 	it("Warn writes to warn", () => {
 		// Arrange.
 		const target = new ConsoleTarget();
-		const spyOnConsoleWarn = jest.spyOn(console, "warn");
+		const spyOnConsoleWarn = jest.spyOn(console, "warn").mockImplementationOnce(() => jest.fn());
 
 		// Act.
 		target.write({
@@ -52,7 +52,7 @@ describe("ConsoleTarget", () => {
 	])("$name writes to log", ({ level }) => {
 		// Arrange.
 		const target = new ConsoleTarget();
-		const spyOnConsoleLog = jest.spyOn(console, "log");
+		const spyOnConsoleLog = jest.spyOn(console, "log").mockImplementationOnce(() => jest.fn());
 
 		// Act.
 		target.write({

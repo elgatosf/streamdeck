@@ -35,10 +35,3 @@ export type LogEntry = {
  * Data to log.
  */
 export type LogEntryData = unknown[] | [string, ...unknown[]];
-
-/**
- * Formats the specified entry.
- * @param entry Log entry to format.
- * @returns The formatted log entry as a `string`.
- */
-export type LogEntryFormatter = (entry: LogEntry) => string;

@@ -34,7 +34,7 @@ export class FileTarget implements LogTarget {
 
 		try {
 			const msg = this.options.format(entry);
-			fs.writeSync(fd, msg);
+			fs.writeSync(fd, msg + "\n");
 			this.size += msg.length;
 		} finally {
 			fs.closeSync(fd);

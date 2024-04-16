@@ -72,8 +72,8 @@ describe("createLogger", () => {
 	it("initializes the file target from the cwd", async () => {
 		// Arrange.
 		jest.spyOn(utils, "isDebugMode").mockReturnValue(false);
-		const { FileTarget } = await require("../file-target");
-		const { format } = await require("../node-util-formatter");
+		const { FileTarget } = (await require("../file-target")) as typeof import("../file-target");
+		const { stringFormatter } = (await require("../../../common/logging")) as typeof import("../../../common/logging");
 
 		// Act.
 		await require("../index");
@@ -82,7 +82,7 @@ describe("createLogger", () => {
 		expect(FileTarget).toHaveBeenLastCalledWith<[FileTargetOptions]>({
 			dest: path.join(mockedCwd, "logs"),
 			fileName: "com.elgato.test",
-			format,
+			format: stringFormatter(),
 			maxFileCount: 10,
 			maxSize: 50 * 1024 * 1024
 		});
