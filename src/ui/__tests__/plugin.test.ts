@@ -7,6 +7,7 @@ import type { DidReceivePluginMessage, SendToPlugin } from "../../api";
 import { actionInfo } from "../../api/registration/__mocks__";
 import type { RawMessageRequest } from "../../common/messaging/message";
 import { MessageResponder } from "../../common/messaging/responder";
+import { PromiseCompletionSource } from "../../common/promises";
 import { connection } from "../connection";
 import { plugin, router, type PluginController } from "../plugin";
 import { getSettings, setSettings } from "../settings";
@@ -154,9 +155,10 @@ describe("plugin", () => {
 	/**
 	 * Asserts {@link router} routes the request with a construct action.
 	 */
-	it("receives request", () => {
+	it("receives request", async () => {
 		// Arrange.
-		const listener = jest.fn();
+		const awaiter = new PromiseCompletionSource();
+		const listener = jest.fn().mockImplementation(() => awaiter.setResult(true));
 		const ev = {
 			action: actionInfo.action,
 			context: uuid,
@@ -175,6 +177,7 @@ describe("plugin", () => {
 		// Act.
 		const disposable = plugin.registerRoute("/receive", listener);
 		connection.emit("sendToPropertyInspector", ev);
+		await awaiter.promise;
 
 		// Assert.
 		expect(listener).toHaveBeenCalledTimes(1);
