@@ -24,8 +24,7 @@ if (isDebugMode()) {
 }
 
 /**
- * The default {@link Logger} for the current plugin based on its environment.
- * @returns The default {@link Logger}.
+ * Logger responsible for capturing log messages.
  */
 export const logger = new Logger({
 	isDebugMode: isDebugMode(),
