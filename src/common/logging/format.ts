@@ -1,4 +1,5 @@
-import { LogLevel, type LogEntry } from "../../common/logging";
+import { LogLevel } from "./level";
+import { type LogEntry } from "./target";
 
 // Remove any dependencies on node.
 const EOL = "\n";

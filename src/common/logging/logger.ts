@@ -1,5 +1,5 @@
 import { LogLevel } from "./level";
-import type { LogEntryData, LogTarget } from "./target";
+import type { LogEntry, LogEntryData, LogTarget } from "./target";
 
 /**
  * Logger capable of forwarding messages to a {@link LogTarget}.
@@ -69,7 +69,7 @@ export class Logger {
 	 * @returns This instance for chaining.
 	 */
 	public debug(...data: LogEntryData): this {
-		return this.log(LogLevel.DEBUG, ...data);
+		return this.write({ level: LogLevel.DEBUG, data, scope: this.scope });
 	}
 
 	/**
@@ -78,7 +78,7 @@ export class Logger {
 	 * @returns This instance for chaining.
 	 */
 	public error(...data: LogEntryData): this {
-		return this.log(LogLevel.ERROR, ...data);
+		return this.write({ level: LogLevel.ERROR, data, scope: this.scope });
 	}
 
 	/**
@@ -87,7 +87,7 @@ export class Logger {
 	 * @returns This instance for chaining.
 	 */
 	public info(...data: LogEntryData): this {
-		return this.log(LogLevel.INFO, ...data);
+		return this.write({ level: LogLevel.INFO, data, scope: this.scope });
 	}
 
 	/**
@@ -112,7 +112,7 @@ export class Logger {
 	 * @returns This instance for chaining.
 	 */
 	public trace(...data: LogEntryData): this {
-		return this.log(LogLevel.TRACE, ...data);
+		return this.write({ level: LogLevel.TRACE, data, scope: this.scope });
 	}
 
 	/**
@@ -121,18 +121,17 @@ export class Logger {
 	 * @returns This instance for chaining.
 	 */
 	public warn(...data: LogEntryData): this {
-		return this.log(LogLevel.WARN, ...data);
+		return this.write({ level: LogLevel.WARN, data, scope: this.scope });
 	}
 
 	/**
-	 * Writes a log entry.
-	 * @param level Log level of the message, printed as part of the overall log message.
-	 * @param data Message or data to log.
+	 * Writes the log entry.
+	 * @param entry Log entry to write.
 	 * @returns This instance for chaining.
 	 */
-	private log(level: LogLevel, ...data: LogEntryData): this {
-		if (level <= this.level) {
-			this.options.targets.forEach((t) => t.write({ data, level, scope: this.scope }));
+	public write(entry: LogEntry): this {
+		if (entry.level <= this.level) {
+			this.options.targets.forEach((t) => t.write(entry));
 		}
 
 		return this;
