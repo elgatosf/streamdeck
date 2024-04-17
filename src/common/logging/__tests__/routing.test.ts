@@ -95,7 +95,6 @@ describe("registerCreateLogEntryRoute", () => {
 
 		const logger = new Logger({
 			level: LogLevel.INFO,
-			isDebugMode: true,
 			targets: [{ write: jest.fn() }]
 		});
 

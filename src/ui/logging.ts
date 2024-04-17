@@ -5,7 +5,6 @@ import { router } from "./plugin";
  * Logger responsible for capturing log messages.
  */
 export const logger = new Logger({
-	isDebugMode: true,
-	level: LogLevel.TRACE,
+	level: LogLevel.DEBUG,
 	targets: [new ConsoleTarget(), createRoutedLogTarget(router)]
 });

@@ -9,7 +9,6 @@ describe("Logger", () => {
 	it("clones options on construction", () => {
 		// Arrange.
 		const options: LoggerOptions = {
-			isDebugMode: false,
 			level: LogLevel.ERROR,
 			targets: [{ write: jest.fn() }]
 		};
@@ -37,7 +36,6 @@ describe("Logger", () => {
 	it("writes to all targets", () => {
 		// Arrange.
 		const options: LoggerOptions = {
-			isDebugMode: false,
 			level: LogLevel.INFO,
 			targets: [{ write: jest.fn() }, { write: jest.fn() }, { write: jest.fn() }]
 		};
@@ -91,8 +89,8 @@ describe("Logger", () => {
 			// Arrange.
 			const target = { write: jest.fn() };
 			const parent = new Logger({
-				isDebugMode: true,
 				level: LogLevel.TRACE,
+				minimumLevel: LogLevel.TRACE,
 				targets: [target]
 			});
 
@@ -229,8 +227,8 @@ describe("Logger", () => {
 			// Arrange.
 			const target = { write: jest.fn() };
 			const logger = new Logger({
-				isDebugMode: true,
 				level,
+				minimumLevel: LogLevel.TRACE,
 				targets: [target]
 			});
 
@@ -249,7 +247,6 @@ describe("Logger", () => {
 		it("inherited by scoped loggers", () => {
 			// Arrange.
 			const parent = new Logger({
-				isDebugMode: false,
 				level: LogLevel.ERROR,
 				targets: [{ write: jest.fn() }]
 			});
@@ -274,7 +271,6 @@ describe("Logger", () => {
 		it("inherited from parents with defined log-level", () => {
 			// Arrange.
 			const parent = new Logger({
-				isDebugMode: false,
 				level: LogLevel.ERROR,
 				targets: [{ write: jest.fn() }]
 			});
@@ -298,7 +294,6 @@ describe("Logger", () => {
 		it("defaults when set to undefined", () => {
 			// Arrange.
 			const parent = new Logger({
-				isDebugMode: false,
 				level: LogLevel.ERROR,
 				targets: [{ write: jest.fn() }]
 			});
@@ -324,61 +319,61 @@ describe("Logger", () => {
 	describe("log-level validation", () => {
 		const testCases = [
 			{
-				isDebugMode: false,
+				minimumLevel: LogLevel.INFO,
 				name: "Can be ERROR",
 				level: LogLevel.ERROR,
 				expected: LogLevel.ERROR
 			},
 			{
-				isDebugMode: true,
+				minimumLevel: LogLevel.TRACE,
 				name: "Can be ERROR",
 				level: LogLevel.ERROR,
 				expected: LogLevel.ERROR
 			},
 			{
-				isDebugMode: false,
+				minimumLevel: LogLevel.INFO,
 				name: "Can be WARN",
 				level: LogLevel.WARN,
 				expected: LogLevel.WARN
 			},
 			{
-				isDebugMode: true,
+				minimumLevel: LogLevel.TRACE,
 				name: "Can be WARN",
 				level: LogLevel.WARN,
 				expected: LogLevel.WARN
 			},
 			{
-				isDebugMode: false,
+				minimumLevel: LogLevel.INFO,
 				name: "Can be INFO",
 				level: LogLevel.INFO,
 				expected: LogLevel.INFO
 			},
 			{
-				isDebugMode: true,
+				minimumLevel: LogLevel.TRACE,
 				name: "Can be INFO",
 				level: LogLevel.INFO,
 				expected: LogLevel.INFO
 			},
 			{
-				isDebugMode: false,
+				minimumLevel: LogLevel.INFO,
 				name: "Cannot be DEBUG",
 				level: LogLevel.DEBUG,
 				expected: LogLevel.INFO
 			},
 			{
-				isDebugMode: true,
+				minimumLevel: LogLevel.TRACE,
 				name: "Can be DEBUG",
 				level: LogLevel.DEBUG,
 				expected: LogLevel.DEBUG
 			},
 			{
-				isDebugMode: false,
+				minimumLevel: LogLevel.INFO,
 				name: "Cannot be TRACE",
 				level: LogLevel.TRACE,
 				expected: LogLevel.INFO
 			},
 			{
-				isDebugMode: true,
+				minimumLevel: LogLevel.TRACE,
 				name: "Can be TRACE",
 				level: LogLevel.TRACE,
 				expected: LogLevel.TRACE
@@ -389,11 +384,11 @@ describe("Logger", () => {
 		 * Asserts the {@link Logger} validates the {@link LogLevel} on construction.
 		 */
 		describe("construction", () => {
-			it.each(testCases)("$name when isDebugMode is $isDebugMode", ({ level, expected, isDebugMode }) => {
+			it.each(testCases)("$name when minimumLevel is $minimumLevel", ({ level, expected, minimumLevel }) => {
 				// Arrange.
 				const options: LoggerOptions = {
-					isDebugMode,
 					level,
+					minimumLevel: minimumLevel as LogLevel.INFO | LogLevel.TRACE,
 					targets: [{ write: jest.fn() }]
 				};
 
@@ -420,11 +415,11 @@ describe("Logger", () => {
 		 * Asserts {@link Logger.setLogLevel} validates teh {@link LogLevel}.
 		 */
 		describe("setLevel", () => {
-			it.each(testCases)("$name when isDebugMode is $isDebugMode", ({ level, expected, isDebugMode }) => {
+			it.each(testCases)("$name when minimumLevel is $minimumLevel", ({ level, expected, minimumLevel }) => {
 				// Arrange.
 				const options: LoggerOptions = {
-					isDebugMode,
 					level: LogLevel.ERROR,
+					minimumLevel: minimumLevel as LogLevel.INFO | LogLevel.TRACE,
 					targets: [{ write: jest.fn() }]
 				};
 

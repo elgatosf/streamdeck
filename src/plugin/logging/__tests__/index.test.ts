@@ -39,8 +39,8 @@ describe("createLogger", () => {
 			// Assert.
 			expect(spyOnFileTarget).toHaveBeenCalledTimes(1);
 			expect(Logger).toHaveBeenCalledWith<[LoggerOptions]>({
-				isDebugMode: true,
 				level: LogLevel.DEBUG,
+				minimumLevel: LogLevel.TRACE,
 				targets: [expect.any(ConsoleTarget), spyOnFileTarget.mock.instances[0]]
 			});
 		});
@@ -59,8 +59,8 @@ describe("createLogger", () => {
 
 			// Assert.
 			expect(Logger).toHaveBeenCalledWith<[LoggerOptions]>({
-				isDebugMode: false,
 				level: LogLevel.INFO,
+				minimumLevel: LogLevel.INFO,
 				targets: [spyOnFileTarget.mock.instances[0]]
 			});
 		});

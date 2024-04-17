@@ -18,8 +18,7 @@ describe("Logging", () => {
 		expect(logger).toBe(spyOnLogger.mock.instances[0]);
 		expect(spyOnLogger).toHaveBeenCalledTimes(1);
 		expect(spyOnLogger).toHaveBeenCalledWith<[LoggingModule.LoggerOptions]>({
-			isDebugMode: true,
-			level: LoggingModule.LogLevel.TRACE,
+			level: LoggingModule.LogLevel.DEBUG,
 			targets: [expect.any(LoggingModule.ConsoleTarget), LoggingModule.createRoutedLogTarget(router)]
 		});
 	});

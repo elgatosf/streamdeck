@@ -13,7 +13,7 @@ export class Logger {
 	/**
 	 * Options that define the loggers behavior.
 	 */
-	private readonly options: LoggerOptions;
+	private readonly options: LoggerOptions & Required<Pick<LoggerOptions, "minimumLevel">>;
 
 	/**
 	 * Scope associated with this {@link Logger}.
@@ -25,7 +25,7 @@ export class Logger {
 	 * @param opts Options that define the loggers behavior.
 	 */
 	constructor(opts: LoggerOptions) {
-		this.options = { ...opts };
+		this.options = { minimumLevel: LogLevel.TRACE, ...opts };
 		this.scope = this.options.scope === undefined || this.options.scope.trim() === "" ? "" : this.options.scope;
 
 		if (typeof this.options.level !== "function") {
@@ -96,7 +96,7 @@ export class Logger {
 	 * @returns This instance for chaining.
 	 */
 	public setLevel(level?: LogLevel): this {
-		if ((level === LogLevel.DEBUG || level === LogLevel.TRACE) && !this.options.isDebugMode) {
+		if (level !== undefined && level > this.options.minimumLevel) {
 			this._level = LogLevel.INFO;
 			this.warn(`Log level cannot be set to ${LogLevel[level]} whilst not in debug mode.`);
 		} else {
@@ -143,14 +143,14 @@ export class Logger {
  */
 export type LoggerOptions = {
 	/**
-	 * Indicates whether the current context is running in debug mode.
-	 */
-	isDebugMode: boolean;
-
-	/**
 	 * Determines the minimum level of logs that can be written.
 	 */
 	level: LogLevel | (() => LogLevel);
+
+	/**
+	 * Minimum level the logger can be set to.
+	 */
+	minimumLevel?: LogLevel.INFO | LogLevel.TRACE;
 
 	/**
 	 * Optional value that defines the scope of the logger.

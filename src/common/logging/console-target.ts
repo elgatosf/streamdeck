@@ -1,4 +1,4 @@
-import { LogLevel } from ".";
+import { LogLevel } from "./level";
 import type { LogEntry, LogTarget } from "./target";
 
 /**

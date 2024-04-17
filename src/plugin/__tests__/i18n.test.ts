@@ -30,7 +30,6 @@ describe("I18nProvider", () => {
 
 	beforeEach(() => {
 		scopedLogger = new Logger({
-			isDebugMode: false,
 			level: LogLevel.TRACE,
 			targets: [{ write: jest.fn }]
 		});

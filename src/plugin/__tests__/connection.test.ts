@@ -24,7 +24,6 @@ describe("connection", () => {
 	// Re-import the connection to ensure a fresh state.
 	beforeEach(async () => {
 		connectionLogger = new Logger({
-			isDebugMode: false,
 			level: LogLevel.TRACE,
 			targets: [{ write: jest.fn() }]
 		});
@@ -299,7 +298,6 @@ describe("connection", () => {
 		it("logs arguments", () => {
 			// Arrange
 			const scopedLogger = new Logger({
-				isDebugMode: false,
 				level: LogLevel.TRACE,
 				targets: [{ write: jest.fn() }]
 			});

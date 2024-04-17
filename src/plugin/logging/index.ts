@@ -27,8 +27,8 @@ if (isDebugMode()) {
  * Logger responsible for capturing log messages.
  */
 export const logger = new Logger({
-	isDebugMode: isDebugMode(),
 	level: isDebugMode() ? LogLevel.DEBUG : LogLevel.INFO,
+	minimumLevel: isDebugMode() ? LogLevel.TRACE : LogLevel.INFO,
 	targets
 });
 
