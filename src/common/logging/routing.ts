@@ -40,8 +40,7 @@ export function registerCreateLogEntryRoute(router: MessageGateway<unknown>, log
 		}
 
 		const { level, message, scope } = req.body;
-		if (level === undefined || typeof level !== "number") {
-			logger.warn(`Unknown log entry level received from property inspector: ${level}`);
+		if (level === undefined) {
 			return res.fail();
 		}
 

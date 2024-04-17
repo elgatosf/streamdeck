@@ -6,7 +6,7 @@ describe("Logger", () => {
 	/**
 	 * Asserts the {@link Logger} clones options on construction.
 	 */
-	it("Clones options on construction", () => {
+	it("clones options on construction", () => {
 		// Arrange.
 		const options: LoggerOptions = {
 			isDebugMode: false,
@@ -65,7 +65,7 @@ describe("Logger", () => {
 	/**
 	 * Asserts {@link Logger} correctly supplies all log entry data.
 	 */
-	describe("Supplies all log entry data", () => {
+	describe("supplies all log entry data", () => {
 		it.each([
 			{
 				scopes: [],
@@ -167,57 +167,57 @@ describe("Logger", () => {
 	/**
 	 * Asserts {@link Logger} only writes messages to the {@link LogTarget} when the log-level is allowed.
 	 */
-	describe("Checks the log level before forwarding to target", () => {
+	describe("checks the log level before forwarding to target", () => {
 		let level: LogLevel;
 
 		describe("ERROR", () => {
 			beforeAll(() => (level = LogLevel.ERROR));
 
-			it("Does log ERROR", () => verify((logger) => logger.error("error"), true));
-			it("Does not log WARN", () => verify((logger) => logger.warn("warn"), false));
-			it("Does not log INFO", () => verify((logger) => logger.info("info"), false));
-			it("Does not log DEBUG", () => verify((logger) => logger.debug("debug"), false));
-			it("Does not log TRACE", () => verify((logger) => logger.trace("trace"), false));
+			it("does log ERROR", () => verify((logger) => logger.error("error"), true));
+			it("does not log WARN", () => verify((logger) => logger.warn("warn"), false));
+			it("does not log INFO", () => verify((logger) => logger.info("info"), false));
+			it("does not log DEBUG", () => verify((logger) => logger.debug("debug"), false));
+			it("does not log TRACE", () => verify((logger) => logger.trace("trace"), false));
 		});
 
 		describe("WARN", () => {
 			beforeAll(() => (level = LogLevel.WARN));
 
-			it("Does log ERROR", () => verify((logger) => logger.error("error"), true));
-			it("Does log WARN", () => verify((logger) => logger.warn("warn"), true));
-			it("Does not log INFO", () => verify((logger) => logger.info("info"), false));
-			it("Does not log DEBUG", () => verify((logger) => logger.debug("debug"), false));
-			it("Does not log TRACE", () => verify((logger) => logger.trace("trace"), false));
+			it("does log ERROR", () => verify((logger) => logger.error("error"), true));
+			it("does log WARN", () => verify((logger) => logger.warn("warn"), true));
+			it("does not log INFO", () => verify((logger) => logger.info("info"), false));
+			it("does not log DEBUG", () => verify((logger) => logger.debug("debug"), false));
+			it("does not log TRACE", () => verify((logger) => logger.trace("trace"), false));
 		});
 
 		describe("INFO", () => {
 			beforeAll(() => (level = LogLevel.INFO));
 
-			it("Does log ERROR", () => verify((logger) => logger.error("error"), true));
-			it("Does log WARN", () => verify((logger) => logger.warn("warn"), true));
-			it("Does log INFO", () => verify((logger) => logger.info("info"), true));
-			it("Does not log DEBUG", () => verify((logger) => logger.debug("debug"), false));
-			it("Does not log TRACE", () => verify((logger) => logger.trace("trace"), false));
+			it("does log ERROR", () => verify((logger) => logger.error("error"), true));
+			it("does log WARN", () => verify((logger) => logger.warn("warn"), true));
+			it("does log INFO", () => verify((logger) => logger.info("info"), true));
+			it("does not log DEBUG", () => verify((logger) => logger.debug("debug"), false));
+			it("does not log TRACE", () => verify((logger) => logger.trace("trace"), false));
 		});
 
 		describe("DEBUG", () => {
 			beforeAll(() => (level = LogLevel.DEBUG));
 
-			it("Does log ERROR", () => verify((logger) => logger.error("error"), true));
-			it("Does log WARN", () => verify((logger) => logger.warn("warn"), true));
-			it("Does log INFO", () => verify((logger) => logger.info("info"), true));
-			it("Does log DEBUG", () => verify((logger) => logger.debug("debug"), true));
-			it("Does not log TRACE", () => verify((logger) => logger.trace("trace"), false));
+			it("does log ERROR", () => verify((logger) => logger.error("error"), true));
+			it("does log WARN", () => verify((logger) => logger.warn("warn"), true));
+			it("does log INFO", () => verify((logger) => logger.info("info"), true));
+			it("does log DEBUG", () => verify((logger) => logger.debug("debug"), true));
+			it("does not log TRACE", () => verify((logger) => logger.trace("trace"), false));
 		});
 
 		describe("TRACE", () => {
 			beforeAll(() => (level = LogLevel.TRACE));
 
-			it("Does log ERROR", () => verify((logger) => logger.error("error"), true));
-			it("Does log WARN", () => verify((logger) => logger.warn("warn"), true));
-			it("Does log INFO", () => verify((logger) => logger.info("info"), true));
-			it("Does log DEBUG", () => verify((logger) => logger.debug("debug"), true));
-			it("Does log TRACE", () => verify((logger) => logger.trace("trace"), true));
+			it("does log ERROR", () => verify((logger) => logger.error("error"), true));
+			it("does log WARN", () => verify((logger) => logger.warn("warn"), true));
+			it("does log INFO", () => verify((logger) => logger.info("info"), true));
+			it("does log DEBUG", () => verify((logger) => logger.debug("debug"), true));
+			it("does log TRACE", () => verify((logger) => logger.trace("trace"), true));
 		});
 
 		/**
@@ -246,7 +246,7 @@ describe("Logger", () => {
 		/**
 		 * Asserts scoped {@link Logger} inherit the {@link LogLevel} of their parent.
 		 */
-		it("Inherited by scoped loggers", () => {
+		it("inherited by scoped loggers", () => {
 			// Arrange.
 			const parent = new Logger({
 				isDebugMode: false,
@@ -271,7 +271,7 @@ describe("Logger", () => {
 		/**
 		 * Asserts scoped {@link Logger} inherit the {@link LogLevel} of their earliest parent that has an explicit {@link LogLevel} defined.
 		 */
-		it("Inherited from parents with defined log-level", () => {
+		it("inherited from parents with defined log-level", () => {
 			// Arrange.
 			const parent = new Logger({
 				isDebugMode: false,
@@ -295,7 +295,7 @@ describe("Logger", () => {
 		/**
 		 * Asserts scoped {@link Logger} inherit the {@link LogLevel}, from their parent, when resetting the {@link LogLevel}.
 		 */
-		it("Defaults when set to undefined", () => {
+		it("defaults when set to undefined", () => {
 			// Arrange.
 			const parent = new Logger({
 				isDebugMode: false,
@@ -321,7 +321,7 @@ describe("Logger", () => {
 	/**
 	 * Asserts validating the {@link LogLevel} can be set based on the environment.
 	 */
-	describe("Log-level validation", () => {
+	describe("log-level validation", () => {
 		const testCases = [
 			{
 				isDebugMode: false,
@@ -388,7 +388,7 @@ describe("Logger", () => {
 		/**
 		 * Asserts the {@link Logger} validates the {@link LogLevel} on construction.
 		 */
-		describe("Construction", () => {
+		describe("construction", () => {
 			it.each(testCases)("$name when isDebugMode is $isDebugMode", ({ level, expected, isDebugMode }) => {
 				// Arrange.
 				const options: LoggerOptions = {

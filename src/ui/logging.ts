@@ -1,5 +1,4 @@
-import { LogLevel, Logger, createRoutedLogTarget } from "../common/logging";
-import { ConsoleTarget } from "../common/logging/console-target";
+import { ConsoleTarget, LogLevel, Logger, createRoutedLogTarget } from "../common/logging";
 import { router } from "./plugin";
 
 /**
