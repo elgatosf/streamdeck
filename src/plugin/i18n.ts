@@ -3,7 +3,7 @@ import path from "node:path";
 
 import { supportedLanguages, type Language } from "../api";
 import { JsonObject } from "../common/json";
-import { get } from "./common/utils";
+import { get } from "../common/utils";
 import { Logger } from "./logging";
 
 /**
