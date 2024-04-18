@@ -1,6 +1,6 @@
 import { supportedLanguages, type Language } from "../api";
 import { JsonObject } from "../common/json";
-import { get } from "./utils";
+import { freeze, get } from "./utils";
 
 /**
  * Provides locales and translations for internalization.
@@ -14,17 +14,35 @@ export class I18nProvider {
 	/**
 	 * Map of localized resources, indexed by their language.
 	 */
-	private readonly _locales: Map<Language, JsonObject | null> = new Map();
+	private readonly _translations: Map<Language, JsonObject | null> = new Map();
 
 	/**
 	 * Initializes a new instance of the {@link I18nProvider} class.
 	 * @param language The default language to be used when retrieving translations for a given key.
-	 * @param loadLocaleFn Function responsible for loading new locales.
+	 * @param readTranslations Function responsible for loading translations.
 	 */
 	constructor(
 		private readonly language: Language,
-		private readonly loadLocaleFn: LocaleLoaderDelegate
+		private readonly readTranslations: TranslationsReader
 	) {}
+
+	/**
+	 * Gets the translations for the specified language.
+	 * @param language Language whose translations are being retrieved.
+	 * @returns The translations, otherwise `null`.
+	 */
+	public getTranslations(language: Language): JsonObject | null {
+		let translations = this._translations.get(language);
+
+		if (translations === undefined) {
+			translations = supportedLanguages.includes(language) ? this.readTranslations(language) : null;
+			freeze(translations);
+
+			this._translations.set(language, translations);
+		}
+
+		return translations;
+	}
 
 	/**
 	 * Gets the translation for the specified {@link key}, as defined within the resources for the {@link language}. When the key is not found, the default language is checked.
@@ -35,27 +53,11 @@ export class I18nProvider {
 	public translate(key: string, language: Language = this.language): string {
 		// When the language and default are the same, only check the language.
 		if (language === I18nProvider.DEFAULT_LANGUAGE) {
-			return get(key, this.getLocale(language))?.toString() || key;
+			return get(key, this.getTranslations(language))?.toString() || key;
 		}
 
 		// Otherwise check the language and default.
-		return get(key, this.getLocale(language))?.toString() || get(key, this.getLocale(I18nProvider.DEFAULT_LANGUAGE))?.toString() || key;
-	}
-
-	/**
-	 * Gets the translations for the specified language.
-	 * @param language Language whose translations are being retrieved.
-	 * @returns The translations, otherwise `null`.
-	 */
-	private getLocale(language: Language): JsonObject | null {
-		let locale = this._locales.get(language);
-
-		if (locale === undefined) {
-			locale = supportedLanguages.includes(language) ? this.loadLocaleFn(language) : null;
-			this._locales.set(language, locale);
-		}
-
-		return locale;
+		return get(key, this.getTranslations(language))?.toString() || get(key, this.getTranslations(I18nProvider.DEFAULT_LANGUAGE))?.toString() || key;
 	}
 }
 
@@ -64,4 +66,4 @@ export class I18nProvider {
  * @param language The language whose resources should be retrieved.
  * @returns Localized resources represented as a JSON object.
  */
-export type LocaleLoaderDelegate = (language: Language) => JsonObject | null;
+export type TranslationsReader = (language: Language) => JsonObject | null;

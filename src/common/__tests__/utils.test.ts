@@ -1,25 +1,60 @@
-import { get } from "../utils";
+import { freeze, get } from "../utils";
 
 /**
- * Asserts {@link get} correct reads values from objects based on the specified path.
+ * Provides assertions for {@link freeze}.
+ */
+describe("freeze", () => {
+	it("top-level properties", () => {
+		// Arrange.
+		const obj = {
+			name: "Elgato"
+		};
+
+		// Act.
+		freeze(obj);
+
+		// Assert.
+		expect(() => (obj.name = "Other")).toThrowError();
+		expect(obj.name).toEqual("Elgato");
+	});
+
+	it("nested properties", () => {
+		// Arrange.
+		const obj = {
+			company: {
+				name: "Elgato"
+			}
+		};
+
+		// Act.
+		freeze(obj);
+
+		// Assert.
+		expect(() => (obj.company.name = "Other")).toThrowError();
+		expect(obj.company.name).toEqual("Elgato");
+	});
+});
+
+/**
+ * Provides assertions for {@link get}.
  */
 describe("get", () => {
-	it("Gets the value for a top-level path", () => {
+	it("gets the value for a top-level path", () => {
 		const obj = { foo: "bar" };
 		expect(get("foo", obj)).toBe("bar");
 	});
 
-	it("Gets the value for a nested path", () => {
+	it("gets the value for a nested path", () => {
 		const obj = { nested: { number: 13 } };
 		expect(get("nested.number", obj)).toBe(13);
 	});
 
-	it("Handles falsy values", () => {
+	it("handles falsy values", () => {
 		const obj = { falsy: false };
 		expect(get("falsy", obj)).toBe(false);
 	});
 
-	it("Defaults to undefined", () => {
+	it("defaults to undefined", () => {
 		const obj = {};
 		expect(get("__unknown.__prop", obj)).toBe(undefined);
 	});
