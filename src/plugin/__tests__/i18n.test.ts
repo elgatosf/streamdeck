@@ -1,9 +1,8 @@
 import fs, { Dirent } from "node:fs";
 import path from "node:path";
+import { LogLevel, Logger } from "../../common/logging";
 import { I18nProvider } from "../i18n";
 import { logger } from "../logging";
-import { LogLevel } from "../logging/log-level";
-import { Logger } from "../logging/logger";
 
 jest.mock("../logging");
 
@@ -32,7 +31,7 @@ describe("I18nProvider", () => {
 	beforeEach(() => {
 		scopedLogger = new Logger({
 			level: LogLevel.TRACE,
-			target: { write: jest.fn }
+			targets: [{ write: jest.fn }]
 		});
 
 		jest.spyOn(logger, "createScope").mockReturnValue(scopedLogger);

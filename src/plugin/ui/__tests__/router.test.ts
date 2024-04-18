@@ -2,6 +2,7 @@ import { Action, MessageRequest, type MessageRequestOptions } from "../..";
 import type { DidReceivePropertyInspectorMessage, SendToPropertyInspector } from "../../../api";
 import type { RawMessageRequest } from "../../../common/messaging/message";
 import { MessageResponder } from "../../../common/messaging/responder";
+import { PromiseCompletionSource } from "../../../common/promises";
 import { connection } from "../../connection";
 import { PropertyInspector } from "../property-inspector";
 import { getCurrentUI, router } from "../router";
@@ -96,7 +97,7 @@ describe("router", () => {
 		/**
 		 * Asserts {@link router} processed messages when the {@link connection} emits `sendToPlugin`.
 		 */
-		it("processes", () => {
+		it("processes", async () => {
 			// Arrange.
 			const spyOnProcess = jest.spyOn(router, "process");
 			const ev = {
@@ -114,11 +115,13 @@ describe("router", () => {
 				}
 			} satisfies DidReceivePropertyInspectorMessage<RawMessageRequest>;
 
-			const listener = jest.fn();
+			const awaiter = new PromiseCompletionSource();
+			const listener = jest.fn().mockImplementation(() => awaiter.setResult(true));
 			const disposable = router.route("/test", listener);
 
 			// Act.
 			connection.emit("sendToPlugin", ev);
+			await awaiter.promise;
 
 			// Assert.
 			expect(spyOnProcess).toBeCalledTimes(1);

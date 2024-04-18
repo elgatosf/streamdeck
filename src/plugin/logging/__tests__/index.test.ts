@@ -1,25 +1,27 @@
 import path from "node:path";
-import * as utils from "../../common/utils";
+import { LogLevel, type LoggerOptions } from "../../../common/logging";
+import { ConsoleTarget } from "../../../common/logging/console-target";
 import { type FileTargetOptions } from "../file-target";
-import { LogLevel } from "../log-level";
-import { type LoggerOptions } from "../logger";
-
-jest.mock("../../common/utils", () => {
-	return {
-		get: jest.fn(),
-		getPluginUUID: jest.fn().mockReturnValue("com.elgato.test"),
-		isDebugMode: jest.fn()
-	} satisfies typeof import("../../common/utils");
-});
 
 jest.mock("../file-target");
-jest.mock("../logger");
+jest.mock("../../../common/logging");
+jest.mock("../../common/utils");
 
 describe("createLogger", () => {
 	const mockedCwd = path.join("stream-deck", "tests");
+	let utils: typeof import("../../common/utils");
 
-	beforeEach(() => jest.spyOn(process, "cwd").mockReturnValue(mockedCwd));
-	afterEach(() => jest.resetModules());
+	beforeEach(async () => {
+		jest.spyOn(process, "cwd").mockReturnValue(mockedCwd);
+
+		utils = await require("../../common/utils");
+		jest.spyOn(utils, "getPluginUUID").mockReturnValue("com.elgato.test");
+	});
+
+	afterEach(() => {
+		jest.resetModules();
+		jest.resetAllMocks();
+	});
 
 	describe("default log level", () => {
 		/**
@@ -29,7 +31,7 @@ describe("createLogger", () => {
 			// Arrange.
 			jest.spyOn(utils, "isDebugMode").mockReturnValue(true);
 			const spyOnFileTarget = jest.spyOn(await require("../file-target"), "FileTarget");
-			const { Logger } = await require("../logger");
+			const { Logger } = await require("../../../common/logging");
 
 			// Act.
 			await require("../index");
@@ -38,7 +40,8 @@ describe("createLogger", () => {
 			expect(spyOnFileTarget).toHaveBeenCalledTimes(1);
 			expect(Logger).toHaveBeenCalledWith<[LoggerOptions]>({
 				level: LogLevel.DEBUG,
-				target: spyOnFileTarget.mock.instances[0]
+				minimumLevel: LogLevel.TRACE,
+				targets: [expect.any(ConsoleTarget), spyOnFileTarget.mock.instances[0]]
 			});
 		});
 
@@ -49,7 +52,7 @@ describe("createLogger", () => {
 			// Arrange.
 			jest.spyOn(utils, "isDebugMode").mockReturnValue(false);
 			const spyOnFileTarget = jest.spyOn(await require("../file-target"), "FileTarget");
-			const { Logger } = await require("../logger");
+			const { Logger } = await require("../../../common/logging");
 
 			// Act.
 			await require("../index");
@@ -57,7 +60,8 @@ describe("createLogger", () => {
 			// Assert.
 			expect(Logger).toHaveBeenCalledWith<[LoggerOptions]>({
 				level: LogLevel.INFO,
-				target: spyOnFileTarget.mock.instances[0]
+				minimumLevel: LogLevel.INFO,
+				targets: [spyOnFileTarget.mock.instances[0]]
 			});
 		});
 	});
@@ -68,7 +72,8 @@ describe("createLogger", () => {
 	it("initializes the file target from the cwd", async () => {
 		// Arrange.
 		jest.spyOn(utils, "isDebugMode").mockReturnValue(false);
-		const { FileTarget } = await require("../file-target");
+		const { FileTarget } = (await require("../file-target")) as typeof import("../file-target");
+		const { stringFormatter } = (await require("../../../common/logging")) as typeof import("../../../common/logging");
 
 		// Act.
 		await require("../index");
@@ -77,6 +82,7 @@ describe("createLogger", () => {
 		expect(FileTarget).toHaveBeenLastCalledWith<[FileTargetOptions]>({
 			dest: path.join(mockedCwd, "logs"),
 			fileName: "com.elgato.test",
+			format: stringFormatter(),
 			maxFileCount: 10,
 			maxSize: 50 * 1024 * 1024
 		});
@@ -103,7 +109,7 @@ describe("createLogger", () => {
 	});
 
 	/**
-	 * Asserts the exports of "../logger".
+	 * Asserts the exports of "./index".
 	 */
 	describe("exports", () => {
 		test("LogLevel", async () => {

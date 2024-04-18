@@ -1,6 +1,5 @@
-import { isDebugMode } from "../common/utils";
-import { LogLevel } from "./log-level";
-import type { LogTarget } from "./log-target";
+import { LogLevel } from "./level";
+import type { LogEntry, LogEntryData, LogTarget } from "./target";
 
 /**
  * Logger capable of forwarding messages to a {@link LogTarget}.
@@ -14,7 +13,7 @@ export class Logger {
 	/**
 	 * Options that define the loggers behavior.
 	 */
-	private readonly options: LoggerOptions;
+	private readonly options: LoggerOptions & Required<Pick<LoggerOptions, "minimumLevel">>;
 
 	/**
 	 * Scope associated with this {@link Logger}.
@@ -26,8 +25,8 @@ export class Logger {
 	 * @param opts Options that define the loggers behavior.
 	 */
 	constructor(opts: LoggerOptions) {
-		this.options = { ...opts };
-		this.scope = this.options.scope === undefined || this.options.scope.trim() === "" ? "" : `${this.options.scope}: `;
+		this.options = { minimumLevel: LogLevel.TRACE, ...opts };
+		this.scope = this.options.scope === undefined || this.options.scope.trim() === "" ? "" : this.options.scope;
 
 		if (typeof this.options.level !== "function") {
 			this.setLevel(this.options.level);
@@ -65,33 +64,30 @@ export class Logger {
 	}
 
 	/**
-	 * Writes a debug log {@link message}.
-	 * @param message Message to write to the log.
-	 * @param error Optional error to log with the {@link message}.
+	 * Writes the arguments as a debug log entry.
+	 * @param data Message or data to log.
 	 * @returns This instance for chaining.
 	 */
-	public debug(message: string, error?: Error | unknown): this {
-		return this.log(LogLevel.DEBUG, message, error);
+	public debug(...data: LogEntryData): this {
+		return this.write({ level: LogLevel.DEBUG, data, scope: this.scope });
 	}
 
 	/**
-	 * Writes an error log {@link message}.
-	 * @param message Message to write to the log.
-	 * @param error Optional error to log with the {@link message}.
+	 * Writes the arguments as error log entry.
+	 * @param data Message or data to log.
 	 * @returns This instance for chaining.
 	 */
-	public error(message: string, error?: Error | unknown): this {
-		return this.log(LogLevel.ERROR, message, error);
+	public error(...data: LogEntryData): this {
+		return this.write({ level: LogLevel.ERROR, data, scope: this.scope });
 	}
 
 	/**
-	 * Writes an info log {@link message}.
-	 * @param message Message to write to the log.
-	 * @param error Optional error to log with the {@link message}.
+	 * Writes the arguments as an info log entry.
+	 * @param data Message or data to log.
 	 * @returns This instance for chaining.
 	 */
-	public info(message: string, error?: Error | unknown): this {
-		return this.log(LogLevel.INFO, message, error);
+	public info(...data: LogEntryData): this {
+		return this.write({ level: LogLevel.INFO, data, scope: this.scope });
 	}
 
 	/**
@@ -100,7 +96,7 @@ export class Logger {
 	 * @returns This instance for chaining.
 	 */
 	public setLevel(level?: LogLevel): this {
-		if ((level === LogLevel.DEBUG || level === LogLevel.TRACE) && !isDebugMode()) {
+		if (level !== undefined && level > this.options.minimumLevel) {
 			this._level = LogLevel.INFO;
 			this.warn(`Log level cannot be set to ${LogLevel[level]} whilst not in debug mode.`);
 		} else {
@@ -111,39 +107,31 @@ export class Logger {
 	}
 
 	/**
-	 * Write a trace log {@link message}.
-	 * @param message Message to write to the log.
-	 * @param error Optional error to log with the {@link message}.
+	 * Writes the arguments as a trace log entry.
+	 * @param data Message or data to log.
 	 * @returns This instance for chaining.
 	 */
-	public trace(message: string, error?: Error | unknown): this {
-		return this.log(LogLevel.TRACE, message, error);
+	public trace(...data: LogEntryData): this {
+		return this.write({ level: LogLevel.TRACE, data, scope: this.scope });
 	}
 
 	/**
-	 * Writes a warning log {@link message}.
-	 * @param message Message to write to the log.
-	 * @param error Optional error to log with the {@link message}.
+	 * Writes the arguments as a warning log entry.
+	 * @param data Message or data to log.
 	 * @returns This instance for chaining.
 	 */
-	public warn(message: string, error?: Error | unknown): this {
-		return this.log(LogLevel.WARN, message, error);
+	public warn(...data: LogEntryData): this {
+		return this.write({ level: LogLevel.WARN, data, scope: this.scope });
 	}
 
 	/**
-	 * Writes a log {@link message} with the specified {@link level}.
-	 * @param level Log level of the message, printed as part of the overall log message.
-	 * @param message Message to write to the log.
-	 * @param error Optional error to log with the {@link message}.
+	 * Writes the log entry.
+	 * @param entry Log entry to write.
 	 * @returns This instance for chaining.
 	 */
-	private log(level: LogLevel, message: string, error?: Error | unknown): this {
-		if (level <= this.level) {
-			this.options.target.write({
-				level,
-				message: `${this.scope}${message}`,
-				error
-			});
+	public write(entry: LogEntry): this {
+		if (entry.level <= this.level) {
+			this.options.targets.forEach((t) => t.write(entry));
 		}
 
 		return this;
@@ -155,9 +143,14 @@ export class Logger {
  */
 export type LoggerOptions = {
 	/**
-	 * Minimum log-level required for a log message to be written.
+	 * Determines the minimum level of logs that can be written.
 	 */
 	level: LogLevel | (() => LogLevel);
+
+	/**
+	 * Minimum level the logger can be set to.
+	 */
+	minimumLevel?: LogLevel.INFO | LogLevel.TRACE;
 
 	/**
 	 * Optional value that defines the scope of the logger.
@@ -165,7 +158,7 @@ export type LoggerOptions = {
 	scope?: string;
 
 	/**
-	 * Log target that defines where log messages will be written.
+	 * Log targets where logs will be written to.
 	 */
-	target: LogTarget;
+	targets: LogTarget[];
 };

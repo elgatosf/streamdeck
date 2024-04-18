@@ -116,7 +116,7 @@ export class MessageGateway<TAction> extends EventEmitter<MessageGatewayEventMap
 
 		return this.routes.disposableOn(path, async (ev: InternalRouteHandlerEventArgs<TAction, TBody>) => {
 			if (options?.filter && options.filter(ev.request.action)) {
-				ev.routed();
+				await ev.routed();
 
 				try {
 					// Invoke the handler; when data was returned, propagate it as part of the response (if there wasn't already a response).

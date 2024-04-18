@@ -1,9 +1,7 @@
 import fs, { Dirent } from "node:fs";
-import { EOL } from "node:os";
 import path from "node:path";
 
-import { LogLevel } from "./log-level";
-import type { LogEntry, LogTarget } from "./log-target";
+import { type LogEntry, type LogEntryFormatter, type LogTarget } from "../../common/logging";
 
 /**
  * Provides a {@link LogTarget} capable of logging to a local file system.
@@ -31,23 +29,13 @@ export class FileTarget implements LogTarget {
 	/**
 	 * @inheritdoc
 	 */
-	public write({ level, message, error }: LogEntry): void {
+	public write(entry: LogEntry): void {
 		const fd = fs.openSync(this.filePath, "a");
-		const write = (message: string): void => {
-			fs.writeSync(fd, message);
-			this.size += message.length;
-		};
 
 		try {
-			write(`${new Date().toISOString()} ${LogLevel[level].padEnd(5)} ${message}${EOL}`);
-			if (error !== undefined) {
-				if (error instanceof Object && "message" in error && error.message && error.message !== "") {
-					write(`${error.message}${EOL}`);
-				}
-				if (error instanceof Object && "stack" in error && error.stack) {
-					write(`${error.stack}${EOL}`);
-				}
-			}
+			const msg = this.options.format(entry);
+			fs.writeSync(fd, msg + "\n");
+			this.size += msg.length;
 		} finally {
 			fs.closeSync(fd);
 		}
@@ -150,6 +138,11 @@ export type FileTargetOptions = {
 	 * filename will be `com.elgato.test.1.log`.
 	 */
 	fileName: string;
+
+	/**
+	 * Formatter responsible for formatting the log entry.
+	 */
+	format: LogEntryFormatter;
 
 	/**
 	 * Maximum number of files that can be created as part of the target before old logs should be truncated and removed.

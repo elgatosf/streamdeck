@@ -30,6 +30,7 @@ export * from "./events";
 export { LogLevel } from "./logging";
 export { route, type MessageRequest, type PropertyInspector } from "./ui";
 
+import { registerCreateLogEntryRoute } from "../common/logging";
 import * as actions from "./actions";
 import { connection } from "./connection";
 import { devices } from "./devices";
@@ -39,6 +40,7 @@ import * as profiles from "./profiles";
 import * as settings from "./settings";
 import * as system from "./system";
 import { ui, type UIController } from "./ui";
+import { router } from "./ui/router";
 
 let i18n: I18nProvider | undefined;
 
@@ -132,4 +134,5 @@ export const streamDeck = {
 	}
 };
 
+registerCreateLogEntryRoute(router, logger);
 export default streamDeck;

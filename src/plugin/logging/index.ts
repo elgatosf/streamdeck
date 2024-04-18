@@ -1,29 +1,35 @@
 import path from "node:path";
 import { cwd } from "node:process";
 
+import { LogLevel, Logger, stringFormatter, type LogTarget } from "../../common/logging";
+import { ConsoleTarget } from "../../common/logging/console-target";
 import { getPluginUUID, isDebugMode } from "../common/utils";
 import { FileTarget } from "./file-target";
-import { LogLevel } from "./log-level";
-import { Logger } from "./logger";
 
-export { LogLevel } from "./log-level";
-export { Logger } from "./logger";
+export { LogLevel, Logger } from "../../common/logging";
 
 // Log all entires to a log file.
-const target = new FileTarget({
+const fileTarget = new FileTarget({
 	dest: path.join(cwd(), "logs"),
 	fileName: getPluginUUID(),
+	format: stringFormatter(),
 	maxFileCount: 10,
 	maxSize: 50 * 1024 * 1024
 });
 
+// Construct the log targets.
+const targets: LogTarget[] = [fileTarget];
+if (isDebugMode()) {
+	targets.splice(0, 0, new ConsoleTarget());
+}
+
 /**
- * The default {@link Logger} for the current plugin based on its environment.
- * @returns The default {@link Logger}.
+ * Logger responsible for capturing log messages.
  */
 export const logger = new Logger({
 	level: isDebugMode() ? LogLevel.DEBUG : LogLevel.INFO,
-	target
+	minimumLevel: isDebugMode() ? LogLevel.TRACE : LogLevel.INFO,
+	targets
 });
 
 process.once("uncaughtException", (err) => logger.error("Process encountered uncaught exception", err));
