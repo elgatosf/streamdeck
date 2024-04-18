@@ -1,17 +1,17 @@
 import { BarSubType, DeviceType, Target } from "../../api";
 import { EventEmitter } from "../../common/event-emitter";
+import { I18nProvider } from "../../common/i18n";
 import { LogLevel } from "../../common/logging";
 import { Action } from "../actions/action";
 import { SingletonAction } from "../actions/singleton-action";
 import { connection } from "../connection";
-import { I18nProvider } from "../i18n";
 import streamDeckAsDefaultExport, { streamDeck } from "../index";
 import { logger } from "../logging";
 
+jest.mock("../../common/i18n");
 jest.mock("../logging");
 jest.mock("../manifest");
 jest.mock("../connection");
-jest.mock("../i18n");
 
 describe("index", () => {
 	/**

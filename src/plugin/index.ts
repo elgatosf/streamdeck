@@ -30,11 +30,12 @@ export * from "./events";
 export { LogLevel } from "./logging";
 export { route, type MessageRequest, type PropertyInspector } from "./ui";
 
+import { I18nProvider } from "../common/i18n";
 import { registerCreateLogEntryRoute } from "../common/logging";
 import * as actions from "./actions";
 import { connection } from "./connection";
 import { devices } from "./devices";
-import { I18nProvider } from "./i18n";
+import { fileSystemLocaleProvider } from "./i18n";
 import { logger, type Logger } from "./logging";
 import * as profiles from "./profiles";
 import * as settings from "./settings";
@@ -66,7 +67,7 @@ export const streamDeck = {
 	 * @returns Internalization provider.
 	 */
 	get i18n(): I18nProvider {
-		return (i18n ??= new I18nProvider(this.info.application.language, this.logger));
+		return (i18n ??= new I18nProvider(this.info.application.language, fileSystemLocaleProvider));
 	},
 
 	/**
