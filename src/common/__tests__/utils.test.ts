@@ -33,6 +33,24 @@ describe("freeze", () => {
 		expect(() => (obj.company.name = "Other")).toThrowError();
 		expect(obj.company.name).toEqual("Elgato");
 	});
+
+	it("handles undefined", () => {
+		// Arrange, act.
+		const value = undefined;
+		freeze(value);
+
+		// Assert.
+		expect(value).toBeUndefined();
+	});
+
+	it("handles null", () => {
+		// Arrange, act.
+		const value = null;
+		freeze(value);
+
+		// Assert.
+		expect(value).toBeNull();
+	});
 });
 
 /**
