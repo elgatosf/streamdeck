@@ -52,6 +52,21 @@ describe("I18nProvider", () => {
 		expect(localeProvider).toHaveBeenCalledWith("en");
 	});
 
+	it("t is alias of translate", () => {
+		// Arrange.
+		const i18n = new I18nProvider("en", jest.fn());
+		const spyOnTranslate = jest.spyOn(i18n, "translate");
+
+		// Act.
+		i18n.t("test");
+		i18n.t("test", "de");
+
+		// Assert.
+		expect(spyOnTranslate).toHaveBeenCalledTimes(2);
+		expect(spyOnTranslate).toHaveBeenNthCalledWith(1, "test", "en");
+		expect(spyOnTranslate).toHaveBeenNthCalledWith(2, "test", "de");
+	});
+
 	describe("translating", () => {
 		const localeProvider = jest.fn().mockImplementation((language: Language) => {
 			switch (language) {
@@ -98,6 +113,12 @@ describe("I18nProvider", () => {
 			// Arrange, act, assert.
 			const i18n = new I18nProvider("en", localeProvider);
 			expect(i18n.translate("Company.Name")).toBe("Elgato");
+		});
+
+		it("can translate with t alias", () => {
+			// Arrange, act, assert.
+			const i18n = new I18nProvider("en", localeProvider);
+			expect(i18n.t("Company.Name")).toBe("Elgato");
 		});
 	});
 });

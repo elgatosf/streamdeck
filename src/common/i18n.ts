@@ -28,6 +28,18 @@ export class I18nProvider {
 
 	/**
 	 * Translates the specified {@link key}, as defined within the resources for the {@link language}. When the key is not found, the default language is checked.
+	 *
+	 * Alias of `I18nProvider.translate(string, Language)`
+	 * @param key Key of the translation.
+	 * @param language Optional language to get the translation for; otherwise the default language.
+	 * @returns The translation; otherwise the key.
+	 */
+	public t(key: string, language: Language = this.language): string {
+		return this.translate(key, language);
+	}
+
+	/**
+	 * Translates the specified {@link key}, as defined within the resources for the {@link language}. When the key is not found, the default language is checked.
 	 * @param key Key of the translation.
 	 * @param language Optional language to get the translation for; otherwise the default language.
 	 * @returns The translation; otherwise the key.
