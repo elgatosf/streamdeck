@@ -7,6 +7,7 @@ import { SingletonAction } from "../actions/singleton-action";
 import { connection } from "../connection";
 import streamDeckAsDefaultExport, { streamDeck } from "../index";
 import { logger } from "../logging";
+import { route } from "../ui/route";
 
 jest.mock("../../common/i18n");
 jest.mock("../logging");
@@ -65,9 +66,9 @@ describe("index", () => {
 	});
 
 	/**
-	 * Asserts supporting enums and classes are exported.
+	 * Asserts supporting enums, classes, and functions are exported.
 	 */
-	it("exports enums and classes", async () => {
+	it("exports enums, classes, and functions", async () => {
 		// Arrange.
 		const index = (await require("../index")) as typeof import("../index");
 
@@ -80,6 +81,7 @@ describe("index", () => {
 		expect(index.LogLevel).toBe(LogLevel);
 		expect(index.SingletonAction).toBe(SingletonAction);
 		expect(index.Target).toBe(Target);
+		expect(index.route).toBe(route);
 	});
 
 	/**

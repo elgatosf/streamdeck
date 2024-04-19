@@ -5,5 +5,4 @@ const options: LoggerOptions = {
 	targets: [{ write: jest.fn() }]
 };
 
-export { LogLevel, Logger };
 export const logger = new Logger(options);

@@ -1,5 +1,17 @@
 import type { Manifest, RegistrationInfo } from "../api";
+import { I18nProvider } from "../common/i18n";
+import { registerCreateLogEntryRoute, type Logger } from "../common/logging";
+import * as actions from "./actions";
+import { connection } from "./connection";
+import { devices } from "./devices";
+import { fileSystemLocaleProvider } from "./i18n";
+import { logger } from "./logging";
 import { getManifest } from "./manifest";
+import * as profiles from "./profiles";
+import * as settings from "./settings";
+import * as system from "./system";
+import { ui, type UIController } from "./ui";
+import { router } from "./ui/router";
 
 export {
 	BarSubType,
@@ -21,27 +33,15 @@ export {
 } from "../api";
 export { EventEmitter, EventsOf } from "../common/event-emitter";
 export { type JsonObject, type JsonPrimitive, type JsonValue } from "../common/json";
+export { LogLevel } from "../common/logging";
 export { type MessageRequestOptions, type MessageResponder, type MessageResponse, type RouteConfiguration, type StatusCode } from "../common/messaging";
 export { Action, ImageOptions, TitleOptions, TriggerDescriptionOptions } from "./actions/action";
 export { action } from "./actions/decorators";
 export { SingletonAction } from "./actions/singleton-action";
-export { Device } from "./devices";
+export { type Device } from "./devices";
 export * from "./events";
-export { LogLevel } from "./logging";
 export { route, type MessageRequest, type PropertyInspector } from "./ui";
-
-import { I18nProvider } from "../common/i18n";
-import { registerCreateLogEntryRoute } from "../common/logging";
-import * as actions from "./actions";
-import { connection } from "./connection";
-import { devices } from "./devices";
-import { fileSystemLocaleProvider } from "./i18n";
-import { logger, type Logger } from "./logging";
-import * as profiles from "./profiles";
-import * as settings from "./settings";
-import * as system from "./system";
-import { ui, type UIController } from "./ui";
-import { router } from "./ui/router";
+export { type Logger };
 
 let i18n: I18nProvider | undefined;
 
@@ -63,7 +63,7 @@ export const streamDeck = {
 	},
 
 	/**
-	 * Namespace for internalization, including translations, see {@link https://docs.elgato.com/sdk/plugins/localization}.
+	 * Internalization provider, responsible for managing localizations and translating resources.
 	 * @returns Internalization provider.
 	 */
 	get i18n(): I18nProvider {

@@ -3,7 +3,7 @@ import { JsonObject } from "../common/json";
 import { freeze, get } from "./utils";
 
 /**
- * Provides locales and translations for internalization.
+ * Internalization provider, responsible for managing localizations and translating resources.
  */
 export class I18nProvider {
 	/**
@@ -27,25 +27,7 @@ export class I18nProvider {
 	) {}
 
 	/**
-	 * Gets the translations for the specified language.
-	 * @param language Language whose translations are being retrieved.
-	 * @returns The translations, otherwise `null`.
-	 */
-	public getTranslations(language: Language): JsonObject | null {
-		let translations = this._translations.get(language);
-
-		if (translations === undefined) {
-			translations = supportedLanguages.includes(language) ? this.readTranslations(language) : null;
-			freeze(translations);
-
-			this._translations.set(language, translations);
-		}
-
-		return translations;
-	}
-
-	/**
-	 * Gets the translation for the specified {@link key}, as defined within the resources for the {@link language}. When the key is not found, the default language is checked.
+	 * Translates the specified {@link key}, as defined within the resources for the {@link language}. When the key is not found, the default language is checked.
 	 * @param key Key of the translation.
 	 * @param language Optional language to get the translation for; otherwise the default language.
 	 * @returns The translation; otherwise the key.
@@ -59,6 +41,24 @@ export class I18nProvider {
 		// Otherwise check the language and default.
 		return get(key, this.getTranslations(language))?.toString() || get(key, this.getTranslations(I18nProvider.DEFAULT_LANGUAGE))?.toString() || key;
 	}
+
+	/**
+	 * Gets the translations for the specified language.
+	 * @param language Language whose translations are being retrieved.
+	 * @returns The translations, otherwise `null`.
+	 */
+	private getTranslations(language: Language): JsonObject | null {
+		let translations = this._translations.get(language);
+
+		if (translations === undefined) {
+			translations = supportedLanguages.includes(language) ? this.readTranslations(language) : null;
+			freeze(translations);
+
+			this._translations.set(language, translations);
+		}
+
+		return translations;
+	}
 }
 
 /**
@@ -67,3 +67,17 @@ export class I18nProvider {
  * @returns Localized resources represented as a JSON object.
  */
 export type TranslationsReader = (language: Language) => JsonObject | null;
+
+/**
+ * Parses the localizations from the specified contents, or throws a `TypeError` when unsuccessful.
+ * @param contents Contents that represent the stringified JSON containing the localizations.
+ * @returns The localizations; otherwise a `TypeError`.
+ */
+export function parseLocalizations(contents: string): JsonObject {
+	const json = JSON.parse(contents);
+	if (json !== undefined && json !== null && typeof json === "object" && "Localization" in json) {
+		return json["Localization"] as JsonObject;
+	}
+
+	throw new TypeError(`Translations must be a JSON object nested under a property named "Localization"`);
+}

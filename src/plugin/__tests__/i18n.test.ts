@@ -5,7 +5,7 @@ import { logger } from "../logging";
 
 jest.mock("../logging");
 
-describe("I18nProvider", () => {
+describe("fileSystemLocaleProvider", () => {
 	const mockedCwd = "c:\\temp";
 
 	beforeEach(() => jest.spyOn(process, "cwd").mockReturnValue(mockedCwd));
@@ -20,7 +20,7 @@ describe("I18nProvider", () => {
 		const spyOnReadFileSync = jest.spyOn(fs, "readFileSync").mockReturnValue(
 			JSON.stringify({
 				Localization: {
-					Hello: "Hello world"
+					Hello: "Hallo Welt"
 				}
 			})
 		);
