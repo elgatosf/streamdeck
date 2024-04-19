@@ -29,7 +29,7 @@ describe("fileSystemLocaleProvider", () => {
 		const translations = fileSystemLocaleProvider("de");
 
 		// Assert.
-		expect(translations).toEqual({ Hello: "Hello world" });
+		expect(translations).toEqual({ Hello: "Hallo Welt" });
 		expect(spyOnReadFileSync).toHaveBeenCalledTimes(1);
 		expect(spyOnReadFileSync).toHaveBeenCalledWith(path.join(mockedCwd, "de.json"), { flag: "r" });
 	});
