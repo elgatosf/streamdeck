@@ -3,7 +3,10 @@
  */
 
 import streamDeck from "../";
+import { DeviceType } from "../../api";
 import { actionInfo, registrationInfo } from "../../api/registration/__mocks__";
+import { EventEmitter } from "../../common/event-emitter";
+import { LogLevel } from "../../common/logging";
 import { connection } from "../connection";
 import { plugin } from "../plugin";
 import * as settings from "../settings";
@@ -20,6 +23,19 @@ describe("streamDeck", () => {
 		expect(streamDeck.plugin).toStrictEqual(plugin);
 		expect(streamDeck.settings).toStrictEqual(settings);
 		expect(streamDeck.system).toStrictEqual(system);
+	});
+
+	/**
+	 * Asserts supporting enums, classes, and functions are exported.
+	 */
+	it("exports enums, classes, and functions", async () => {
+		// Arrange.
+		const index = (await require("../index")) as typeof import("../index");
+
+		// Act, assert.
+		expect(index.DeviceType).toBe(DeviceType);
+		expect(index.EventEmitter).toBe(EventEmitter);
+		expect(index.LogLevel).toBe(LogLevel);
 	});
 
 	/**

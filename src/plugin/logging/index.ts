@@ -6,8 +6,6 @@ import { ConsoleTarget } from "../../common/logging/console-target";
 import { getPluginUUID, isDebugMode } from "../common/utils";
 import { FileTarget } from "./file-target";
 
-export { LogLevel, Logger } from "../../common/logging";
-
 // Log all entires to a log file.
 const fileTarget = new FileTarget({
 	dest: path.join(cwd(), "logs"),

@@ -1,17 +1,18 @@
 import { BarSubType, DeviceType, Target } from "../../api";
 import { EventEmitter } from "../../common/event-emitter";
+import { I18nProvider } from "../../common/i18n";
 import { LogLevel } from "../../common/logging";
 import { Action } from "../actions/action";
 import { SingletonAction } from "../actions/singleton-action";
 import { connection } from "../connection";
-import { I18nProvider } from "../i18n";
 import streamDeckAsDefaultExport, { streamDeck } from "../index";
 import { logger } from "../logging";
+import { route } from "../ui/route";
 
+jest.mock("../../common/i18n");
 jest.mock("../logging");
 jest.mock("../manifest");
 jest.mock("../connection");
-jest.mock("../i18n");
 
 describe("index", () => {
 	/**
@@ -65,9 +66,9 @@ describe("index", () => {
 	});
 
 	/**
-	 * Asserts supporting enums and classes are exported.
+	 * Asserts supporting enums, classes, and functions are exported.
 	 */
-	it("exports enums and classes", async () => {
+	it("exports enums, classes, and functions", async () => {
 		// Arrange.
 		const index = (await require("../index")) as typeof import("../index");
 
@@ -80,6 +81,7 @@ describe("index", () => {
 		expect(index.LogLevel).toBe(LogLevel);
 		expect(index.SingletonAction).toBe(SingletonAction);
 		expect(index.Target).toBe(Target);
+		expect(index.route).toBe(route);
 	});
 
 	/**

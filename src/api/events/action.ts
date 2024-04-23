@@ -177,4 +177,4 @@ export type Coordinates = {
 /**
  * Possible states an action can be in. This only applies to actions that have multiple states defined in the plugin's manifest.json file.
  */
-export type State = 0 | 1;
+export type State = number;

@@ -3,17 +3,6 @@ import path from "node:path";
 let __isDebugMode: boolean | undefined = undefined;
 
 /**
- * Gets the value at the specified {@link path}.
- * @param path Path to the property to get.
- * @param source Source object that is being read from.
- * @returns Value of the property.
- */
-export function get(path: string, source: unknown): unknown {
-	const props: string[] = path.split(".");
-	return props.reduce((obj, prop) => obj && obj[prop as keyof object], source);
-}
-
-/**
  * Determines whether the current plugin is running in a debug environment; this is determined by the command-line arguments supplied to the plugin by Stream. Specifically, the result
  * is `true` when  either `--inspect`, `--inspect-brk` or `--inspect-port` are present as part of the processes' arguments.
  * @returns `true` when the plugin is running in debug mode; otherwise `false`.

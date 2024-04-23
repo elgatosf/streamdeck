@@ -34,6 +34,7 @@
 -   Update layout and manifest references to propagate from [`@elgato/schemas`](https://github.com/elgatosf/schemas).
 -   Localization lookup will now return the key if the resource is not defined.
 -   Update structure of JSON localizations.
+-   Update `State` type to allow for more than two states.
 
 ### ⬆️ Upgrading
 

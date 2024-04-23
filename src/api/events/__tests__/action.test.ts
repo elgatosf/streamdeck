@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Coordinates, WillAppear, WillDisappear } from "..";
+import { Coordinates, WillAppear, WillDisappear, type State } from "..";
 import { Expect, TypesAreEqual } from "../../../../tests/utils";
 import { Settings } from "../../__mocks__/events";
 
@@ -21,7 +21,7 @@ describe("action event types", () => {
 							readonly controller: "Encoder" | "Keypad";
 							readonly coordinates: Coordinates;
 							settings: Settings;
-							readonly state?: 0 | 1;
+							readonly state?: State;
 						};
 				  }
 				| {
@@ -33,7 +33,7 @@ describe("action event types", () => {
 							readonly isInMultiAction: true;
 							readonly controller: "Keypad";
 							settings: Settings;
-							readonly state?: 0 | 1;
+							readonly state?: State;
 						};
 				  }
 			>
@@ -57,7 +57,7 @@ describe("action event types", () => {
 							readonly controller: "Encoder" | "Keypad";
 							readonly coordinates: Coordinates;
 							settings: Settings;
-							readonly state?: 0 | 1;
+							readonly state?: State;
 						};
 				  }
 				| {
@@ -69,7 +69,7 @@ describe("action event types", () => {
 							readonly isInMultiAction: true;
 							readonly controller: "Keypad";
 							settings: Settings;
-							readonly state?: 0 | 1;
+							readonly state?: State;
 						};
 				  }
 			>
