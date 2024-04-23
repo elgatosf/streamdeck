@@ -11,7 +11,7 @@
 
 # Change Log
 
-## vNext
+## Unreleased
 
 ### ✨ New
 
@@ -32,6 +32,7 @@
 
 -   Update layout and manifest references to propagate from [`@elgato/schemas`](https://github.com/elgatosf/schemas).
 -   Localization lookup will now return the key if the resource is not defined.
+-   Update `State` type to allow for more than two states.
 
 ### ➡️ Migration
 
