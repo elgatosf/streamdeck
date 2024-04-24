@@ -203,7 +203,7 @@ export class Action<T extends JsonObject = JsonObject> extends ActionContext {
 	 * will happen when they interact with the action, e.g. rotate, touch, etc. When {@link descriptions} is `undefined`, the descriptions will be reset to the values provided as part
 	 * of the manifest.
 	 *
-	 * NB: Applies to encoders (dials / touchscreens) found on Stream Deck+ devices.
+	 * NB: Applies to encoders (dials / touchscreens) found on Stream Deck + devices.
 	 * @param descriptions Descriptions that detail the action's interaction.
 	 * @returns `Promise` resolved when the request to set the {@link descriptions} has been sent to Stream Deck.
 	 */

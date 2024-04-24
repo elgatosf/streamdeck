@@ -3,21 +3,21 @@ import type { ActionEventMessage, Coordinates, SingleActionPayload } from "./act
 import type { KeyDown, KeyUp } from "./keypad";
 
 /**
- * Occurs when the user presses a dial (Stream Deck+).Also see {@link DialUp}.
+ * Occurs when the user presses a dial (Stream Deck +).Also see {@link DialUp}.
  *
  * NB: For other action types see {@link KeyDown}.
  */
 export type DialDown<TSettings extends JsonObject> = ActionEventMessage<"dialDown", EncoderPayload<TSettings>>;
 
 /**
- * Occurs when the user releases a pressed dial (Stream Deck+).Also see {@link DialDown}.
+ * Occurs when the user releases a pressed dial (Stream Deck +).Also see {@link DialDown}.
  *
  * NB: For other action types see {@link KeyUp}.
  */
 export type DialUp<TSettings extends JsonObject> = ActionEventMessage<"dialUp", EncoderPayload<TSettings>>;
 
 /**
- * Occurs when the user rotates a dial (Stream Deck+).
+ * Occurs when the user rotates a dial (Stream Deck +).
  */
 export type DialRotate<TSettings extends JsonObject> = ActionEventMessage<
 	"dialRotate",
@@ -35,7 +35,7 @@ export type DialRotate<TSettings extends JsonObject> = ActionEventMessage<
 >;
 
 /**
- * Occurs when the user taps the touchscreen (Stream Deck+).
+ * Occurs when the user taps the touchscreen (Stream Deck +).
  */
 export type TouchTap<TSettings extends JsonObject> = ActionEventMessage<
 	"touchTap",

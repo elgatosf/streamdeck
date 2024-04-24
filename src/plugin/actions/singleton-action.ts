@@ -28,7 +28,7 @@ export class SingletonAction<T extends JsonObject = JsonObject> {
 	public readonly manifestId: string | undefined;
 
 	/**
-	 * Occurs when the user presses a dial (Stream Deck+). Also see {@link streamDeck.actions.onDialUp}.
+	 * Occurs when the user presses a dial (Stream Deck +). Also see {@link streamDeck.actions.onDialUp}.
 	 *
 	 * NB: For other action types see {@link streamDeck.actions.onKeyDown}.
 	 * @param listener Function to be invoked when the event occurs.
@@ -36,13 +36,13 @@ export class SingletonAction<T extends JsonObject = JsonObject> {
 	public onDialDown?(ev: DialDownEvent<T>): Promise<void> | void;
 
 	/**
-	 * Occurs when the user rotates a dial (Stream Deck+).
+	 * Occurs when the user rotates a dial (Stream Deck +).
 	 * @param listener Function to be invoked when the event occurs.
 	 */
 	public onDialRotate?(ev: DialRotateEvent<T>): Promise<void> | void;
 
 	/**
-	 * Occurs when the user releases a pressed dial (Stream Deck+). Also see {@link streamDeck.actions.onDialDown}.
+	 * Occurs when the user releases a pressed dial (Stream Deck +). Also see {@link streamDeck.actions.onDialDown}.
 	 *
 	 * NB: For other action types see {@link streamDeck.actions.onKeyUp}.
 	 * @param listener Function to be invoked when the event occurs.
@@ -97,7 +97,7 @@ export class SingletonAction<T extends JsonObject = JsonObject> {
 	public onTitleParametersDidChange?(ev: TitleParametersDidChangeEvent<T>): Promise<void> | void;
 
 	/**
-	 * Occurs when the user taps the touchscreen (Stream Deck+).
+	 * Occurs when the user taps the touchscreen (Stream Deck +).
 	 * @param listener Function to be invoked when the event occurs.
 	 */
 	public onTouchTap?(ev: TouchTapEvent<T>): Promise<void> | void;

@@ -35,7 +35,7 @@ export function createController<T extends JsonObject = JsonObject>(id: string):
 }
 
 /**
- * Occurs when the user presses a dial (Stream Deck+). Also see {@link onDialUp}.
+ * Occurs when the user presses a dial (Stream Deck +). Also see {@link onDialUp}.
  *
  * NB: For other action types see {@link onKeyDown}.
  * @template T The type of settings associated with the action.
@@ -47,7 +47,7 @@ export function onDialDown<T extends JsonObject = JsonObject>(listener: (ev: Dia
 }
 
 /**
- * Occurs when the user rotates a dial (Stream Deck+).
+ * Occurs when the user rotates a dial (Stream Deck +).
  * @template T The type of settings associated with the action.
  * @param listener Function to be invoked when the event occurs.
  * @returns A disposable that, when disposed, removes the listener.
@@ -57,7 +57,7 @@ export function onDialRotate<T extends JsonObject = JsonObject>(listener: (ev: D
 }
 
 /**
- * Occurs when the user releases a pressed dial (Stream Deck+). Also see {@link onDialDown}.
+ * Occurs when the user releases a pressed dial (Stream Deck +). Also see {@link onDialDown}.
  *
  * NB: For other action types see {@link onKeyUp}.
  * @template T The type of settings associated with the action.
@@ -105,7 +105,7 @@ export function onTitleParametersDidChange<T extends JsonObject = JsonObject>(li
 }
 
 /**
- * Occurs when the user taps the touchscreen (Stream Deck+).
+ * Occurs when the user taps the touchscreen (Stream Deck +).
  * @template T The type of settings associated with the action.
  * @param listener Function to be invoked when the event occurs.
  * @returns A disposable that, when disposed, removes the listener.
