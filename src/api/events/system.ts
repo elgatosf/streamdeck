@@ -3,13 +3,13 @@ import type { JsonObject } from "../../common/json";
 import type { EventIdentifier } from "./index";
 
 /**
- * Occurs when a monitored application is launched. Monitored applications can be defined in the `manifest.json` file via the {@link Manifest.ApplicationsToMonitor} property. Also see
+ * Occurs when a monitored application is launched. Monitored applications can be defined in the `manifest.json` file via the {@link Manifest.ApplicationsToMonitor} property. See also
  * {@link ApplicationDidTerminate}.
  */
 export type ApplicationDidLaunch = ApplicationEventIdentifier<"applicationDidLaunch">;
 
 /**
- * Occurs when a monitored application terminates. Monitored applications can be defined in the `manifest.json` file via the {@link Manifest.ApplicationsToMonitor} property. Also see
+ * Occurs when a monitored application terminates. Monitored applications can be defined in the `manifest.json` file via the {@link Manifest.ApplicationsToMonitor} property. See also
  * {@link ApplicationDidLaunch}.
  */
 export type ApplicationDidTerminate = ApplicationEventIdentifier<"applicationDidTerminate">;

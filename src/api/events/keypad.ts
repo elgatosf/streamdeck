@@ -3,14 +3,14 @@ import type { ActionEventMessage, MultiActionPayload, SingleActionPayload, State
 import type { DialDown, DialUp } from "./encoder";
 
 /**
- * Occurs when the user presses a action down. Also see {@link KeyUp}.
+ * Occurs when the user presses a action down. See also {@link KeyUp}.
  *
  * NB: For dials / touchscreens see {@link DialDown}.
  */
 export type KeyDown<TSettings extends JsonObject> = ActionEventMessage<"keyDown", KeypadPayload<TSettings>>;
 
 /**
- * Occurs when the user releases a pressed action. Also see {@link KeyDown}.
+ * Occurs when the user releases a pressed action. See also {@link KeyDown}.
  *
  * NB: For dials / touchscreens see {@link DialUp}.
  */

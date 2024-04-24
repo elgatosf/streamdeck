@@ -3,12 +3,12 @@ import type { ActionEventMessage } from "./action";
 import type { DeviceIdentifier } from "./device";
 
 /**
- * Occurs when the property inspector associated with the action becomes visible, i.e. the user selected an action in the Stream Deck application. Also see {@link PropertyInspectorDidDisappear}.
+ * Occurs when the property inspector associated with the action becomes visible, i.e. the user selected an action in the Stream Deck application. See also {@link PropertyInspectorDidDisappear}.
  */
 export type PropertyInspectorDidAppear = ActionEventMessage<"propertyInspectorDidAppear">;
 
 /**
- * Occurs when the property inspector associated with the action becomes invisible, i.e. the user unselected the action in the Stream Deck application. Also see {@link PropertyInspectorDidAppear}.
+ * Occurs when the property inspector associated with the action becomes invisible, i.e. the user unselected the action in the Stream Deck application. See also {@link PropertyInspectorDidAppear}.
  */
 export type PropertyInspectorDidDisappear = ActionEventMessage<"propertyInspectorDidDisappear">;
 

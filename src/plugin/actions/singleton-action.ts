@@ -28,7 +28,7 @@ export class SingletonAction<T extends JsonObject = JsonObject> {
 	public readonly manifestId: string | undefined;
 
 	/**
-	 * Occurs when the user presses a dial (Stream Deck +). Also see {@link SingletonAction.onDialUp}.
+	 * Occurs when the user presses a dial (Stream Deck +). See also {@link SingletonAction.onDialUp}.
 	 *
 	 * NB: For other action types see {@link SingletonAction.onKeyDown}.
 	 * @param ev The event.
@@ -42,7 +42,7 @@ export class SingletonAction<T extends JsonObject = JsonObject> {
 	public onDialRotate?(ev: DialRotateEvent<T>): Promise<void> | void;
 
 	/**
-	 * Occurs when the user releases a pressed dial (Stream Deck +). Also see {@link SingletonAction.onDialDown}.
+	 * Occurs when the user releases a pressed dial (Stream Deck +). See also {@link SingletonAction.onDialDown}.
 	 *
 	 * NB: For other action types see {@link SingletonAction.onKeyUp}.
 	 * @param ev The event.
@@ -56,7 +56,7 @@ export class SingletonAction<T extends JsonObject = JsonObject> {
 	public onDidReceiveSettings?(ev: DidReceiveSettingsEvent<T>): Promise<void> | void;
 
 	/**
-	 * Occurs when the user presses a action down. Also see {@link SingletonAction.onKeyUp}.
+	 * Occurs when the user presses a action down. See also {@link SingletonAction.onKeyUp}.
 	 *
 	 * NB: For dials / touchscreens see {@link SingletonAction.onDialDown}.
 	 * @param ev The event.
@@ -64,7 +64,7 @@ export class SingletonAction<T extends JsonObject = JsonObject> {
 	public onKeyDown?(ev: KeyDownEvent<T>): Promise<void> | void;
 
 	/**
-	 * Occurs when the user releases a pressed action. Also see {@link SingletonAction.onKeyDown}.
+	 * Occurs when the user releases a pressed action. See also {@link SingletonAction.onKeyDown}.
 	 *
 	 * NB: For dials / touchscreens see {@link SingletonAction.onDialUp}.
 	 * @param ev The event.
@@ -72,13 +72,13 @@ export class SingletonAction<T extends JsonObject = JsonObject> {
 	public onKeyUp?(ev: KeyUpEvent<T>): Promise<void> | void;
 
 	/**
-	 * Occurs when the property inspector associated with the action becomes visible, i.e. the user selected an action in the Stream Deck application. Also see {@link streamDeck.ui.onDidAppear}.
+	 * Occurs when the property inspector associated with the action becomes visible, i.e. the user selected an action in the Stream Deck application. See also {@link streamDeck.ui.onDidAppear}.
 	 * @param ev The event.
 	 */
 	public onPropertyInspectorDidAppear?(ev: PropertyInspectorDidAppearEvent<T>): Promise<void> | void;
 
 	/**
-	 * Occurs when the property inspector associated with the action becomes invisible, i.e. the user unselected the action in the Stream Deck application. Also see {@link streamDeck.ui.onDidDisappear}.
+	 * Occurs when the property inspector associated with the action becomes invisible, i.e. the user unselected the action in the Stream Deck application. See also {@link streamDeck.ui.onDidDisappear}.
 	 * @param ev The event.
 	 */
 	public onPropertyInspectorDidDisappear?(ev: PropertyInspectorDidDisappearEvent<T>): Promise<void> | void;
@@ -91,7 +91,7 @@ export class SingletonAction<T extends JsonObject = JsonObject> {
 	public onSendToPlugin?(ev: SendToPluginEvent<JsonValue, T>): Promise<void> | void;
 
 	/**
-	 * Occurs when the user updates an action's title settings in the Stream Deck application. Also see {@link Action.setTitle}.
+	 * Occurs when the user updates an action's title settings in the Stream Deck application. See also {@link Action.setTitle}.
 	 * @param ev The event.
 	 */
 	public onTitleParametersDidChange?(ev: TitleParametersDidChangeEvent<T>): Promise<void> | void;
