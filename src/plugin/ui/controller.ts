@@ -23,7 +23,7 @@ class UIController {
 	}
 
 	/**
-	 * Occurs when the property inspector associated with the action becomes visible, i.e. the user selected an action in the Stream Deck application. Also see {@link UIController.onDidDisappear}.
+	 * Occurs when the property inspector associated with the action becomes visible, i.e. the user selected an action in the Stream Deck application. See also {@link UIController.onDidDisappear}.
 	 * @template T The type of settings associated with the action.
 	 * @param listener Function to be invoked when the event occurs.
 	 * @returns A disposable that, when disposed, removes the listener.
@@ -33,7 +33,7 @@ class UIController {
 	}
 
 	/**
-	 * Occurs when the property inspector associated with the action becomes destroyed, i.e. the user unselected the action in the Stream Deck application. Also see {@link UIController.onDidAppear}.
+	 * Occurs when the property inspector associated with the action becomes destroyed, i.e. the user unselected the action in the Stream Deck application. See also {@link UIController.onDidAppear}.
 	 * @template T The type of settings associated with the action.
 	 * @param listener Function to be invoked when the event occurs.
 	 * @returns A disposable that, when disposed, removes the listener.

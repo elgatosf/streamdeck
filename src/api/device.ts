@@ -17,7 +17,7 @@ export type DeviceInfo = {
 	readonly size: Size;
 
 	/**
-	 * Type of the device that was connected, e.g. Stream Deck+, Stream Deck Pedal, etc. See {@link DeviceType}.
+	 * Type of the device that was connected, e.g. Stream Deck +, Stream Deck Pedal, etc. See {@link DeviceType}.
 	 */
 	readonly type: DeviceType;
 };

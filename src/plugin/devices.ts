@@ -81,7 +81,7 @@ class DeviceCollection {
 	}
 
 	/**
-	 * Occurs when a Stream Deck device is connected. Also see {@link DeviceCollection.onDeviceDidConnect}.
+	 * Occurs when a Stream Deck device is connected. See also {@link DeviceCollection.onDeviceDidConnect}.
 	 * @param listener Function to be invoked when the event occurs.
 	 * @returns A disposable that, when disposed, removes the listener.
 	 */
@@ -97,7 +97,7 @@ class DeviceCollection {
 	}
 
 	/**
-	 * Occurs when a Stream Deck device is disconnected. Also see {@link DeviceCollection.onDeviceDidDisconnect}.
+	 * Occurs when a Stream Deck device is disconnected. See also {@link DeviceCollection.onDeviceDidDisconnect}.
 	 * @param listener Function to be invoked when the event occurs.
 	 * @returns A disposable that, when disposed, removes the listener.
 	 */

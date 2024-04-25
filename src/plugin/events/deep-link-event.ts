@@ -43,12 +43,12 @@ export class DeepLinkURL {
 
 	/**
 	 * Query of the URL, with the question mark (?) omitted. For example, a URL of "/test?name=elgato&key=123" would result in a {@link DeepLinkURL.query} of "name=elgato&key=123".
-	 * Also see {@link DeepLinkURL.queryParameters}.
+	 * See also {@link DeepLinkURL.queryParameters}.
 	 */
 	public readonly query: string;
 
 	/**
-	 * Query string parameters parsed from the URL. Also see {@link DeepLinkURL.query}.
+	 * Query string parameters parsed from the URL. See also {@link DeepLinkURL.query}.
 	 */
 	public readonly queryParameters: URLSearchParams;
 

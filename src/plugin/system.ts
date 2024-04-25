@@ -6,7 +6,7 @@ import { requiresVersion } from "./validation";
 
 /**
  * Occurs when a monitored application is launched. Monitored applications can be defined in the manifest via the {@link Manifest.ApplicationsToMonitor} property.
- * Also see {@link onApplicationDidTerminate}.
+ * See also {@link onApplicationDidTerminate}.
  * @param listener Function to be invoked when the event occurs.
  * @returns A disposable that, when disposed, removes the listener.
  */
@@ -16,7 +16,7 @@ export function onApplicationDidLaunch(listener: (ev: ApplicationDidLaunchEvent)
 
 /**
  * Occurs when a monitored application terminates. Monitored applications can be defined in the manifest via the {@link Manifest.ApplicationsToMonitor} property.
- * Also see {@link onApplicationDidLaunch}.
+ * See also {@link onApplicationDidLaunch}.
  * @param listener Function to be invoked when the event occurs.
  * @returns A disposable that, when disposed, removes the listener.
  */
