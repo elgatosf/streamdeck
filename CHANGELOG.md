@@ -6,6 +6,7 @@
 ✨ New
 🐞 Fix
 ♻️ Refactor / Enhance / Update
+⬆️ Upgrading
 
 -->
 
@@ -32,13 +33,12 @@
 
 -   Update layout and manifest references to propagate from [`@elgato/schemas`](https://github.com/elgatosf/schemas).
 -   Localization lookup will now return the key if the resource is not defined.
+-   Update structure of JSON localizations.
 -   Update `State` type to allow for more than two states.
 
-### ➡️ Migration
+### ⬆️ Upgrading
 
--   Localizations keys are now indexed from the `Localization` node within the translation file.
--   Previous `PayloadObject<T>` type has been replaced with `JsonObject`.
--   JSON schemas can now be found in their dedicated schemas package, [`@elgato/schemas`](https://github.com/elgatosf/schemas).
+-   For information on breaking changes, and migrating to the this version, read more about [upgrading to v0.4.0](/UPGRADE.md#v0-4-0).
 
 ## 0.3.0
 
@@ -67,10 +67,6 @@
 -   Remove `$A2` incorrectly being listed as a pre-defined layout.
 
 ## 0.2.0
-
-### ⚠️ Breaking Changes
-
-Namespaces have been introduced in place of the previous `streamDeck.client` object to provide better natural-grouping of functionality. Additionally, `streamDeck.devices` has been promoted to a namespace to allow for future enhancements, with devices remaining iterable. For more information, see [migration details](#0-2-0_migration).
 
 ### ✨ New
 
@@ -102,50 +98,9 @@ Namespaces have been introduced in place of the previous `streamDeck.client` obj
 -   Correctly validate paths without extensions in manifest JSON schema.
 -   Default `text-overflow` set to `ellipsis` in layout JSON schema.
 
-<h3 id="0-2-0_migration">
-	➡️ Migration
-</h3>
+### ⬆️ Upgrading
 
-> Functionality introduced in Stream Deck 6.5 requires the plugin's manifest to have a `Software.MinimumVersion` of 6.5 or higher.
-
-Members previously accessed directly from `streamDeck.client` have been relocated to the following namespaces:
-
-| Previous `streamDeck.client` Member | New Namespace                             |
-| ----------------------------------- | ----------------------------------------- |
-| `getGlobalSettings`                 | `streamDeck.settings`                     |
-| `getSettings`                       | `streamDeck.actions.createController(id)` |
-| `onApplicationDidLaunch`            | `streamDeck.system`                       |
-| `onApplicationDidTerminate`         | `streamDeck.system`                       |
-| `onDeviceDidConnect`                | `streamDeck.devices`                      |
-| `onDeviceDidDisconnect`             | `streamDeck.devices`                      |
-| `onDialDown`                        | `streamDeck.actions`                      |
-| `onDialRotate`                      | `streamDeck.actions`                      |
-| `onDialUp`                          | `streamDeck.actions`                      |
-| `onDidReceiveGlobalSettings`        | `streamDeck.settings`                     |
-| `onDidReceiveSettings`              | `streamDeck.settings`                     |
-| `onKeyDown`                         | `streamDeck.actions`                      |
-| `onKeyUp`                           | `streamDeck.actions`                      |
-| `onPropertyInspectorDidAppear`      | `streamDeck.ui`                           |
-| `onPropertyInspectorDidDisappear`   | `streamDeck.ui`                           |
-| `onSendToPlugin`                    | `streamDeck.ui`                           |
-| `onSystemDidWakeUp`                 | `streamDeck.system`                       |
-| `onTitleParametersDidChange`        | `streamDeck.actions`                      |
-| `onTouchTap`                        | `streamDeck.actions`                      |
-| `onWillAppear`                      | `streamDeck.actions`                      |
-| `onWillDisappear`                   | `streamDeck.actions`                      |
-| `openUrl`                           | `streamDeck.system`                       |
-| `sendToPropertyInspector`           | `streamDeck.actions.createController(id)` |
-| `setFeedback`                       | `streamDeck.actions.createController(id)` |
-| `setFeedbackLayout`                 | `streamDeck.actions.createController(id)` |
-| `setGlobalSettings`                 | `streamDeck.settings`                     |
-| `setImage`                          | `streamDeck.actions.createController(id)` |
-| `setSettings`                       | `streamDeck.actions.createController(id)` |
-| `setState`                          | `streamDeck.actions.createController(id)` |
-| `setTitle`                          | `streamDeck.actions.createController(id)` |
-| `setTriggerDescription`             | `streamDeck.actions.createController(id)` |
-| `showAlert`                         | `streamDeck.actions.createController(id)` |
-| `showOk`                            | `streamDeck.actions.createController(id)` |
-| `switchToProfile`                   | `streamDeck.profiles`                     |
+-   For information on breaking changes, and migrating to the this version, read more about [upgrading to v0.2.0](/UPGRADE.md#v0-2-0).
 
 ## 0.1.0
 
