@@ -10,6 +10,9 @@ import { MessageResponder } from "./responder";
  */
 const DEFAULT_TIMEOUT = 5000;
 
+export const PUBLIC_PATH_PREFIX = "public:";
+export const INTERNAL_PATH_PREFIX = "internal:";
+
 /**
  * Message gateway responsible for sending, routing, and receiving requests and responses.
  */

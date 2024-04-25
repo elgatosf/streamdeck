@@ -85,7 +85,7 @@ describe("current UI", () => {
 		// Assert.
 		expect(spyOnFetch).toBeCalledTimes(1);
 		expect(spyOnFetch).toHaveBeenCalledWith<[MessageRequestOptions]>({
-			path: "/test",
+			path: "public:/test",
 			timeout: 1,
 			unidirectional: true
 		});

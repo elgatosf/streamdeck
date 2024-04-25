@@ -1,5 +1,5 @@
 import type { JsonObject, JsonValue } from "../../common/json";
-import { type MessageResponder } from "../../common/messaging";
+import { PUBLIC_PATH_PREFIX, type MessageResponder } from "../../common/messaging";
 import type { SingletonAction } from "../actions/singleton-action";
 import type { MessageHandler, MessageRequest } from "./message";
 import { router } from "./router";
@@ -14,7 +14,7 @@ export function route<TBody extends JsonValue = JsonValue, TSettings extends Jso
 ): (target: MessageHandler<TBody, TSettings>, context: ClassMethodDecoratorContext<SingletonAction>) => OptionalParameterMessageHandler<TBody, TSettings, TResult> | void {
 	return function (target: MessageHandler<TBody, TSettings>, context: ClassMethodDecoratorContext<SingletonAction>): void {
 		context.addInitializer(function () {
-			router.route(path, target.bind(this), {
+			router.route(`${PUBLIC_PATH_PREFIX}${path}`, target.bind(this), {
 				filter: (source) => source.manifestId === this.manifestId
 			});
 		});

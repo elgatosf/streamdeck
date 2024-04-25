@@ -153,6 +153,6 @@ describe("UIController", () => {
 
 		// Assert.
 		expect(spyOnRoute).toHaveBeenCalledTimes(1);
-		expect(spyOnRoute).toHaveBeenCalledWith("/register", handler, options);
+		expect(spyOnRoute).toHaveBeenCalledWith("public:/register", handler, options);
 	});
 });

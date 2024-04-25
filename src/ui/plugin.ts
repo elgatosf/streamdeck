@@ -2,6 +2,7 @@ import type { IDisposable } from "../common/disposable";
 import type { JsonObject, JsonValue } from "../common/json";
 import {
 	MessageGateway,
+	PUBLIC_PATH_PREFIX,
 	type MessageRequestOptions,
 	type MessageResponder,
 	type MessageResponse,
@@ -80,9 +81,12 @@ class PluginController {
 	 */
 	public async fetch<T extends JsonValue = JsonValue>(requestOrPath: MessageRequestOptions | string, bodyOrUndefined?: JsonValue): Promise<MessageResponse<T>> {
 		if (typeof requestOrPath === "string") {
-			return router.fetch(requestOrPath, bodyOrUndefined);
+			return router.fetch(`${PUBLIC_PATH_PREFIX}${requestOrPath}`, bodyOrUndefined);
 		} else {
-			return router.fetch(requestOrPath);
+			return router.fetch({
+				...requestOrPath,
+				path: `${PUBLIC_PATH_PREFIX}${requestOrPath.path}`
+			});
 		}
 	}
 
@@ -130,7 +134,7 @@ class PluginController {
 		handler: MessageHandler<TBody, TSettings>,
 		options?: RouteConfiguration<Action>
 	): IDisposable {
-		return router.route(path, handler, options);
+		return router.route(`${PUBLIC_PATH_PREFIX}${path}`, handler, options);
 	}
 
 	/**
