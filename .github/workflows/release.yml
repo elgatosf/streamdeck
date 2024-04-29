@@ -41,7 +41,7 @@ jobs:
         run: npm run test
 
       - name: "📖 Retrieve package information"
-        run: geekyeggo/npm-pkg@v1
+        uses: geekyeggo/npm-pkg@v1
         id: pkg
 
       - name: "📤 Publish"
