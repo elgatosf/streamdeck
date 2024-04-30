@@ -8,6 +8,7 @@ import * as settings from "./settings";
 import * as system from "./system";
 
 export { DeviceType, type ActionInfo, type ConnectElgatoStreamDeckSocketFn, type Controller, type RegistrationInfo } from "../api";
+export { Enumerable } from "../common/enumerable";
 export { EventEmitter } from "../common/event-emitter";
 export { type JsonObject, type JsonPrimitive, type JsonValue } from "../common/json";
 export { LogLevel, type Logger } from "../common/logging";

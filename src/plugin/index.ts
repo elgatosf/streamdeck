@@ -31,6 +31,7 @@ export {
 	type State,
 	type Text
 } from "../api";
+export { Enumerable } from "../common/enumerable";
 export { EventEmitter, EventsOf } from "../common/event-emitter";
 export { type JsonObject, type JsonPrimitive, type JsonValue } from "../common/json";
 export { LogLevel } from "../common/logging";
