@@ -40,7 +40,11 @@ jobs:
       - name: "🧪 Test"
         run: npm run test
 
+      - name: "📖 Retrieve package information"
+        uses: geekyeggo/npm-pkg@v1
+        id: pkg
+
       - name: "📤 Publish"
-        run: npm publish --provenance --access public
+        run: npm publish --provenance --access public --tag ${{ steps.pkg.outputs.version-tag }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
