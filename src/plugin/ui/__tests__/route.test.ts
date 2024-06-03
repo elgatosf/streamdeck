@@ -31,7 +31,7 @@ describe("route", () => {
 			action.spyOnGetCharacters.mockImplementation(() => awaiter.setResult(true));
 
 			// Act.
-			const res = await piRouter.fetch("/characters", {
+			const res = await piRouter.fetch("public:/characters", {
 				game: "World of Warcraft"
 			});
 
@@ -41,7 +41,7 @@ describe("route", () => {
 			expect(action.spyOnGetCharacters).toHaveBeenLastCalledWith<[MessageRequest<Filter>, MessageResponder]>(
 				{
 					action: new Action(ev),
-					path: "/characters",
+					path: "public:/characters",
 					unidirectional: false,
 					body: {
 						game: "World of Warcraft"
@@ -65,7 +65,7 @@ describe("route", () => {
 			action.spyOnGetCharactersSync.mockImplementation(() => awaiter.setResult(true));
 
 			// Act.
-			const res = await piRouter.fetch("/characters-sync", {
+			const res = await piRouter.fetch("public:/characters-sync", {
 				game: "Mario World"
 			});
 
@@ -75,7 +75,7 @@ describe("route", () => {
 			expect(action.spyOnGetCharactersSync).toHaveBeenLastCalledWith<[MessageRequest<Filter>, MessageResponder]>(
 				{
 					action: new Action(ev),
-					path: "/characters-sync",
+					path: "public:/characters-sync",
 					unidirectional: false,
 					body: {
 						game: "Mario World"
@@ -95,14 +95,14 @@ describe("route", () => {
 		test("void", async () => {
 			// Arrange, act.
 			const action = new ActionWithRoutes();
-			const res = await piRouter.fetch("/save");
+			const res = await piRouter.fetch("public:/save");
 
 			// Assert.
 			expect(action.spyOnSave).toHaveBeenCalledTimes(1);
 			expect(action.spyOnSave).toHaveBeenLastCalledWith<[MessageRequest<Filter>, MessageResponder]>(
 				{
 					action: new Action(ev),
-					path: "/save",
+					path: "public:/save",
 					unidirectional: false,
 					body: undefined
 				},
@@ -124,7 +124,7 @@ describe("route", () => {
 		test("async", async () => {
 			// Arrange, act.
 			const action = new ActionWithRoutes();
-			const res = await piRouter.fetch("/characters", {
+			const res = await piRouter.fetch("public:/characters", {
 				game: "World of Warcraft"
 			});
 
@@ -141,7 +141,7 @@ describe("route", () => {
 		test("sync", async () => {
 			// Arrange, act.
 			const action = new ActionWithRoutes();
-			const res = await piRouter.fetch("/characters-sync", {
+			const res = await piRouter.fetch("public:/characters-sync", {
 				game: "Mario World"
 			});
 
@@ -158,7 +158,7 @@ describe("route", () => {
 		test("void", async () => {
 			// Arrange, act.
 			const action = new ActionWithRoutes();
-			const res = await piRouter.fetch("/save");
+			const res = await piRouter.fetch("public:/save");
 
 			// Assert.
 			expect(action.spyOnSave).toHaveBeenCalledTimes(0);

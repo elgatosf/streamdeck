@@ -1,9 +1,9 @@
-import type { MessageGateway } from "../messaging";
+import { INTERNAL_PATH_PREFIX, type MessageGateway } from "../messaging";
 import { stringFormatter } from "./format";
 import type { Logger } from "./logger";
 import type { LogEntry, LogTarget } from "./target";
 
-export const LOGGING_WRITE_ROUTE = "#internal:logger.write";
+const LOGGER_WRITE_PATH = `${INTERNAL_PATH_PREFIX}logger.write`;
 
 /**
  * Creates a log target that that sends the log entry to the router.
@@ -21,7 +21,7 @@ export function createRoutedLogTarget(router: MessageGateway<unknown>): LogTarge
 					message: format(entry),
 					scope: entry.scope
 				} satisfies JsonSafeLogEntry,
-				path: LOGGING_WRITE_ROUTE,
+				path: LOGGER_WRITE_PATH,
 				unidirectional: true
 			});
 		}
@@ -34,7 +34,7 @@ export function createRoutedLogTarget(router: MessageGateway<unknown>): LogTarge
  * @param logger Logger responsible for logging log entries.
  */
 export function registerCreateLogEntryRoute(router: MessageGateway<unknown>, logger: Logger): void {
-	router.route<JsonSafeLogEntry>(LOGGING_WRITE_ROUTE, (req, res) => {
+	router.route<JsonSafeLogEntry>(LOGGER_WRITE_PATH, (req, res) => {
 		if (req.body === undefined) {
 			return res.fail();
 		}

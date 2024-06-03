@@ -2,7 +2,7 @@ import type streamDeck from "../";
 import type { DidReceivePropertyInspectorMessage, PropertyInspectorDidAppear, PropertyInspectorDidDisappear } from "../../api";
 import type { IDisposable } from "../../common/disposable";
 import type { JsonObject, JsonValue } from "../../common/json";
-import type { RouteConfiguration } from "../../common/messaging";
+import { PUBLIC_PATH_PREFIX, type RouteConfiguration } from "../../common/messaging";
 import { Action } from "../actions/action";
 import { connection } from "../connection";
 import { ActionWithoutPayloadEvent, SendToPluginEvent, type PropertyInspectorDidAppearEvent, type PropertyInspectorDidDisappearEvent } from "../events";
@@ -80,7 +80,7 @@ class UIController {
 		handler: MessageHandler<TBody, TSettings>,
 		options?: RouteConfiguration<Action>
 	): IDisposable {
-		return router.route(path, handler, options);
+		return router.route(`${PUBLIC_PATH_PREFIX}${path}`, handler, options);
 	}
 }
 

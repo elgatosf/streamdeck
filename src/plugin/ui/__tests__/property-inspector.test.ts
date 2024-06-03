@@ -45,7 +45,7 @@ describe("PropertyInspector", () => {
 
 			// Assert.
 			expect(spyOnFetch).toBeCalledTimes(1);
-			expect(spyOnFetch).toHaveBeenLastCalledWith<[string, JsonValue]>("/hello", { name: "Elgato" });
+			expect(spyOnFetch).toHaveBeenLastCalledWith<[string, JsonValue]>("public:/hello", { name: "Elgato" });
 		});
 
 		/**
@@ -71,7 +71,7 @@ describe("PropertyInspector", () => {
 			// Assert.
 			expect(spyOnFetch).toBeCalledTimes(1);
 			expect(spyOnFetch).toHaveBeenLastCalledWith<[MessageRequestOptions]>({
-				path: "/hello",
+				path: "public:/hello",
 				body: { name: "Elgato" },
 				timeout: 1000,
 				unidirectional: true

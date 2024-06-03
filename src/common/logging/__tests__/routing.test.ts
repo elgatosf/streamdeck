@@ -2,10 +2,11 @@ import type { LogEntry } from "..";
 import { MessageGateway, MessageResponder, type MessageRequestOptions } from "../../messaging";
 import { LogLevel } from "../level";
 import { Logger } from "../logger";
-
-import { LOGGING_WRITE_ROUTE, createRoutedLogTarget, registerCreateLogEntryRoute, type JsonSafeLogEntry } from "../routing";
+import { createRoutedLogTarget, registerCreateLogEntryRoute, type JsonSafeLogEntry } from "../routing";
 
 jest.mock("../../messaging");
+
+const expectedLoggerWritePath = "internal:logger.write";
 
 describe("createRoutedLogTarget", () => {
 	it("sends log entry to router", () => {
@@ -28,7 +29,7 @@ describe("createRoutedLogTarget", () => {
 				message: "Hello world",
 				scope: "Test"
 			} satisfies JsonSafeLogEntry,
-			path: LOGGING_WRITE_ROUTE,
+			path: expectedLoggerWritePath,
 			unidirectional: true
 		});
 	});
@@ -47,7 +48,7 @@ describe("registerCreateLogEntryRoute", () => {
 			spyOnRoute.mock.calls[0][1](
 				{
 					action: jest.fn(),
-					path: LOGGING_WRITE_ROUTE,
+					path: expectedLoggerWritePath,
 					unidirectional: true,
 					body: undefined
 				},
@@ -56,7 +57,7 @@ describe("registerCreateLogEntryRoute", () => {
 
 			// Assert.
 			expect(spyOnRoute).toHaveBeenCalledTimes(1);
-			expect(spyOnRoute).toHaveBeenCalledWith(LOGGING_WRITE_ROUTE, expect.any(Function));
+			expect(spyOnRoute).toHaveBeenCalledWith(expectedLoggerWritePath, expect.any(Function));
 			expect(responder.fail).toHaveBeenCalledTimes(1);
 		});
 
@@ -71,7 +72,7 @@ describe("registerCreateLogEntryRoute", () => {
 			spyOnRoute.mock.calls[0][1](
 				{
 					action: jest.fn(),
-					path: LOGGING_WRITE_ROUTE,
+					path: expectedLoggerWritePath,
 					unidirectional: true,
 					body: {
 						level: undefined
@@ -82,7 +83,7 @@ describe("registerCreateLogEntryRoute", () => {
 
 			// Assert.
 			expect(spyOnRoute).toHaveBeenCalledTimes(1);
-			expect(spyOnRoute).toHaveBeenCalledWith(LOGGING_WRITE_ROUTE, expect.any(Function));
+			expect(spyOnRoute).toHaveBeenCalledWith(expectedLoggerWritePath, expect.any(Function));
 			expect(responder.fail).toHaveBeenCalledTimes(1);
 		});
 	});
@@ -105,7 +106,7 @@ describe("registerCreateLogEntryRoute", () => {
 		spyOnRoute.mock.calls[0][1](
 			{
 				action: jest.fn(),
-				path: LOGGING_WRITE_ROUTE,
+				path: expectedLoggerWritePath,
 				unidirectional: true,
 				body: {
 					level: LogLevel.WARN,
@@ -118,7 +119,7 @@ describe("registerCreateLogEntryRoute", () => {
 
 		// Assert.
 		expect(spyOnRoute).toHaveBeenCalledTimes(1);
-		expect(spyOnRoute).toHaveBeenCalledWith(LOGGING_WRITE_ROUTE, expect.any(Function));
+		expect(spyOnRoute).toHaveBeenCalledWith(expectedLoggerWritePath, expect.any(Function));
 		expect(spyOnWrite).toHaveBeenCalledTimes(1);
 		expect(spyOnWrite).toHaveBeenCalledWith<[LogEntry]>({
 			data: ["Hello world"],
