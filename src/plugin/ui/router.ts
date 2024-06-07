@@ -36,7 +36,11 @@ const router = new MessageGateway<Action>(
 );
 
 connection.on("propertyInspectorDidAppear", (ev) => (current = new PropertyInspector(router, ev)));
-connection.on("propertyInspectorDidDisappear", () => (current = undefined));
+connection.on("propertyInspectorDidDisappear", (ev) => {
+	if (current?.id === ev.context && current.manifestId === ev.action && current.deviceId === ev.device) {
+		current = undefined;
+	}
+});
 connection.on("sendToPlugin", (ev) => router.process(ev));
 
 export { router };
