@@ -60,8 +60,11 @@ connection.on("propertyInspectorDidAppear", (ev) => {
 });
 
 connection.on("propertyInspectorDidDisappear", (ev) => {
-	if (isCurrent(ev) && --debounceCount <= 0) {
-		current = undefined;
+	if (isCurrent(ev)) {
+		debounceCount--;
+		if (debounceCount <= 0) {
+			current = undefined;
+		}
 	}
 });
 
