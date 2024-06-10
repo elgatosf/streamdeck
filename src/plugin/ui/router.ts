@@ -1,3 +1,4 @@
+import type { PropertyInspectorDidAppear, PropertyInspectorDidDisappear } from "../../api";
 import type { JsonValue } from "../../common/json";
 import { MessageGateway } from "../../common/messaging";
 import { Action } from "../actions/action";
@@ -5,6 +6,7 @@ import { connection } from "../connection";
 import { PropertyInspector } from "./property-inspector";
 
 let current: PropertyInspector | undefined;
+let debounceCount = 0;
 
 /**
  * Gets the current property inspector.
@@ -35,8 +37,37 @@ const router = new MessageGateway<Action>(
 	(source) => new Action(source)
 );
 
-connection.on("propertyInspectorDidAppear", (ev) => (current = new PropertyInspector(router, ev)));
-connection.on("propertyInspectorDidDisappear", () => (current = undefined));
+/**
+ * Determines whether the specified event is related to the current tracked property inspector.
+ * @param ev The event.
+ * @returns `true` when the event is related to the current property inspector.
+ */
+function isCurrent(ev: PropertyInspectorDidAppear | PropertyInspectorDidDisappear): boolean {
+	return current?.id === ev.context && current.manifestId === ev.action && current.deviceId === ev.device;
+}
+
+/*
+ * To overcome event races, the debounce counter keeps track of appear vs disappear events, ensuring we only
+ * clear the current ui when an equal number of matching disappear events occur.
+ */
+connection.on("propertyInspectorDidAppear", (ev) => {
+	if (isCurrent(ev)) {
+		debounceCount++;
+	} else {
+		debounceCount = 1;
+		current = new PropertyInspector(router, ev);
+	}
+});
+
+connection.on("propertyInspectorDidDisappear", (ev) => {
+	if (isCurrent(ev)) {
+		debounceCount--;
+		if (debounceCount <= 0) {
+			current = undefined;
+		}
+	}
+});
+
 connection.on("sendToPlugin", (ev) => router.process(ev));
 
 export { router };
