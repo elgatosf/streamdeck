@@ -75,4 +75,17 @@ function getOptions(input: string, output: string): RollupOptions[] {
 	];
 }
 
-export default [...getOptions("src/plugin/index.ts", "index.js"), ...getOptions("src/ui/index.ts", "browser.js")];
+/**
+ * Provides declarations for Stream Deck API related types.
+ */
+const api = {
+	input: "src/api/index.ts",
+	output: {
+		banner,
+		file: "dist/api.d.ts"
+	},
+	external: ["@elgato/schemas/streamdeck/plugins"],
+	plugins: [dts()]
+};
+
+export default [...getOptions("src/plugin/index.ts", "index.js"), ...getOptions("src/ui/index.ts", "browser.js"), api];
