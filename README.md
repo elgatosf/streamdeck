@@ -12,8 +12,6 @@
 
 </div>
 
-## 👋 You're Early!
-
 Welcome to the Stream Deck SDK for Node.js. Designed to make creating Stream Deck plugins easy, the Stream Deck SDK provides everything you need to connect, communicate and build with Stream Deck, and lets you focus on the fun stuff.
 
 The Stream Deck SDK for Node.js is currently in public beta, and is available to everyone running Stream Deck 6.4 or newer. If you're interested in building plugins and would like to know more, please join our [Marketplace Makers Discord](https://discord.gg/GehBUcu627).

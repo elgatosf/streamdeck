@@ -12,7 +12,7 @@
 
 # Change Log
 
-## Unreleased
+## 0.4.0-beta.x
 
 ### ✨ New
 
@@ -28,6 +28,7 @@
 -   `Coordinates` type could erroneously have a non-number type for `row`.
 -   Fix support for allowed types within payloads.
 -   Fix localization lookup to index from `Localization`.
+-   Fix race condition when tracking the property inspector.
 
 ### ♻️ Update
 
@@ -35,6 +36,8 @@
 -   Localization lookup will now return the key if the resource is not defined.
 -   Update structure of JSON localizations.
 -   Update `State` type to allow for more than two states.
+-   Update routing to prevent exposure of internal messages.
+-   Update build to export Stream Deck API types.
 
 ### ⬆️ Upgrading
 
