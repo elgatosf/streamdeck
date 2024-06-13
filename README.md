@@ -94,7 +94,7 @@ The following is an example of an action that listens for the `keyDown` event, a
 >      * Listen for the key down event that occurs when a user presses
 >      * a Stream Deck button, and change the title of the action.
 >      */
->     async onKeyDown(ev: KeyDownEvent) {
+>     async onKeyDown(ev: KeyDownEvent<object>) {
 >         await ev.action.setTitle("Hello world");
 >     }
 > }
