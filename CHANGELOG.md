@@ -38,6 +38,7 @@
 -   Update `State` type to allow for more than two states.
 -   Update routing to prevent exposure of internal messages.
 -   Update build to export Stream Deck API types.
+-   Update `ws` dependency.
 
 ### ⬆️ Upgrading
 
