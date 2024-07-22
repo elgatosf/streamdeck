@@ -22,6 +22,7 @@
     -   Add `streamDeck.settings` namespace for interacting with settings.
     -   Add `streamDeck.system` namespace for system-related operations.
     -   Add `streamDeck.plugin` namespace for bi-direction communication with the plugin and the UI.
+-   Add `isInMultiAction` to the property inspector's action information.
 
 ### 🐞 Fix
 
