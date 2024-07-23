@@ -121,6 +121,8 @@ export type SingleActionPayload<TSettings extends JsonObject, TController extend
 
 	/**
 	 * Determines whether the action is part of a multi-action.
+	 *
+	 * NB. Requires Stream Deck 6.7 when accessed from the property inspector.
 	 */
 	readonly isInMultiAction: false;
 };
@@ -139,6 +141,8 @@ export type MultiActionPayload<TSettings extends JsonObject> = ActionPayload<TSe
 
 	/**
 	 * Determines whether the action is part of a multi-action.
+	 *
+	 * NB. Requires Stream Deck 6.7 when accessed from the property inspector.
 	 */
 	readonly isInMultiAction: true;
 };

@@ -1,5 +1,6 @@
 import { type ActionInfo, type RegistrationInfo } from "../api";
 import type { IDisposable } from "../common/disposable";
+import type { JsonObject } from "../common/json";
 import { connection } from "./connection";
 import { i18n } from "./i18n";
 import { logger } from "./logging";
@@ -46,7 +47,7 @@ const streamDeck = {
 	 * @param listener Event handler function.
 	 * @returns A disposable that removes the listener when disposed.
 	 */
-	onDidConnect: (listener: (info: RegistrationInfo, actionInfo: ActionInfo) => void): IDisposable => {
+	onDidConnect: <TSettings extends JsonObject = JsonObject>(listener: (info: RegistrationInfo, actionInfo: ActionInfo<TSettings>) => void): IDisposable => {
 		return connection.disposableOn("connected", listener);
 	}
 };

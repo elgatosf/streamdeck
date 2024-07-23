@@ -10,6 +10,7 @@ export const actionInfo: ActionInfo = {
 	device: "dev123",
 	payload: {
 		controller: "Keypad",
+		isInMultiAction: false,
 		coordinates: {
 			column: 1,
 			row: 2
