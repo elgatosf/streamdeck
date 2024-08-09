@@ -1,26 +1,21 @@
 import type { JsonValue } from "../../common/json";
-import type { ActionEventMessage } from "./action";
+import type { ActionEventMessage, ActionEventMessageWithoutPayload } from "./action";
 import type { DeviceIdentifier } from "./device";
 
 /**
  * Occurs when the property inspector associated with the action becomes visible, i.e. the user selected an action in the Stream Deck application. See also {@link PropertyInspectorDidDisappear}.
  */
-export type PropertyInspectorDidAppear = ActionEventMessage<"propertyInspectorDidAppear">;
+export type PropertyInspectorDidAppear = ActionEventMessageWithoutPayload<"propertyInspectorDidAppear">;
 
 /**
  * Occurs when the property inspector associated with the action becomes invisible, i.e. the user unselected the action in the Stream Deck application. See also {@link PropertyInspectorDidAppear}.
  */
-export type PropertyInspectorDidDisappear = ActionEventMessage<"propertyInspectorDidDisappear">;
+export type PropertyInspectorDidDisappear = ActionEventMessageWithoutPayload<"propertyInspectorDidDisappear">;
 
 /**
  * Message sent between the plugin and it's respective UI.
  */
-type PluginMessage<TEvent extends string, TPayload extends JsonValue> = Omit<ActionEventMessage<TEvent>, keyof DeviceIdentifier> & {
-	/**
-	 * Payload sent between the plugin and it's UI.
-	 */
-	readonly payload: TPayload;
-};
+type PluginMessage<TEvent extends string, TPayload extends JsonValue> = Omit<ActionEventMessage<TEvent, TPayload>, keyof DeviceIdentifier>;
 
 /**
  * Occurs when a payload was received from the UI.

@@ -1,4 +1,4 @@
-import type { JsonValue } from "../plugin";
+import type { JsonObject, JsonValue } from "../plugin";
 import type { ActionIdentifier, DidReceiveGlobalSettings, DidReceiveSettings, State } from "./events";
 import type { FeedbackPayload } from "./layout";
 import type { Target } from "./target";
@@ -6,29 +6,27 @@ import type { Target } from "./target";
 /**
  * Command sent to Stream Deck.
  */
-type CommandBase<TCommand, TPayload = void> = TPayload extends void
-	? {
-			/**
-			 * Name of the command, used to identify the request.
-			 */
-			event: TCommand;
-	  }
-	: {
-			/**
-			 * Name of the command, used to identify the request.
-			 */
-			event: TCommand;
-
-			/**
-			 * Additional information supplied as part of the command.
-			 */
-			payload: TPayload;
-	  };
+type CommandBase<TCommand> = {
+	/**
+	 * Name of the command, used to identify the request.
+	 */
+	event: TCommand;
+};
 
 /**
- * A {@link CommandBase} that is associated with a specific context, e.g. action.
+ * Command sent to Stream Deck, with payload information.
  */
-type ContextualizedCommand<TCommand, TPayload = void> = CommandBase<TCommand, TPayload> & {
+type CommandBaseWithPayload<TCommand, TPayload> = CommandBase<TCommand> & {
+	/**
+	 * Additional information supplied as part of the command.
+	 */
+	payload: TPayload;
+};
+
+/**
+ * A {@link CommandBase} that is associated with a specific action identified by the context..
+ */
+type ContextualizedCommand<TCommand> = CommandBase<TCommand> & {
 	/**
 	 * Defines the context of the command, e.g. which action instance the command is intended for.
 	 */
@@ -36,9 +34,19 @@ type ContextualizedCommand<TCommand, TPayload = void> = CommandBase<TCommand, TP
 };
 
 /**
+ * A {@link CommandBase} that is associated with a specific action identified by the context.
+ */
+type ContextualizedCommandWithPayload<TCommand, TPayload> = ContextualizedCommand<TCommand> & {
+	/**
+	 * Additional information supplied as part of the command.
+	 */
+	payload: TPayload;
+};
+
+/**
  * Sets the settings associated with an instance of an action.
  */
-export type SetSettings = ContextualizedCommand<"setSettings", unknown>;
+export type SetSettings = ContextualizedCommandWithPayload<"setSettings", JsonObject>;
 
 /**
  * Sets the settings associated with an instance of an action.
@@ -58,7 +66,7 @@ export type UIGetSettings = ActionIdentifier & GetSettings;
 /**
  * Sets the global settings associated with the plugin.
  */
-export type SetGlobalSettings = ContextualizedCommand<"setGlobalSettings", unknown>;
+export type SetGlobalSettings = ContextualizedCommandWithPayload<"setGlobalSettings", JsonObject>;
 
 /**
  * Gets the global settings associated with the plugin. Causes {@link DidReceiveGlobalSettings} to be emitted.
@@ -68,7 +76,7 @@ export type GetGlobalSettings = ContextualizedCommand<"getGlobalSettings">;
 /**
  * Opens the URL in the user's default browser.
  */
-export type OpenUrl = CommandBase<
+export type OpenUrl = CommandBaseWithPayload<
 	"openUrl",
 	{
 		/**
@@ -81,7 +89,7 @@ export type OpenUrl = CommandBase<
 /**
  * Logs a message to the file-system.
  */
-export type LogMessage = CommandBase<
+export type LogMessage = CommandBaseWithPayload<
 	"logMessage",
 	{
 		/**
@@ -93,7 +101,7 @@ export type LogMessage = CommandBase<
 /**
  * Sets the title displayed for an instance of an action.
  */
-export type SetTitle = ContextualizedCommand<
+export type SetTitle = ContextualizedCommandWithPayload<
 	"setTitle",
 	{
 		/**
@@ -116,7 +124,7 @@ export type SetTitle = ContextualizedCommand<
 /**
  * Sets the image associated with an action instance.
  */
-export type SetImage = ContextualizedCommand<
+export type SetImage = ContextualizedCommandWithPayload<
 	"setImage",
 	{
 		/**
@@ -139,12 +147,12 @@ export type SetImage = ContextualizedCommand<
 /**
  * Set's the feedback of an existing layout associated with an action instance.
  */
-export type SetFeedback = ContextualizedCommand<"setFeedback", FeedbackPayload>;
+export type SetFeedback = ContextualizedCommandWithPayload<"setFeedback", FeedbackPayload>;
 
 /**
  * Sets the layout associated with an action instance.
  */
-export type SetFeedbackLayout = ContextualizedCommand<
+export type SetFeedbackLayout = ContextualizedCommandWithPayload<
 	"setFeedbackLayout",
 	{
 		/**
@@ -167,7 +175,7 @@ export type ShowOk = ContextualizedCommand<"showOk">;
 /**
  * Sets the current state of an action instance.
  */
-export type SetState = ContextualizedCommand<
+export type SetState = ContextualizedCommandWithPayload<
 	"setState",
 	{
 		/**
@@ -180,7 +188,7 @@ export type SetState = ContextualizedCommand<
 /**
  * Sets the trigger descriptions associated with an encoder action instance.
  */
-export type SetTriggerDescription = ContextualizedCommand<
+export type SetTriggerDescription = ContextualizedCommandWithPayload<
 	"setTriggerDescription",
 	{
 		/**
@@ -210,7 +218,7 @@ export type SetTriggerDescription = ContextualizedCommand<
  *
  * NB: Plugins may only switch to profiles distributed with the plugin, as defined within the manifest, and cannot access user-defined profiles.
  */
-export type SwitchToProfile = ContextualizedCommand<
+export type SwitchToProfile = ContextualizedCommandWithPayload<
 	"switchToProfile",
 	{
 		/**
@@ -234,12 +242,12 @@ export type SwitchToProfile = ContextualizedCommand<
 /**
  * Sends a message to the property inspector.
  */
-export type SendToPropertyInspector<TPayload extends JsonValue = JsonValue> = ContextualizedCommand<"sendToPropertyInspector", TPayload>;
+export type SendToPropertyInspector<TPayload extends JsonValue = JsonValue> = ContextualizedCommandWithPayload<"sendToPropertyInspector", TPayload>;
 
 /**
  * Sends a message to the plugin.
  */
-export type SendToPlugin<TPayload extends JsonValue = JsonValue> = ActionIdentifier & CommandBase<"sendToPlugin", TPayload>;
+export type SendToPlugin<TPayload extends JsonValue = JsonValue> = ActionIdentifier & CommandBaseWithPayload<"sendToPlugin", TPayload>;
 
 /**
  * Command sent to Stream Deck, from the plugin.
