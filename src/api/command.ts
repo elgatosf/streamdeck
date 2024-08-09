@@ -13,6 +13,9 @@ type CommandBase<TCommand> = {
 	event: TCommand;
 };
 
+/**
+ * Command sent to Stream Deck, with payload information.
+ */
 type CommandBaseWithPayload<TCommand, TPayload> = CommandBase<TCommand> & {
 	/**
 	 * Additional information supplied as part of the command.
