@@ -73,14 +73,12 @@ export type RegistrationInfo = {
 	/**
 	 * Devices associated with the Stream Deck application; this may include devices that are not currently connected. Use `"deviceDidConnect"` event to determine which devices are active.
 	 */
-	readonly devices: [
-		DeviceInfo & {
-			/**
-			 * Unique identifier of the Stream Deck device.
-			 */
-			readonly id: string;
-		}
-	];
+	readonly devices: (DeviceInfo & {
+		/**
+		 * Unique identifier of the Stream Deck device.
+		 */
+		readonly id: string;
+	})[];
 
 	/**
 	 * Information about the plugin.
