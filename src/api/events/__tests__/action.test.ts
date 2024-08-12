@@ -11,31 +11,26 @@ describe("action event types", () => {
 		type test = Expect<
 			TypesAreEqual<
 				WillAppear<Settings>,
-				| {
-						readonly action: string;
-						readonly event: "willAppear";
-						readonly context: string;
-						readonly device: string;
-						readonly payload: {
-							readonly isInMultiAction: false;
-							readonly controller: "Encoder" | "Keypad";
-							readonly coordinates: Coordinates;
-							settings: Settings;
-							readonly state?: State;
-						};
-				  }
-				| {
-						readonly action: string;
-						readonly event: "willAppear";
-						readonly context: string;
-						readonly device: string;
-						readonly payload: {
-							readonly isInMultiAction: true;
-							readonly controller: "Keypad";
-							settings: Settings;
-							readonly state?: State;
-						};
-				  }
+				{
+					readonly action: string;
+					readonly event: "willAppear";
+					readonly context: string;
+					readonly device: string;
+					readonly payload:
+						| {
+								readonly isInMultiAction: false;
+								readonly controller: "Encoder" | "Keypad";
+								readonly coordinates: Coordinates;
+								settings: Settings;
+								readonly state?: State;
+						  }
+						| {
+								readonly isInMultiAction: true;
+								readonly controller: "Keypad";
+								settings: Settings;
+								readonly state?: State;
+						  };
+				}
 			>
 		>;
 	});
@@ -47,31 +42,26 @@ describe("action event types", () => {
 		type test = Expect<
 			TypesAreEqual<
 				WillDisappear<Settings>,
-				| {
-						readonly action: string;
-						readonly event: "willDisappear";
-						readonly context: string;
-						readonly device: string;
-						readonly payload: {
-							readonly isInMultiAction: false;
-							readonly controller: "Encoder" | "Keypad";
-							readonly coordinates: Coordinates;
-							settings: Settings;
-							readonly state?: State;
-						};
-				  }
-				| {
-						readonly action: string;
-						readonly event: "willDisappear";
-						readonly context: string;
-						readonly device: string;
-						readonly payload: {
-							readonly isInMultiAction: true;
-							readonly controller: "Keypad";
-							settings: Settings;
-							readonly state?: State;
-						};
-				  }
+				{
+					readonly action: string;
+					readonly event: "willDisappear";
+					readonly context: string;
+					readonly device: string;
+					readonly payload:
+						| {
+								readonly isInMultiAction: false;
+								readonly controller: "Encoder" | "Keypad";
+								readonly coordinates: Coordinates;
+								settings: Settings;
+								readonly state?: State;
+						  }
+						| {
+								readonly isInMultiAction: true;
+								readonly controller: "Keypad";
+								settings: Settings;
+								readonly state?: State;
+						  };
+				}
 			>
 		>;
 	});
