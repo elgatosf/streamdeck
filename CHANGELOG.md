@@ -30,6 +30,7 @@
 -   Fix support for allowed types within payloads.
 -   Fix localization lookup to index from `Localization`.
 -   Fix race condition when tracking the property inspector.
+-   Fix `streamDeck.setGlobalSettings` to require settings that extend `JsonObject`.
 
 ### ♻️ Update
 
