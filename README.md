@@ -48,6 +48,8 @@ After creating a plugin with `streamdeck create` you'll be provided with a local
 │   ├── bin/
 │   ├── imgs/
 │   ├── logs/
+│   ├── ui/
+│   │   └── increment-counter.html
 │   └── manifest.json
 ├── src/
 │   ├── actions/
@@ -66,6 +68,7 @@ The root of the plugin; this folder contains the build output from the source fi
 -   **bin/** - build output.
 -   **imgs/** - assets used by the plugin, such as icons, profiles, etc.
 -   **logs/** - logs generated from [`streamDeck.logger`](#-logging).
+-   **ui/** - property inspectors of actions.
 
 ### src/
 
