@@ -4,7 +4,7 @@
 
 import { WS as WebSocketServer } from "jest-websocket-mock";
 import { ActionInfo, RegistrationInfo } from "..";
-import { type DidReceiveGlobalSettings } from "../../api";
+import { type ConnectElgatoStreamDeckSocketFn, type DidReceiveGlobalSettings } from "../../api";
 import { actionInfo, registrationInfo } from "../../api/registration/__mocks__/";
 import type { connection as UIConnection } from "../connection";
 
@@ -156,25 +156,18 @@ describe("connection", () => {
 		// Arrange.
 		jest.resetModules();
 
+		const existingFn = jest.fn();
 		const event = "register";
 		const uuid = "123_registers";
 
 		// Act.
-		const existingFn = jest.fn();
 		window.connectElgatoStreamDeckSocket = existingFn;
-		const { connection } = await require("../connection");
-
+		await require("../connection");
 		await window.connectElgatoStreamDeckSocket(port, uuid, event, JSON.stringify(registrationInfo), JSON.stringify(actionInfo));
 
 		// Assert.
 		expect(existingFn).toHaveBeenCalledTimes(1);
-		expect(existingFn).toHaveBeenLastCalledWith<Parameters<typeof window.connectElgatoStreamDeckSocket>>(
-			port,
-			uuid,
-			event,
-			JSON.stringify(registrationInfo),
-			JSON.stringify(actionInfo)
-		);
+		expect(existingFn).toHaveBeenLastCalledWith<Parameters<ConnectElgatoStreamDeckSocketFn>>(port, uuid, event, JSON.stringify(registrationInfo), JSON.stringify(actionInfo));
 
 		await expect(server).toReceiveMessage({ event, uuid });
 	});

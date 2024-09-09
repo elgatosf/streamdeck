@@ -41,12 +41,13 @@ class Connection extends EventEmitter<ExtendedUIEventMap> {
 	constructor() {
 		super();
 
-		window.connectElgatoStreamDeckSocket = ((fn = () => {}) => {
-			return async (port: string, uuid: string, event: string, info: string, actionInfo: string): Promise<void> => {
-				await this.connect(port, uuid, event, JSON.parse(info), JSON.parse(actionInfo));
-				fn(port, uuid, event, info, actionInfo);
-			};
-		})(window.connectElgatoStreamDeckSocket);
+		const existingFn = window.connectElgatoStreamDeckSocket;
+		window.connectElgatoStreamDeckSocket = async (port: string, uuid: string, event: string, info: string, actionInfo: string): Promise<void> => {
+			await this.connect(port, uuid, event, JSON.parse(info), JSON.parse(actionInfo));
+			if (existingFn) {
+				existingFn(port, uuid, event, info, actionInfo);
+			}
+		};
 	}
 
 	/**
