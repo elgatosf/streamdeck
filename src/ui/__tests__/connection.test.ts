@@ -148,6 +148,36 @@ describe("connection", () => {
 			}
 		});
 	});
+
+	/**
+	 * Asserts the connection wraps an existing `connectElgatoStreamDeckSocket` if it is defined on the window.
+	 */
+	it("wraps connectElgatoStreamDeckSocket", async () => {
+		// Arrange.
+		jest.resetModules();
+
+		const event = "register";
+		const uuid = "123_registers";
+
+		// Act.
+		const existingFn = jest.fn();
+		window.connectElgatoStreamDeckSocket = existingFn;
+		const { connection } = await require("../connection");
+
+		await window.connectElgatoStreamDeckSocket(port, uuid, event, JSON.stringify(registrationInfo), JSON.stringify(actionInfo));
+
+		// Assert.
+		expect(existingFn).toHaveBeenCalledTimes(1);
+		expect(existingFn).toHaveBeenLastCalledWith<Parameters<typeof window.connectElgatoStreamDeckSocket>>(
+			port,
+			uuid,
+			event,
+			JSON.stringify(registrationInfo),
+			JSON.stringify(actionInfo)
+		);
+
+		await expect(server).toReceiveMessage({ event, uuid });
+	});
 });
 
 type Settings = {
