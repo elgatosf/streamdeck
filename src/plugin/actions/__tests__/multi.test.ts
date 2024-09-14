@@ -1,6 +1,6 @@
-import { type ActionIdentifier, type SetState } from "../../../api";
+import { type SetState } from "../../../api";
 import { connection } from "../../connection";
-import { Action } from "../action";
+import { Action, type ActionContext } from "../action";
 import { KeyInMultiAction } from "../multi";
 
 jest.mock("../../logging");
@@ -13,17 +13,22 @@ describe("KeyMultiAction", () => {
 	 */
 	it("constructor sets manifestId and id", () => {
 		// Arrange.
-		const source: ActionIdentifier = {
-			action: "com.elgato.test.one",
-			context: "ABC123"
+		const context: ActionContext = {
+			device: {
+				id: "DEV123",
+				isConnected: false
+			},
+			id: "ABC123",
+			manifestId: "com.elgato.test.one"
 		};
 
 		// Act.
-		const keyInMultiAction = new KeyInMultiAction(source);
+		const keyInMultiAction = new KeyInMultiAction(context);
 
 		// Assert.
-		expect(keyInMultiAction.id).toBe("ABC123");
-		expect(keyInMultiAction.manifestId).toBe("com.elgato.test.one");
+		expect(keyInMultiAction.device).toBe(context.device);
+		expect(keyInMultiAction.id).toBe(context.id);
+		expect(keyInMultiAction.manifestId).toBe(context.manifestId);
 	});
 
 	/**
@@ -32,8 +37,12 @@ describe("KeyMultiAction", () => {
 	it("inherits shared methods", () => {
 		// Arrange, act.
 		const keyInMultiAction = new KeyInMultiAction({
-			action: "com.elgato.test.one",
-			context: "ABC123"
+			device: {
+				id: "DEV123",
+				isConnected: false
+			},
+			id: "ABC123",
+			manifestId: "com.elgato.test.one"
 		});
 
 		// Assert.
@@ -42,8 +51,12 @@ describe("KeyMultiAction", () => {
 
 	describe("sending", () => {
 		const keyInMultiAction = new KeyInMultiAction({
-			action: "com.elgato.test.one",
-			context: "ABC123"
+			device: {
+				id: "DEV123",
+				isConnected: false
+			},
+			id: "ABC123",
+			manifestId: "com.elgato.test.one"
 		});
 
 		/**

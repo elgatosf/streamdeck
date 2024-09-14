@@ -1,20 +1,33 @@
-import type { ActionIdentifier, FeedbackPayload, SetTriggerDescription } from "../../api";
+import type { Coordinates, FeedbackPayload, SetTriggerDescription } from "../../api";
 import type { JsonObject } from "../../common/json";
 import type { KeyOf } from "../../common/utils";
 import { connection } from "../connection";
-import { Action, type ImageOptions, type TitleOptions } from "./action";
+import { Action, type CoordinatedActionContext, type ImageOptions, type TitleOptions } from "./action";
 
 /**
  * Provides a contextualized instance of a dial action.
  * @template T The type of settings associated with the action.
  */
-export class DialAction<T extends JsonObject = JsonObject> extends Action<T> {
+export class DialAction<T extends JsonObject = JsonObject> extends Action<T> implements CoordinatedActionContext {
+	/**
+	 * The action context.
+	 */
+	readonly #context: CoordinatedActionContext;
+
 	/**
 	 * Initializes a new instance of the {@see DialAction} class.
-	 * @param source Source of the action.
+	 * @param context Action context.
 	 */
-	constructor(source: ActionIdentifier) {
-		super(source);
+	constructor(context: CoordinatedActionContext) {
+		super(context);
+		this.#context = context;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public get coordinates(): Coordinates {
+		return this.#context.coordinates;
 	}
 
 	/**

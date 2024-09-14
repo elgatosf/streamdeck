@@ -1,22 +1,48 @@
 import type streamDeck from "../";
-import type { ActionIdentifier, DidReceiveSettings, SetImage, SetTitle } from "../../api";
+import type { Coordinates, DidReceiveSettings, SetImage, SetTitle } from "../../api";
 import type { JsonObject, JsonValue } from "../../common/json";
 import type { KeyOf } from "../../common/utils";
 import { connection } from "../connection";
-import { ActionContext } from "./context";
+import type { Device } from "../devices";
 import type { SingletonAction } from "./singleton-action";
 
 /**
  * Provides a contextualized instance of an {@link Action}, allowing for direct communication with the Stream Deck.
  * @template T The type of settings associated with the action.
  */
-export class Action<T extends JsonObject = JsonObject> extends ActionContext {
+export class Action<T extends JsonObject = JsonObject> implements ActionContext {
+	/**
+	 * The action context.
+	 */
+	readonly #context: ActionContext;
+
 	/**
 	 * Initializes a new instance of the {@see Action} class.
-	 * @param source Source of the action.
+	 * @param context Action context.
 	 */
-	constructor(source: ActionIdentifier) {
-		super(source);
+	constructor(context: ActionContext) {
+		this.#context = context;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public get device(): Device {
+		return this.#context.device;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public get id(): string {
+		return this.#context.id;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public get manifestId(): string {
+		return this.#context.manifestId;
 	}
 
 	/**
@@ -79,3 +105,37 @@ export type ImageOptions = Omit<KeyOf<SetImage, "payload">, "image">;
  * Options that define how to render a title associated with an action.
  */
 export type TitleOptions = Omit<KeyOf<SetTitle, "payload">, "title">;
+
+/**
+ * Provides context information for an instance of an action.
+ */
+export type ActionContext = {
+	/**
+	 * Stream Deck device the action is positioned on.
+	 * @returns Stream Deck device.
+	 */
+	get device(): Device;
+
+	/**
+	 * Action instance identifier.
+	 * @returns Identifier.
+	 */
+	get id(): string;
+
+	/**
+	 * Manifest identifier (UUID) for this action type.
+	 * @returns Manifest identifier.
+	 */
+	get manifestId(): string;
+};
+
+/**
+ * Provides context information for an instance of an action, with coordinates.
+ */
+export type CoordinatedActionContext = ActionContext & {
+	/**
+	 * Coordinates of the action, on the Stream Deck device.
+	 * @returns Coordinates.
+	 */
+	get coordinates(): Readonly<Coordinates>;
+};

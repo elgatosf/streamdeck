@@ -1,6 +1,6 @@
-import { Target, type ActionIdentifier, type SetFeedback, type SetFeedbackLayout, type SetImage, type SetTitle, type SetTriggerDescription, type ShowAlert } from "../../../api";
+import { Target, type SetFeedback, type SetFeedbackLayout, type SetImage, type SetTitle, type SetTriggerDescription, type ShowAlert } from "../../../api";
 import { connection } from "../../connection";
-import { Action } from "../action";
+import { Action, type CoordinatedActionContext } from "../action";
 import { DialAction } from "../dial";
 
 jest.mock("../../logging");
@@ -9,21 +9,31 @@ jest.mock("../../connection");
 
 describe("Action", () => {
 	/**
-	 * Asserts the constructor of {@link Dial} sets the {@link DialAction.manifestId} and {@link DialAction.id}.
+	 * Asserts the constructor of {@link Dial} sets the context.
 	 */
-	it("constructor sets manifestId and id", () => {
+	it("constructor sets context", () => {
 		// Arrange.
-		const source: ActionIdentifier = {
-			action: "com.elgato.test.one",
-			context: "ABC123"
+		const source: CoordinatedActionContext = {
+			device: {
+				id: "DEV123",
+				isConnected: false
+			},
+			id: "ABC123",
+			manifestId: "com.elgato.test.one",
+			coordinates: {
+				column: 1,
+				row: 2
+			}
 		};
 
 		// Act.
 		const dialAction = new DialAction(source);
 
 		// Assert.
-		expect(dialAction.id).toBe("ABC123");
-		expect(dialAction.manifestId).toBe("com.elgato.test.one");
+		expect(dialAction.coordinates).toBe(source.coordinates);
+		expect(dialAction.device).toBe(source.device);
+		expect(dialAction.id).toBe(source.id);
+		expect(dialAction.manifestId).toBe(source.manifestId);
 	});
 
 	/**
@@ -32,8 +42,16 @@ describe("Action", () => {
 	it("inherits shared methods", () => {
 		// Arrange, act.
 		const dialAction = new DialAction({
-			action: "com.elgato.test.one",
-			context: "ABC123"
+			device: {
+				id: "DEV123",
+				isConnected: false
+			},
+			id: "ABC123",
+			manifestId: "com.elgato.test.one",
+			coordinates: {
+				column: 1,
+				row: 2
+			}
 		});
 
 		// Assert.
@@ -42,8 +60,16 @@ describe("Action", () => {
 
 	describe("sending", () => {
 		const dialAction = new DialAction({
-			action: "com.elgato.test.one",
-			context: "ABC123"
+			device: {
+				id: "DEV123",
+				isConnected: false
+			},
+			id: "ABC123",
+			manifestId: "com.elgato.test.one",
+			coordinates: {
+				column: 1,
+				row: 2
+			}
 		});
 
 		/**

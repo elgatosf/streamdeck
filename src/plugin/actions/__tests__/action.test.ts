@@ -1,7 +1,7 @@
-import { type ActionIdentifier, type GetSettings, type SendToPropertyInspector, type SetSettings } from "../../../api";
+import { type GetSettings, type SendToPropertyInspector, type SetSettings } from "../../../api";
 import { Settings } from "../../../api/__mocks__/events";
 import { connection } from "../../connection";
-import { Action } from "../action";
+import { Action, type ActionContext } from "../action";
 
 jest.mock("../../logging");
 jest.mock("../../manifest");
@@ -13,17 +13,22 @@ describe("Action", () => {
 	 */
 	it("constructor sets manifestId and id", () => {
 		// Arrange.
-		const source: ActionIdentifier = {
-			action: "com.elgato.test.one",
-			context: "ABC123"
+		const context: ActionContext = {
+			device: {
+				id: "DEV123",
+				isConnected: false
+			},
+			id: "ABC123",
+			manifestId: "com.elgato.test.one"
 		};
 
 		// Act.
-		const action = new Action(source);
+		const action = new Action(context);
 
 		// Assert.
-		expect(action.id).toBe("ABC123");
-		expect(action.manifestId).toBe("com.elgato.test.one");
+		expect(action.device).toBe(context.device);
+		expect(action.id).toBe(context.id);
+		expect(action.manifestId).toBe(context.manifestId);
 	});
 
 	/**
@@ -32,8 +37,12 @@ describe("Action", () => {
 	it("getSettings", async () => {
 		// Arrange.
 		const action = new Action<Settings>({
-			action: "com.elgato.test.one",
-			context: "ABC123"
+			device: {
+				id: "DEV123",
+				isConnected: false
+			},
+			id: "ABC123",
+			manifestId: "com.elgato.test.one"
 		});
 
 		// Act (Command).
@@ -145,8 +154,12 @@ describe("Action", () => {
 
 	describe("sending", () => {
 		const action = new Action({
-			action: "com.elgato.test.one",
-			context: "ABC123"
+			device: {
+				id: "DEV123",
+				isConnected: false
+			},
+			id: "ABC123",
+			manifestId: "com.elgato.test.one"
 		});
 
 		/**

@@ -1,6 +1,6 @@
-import { Target, type ActionIdentifier, type SetImage, type SetState, type SetTitle, type ShowAlert, type ShowOk } from "../../../api";
+import { Target, type SetImage, type SetState, type SetTitle, type ShowAlert, type ShowOk } from "../../../api";
 import { connection } from "../../connection";
-import { Action } from "../action";
+import { Action, type CoordinatedActionContext } from "../action";
 import { KeyAction } from "../key";
 
 jest.mock("../../logging");
@@ -9,21 +9,31 @@ jest.mock("../../connection");
 
 describe("KeyAction", () => {
 	/**
-	 * Asserts the constructor of {@link KeyAction} sets the {@link KeyAction.manifestId} and {@link KeyAction.id}.
+	 * Asserts the constructor of {@link KeyAction} sets the context.
 	 */
-	it("constructor sets manifestId and id", () => {
+	it("constructor sets context", () => {
 		// Arrange.
-		const source: ActionIdentifier = {
-			action: "com.elgato.test.one",
-			context: "ABC123"
+		const context: CoordinatedActionContext = {
+			device: {
+				id: "DEV123",
+				isConnected: false
+			},
+			id: "ABC123",
+			manifestId: "com.elgato.test.one",
+			coordinates: {
+				column: 1,
+				row: 2
+			}
 		};
 
 		// Act.
-		const keyAction = new KeyAction(source);
+		const keyAction = new KeyAction(context);
 
 		// Assert.
-		expect(keyAction.id).toBe("ABC123");
-		expect(keyAction.manifestId).toBe("com.elgato.test.one");
+		expect(keyAction.coordinates).toBe(context.coordinates);
+		expect(keyAction.device).toBe(context.device);
+		expect(keyAction.id).toBe(context.id);
+		expect(keyAction.manifestId).toBe(context.manifestId);
 	});
 
 	/**
@@ -32,8 +42,16 @@ describe("KeyAction", () => {
 	it("inherits shared methods", () => {
 		// Arrange, act.
 		const keyAction = new KeyAction({
-			action: "com.elgato.test.one",
-			context: "ABC123"
+			device: {
+				id: "DEV123",
+				isConnected: false
+			},
+			id: "ABC123",
+			manifestId: "com.elgato.test.one",
+			coordinates: {
+				column: 1,
+				row: 2
+			}
 		});
 
 		// Assert.
@@ -42,8 +60,16 @@ describe("KeyAction", () => {
 
 	describe("sending", () => {
 		const keyAction = new KeyAction({
-			action: "com.elgato.test.one",
-			context: "ABC123"
+			device: {
+				id: "DEV123",
+				isConnected: false
+			},
+			id: "ABC123",
+			manifestId: "com.elgato.test.one",
+			coordinates: {
+				column: 1,
+				row: 2
+			}
 		});
 
 		/**

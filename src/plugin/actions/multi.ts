@@ -1,7 +1,7 @@
-import type { ActionIdentifier, State } from "../../api";
+import type { State } from "../../api";
 import type { JsonObject } from "../../common/json";
 import { connection } from "../connection";
-import { Action } from "./action";
+import { Action, type ActionContext } from "./action";
 
 /**
  * Provides a contextualized instance of a key action, within a multi-action.
@@ -10,10 +10,10 @@ import { Action } from "./action";
 export class KeyInMultiAction<T extends JsonObject = JsonObject> extends Action<T> {
 	/**
 	 * Initializes a new instance of the {@see KeyMultiAction} class.
-	 * @param source Source of the action.
+	 * @param context Action context.
 	 */
-	constructor(source: ActionIdentifier) {
-		super(source);
+	constructor(context: ActionContext) {
+		super(context);
 	}
 
 	/**

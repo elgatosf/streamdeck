@@ -1,19 +1,32 @@
-import type { ActionIdentifier, State } from "../../api";
+import type { Coordinates, State } from "../../api";
 import type { JsonObject } from "../../common/json";
 import { connection } from "../connection";
-import { Action, type ImageOptions, type TitleOptions } from "./action";
+import { Action, type CoordinatedActionContext, type ImageOptions, type TitleOptions } from "./action";
 
 /**
  * Provides a contextualized instance of a key action.
  * @template T The type of settings associated with the action.
  */
-export class KeyAction<T extends JsonObject = JsonObject> extends Action<T> {
+export class KeyAction<T extends JsonObject = JsonObject> extends Action<T> implements CoordinatedActionContext {
+	/**
+	 * The action context.
+	 */
+	readonly #context: CoordinatedActionContext;
+
 	/**
 	 * Initializes a new instance of the {@see KeyAction} class.
-	 * @param source Source of the action.
+	 * @param context Action context.
 	 */
-	constructor(source: ActionIdentifier) {
-		super(source);
+	constructor(context: CoordinatedActionContext) {
+		super(context);
+		this.#context = context;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public get coordinates(): Coordinates {
+		return this.#context.coordinates;
 	}
 
 	/**
