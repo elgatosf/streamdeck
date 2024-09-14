@@ -14,12 +14,17 @@ export class Enumerable<T> {
 
 	/**
 	 * Initializes a new instance of the {@link Enumerable} class.
-	 * @param items Underlying iterator responsible for providing the items.
-	 * @param length Function to get the number of items.
+	 * @param source Source that contains the items.
+	 * @returns The enumerable.
 	 */
-	private constructor(items: () => Iterable<T>, length: () => number) {
-		this.#items = items;
-		this.#length = length;
+	public constructor(source: Map<unknown, T> | Set<T> | T[]) {
+		if (Array.isArray(source)) {
+			this.#items = () => source;
+			this.#length = () => source.length;
+		} else {
+			this.#items = () => source.values();
+			this.#length = () => source.size;
+		}
 	}
 
 	/**
@@ -28,43 +33,6 @@ export class Enumerable<T> {
 	 */
 	public get length(): number {
 		return this.#length();
-	}
-
-	/**
-	 * Creates a new enumerable from the specified array.
-	 * @param source Source array.
-	 * @returns The enumerable.
-	 */
-	public static from<T>(source: T[]): Enumerable<T>;
-	/**
-	 * Creates a new enumerable from the specified map.
-	 * @param source Source map.
-	 * @returns The enumerable.
-	 */
-	public static from<T, K>(source: Map<K, T>): Enumerable<T>;
-	/**
-	 * Creates a new enumerable from the specified set.
-	 * @param source Source set.
-	 * @returns The enumerable.
-	 */
-	public static from<T>(source: Set<T>): Enumerable<T>;
-	/**
-	 * Creates a new enumerable from the specified items.
-	 * @param source Source that contains the items.
-	 * @returns The enumerable.
-	 */
-	public static from<T, K>(source: Map<K, T> | Set<T> | T[]): Enumerable<T> {
-		if (Array.isArray(source)) {
-			return new Enumerable(
-				() => source,
-				() => source.length
-			);
-		}
-
-		return new Enumerable(
-			() => source.values(),
-			() => source.size
-		);
 	}
 
 	/**

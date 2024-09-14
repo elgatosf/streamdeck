@@ -7,7 +7,7 @@ describe("Enumerable", () => {
 		{ name: "Wave DX" } //
 	];
 
-	const enumerable = Enumerable.from(source);
+	const enumerable = new Enumerable(source);
 
 	/**
 	 * Provides assertions for {@link Enumerable.from}.
@@ -21,7 +21,7 @@ describe("Enumerable", () => {
 				// Arrange.
 				const fn = jest.fn();
 				const arr = [1, 2];
-				const enumerable = Enumerable.from(arr);
+				const enumerable = new Enumerable(arr);
 
 				// Act.
 				arr.push(3, 4);
@@ -41,7 +41,7 @@ describe("Enumerable", () => {
 				const arr = [1];
 
 				// Act, assert.
-				const enumerable = Enumerable.from(arr);
+				const enumerable = new Enumerable(arr);
 				expect(enumerable.length).toBe(1);
 
 				// Act, assert.
@@ -61,7 +61,7 @@ describe("Enumerable", () => {
 					[1, "One"],
 					[2, "Two"]
 				]);
-				const enumerable = Enumerable.from(map);
+				const enumerable = new Enumerable(map);
 
 				// Act (1), assert (1).
 				enumerable.forEach(fnBefore);
@@ -92,7 +92,7 @@ describe("Enumerable", () => {
 				]);
 
 				// Act (1).
-				const enumerable = Enumerable.from(map);
+				const enumerable = new Enumerable(map);
 
 				// Assert (1).
 				expect(enumerable.length).toBe(2);
@@ -115,7 +115,7 @@ describe("Enumerable", () => {
 				// Arrange (1).
 				const fnBefore = jest.fn();
 				const set = new Set(["One", "Two"]);
-				const enumerable = Enumerable.from(set);
+				const enumerable = new Enumerable(set);
 
 				// Act (1), assert (1).
 				enumerable.forEach(fnBefore);
@@ -142,7 +142,7 @@ describe("Enumerable", () => {
 				const set = new Set(["One", "Two"]);
 
 				// Act (1).
-				const enumerable = Enumerable.from(set);
+				const enumerable = new Enumerable(set);
 
 				// Assert (1).
 				expect(enumerable.length).toBe(2);
@@ -164,7 +164,7 @@ describe("Enumerable", () => {
 	describe("iterator", () => {
 		// Arrange.
 		const source = ["a", "b", "c"];
-		const enumerable = Enumerable.from(source);
+		const enumerable = new Enumerable(source);
 
 		// Act, assert.
 		let i = 0;
@@ -366,7 +366,7 @@ describe("Enumerable", () => {
 
 		it("returns an empty array", () => {
 			// Arrange, act.
-			const empty = Enumerable.from<number>([]);
+			const empty = new Enumerable<number>([]);
 			const res = Array.from(empty.map((x) => x.toString()));
 
 			// Assert.
@@ -396,7 +396,7 @@ describe("Enumerable", () => {
 
 			it("throws when empty", () => {
 				// Arrange, act, assert.
-				const empty = Enumerable.from([]);
+				const empty = new Enumerable([]);
 				expect(() => empty.reduce((prev, curr) => curr)).toThrowError(new TypeError("Reduce of empty enumerable with no initial value."));
 			});
 		});
@@ -410,7 +410,7 @@ describe("Enumerable", () => {
 
 			it("reduces empty", () => {
 				// Arrange, act, assert.
-				const empty = Enumerable.from([]);
+				const empty = new Enumerable([]);
 				expect(empty.reduce((prev, curr) => `${prev}, ${curr}`, "Initial")).toBe("Initial");
 			});
 		});
