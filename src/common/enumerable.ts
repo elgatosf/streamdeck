@@ -68,6 +68,16 @@ export class Enumerable<T> {
 	}
 
 	/**
+	 * Gets the iterator for the enumerable.
+	 * @returns The iterator.
+	 */
+	public *[Symbol.iterator](): IterableIterator<T> {
+		for (const item of this.#items()) {
+			yield item;
+		}
+	}
+
+	/**
 	 * Determines whether all items satisfy the specified predicate.
 	 * @param predicate Function that determines whether each item fulfils the predicate.
 	 * @returns `true` when all items satisfy the predicate; otherwise `false`.

@@ -1,18 +1,4 @@
-import {
-	Target,
-	type ActionIdentifier,
-	type GetSettings,
-	type SendToPropertyInspector,
-	type SetFeedback,
-	type SetFeedbackLayout,
-	type SetImage,
-	type SetSettings,
-	type SetState,
-	type SetTitle,
-	type SetTriggerDescription,
-	type ShowAlert,
-	type ShowOk
-} from "../../../api";
+import { type ActionIdentifier, type GetSettings, type SendToPropertyInspector, type SetSettings } from "../../../api";
 import { Settings } from "../../../api/__mocks__/events";
 import { connection } from "../../connection";
 import { Action } from "../action";
@@ -107,6 +93,56 @@ describe("Action", () => {
 		});
 	});
 
+	// describe("type checking", () => {
+	// 	/**
+	// 	 * Asserts {@link Action.isDial}.
+	// 	 */
+	// 	it("can be dial", () => {
+	// 		// Arrange.
+	// 		const action = new DialAction({
+	// 			action: "com.elgato.test.one",
+	// 			context: "ABC123"
+	// 		});
+
+	// 		// Act, assert.
+	// 		expect(action.isDial()).toBe(true);
+	// 		expect(action.isKey()).toBe(false);
+	// 		expect(action.isKeyInMultiAction()).toBe(false);
+	// 	});
+
+	// 	/**
+	// 	 * Asserts {@link Action.isKey}.
+	// 	 */
+	// 	it("can be key", () => {
+	// 		// Arrange.
+	// 		const action = new KeyAction({
+	// 			action: "com.elgato.test.one",
+	// 			context: "ABC123"
+	// 		});
+
+	// 		// Act, assert.
+	// 		expect(action.isDial()).toBe(false);
+	// 		expect(action.isKey()).toBe(true);
+	// 		expect(action.isKeyInMultiAction()).toBe(false);
+	// 	});
+
+	// 	/**
+	// 	 * Asserts {@link Action.isKeyInMultiAction}.
+	// 	 */
+	// 	it("can be key in multi-action", () => {
+	// 		// Arrange.
+	// 		const action = new KeyInMultiAction({
+	// 			action: "com.elgato.test.one",
+	// 			context: "ABC123"
+	// 		});
+
+	// 		// Act, assert.
+	// 		expect(action.isDial()).toBe(false);
+	// 		expect(action.isKey()).toBe(false);
+	// 		expect(action.isKeyInMultiAction()).toBe(true);
+	// 	});
+	// });
+
 	describe("sending", () => {
 		const action = new Action({
 			action: "com.elgato.test.one",
@@ -134,80 +170,6 @@ describe("Action", () => {
 		});
 
 		/**
-		 * Asserts {@link Action.setFeedback} forwards the command to the {@link connection}.
-		 */
-		it("setFeedback", async () => {
-			// Arrange, act.
-			await action.setFeedback({
-				bar: 50,
-				title: "Hello world"
-			});
-
-			// Assert.
-			expect(connection.send).toHaveBeenCalledTimes(1);
-			expect(connection.send).toHaveBeenCalledWith<[SetFeedback]>({
-				context: action.id,
-				event: "setFeedback",
-				payload: {
-					bar: 50,
-					title: "Hello world"
-				}
-			});
-		});
-
-		/**
-		 * Asserts {@link Action.setFeedbackLayout} forwards the command to the {@link connection}.
-		 */
-		it("Sends setFeedbackLayout", async () => {
-			// Arrange, act.
-			await action.setFeedbackLayout("CustomLayout.json");
-
-			// Assert.
-			expect(connection.send).toHaveBeenCalledTimes(1);
-			expect(connection.send).toHaveBeenCalledWith<[SetFeedbackLayout]>({
-				context: action.id,
-				event: "setFeedbackLayout",
-				payload: {
-					layout: "CustomLayout.json"
-				}
-			});
-		});
-
-		/**
-		 * Asserts {@link Action.setImage} forwards the command to the {@link connection}.
-		 */
-		it("setImage", async () => {
-			// Arrange, act
-			await action.setImage();
-			await action.setImage("./imgs/test.png", {
-				state: 1,
-				target: Target.Hardware
-			});
-
-			// Assert.
-			expect(connection.send).toHaveBeenCalledTimes(2);
-			expect(connection.send).toHaveBeenNthCalledWith<[SetImage]>(1, {
-				context: action.id,
-				event: "setImage",
-				payload: {
-					image: undefined,
-					state: undefined,
-					target: undefined
-				}
-			});
-
-			expect(connection.send).toHaveBeenNthCalledWith<[SetImage]>(2, {
-				context: action.id,
-				event: "setImage",
-				payload: {
-					image: "./imgs/test.png",
-					state: 1,
-					target: Target.Hardware
-				}
-			});
-		});
-
-		/**
 		 * Asserts {@link Action.setSettings} forwards the command to the {@link connection}.
 		 */
 		it("setSettings", async () => {
@@ -224,116 +186,6 @@ describe("Action", () => {
 				payload: {
 					name: "Elgato"
 				}
-			});
-		});
-
-		/**
-		 * Asserts {@link Action.setState} forwards the command to the {@link connection}.
-		 */
-		it("setState", async () => {
-			// Arrange, act.
-			await action.setState(1);
-
-			// Assert.
-			expect(connection.send).toHaveBeenCalledTimes(1);
-			expect(connection.send).toHaveBeenCalledWith<[SetState]>({
-				context: action.id,
-				event: "setState",
-				payload: {
-					state: 1
-				}
-			});
-		});
-
-		/**
-		 * Asserts {@link Action.setTitle} forwards the command to the {@link connection}.
-		 */
-		it("setTitle", async () => {
-			// Arrange, act.
-			await action.setTitle("Hello world");
-			await action.setTitle("This is a test", { state: 1, target: Target.Software });
-
-			// Assert.
-			expect(connection.send).toHaveBeenCalledTimes(2);
-			expect(connection.send).toHaveBeenNthCalledWith<[SetTitle]>(1, {
-				event: "setTitle",
-				context: "ABC123",
-				payload: {
-					title: "Hello world"
-				}
-			});
-
-			expect(connection.send).toHaveBeenNthCalledWith<[SetTitle]>(2, {
-				event: "setTitle",
-				context: "ABC123",
-				payload: {
-					state: 1,
-					target: Target.Software,
-					title: "This is a test"
-				}
-			});
-		});
-
-		/**
-		 * Asserts {@link Action.setTriggerDescription} forwards the command to the {@link connection}.
-		 */
-		it("setTriggerDescription", async () => {
-			// Arrange, act.
-			await action.setTriggerDescription();
-			await action.setTriggerDescription({
-				longTouch: "Long-touch",
-				push: "Push",
-				rotate: "Rotate",
-				touch: "Touch"
-			});
-
-			// Assert.
-			expect(connection.send).toHaveBeenCalledTimes(2);
-			expect(connection.send).toHaveBeenNthCalledWith<[SetTriggerDescription]>(1, {
-				event: "setTriggerDescription",
-				context: action.id,
-				payload: {}
-			});
-
-			expect(connection.send).toHaveBeenNthCalledWith<[SetTriggerDescription]>(2, {
-				event: "setTriggerDescription",
-				context: action.id,
-				payload: {
-					longTouch: "Long-touch",
-					push: "Push",
-					rotate: "Rotate",
-					touch: "Touch"
-				}
-			});
-		});
-
-		/**
-		 * Asserts {@link Action.showAlert} forwards the command to the {@link connection}.
-		 */
-		it("showAlert", async () => {
-			// Arrange, act.
-			await action.showAlert();
-
-			// Assert.
-			expect(connection.send).toHaveBeenCalledTimes(1);
-			expect(connection.send).toHaveBeenCalledWith<[ShowAlert]>({
-				context: action.id,
-				event: "showAlert"
-			});
-		});
-
-		/**
-		 * Asserts {@link Action.showOk} forwards the command to the {@link connection}.
-		 */
-		it("showOk", async () => {
-			// Arrange, act
-			await action.showOk();
-
-			// Assert.
-			expect(connection.send).toHaveBeenCalledTimes(1);
-			expect(connection.send).toHaveBeenCalledWith<[ShowOk]>({
-				context: action.id,
-				event: "showOk"
 			});
 		});
 	});

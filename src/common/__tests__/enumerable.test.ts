@@ -159,6 +159,23 @@ describe("Enumerable", () => {
 	});
 
 	/**
+	 * Asserts the iterator of an {@link Enumerable}.
+	 */
+	describe("iterator", () => {
+		// Arrange.
+		const source = ["a", "b", "c"];
+		const enumerable = Enumerable.from(source);
+
+		// Act, assert.
+		let i = 0;
+		for (const item of enumerable) {
+			expect(item).toBe(source[i++]);
+		}
+
+		expect(i).toBe(3);
+	});
+
+	/**
 	 * Provides assertions for {@link Enumerable.every}.
 	 */
 	describe("every", () => {
