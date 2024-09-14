@@ -1,7 +1,7 @@
-import type { DeviceDidConnectEvent, DeviceDidDisconnectEvent } from "..";
-import { DeviceType, type DeviceDidConnect, type DeviceDidDisconnect } from "../../api";
-import { type connection as Connection } from "../connection";
-import { type Device, type DeviceCollection } from "../devices";
+import { Device, type DeviceCollection } from "../";
+import type { DeviceDidConnectEvent, DeviceDidDisconnectEvent } from "../..";
+import { DeviceType, type DeviceDidConnect, type DeviceDidDisconnect } from "../../../api";
+import { type connection as Connection } from "../../connection";
 
 jest.mock("../connection");
 jest.mock("../logging");
@@ -42,20 +42,11 @@ describe("devices", () => {
 
 		// Assert.
 		expect(listener).toHaveBeenCalledTimes(2);
-		expect(listener).toHaveBeenNthCalledWith<[Device]>(1, {
-			id: connection.registrationParameters.info.devices[0].id,
-			isConnected: false,
-			name: connection.registrationParameters.info.devices[0].name,
-			size: connection.registrationParameters.info.devices[0].size,
-			type: connection.registrationParameters.info.devices[0].type
-		});
-		expect(listener).toHaveBeenNthCalledWith<[Device]>(2, {
-			id: ev.device,
-			isConnected: true,
-			name: ev.deviceInfo.name,
-			size: ev.deviceInfo.size,
-			type: ev.deviceInfo.type
-		});
+		expect(listener).toHaveBeenNthCalledWith<[Device]>(
+			1,
+			new Device(connection.registrationParameters.info.devices[0].id, connection.registrationParameters.info.devices[0], false)
+		);
+		expect(listener).toHaveBeenNthCalledWith<[Device]>(2, new Device(ev.device, ev.deviceInfo, true));
 	});
 
 	/**
@@ -292,11 +283,7 @@ describe("devices", () => {
 		// Assert (emit).
 		expect(listener).toHaveBeenCalledTimes(1);
 		expect(listener).toHaveBeenCalledWith<[DeviceDidConnectEvent]>({
-			device: {
-				...ev.deviceInfo,
-				id: ev.device,
-				isConnected: true
-			},
+			device: new Device(ev.device, ev.deviceInfo, true),
 			type: "deviceDidConnect"
 		});
 
@@ -328,10 +315,7 @@ describe("devices", () => {
 		// Assert (emit).
 		expect(listener).toHaveBeenCalledTimes(1);
 		expect(listener).toHaveBeenCalledWith<[DeviceDidDisconnectEvent]>({
-			device: {
-				...connection.registrationParameters.info.devices[0],
-				isConnected: false
-			},
+			device: new Device(connection.registrationParameters.info.devices[0].id, connection.registrationParameters.info.devices[0], false),
 			type: "deviceDidDisconnect"
 		});
 

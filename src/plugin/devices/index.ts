@@ -1,19 +1,32 @@
-import { type DeviceInfo } from "../api/device";
-import type { IDisposable } from "../common/disposable";
-import { Enumerable } from "../common/enumerable";
-import { connection } from "./connection";
-import { DeviceDidConnectEvent, DeviceDidDisconnectEvent, DeviceEvent } from "./events";
-import store from "./store";
+import { Enumerable } from "..";
+import type { IDisposable } from "../../common/disposable";
+import { connection } from "../connection";
+import { DeviceDidConnectEvent, DeviceDidDisconnectEvent, DeviceEvent } from "../events";
+import { Device } from "./device";
+
+const __devices = new Map<string, Device>();
 
 /**
  * Collection of tracked Stream Deck devices.
  */
-class DeviceCollection extends Enumerable<Readonly<Device>> {
+class DeviceCollection extends Enumerable<Device> {
 	/**
 	 * Initializes a new instance of the {@link DeviceCollection} class.
 	 */
 	constructor() {
-		super(store.devices);
+		super(__devices);
+
+		// Add the devices based on the registration parameters.
+		connection.once("connected", (info) => {
+			info.devices.forEach((dev) => __devices.set(dev.id, new Device(dev.id, dev, false)));
+		});
+
+		// Add new devices.
+		connection.on("deviceDidConnect", ({ device: id, deviceInfo }) => {
+			if (!__devices.get(id)) {
+				__devices.set(id, new Device(id, deviceInfo, true));
+			}
+		});
 	}
 
 	/**
@@ -22,7 +35,7 @@ class DeviceCollection extends Enumerable<Readonly<Device>> {
 	 * @returns The Stream Deck device information; otherwise `undefined` if a device with the {@link deviceId} does not exist.
 	 */
 	public getDeviceById(deviceId: string): Device | undefined {
-		return store.devices.find((d) => d.id === deviceId);
+		return __devices.get(deviceId);
 	}
 
 	/**
@@ -31,14 +44,7 @@ class DeviceCollection extends Enumerable<Readonly<Device>> {
 	 * @returns A disposable that, when disposed, removes the listener.
 	 */
 	public onDeviceDidConnect(listener: (ev: DeviceDidConnectEvent) => void): IDisposable {
-		return connection.disposableOn("deviceDidConnect", (ev) =>
-			listener(
-				new DeviceEvent(ev, {
-					...ev.deviceInfo,
-					...{ id: ev.device, isConnected: true }
-				})
-			)
-		);
+		return connection.disposableOn("deviceDidConnect", (ev) => listener(new DeviceEvent(ev, this.getDeviceById(ev.device)!)));
 	}
 
 	/**
@@ -47,14 +53,7 @@ class DeviceCollection extends Enumerable<Readonly<Device>> {
 	 * @returns A disposable that, when disposed, removes the listener.
 	 */
 	public onDeviceDidDisconnect(listener: (ev: DeviceDidDisconnectEvent) => void): IDisposable {
-		return connection.disposableOn("deviceDidDisconnect", (ev) =>
-			listener(
-				new DeviceEvent(ev, {
-					...this.getDeviceById(ev.device),
-					...{ id: ev.device, isConnected: false }
-				})
-			)
-		);
+		return connection.disposableOn("deviceDidDisconnect", (ev) => listener(new DeviceEvent(ev, this.getDeviceById(ev.device)!)));
 	}
 }
 
@@ -63,22 +62,4 @@ class DeviceCollection extends Enumerable<Readonly<Device>> {
  */
 export const devices = new DeviceCollection();
 
-/**
- * Collection of tracked Stream Deck devices.
- */
-export { type DeviceCollection };
-
-/**
- * Provides information about a device.
- */
-export type Device = Partial<DeviceInfo> & {
-	/**
-	 * Unique identifier of the device.
-	 */
-	id: string;
-
-	/**
-	 * Determines whether the device is currently connected.
-	 */
-	isConnected: boolean;
-};
+export { Device, type DeviceCollection };
