@@ -1,4 +1,6 @@
-import type { ActionIdentifier, Coordinates, DeviceIdentifier } from "../events";
+import type { JsonObject } from "../../common/json";
+import type { ActionIdentifier, DeviceIdentifier } from "../events";
+import type { MultiActionPayload, SingleActionPayload } from "../events/action";
 
 /**
  * Connects to the Stream Deck, enabling the UI to interact with the plugin, and access the Stream Deck API.
@@ -12,29 +14,12 @@ export type ConnectElgatoStreamDeckSocketFn = (port: string, uuid: string, event
 
 /**
  * Information about the action associated with the UI.
+ * @template TSettings Settings associated with the action.
  */
-export type ActionInfo<T = unknown> = ActionIdentifier &
+export type ActionInfo<TSettings extends JsonObject = JsonObject> = ActionIdentifier &
 	DeviceIdentifier & {
 		/**
 		 * Additional information about the action and event that occurred.
 		 */
-		readonly payload: {
-			/**
-			 * Defines the controller type the action is applicable to. **Keypad** refers to a standard action on a Stream Deck device, e.g. 1 of the 15 buttons on the Stream Deck MK.2,
-			 * or a pedal on the Stream Deck Pedal, etc., whereas an **Encoder** refers to a dial / touchscreen on the Stream Deck +.
-			 *
-			 * NB: Requires Stream Deck 6.5 for `WillAppear` and `WillDisappear` events.
-			 */
-			readonly controller: T;
-
-			/**
-			 * Coordinates that identify the location of an action.
-			 */
-			readonly coordinates: Coordinates;
-
-			/**
-			 * Settings associated with the action instance.
-			 */
-			settings: T;
-		};
+		readonly payload: MultiActionPayload<TSettings> | SingleActionPayload<TSettings>;
 	};

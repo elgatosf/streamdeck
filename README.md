@@ -12,8 +12,6 @@
 
 </div>
 
-## 👋 You're Early!
-
 Welcome to the Stream Deck SDK for Node.js. Designed to make creating Stream Deck plugins easy, the Stream Deck SDK provides everything you need to connect, communicate and build with Stream Deck, and lets you focus on the fun stuff.
 
 The Stream Deck SDK for Node.js is currently in public beta, and is available to everyone running Stream Deck 6.4 or newer. If you're interested in building plugins and would like to know more, please join our [Marketplace Makers Discord](https://discord.gg/GehBUcu627).
@@ -50,6 +48,8 @@ After creating a plugin with `streamdeck create` you'll be provided with a local
 │   ├── bin/
 │   ├── imgs/
 │   ├── logs/
+│   ├── ui/
+│   │   └── increment-counter.html
 │   └── manifest.json
 ├── src/
 │   ├── actions/
@@ -68,6 +68,7 @@ The root of the plugin; this folder contains the build output from the source fi
 -   **bin/** - build output.
 -   **imgs/** - assets used by the plugin, such as icons, profiles, etc.
 -   **logs/** - logs generated from [`streamDeck.logger`](#-logging).
+-   **ui/** - property inspectors of actions.
 
 ### src/
 
@@ -96,7 +97,7 @@ The following is an example of an action that listens for the `keyDown` event, a
 >      * Listen for the key down event that occurs when a user presses
 >      * a Stream Deck button, and change the title of the action.
 >      */
->     async onKeyDown(ev: KeyDownEvent) {
+>     async onKeyDown(ev: KeyDownEvent<object>) {
 >         await ev.action.setTitle("Hello world");
 >     }
 > }

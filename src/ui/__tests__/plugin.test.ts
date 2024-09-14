@@ -46,7 +46,7 @@ describe("plugin", () => {
 				payload: {
 					__type: "request",
 					id: mockUUID,
-					path: "/outbound/path-and-body",
+					path: "public:/outbound/path-and-body",
 					unidirectional: false,
 					body: {
 						name: "Elgato"
@@ -81,7 +81,7 @@ describe("plugin", () => {
 				payload: {
 					__type: "request",
 					id: mockUUID,
-					path: "/outbound/request",
+					path: "public:/outbound/request",
 					unidirectional: true,
 					body: {
 						name: "Elgato"
@@ -149,7 +149,7 @@ describe("plugin", () => {
 
 		// Assert.
 		expect(spyOnRoute).toHaveBeenCalledTimes(1);
-		expect(spyOnRoute).toHaveBeenCalledWith("/register", handler, options);
+		expect(spyOnRoute).toHaveBeenCalledWith("public:/register", handler, options);
 	});
 
 	/**
@@ -166,7 +166,7 @@ describe("plugin", () => {
 			payload: {
 				__type: "request",
 				id: "abc123",
-				path: "/receive",
+				path: "public:/receive",
 				unidirectional: false,
 				body: {
 					name: "Elgato"
@@ -189,7 +189,7 @@ describe("plugin", () => {
 					getSettings,
 					setSettings
 				},
-				path: "/receive",
+				path: "public:/receive",
 				unidirectional: false,
 				body: {
 					name: "Elgato"

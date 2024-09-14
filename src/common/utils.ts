@@ -19,3 +19,9 @@ export function get(path: string, source: unknown): unknown {
 	const props: string[] = path.split(".");
 	return props.reduce((obj, prop) => obj && obj[prop as keyof object], source);
 }
+
+/**
+ * Utility type that acts as an alternate for `type[key]`. This type provides better support for aliasing
+ * types when parsing them using the abstract syntax tree, used when generating documentation.
+ */
+export type KeyOf<T, K extends keyof T> = Omit<T[K], "">;

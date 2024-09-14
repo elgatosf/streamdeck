@@ -52,7 +52,7 @@ export function onDidReceiveSettings<T extends JsonObject = JsonObject>(listener
  *   connectedDate: new Date()
  * })
  */
-export function setGlobalSettings<T>(settings: T): Promise<void> {
+export function setGlobalSettings<T extends JsonObject>(settings: T): Promise<void> {
 	return connection.send({
 		event: "setGlobalSettings",
 		context: connection.registrationParameters.pluginUUID,

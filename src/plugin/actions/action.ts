@@ -1,6 +1,7 @@
 import type { JsonObject, JsonValue } from "..";
 import type streamDeck from "../";
 import type { ActionIdentifier, DidReceiveSettings, FeedbackPayload, SetImage, SetTitle, SetTriggerDescription, State } from "../../api";
+import type { KeyOf } from "../../common/utils";
 import { connection } from "../connection";
 import { ActionContext } from "./context";
 import type { SingletonAction } from "./singleton-action";
@@ -242,14 +243,14 @@ export class Action<T extends JsonObject = JsonObject> extends ActionContext {
 /**
  * Options that define how to render an image associated with an action.
  */
-export type ImageOptions = Omit<SetImage["payload"], "image">;
+export type ImageOptions = Omit<KeyOf<SetImage, "payload">, "image">;
 
 /**
  * Options that define how to render a title associated with an action.
  */
-export type TitleOptions = Omit<SetTitle["payload"], "title">;
+export type TitleOptions = Omit<KeyOf<SetTitle, "payload">, "title">;
 
 /**
  * Options that define the trigger descriptions associated with an action.
  */
-export type TriggerDescriptionOptions = SetTriggerDescription["payload"];
+export type TriggerDescriptionOptions = KeyOf<SetTriggerDescription, "payload">;

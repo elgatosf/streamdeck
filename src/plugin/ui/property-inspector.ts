@@ -1,7 +1,7 @@
 import type streamDeck from "../";
 import type { ActionIdentifier, DeviceIdentifier } from "../../api";
 import type { JsonValue } from "../../common/json";
-import type { MessageGateway, MessageRequestOptions, MessageResponse } from "../../common/messaging";
+import { PUBLIC_PATH_PREFIX, type MessageGateway, type MessageRequestOptions, type MessageResponse } from "../../common/messaging";
 import type { Action } from "../actions/action";
 import { ActionContext } from "../actions/context";
 import type { SingletonAction } from "../actions/singleton-action";
@@ -71,9 +71,12 @@ export class PropertyInspector extends ActionContext implements Pick<MessageGate
 	 */
 	public async fetch<T extends JsonValue = JsonValue>(requestOrPath: MessageRequestOptions | string, bodyOrUndefined?: JsonValue): Promise<MessageResponse<T>> {
 		if (typeof requestOrPath === "string") {
-			return this.router.fetch(requestOrPath, bodyOrUndefined);
+			return this.router.fetch(`${PUBLIC_PATH_PREFIX}${requestOrPath}`, bodyOrUndefined);
 		} else {
-			return this.router.fetch(requestOrPath);
+			return this.router.fetch({
+				...requestOrPath,
+				path: `${PUBLIC_PATH_PREFIX}${requestOrPath.path}`
+			});
 		}
 	}
 

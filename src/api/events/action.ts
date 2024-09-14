@@ -63,8 +63,7 @@ export type TitleParametersDidChange<TSettings extends JsonObject> = ActionEvent
 
 /**
  * Occurs when an action appears on the Stream Deck due to the user navigating to another page, profile, folder, etc. This also occurs during startup if the action is on the "front
- * page". An action refers to _all_ types of actions, e.g. keys, dials,
- * touchscreens, pedals, etc.
+ * page". An action refers to _all_ types of actions, e.g. keys, dials, touchscreens, pedals, etc.
  */
 export type WillAppear<TSettings extends JsonObject> = ActionEventMessage<"willAppear", MultiActionPayload<TSettings> | SingleActionPayload<TSettings>>;
 
@@ -91,18 +90,21 @@ export type ActionIdentifier = {
 };
 
 /**
- * Provides information for an event relating to an action, e.g. `willAppear`, `keyDown`, etc.
+ * Provides information for an event relating to an action, for example `willAppear`.
  */
-export type ActionEventMessage<TEvent extends string, TPayload = void> = DeviceIdentifier &
-	EventIdentifier<TEvent> &
-	(TPayload extends void
-		? ActionIdentifier
-		: ActionIdentifier & {
-				/**
-				 * Additional information about the action and event that occurred.
-				 */
-				readonly payload: TPayload;
-		  });
+export type ActionEventMessage<TEvent extends string, TPayload> = ActionIdentifier &
+	DeviceIdentifier &
+	EventIdentifier<TEvent> & {
+		/**
+		 * Contextualized information for this event.
+		 */
+		readonly payload: TPayload;
+	};
+
+/**
+ * Provides information for an event relating to an action, for example `propertyInspectorDidAppear`.
+ */
+export type ActionEventMessageWithoutPayload<TEvent extends string> = Omit<ActionEventMessage<TEvent, void>, "payload">;
 
 /**
  * Additional information about the action and event that occurred as part of a single-action event.
@@ -121,6 +123,8 @@ export type SingleActionPayload<TSettings extends JsonObject, TController extend
 
 	/**
 	 * Determines whether the action is part of a multi-action.
+	 *
+	 * NB. Requires Stream Deck 6.7 when accessed from the property inspector.
 	 */
 	readonly isInMultiAction: false;
 };
@@ -139,6 +143,8 @@ export type MultiActionPayload<TSettings extends JsonObject> = ActionPayload<TSe
 
 	/**
 	 * Determines whether the action is part of a multi-action.
+	 *
+	 * NB. Requires Stream Deck 6.7 when accessed from the property inspector.
 	 */
 	readonly isInMultiAction: true;
 };

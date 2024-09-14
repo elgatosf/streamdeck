@@ -12,6 +12,18 @@ jest.mock("../../logging");
 jest.mock("../../manifest");
 
 describe("current UI", () => {
+	beforeEach(() => {
+		// Resets the debounce counter.
+		const context = {
+			action: "__reset__",
+			context: "__reset__",
+			device: "__reset__"
+		};
+
+		connection.emit("propertyInspectorDidAppear", { event: "propertyInspectorDidAppear", ...context });
+		connection.emit("propertyInspectorDidDisappear", { event: "propertyInspectorDidDisappear", ...context });
+	});
+
 	/**
 	 * Asserts {@link getCurrentUI} is set when the connection emits `propertyInspectorDidAppear`.
 	 */
@@ -36,9 +48,108 @@ describe("current UI", () => {
 	});
 
 	/**
-	 * Asserts {@link getCurrentUI} is unset when the connection emits `propertyInspectorDidDisappear`.
+	 * Asserts {@link getCurrentUI} is overwritten when the connection emits `propertyInspectorDidAppear`.
 	 */
-	it("unset on propertyInspectorDidDisappear", () => {
+	it("overwrites on propertyInspectorDidAppear", () => {
+		// Arrange.
+		connection.emit("propertyInspectorDidAppear", {
+			action: "com.elgato.test.one",
+			context: "__first__",
+			device: "dev123",
+			event: "propertyInspectorDidAppear"
+		});
+
+		connection.emit("propertyInspectorDidAppear", {
+			action: "com.elgato.test.one",
+			context: "abc123",
+			device: "dev123",
+			event: "propertyInspectorDidAppear"
+		});
+
+		// Act.
+		const current = getCurrentUI();
+
+		// Assert.
+		expect(current).toBeInstanceOf(PropertyInspector);
+		expect(current).not.toBeUndefined();
+		expect(current?.deviceId).toBe("dev123");
+		expect(current?.id).toBe("abc123");
+		expect(current?.manifestId).toBe("com.elgato.test.one");
+	});
+
+	/**
+	 * Asserts {@link getCurrentUI} is unset when the connection emits `propertyInspectorDidDisappear` for the current UI.
+	 */
+	it("clears matching PI", () => {
+		// Arrange.
+		const context = {
+			action: "com.elgato.test.one",
+			context: "abc123",
+			device: "dev123"
+		};
+
+		connection.emit("propertyInspectorDidAppear", {
+			...context,
+			event: "propertyInspectorDidAppear"
+		});
+
+		expect(getCurrentUI()).not.toBeUndefined();
+		connection.emit("propertyInspectorDidDisappear", {
+			...context,
+			event: "propertyInspectorDidDisappear"
+		});
+
+		// Act.
+		const current = getCurrentUI();
+
+		// Assert.
+		expect(current).toBeUndefined();
+	});
+
+	/**
+	 * Asserts {@link getCurrentUI} is not cleared when the connection emits `propertyInspectorDidDisappear` when the debounce count is greater than zero.
+	 */
+	it("does not clear matching PI with debounce", () => {
+		// Arrange.
+		const context = {
+			action: "com.elgato.test.one",
+			context: "abc123",
+			device: "dev123"
+		};
+
+		connection.emit("propertyInspectorDidAppear", {
+			...context,
+			event: "propertyInspectorDidAppear"
+		});
+
+		// Show twice (mock event race)
+		connection.emit("propertyInspectorDidAppear", {
+			...context,
+			event: "propertyInspectorDidAppear"
+		});
+
+		expect(getCurrentUI()).not.toBeUndefined();
+		connection.emit("propertyInspectorDidDisappear", {
+			...context,
+			event: "propertyInspectorDidDisappear"
+		});
+
+		// Act, assert.
+		const current = getCurrentUI();
+		expect(current).not.toBeUndefined();
+
+		// Act, assert.
+		connection.emit("propertyInspectorDidDisappear", {
+			...context,
+			event: "propertyInspectorDidDisappear"
+		});
+		expect(getCurrentUI()).toBeUndefined();
+	});
+
+	/**
+	 * Asserts {@link getCurrentUI} is not cleared when the connection emits `propertyInspectorDidDisappear` for a UI that is not the current.
+	 */
+	it("does not clear non-matching PI", () => {
 		// Arrange.
 		connection.emit("propertyInspectorDidAppear", {
 			action: "com.elgato.test.one",
@@ -50,7 +161,7 @@ describe("current UI", () => {
 		expect(getCurrentUI()).not.toBeUndefined();
 		connection.emit("propertyInspectorDidDisappear", {
 			action: "com.elgato.test.one",
-			context: "abc123",
+			context: "__other__",
 			device: "dev123",
 			event: "propertyInspectorDidDisappear"
 		});
@@ -59,7 +170,7 @@ describe("current UI", () => {
 		const current = getCurrentUI();
 
 		// Assert.
-		expect(current).toBeUndefined();
+		expect(current).not.toBeUndefined();
 	});
 
 	/**
@@ -85,7 +196,7 @@ describe("current UI", () => {
 		// Assert.
 		expect(spyOnFetch).toBeCalledTimes(1);
 		expect(spyOnFetch).toHaveBeenCalledWith<[MessageRequestOptions]>({
-			path: "/test",
+			path: "public:/test",
 			timeout: 1,
 			unidirectional: true
 		});
@@ -232,10 +343,19 @@ describe("router", () => {
 		 */
 		test("without ui", async () => {
 			// Arrange.
-			connection.emit("propertyInspectorDidDisappear", {
+			const ev = {
 				action: "com.elgato.test.one",
 				context: "proxy-outbound-message-without-ui",
-				device: "dev123",
+				device: "dev123"
+			};
+
+			connection.emit("propertyInspectorDidAppear", {
+				...ev,
+				event: "propertyInspectorDidAppear"
+			});
+
+			connection.emit("propertyInspectorDidDisappear", {
+				...ev,
 				event: "propertyInspectorDidDisappear"
 			});
 
