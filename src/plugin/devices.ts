@@ -1,5 +1,6 @@
 import { type DeviceInfo } from "../api/device";
 import type { IDisposable } from "../common/disposable";
+import { Enumerable } from "../common/enumerable";
 import { connection } from "./connection";
 import { DeviceDidConnectEvent, DeviceDidDisconnectEvent, DeviceEvent } from "./events";
 import store from "./store";
@@ -7,29 +8,12 @@ import store from "./store";
 /**
  * Collection of tracked Stream Deck devices.
  */
-class DeviceCollection {
+class DeviceCollection extends Enumerable<Readonly<Device>> {
 	/**
-	 * Gets the number of Stream Deck devices currently being tracked.
-	 * @returns The device count.
+	 * Initializes a new instance of the {@link DeviceCollection} class.
 	 */
-	public get length(): number {
-		return store.devices.length;
-	}
-
-	/**
-	 * Gets the iterator capable of iterating the collection of Stream Deck devices.
-	 * @returns Collection of Stream Deck devices
-	 */
-	public [Symbol.iterator](): IterableIterator<Readonly<Device>> {
-		return store.devices[Symbol.iterator]();
-	}
-
-	/**
-	 * Iterates over each {@link Device} and invokes the {@link callback} function.
-	 * @param callback Function to invoke for each {@link Device}.
-	 */
-	public forEach(callback: (device: Readonly<Device>) => void): void {
-		store.devices.forEach((value) => callback(value));
+	constructor() {
+		super(store.devices);
 	}
 
 	/**
