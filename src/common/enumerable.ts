@@ -17,16 +17,16 @@ export class Enumerable<T> {
 	 * @param source Source that contains the items.
 	 * @returns The enumerable.
 	 */
-	public constructor(source: Enumerable<T> | Map<unknown, T> | Set<T> | T[]) {
+	constructor(source: Enumerable<T> | Map<unknown, T> | Set<T> | T[]) {
 		if (source instanceof Enumerable) {
 			this.#items = source.#items;
 			this.#length = source.#length;
 		} else if (Array.isArray(source)) {
-			this.#items = () => source;
-			this.#length = () => source.length;
+			this.#items = (): Iterable<T> => source;
+			this.#length = (): number => source.length;
 		} else {
-			this.#items = () => source.values();
-			this.#length = () => source.size;
+			this.#items = (): IterableIterator<T> => source.values();
+			this.#length = (): number => source.size;
 		}
 	}
 
@@ -40,7 +40,7 @@ export class Enumerable<T> {
 
 	/**
 	 * Gets the iterator for the enumerable.
-	 * @returns The iterator.
+	 * @yields The items.
 	 */
 	public *[Symbol.iterator](): IterableIterator<T> {
 		for (const item of this.#items()) {

@@ -7,9 +7,9 @@ jest.mock("../../logging");
 jest.mock("../../manifest");
 jest.mock("../../connection");
 
-describe("Action", () => {
+describe("DialAction", () => {
 	/**
-	 * Asserts the constructor of {@link Dial} sets the context.
+	 * Asserts the constructor of {@link DialAction} sets the context.
 	 */
 	it("constructor sets context", () => {
 		// Arrange.
@@ -37,7 +37,7 @@ describe("Action", () => {
 	});
 
 	/**
-	 * Asserts the inheritance of {@link KeyAction}.
+	 * Asserts the inheritance of {@link DialAction}.
 	 */
 	it("inherits shared methods", () => {
 		// Arrange, act.

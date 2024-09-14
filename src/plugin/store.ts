@@ -11,7 +11,7 @@ import type { Device } from "./devices";
 const actions = new Map<string, DialAction | KeyAction | KeyInMultiAction>();
 const devices = new Map<string, Device>();
 
-const keyOfAction = (ev: WillAppear<JsonObject> | WillDisappear<JsonObject>) => `${ev.action}_${ev.device}_${ev.context}`;
+const keyOfAction = (ev: WillAppear<JsonObject> | WillDisappear<JsonObject>): string => `${ev.action}_${ev.device}_${ev.context}`;
 
 // Add actions appearing.
 connection.prependListener("willAppear", (ev) => {
