@@ -10,9 +10,48 @@ describe("Enumerable", () => {
 	const enumerable = new Enumerable(source);
 
 	/**
-	 * Provides assertions for {@link Enumerable.from}.
+	 * Provides assertions for the {@link Enumerable} constructor.
 	 */
-	describe("from", () => {
+	describe("constructor", () => {
+		/**
+		 * With Enumerable<T>.
+		 */
+		describe("Enumerable<T>", () => {
+			it("iterates enumerable", () => {
+				// Arrange.
+				const fn = jest.fn();
+				const arr = [1, 2];
+				const source = new Enumerable(arr);
+				const enumerable = new Enumerable(source);
+
+				// Act.
+				arr.push(3, 4);
+				enumerable.forEach(fn);
+
+				// Assert.
+				expect(enumerable.length).toBe(4);
+				expect(fn).toHaveBeenCalledTimes(4);
+				expect(fn).toHaveBeenNthCalledWith(1, 1);
+				expect(fn).toHaveBeenNthCalledWith(2, 2);
+				expect(fn).toHaveBeenNthCalledWith(3, 3);
+				expect(fn).toHaveBeenNthCalledWith(4, 4);
+			});
+
+			it("reads length", () => {
+				// Arrange.
+				const arr = [1];
+				const source = new Enumerable(arr);
+
+				// Act, assert.
+				const enumerable = new Enumerable(source);
+				expect(enumerable.length).toBe(1);
+
+				// Act, assert.
+				arr.push(2);
+				expect(enumerable.length).toBe(2);
+			});
+		});
+
 		/**
 		 * With T[].
 		 */
