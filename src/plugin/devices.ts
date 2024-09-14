@@ -2,57 +2,18 @@ import { type DeviceInfo } from "../api/device";
 import type { IDisposable } from "../common/disposable";
 import { connection } from "./connection";
 import { DeviceDidConnectEvent, DeviceDidDisconnectEvent, DeviceEvent } from "./events";
+import store from "./store";
 
 /**
  * Collection of tracked Stream Deck devices.
  */
 class DeviceCollection {
 	/**
-	 * Collection of tracked Stream Deck devices.
-	 */
-	private readonly devices = new Map<string, Device>();
-
-	/**
-	 * Initializes a new instance of the {@link DeviceCollection} class.
-	 */
-	constructor() {
-		// Add the devices based on the registration parameters.
-		connection.once("connected", (info) => {
-			info.devices.forEach((dev) => {
-				this.devices.set(dev.id, {
-					...dev,
-					isConnected: false
-				});
-			});
-		});
-
-		// Set newly connected devices.
-		connection.on("deviceDidConnect", ({ device: id, deviceInfo }) => {
-			this.devices.set(
-				id,
-				Object.assign<Device | object, Device>(this.devices.get(id) || {}, {
-					id,
-					isConnected: true,
-					...deviceInfo
-				})
-			);
-		});
-
-		// Updated disconnected devices.
-		connection.on("deviceDidDisconnect", ({ device: id }) => {
-			const device = this.devices.get(id);
-			if (device !== undefined) {
-				device.isConnected = false;
-			}
-		});
-	}
-
-	/**
 	 * Gets the number of Stream Deck devices currently being tracked.
 	 * @returns The device count.
 	 */
 	public get length(): number {
-		return this.devices.size;
+		return store.devices.length;
 	}
 
 	/**
@@ -60,7 +21,7 @@ class DeviceCollection {
 	 * @returns Collection of Stream Deck devices
 	 */
 	public [Symbol.iterator](): IterableIterator<Readonly<Device>> {
-		return this.devices.values();
+		return store.devices[Symbol.iterator]();
 	}
 
 	/**
@@ -68,7 +29,7 @@ class DeviceCollection {
 	 * @param callback Function to invoke for each {@link Device}.
 	 */
 	public forEach(callback: (device: Readonly<Device>) => void): void {
-		this.devices.forEach((value) => callback(value));
+		store.devices.forEach((value) => callback(value));
 	}
 
 	/**
@@ -77,7 +38,7 @@ class DeviceCollection {
 	 * @returns The Stream Deck device information; otherwise `undefined` if a device with the {@link deviceId} does not exist.
 	 */
 	public getDeviceById(deviceId: string): Device | undefined {
-		return this.devices.get(deviceId);
+		return store.devices.find((d) => d.id === deviceId);
 	}
 
 	/**
@@ -105,7 +66,7 @@ class DeviceCollection {
 		return connection.disposableOn("deviceDidDisconnect", (ev) =>
 			listener(
 				new DeviceEvent(ev, {
-					...this.devices.get(ev.device),
+					...this.getDeviceById(ev.device),
 					...{ id: ev.device, isConnected: false }
 				})
 			)
