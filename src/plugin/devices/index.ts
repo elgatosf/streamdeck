@@ -1,5 +1,6 @@
 import type { IDisposable } from "../../common/disposable";
 import { Enumerable } from "../../common/enumerable";
+import { initializeStore } from "../actions/store";
 import { connection } from "../connection";
 import { DeviceDidConnectEvent, DeviceDidDisconnectEvent, DeviceEvent } from "../events";
 import { Device } from "./device";
@@ -16,7 +17,7 @@ class DeviceCollection extends Enumerable<Device> {
 	constructor() {
 		super(__devices);
 
-		// Add the devices based on the registration parameters.
+		// Add the devices from registration parameters.
 		connection.once("connected", (info) => {
 			info.devices.forEach((dev) => __devices.set(dev.id, new Device(dev.id, dev, false)));
 		});
@@ -61,5 +62,8 @@ class DeviceCollection extends Enumerable<Device> {
  * Collection of tracked Stream Deck devices.
  */
 export const devices = new DeviceCollection();
+
+// Initializes the action store.
+initializeStore(devices);
 
 export { Device, type DeviceCollection };

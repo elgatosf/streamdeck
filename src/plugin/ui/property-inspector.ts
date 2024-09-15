@@ -7,8 +7,8 @@ import type { DialAction } from "../actions/dial";
 import type { KeyAction } from "../actions/key";
 import type { KeyInMultiAction } from "../actions/multi";
 import type { SingletonAction } from "../actions/singleton-action";
+import { actionStore } from "../actions/store";
 import { connection } from "../connection";
-import { devices } from "../devices";
 
 /**
  * Property inspector providing information about its context, and functions for sending and fetching messages.
@@ -28,7 +28,7 @@ export class PropertyInspector implements Pick<MessageGateway<Action>, "fetch"> 
 		private readonly router: MessageGateway<Action>,
 		source: ActionIdentifier & DeviceIdentifier
 	) {
-		this.action = devices.getDeviceById(source.device)!.getActionById(source.context)!;
+		this.action = actionStore.getActionById(source.context)!;
 	}
 
 	/**

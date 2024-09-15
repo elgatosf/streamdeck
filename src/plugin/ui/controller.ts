@@ -4,8 +4,8 @@ import type { IDisposable } from "../../common/disposable";
 import type { JsonObject, JsonValue } from "../../common/json";
 import { PUBLIC_PATH_PREFIX, type RouteConfiguration } from "../../common/messaging";
 import { Action } from "../actions/action";
+import { actionStore } from "../actions/store";
 import { connection } from "../connection";
-import { devices } from "../devices";
 import { ActionWithoutPayloadEvent, SendToPluginEvent, type PropertyInspectorDidAppearEvent, type PropertyInspectorDidDisappearEvent } from "../events";
 import { type MessageHandler } from "./message";
 import { type PropertyInspector } from "./property-inspector";
@@ -31,7 +31,7 @@ class UIController {
 	 */
 	public onDidAppear<T extends JsonObject = JsonObject>(listener: (ev: PropertyInspectorDidAppearEvent<T>) => void): IDisposable {
 		return connection.disposableOn("propertyInspectorDidAppear", (ev) => {
-			const action = devices.getDeviceById(ev.device)?.getActionById(ev.context);
+			const action = actionStore.getActionById(ev.context);
 			if (action) {
 				listener(new ActionWithoutPayloadEvent(action, ev));
 			}
@@ -46,7 +46,7 @@ class UIController {
 	 */
 	public onDidDisappear<T extends JsonObject = JsonObject>(listener: (ev: PropertyInspectorDidDisappearEvent<T>) => void): IDisposable {
 		return connection.disposableOn("propertyInspectorDidDisappear", (ev) => {
-			const action = devices.getDeviceById(ev.device)?.getActionById(ev.context);
+			const action = actionStore.getActionById(ev.context);
 			if (action) {
 				listener(new ActionWithoutPayloadEvent(action, ev));
 			}
@@ -66,13 +66,9 @@ class UIController {
 		listener: (ev: SendToPluginEvent<TPayload, TSettings>) => void
 	): IDisposable {
 		return router.disposableOn("unhandledMessage", (ev) => {
-			// Send to plugin doesn't include the device.
-			for (const device of devices) {
-				const action = device.getActionById(ev.context);
-				if (action) {
-					listener(new SendToPluginEvent<TPayload, TSettings>(action, ev as DidReceivePropertyInspectorMessage<TPayload>));
-					return;
-				}
+			const action = actionStore.getActionById(ev.context);
+			if (action) {
+				listener(new SendToPluginEvent<TPayload, TSettings>(action, ev as DidReceivePropertyInspectorMessage<TPayload>));
 			}
 		});
 	}

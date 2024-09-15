@@ -3,8 +3,8 @@ import type { IDisposable } from "../common/disposable";
 import { ActionEvent } from "../common/events";
 import type { JsonObject } from "../common/json";
 import { Action } from "./actions/action";
+import { actionStore } from "./actions/store";
 import { connection } from "./connection";
-import { devices } from "./devices";
 import { DidReceiveGlobalSettingsEvent, DidReceiveSettingsEvent } from "./events";
 
 /**
@@ -40,7 +40,7 @@ export function onDidReceiveGlobalSettings<T extends JsonObject = JsonObject>(li
  */
 export function onDidReceiveSettings<T extends JsonObject = JsonObject>(listener: (ev: DidReceiveSettingsEvent<T>) => void): IDisposable {
 	return connection.disposableOn("didReceiveSettings", (ev: DidReceiveSettings<T>) => {
-		const action = devices.getDeviceById(ev.device)?.getActionById(ev.context);
+		const action = actionStore.getActionById(ev.context);
 		if (action) {
 			listener(new ActionEvent(action, ev));
 		}
