@@ -18,7 +18,7 @@ describe("PropertyInspector", () => {
 	it("initializes context", () => {
 		// Arrange, act.
 		const pi = new PropertyInspector(router, {
-			action: "com.elgato.test.action",
+			action: "com.elgato.test.key",
 			context: "key123", // Mocked in actionStore.
 			device: "dev123"
 		});
@@ -35,7 +35,7 @@ describe("PropertyInspector", () => {
 			// Arrange.
 			const spyOnFetch = jest.spyOn(router, "fetch");
 			const pi = new PropertyInspector(router, {
-				action: "com.elgato.test.action",
+				action: "com.elgato.test.key",
 				context: "abc123",
 				device: "dev123"
 			});
@@ -55,7 +55,7 @@ describe("PropertyInspector", () => {
 			// Arrange.
 			const spyOnFetch = jest.spyOn(router, "fetch");
 			const pi = new PropertyInspector(router, {
-				action: "com.elgato.test.action",
+				action: "com.elgato.test.key",
 				context: "abc123",
 				device: "dev123"
 			});
@@ -86,7 +86,7 @@ describe("PropertyInspector", () => {
 		// Arrange.
 		const spyOnSend = jest.spyOn(connection, "send");
 		const pi = new PropertyInspector(router, {
-			action: "com.elgato.test.action",
+			action: "com.elgato.test.key",
 			context: "key123", // Mocked in actionStore.
 			device: "dev123"
 		});

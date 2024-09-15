@@ -261,8 +261,8 @@ describe("router", () => {
 	describe("outbound messages", () => {
 		describe("with ui", () => {
 			const action = new KeyAction({
-				id: "com.elgato.test.action",
-				manifestId: "com.elgato.test.action",
+				id: "key123",
+				manifestId: "com.elgato.test.key",
 				device: new Device(
 					"device123",
 					{

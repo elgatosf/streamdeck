@@ -151,7 +151,7 @@ describe("settings", () => {
 		const listener = jest.fn();
 		const ev: DidReceiveSettings<Settings> = {
 			event: "didReceiveSettings",
-			action: "com.elgato.test.action",
+			action: "com.elgato.test.key",
 			context: "action123",
 			device: "dev123",
 			payload: {

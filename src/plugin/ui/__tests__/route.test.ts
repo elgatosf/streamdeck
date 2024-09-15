@@ -17,11 +17,11 @@ describe("route", () => {
 
 	describe("current PI has routes", () => {
 		const ev = {
-			action: "com.elgato.test.action",
+			action: "com.elgato.test.key",
 			context: "key123"
 		};
 
-		beforeEach(() => initialize(ev.action));
+		beforeEach(() => initialize(ev.context));
 
 		/**
 		 * Asserts {@link route} with an asynchronous result.
@@ -118,7 +118,7 @@ describe("route", () => {
 	});
 
 	describe("current PI does not have routes", () => {
-		beforeEach(() => initialize("com.other"));
+		beforeEach(() => initialize("dial123")); // This resolves a different manifestId to the sample class below
 
 		/**
 		 * Asserts {@link route} with an asynchronous result.
@@ -174,12 +174,12 @@ describe("route", () => {
 	 * Initializes the "current property inspector" for the specific action type.
 	 * @param action Action type of the current property inspector.
 	 */
-	function initialize(action: string): void {
-		const context = "key123"; // Mocked in actionStore.
+	function initialize(context: string): void {
+		const action = actionStore.getActionById(context)!;
 
 		// Set the current property inspector associated with the plugin router.
 		connection.emit("propertyInspectorDidAppear", {
-			action,
+			action: action?.manifestId,
 			context,
 			device: "dev123",
 			event: "propertyInspectorDidAppear"
@@ -189,7 +189,7 @@ describe("route", () => {
 		piRouter = new MessageGateway<object>(
 			(payload) => {
 				connection.emit("sendToPlugin", {
-					action,
+					action: action.manifestId,
 					context,
 					event: "sendToPlugin",
 					payload
@@ -203,7 +203,7 @@ describe("route", () => {
 		jest.spyOn(connection, "send").mockImplementation((cmd: PluginCommand) => {
 			if (cmd.event === "sendToPropertyInspector") {
 				piRouter.process({
-					action,
+					action: action.manifestId,
 					context,
 					event: "sendToPropertyInspector",
 					payload: (cmd as SendToPropertyInspector<JsonObject>).payload
@@ -218,7 +218,7 @@ describe("route", () => {
 /**
  * Mock action with routes.
  */
-@action({ UUID: "com.elgato.test.action" })
+@action({ UUID: "com.elgato.test.key" })
 class ActionWithRoutes extends SingletonAction {
 	public spyOnGetCharacters = jest.fn();
 	public spyOnGetCharactersSync = jest.fn();

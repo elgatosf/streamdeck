@@ -3,7 +3,7 @@ import { KeyAction } from "../key";
 
 const key = new KeyAction({
 	id: "key123",
-	manifestId: "com.elgato.test.action",
+	manifestId: "com.elgato.test.key",
 	coordinates: {
 		column: 1,
 		row: 1
@@ -13,7 +13,7 @@ const key = new KeyAction({
 
 const dial = new DialAction({
 	id: "dial123",
-	manifestId: "com.elgato.test.action",
+	manifestId: "com.elgato.test.dial",
 	coordinates: {
 		column: 1,
 		row: 1

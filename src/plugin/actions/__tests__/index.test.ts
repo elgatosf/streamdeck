@@ -37,7 +37,6 @@ import { Settings } from "../../../api/__mocks__/events";
 import { connection } from "../../connection";
 import { devices } from "../../devices";
 import { Device } from "../../devices/device";
-import { getManifest } from "../../manifest";
 import type { onDidReceiveSettings } from "../../settings";
 import type { UIController } from "../../ui";
 import { actionStore } from "../store";
@@ -486,8 +485,9 @@ describe("actions", () => {
 	});
 
 	describe("registering an action", () => {
-		const manifestId = getManifest().Actions[0].UUID;
-		// 	afterEach(() => jest.clearAllMocks());
+		const keyManifestId = "com.elgato.test.key";
+		const dialManifestId = "com.elgato.test.dial";
+
 		/**
 		 * Asserts {@link registerAction} validates the manifest identifier is not undefined.
 		 */
@@ -527,7 +527,7 @@ describe("actions", () => {
 			const spyOnPrependOnceListener = jest.spyOn(connection, "prependOnceListener");
 
 			// Act.
-			registerAction({ manifestId });
+			registerAction({ manifestId: keyManifestId });
 
 			// Assert.
 			expect(spyOnAddListener).not.toHaveBeenCalled();
@@ -545,7 +545,7 @@ describe("actions", () => {
 			// Arrange.
 			const listener = jest.fn();
 			const ev = {
-				action: manifestId,
+				action: dialManifestId,
 				context: "dial123", // Mocked in actionStore.
 				device: "device123",
 				event: "dialDown",
@@ -563,7 +563,7 @@ describe("actions", () => {
 
 			// Act.
 			registerAction({
-				manifestId,
+				manifestId: ev.action,
 				onDialDown: listener
 			});
 
@@ -586,7 +586,7 @@ describe("actions", () => {
 			// Arrange.
 			const listener = jest.fn();
 			const ev = {
-				action: manifestId,
+				action: dialManifestId,
 				context: "dial123", // Mocked in actionStore
 				device: "device123",
 				event: "dialRotate",
@@ -606,7 +606,7 @@ describe("actions", () => {
 
 			// Act.
 			registerAction({
-				manifestId,
+				manifestId: ev.action,
 				onDialRotate: listener
 			});
 
@@ -629,7 +629,7 @@ describe("actions", () => {
 			// Arrange.
 			const listener = jest.fn();
 			const ev = {
-				action: manifestId,
+				action: dialManifestId,
 				context: "dial123", // Mocked in actionStore
 				device: "device123",
 				event: "dialUp",
@@ -647,7 +647,7 @@ describe("actions", () => {
 
 			// Act.
 			registerAction({
-				manifestId,
+				manifestId: ev.action,
 				onDialUp: listener
 			});
 
@@ -670,7 +670,7 @@ describe("actions", () => {
 			// Arrange
 			const listener = jest.fn();
 			const ev = {
-				action: manifestId,
+				action: keyManifestId,
 				context: "key123", // Mocked in actionStore
 				event: "sendToPlugin",
 				payload: {
@@ -680,7 +680,7 @@ describe("actions", () => {
 
 			// Act.
 			registerAction({
-				manifestId,
+				manifestId: ev.action,
 				onSendToPlugin: listener
 			});
 
@@ -704,7 +704,7 @@ describe("actions", () => {
 			// Arrange
 			const listener = jest.fn();
 			const ev = {
-				action: manifestId,
+				action: keyManifestId,
 				context: "key123", // Mocked in actionStore
 				device: "device123",
 				event: "didReceiveSettings",
@@ -723,7 +723,7 @@ describe("actions", () => {
 
 			// Act.
 			registerAction({
-				manifestId,
+				manifestId: ev.action,
 				onDidReceiveSettings: listener
 			});
 
@@ -746,7 +746,7 @@ describe("actions", () => {
 			// Arrange.
 			const listener = jest.fn();
 			const ev = {
-				action: manifestId,
+				action: keyManifestId,
 				context: "key123", // Mocked in actionStore
 				device: "device123",
 				event: "keyDown",
@@ -765,7 +765,7 @@ describe("actions", () => {
 
 			// Act.
 			registerAction({
-				manifestId,
+				manifestId: ev.action,
 				onKeyDown: listener
 			});
 
@@ -788,7 +788,7 @@ describe("actions", () => {
 			// Arrange.
 			const listener = jest.fn();
 			const ev = {
-				action: manifestId,
+				action: keyManifestId,
 				context: "key123", // Mocked in actionStore
 				device: "device123",
 				event: "keyUp",
@@ -807,7 +807,7 @@ describe("actions", () => {
 
 			// Act.
 			registerAction({
-				manifestId,
+				manifestId: ev.action,
 				onKeyUp: listener
 			});
 
@@ -830,7 +830,7 @@ describe("actions", () => {
 			// Arrange
 			const listener = jest.fn();
 			const ev = {
-				action: manifestId,
+				action: keyManifestId,
 				context: "key123", // Mocked in actionStore
 				device: "device123",
 				event: "propertyInspectorDidAppear"
@@ -838,7 +838,7 @@ describe("actions", () => {
 
 			// Act.
 			registerAction({
-				manifestId,
+				manifestId: ev.action,
 				onPropertyInspectorDidAppear: listener
 			});
 
@@ -860,7 +860,7 @@ describe("actions", () => {
 			// Arrange
 			const listener = jest.fn();
 			const ev = {
-				action: manifestId,
+				action: keyManifestId,
 				context: "key123", // Mocked in actionStore
 				device: "device123",
 				event: "propertyInspectorDidDisappear"
@@ -868,7 +868,7 @@ describe("actions", () => {
 
 			// Act (emit).
 			registerAction({
-				manifestId,
+				manifestId: ev.action,
 				onPropertyInspectorDidDisappear: listener
 			});
 
@@ -890,7 +890,7 @@ describe("actions", () => {
 			// Arrange.
 			const listener = jest.fn();
 			const ev = {
-				action: manifestId,
+				action: keyManifestId,
 				context: "key123", // Mocked in actionStore
 				device: "device123",
 				event: "titleParametersDidChange",
@@ -918,7 +918,7 @@ describe("actions", () => {
 
 			// Act.
 			registerAction({
-				manifestId,
+				manifestId: ev.action,
 				onTitleParametersDidChange: listener
 			});
 
@@ -941,7 +941,7 @@ describe("actions", () => {
 			// Arrange.
 			const listener = jest.fn();
 			const ev = {
-				action: manifestId,
+				action: dialManifestId,
 				context: "dial123", // Mocked in actionStore
 				device: "device123",
 				event: "touchTap",
@@ -961,7 +961,7 @@ describe("actions", () => {
 
 			// Act.
 			registerAction({
-				manifestId,
+				manifestId: ev.action,
 				onTouchTap: listener
 			});
 
@@ -984,7 +984,7 @@ describe("actions", () => {
 			// Arrange.
 			const listener = jest.fn();
 			const ev = {
-				action: manifestId,
+				action: keyManifestId,
 				context: "key123", // Mocked in actionStore
 				device: "device123",
 				event: "willAppear",
@@ -1003,7 +1003,7 @@ describe("actions", () => {
 
 			// Act.
 			registerAction({
-				manifestId,
+				manifestId: ev.action,
 				onWillAppear: listener
 			});
 
@@ -1026,7 +1026,7 @@ describe("actions", () => {
 			// Arrange.
 			const listener = jest.fn();
 			const ev = {
-				action: manifestId,
+				action: keyManifestId,
 				context: "key123", // Mocked in actionStore
 				device: "device123",
 				event: "willDisappear",
@@ -1045,7 +1045,7 @@ describe("actions", () => {
 
 			// Act.
 			registerAction({
-				manifestId,
+				manifestId: ev.action,
 				onWillDisappear: listener
 			});
 

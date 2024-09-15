@@ -9,7 +9,17 @@ export const manifest: Manifest = {
 	Actions: [
 		{
 			Name: "Action One",
-			UUID: "com.elgato.test.action",
+			UUID: "com.elgato.test.key",
+			Icon: "imgs/actions/one",
+			States: [
+				{
+					Image: "imgs/actions/state"
+				}
+			]
+		},
+		{
+			Name: "Action Two",
+			UUID: "com.elgato.test.dial",
 			Icon: "imgs/actions/one",
 			States: [
 				{

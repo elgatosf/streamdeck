@@ -2,6 +2,7 @@ import type { PropertyInspectorDidAppear, PropertyInspectorDidDisappear } from "
 import type { JsonValue } from "../../common/json";
 import { MessageGateway } from "../../common/messaging";
 import { Action } from "../actions/action";
+import { actionStore } from "../actions/store";
 import { connection } from "../connection";
 import { PropertyInspector } from "./property-inspector";
 
@@ -34,7 +35,7 @@ const router = new MessageGateway<Action>(
 
 		return false;
 	},
-	(source) => current!.action
+	(source) => actionStore.getActionById(source.context)!
 );
 
 /**
