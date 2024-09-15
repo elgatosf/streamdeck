@@ -96,6 +96,15 @@ export class Device {
 	}
 
 	/**
+	 * Gets the visible action on this device with the specified {@link id}.
+	 * @param deviceId Identifier of the action to find.
+	 * @returns The visible action; otherwise `undefined`.
+	 */
+	public getActionById(id: string): DialAction | KeyAction | KeyInMultiAction | undefined {
+		return this.#actions.get(id);
+	}
+
+	/**
 	 * Adds the specified action to the underlying collection of visible actions for the device.
 	 * @param ev The action's appearance event.
 	 */

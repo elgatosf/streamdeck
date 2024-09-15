@@ -3,6 +3,7 @@ import type { IDisposable } from "../../common/disposable";
 import { ActionEvent } from "../../common/events";
 import type { JsonObject } from "../../common/json";
 import { connection } from "../connection";
+import { devices } from "../devices";
 import {
 	DialDownEvent,
 	DialRotateEvent,
@@ -17,22 +18,13 @@ import {
 import { getManifest } from "../manifest";
 import { onDidReceiveSettings } from "../settings";
 import { ui } from "../ui";
-import { Action } from "./action";
+import { Action, type ActionContext } from "./action";
+import { DialAction } from "./dial";
+import { KeyAction } from "./key";
+import { KeyInMultiAction } from "./multi";
 import type { SingletonAction } from "./singleton-action";
 
 const manifest = getManifest();
-
-/**
- * Creates an {@link Action} controller capable of interacting with Stream Deck.
- * @param id The instance identifier of the action to control; identifiers are supplied as part of events emitted by this client, and are accessible via {@link Action.id}.
- * @returns The {@link Action} controller.
- */
-export function createController<T extends JsonObject = JsonObject>(id: string): Omit<Action<T>, "manifestId"> {
-	return new Action<T>({
-		action: "",
-		context: id
-	});
-}
 
 /**
  * Occurs when the user presses a dial (Stream Deck +). See also {@link onDialUp}.
@@ -43,7 +35,12 @@ export function createController<T extends JsonObject = JsonObject>(id: string):
  * @returns A disposable that, when disposed, removes the listener.
  */
 export function onDialDown<T extends JsonObject = JsonObject>(listener: (ev: DialDownEvent<T>) => void): IDisposable {
-	return connection.disposableOn("dialDown", (ev: DialDown<T>) => listener(new ActionEvent<DialDown<T>, Action<T>>(new Action<T>(ev), ev)));
+	return connection.disposableOn("dialDown", (ev: DialDown<T>) => {
+		const action = devices.getDeviceById(ev.device)?.getActionById(ev.context);
+		if (action && action instanceof DialAction) {
+			listener(new ActionEvent(action, ev));
+		}
+	});
 }
 
 /**
@@ -53,7 +50,12 @@ export function onDialDown<T extends JsonObject = JsonObject>(listener: (ev: Dia
  * @returns A disposable that, when disposed, removes the listener.
  */
 export function onDialRotate<T extends JsonObject = JsonObject>(listener: (ev: DialRotateEvent<T>) => void): IDisposable {
-	return connection.disposableOn("dialRotate", (ev: DialRotate<T>) => listener(new ActionEvent<DialRotate<T>, Action<T>>(new Action<T>(ev), ev)));
+	return connection.disposableOn("dialRotate", (ev: DialRotate<T>) => {
+		const action = devices.getDeviceById(ev.device)?.getActionById(ev.context);
+		if (action && action instanceof DialAction) {
+			listener(new ActionEvent(action, ev));
+		}
+	});
 }
 
 /**
@@ -65,7 +67,12 @@ export function onDialRotate<T extends JsonObject = JsonObject>(listener: (ev: D
  * @returns A disposable that, when disposed, removes the listener.
  */
 export function onDialUp<T extends JsonObject = JsonObject>(listener: (ev: DialUpEvent<T>) => void): IDisposable {
-	return connection.disposableOn("dialUp", (ev: DialUp<T>) => listener(new ActionEvent<DialUp<T>, Action<T>>(new Action<T>(ev), ev)));
+	return connection.disposableOn("dialUp", (ev: DialUp<T>) => {
+		const action = devices.getDeviceById(ev.device)?.getActionById(ev.context);
+		if (action && action instanceof DialAction) {
+			listener(new ActionEvent(action, ev));
+		}
+	});
 }
 
 /**
@@ -77,7 +84,12 @@ export function onDialUp<T extends JsonObject = JsonObject>(listener: (ev: DialU
  * @returns A disposable that, when disposed, removes the listener.
  */
 export function onKeyDown<T extends JsonObject = JsonObject>(listener: (ev: KeyDownEvent<T>) => void): IDisposable {
-	return connection.disposableOn("keyDown", (ev: KeyDown<T>) => listener(new ActionEvent<KeyDown<T>, Action<T>>(new Action<T>(ev), ev)));
+	return connection.disposableOn("keyDown", (ev: KeyDown<T>) => {
+		const action = devices.getDeviceById(ev.device)?.getActionById(ev.context);
+		if (action && (action instanceof KeyAction || action instanceof KeyInMultiAction)) {
+			listener(new ActionEvent(action, ev));
+		}
+	});
 }
 
 /**
@@ -89,7 +101,12 @@ export function onKeyDown<T extends JsonObject = JsonObject>(listener: (ev: KeyD
  * @returns A disposable that, when disposed, removes the listener.
  */
 export function onKeyUp<T extends JsonObject = JsonObject>(listener: (ev: KeyUpEvent<T>) => void): IDisposable {
-	return connection.disposableOn("keyUp", (ev: KeyUp<T>) => listener(new ActionEvent<KeyUp<T>, Action<T>>(new Action<T>(ev), ev)));
+	return connection.disposableOn("keyUp", (ev: KeyUp<T>) => {
+		const action = devices.getDeviceById(ev.device)?.getActionById(ev.context);
+		if (action && (action instanceof KeyAction || action instanceof KeyInMultiAction)) {
+			listener(new ActionEvent(action, ev));
+		}
+	});
 }
 
 /**
@@ -99,9 +116,12 @@ export function onKeyUp<T extends JsonObject = JsonObject>(listener: (ev: KeyUpE
  * @returns A disposable that, when disposed, removes the listener.
  */
 export function onTitleParametersDidChange<T extends JsonObject = JsonObject>(listener: (ev: TitleParametersDidChangeEvent<T>) => void): IDisposable {
-	return connection.disposableOn("titleParametersDidChange", (ev: TitleParametersDidChange<T>) =>
-		listener(new ActionEvent<TitleParametersDidChange<T>, Action<T>>(new Action<T>(ev), ev))
-	);
+	return connection.disposableOn("titleParametersDidChange", (ev: TitleParametersDidChange<T>) => {
+		const action = devices.getDeviceById(ev.device)?.getActionById(ev.context);
+		if (action && action instanceof KeyAction) {
+			listener(new ActionEvent(action, ev));
+		}
+	});
 }
 
 /**
@@ -111,7 +131,12 @@ export function onTitleParametersDidChange<T extends JsonObject = JsonObject>(li
  * @returns A disposable that, when disposed, removes the listener.
  */
 export function onTouchTap<T extends JsonObject = JsonObject>(listener: (ev: TouchTapEvent<T>) => void): IDisposable {
-	return connection.disposableOn("touchTap", (ev: TouchTap<T>) => listener(new ActionEvent<TouchTap<T>, Action<T>>(new Action<T>(ev), ev)));
+	return connection.disposableOn("touchTap", (ev: TouchTap<T>) => {
+		const action = devices.getDeviceById(ev.device)?.getActionById(ev.context);
+		if (action && action instanceof DialAction) {
+			listener(new ActionEvent(action, ev));
+		}
+	});
 }
 
 /**
@@ -122,7 +147,12 @@ export function onTouchTap<T extends JsonObject = JsonObject>(listener: (ev: Tou
  * @returns A disposable that, when disposed, removes the listener.
  */
 export function onWillAppear<T extends JsonObject = JsonObject>(listener: (ev: WillAppearEvent<T>) => void): IDisposable {
-	return connection.disposableOn("willAppear", (ev: WillAppear<T>) => listener(new ActionEvent<WillAppear<T>, Action<T>>(new Action<T>(ev), ev)));
+	return connection.disposableOn("willAppear", (ev: WillAppear<T>) => {
+		const action = devices.getDeviceById(ev.device)?.getActionById(ev.context);
+		if (action) {
+			listener(new ActionEvent(action, ev));
+		}
+	});
 }
 
 /**
@@ -133,7 +163,21 @@ export function onWillAppear<T extends JsonObject = JsonObject>(listener: (ev: W
  * @returns A disposable that, when disposed, removes the listener.
  */
 export function onWillDisappear<T extends JsonObject = JsonObject>(listener: (ev: WillDisappearEvent<T>) => void): IDisposable {
-	return connection.disposableOn("willDisappear", (ev: WillDisappear<T>) => listener(new ActionEvent<WillDisappear<T>, Action<T>>(new Action<T>(ev), ev)));
+	return connection.disposableOn("willDisappear", (ev: WillDisappear<T>) => {
+		const device = devices.getDeviceById(ev.device);
+		if (device) {
+			listener(
+				new ActionEvent(
+					{
+						device,
+						id: ev.context,
+						manifestId: ev.action
+					},
+					ev
+				)
+			);
+		}
+	});
 }
 
 /**
@@ -199,5 +243,5 @@ type RoutingEvent<T extends JsonObject> = {
 	/**
 	 * The {@link Action} the event is associated with.
 	 */
-	action: Action<T>;
+	action: Action<T> | ActionContext;
 };

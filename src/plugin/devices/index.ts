@@ -1,5 +1,5 @@
-import { Enumerable } from "..";
 import type { IDisposable } from "../../common/disposable";
+import { Enumerable } from "../../common/enumerable";
 import { connection } from "../connection";
 import { DeviceDidConnectEvent, DeviceDidDisconnectEvent, DeviceEvent } from "../events";
 import { Device } from "./device";

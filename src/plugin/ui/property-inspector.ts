@@ -3,18 +3,21 @@ import type { ActionIdentifier, DeviceIdentifier } from "../../api";
 import type { JsonValue } from "../../common/json";
 import { PUBLIC_PATH_PREFIX, type MessageGateway, type MessageRequestOptions, type MessageResponse } from "../../common/messaging";
 import type { Action } from "../actions/action";
-import { ActionContext } from "../actions/context";
+import type { DialAction } from "../actions/dial";
+import type { KeyAction } from "../actions/key";
+import type { KeyInMultiAction } from "../actions/multi";
 import type { SingletonAction } from "../actions/singleton-action";
 import { connection } from "../connection";
+import { devices } from "../devices";
 
 /**
  * Property inspector providing information about its context, and functions for sending and fetching messages.
  */
-export class PropertyInspector extends ActionContext implements Pick<MessageGateway<Action>, "fetch"> {
+export class PropertyInspector implements Pick<MessageGateway<Action>, "fetch"> {
 	/**
-	 * Unique identifier of the Stream Deck device this property inspector is associated with.
+	 * Action associated with the property inspector
 	 */
-	public readonly deviceId: string;
+	public readonly action: DialAction | KeyAction | KeyInMultiAction;
 
 	/**
 	 * Initializes a new instance of the {@link PropertyInspector} class.
@@ -25,8 +28,7 @@ export class PropertyInspector extends ActionContext implements Pick<MessageGate
 		private readonly router: MessageGateway<Action>,
 		source: ActionIdentifier & DeviceIdentifier
 	) {
-		super(source);
-		this.deviceId = source.device;
+		this.action = devices.getDeviceById(source.device)!.getActionById(source.context)!;
 	}
 
 	/**
@@ -91,7 +93,7 @@ export class PropertyInspector extends ActionContext implements Pick<MessageGate
 	public sendToPropertyInspector(payload: JsonValue): Promise<void> {
 		return connection.send({
 			event: "sendToPropertyInspector",
-			context: this.id,
+			context: this.action.id,
 			payload
 		});
 	}
