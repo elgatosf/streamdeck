@@ -172,7 +172,7 @@ describe("route", () => {
 
 	/**
 	 * Initializes the "current property inspector" for the specific action type.
-	 * @param action Action type of the current property inspector.
+	 * @param context Action context (i.e. the action's instance identifier).
 	 */
 	function initialize(context: string): void {
 		const action = actionStore.getActionById(context)!;
