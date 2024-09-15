@@ -3,9 +3,10 @@ import type { DeviceDidConnectEvent, DeviceDidDisconnectEvent } from "../..";
 import { DeviceType, type DeviceDidConnect, type DeviceDidDisconnect } from "../../../api";
 import { type connection as Connection } from "../../connection";
 
-jest.mock("../connection");
-jest.mock("../logging");
-jest.mock("../manifest");
+jest.mock("../../actions/store");
+jest.mock("../../connection");
+jest.mock("../../logging");
+jest.mock("../../manifest");
 
 describe("devices", () => {
 	let connection!: typeof Connection;
@@ -13,8 +14,8 @@ describe("devices", () => {
 
 	beforeEach(async () => {
 		jest.resetModules();
-		({ connection } = await require("../connection"));
-		({ devices } = await require("../devices"));
+		({ connection } = await require("../../connection"));
+		({ devices } = await require("../"));
 	});
 
 	/**
