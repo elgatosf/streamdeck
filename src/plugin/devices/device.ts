@@ -1,7 +1,7 @@
 import type { DeviceInfo, DeviceType, Size } from "../../api";
-import { DialAction } from "../actions/dial";
-import { KeyAction } from "../actions/key";
-import { MultiActionKey } from "../actions/multi";
+import type { DialAction } from "../actions/dial";
+import type { KeyAction } from "../actions/key";
+import type { MultiActionKey } from "../actions/multi";
 import { actionStore } from "../actions/store";
 import { connection } from "../connection";
 

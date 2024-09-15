@@ -1,6 +1,7 @@
-import type { DidReceiveGlobalSettings, DidReceiveSettings, GetGlobalSettings, SetGlobalSettings } from "../../api";
+import { type DidReceiveGlobalSettings, type DidReceiveSettings, type GetGlobalSettings, type SetGlobalSettings } from "../../api";
 import { type Settings } from "../../api/__mocks__/events";
-import { Action } from "../actions/action";
+
+import { actionStore } from "../actions/store";
 import { connection } from "../connection";
 import type { DidReceiveGlobalSettingsEvent, DidReceiveSettingsEvent } from "../events";
 import { getGlobalSettings, onDidReceiveGlobalSettings, onDidReceiveSettings, setGlobalSettings } from "../settings";
@@ -8,6 +9,7 @@ import { getGlobalSettings, onDidReceiveGlobalSettings, onDidReceiveSettings, se
 jest.mock("../connection");
 jest.mock("../logging");
 jest.mock("../manifest");
+jest.mock("../actions/store");
 
 describe("settings", () => {
 	describe("sending", () => {
@@ -110,7 +112,7 @@ describe("settings", () => {
 			const listener = jest.fn();
 			const ev = {
 				action: "com.elgato.test.one",
-				context: "context123",
+				context: "key123",
 				device: "device123",
 				event: "didReceiveSettings",
 				payload: {
@@ -133,7 +135,7 @@ describe("settings", () => {
 			// Assert (emit).
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[DidReceiveSettingsEvent<Settings>]>({
-				action: new Action(ev),
+				action: actionStore.getActionById(ev.context)!,
 				deviceId: ev.device,
 				payload: ev.payload,
 				type: "didReceiveSettings"

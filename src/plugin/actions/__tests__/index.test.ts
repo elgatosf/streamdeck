@@ -1,31 +1,22 @@
+import { onDialDown, onDialRotate, onDialUp, onKeyDown, onKeyUp, onTitleParametersDidChange, onTouchTap, onWillAppear, onWillDisappear, registerAction } from "..";
 import {
-	createController,
-	onDialDown,
-	onDialRotate,
-	onDialUp,
-	onKeyDown,
-	onKeyUp,
-	onTitleParametersDidChange,
-	onTouchTap,
-	onWillAppear,
-	onWillDisappear,
-	registerAction
-} from "..";
-import type {
-	DialDownEvent,
-	DialRotateEvent,
-	DialUpEvent,
-	DidReceiveSettingsEvent,
-	KeyDownEvent,
-	KeyUpEvent,
-	PropertyInspectorDidAppearEvent,
-	PropertyInspectorDidDisappearEvent,
-	SendToPluginEvent,
-	SingletonAction,
-	TitleParametersDidChangeEvent,
-	TouchTapEvent,
-	WillAppearEvent,
-	WillDisappearEvent
+	DeviceType,
+	type DialAction,
+	type DialDownEvent,
+	type DialRotateEvent,
+	type DialUpEvent,
+	type DidReceiveSettingsEvent,
+	type KeyAction,
+	type KeyDownEvent,
+	type KeyUpEvent,
+	type PropertyInspectorDidAppearEvent,
+	type PropertyInspectorDidDisappearEvent,
+	type SendToPluginEvent,
+	type SingletonAction,
+	type TitleParametersDidChangeEvent,
+	type TouchTapEvent,
+	type WillAppearEvent,
+	type WillDisappearEvent
 } from "../..";
 import type {
 	DialDown,
@@ -44,29 +35,35 @@ import type {
 } from "../../../api";
 import { Settings } from "../../../api/__mocks__/events";
 import { connection } from "../../connection";
+import { devices } from "../../devices";
+import { Device } from "../../devices/device";
 import { getManifest } from "../../manifest";
 import type { onDidReceiveSettings } from "../../settings";
 import type { UIController } from "../../ui";
-import { Action } from "../action";
+import { actionStore } from "../store";
 
+jest.mock("../store");
+jest.mock("../../devices");
 jest.mock("../../connection");
 jest.mock("../../logging");
 jest.mock("../../manifest");
 
 describe("actions", () => {
-	/**
-	 * Asserts {@link createController} initializes a new action.
-	 */
-	it("creates controllers", () => {
-		// Arrange, act.
-		const action = createController("abc123");
+	const device = new Device(
+		"device123",
+		{
+			name: "Device 1",
+			size: {
+				columns: 5,
+				rows: 3
+			},
+			type: DeviceType.StreamDeck
+		},
+		false
+	);
 
-		// Assert.
-		expect(action).not.toBeUndefined();
-		expect(action).toBeInstanceOf(Action);
-		expect(action.id).toBe("abc123");
-		// @ts-expect-error: manifestId is omitted, and should be an empty string.
-		expect(action.manifestId).toBe("");
+	beforeAll(() => {
+		jest.spyOn(devices, "getDeviceById").mockReturnValue(device);
 	});
 
 	describe("event emitters", () => {
@@ -78,7 +75,7 @@ describe("actions", () => {
 			const listener = jest.fn();
 			const ev = {
 				action: "com.elgato.test.one",
-				context: "context123",
+				context: "dial123", // Mocked in actionStore
 				device: "device123",
 				event: "dialDown",
 				payload: {
@@ -100,7 +97,7 @@ describe("actions", () => {
 			// Assert (emit).
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[DialDownEvent<Settings>]>({
-				action: new Action(ev),
+				action: actionStore.getActionById(ev.context) as DialAction,
 				deviceId: ev.device,
 				payload: ev.payload,
 				type: "dialDown"
@@ -122,7 +119,7 @@ describe("actions", () => {
 			const listener = jest.fn();
 			const ev = {
 				action: "com.elgato.test.one",
-				context: "context123",
+				context: "dial123", // Mocked in actionStore
 				device: "device123",
 				event: "dialRotate",
 				payload: {
@@ -146,7 +143,7 @@ describe("actions", () => {
 			// Assert (emit).
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[DialRotateEvent<Settings>]>({
-				action: new Action(ev),
+				action: actionStore.getActionById(ev.context) as DialAction,
 				deviceId: ev.device,
 				payload: ev.payload,
 				type: "dialRotate"
@@ -168,7 +165,7 @@ describe("actions", () => {
 			const listener = jest.fn();
 			const ev = {
 				action: "com.elgato.test.one",
-				context: "context123",
+				context: "dial123", // Mocked in actionStore
 				device: "device123",
 				event: "dialUp",
 				payload: {
@@ -190,7 +187,7 @@ describe("actions", () => {
 			// Assert (emit).
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[DialUpEvent<Settings>]>({
-				action: new Action(ev),
+				action: actionStore.getActionById(ev.context) as DialAction,
 				deviceId: ev.device,
 				payload: ev.payload,
 				type: "dialUp"
@@ -212,7 +209,7 @@ describe("actions", () => {
 			const listener = jest.fn();
 			const ev = {
 				action: "com.elgato.test.one",
-				context: "context123",
+				context: "key123", // Mocked in actionStore
 				device: "device123",
 				event: "keyDown",
 				payload: {
@@ -235,7 +232,7 @@ describe("actions", () => {
 			// Assert (emit).
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[KeyDownEvent<Settings>]>({
-				action: new Action(ev),
+				action: actionStore.getActionById(ev.context) as KeyAction,
 				deviceId: ev.device,
 				payload: ev.payload,
 				type: "keyDown"
@@ -257,7 +254,7 @@ describe("actions", () => {
 			const listener = jest.fn();
 			const ev = {
 				action: "com.elgato.test.one",
-				context: "context123",
+				context: "key123", // Mocked in actionStore
 				device: "device123",
 				event: "keyUp",
 				payload: {
@@ -280,7 +277,7 @@ describe("actions", () => {
 			// Assert (emit).
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[KeyUpEvent<Settings>]>({
-				action: new Action(ev),
+				action: actionStore.getActionById(ev.context) as KeyAction,
 				deviceId: ev.device,
 				payload: ev.payload,
 				type: "keyUp"
@@ -302,7 +299,7 @@ describe("actions", () => {
 			const listener = jest.fn();
 			const ev = {
 				action: "com.elgato.test.one",
-				context: "context123",
+				context: "key123", // Mocked in actionStore
 				device: "device123",
 				event: "titleParametersDidChange",
 				payload: {
@@ -334,7 +331,7 @@ describe("actions", () => {
 			// Assert (emit).
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[TitleParametersDidChangeEvent<Settings>]>({
-				action: new Action(ev),
+				action: actionStore.getActionById(ev.context) as KeyAction,
 				deviceId: ev.device,
 				payload: ev.payload,
 				type: "titleParametersDidChange"
@@ -356,7 +353,7 @@ describe("actions", () => {
 			const listener = jest.fn();
 			const ev = {
 				action: "com.elgato.test.one",
-				context: "context123",
+				context: "dial123", // Mocked in actionStore
 				device: "device123",
 				event: "touchTap",
 				payload: {
@@ -380,7 +377,7 @@ describe("actions", () => {
 			// Assert (emit).
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[TouchTapEvent<Settings>]>({
-				action: new Action(ev),
+				action: actionStore.getActionById(ev.context) as DialAction,
 				deviceId: ev.device,
 				payload: ev.payload,
 				type: "touchTap"
@@ -402,7 +399,7 @@ describe("actions", () => {
 			const listener = jest.fn();
 			const ev = {
 				action: "com.elgato.test.one",
-				context: "context123",
+				context: "key123", // Mocked in actionStore.
 				device: "device123",
 				event: "willAppear",
 				payload: {
@@ -425,7 +422,7 @@ describe("actions", () => {
 			// Assert (emit).
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[WillAppearEvent<Settings>]>({
-				action: new Action(ev),
+				action: actionStore.getActionById(ev.context) as KeyAction,
 				deviceId: ev.device,
 				payload: ev.payload,
 				type: "willAppear"
@@ -442,7 +439,7 @@ describe("actions", () => {
 		/**
 		 * Asserts {@link onWillDisappear} is invoked when `willDisappear` is emitted.
 		 */
-		it("receives onWillAppear", () => {
+		it("receives onWillDisappear", () => {
 			// Arrange.
 			const listener = jest.fn();
 			const ev = {
@@ -466,11 +463,14 @@ describe("actions", () => {
 			// Act (emit).
 			const disposable = onWillDisappear(listener);
 			connection.emit("willDisappear", ev);
-
 			// Assert (emit).
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[WillDisappearEvent<Settings>]>({
-				action: new Action(ev),
+				action: {
+					device,
+					id: ev.context,
+					manifestId: ev.action
+				},
 				deviceId: ev.device,
 				payload: ev.payload,
 				type: "willDisappear"
@@ -543,10 +543,10 @@ describe("actions", () => {
 		 */
 		it("routes onDialDown", () => {
 			// Arrange.
-			const listener = jest.fn();
+			const listener = jest.fn().mockImplementation(() => console.log("Hello from the other side"));
 			const ev = {
 				action: manifestId,
-				context: "context123",
+				context: "dial123", // Mocked in actionStore.
 				device: "device123",
 				event: "dialDown",
 				payload: {
@@ -567,12 +567,13 @@ describe("actions", () => {
 				onDialDown: listener
 			});
 
+			console.log("Foo");
 			connection.emit("dialDown", ev);
 
 			// Assert.
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[DialDownEvent<Settings>]>({
-				action: new Action(ev),
+				action: actionStore.getActionById(ev.context) as DialAction,
 				deviceId: ev.device,
 				payload: ev.payload,
 				type: "dialDown"
@@ -587,7 +588,7 @@ describe("actions", () => {
 			const listener = jest.fn();
 			const ev = {
 				action: manifestId,
-				context: "context123",
+				context: "dial123", // Mocked in actionStore
 				device: "device123",
 				event: "dialRotate",
 				payload: {
@@ -615,7 +616,7 @@ describe("actions", () => {
 			// Assert.
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[DialRotateEvent<Settings>]>({
-				action: new Action(ev),
+				action: actionStore.getActionById(ev.context) as DialAction,
 				deviceId: ev.device,
 				payload: ev.payload,
 				type: "dialRotate"
@@ -630,7 +631,7 @@ describe("actions", () => {
 			const listener = jest.fn();
 			const ev = {
 				action: manifestId,
-				context: "context123",
+				context: "dial123", // Mocked in actionStore
 				device: "device123",
 				event: "dialUp",
 				payload: {
@@ -656,7 +657,7 @@ describe("actions", () => {
 			// Assert.
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[DialUpEvent<Settings>]>({
-				action: new Action(ev),
+				action: actionStore.getActionById(ev.context) as DialAction,
 				deviceId: ev.device,
 				payload: ev.payload,
 				type: "dialUp"
@@ -671,7 +672,7 @@ describe("actions", () => {
 			const listener = jest.fn();
 			const ev = {
 				action: manifestId,
-				context: "context123",
+				context: "key123", // Mocked in actionStore
 				event: "sendToPlugin",
 				payload: {
 					name: "Hello world"
@@ -689,7 +690,7 @@ describe("actions", () => {
 			// Assert.
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[SendToPluginEvent<Settings, Settings>]>({
-				action: new Action(ev),
+				action: actionStore.getActionById(ev.context) as KeyAction,
 				payload: {
 					name: "Hello world"
 				},
@@ -705,7 +706,7 @@ describe("actions", () => {
 			const listener = jest.fn();
 			const ev = {
 				action: manifestId,
-				context: "context123",
+				context: "key123", // Mocked in actionStore
 				device: "device123",
 				event: "didReceiveSettings",
 				payload: {
@@ -732,7 +733,7 @@ describe("actions", () => {
 			// Assert.
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[DidReceiveSettingsEvent<Settings>]>({
-				action: new Action(ev),
+				action: actionStore.getActionById(ev.context) as KeyAction,
 				deviceId: ev.device,
 				payload: ev.payload,
 				type: "didReceiveSettings"
@@ -747,7 +748,7 @@ describe("actions", () => {
 			const listener = jest.fn();
 			const ev = {
 				action: manifestId,
-				context: "context123",
+				context: "key123", // Mocked in actionStore
 				device: "device123",
 				event: "keyDown",
 				payload: {
@@ -774,7 +775,7 @@ describe("actions", () => {
 			// Assert.
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[KeyDownEvent<Settings>]>({
-				action: new Action(ev),
+				action: actionStore.getActionById(ev.context) as KeyAction,
 				deviceId: ev.device,
 				payload: ev.payload,
 				type: "keyDown"
@@ -789,7 +790,7 @@ describe("actions", () => {
 			const listener = jest.fn();
 			const ev = {
 				action: manifestId,
-				context: "context123",
+				context: "key123", // Mocked in actionStore
 				device: "device123",
 				event: "keyUp",
 				payload: {
@@ -816,7 +817,7 @@ describe("actions", () => {
 			// Assert.
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[KeyUpEvent<Settings>]>({
-				action: new Action(ev),
+				action: actionStore.getActionById(ev.context) as KeyAction,
 				deviceId: ev.device,
 				payload: ev.payload,
 				type: "keyUp"
@@ -831,7 +832,7 @@ describe("actions", () => {
 			const listener = jest.fn();
 			const ev = {
 				action: manifestId,
-				context: "context123",
+				context: "key123", // Mocked in actionStore
 				device: "device123",
 				event: "propertyInspectorDidAppear"
 			} satisfies PropertyInspectorDidAppear;
@@ -847,7 +848,7 @@ describe("actions", () => {
 			// Assert.
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[PropertyInspectorDidAppearEvent<Settings>]>({
-				action: new Action(ev),
+				action: actionStore.getActionById(ev.context) as KeyAction,
 				deviceId: ev.device,
 				type: "propertyInspectorDidAppear"
 			});
@@ -861,7 +862,7 @@ describe("actions", () => {
 			const listener = jest.fn();
 			const ev = {
 				action: manifestId,
-				context: "context123",
+				context: "key123", // Mocked in actionStore
 				device: "device123",
 				event: "propertyInspectorDidDisappear"
 			} satisfies PropertyInspectorDidDisappear;
@@ -877,7 +878,7 @@ describe("actions", () => {
 			// Assert.
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[PropertyInspectorDidDisappearEvent<Settings>]>({
-				action: new Action(ev),
+				action: actionStore.getActionById(ev.context) as KeyAction,
 				deviceId: ev.device,
 				type: "propertyInspectorDidDisappear"
 			});
@@ -891,7 +892,7 @@ describe("actions", () => {
 			const listener = jest.fn();
 			const ev = {
 				action: manifestId,
-				context: "context123",
+				context: "key123", // Mocked in actionStore
 				device: "device123",
 				event: "titleParametersDidChange",
 				payload: {
@@ -927,7 +928,7 @@ describe("actions", () => {
 			// Assert.
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[TitleParametersDidChangeEvent<Settings>]>({
-				action: new Action(ev),
+				action: actionStore.getActionById(ev.context) as KeyAction,
 				deviceId: ev.device,
 				payload: ev.payload,
 				type: "titleParametersDidChange"
@@ -942,7 +943,7 @@ describe("actions", () => {
 			const listener = jest.fn();
 			const ev = {
 				action: manifestId,
-				context: "context123",
+				context: "dial123", // Mocked in actionStore
 				device: "device123",
 				event: "touchTap",
 				payload: {
@@ -970,7 +971,7 @@ describe("actions", () => {
 			// Assert.
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[TouchTapEvent<Settings>]>({
-				action: new Action(ev),
+				action: actionStore.getActionById(ev.context) as DialAction,
 				deviceId: ev.device,
 				payload: ev.payload,
 				type: "touchTap"
@@ -985,7 +986,7 @@ describe("actions", () => {
 			const listener = jest.fn();
 			const ev = {
 				action: manifestId,
-				context: "context123",
+				context: "key123", // Mocked in actionStore
 				device: "device123",
 				event: "willAppear",
 				payload: {
@@ -1012,7 +1013,7 @@ describe("actions", () => {
 			// Assert.
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[WillAppearEvent<Settings>]>({
-				action: new Action(ev),
+				action: actionStore.getActionById(ev.context) as KeyAction,
 				deviceId: ev.device,
 				payload: ev.payload,
 				type: "willAppear"
@@ -1022,12 +1023,12 @@ describe("actions", () => {
 		/**
 		 * Asserts {@link onWillDisappear} is routed to the action when `willDisappear` is emitted.
 		 */
-		it("routes onWillAppear", () => {
+		it("routes onWillDisappear", () => {
 			// Arrange.
 			const listener = jest.fn();
 			const ev = {
 				action: manifestId,
-				context: "context123",
+				context: "key123", // Mocked in actionStore
 				device: "device123",
 				event: "willDisappear",
 				payload: {
@@ -1054,7 +1055,11 @@ describe("actions", () => {
 			// Assert.
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[WillDisappearEvent<Settings>]>({
-				action: new Action(ev),
+				action: {
+					device,
+					id: ev.context,
+					manifestId: ev.action
+				},
 				deviceId: ev.device,
 				payload: ev.payload,
 				type: "willDisappear"
