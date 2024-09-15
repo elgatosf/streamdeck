@@ -124,6 +124,7 @@ export class Device {
 					coordinates: Object.freeze(ev.payload.coordinates)
 				})
 			);
+
 			return;
 		}
 
@@ -136,6 +137,8 @@ export class Device {
 					coordinates: Object.freeze(ev.payload.coordinates)
 				})
 			);
+
+			return;
 		}
 
 		// Multi-action key
