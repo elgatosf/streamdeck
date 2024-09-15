@@ -1,5 +1,6 @@
-import { Target, type SetImage, type SetState, type SetTitle, type ShowAlert, type ShowOk } from "../../../api";
+import { DeviceType, Target, type SetImage, type SetState, type SetTitle, type ShowAlert, type ShowOk } from "../../../api";
 import { connection } from "../../connection";
+import { Device } from "../../devices";
 import { Action, type CoordinatedActionContext } from "../action";
 import { KeyAction } from "../key";
 
@@ -8,16 +9,27 @@ jest.mock("../../manifest");
 jest.mock("../../connection");
 
 describe("KeyAction", () => {
+	// Mock device.
+	const device = new Device(
+		"dev123",
+		{
+			name: "Device One",
+			size: {
+				columns: 5,
+				rows: 3
+			},
+			type: DeviceType.StreamDeck
+		},
+		false
+	);
+
 	/**
 	 * Asserts the constructor of {@link KeyAction} sets the context.
 	 */
 	it("constructor sets context", () => {
 		// Arrange.
 		const context: CoordinatedActionContext = {
-			device: {
-				id: "DEV123",
-				isConnected: false
-			},
+			device,
 			id: "ABC123",
 			manifestId: "com.elgato.test.one",
 			coordinates: {
@@ -42,10 +54,7 @@ describe("KeyAction", () => {
 	it("inherits shared methods", () => {
 		// Arrange, act.
 		const keyAction = new KeyAction({
-			device: {
-				id: "DEV123",
-				isConnected: false
-			},
+			device,
 			id: "ABC123",
 			manifestId: "com.elgato.test.one",
 			coordinates: {
@@ -60,10 +69,7 @@ describe("KeyAction", () => {
 
 	describe("sending", () => {
 		const keyAction = new KeyAction({
-			device: {
-				id: "DEV123",
-				isConnected: false
-			},
+			device,
 			id: "ABC123",
 			manifestId: "com.elgato.test.one",
 			coordinates: {

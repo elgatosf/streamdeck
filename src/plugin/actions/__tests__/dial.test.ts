@@ -1,5 +1,6 @@
-import { Target, type SetFeedback, type SetFeedbackLayout, type SetImage, type SetTitle, type SetTriggerDescription, type ShowAlert } from "../../../api";
+import { DeviceType, Target, type SetFeedback, type SetFeedbackLayout, type SetImage, type SetTitle, type SetTriggerDescription, type ShowAlert } from "../../../api";
 import { connection } from "../../connection";
+import { Device } from "../../devices";
 import { Action, type CoordinatedActionContext } from "../action";
 import { DialAction } from "../dial";
 
@@ -8,16 +9,27 @@ jest.mock("../../manifest");
 jest.mock("../../connection");
 
 describe("DialAction", () => {
+	// Mock device.
+	const device = new Device(
+		"dev123",
+		{
+			name: "Device One",
+			size: {
+				columns: 5,
+				rows: 3
+			},
+			type: DeviceType.StreamDeck
+		},
+		false
+	);
+
 	/**
 	 * Asserts the constructor of {@link DialAction} sets the context.
 	 */
 	it("constructor sets context", () => {
 		// Arrange.
 		const source: CoordinatedActionContext = {
-			device: {
-				id: "DEV123",
-				isConnected: false
-			},
+			device,
 			id: "ABC123",
 			manifestId: "com.elgato.test.one",
 			coordinates: {
@@ -42,10 +54,7 @@ describe("DialAction", () => {
 	it("inherits shared methods", () => {
 		// Arrange, act.
 		const dialAction = new DialAction({
-			device: {
-				id: "DEV123",
-				isConnected: false
-			},
+			device,
 			id: "ABC123",
 			manifestId: "com.elgato.test.one",
 			coordinates: {
@@ -60,10 +69,7 @@ describe("DialAction", () => {
 
 	describe("sending", () => {
 		const dialAction = new DialAction({
-			device: {
-				id: "DEV123",
-				isConnected: false
-			},
+			device,
 			id: "ABC123",
 			manifestId: "com.elgato.test.one",
 			coordinates: {

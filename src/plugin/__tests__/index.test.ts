@@ -28,7 +28,7 @@ describe("index", () => {
 	 */
 	it("exports namespaces", async () => {
 		// Arrange.
-		const actions = await require("../actions");
+		const { actionService } = await require("../actions");
 		const { devices } = await require("../devices");
 		const { getManifest } = await require("../manifest");
 		const profiles = await require("../profiles");
@@ -37,7 +37,7 @@ describe("index", () => {
 		const { ui } = await require("../ui");
 
 		// Act, assert.
-		expect(streamDeck.actions).toBe(actions);
+		expect(streamDeck.actions).toBe(actionService);
 		expect(streamDeck.devices).toBe(devices);
 		expect(streamDeck.manifest).toBe(getManifest());
 		expect(streamDeck.profiles).toBe(profiles);

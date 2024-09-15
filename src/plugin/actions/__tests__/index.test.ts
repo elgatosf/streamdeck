@@ -1,4 +1,4 @@
-import { onDialDown, onDialRotate, onDialUp, onKeyDown, onKeyUp, onTitleParametersDidChange, onTouchTap, onWillAppear, onWillDisappear, registerAction } from "..";
+import { actionService } from "..";
 import {
 	DeviceType,
 	type DialAction,
@@ -90,7 +90,7 @@ describe("actions", () => {
 			} satisfies DialDown<Settings>;
 
 			// Act (emit).
-			const disposable = onDialDown(listener);
+			const disposable = actionService.onDialDown(listener);
 			connection.emit("dialDown", ev);
 
 			// Assert (emit).
@@ -136,7 +136,7 @@ describe("actions", () => {
 			} satisfies DialRotate<Settings>;
 
 			// Act (emit).
-			const disposable = onDialRotate(listener);
+			const disposable = actionService.onDialRotate(listener);
 			connection.emit("dialRotate", ev);
 
 			// Assert (emit).
@@ -180,7 +180,7 @@ describe("actions", () => {
 			} satisfies DialUp<Settings>;
 
 			// Act (emit).
-			const disposable = onDialUp(listener);
+			const disposable = actionService.onDialUp(listener);
 			connection.emit("dialUp", ev);
 
 			// Assert (emit).
@@ -225,7 +225,7 @@ describe("actions", () => {
 			} satisfies KeyDown<Settings>;
 
 			// Act (emit).
-			const disposable = onKeyDown(listener);
+			const disposable = actionService.onKeyDown(listener);
 			connection.emit("keyDown", ev);
 
 			// Assert (emit).
@@ -270,7 +270,7 @@ describe("actions", () => {
 			} satisfies KeyUp<Settings>;
 
 			// Act (emit).
-			const disposable = onKeyUp(listener);
+			const disposable = actionService.onKeyUp(listener);
 			connection.emit("keyUp", ev);
 
 			// Assert (emit).
@@ -324,7 +324,7 @@ describe("actions", () => {
 			} satisfies TitleParametersDidChange<Settings>;
 
 			// Act (emit).
-			const disposable = onTitleParametersDidChange(listener);
+			const disposable = actionService.onTitleParametersDidChange(listener);
 			connection.emit("titleParametersDidChange", ev);
 
 			// Assert (emit).
@@ -370,7 +370,7 @@ describe("actions", () => {
 			} satisfies TouchTap<Settings>;
 
 			// Act (emit).
-			const disposable = onTouchTap(listener);
+			const disposable = actionService.onTouchTap(listener);
 			connection.emit("touchTap", ev);
 
 			// Assert (emit).
@@ -415,7 +415,7 @@ describe("actions", () => {
 			} satisfies WillAppear<Settings>;
 
 			// Act (emit).
-			const disposable = onWillAppear(listener);
+			const disposable = actionService.onWillAppear(listener);
 			connection.emit("willAppear", ev);
 
 			// Assert (emit).
@@ -460,7 +460,7 @@ describe("actions", () => {
 			} satisfies WillDisappear<Settings>;
 
 			// Act (emit).
-			const disposable = onWillDisappear(listener);
+			const disposable = actionService.onWillDisappear(listener);
 			connection.emit("willDisappear", ev);
 			// Assert (emit).
 			expect(listener).toHaveBeenCalledTimes(1);
@@ -498,7 +498,7 @@ describe("actions", () => {
 			};
 
 			// Act, assert.
-			expect(() => registerAction(action)).toThrow("The action's manifestId cannot be undefined.");
+			expect(() => actionService.registerAction(action)).toThrow("The action's manifestId cannot be undefined.");
 		});
 
 		/**
@@ -511,7 +511,7 @@ describe("actions", () => {
 			};
 
 			// Act, assert.
-			expect(() => registerAction(action)).toThrow("com.elgato.action-service.__one");
+			expect(() => actionService.registerAction(action)).toThrow("com.elgato.action-service.__one");
 		});
 
 		/**
@@ -527,7 +527,7 @@ describe("actions", () => {
 			const spyOnPrependOnceListener = jest.spyOn(connection, "prependOnceListener");
 
 			// Act.
-			registerAction({ manifestId: keyManifestId });
+			actionService.registerAction({ manifestId: keyManifestId });
 
 			// Assert.
 			expect(spyOnAddListener).not.toHaveBeenCalled();
@@ -562,7 +562,7 @@ describe("actions", () => {
 			} satisfies DialDown<Settings>;
 
 			// Act.
-			registerAction({
+			actionService.registerAction({
 				manifestId: ev.action,
 				onDialDown: listener
 			});
@@ -605,7 +605,7 @@ describe("actions", () => {
 			} satisfies DialRotate<Settings>;
 
 			// Act.
-			registerAction({
+			actionService.registerAction({
 				manifestId: ev.action,
 				onDialRotate: listener
 			});
@@ -646,7 +646,7 @@ describe("actions", () => {
 			} satisfies DialUp<Settings>;
 
 			// Act.
-			registerAction({
+			actionService.registerAction({
 				manifestId: ev.action,
 				onDialUp: listener
 			});
@@ -679,7 +679,7 @@ describe("actions", () => {
 			} satisfies DidReceivePropertyInspectorMessage<Settings>;
 
 			// Act.
-			registerAction({
+			actionService.registerAction({
 				manifestId: ev.action,
 				onSendToPlugin: listener
 			});
@@ -722,7 +722,7 @@ describe("actions", () => {
 			} satisfies DidReceiveSettings<Settings>;
 
 			// Act.
-			registerAction({
+			actionService.registerAction({
 				manifestId: ev.action,
 				onDidReceiveSettings: listener
 			});
@@ -764,7 +764,7 @@ describe("actions", () => {
 			} satisfies KeyDown<Settings>;
 
 			// Act.
-			registerAction({
+			actionService.registerAction({
 				manifestId: ev.action,
 				onKeyDown: listener
 			});
@@ -806,7 +806,7 @@ describe("actions", () => {
 			} satisfies KeyUp<Settings>;
 
 			// Act.
-			registerAction({
+			actionService.registerAction({
 				manifestId: ev.action,
 				onKeyUp: listener
 			});
@@ -837,7 +837,7 @@ describe("actions", () => {
 			} satisfies PropertyInspectorDidAppear;
 
 			// Act.
-			registerAction({
+			actionService.registerAction({
 				manifestId: ev.action,
 				onPropertyInspectorDidAppear: listener
 			});
@@ -867,7 +867,7 @@ describe("actions", () => {
 			} satisfies PropertyInspectorDidDisappear;
 
 			// Act (emit).
-			registerAction({
+			actionService.registerAction({
 				manifestId: ev.action,
 				onPropertyInspectorDidDisappear: listener
 			});
@@ -917,7 +917,7 @@ describe("actions", () => {
 			} satisfies TitleParametersDidChange<Settings>;
 
 			// Act.
-			registerAction({
+			actionService.registerAction({
 				manifestId: ev.action,
 				onTitleParametersDidChange: listener
 			});
@@ -960,7 +960,7 @@ describe("actions", () => {
 			} satisfies TouchTap<Settings>;
 
 			// Act.
-			registerAction({
+			actionService.registerAction({
 				manifestId: ev.action,
 				onTouchTap: listener
 			});
@@ -1002,7 +1002,7 @@ describe("actions", () => {
 			} satisfies WillAppear<Settings>;
 
 			// Act.
-			registerAction({
+			actionService.registerAction({
 				manifestId: ev.action,
 				onWillAppear: listener
 			});
@@ -1044,7 +1044,7 @@ describe("actions", () => {
 			} satisfies WillDisappear<Settings>;
 
 			// Act.
-			registerAction({
+			actionService.registerAction({
 				manifestId: ev.action,
 				onWillDisappear: listener
 			});

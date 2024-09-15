@@ -1,5 +1,6 @@
-import { type SetState } from "../../../api";
+import { DeviceType, type SetState } from "../../../api";
 import { connection } from "../../connection";
+import { Device } from "../../devices/device";
 import { Action, type ActionContext } from "../action";
 import { MultiActionKey } from "../multi";
 
@@ -8,16 +9,27 @@ jest.mock("../../manifest");
 jest.mock("../../connection");
 
 describe("KeyMultiAction", () => {
+	// Mock device.
+	const device = new Device(
+		"dev123",
+		{
+			name: "Device One",
+			size: {
+				columns: 5,
+				rows: 3
+			},
+			type: DeviceType.StreamDeck
+		},
+		false
+	);
+
 	/**
-	 * Asserts the constructor of {@link MultiActionKey} sets the {@link MultiActionKey.manifestId} and {@link MultiActionKey.id}.
+	 * Asserts the constructor of {@link MultiActionKey} sets the context.
 	 */
-	it("constructor sets manifestId and id", () => {
+	it("constructor sets context", () => {
 		// Arrange.
 		const context: ActionContext = {
-			device: {
-				id: "DEV123",
-				isConnected: false
-			},
+			device,
 			id: "ABC123",
 			manifestId: "com.elgato.test.one"
 		};
@@ -37,10 +49,7 @@ describe("KeyMultiAction", () => {
 	it("inherits shared methods", () => {
 		// Arrange, act.
 		const multiActionKey = new MultiActionKey({
-			device: {
-				id: "DEV123",
-				isConnected: false
-			},
+			device,
 			id: "ABC123",
 			manifestId: "com.elgato.test.one"
 		});
@@ -51,10 +60,7 @@ describe("KeyMultiAction", () => {
 
 	describe("sending", () => {
 		const multiActionKey = new MultiActionKey({
-			device: {
-				id: "DEV123",
-				isConnected: false
-			},
+			device,
 			id: "ABC123",
 			manifestId: "com.elgato.test.one"
 		});

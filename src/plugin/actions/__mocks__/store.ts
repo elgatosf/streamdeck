@@ -1,6 +1,8 @@
 import { DialAction } from "../dial";
 import { KeyAction } from "../key";
 
+const { ActionStore, initializeStore: __initializeStore } = jest.requireActual<typeof import("../store")>("../store");
+
 const key = new KeyAction({
 	id: "key123",
 	manifestId: "com.elgato.test.key",
@@ -33,4 +35,10 @@ export const actionStore = {
 	})
 };
 
+// @ts-expect-error Underlying store is not used, but still registers on the connection.
+__initializeStore({
+	getDeviceById: jest.fn()
+});
+
 export const initializeStore = jest.fn();
+export { ActionStore };

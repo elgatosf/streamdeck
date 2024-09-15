@@ -1,7 +1,7 @@
 import type { Manifest, RegistrationInfo } from "../api";
 import { I18nProvider } from "../common/i18n";
 import { registerCreateLogEntryRoute, type Logger } from "../common/logging";
-import * as actions from "./actions";
+import { actionService, type ActionService } from "./actions";
 import { connection } from "./connection";
 import { devices } from "./devices";
 import { fileSystemLocaleProvider } from "./i18n";
@@ -54,8 +54,8 @@ export const streamDeck = {
 	 * Namespace for event listeners and functionality relating to Stream Deck actions.
 	 * @returns Actions namespace.
 	 */
-	get actions(): typeof actions {
-		return actions;
+	get actions(): ActionService {
+		return actionService;
 	},
 
 	/**

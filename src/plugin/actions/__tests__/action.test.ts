@@ -1,31 +1,45 @@
-import { type GetSettings, type SendToPropertyInspector, type SetSettings } from "../../../api";
+import { DeviceType, type GetSettings, type SendToPropertyInspector, type SetSettings } from "../../../api";
 import { Settings } from "../../../api/__mocks__/events";
 import { connection } from "../../connection";
+import { Device } from "../../devices/device";
 import { Action, type ActionContext } from "../action";
+import { MultiActionKey } from "../multi";
 
 jest.mock("../../logging");
 jest.mock("../../manifest");
 jest.mock("../../connection");
 
 describe("Action", () => {
+	// Mock device.
+	const device = new Device(
+		"dev123",
+		{
+			name: "Device One",
+			size: {
+				columns: 5,
+				rows: 3
+			},
+			type: DeviceType.StreamDeck
+		},
+		false
+	);
+
 	/**
-	 * Asserts the constructor of {@link Action} sets the {@link Action.manifestId} and {@link Action.id}.
+	 * Asserts the constructor of {@link Action} sets the context.
 	 */
-	it("constructor sets manifestId and id", () => {
+	it("constructor sets context", () => {
 		// Arrange.
 		const context: ActionContext = {
-			device: {
-				id: "DEV123",
-				isConnected: false
-			},
+			device,
 			id: "ABC123",
 			manifestId: "com.elgato.test.one"
 		};
 
 		// Act.
-		const action = new Action(context);
+		const action = new MultiActionKey(context);
 
 		// Assert.
+		expect(action).toBeInstanceOf(Action);
 		expect(action.device).toBe(context.device);
 		expect(action.id).toBe(context.id);
 		expect(action.manifestId).toBe(context.manifestId);
@@ -36,11 +50,8 @@ describe("Action", () => {
 	 */
 	it("getSettings", async () => {
 		// Arrange.
-		const action = new Action<Settings>({
-			device: {
-				id: "DEV123",
-				isConnected: false
-			},
+		const action = new MultiActionKey<Settings>({
+			device,
 			id: "ABC123",
 			manifestId: "com.elgato.test.one"
 		});
@@ -102,62 +113,9 @@ describe("Action", () => {
 		});
 	});
 
-	// describe("type checking", () => {
-	// 	/**
-	// 	 * Asserts {@link Action.isDial}.
-	// 	 */
-	// 	it("can be dial", () => {
-	// 		// Arrange.
-	// 		const action = new DialAction({
-	// 			action: "com.elgato.test.one",
-	// 			context: "ABC123"
-	// 		});
-
-	// 		// Act, assert.
-	// 		expect(action.isDial()).toBe(true);
-	// 		expect(action.isKey()).toBe(false);
-	// 		expect(action.isKeyInMultiAction()).toBe(false);
-	// 	});
-
-	// 	/**
-	// 	 * Asserts {@link Action.isKey}.
-	// 	 */
-	// 	it("can be key", () => {
-	// 		// Arrange.
-	// 		const action = new KeyAction({
-	// 			action: "com.elgato.test.one",
-	// 			context: "ABC123"
-	// 		});
-
-	// 		// Act, assert.
-	// 		expect(action.isDial()).toBe(false);
-	// 		expect(action.isKey()).toBe(true);
-	// 		expect(action.isKeyInMultiAction()).toBe(false);
-	// 	});
-
-	// 	/**
-	// 	 * Asserts {@link Action.isKeyInMultiAction}.
-	// 	 */
-	// 	it("can be key in multi-action", () => {
-	// 		// Arrange.
-	// 		const action = new KeyInMultiAction({
-	// 			action: "com.elgato.test.one",
-	// 			context: "ABC123"
-	// 		});
-
-	// 		// Act, assert.
-	// 		expect(action.isDial()).toBe(false);
-	// 		expect(action.isKey()).toBe(false);
-	// 		expect(action.isKeyInMultiAction()).toBe(true);
-	// 	});
-	// });
-
 	describe("sending", () => {
-		const action = new Action({
-			device: {
-				id: "DEV123",
-				isConnected: false
-			},
+		const action = new MultiActionKey({
+			device,
 			id: "ABC123",
 			manifestId: "com.elgato.test.one"
 		});
