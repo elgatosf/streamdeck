@@ -543,7 +543,7 @@ describe("actions", () => {
 		 */
 		it("routes onDialDown", () => {
 			// Arrange.
-			const listener = jest.fn().mockImplementation(() => console.log("Hello from the other side"));
+			const listener = jest.fn();
 			const ev = {
 				action: manifestId,
 				context: "dial123", // Mocked in actionStore.
@@ -567,7 +567,6 @@ describe("actions", () => {
 				onDialDown: listener
 			});
 
-			console.log("Foo");
 			connection.emit("dialDown", ev);
 
 			// Assert.

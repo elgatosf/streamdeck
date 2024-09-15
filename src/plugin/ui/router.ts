@@ -43,7 +43,7 @@ const router = new MessageGateway<Action>(
  * @returns `true` when the event is related to the current property inspector.
  */
 function isCurrent(ev: PropertyInspectorDidAppear | PropertyInspectorDidDisappear): boolean {
-	return current?.action.id === ev.context;
+	return current?.action?.id === ev.context && current?.action?.manifestId === ev.action && current?.action?.device?.id === ev.device;
 }
 
 /*

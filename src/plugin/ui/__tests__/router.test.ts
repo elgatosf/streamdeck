@@ -1,12 +1,15 @@
-import { Action, MessageRequest, type MessageRequestOptions } from "../..";
+import { DeviceType, KeyAction, MessageRequest, type MessageRequestOptions } from "../..";
 import type { DidReceivePropertyInspectorMessage, SendToPropertyInspector } from "../../../api";
 import type { RawMessageRequest } from "../../../common/messaging/message";
 import { MessageResponder } from "../../../common/messaging/responder";
 import { PromiseCompletionSource } from "../../../common/promises";
+import { actionStore } from "../../actions/store";
 import { connection } from "../../connection";
+import { Device } from "../../devices/device";
 import { PropertyInspector } from "../property-inspector";
 import { getCurrentUI, router } from "../router";
 
+jest.mock("../../actions/store");
 jest.mock("../../connection");
 jest.mock("../../logging");
 jest.mock("../../manifest");
@@ -31,7 +34,7 @@ describe("current UI", () => {
 		// Arrange.
 		connection.emit("propertyInspectorDidAppear", {
 			action: "com.elgato.test.one",
-			context: "abc123",
+			context: "key123", // Mocked in actionStore.
 			device: "dev123",
 			event: "propertyInspectorDidAppear"
 		});
@@ -42,9 +45,7 @@ describe("current UI", () => {
 		// Assert.
 		expect(current).toBeInstanceOf(PropertyInspector);
 		expect(current).not.toBeUndefined();
-		expect(current?.deviceId).toBe("dev123");
-		expect(current?.id).toBe("abc123");
-		expect(current?.manifestId).toBe("com.elgato.test.one");
+		expect(current?.action).toBe(actionStore.getActionById("key123"));
 	});
 
 	/**
@@ -61,7 +62,7 @@ describe("current UI", () => {
 
 		connection.emit("propertyInspectorDidAppear", {
 			action: "com.elgato.test.one",
-			context: "abc123",
+			context: "key123", // Mocked in actionStore.
 			device: "dev123",
 			event: "propertyInspectorDidAppear"
 		});
@@ -72,9 +73,7 @@ describe("current UI", () => {
 		// Assert.
 		expect(current).toBeInstanceOf(PropertyInspector);
 		expect(current).not.toBeUndefined();
-		expect(current?.deviceId).toBe("dev123");
-		expect(current?.id).toBe("abc123");
-		expect(current?.manifestId).toBe("com.elgato.test.one");
+		expect(current?.action).toBe(actionStore.getActionById("key123"));
 	});
 
 	/**
@@ -82,10 +81,11 @@ describe("current UI", () => {
 	 */
 	it("clears matching PI", () => {
 		// Arrange.
+		const action = actionStore.getActionById("key123")!;
 		const context = {
-			action: "com.elgato.test.one",
-			context: "abc123",
-			device: "dev123"
+			action: action.manifestId,
+			context: action.id,
+			device: undefined!
 		};
 
 		connection.emit("propertyInspectorDidAppear", {
@@ -111,10 +111,11 @@ describe("current UI", () => {
 	 */
 	it("does not clear matching PI with debounce", () => {
 		// Arrange.
+		const action = actionStore.getActionById("key123")!;
 		const context = {
-			action: "com.elgato.test.one",
-			context: "abc123",
-			device: "dev123"
+			action: action.manifestId,
+			context: action.id,
+			device: undefined!
 		};
 
 		connection.emit("propertyInspectorDidAppear", {
@@ -153,7 +154,7 @@ describe("current UI", () => {
 		// Arrange.
 		connection.emit("propertyInspectorDidAppear", {
 			action: "com.elgato.test.one",
-			context: "abc123",
+			context: "key123", // Mocked in actionStore.
 			device: "dev123",
 			event: "propertyInspectorDidAppear"
 		});
@@ -161,7 +162,7 @@ describe("current UI", () => {
 		expect(getCurrentUI()).not.toBeUndefined();
 		connection.emit("propertyInspectorDidDisappear", {
 			action: "com.elgato.test.one",
-			context: "__other__",
+			context: "dial123", // Mocked in actionStore
 			device: "dev123",
 			event: "propertyInspectorDidDisappear"
 		});
@@ -181,7 +182,7 @@ describe("current UI", () => {
 		const spyOnFetch = jest.spyOn(router, "fetch");
 		connection.emit("propertyInspectorDidAppear", {
 			action: "com.elgato.test.one",
-			context: "abc123",
+			context: "key123", // Mocked in actionStore.
 			device: "dev123",
 			event: "propertyInspectorDidAppear"
 		});
@@ -213,7 +214,7 @@ describe("router", () => {
 			const spyOnProcess = jest.spyOn(router, "process");
 			const ev = {
 				action: "com.elgato.test.one",
-				context: "abc123",
+				context: "key123", // Mocked in actionStore.
 				event: "sendToPlugin",
 				payload: {
 					__type: "request",
@@ -240,7 +241,7 @@ describe("router", () => {
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[MessageRequest, MessageResponder]>(
 				{
-					action: new Action(ev),
+					action: actionStore.getActionById("key123")!,
 					path: "/test",
 					unidirectional: false,
 					body: {
@@ -259,7 +260,32 @@ describe("router", () => {
 
 	describe("outbound messages", () => {
 		describe("with ui", () => {
-			beforeAll(() => jest.useFakeTimers());
+			const action = new KeyAction({
+				id: "com.elgato.test.action",
+				manifestId: "com.elgato.test.action",
+				device: new Device(
+					"device123",
+					{
+						name: "Device One",
+						size: {
+							columns: 5,
+							rows: 3
+						},
+						type: DeviceType.StreamDeck
+					},
+					false
+				),
+				coordinates: {
+					column: 0,
+					row: 0
+				}
+			});
+
+			beforeAll(() => {
+				jest.useFakeTimers();
+				jest.spyOn(actionStore, "getActionById").mockReturnValue(action);
+			});
+
 			afterAll(() => jest.useRealTimers());
 
 			/**
@@ -269,9 +295,9 @@ describe("router", () => {
 				// Arrange.
 				const spyOnSend = jest.spyOn(connection, "send");
 				connection.emit("propertyInspectorDidAppear", {
-					action: "com.elgato.test.one",
-					context: "proxy-outbound-message-with-path-and-body",
-					device: "dev123",
+					action: action.manifestId,
+					context: action.id,
+					device: action.device.id,
 					event: "propertyInspectorDidAppear"
 				});
 
@@ -283,7 +309,7 @@ describe("router", () => {
 				// Assert.
 				expect(spyOnSend).toHaveBeenCalledTimes(1);
 				expect(spyOnSend).toHaveBeenCalledWith<[SendToPropertyInspector<RawMessageRequest>]>({
-					context: "proxy-outbound-message-with-path-and-body",
+					context: action.id,
 					event: "sendToPropertyInspector",
 					payload: {
 						__type: "request",
@@ -304,9 +330,9 @@ describe("router", () => {
 				// Arrange.
 				const spyOnSend = jest.spyOn(connection, "send");
 				connection.emit("propertyInspectorDidAppear", {
-					action: "com.elgato.test.one",
-					context: "proxy-outbound-message-with-path-and-body",
-					device: "dev123",
+					action: action.manifestId,
+					context: action.id,
+					device: action.device.id,
 					event: "propertyInspectorDidAppear"
 				});
 
@@ -317,13 +343,14 @@ describe("router", () => {
 					timeout: 1000,
 					unidirectional: true
 				});
+
 				jest.runAllTimers();
 				await req;
 
 				// Assert.
 				expect(spyOnSend).toHaveBeenCalledTimes(1);
 				expect(spyOnSend).toHaveBeenCalledWith<[SendToPropertyInspector<RawMessageRequest>]>({
-					context: "proxy-outbound-message-with-path-and-body",
+					context: action.id,
 					event: "sendToPropertyInspector",
 					payload: {
 						__type: "request",
@@ -343,10 +370,22 @@ describe("router", () => {
 		 */
 		test("without ui", async () => {
 			// Arrange.
+			const action = new KeyAction({
+				manifestId: "com.elgato.test.one",
+				id: "proxy-outbound-message-without-ui",
+				coordinates: {
+					column: 0,
+					row: 0
+				},
+				device: undefined!
+			});
+
+			jest.spyOn(actionStore, "getActionById").mockReturnValue(action);
+
 			const ev = {
-				action: "com.elgato.test.one",
-				context: "proxy-outbound-message-without-ui",
-				device: "dev123"
+				action: action.manifestId,
+				context: action.id,
+				device: undefined!
 			};
 
 			connection.emit("propertyInspectorDidAppear", {
