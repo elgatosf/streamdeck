@@ -1,19 +1,26 @@
 import type { State } from "../../api";
 import type { JsonObject } from "../../common/json";
 import { connection } from "../connection";
-import { Action, type ActionContext } from "./action";
+import { Action, type ActionContext, type ActionType } from "./action";
 
 /**
  * Provides a contextualized instance of a key action, within a multi-action.
  * @template T The type of settings associated with the action.
  */
-export class KeyInMultiAction<T extends JsonObject = JsonObject> extends Action<T> {
+export class MultiActionKey<T extends JsonObject = JsonObject> extends Action<T> {
 	/**
 	 * Initializes a new instance of the {@see KeyMultiAction} class.
 	 * @param context Action context.
 	 */
 	constructor(context: ActionContext) {
 		super(context);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	protected override get type(): ActionType {
+		return "MultiActionKey";
 	}
 
 	/**

@@ -1,7 +1,7 @@
 import type { Coordinates, State } from "../../api";
 import type { JsonObject } from "../../common/json";
 import { connection } from "../connection";
-import { Action, type CoordinatedActionContext, type ImageOptions, type TitleOptions } from "./action";
+import { Action, type ActionType, type CoordinatedActionContext, type ImageOptions, type TitleOptions } from "./action";
 
 /**
  * Provides a contextualized instance of a key action.
@@ -27,6 +27,13 @@ export class KeyAction<T extends JsonObject = JsonObject> extends Action<T> impl
 	 */
 	public get coordinates(): Coordinates {
 		return this.#context.coordinates;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	protected override get type(): ActionType {
+		return "Key";
 	}
 
 	/**

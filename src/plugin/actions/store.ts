@@ -6,9 +6,9 @@ import type { DeviceCollection } from "../devices";
 import { type ActionContext } from "./action";
 import { DialAction } from "./dial";
 import { KeyAction } from "./key";
-import { KeyInMultiAction } from "./multi";
+import { MultiActionKey } from "./multi";
 
-const __actions = new Map<string, DialAction | KeyAction | KeyInMultiAction>();
+const __actions = new Map<string, DialAction | KeyAction | MultiActionKey>();
 let __devices: DeviceCollection | undefined;
 
 // Adds the action to the store.
@@ -35,7 +35,7 @@ connection.prependListener("willDisappear", (ev) => __actions.delete(ev.context)
  * @param context Context of the action.
  * @returns The new action.
  */
-function create(ev: WillAppear<JsonObject>, context: ActionContext): DialAction | KeyAction | KeyInMultiAction {
+function create(ev: WillAppear<JsonObject>, context: ActionContext): DialAction | KeyAction | MultiActionKey {
 	// Dial.
 	if (ev.payload.controller === "Encoder") {
 		return new DialAction({
@@ -46,7 +46,7 @@ function create(ev: WillAppear<JsonObject>, context: ActionContext): DialAction 
 
 	// Multi-action key
 	if (ev.payload.isInMultiAction) {
-		return new KeyInMultiAction(context);
+		return new MultiActionKey(context);
 	}
 
 	// Key action.
@@ -71,7 +71,7 @@ export function initializeStore(devices: DeviceCollection): void {
 /**
  * Provides a store of visible actions.
  */
-export class ActionStore extends Enumerable<DialAction | KeyAction | KeyInMultiAction> {
+export class ActionStore extends Enumerable<DialAction | KeyAction | MultiActionKey> {
 	/**
 	 * Initializes a new instance of the {@link ActionStore} class.
 	 */
@@ -84,7 +84,7 @@ export class ActionStore extends Enumerable<DialAction | KeyAction | KeyInMultiA
 	 * @param id Identifier of action to search for.
 	 * @returns The action, when present; otherwise `undefined`.
 	 */
-	public getActionById(id: string): DialAction | KeyAction | KeyInMultiAction | undefined {
+	public getActionById(id: string): DialAction | KeyAction | MultiActionKey | undefined {
 		return __actions.get(id);
 	}
 }

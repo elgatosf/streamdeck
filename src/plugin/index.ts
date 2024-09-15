@@ -40,7 +40,7 @@ export { Action, ImageOptions, TitleOptions } from "./actions/action";
 export { action } from "./actions/decorators";
 export { DialAction, TriggerDescriptionOptions } from "./actions/dial";
 export { KeyAction } from "./actions/key";
-export { KeyInMultiAction } from "./actions/multi";
+export { MultiActionKey } from "./actions/multi";
 export { SingletonAction } from "./actions/singleton-action";
 export { type Device } from "./devices";
 export * from "./events";

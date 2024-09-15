@@ -4,13 +4,16 @@ import type { JsonObject, JsonValue } from "../../common/json";
 import type { KeyOf } from "../../common/utils";
 import { connection } from "../connection";
 import type { Device } from "../devices";
+import type { DialAction } from "./dial";
+import type { KeyAction } from "./key";
+import type { MultiActionKey } from "./multi";
 import type { SingletonAction } from "./singleton-action";
 
 /**
  * Provides a contextualized instance of an {@link Action}, allowing for direct communication with the Stream Deck.
  * @template T The type of settings associated with the action.
  */
-export class Action<T extends JsonObject = JsonObject> implements ActionContext {
+export abstract class Action<T extends JsonObject = JsonObject> implements ActionContext {
 	/**
 	 * The action context.
 	 */
@@ -46,6 +49,12 @@ export class Action<T extends JsonObject = JsonObject> implements ActionContext 
 	}
 
 	/**
+	 * Underlying type of the action.
+	 * @returns The type.
+	 */
+	protected abstract get type(): ActionType;
+
+	/**
 	 * Gets the settings associated this action instance.
 	 * @template U The type of settings associated with the action.
 	 * @returns Promise containing the action instance's settings.
@@ -65,6 +74,30 @@ export class Action<T extends JsonObject = JsonObject> implements ActionContext 
 				context: this.id
 			});
 		});
+	}
+
+	/**
+	 * Determines whether this instance is a dial action.
+	 * @returns `true` when this instance is a dial; otherwise `false`.
+	 */
+	public isDial(): this is DialAction {
+		return this.type === "Dial";
+	}
+
+	/**
+	 * Determines whether this instance is a key action.
+	 * @returns `true` when this instance is a key; otherwise `false`.
+	 */
+	public isKey(): this is KeyAction {
+		return this.type === "Key";
+	}
+
+	/**
+	 * Determines whether this instance is a multi-action key.
+	 * @returns `true` when this instance is a multi-action key; otherwise `false`.
+	 */
+	public isMultiActionKey(): this is MultiActionKey {
+		return this.type === "MultiActionKey";
 	}
 
 	/**
@@ -105,6 +138,11 @@ export type ImageOptions = Omit<KeyOf<SetImage, "payload">, "image">;
  * Options that define how to render a title associated with an action.
  */
 export type TitleOptions = Omit<KeyOf<SetTitle, "payload">, "title">;
+
+/**
+ * Action type, for example dial or key.
+ */
+export type ActionType = "Dial" | "Key" | "MultiActionKey";
 
 /**
  * Provides context information for an instance of an action.

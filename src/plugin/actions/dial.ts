@@ -2,7 +2,7 @@ import type { Coordinates, FeedbackPayload, SetTriggerDescription } from "../../
 import type { JsonObject } from "../../common/json";
 import type { KeyOf } from "../../common/utils";
 import { connection } from "../connection";
-import { Action, type CoordinatedActionContext, type ImageOptions, type TitleOptions } from "./action";
+import { Action, type ActionType, type CoordinatedActionContext, type ImageOptions, type TitleOptions } from "./action";
 
 /**
  * Provides a contextualized instance of a dial action.
@@ -28,6 +28,13 @@ export class DialAction<T extends JsonObject = JsonObject> extends Action<T> imp
 	 */
 	public get coordinates(): Coordinates {
 		return this.#context.coordinates;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	protected override get type(): ActionType {
+		return "Dial";
 	}
 
 	/**

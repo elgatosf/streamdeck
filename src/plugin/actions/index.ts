@@ -19,9 +19,6 @@ import { getManifest } from "../manifest";
 import { onDidReceiveSettings } from "../settings";
 import { ui } from "../ui";
 import { Action, type ActionContext } from "./action";
-import { DialAction } from "./dial";
-import { KeyAction } from "./key";
-import { KeyInMultiAction } from "./multi";
 import type { SingletonAction } from "./singleton-action";
 import { actionStore } from "./store";
 
@@ -38,7 +35,7 @@ const manifest = getManifest();
 export function onDialDown<T extends JsonObject = JsonObject>(listener: (ev: DialDownEvent<T>) => void): IDisposable {
 	return connection.disposableOn("dialDown", (ev: DialDown<T>) => {
 		const action = actionStore.getActionById(ev.context);
-		if (action && action instanceof DialAction) {
+		if (action?.isDial()) {
 			listener(new ActionEvent(action, ev));
 		}
 	});
@@ -53,7 +50,7 @@ export function onDialDown<T extends JsonObject = JsonObject>(listener: (ev: Dia
 export function onDialRotate<T extends JsonObject = JsonObject>(listener: (ev: DialRotateEvent<T>) => void): IDisposable {
 	return connection.disposableOn("dialRotate", (ev: DialRotate<T>) => {
 		const action = actionStore.getActionById(ev.context);
-		if (action && action instanceof DialAction) {
+		if (action?.isDial()) {
 			listener(new ActionEvent(action, ev));
 		}
 	});
@@ -70,7 +67,7 @@ export function onDialRotate<T extends JsonObject = JsonObject>(listener: (ev: D
 export function onDialUp<T extends JsonObject = JsonObject>(listener: (ev: DialUpEvent<T>) => void): IDisposable {
 	return connection.disposableOn("dialUp", (ev: DialUp<T>) => {
 		const action = actionStore.getActionById(ev.context);
-		if (action && action instanceof DialAction) {
+		if (action?.isDial()) {
 			listener(new ActionEvent(action, ev));
 		}
 	});
@@ -87,7 +84,7 @@ export function onDialUp<T extends JsonObject = JsonObject>(listener: (ev: DialU
 export function onKeyDown<T extends JsonObject = JsonObject>(listener: (ev: KeyDownEvent<T>) => void): IDisposable {
 	return connection.disposableOn("keyDown", (ev: KeyDown<T>) => {
 		const action = actionStore.getActionById(ev.context);
-		if (action && (action instanceof KeyAction || action instanceof KeyInMultiAction)) {
+		if (action?.isKey() || action?.isMultiActionKey()) {
 			listener(new ActionEvent(action, ev));
 		}
 	});
@@ -104,7 +101,7 @@ export function onKeyDown<T extends JsonObject = JsonObject>(listener: (ev: KeyD
 export function onKeyUp<T extends JsonObject = JsonObject>(listener: (ev: KeyUpEvent<T>) => void): IDisposable {
 	return connection.disposableOn("keyUp", (ev: KeyUp<T>) => {
 		const action = actionStore.getActionById(ev.context);
-		if (action && (action instanceof KeyAction || action instanceof KeyInMultiAction)) {
+		if (action?.isKey() || action?.isMultiActionKey()) {
 			listener(new ActionEvent(action, ev));
 		}
 	});
@@ -119,7 +116,7 @@ export function onKeyUp<T extends JsonObject = JsonObject>(listener: (ev: KeyUpE
 export function onTitleParametersDidChange<T extends JsonObject = JsonObject>(listener: (ev: TitleParametersDidChangeEvent<T>) => void): IDisposable {
 	return connection.disposableOn("titleParametersDidChange", (ev: TitleParametersDidChange<T>) => {
 		const action = actionStore.getActionById(ev.context);
-		if (action && action instanceof KeyAction) {
+		if (action?.isKey()) {
 			listener(new ActionEvent(action, ev));
 		}
 	});
@@ -134,7 +131,7 @@ export function onTitleParametersDidChange<T extends JsonObject = JsonObject>(li
 export function onTouchTap<T extends JsonObject = JsonObject>(listener: (ev: TouchTapEvent<T>) => void): IDisposable {
 	return connection.disposableOn("touchTap", (ev: TouchTap<T>) => {
 		const action = actionStore.getActionById(ev.context);
-		if (action && action instanceof DialAction) {
+		if (action?.isDial()) {
 			listener(new ActionEvent(action, ev));
 		}
 	});
