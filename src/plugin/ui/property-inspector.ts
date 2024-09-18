@@ -5,7 +5,6 @@ import { PUBLIC_PATH_PREFIX, type MessageGateway, type MessageRequestOptions, ty
 import type { Action } from "../actions/action";
 import type { DialAction } from "../actions/dial";
 import type { KeyAction } from "../actions/key";
-import type { MultiActionKey } from "../actions/multi";
 import type { SingletonAction } from "../actions/singleton-action";
 import { actionStore } from "../actions/store";
 import { connection } from "../connection";
@@ -17,7 +16,7 @@ export class PropertyInspector implements Pick<MessageGateway<Action>, "fetch"> 
 	/**
 	 * Action associated with the property inspector
 	 */
-	public readonly action: DialAction | KeyAction | MultiActionKey;
+	public readonly action: DialAction | KeyAction;
 
 	/**
 	 * Initializes a new instance of the {@link PropertyInspector} class.

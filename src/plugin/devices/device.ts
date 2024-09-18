@@ -1,7 +1,6 @@
 import type { DeviceInfo, DeviceType, Size } from "../../api";
 import type { DialAction } from "../actions/dial";
 import type { KeyAction } from "../actions/key";
-import type { MultiActionKey } from "../actions/multi";
 import { actionStore } from "../actions/store";
 import { connection } from "../connection";
 
@@ -55,7 +54,7 @@ export class Device {
 	 * Actions currently visible on the device.
 	 * @returns Collection of visible actions.
 	 */
-	public get actions(): IterableIterator<DialAction | KeyAction | MultiActionKey> {
+	public get actions(): IterableIterator<DialAction | KeyAction> {
 		return actionStore.filter((a) => a.device.id === this.id);
 	}
 

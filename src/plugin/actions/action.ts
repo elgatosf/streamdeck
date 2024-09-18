@@ -1,19 +1,19 @@
 import type streamDeck from "../";
-import type { Coordinates, DidReceiveSettings, SetImage, SetTitle } from "../../api";
+
+import type { DidReceiveSettings } from "../../api";
 import type { JsonObject, JsonValue } from "../../common/json";
-import type { KeyOf } from "../../common/utils";
 import { connection } from "../connection";
 import type { Device } from "../devices";
 import type { DialAction } from "./dial";
 import type { KeyAction } from "./key";
-import type { MultiActionKey } from "./multi";
 import type { SingletonAction } from "./singleton-action";
+import type { ActionContext } from "./store";
 
 /**
  * Provides a contextualized instance of an {@link Action}, allowing for direct communication with the Stream Deck.
  * @template T The type of settings associated with the action.
  */
-export abstract class Action<T extends JsonObject = JsonObject> implements ActionContext {
+export class Action<T extends JsonObject = JsonObject> {
 	/**
 	 * The action context.
 	 */
@@ -49,12 +49,6 @@ export abstract class Action<T extends JsonObject = JsonObject> implements Actio
 	}
 
 	/**
-	 * Underlying type of the action.
-	 * @returns The type.
-	 */
-	protected abstract get type(): ActionType;
-
-	/**
 	 * Gets the settings associated this action instance.
 	 * @template U The type of settings associated with the action.
 	 * @returns Promise containing the action instance's settings.
@@ -77,27 +71,19 @@ export abstract class Action<T extends JsonObject = JsonObject> implements Actio
 	}
 
 	/**
-	 * Determines whether this instance is a dial action.
+	 * Determines whether this instance is a dial.
 	 * @returns `true` when this instance is a dial; otherwise `false`.
 	 */
 	public isDial(): this is DialAction {
-		return this.type === "Dial";
+		return this.#context.controller === "Encoder";
 	}
 
 	/**
-	 * Determines whether this instance is a key action.
+	 * Determines whether this instance is a key.
 	 * @returns `true` when this instance is a key; otherwise `false`.
 	 */
 	public isKey(): this is KeyAction {
-		return this.type === "Key";
-	}
-
-	/**
-	 * Determines whether this instance is a multi-action key.
-	 * @returns `true` when this instance is a multi-action key; otherwise `false`.
-	 */
-	public isMultiActionKey(): this is MultiActionKey {
-		return this.type === "MultiActionKey";
+		return this.#context.controller === "Keypad";
 	}
 
 	/**
@@ -127,53 +113,15 @@ export abstract class Action<T extends JsonObject = JsonObject> implements Actio
 			payload: settings
 		});
 	}
+
+	/**
+	 * Temporarily shows an alert (i.e. warning), in the form of an exclamation mark in a yellow triangle, on this action instance. Used to provide visual feedback when an action failed.
+	 * @returns `Promise` resolved when the request to show an alert has been sent to Stream Deck.
+	 */
+	public showAlert(): Promise<void> {
+		return connection.send({
+			event: "showAlert",
+			context: this.id
+		});
+	}
 }
-
-/**
- * Options that define how to render an image associated with an action.
- */
-export type ImageOptions = Omit<KeyOf<SetImage, "payload">, "image">;
-
-/**
- * Options that define how to render a title associated with an action.
- */
-export type TitleOptions = Omit<KeyOf<SetTitle, "payload">, "title">;
-
-/**
- * Action type, for example dial or key.
- */
-export type ActionType = "Dial" | "Key" | "MultiActionKey";
-
-/**
- * Provides context information for an instance of an action.
- */
-export type ActionContext = {
-	/**
-	 * Stream Deck device the action is positioned on.
-	 * @returns Stream Deck device.
-	 */
-	get device(): Device;
-
-	/**
-	 * Action instance identifier.
-	 * @returns Identifier.
-	 */
-	get id(): string;
-
-	/**
-	 * Manifest identifier (UUID) for this action type.
-	 * @returns Manifest identifier.
-	 */
-	get manifestId(): string;
-};
-
-/**
- * Provides context information for an instance of an action, with coordinates.
- */
-export type CoordinatedActionContext = ActionContext & {
-	/**
-	 * Coordinates of the action, on the Stream Deck device.
-	 * @returns Coordinates.
-	 */
-	get coordinates(): Readonly<Coordinates>;
-};

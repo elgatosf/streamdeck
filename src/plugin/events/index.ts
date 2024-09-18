@@ -19,10 +19,9 @@ import type {
 } from "../../api";
 import { ActionWithoutPayloadEvent, Event, type ActionEvent } from "../../common/events";
 import type { JsonObject } from "../../common/json";
-import type { ActionContext } from "../actions/action";
 import type { DialAction } from "../actions/dial";
 import type { KeyAction } from "../actions/key";
-import type { MultiActionKey } from "../actions/multi";
+import type { ActionContext } from "../actions/store";
 import type { Device } from "../devices";
 import { ApplicationEvent } from "./application-event";
 import { DeviceEvent } from "./device-event";
@@ -70,27 +69,24 @@ export type DialUpEvent<TSettings extends JsonObject = JsonObject> = ActionEvent
 /**
  * Event information received from Stream Deck when the plugin receives settings.
  */
-export type DidReceiveSettingsEvent<TSettings extends JsonObject = JsonObject> = ActionEvent<
-	DidReceiveSettings<TSettings>,
-	DialAction<TSettings> | KeyAction<TSettings> | MultiActionKey<TSettings>
->;
+export type DidReceiveSettingsEvent<TSettings extends JsonObject = JsonObject> = ActionEvent<DidReceiveSettings<TSettings>, DialAction<TSettings> | KeyAction<TSettings>>;
 
 /**
  * Event information received from Stream Deck when a key is pressed down.
  */
-export type KeyDownEvent<TSettings extends JsonObject = JsonObject> = ActionEvent<KeyDown<TSettings>, KeyAction<TSettings> | MultiActionKey<TSettings>>;
+export type KeyDownEvent<TSettings extends JsonObject = JsonObject> = ActionEvent<KeyDown<TSettings>, KeyAction<TSettings>>;
 
 /**
  * Event information received from Stream Deck when a pressed key is release.
  */
-export type KeyUpEvent<TSettings extends JsonObject = JsonObject> = ActionEvent<KeyUp<TSettings>, KeyAction<TSettings> | MultiActionKey<TSettings>>;
+export type KeyUpEvent<TSettings extends JsonObject = JsonObject> = ActionEvent<KeyUp<TSettings>, KeyAction<TSettings>>;
 
 /**
  * Event information received from Stream Deck when the property inspector appears.
  */
 export type PropertyInspectorDidAppearEvent<TSettings extends JsonObject = JsonObject> = ActionWithoutPayloadEvent<
 	PropertyInspectorDidAppear,
-	DialAction<TSettings> | KeyAction<TSettings> | MultiActionKey<TSettings>
+	DialAction<TSettings> | KeyAction<TSettings>
 >;
 
 /**
@@ -98,7 +94,7 @@ export type PropertyInspectorDidAppearEvent<TSettings extends JsonObject = JsonO
  */
 export type PropertyInspectorDidDisappearEvent<TSettings extends JsonObject = JsonObject> = ActionWithoutPayloadEvent<
 	PropertyInspectorDidDisappear,
-	DialAction<TSettings> | KeyAction<TSettings> | MultiActionKey<TSettings>
+	DialAction<TSettings> | KeyAction<TSettings>
 >;
 
 /**
@@ -122,10 +118,7 @@ export type TouchTapEvent<TSettings extends JsonObject = JsonObject> = ActionEve
 /**
  * Event information received from Stream Deck when an action appears on the canvas.
  */
-export type WillAppearEvent<TSettings extends JsonObject = JsonObject> = ActionEvent<
-	WillAppear<TSettings>,
-	DialAction<TSettings> | KeyAction<TSettings> | MultiActionKey<TSettings>
->;
+export type WillAppearEvent<TSettings extends JsonObject = JsonObject> = ActionEvent<WillAppear<TSettings>, DialAction<TSettings> | KeyAction<TSettings>>;
 
 /**
  * Event information received from Stream Deck when an action disappears from the canvas.

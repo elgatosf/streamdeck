@@ -1,7 +1,6 @@
 import type { JsonObject, JsonValue } from "../../common/json";
 import type { DialAction } from "../actions/dial";
 import type { KeyAction } from "../actions/key";
-import type { MultiActionKey } from "../actions/multi";
 import type {
 	DialDownEvent,
 	DialRotateEvent,
@@ -34,7 +33,7 @@ export class SingletonAction<T extends JsonObject = JsonObject> {
 	 * Gets the visible actions with the `manifestId` that match this instance's.
 	 * @returns The visible actions.
 	 */
-	public get actions(): IterableIterator<DialAction<T> | KeyAction<T> | MultiActionKey<T>> {
+	public get actions(): IterableIterator<DialAction<T> | KeyAction<T>> {
 		return actionStore.filter((a) => a.manifestId === this.manifestId);
 	}
 

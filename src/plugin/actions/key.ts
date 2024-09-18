@@ -1,39 +1,51 @@
-import type { Coordinates, State } from "../../api";
+import type { Coordinates, SetImage, SetTitle, State, WillAppear } from "../../api";
 import type { JsonObject } from "../../common/json";
+import type { KeyOf } from "../../common/utils";
 import { connection } from "../connection";
-import { Action, type ActionType, type CoordinatedActionContext, type ImageOptions, type TitleOptions } from "./action";
+import { Action } from "./action";
+import type { ActionContext } from "./store";
 
 /**
  * Provides a contextualized instance of a key action.
  * @template T The type of settings associated with the action.
  */
-export class KeyAction<T extends JsonObject = JsonObject> extends Action<T> implements CoordinatedActionContext {
+export class KeyAction<T extends JsonObject = JsonObject> extends Action<T> {
 	/**
-	 * The action context.
+	 * Private backing field for {@link coordinates}.
 	 */
-	readonly #context: CoordinatedActionContext;
+	readonly #coordinates: Readonly<Coordinates> | undefined;
+
+	/**
+	 * Source of the action.
+	 */
+	readonly #source: WillAppear<JsonObject>;
 
 	/**
 	 * Initializes a new instance of the {@see KeyAction} class.
 	 * @param context Action context.
+	 * @param source Source of the action.
 	 */
-	constructor(context: CoordinatedActionContext) {
+	constructor(context: ActionContext, source: WillAppear<JsonObject>) {
 		super(context);
-		this.#context = context;
+
+		this.#coordinates = !source.payload.isInMultiAction ? Object.freeze(source.payload.coordinates) : undefined;
+		this.#source = source;
 	}
 
 	/**
-	 * @inheritdoc
+	 * Coordinates of the key; otherwise `undefined` when the action is part of a multi-action.
+	 * @returns The coordinates.
 	 */
-	public get coordinates(): Coordinates {
-		return this.#context.coordinates;
+	public get coordinates(): Coordinates | undefined {
+		return this.#coordinates;
 	}
 
 	/**
-	 * @inheritdoc
+	 * Determines whether the key is part of a multi-action.
+	 * @returns `true` when in a multi-action; otherwise `false`.
 	 */
-	protected override get type(): ActionType {
-		return "Key";
+	public get isInMultiAction(): boolean {
+		return this.#source.payload.isInMultiAction;
 	}
 
 	/**
@@ -91,17 +103,6 @@ export class KeyAction<T extends JsonObject = JsonObject> extends Action<T> impl
 	}
 
 	/**
-	 * Temporarily shows an alert (i.e. warning), in the form of an exclamation mark in a yellow triangle, on this action instance. Used to provide visual feedback when an action failed.
-	 * @returns `Promise` resolved when the request to show an alert has been sent to Stream Deck.
-	 */
-	public showAlert(): Promise<void> {
-		return connection.send({
-			event: "showAlert",
-			context: this.id
-		});
-	}
-
-	/**
 	 * Temporarily shows an "OK" (i.e. success), in the form of a check-mark in a green circle, on this action instance. Used to provide visual feedback when an action successfully
 	 * executed.
 	 * @returns `Promise` resolved when the request to show an "OK" has been sent to Stream Deck.
@@ -113,3 +114,13 @@ export class KeyAction<T extends JsonObject = JsonObject> extends Action<T> impl
 		});
 	}
 }
+
+/**
+ * Options that define how to render an image associated with an action.
+ */
+export type ImageOptions = Omit<KeyOf<SetImage, "payload">, "image">;
+
+/**
+ * Options that define how to render a title associated with an action.
+ */
+export type TitleOptions = Omit<KeyOf<SetTitle, "payload">, "title">;

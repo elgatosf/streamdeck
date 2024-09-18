@@ -3,7 +3,7 @@ import { Settings } from "../../../api/__mocks__/events";
 import { connection } from "../../connection";
 import { Device } from "../../devices/device";
 import { Action, type ActionContext } from "../action";
-import { MultiActionKey } from "../multi";
+import { KeyAction } from "../key";
 
 jest.mock("../../logging");
 jest.mock("../../manifest");
@@ -36,7 +36,7 @@ describe("Action", () => {
 		};
 
 		// Act.
-		const action = new MultiActionKey(context);
+		const action = new KeyAction(context);
 
 		// Assert.
 		expect(action).toBeInstanceOf(Action);
@@ -50,7 +50,7 @@ describe("Action", () => {
 	 */
 	it("getSettings", async () => {
 		// Arrange.
-		const action = new MultiActionKey<Settings>({
+		const action = new KeyAction<Settings>({
 			device,
 			id: "ABC123",
 			manifestId: "com.elgato.test.one"
@@ -114,7 +114,7 @@ describe("Action", () => {
 	});
 
 	describe("sending", () => {
-		const action = new MultiActionKey({
+		const action = new KeyAction({
 			device,
 			id: "ABC123",
 			manifestId: "com.elgato.test.one"

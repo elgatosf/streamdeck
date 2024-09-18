@@ -18,9 +18,9 @@ import {
 import { getManifest } from "../manifest";
 import { onDidReceiveSettings } from "../settings";
 import { ui } from "../ui";
-import { Action, type ActionContext } from "./action";
+import { Action } from "./action";
 import type { SingletonAction } from "./singleton-action";
-import { ActionStore, actionStore } from "./store";
+import { ActionStore, actionStore, createContext, type ActionContext } from "./store";
 
 const manifest = getManifest();
 
@@ -88,7 +88,7 @@ class ActionService extends ActionStore {
 	public onKeyDown<T extends JsonObject = JsonObject>(listener: (ev: KeyDownEvent<T>) => void): IDisposable {
 		return connection.disposableOn("keyDown", (ev: KeyDown<T>) => {
 			const action = actionStore.getActionById(ev.context);
-			if (action?.isKey() || action?.isMultiActionKey()) {
+			if (action?.isKey()) {
 				listener(new ActionEvent(action, ev));
 			}
 		});
@@ -105,7 +105,7 @@ class ActionService extends ActionStore {
 	public onKeyUp<T extends JsonObject = JsonObject>(listener: (ev: KeyUpEvent<T>) => void): IDisposable {
 		return connection.disposableOn("keyUp", (ev: KeyUp<T>) => {
 			const action = actionStore.getActionById(ev.context);
-			if (action?.isKey() || action?.isMultiActionKey()) {
+			if (action?.isKey()) {
 				listener(new ActionEvent(action, ev));
 			}
 		});
@@ -120,7 +120,7 @@ class ActionService extends ActionStore {
 	public onTitleParametersDidChange<T extends JsonObject = JsonObject>(listener: (ev: TitleParametersDidChangeEvent<T>) => void): IDisposable {
 		return connection.disposableOn("titleParametersDidChange", (ev: TitleParametersDidChange<T>) => {
 			const action = actionStore.getActionById(ev.context);
-			if (action?.isKey()) {
+			if (action) {
 				listener(new ActionEvent(action, ev));
 			}
 		});
@@ -168,16 +168,7 @@ class ActionService extends ActionStore {
 		return connection.disposableOn("willDisappear", (ev: WillDisappear<T>) => {
 			const device = devices.getDeviceById(ev.device);
 			if (device) {
-				listener(
-					new ActionEvent(
-						{
-							device,
-							id: ev.context,
-							manifestId: ev.action
-						},
-						ev
-					)
-				);
+				listener(new ActionEvent(createContext(ev), ev));
 			}
 		});
 	}
