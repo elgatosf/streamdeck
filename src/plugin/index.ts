@@ -3,7 +3,7 @@ import { I18nProvider } from "../common/i18n";
 import { registerCreateLogEntryRoute, type Logger } from "../common/logging";
 import { actionService, type ActionService } from "./actions";
 import { connection } from "./connection";
-import { devices } from "./devices";
+import { devices, type DeviceService } from "./devices";
 import { fileSystemLocaleProvider } from "./i18n";
 import { logger } from "./logging";
 import { getManifest } from "./manifest";
@@ -41,7 +41,7 @@ export { action } from "./actions/decorators";
 export { type DialAction, type TriggerDescriptionOptions } from "./actions/dial";
 export { type ImageOptions, type KeyAction, type TitleOptions } from "./actions/key";
 export { SingletonAction } from "./actions/singleton-action";
-export { type Device } from "./devices";
+export { type Device, type DeviceService } from "./devices";
 export * from "./events";
 export { route, type MessageRequest, type PropertyInspector } from "./ui";
 export { type Logger };
@@ -61,7 +61,7 @@ export const streamDeck = {
 	 * Namespace for interacting with Stream Deck devices.
 	 * @returns Devices namespace.
 	 */
-	get devices(): typeof devices {
+	get devices(): DeviceService {
 		return devices;
 	},
 
