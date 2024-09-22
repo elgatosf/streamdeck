@@ -1,9 +1,10 @@
-import { DeviceType, KeyAction, MessageRequest, type MessageRequestOptions } from "../..";
+import { MessageRequest, type MessageRequestOptions } from "../..";
 import type { DidReceivePropertyInspectorMessage, SendToPropertyInspector } from "../../../api";
 import type { RawMessageRequest } from "../../../common/messaging/message";
 import { MessageResponder } from "../../../common/messaging/responder";
 import { PromiseCompletionSource } from "../../../common/promises";
-import { actionStore } from "../../actions/store";
+import { KeyAction } from "../../actions/key";
+import { actionStore, type ActionContext } from "../../actions/store";
 import { connection } from "../../connection";
 import { Device } from "../../devices/device";
 import { PropertyInspector } from "../property-inspector";
@@ -260,26 +261,25 @@ describe("router", () => {
 
 	describe("outbound messages", () => {
 		describe("with ui", () => {
-			const action = new KeyAction({
-				id: "key123",
-				manifestId: "com.elgato.test.key",
-				device: new Device(
-					"device123",
-					{
-						name: "Device One",
-						size: {
-							columns: 5,
-							rows: 3
-						},
-						type: DeviceType.StreamDeck
-					},
-					false
-				),
+			// Mock context.
+			const context: ActionContext = {
+				// @ts-expect-error Mocked device.
+				device: new Device(),
+				controller: "Keypad",
+				id: "ABC123",
+				manifestId: "com.elgato.test.one"
+			};
+
+			// Mock action.
+			const action = new KeyAction(context, {
+				controller: "Keypad",
 				coordinates: {
-					column: 0,
-					row: 0
-				}
-			});
+					column: 5,
+					row: 3,
+				},
+				isInMultiAction: false,
+				settings: {}
+			})
 
 			beforeAll(() => {
 				jest.useFakeTimers();
@@ -370,14 +370,22 @@ describe("router", () => {
 		 */
 		test("without ui", async () => {
 			// Arrange.
-			const action = new KeyAction({
-				manifestId: "com.elgato.test.one",
+			const context: ActionContext = {
+				// @ts-expect-error Mocked device.
+				device: new Device(),
+				controller: "Keypad",
 				id: "proxy-outbound-message-without-ui",
+				manifestId: "com.elgato.test.one"
+			};
+
+			const action = new KeyAction(context, {
+				controller: "Keypad",
 				coordinates: {
-					column: 0,
-					row: 0
+					column: 5,
+					row: 3
 				},
-				device: undefined!
+				isInMultiAction: false,
+				settings: {}
 			});
 
 			jest.spyOn(actionStore, "getActionById").mockReturnValue(action);

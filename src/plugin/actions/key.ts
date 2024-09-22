@@ -18,17 +18,17 @@ export class KeyAction<T extends JsonObject = JsonObject> extends Action<T> {
 	/**
 	 * Source of the action.
 	 */
-	readonly #source: WillAppear<JsonObject>;
+	readonly #source: WillAppear<JsonObject>["payload"];
 
 	/**
 	 * Initializes a new instance of the {@see KeyAction} class.
 	 * @param context Action context.
 	 * @param source Source of the action.
 	 */
-	constructor(context: ActionContext, source: WillAppear<JsonObject>) {
+	constructor(context: ActionContext, source: WillAppear<JsonObject>["payload"]) {
 		super(context);
 
-		this.#coordinates = !source.payload.isInMultiAction ? Object.freeze(source.payload.coordinates) : undefined;
+		this.#coordinates = !source.isInMultiAction ? Object.freeze(source.coordinates) : undefined;
 		this.#source = source;
 	}
 
@@ -45,7 +45,7 @@ export class KeyAction<T extends JsonObject = JsonObject> extends Action<T> {
 	 * @returns `true` when in a multi-action; otherwise `false`.
 	 */
 	public get isInMultiAction(): boolean {
-		return this.#source.payload.isInMultiAction;
+		return this.#source.isInMultiAction;
 	}
 
 	/**

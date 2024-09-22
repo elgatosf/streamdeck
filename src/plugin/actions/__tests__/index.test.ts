@@ -1,18 +1,19 @@
 import { actionService } from "..";
 import {
 	DeviceType,
+	SingletonAction,
 	type DialAction,
 	type DialDownEvent,
 	type DialRotateEvent,
 	type DialUpEvent,
 	type DidReceiveSettingsEvent,
+	type JsonObject,
 	type KeyAction,
 	type KeyDownEvent,
 	type KeyUpEvent,
 	type PropertyInspectorDidAppearEvent,
 	type PropertyInspectorDidDisappearEvent,
 	type SendToPluginEvent,
-	type SingletonAction,
 	type TitleParametersDidChangeEvent,
 	type TouchTapEvent,
 	type WillAppearEvent,
@@ -462,10 +463,12 @@ describe("actions", () => {
 			// Act (emit).
 			const disposable = actionService.onWillDisappear(listener);
 			connection.emit("willDisappear", ev);
+
 			// Assert (emit).
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[WillDisappearEvent<Settings>]>({
 				action: {
+					controller: "Encoder",
 					device,
 					id: ev.context,
 					manifestId: ev.action
@@ -487,6 +490,7 @@ describe("actions", () => {
 	describe("registering an action", () => {
 		const keyManifestId = "com.elgato.test.key";
 		const dialManifestId = "com.elgato.test.dial";
+		const actions = jest.fn() as unknown as IterableIterator<DialAction<JsonObject> | KeyAction<JsonObject>>;
 
 		/**
 		 * Asserts {@link registerAction} validates the manifest identifier is not undefined.
@@ -494,7 +498,8 @@ describe("actions", () => {
 		it("validates the manifestId is not undefined", () => {
 			// Arrange.
 			const action: SingletonAction = {
-				manifestId: undefined
+				manifestId: undefined,
+				actions
 			};
 
 			// Act, assert.
@@ -507,6 +512,7 @@ describe("actions", () => {
 		it("validates when action does not exist in manifest", () => {
 			// Arrange.
 			const action: SingletonAction = {
+				actions,
 				manifestId: "com.elgato.action-service.__one"
 			};
 
@@ -527,7 +533,10 @@ describe("actions", () => {
 			const spyOnPrependOnceListener = jest.spyOn(connection, "prependOnceListener");
 
 			// Act.
-			actionService.registerAction({ manifestId: keyManifestId });
+			actionService.registerAction({
+				actions,
+				manifestId: keyManifestId
+			});
 
 			// Assert.
 			expect(spyOnAddListener).not.toHaveBeenCalled();
@@ -563,6 +572,7 @@ describe("actions", () => {
 
 			// Act.
 			actionService.registerAction({
+				actions,
 				manifestId: ev.action,
 				onDialDown: listener
 			});
@@ -606,6 +616,7 @@ describe("actions", () => {
 
 			// Act.
 			actionService.registerAction({
+				actions,
 				manifestId: ev.action,
 				onDialRotate: listener
 			});
@@ -647,6 +658,7 @@ describe("actions", () => {
 
 			// Act.
 			actionService.registerAction({
+				actions,
 				manifestId: ev.action,
 				onDialUp: listener
 			});
@@ -680,6 +692,7 @@ describe("actions", () => {
 
 			// Act.
 			actionService.registerAction({
+				actions,
 				manifestId: ev.action,
 				onSendToPlugin: listener
 			});
@@ -723,6 +736,7 @@ describe("actions", () => {
 
 			// Act.
 			actionService.registerAction({
+				actions,
 				manifestId: ev.action,
 				onDidReceiveSettings: listener
 			});
@@ -765,6 +779,7 @@ describe("actions", () => {
 
 			// Act.
 			actionService.registerAction({
+				actions,
 				manifestId: ev.action,
 				onKeyDown: listener
 			});
@@ -807,6 +822,7 @@ describe("actions", () => {
 
 			// Act.
 			actionService.registerAction({
+				actions,
 				manifestId: ev.action,
 				onKeyUp: listener
 			});
@@ -838,6 +854,7 @@ describe("actions", () => {
 
 			// Act.
 			actionService.registerAction({
+				actions,
 				manifestId: ev.action,
 				onPropertyInspectorDidAppear: listener
 			});
@@ -868,6 +885,7 @@ describe("actions", () => {
 
 			// Act (emit).
 			actionService.registerAction({
+				actions,
 				manifestId: ev.action,
 				onPropertyInspectorDidDisappear: listener
 			});
@@ -918,6 +936,7 @@ describe("actions", () => {
 
 			// Act.
 			actionService.registerAction({
+				actions,
 				manifestId: ev.action,
 				onTitleParametersDidChange: listener
 			});
@@ -961,6 +980,7 @@ describe("actions", () => {
 
 			// Act.
 			actionService.registerAction({
+				actions,
 				manifestId: ev.action,
 				onTouchTap: listener
 			});
@@ -1003,6 +1023,7 @@ describe("actions", () => {
 
 			// Act.
 			actionService.registerAction({
+				actions,
 				manifestId: ev.action,
 				onWillAppear: listener
 			});
@@ -1045,6 +1066,7 @@ describe("actions", () => {
 
 			// Act.
 			actionService.registerAction({
+				actions,
 				manifestId: ev.action,
 				onWillDisappear: listener
 			});
@@ -1055,6 +1077,7 @@ describe("actions", () => {
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[WillDisappearEvent<Settings>]>({
 				action: {
+					controller: "Encoder",
 					device,
 					id: ev.context,
 					manifestId: ev.action

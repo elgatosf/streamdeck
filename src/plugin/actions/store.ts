@@ -12,7 +12,7 @@ let __devices: DeviceCollection | undefined;
 // Adds the action to the store.
 connection.prependListener("willAppear", (ev) => {
 	const context = createContext(ev);
-	const action = ev.payload.controller === "Encoder" ? new DialAction(context, ev) : new KeyAction(context, ev);
+	const action = ev.payload.controller === "Encoder" ? new DialAction(context, ev.payload) : new KeyAction(context, ev.payload);
 
 	__actions.set(ev.context, action);
 });

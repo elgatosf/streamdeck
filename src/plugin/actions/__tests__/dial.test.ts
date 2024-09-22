@@ -1,89 +1,62 @@
-import { DeviceType, Target, type SetFeedback, type SetFeedbackLayout, type SetImage, type SetTitle, type SetTriggerDescription, type ShowAlert } from "../../../api";
+import { type SetFeedback, type SetFeedbackLayout, type SetImage, type SetTriggerDescription, type WillAppear } from "../../../api";
+import type { JsonObject } from "../../../common/json";
 import { connection } from "../../connection";
 import { Device } from "../../devices";
-import { Action, type CoordinatedActionContext } from "../action";
+import { Action } from "../action";
 import { DialAction } from "../dial";
+import type { ActionContext } from "../store";
 
 jest.mock("../../logging");
 jest.mock("../../manifest");
 jest.mock("../../connection");
 
 describe("DialAction", () => {
-	// Mock device.
-	const device = new Device(
-		"dev123",
-		{
-			name: "Device One",
-			size: {
-				columns: 5,
-				rows: 3
-			},
-			type: DeviceType.StreamDeck
+	// Mock context.
+	const context: ActionContext = {
+		// @ts-expect-error Mocked device.
+		device: new Device(),
+		controller: "Keypad",
+		id: "ABC123",
+		manifestId: "com.elgato.test.one"
+	};
+
+	// Mock source.
+	const source: WillAppear<JsonObject>["payload"] = {
+		controller: "Encoder",
+		coordinates: {
+			column: 1,
+			row: 2
 		},
-		false
-	);
+		isInMultiAction: false,
+		settings: {}
+	};
 
 	/**
 	 * Asserts the constructor of {@link DialAction} sets the context.
 	 */
 	it("constructor sets context", () => {
-		// Arrange.
-		const source: CoordinatedActionContext = {
-			device,
-			id: "ABC123",
-			manifestId: "com.elgato.test.one",
-			coordinates: {
-				column: 1,
-				row: 2
-			}
-		};
-
-		// Act.
-		const dialAction = new DialAction(source);
-
-		// Assert.
-		expect(dialAction.coordinates).toBe(source.coordinates);
-		expect(dialAction.device).toBe(source.device);
-		expect(dialAction.id).toBe(source.id);
-		expect(dialAction.manifestId).toBe(source.manifestId);
-	});
-
-	/**
-	 * Asserts the inheritance of {@link DialAction}.
-	 */
-	it("inherits shared methods", () => {
 		// Arrange, act.
-		const dialAction = new DialAction({
-			device,
-			id: "ABC123",
-			manifestId: "com.elgato.test.one",
-			coordinates: {
-				column: 1,
-				row: 2
-			}
-		});
+		const action = new DialAction(context, source);
 
 		// Assert.
-		expect(dialAction).toBeInstanceOf(Action);
+		expect(action).toBeInstanceOf(Action);
+		expect(action.coordinates).not.toBeUndefined();
+		expect(action.coordinates?.column).toBe(1);
+		expect(action.coordinates?.row).toBe(2);
+		expect(action.device).toBe(context.device);
+		expect(action.id).toBe(context.id);
+		expect(action.manifestId).toBe(context.manifestId);
 	});
 
 	describe("sending", () => {
-		const dialAction = new DialAction({
-			device,
-			id: "ABC123",
-			manifestId: "com.elgato.test.one",
-			coordinates: {
-				column: 1,
-				row: 2
-			}
-		});
+		const action = new DialAction(context, source);
 
 		/**
 		 * Asserts {@link DialAction.setFeedback} forwards the command to the {@link connection}.
 		 */
 		it("setFeedback", async () => {
 			// Arrange, act.
-			await dialAction.setFeedback({
+			await action.setFeedback({
 				bar: 50,
 				title: "Hello world"
 			});
@@ -91,7 +64,7 @@ describe("DialAction", () => {
 			// Assert.
 			expect(connection.send).toHaveBeenCalledTimes(1);
 			expect(connection.send).toHaveBeenCalledWith<[SetFeedback]>({
-				context: dialAction.id,
+				context: action.id,
 				event: "setFeedback",
 				payload: {
 					bar: 50,
@@ -105,12 +78,12 @@ describe("DialAction", () => {
 		 */
 		it("Sends setFeedbackLayout", async () => {
 			// Arrange, act.
-			await dialAction.setFeedbackLayout("CustomLayout.json");
+			await action.setFeedbackLayout("CustomLayout.json");
 
 			// Assert.
 			expect(connection.send).toHaveBeenCalledTimes(1);
 			expect(connection.send).toHaveBeenCalledWith<[SetFeedbackLayout]>({
-				context: dialAction.id,
+				context: action.id,
 				event: "setFeedbackLayout",
 				payload: {
 					layout: "CustomLayout.json"
@@ -123,16 +96,13 @@ describe("DialAction", () => {
 		 */
 		it("setImage", async () => {
 			// Arrange, act
-			await dialAction.setImage();
-			await dialAction.setImage("./imgs/test.png", {
-				state: 1,
-				target: Target.Hardware
-			});
+			await action.setImage();
+			await action.setImage("./imgs/test.png");
 
 			// Assert.
 			expect(connection.send).toHaveBeenCalledTimes(2);
 			expect(connection.send).toHaveBeenNthCalledWith<[SetImage]>(1, {
-				context: dialAction.id,
+				context: action.id,
 				event: "setImage",
 				payload: {
 					image: undefined,
@@ -142,41 +112,10 @@ describe("DialAction", () => {
 			});
 
 			expect(connection.send).toHaveBeenNthCalledWith<[SetImage]>(2, {
-				context: dialAction.id,
+				context: action.id,
 				event: "setImage",
 				payload: {
-					image: "./imgs/test.png",
-					state: 1,
-					target: Target.Hardware
-				}
-			});
-		});
-
-		/**
-		 * Asserts {@link DialAction.setTitle} forwards the command to the {@link connection}.
-		 */
-		it("setTitle", async () => {
-			// Arrange, act.
-			await dialAction.setTitle("Hello world");
-			await dialAction.setTitle("This is a test", { state: 1, target: Target.Software });
-
-			// Assert.
-			expect(connection.send).toHaveBeenCalledTimes(2);
-			expect(connection.send).toHaveBeenNthCalledWith<[SetTitle]>(1, {
-				event: "setTitle",
-				context: "ABC123",
-				payload: {
-					title: "Hello world"
-				}
-			});
-
-			expect(connection.send).toHaveBeenNthCalledWith<[SetTitle]>(2, {
-				event: "setTitle",
-				context: "ABC123",
-				payload: {
-					state: 1,
-					target: Target.Software,
-					title: "This is a test"
+					image: "./imgs/test.png"
 				}
 			});
 		});
@@ -186,8 +125,8 @@ describe("DialAction", () => {
 		 */
 		it("setTriggerDescription", async () => {
 			// Arrange, act.
-			await dialAction.setTriggerDescription();
-			await dialAction.setTriggerDescription({
+			await action.setTriggerDescription();
+			await action.setTriggerDescription({
 				longTouch: "Long-touch",
 				push: "Push",
 				rotate: "Rotate",
@@ -198,34 +137,19 @@ describe("DialAction", () => {
 			expect(connection.send).toHaveBeenCalledTimes(2);
 			expect(connection.send).toHaveBeenNthCalledWith<[SetTriggerDescription]>(1, {
 				event: "setTriggerDescription",
-				context: dialAction.id,
+				context: action.id,
 				payload: {}
 			});
 
 			expect(connection.send).toHaveBeenNthCalledWith<[SetTriggerDescription]>(2, {
 				event: "setTriggerDescription",
-				context: dialAction.id,
+				context: action.id,
 				payload: {
 					longTouch: "Long-touch",
 					push: "Push",
 					rotate: "Rotate",
 					touch: "Touch"
 				}
-			});
-		});
-
-		/**
-		 * Asserts {@link DialAction.showAlert} forwards the command to the {@link connection}.
-		 */
-		it("showAlert", async () => {
-			// Arrange, act.
-			await dialAction.showAlert();
-
-			// Assert.
-			expect(connection.send).toHaveBeenCalledTimes(1);
-			expect(connection.send).toHaveBeenCalledWith<[ShowAlert]>({
-				context: dialAction.id,
-				event: "showAlert"
 			});
 		});
 	});

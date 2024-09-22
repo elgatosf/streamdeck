@@ -20,14 +20,14 @@ export class DialAction<T extends JsonObject = JsonObject> extends Action<T> {
 	 * @param context Action context.
 	 * @param source Source of the action.
 	 */
-	constructor(context: ActionContext, source: WillAppear<JsonObject>) {
+	constructor(context: ActionContext, source: WillAppear<JsonObject>["payload"]) {
 		super(context);
 
-		if (source.payload.controller === "Keypad") {
+		if (source.controller === "Keypad") {
 			throw new Error("Unable to create DialAction from Keypad");
 		}
 
-		this.#coordinates = Object.freeze(source.payload.coordinates);
+		this.#coordinates = Object.freeze(source.coordinates);
 	}
 
 	/**
@@ -36,24 +36,6 @@ export class DialAction<T extends JsonObject = JsonObject> extends Action<T> {
 	 */
 	public get coordinates(): Readonly<Coordinates> {
 		return this.#coordinates;
-	}
-
-	/**
-	 * Sets the {@link image} to be display for this action instance within Stream Deck app.
-	 *
-	 * NB: The image can only be set by the plugin when the the user has not specified a custom image.
-	 * @param image Image to display; this can be either a path to a local file within the plugin's folder, a base64 encoded `string` with the mime type declared (e.g. PNG, JPEG, etc.),
-	 * or an SVG `string`. When `undefined`, the image from the manifest will be used.
-	 * @returns `Promise` resolved when the request to set the {@link image} has been sent to Stream Deck.
-	 */
-	public setImage(image?: string): Promise<void> {
-		return connection.send({
-			event: "setImage",
-			context: this.id,
-			payload: {
-				image
-			}
-		});
 	}
 
 	/**
@@ -87,6 +69,35 @@ export class DialAction<T extends JsonObject = JsonObject> extends Action<T> {
 				layout
 			}
 		});
+	}
+
+	/**
+	 * Sets the {@link image} to be display for this action instance within Stream Deck app.
+	 *
+	 * NB: The image can only be set by the plugin when the the user has not specified a custom image.
+	 * @param image Image to display; this can be either a path to a local file within the plugin's folder, a base64 encoded `string` with the mime type declared (e.g. PNG, JPEG, etc.),
+	 * or an SVG `string`. When `undefined`, the image from the manifest will be used.
+	 * @returns `Promise` resolved when the request to set the {@link image} has been sent to Stream Deck.
+	 */
+	public setImage(image?: string): Promise<void> {
+		return connection.send({
+			event: "setImage",
+			context: this.id,
+			payload: {
+				image
+			}
+		});
+	}
+
+	/**
+	 * Sets the {@link title} displayed for this action instance.
+	 *
+	 * NB: The title can only be set by the plugin when the the user has not specified a custom title.
+	 * @param title Title to display.
+	 * @returns `Promise` resolved when the request to set the {@link title} has been sent to Stream Deck.
+	 */
+	public setTitle(title: string): Promise<void> {
+		return this.setFeedback({ title });
 	}
 
 	/**

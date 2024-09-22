@@ -1,90 +1,78 @@
-import { DeviceType, Target, type SetImage, type SetState, type SetTitle, type ShowAlert, type ShowOk } from "../../../api";
+import { Target, type SetImage, type SetState, type SetTitle, type ShowOk, type WillAppear } from "../../../api";
+import type { JsonObject } from "../../../common/json";
 import { connection } from "../../connection";
-import { Device } from "../../devices";
-import { Action, type CoordinatedActionContext } from "../action";
+import { Device } from "../../devices/device";
+import { Action } from "../action";
 import { KeyAction } from "../key";
+import type { ActionContext } from "../store";
 
+jest.mock("../../devices/device");
 jest.mock("../../logging");
 jest.mock("../../manifest");
 jest.mock("../../connection");
 
 describe("KeyAction", () => {
-	// Mock device.
-	const device = new Device(
-		"dev123",
-		{
-			name: "Device One",
-			size: {
-				columns: 5,
-				rows: 3
-			},
-			type: DeviceType.StreamDeck
+	// Mock context.
+	const context: ActionContext = {
+		// @ts-expect-error Mocked device.
+		device: new Device(),
+		controller: "Keypad",
+		id: "ABC123",
+		manifestId: "com.elgato.test.one"
+	};
+
+	// Mock source.
+	const source: WillAppear<JsonObject>["payload"] = {
+		controller: "Keypad",
+		coordinates: {
+			column: 1,
+			row: 2
 		},
-		false
-	);
+		isInMultiAction: false,
+		settings: {}
+	};
 
 	/**
 	 * Asserts the constructor of {@link KeyAction} sets the context.
 	 */
 	it("constructor sets context", () => {
-		// Arrange.
-		const context: CoordinatedActionContext = {
-			device,
-			id: "ABC123",
-			manifestId: "com.elgato.test.one",
-			coordinates: {
-				column: 1,
-				row: 2
-			}
-		};
-
-		// Act.
-		const keyAction = new KeyAction(context);
+		// Arrange, act.
+		const action = new KeyAction(context, source);
 
 		// Assert.
-		expect(keyAction.coordinates).toBe(context.coordinates);
-		expect(keyAction.device).toBe(context.device);
-		expect(keyAction.id).toBe(context.id);
-		expect(keyAction.manifestId).toBe(context.manifestId);
+		expect(action).toBeInstanceOf(Action);
+		expect(action.coordinates).not.toBeUndefined();
+		expect(action.coordinates?.column).toBe(1);
+		expect(action.coordinates?.row).toBe(2);
+		expect(action.device).toBe(context.device);
+		expect(action.id).toBe(context.id);
+		expect(action.manifestId).toBe(context.manifestId);
 	});
 
 	/**
-	 * Asserts the inheritance of {@link KeyAction}.
+	 * Asserts the coordinates are undefined when the {@link KeyAction} is in a multi-action.
 	 */
-	it("inherits shared methods", () => {
+	it("does not have coordinates when multi-action", () => {
 		// Arrange, act.
-		const keyAction = new KeyAction({
-			device,
-			id: "ABC123",
-			manifestId: "com.elgato.test.one",
-			coordinates: {
-				column: 1,
-				row: 2
-			}
+		const action = new KeyAction(context, {
+			...source,
+			isInMultiAction: true
 		});
 
 		// Assert.
-		expect(keyAction).toBeInstanceOf(Action);
+		expect(action.coordinates).toBeUndefined();
 	});
 
 	describe("sending", () => {
-		const keyAction = new KeyAction({
-			device,
-			id: "ABC123",
-			manifestId: "com.elgato.test.one",
-			coordinates: {
-				column: 1,
-				row: 2
-			}
-		});
+		const action = new KeyAction(context, source);
 
 		/**
 		 * Asserts {@link KeyAction.setImage} forwards the command to the {@link connection}.
 		 */
 		it("setImage", async () => {
 			// Arrange, act
-			await keyAction.setImage();
-			await keyAction.setImage("./imgs/test.png", {
+			await action.setImage();
+			await action.setImage("./imgs/test.png", {
 				state: 1,
 				target: Target.Hardware
 			});
@@ -92,7 +80,7 @@ describe("KeyAction", () => {
 			// Assert.
 			expect(connection.send).toHaveBeenCalledTimes(2);
 			expect(connection.send).toHaveBeenNthCalledWith<[SetImage]>(1, {
-				context: keyAction.id,
+				context: action.id,
 				event: "setImage",
 				payload: {
 					image: undefined,
@@ -102,7 +90,7 @@ describe("KeyAction", () => {
 			});
 
 			expect(connection.send).toHaveBeenNthCalledWith<[SetImage]>(2, {
-				context: keyAction.id,
+				context: action.id,
 				event: "setImage",
 				payload: {
 					image: "./imgs/test.png",
@@ -117,12 +105,12 @@ describe("KeyAction", () => {
 		 */
 		it("setState", async () => {
 			// Arrange, act.
-			await keyAction.setState(1);
+			await action.setState(1);
 
 			// Assert.
 			expect(connection.send).toHaveBeenCalledTimes(1);
 			expect(connection.send).toHaveBeenCalledWith<[SetState]>({
-				context: keyAction.id,
+				context: action.id,
 				event: "setState",
 				payload: {
 					state: 1
@@ -135,8 +123,8 @@ describe("KeyAction", () => {
 		 */
 		it("setTitle", async () => {
 			// Arrange, act.
-			await keyAction.setTitle("Hello world");
-			await keyAction.setTitle("This is a test", { state: 1, target: Target.Software });
+			await action.setTitle("Hello world");
+			await action.setTitle("This is a test", { state: 1, target: Target.Software });
 
 			// Assert.
 			expect(connection.send).toHaveBeenCalledTimes(2);
@@ -160,31 +148,16 @@ describe("KeyAction", () => {
 		});
 
 		/**
-		 * Asserts {@link KeyAction.showAlert} forwards the command to the {@link connection}.
-		 */
-		it("showAlert", async () => {
-			// Arrange, act.
-			await keyAction.showAlert();
-
-			// Assert.
-			expect(connection.send).toHaveBeenCalledTimes(1);
-			expect(connection.send).toHaveBeenCalledWith<[ShowAlert]>({
-				context: keyAction.id,
-				event: "showAlert"
-			});
-		});
-
-		/**
 		 * Asserts {@link KeyAction.showOk} forwards the command to the {@link connection}.
 		 */
 		it("showOk", async () => {
 			// Arrange, act
-			await keyAction.showOk();
+			await action.showOk();
 
 			// Assert.
 			expect(connection.send).toHaveBeenCalledTimes(1);
 			expect(connection.send).toHaveBeenCalledWith<[ShowOk]>({
-				context: keyAction.id,
+				context: action.id,
 				event: "showOk"
 			});
 		});
