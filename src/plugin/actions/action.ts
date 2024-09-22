@@ -3,51 +3,16 @@ import type streamDeck from "../";
 import type { DidReceiveSettings } from "../../api";
 import type { JsonObject, JsonValue } from "../../common/json";
 import { connection } from "../connection";
-import type { Device } from "../devices";
+import { ActionContext } from "./context";
 import type { DialAction } from "./dial";
 import type { KeyAction } from "./key";
 import type { SingletonAction } from "./singleton-action";
-import type { ActionContext } from "./store";
 
 /**
  * Provides a contextualized instance of an {@link Action}, allowing for direct communication with the Stream Deck.
  * @template T The type of settings associated with the action.
  */
-export class Action<T extends JsonObject = JsonObject> {
-	/**
-	 * The action context.
-	 */
-	readonly #context: ActionContext;
-
-	/**
-	 * Initializes a new instance of the {@see Action} class.
-	 * @param context Action context.
-	 */
-	constructor(context: ActionContext) {
-		this.#context = context;
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	public get device(): Device {
-		return this.#context.device;
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	public get id(): string {
-		return this.#context.id;
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	public get manifestId(): string {
-		return this.#context.manifestId;
-	}
-
+export class Action<T extends JsonObject = JsonObject> extends ActionContext {
 	/**
 	 * Gets the settings associated this action instance.
 	 * @template U The type of settings associated with the action.
@@ -75,7 +40,7 @@ export class Action<T extends JsonObject = JsonObject> {
 	 * @returns `true` when this instance is a dial; otherwise `false`.
 	 */
 	public isDial(): this is DialAction {
-		return this.#context.controller === "Encoder";
+		return this.controller === "Encoder";
 	}
 
 	/**
@@ -83,7 +48,7 @@ export class Action<T extends JsonObject = JsonObject> {
 	 * @returns `true` when this instance is a key; otherwise `false`.
 	 */
 	public isKey(): this is KeyAction {
-		return this.#context.controller === "Keypad";
+		return this.controller === "Keypad";
 	}
 
 	/**

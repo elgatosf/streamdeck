@@ -3,7 +3,6 @@ import type { JsonObject } from "../../common/json";
 import type { KeyOf } from "../../common/utils";
 import { connection } from "../connection";
 import { Action } from "./action";
-import type { ActionContext } from "./store";
 
 /**
  * Provides a contextualized instance of a key action.
@@ -18,17 +17,16 @@ export class KeyAction<T extends JsonObject = JsonObject> extends Action<T> {
 	/**
 	 * Source of the action.
 	 */
-	readonly #source: WillAppear<JsonObject>["payload"];
+	readonly #source: WillAppear<JsonObject>;
 
 	/**
 	 * Initializes a new instance of the {@see KeyAction} class.
-	 * @param context Action context.
 	 * @param source Source of the action.
 	 */
-	constructor(context: ActionContext, source: WillAppear<JsonObject>["payload"]) {
-		super(context);
+	constructor(source: WillAppear<JsonObject>) {
+		super(source);
 
-		this.#coordinates = !source.isInMultiAction ? Object.freeze(source.coordinates) : undefined;
+		this.#coordinates = !source.payload.isInMultiAction ? Object.freeze(source.payload.coordinates) : undefined;
 		this.#source = source;
 	}
 
@@ -45,7 +43,7 @@ export class KeyAction<T extends JsonObject = JsonObject> extends Action<T> {
 	 * @returns `true` when in a multi-action; otherwise `false`.
 	 */
 	public get isInMultiAction(): boolean {
-		return this.#source.isInMultiAction;
+		return this.#source.payload.isInMultiAction;
 	}
 
 	/**

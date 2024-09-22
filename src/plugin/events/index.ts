@@ -19,9 +19,9 @@ import type {
 } from "../../api";
 import { ActionWithoutPayloadEvent, Event, type ActionEvent } from "../../common/events";
 import type { JsonObject } from "../../common/json";
+import type { ActionContext } from "../actions/context";
 import type { DialAction } from "../actions/dial";
 import type { KeyAction } from "../actions/key";
-import type { ActionContext } from "../actions/store";
 import type { Device } from "../devices";
 import { ApplicationEvent } from "./application-event";
 import { DeviceEvent } from "./device-event";

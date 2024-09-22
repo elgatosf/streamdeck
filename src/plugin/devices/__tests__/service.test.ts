@@ -1,4 +1,4 @@
-import { Device, type DeviceCollection } from "../";
+import { Device, type DeviceService } from "..";
 import type { DeviceDidConnectEvent, DeviceDidDisconnectEvent } from "../..";
 import { DeviceType, type DeviceDidConnect, type DeviceDidDisconnect } from "../../../api";
 import { type connection as Connection } from "../../connection";
@@ -10,7 +10,7 @@ jest.mock("../../manifest");
 
 describe("devices", () => {
 	let connection!: typeof Connection;
-	let devices!: DeviceCollection;
+	let devices!: DeviceService;
 
 	beforeEach(async () => {
 		jest.resetModules();

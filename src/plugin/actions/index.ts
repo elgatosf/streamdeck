@@ -3,7 +3,6 @@ import type { IDisposable } from "../../common/disposable";
 import { ActionEvent } from "../../common/events";
 import type { JsonObject } from "../../common/json";
 import { connection } from "../connection";
-import { devices } from "../devices";
 import {
 	DialDownEvent,
 	DialRotateEvent,
@@ -19,8 +18,9 @@ import { getManifest } from "../manifest";
 import { onDidReceiveSettings } from "../settings";
 import { ui } from "../ui";
 import { Action } from "./action";
+import { ActionContext } from "./context";
 import type { SingletonAction } from "./singleton-action";
-import { ActionStore, actionStore, createContext, type ActionContext } from "./store";
+import { ActionStore, actionStore } from "./store";
 
 const manifest = getManifest();
 
@@ -165,12 +165,7 @@ class ActionService extends ActionStore {
 	 * @returns A disposable that, when disposed, removes the listener.
 	 */
 	public onWillDisappear<T extends JsonObject = JsonObject>(listener: (ev: WillDisappearEvent<T>) => void): IDisposable {
-		return connection.disposableOn("willDisappear", (ev: WillDisappear<T>) => {
-			const device = devices.getDeviceById(ev.device);
-			if (device) {
-				listener(new ActionEvent(createContext(ev), ev));
-			}
-		});
+		return connection.disposableOn("willDisappear", (ev: WillDisappear<T>) => listener(new ActionEvent(new ActionContext(ev), ev)));
 	}
 
 	/**

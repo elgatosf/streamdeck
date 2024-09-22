@@ -3,7 +3,6 @@ import type { JsonObject } from "../../common/json";
 import type { KeyOf } from "../../common/utils";
 import { connection } from "../connection";
 import { Action } from "./action";
-import type { ActionContext } from "./store";
 
 /**
  * Provides a contextualized instance of a dial action.
@@ -17,17 +16,16 @@ export class DialAction<T extends JsonObject = JsonObject> extends Action<T> {
 
 	/**
 	 * Initializes a new instance of the {@see DialAction} class.
-	 * @param context Action context.
 	 * @param source Source of the action.
 	 */
-	constructor(context: ActionContext, source: WillAppear<JsonObject>["payload"]) {
-		super(context);
+	constructor(source: WillAppear<JsonObject>) {
+		super(source);
 
-		if (source.controller === "Keypad") {
-			throw new Error("Unable to create DialAction from Keypad");
+		if (source.payload.controller !== "Encoder") {
+			throw new Error("Unable to create DialAction a source that isn't an Encoder");
 		}
 
-		this.#coordinates = Object.freeze(source.coordinates);
+		this.#coordinates = Object.freeze(source.payload.coordinates);
 	}
 
 	/**

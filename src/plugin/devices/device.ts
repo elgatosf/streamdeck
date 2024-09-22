@@ -1,13 +1,18 @@
 import type { DeviceInfo, DeviceType, Size } from "../../api";
 import type { DialAction } from "../actions/dial";
 import type { KeyAction } from "../actions/key";
-import { actionStore } from "../actions/store";
+import type { ActionStore } from "../actions/store";
 import { connection } from "../connection";
 
 /**
  * Provides information about a device.
  */
 export class Device {
+	/**
+	 * Store of Stream Deck actions.
+	 */
+	#actionStore: ActionStore;
+
 	/**
 	 * Private backing field for {@link Device.isConnected}.
 	 */
@@ -28,11 +33,13 @@ export class Device {
 	 * @param id Device identifier.
 	 * @param info Information about the device.
 	 * @param isConnected Determines whether the device is connected.
+	 * @param actionStore Store of Stream Deck actions.
 	 */
-	constructor(id: string, info: DeviceInfo, isConnected: boolean) {
+	constructor(id: string, info: DeviceInfo, isConnected: boolean, actionStore: ActionStore) {
 		this.id = id;
 		this.#info = info;
 		this.#isConnected = isConnected;
+		this.#actionStore = actionStore;
 
 		// Set connected.
 		connection.prependListener("deviceDidConnect", (ev) => {
@@ -55,7 +62,7 @@ export class Device {
 	 * @returns Collection of visible actions.
 	 */
 	public get actions(): IterableIterator<DialAction | KeyAction> {
-		return actionStore.filter((a) => a.device.id === this.id);
+		return this.#actionStore.filter((a) => a.device.id === this.id);
 	}
 
 	/**
