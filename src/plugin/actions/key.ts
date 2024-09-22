@@ -10,7 +10,7 @@ import { Action } from "./action";
  */
 export class KeyAction<T extends JsonObject = JsonObject> extends Action<T> {
 	/**
-	 * Private backing field for {@link coordinates}.
+	 * Private backing field for {@link KeyAction.coordinates}.
 	 */
 	readonly #coordinates: Readonly<Coordinates> | undefined;
 

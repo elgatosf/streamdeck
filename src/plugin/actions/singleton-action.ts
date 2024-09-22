@@ -1,3 +1,4 @@
+import type streamDeck from "../";
 import type { JsonObject, JsonValue } from "../../common/json";
 import type { DialAction } from "../actions/dial";
 import type { KeyAction } from "../actions/key";

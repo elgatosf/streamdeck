@@ -30,19 +30,19 @@ export class ReadOnlyActionStore extends Enumerable<DialAction | KeyAction> {
  */
 class ActionStore extends ReadOnlyActionStore {
 	/**
+	 * Deletes the action from the store.
+	 * @param id The action's identifier.
+	 */
+	public delete(id: string): void {
+		__items.delete(id);
+	}
+
+	/**
 	 * Adds the action to the store.
 	 * @param action The action.
 	 */
 	public set(action: DialAction | KeyAction): void {
 		__items.set(action.id, action);
-	}
-
-	/**
-	 * Deletes the action from the store.
-	 * @param action The action's identifier.
-	 */
-	public delete(id: string): void {
-		__items.delete(id);
 	}
 }
 

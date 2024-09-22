@@ -20,7 +20,7 @@ describe("devices", () => {
 	});
 
 	/**
-	 * Asserts {@link DeviceCollection} can iterate over each device, and apply the specified callback function using {@link DeviceCollection.forEach}.
+	 * Asserts {@link DeviceService} can iterate over each device, and apply the specified callback function using {@link DeviceService.forEach}.
 	 */
 	it("applies callback with forEach", () => {
 		// Arrange.
@@ -52,7 +52,7 @@ describe("devices", () => {
 	});
 
 	/**
-	 * Asserts {@link DeviceCollection.count} returns the count of devices.
+	 * Asserts {@link DeviceService.count} returns the count of devices.
 	 */
 	it("counts devices", () => {
 		// Arrange.
@@ -85,7 +85,7 @@ describe("devices", () => {
 	});
 
 	/**
-	 * Asserts {@link DeviceCollection} tracks devices supplied by Stream Deck as part of the registration parameters.
+	 * Asserts {@link DeviceService} tracks devices supplied by Stream Deck as part of the registration parameters.
 	 */
 	it("adds devices from registration info", () => {
 		// Arrange.
@@ -103,7 +103,7 @@ describe("devices", () => {
 	});
 
 	/**
-	 * Asserts {@link DeviceCollection} adds devices when they connect.
+	 * Asserts {@link DeviceService} adds devices when they connect.
 	 */
 	it("adds device on deviceDidConnect", () => {
 		// Act.
@@ -134,7 +134,7 @@ describe("devices", () => {
 
 	describe("getDeviceById", () => {
 		/**
-		 * Asserts selecting a known device using {@link DeviceCollection.getDeviceById}.
+		 * Asserts selecting a known device using {@link DeviceService.getDeviceById}.
 		 */
 		it("known identifier", () => {
 			// Arrange.
@@ -165,7 +165,7 @@ describe("devices", () => {
 		});
 
 		/**
-		 * Asserts selecting an unknown device using {@link DeviceCollection.getDeviceById}.
+		 * Asserts selecting an unknown device using {@link DeviceService.getDeviceById}.
 		 */
 		it("unknown identifier", () => {
 			// Arrange, act, assert.
@@ -174,7 +174,7 @@ describe("devices", () => {
 	});
 
 	/**
-	 * Asserts {@link DeviceCollection} updates devices when they connect.
+	 * Asserts {@link DeviceService} updates devices when they connect.
 	 */
 	it("updates device on deviceDidConnect", () => {
 		// Arrange.
@@ -201,7 +201,7 @@ describe("devices", () => {
 	});
 
 	/**
-	 * Asserts {@link DeviceCollection} updates devices when they disconnect.
+	 * Asserts {@link DeviceService} updates devices when they disconnect.
 	 */
 	it("updates device on deviceDidDisconnect", () => {
 		// Arrange.
@@ -234,7 +234,7 @@ describe("devices", () => {
 	});
 
 	/**
-	 * Asserts {@link DeviceCollection} does not track unknown devices when they disconnect.
+	 * Asserts {@link DeviceService} does not track unknown devices when they disconnect.
 	 */
 	it("ignores unknown devices on deviceDidDisconnect", () => {
 		// Arrange.
@@ -260,7 +260,7 @@ describe("devices", () => {
 	});
 
 	/**
-	 * Asserts {@link DeviceCollection.onDeviceDidConnect} is invoked when `deviceDidConnect` is emitted.
+	 * Asserts {@link DeviceService.onDeviceDidConnect} is invoked when `deviceDidConnect` is emitted.
 	 */
 	it("receives onDeviceDidConnect", () => {
 		// Arrange
@@ -298,7 +298,7 @@ describe("devices", () => {
 	});
 
 	/**
-	 * Asserts {@link DeviceCollection.onDeviceDidDisconnect} is invoked when `deviceDidDisconnect` is emitted.
+	 * Asserts {@link DeviceService.onDeviceDidDisconnect} is invoked when `deviceDidDisconnect` is emitted.
 	 */
 	it("receives onDeviceDidDisconnect", () => {
 		// Arrange

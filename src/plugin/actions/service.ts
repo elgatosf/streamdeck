@@ -47,9 +47,7 @@ class ActionService extends ReadOnlyActionStore {
 	}
 
 	/**
-	 * Occurs when the user presses a dial (Stream Deck +). See also {@link onDialUp}.
-	 *
-	 * NB: For other action types see {@link onKeyDown}.
+	 * Occurs when the user presses a dial (Stream Deck +).
 	 * @template T The type of settings associated with the action.
 	 * @param listener Function to be invoked when the event occurs.
 	 * @returns A disposable that, when disposed, removes the listener.
@@ -79,9 +77,7 @@ class ActionService extends ReadOnlyActionStore {
 	}
 
 	/**
-	 * Occurs when the user releases a pressed dial (Stream Deck +). See also {@link onDialDown}.
-	 *
-	 * NB: For other action types see {@link onKeyUp}.
+	 * Occurs when the user releases a pressed dial (Stream Deck +).
 	 * @template T The type of settings associated with the action.
 	 * @param listener Function to be invoked when the event occurs.
 	 * @returns A disposable that, when disposed, removes the listener.
@@ -96,9 +92,7 @@ class ActionService extends ReadOnlyActionStore {
 	}
 
 	/**
-	 * Occurs when the user presses a action down. See also {@link onKeyUp}.
-	 *
-	 * NB: For dials / touchscreens see {@link onDialDown}.
+	 * Occurs when the user presses a action down.
 	 * @template T The type of settings associated with the action.
 	 * @param listener Function to be invoked when the event occurs.
 	 * @returns A disposable that, when disposed, removes the listener.
@@ -113,9 +107,7 @@ class ActionService extends ReadOnlyActionStore {
 	}
 
 	/**
-	 * Occurs when the user releases a pressed action. See also {@link onKeyDown}.
-	 *
-	 * NB: For dials / touchscreens see {@link onDialUp}.
+	 * Occurs when the user releases a pressed action.
 	 * @template T The type of settings associated with the action.
 	 * @param listener Function to be invoked when the event occurs.
 	 * @returns A disposable that, when disposed, removes the listener.

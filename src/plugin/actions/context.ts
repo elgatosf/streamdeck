@@ -36,7 +36,6 @@ export class ActionContext {
 	 * Type of the action.
 	 * - `Keypad` is a key.
 	 * - `Encoder` is a dial and portion of the touch strip.
-	 *
 	 * @returns Controller type.
 	 */
 	public get controller(): Controller {

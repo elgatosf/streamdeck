@@ -31,12 +31,11 @@ import {
 	type WillAppearEvent,
 	type WillDisappearEvent
 } from "../../events";
-import type { onDidReceiveSettings } from "../../settings";
 import type { UIController } from "../../ui";
 import { ActionContext } from "../context";
 import { DialAction } from "../dial";
 import { KeyAction } from "../key";
-import { actionService } from "../service";
+import { actionService, type ActionService } from "../service";
 import { SingletonAction } from "../singleton-action";
 import { actionStore } from "../store";
 
@@ -49,7 +48,7 @@ jest.mock("../../manifest");
 describe("actions", () => {
 	describe("event emitters", () => {
 		/**
-		 * Asserts {@link onDialDown} is invoked when `dialDown` is emitted.
+		 * Asserts {@link ActionService.onDialDown} is invoked when `dialDown` is emitted.
 		 */
 		it("receives onDialDown", () => {
 			// Arrange.
@@ -93,7 +92,7 @@ describe("actions", () => {
 		});
 
 		/**
-		 * Asserts {@link onDialRotate} is invoked when `dialRotate` is emitted.
+		 * Asserts {@link ActionService.onDialRotate} is invoked when `dialRotate` is emitted.
 		 */
 		it("receives onDialRotate", () => {
 			// Arrange.
@@ -139,7 +138,7 @@ describe("actions", () => {
 		});
 
 		/**
-		 * Asserts {@link onDialUp} is invoked when `dialUp` is emitted.
+		 * Asserts {@link ActionService.onDialUp} is invoked when `dialUp` is emitted.
 		 */
 		it("receives onDialUp", () => {
 			// Arrange.
@@ -183,7 +182,7 @@ describe("actions", () => {
 		});
 
 		/**
-		 * Asserts {@link onKeyDown} is invoked when `keyDown` is emitted.
+		 * Asserts {@link ActionService.onKeyDown} is invoked when `keyDown` is emitted.
 		 */
 		it("receives onKeyDown", () => {
 			// Arrange.
@@ -228,7 +227,7 @@ describe("actions", () => {
 		});
 
 		/**
-		 * Asserts {@link onKeyUp} is invoked when `keyUp` is emitted.
+		 * Asserts {@link ActionService.onKeyUp} is invoked when `keyUp` is emitted.
 		 */
 		it("receives onKeyUp", () => {
 			// Arrange.
@@ -273,7 +272,7 @@ describe("actions", () => {
 		});
 
 		/**
-		 * Asserts {@link onTitleParametersDidChange} is invoked when `titleParametersDidChange` is emitted.
+		 * Asserts {@link ActionService.onTitleParametersDidChange} is invoked when `titleParametersDidChange` is emitted.
 		 */
 		it("receives onTitleParametersDidChange", () => {
 			// Arrange.
@@ -327,7 +326,7 @@ describe("actions", () => {
 		});
 
 		/**
-		 * Asserts {@link onTouchTap} is invoked when `touchTap` is emitted.
+		 * Asserts {@link ActionService.onTouchTap} is invoked when `touchTap` is emitted.
 		 */
 		it("receives onTouchTap", () => {
 			// Arrange.
@@ -373,7 +372,7 @@ describe("actions", () => {
 		});
 
 		/**
-		 * Asserts {@link onWillAppear} is invoked when `willAppear` is emitted.
+		 * Asserts {@link ActionService.onWillAppear} is invoked when `willAppear` is emitted.
 		 */
 		it("receives onWillAppear", () => {
 			// Arrange.
@@ -418,7 +417,7 @@ describe("actions", () => {
 		});
 
 		/**
-		 * Asserts {@link onWillDisappear} is invoked when `willDisappear` is emitted.
+		 * Asserts {@link ActionService.onWillDisappear} is invoked when `willDisappear` is emitted.
 		 */
 		it("receives onWillDisappear", () => {
 			// Arrange.
@@ -469,7 +468,7 @@ describe("actions", () => {
 		const actions = jest.fn() as unknown as IterableIterator<DialAction<JsonObject> | KeyAction<JsonObject>>;
 
 		/**
-		 * Asserts {@link registerAction} validates the manifest identifier is not undefined.
+		 * Asserts {@link ActionService.registerAction} validates the manifest identifier is not undefined.
 		 */
 		it("validates the manifestId is not undefined", () => {
 			// Arrange.
@@ -483,7 +482,7 @@ describe("actions", () => {
 		});
 
 		/**
-		 * Asserts {@link registerAction} validates the manifest identifier exists within the manifest.
+		 * Asserts {@link ActionService.registerAction} validates the manifest identifier exists within the manifest.
 		 */
 		it("validates when action does not exist in manifest", () => {
 			// Arrange.
@@ -497,7 +496,7 @@ describe("actions", () => {
 		});
 
 		/**
-		 * Asserts {@link registerAction} ignores undefined handlers.
+		 * Asserts {@link ActionService.registerAction} ignores undefined handlers.
 		 */
 		it("ignore undefined handlers", () => {
 			// Arrange.
@@ -524,7 +523,7 @@ describe("actions", () => {
 		});
 
 		/**
-		 * Asserts {@link onDialDown} is routed to the action when `dialDown` is emitted.
+		 * Asserts {@link ActionService.onDialDown} is routed to the action when `dialDown` is emitted.
 		 */
 		it("routes onDialDown", () => {
 			// Arrange.
@@ -567,7 +566,7 @@ describe("actions", () => {
 		});
 
 		/**
-		 * Asserts {@link onDialRotate} is routed to the action when `dialRotate` is emitted.
+		 * Asserts {@link ActionService.onDialRotate} is routed to the action when `dialRotate` is emitted.
 		 */
 		it("routes onDialRotate", () => {
 			// Arrange.
@@ -611,7 +610,7 @@ describe("actions", () => {
 		});
 
 		/**
-		 * Asserts {@link onDialUp} is routed to the action when `dialUp` is emitted.
+		 * Asserts {@link ActionService.onDialUp} is routed to the action when `dialUp` is emitted.
 		 */
 		it("routes onDialUp", () => {
 			// Arrange.
@@ -688,7 +687,7 @@ describe("actions", () => {
 		});
 
 		/**
-		 * Asserts {@link onDidReceiveSettings} is routed to the action when `didReceiveGlobalSettings` is emitted.
+		 * Asserts {@link ActionService.onDidReceiveSettings} is routed to the action when `didReceiveGlobalSettings` is emitted.
 		 */
 		it("routes onDidReceiveGlobalSettings", () => {
 			// Arrange
@@ -731,7 +730,7 @@ describe("actions", () => {
 		});
 
 		/**
-		 * Asserts {@link onKeyDown} is routed to the action when `keyDown` is emitted.
+		 * Asserts {@link ActionService.onKeyDown} is routed to the action when `keyDown` is emitted.
 		 */
 		it("routes onKeyDown", () => {
 			// Arrange.
@@ -774,7 +773,7 @@ describe("actions", () => {
 		});
 
 		/**
-		 * Asserts {@link onKeyUp} is routed to the action when `keyUp` is emitted.
+		 * Asserts {@link ActionService.onKeyUp} is routed to the action when `keyUp` is emitted.
 		 */
 		it("routes onKeyUp", () => {
 			// Arrange.
@@ -879,7 +878,7 @@ describe("actions", () => {
 		});
 
 		/**
-		 * Asserts {@link onTitleParametersDidChange} is routed to the action when `titleParametersDidChange` is emitted.
+		 * Asserts {@link ActionService.onTitleParametersDidChange} is routed to the action when `titleParametersDidChange` is emitted.
 		 */
 		it("routes onTitleParametersDidChange", () => {
 			// Arrange.
@@ -931,7 +930,7 @@ describe("actions", () => {
 		});
 
 		/**
-		 * Asserts {@link onTouchTap} is routed to the action when `touchTap` is emitted.
+		 * Asserts {@link ActionService.onTouchTap} is routed to the action when `touchTap` is emitted.
 		 */
 		it("routes onTouchTap", () => {
 			// Arrange.
@@ -975,7 +974,7 @@ describe("actions", () => {
 		});
 
 		/**
-		 * Asserts {@link onWillAppear} is routed to the action when `willAppear` is emitted.
+		 * Asserts {@link ActionService.onWillAppear} is routed to the action when `willAppear` is emitted.
 		 */
 		it("routes onWillAppear", () => {
 			// Arrange.
@@ -1018,7 +1017,7 @@ describe("actions", () => {
 		});
 
 		/**
-		 * Asserts {@link onWillDisappear} is routed to the action when `willDisappear` is emitted.
+		 * Asserts {@link ActionService.onWillDisappear} is routed to the action when `willDisappear` is emitted.
 		 */
 		it("routes onWillDisappear", () => {
 			// Arrange.

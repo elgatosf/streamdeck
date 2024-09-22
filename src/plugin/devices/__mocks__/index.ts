@@ -2,10 +2,10 @@ import { DeviceType } from "../../../api/device";
 import { type Device } from "../device";
 
 export const deviceService = {
-	getDeviceById: jest.fn().mockImplementation((deviceId: string) => {
+	getDeviceById: jest.fn().mockImplementation((id: string) => {
 		return {
 			actions: Array.from([]).values(),
-			id: "DEV1",
+			id,
 			name: "Device One",
 			size: {
 				columns: 5,

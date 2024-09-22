@@ -65,7 +65,7 @@ describe("KeyAction", () => {
 	});
 
 	/**
-	 * Asserts the constructor of {@link DialAction} throws when the event is for a keypad.
+	 * Asserts the constructor of {@link KeyAction} throws when the event is for a keypad.
 	 */
 	it("throws for non keypad", () => {
 		// Arrange.
