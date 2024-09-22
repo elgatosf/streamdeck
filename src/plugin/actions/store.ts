@@ -1,29 +1,18 @@
 import { Enumerable } from "../../common/enumerable";
-import { connection } from "../connection";
-import { initializeStore } from "../devices/store";
-import { DialAction } from "./dial";
-import { KeyAction } from "./key";
+import type { DialAction } from "./dial";
+import type { KeyAction } from "./key";
 
-const __actions = new Map<string, DialAction | KeyAction>();
-
-// Adds the action to the store.
-connection.prependListener("willAppear", (ev) => {
-	const action = ev.payload.controller === "Encoder" ? new DialAction(ev) : new KeyAction(ev);
-	__actions.set(ev.context, action);
-});
-
-// Remove the action from the store.
-connection.prependListener("willDisappear", (ev) => __actions.delete(ev.context));
+const __items = new Map<string, DialAction | KeyAction>();
 
 /**
- * Provides a store of visible actions.
+ * Provides a read-only store of Stream Deck devices.
  */
-export class ActionStore extends Enumerable<DialAction | KeyAction> {
+export class ReadOnlyActionStore extends Enumerable<DialAction | KeyAction> {
 	/**
-	 * Initializes a new instance of the {@link ActionStore} class.
+	 * Initializes a new instance of the {@link ReadOnlyActionStore}.
 	 */
 	constructor() {
-		super(__actions);
+		super(__items);
 	}
 
 	/**
@@ -32,13 +21,32 @@ export class ActionStore extends Enumerable<DialAction | KeyAction> {
 	 * @returns The action, when present; otherwise `undefined`.
 	 */
 	public getActionById(id: string): DialAction | KeyAction | undefined {
-		return __actions.get(id);
+		return __items.get(id);
 	}
 }
 
 /**
- * Store of visible Stream Deck actions.
+ * Provides a store of Stream Deck actions.
+ */
+class ActionStore extends ReadOnlyActionStore {
+	/**
+	 * Adds the action to the store.
+	 * @param action The action.
+	 */
+	public set(action: DialAction | KeyAction): void {
+		__items.set(action.id, action);
+	}
+
+	/**
+	 * Deletes the action from the store.
+	 * @param action The action's identifier.
+	 */
+	public delete(id: string): void {
+		__items.delete(id);
+	}
+}
+
+/**
+ * Singleton instance of the action store.
  */
 export const actionStore = new ActionStore();
-
-initializeStore(actionStore);

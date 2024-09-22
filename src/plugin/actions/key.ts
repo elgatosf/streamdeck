@@ -26,6 +26,10 @@ export class KeyAction<T extends JsonObject = JsonObject> extends Action<T> {
 	constructor(source: WillAppear<JsonObject>) {
 		super(source);
 
+		if (source.payload.controller !== "Keypad") {
+			throw new Error("Unable to create KeyAction; source event is not a Keypad");
+		}
+
 		this.#coordinates = !source.payload.isInMultiAction ? Object.freeze(source.payload.coordinates) : undefined;
 		this.#source = source;
 	}

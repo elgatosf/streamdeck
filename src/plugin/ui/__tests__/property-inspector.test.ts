@@ -24,7 +24,9 @@ describe("PropertyInspector", () => {
 		});
 
 		// Assert.
-		expect(pi.action).toBe(actionStore.getActionById("key123"));
+		expect(actionStore.getActionById).toHaveBeenCalledTimes(1);
+		expect(actionStore.getActionById).toHaveBeenLastCalledWith("key123");
+		expect(pi.action).toEqual(actionStore.getActionById("key123"));
 	});
 
 	describe("fetch", () => {
@@ -87,7 +89,7 @@ describe("PropertyInspector", () => {
 		const spyOnSend = jest.spyOn(connection, "send");
 		const pi = new PropertyInspector(router, {
 			action: "com.elgato.test.key",
-			context: "key123", // Mocked in actionStore.
+			context: "key123",
 			device: "dev123"
 		});
 

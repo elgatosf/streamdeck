@@ -1,48 +1,66 @@
-import { DeviceType, type GetSettings, type SendToPropertyInspector, type SetSettings } from "../../../api";
+import { DeviceType, type GetSettings, type SendToPropertyInspector, type SetSettings, type ShowAlert, type WillAppear } from "../../../api";
 import { Settings } from "../../../api/__mocks__/events";
+import { type JsonObject } from "../../../common/json";
 import { connection } from "../../connection";
 import { Device } from "../../devices/device";
-import { Action, type ActionContext } from "../action";
-import { KeyAction } from "../key";
+import { deviceStore } from "../../devices/store";
+import { Action } from "../action";
+import { DialAction } from "../dial";
 
+jest.mock("../../devices/store");
 jest.mock("../../logging");
 jest.mock("../../manifest");
 jest.mock("../../connection");
 
 describe("Action", () => {
+	// Mock source.
+	const source: WillAppear<JsonObject> = {
+		action: "com.test.action.one",
+		context: "action123",
+		device: "device123",
+		event: "willAppear",
+		payload: {
+			controller: "Keypad",
+			coordinates: {
+				column: 1,
+				row: 2
+			},
+			isInMultiAction: false,
+			settings: {}
+		}
+	};
+
 	// Mock device.
 	const device = new Device(
-		"dev123",
+		"device123",
 		{
-			name: "Device One",
+			name: "Device 1",
 			size: {
 				columns: 5,
 				rows: 3
 			},
 			type: DeviceType.StreamDeck
 		},
-		false
+		true
 	);
 
-	/**
-	 * Asserts the constructor of {@link Action} sets the context.
-	 */
-	it("constructor sets context", () => {
-		// Arrange.
-		const context: ActionContext = {
-			device,
-			id: "ABC123",
-			manifestId: "com.elgato.test.one"
-		};
+	beforeAll(() => jest.spyOn(deviceStore, "getDeviceById").mockReturnValue(device));
 
-		// Act.
-		const action = new KeyAction(context);
+	/**
+	 * Asserts the constructor of {@link Action} sets the properties from the source.
+	 */
+	it("constructor sets properties from source", () => {
+		// Arrange, act.
+		const action = new Action(source);
 
 		// Assert.
 		expect(action).toBeInstanceOf(Action);
-		expect(action.device).toBe(context.device);
-		expect(action.id).toBe(context.id);
-		expect(action.manifestId).toBe(context.manifestId);
+		expect(action.controller).toBe("Keypad");
+		expect(action.device).toBe(device);
+		expect(action.id).toBe(source.context);
+		expect(action.manifestId).toBe(source.action);
+		expect(deviceStore.getDeviceById).toHaveBeenCalledTimes(1);
+		expect(deviceStore.getDeviceById).toHaveBeenLastCalledWith(source.device);
 	});
 
 	/**
@@ -50,13 +68,9 @@ describe("Action", () => {
 	 */
 	it("getSettings", async () => {
 		// Arrange.
-		const action = new KeyAction<Settings>({
-			device,
-			id: "ABC123",
-			manifestId: "com.elgato.test.one"
-		});
+		const action = new Action(source);
 
-		// Act (Command).
+		// Array, act (Command).
 		const settings = action.getSettings();
 
 		// Assert (Command).
@@ -113,12 +127,41 @@ describe("Action", () => {
 		});
 	});
 
-	describe("sending", () => {
-		const action = new KeyAction({
-			device,
-			id: "ABC123",
-			manifestId: "com.elgato.test.one"
+	/**
+	 * Asserts type-checking when the controller is "Keypad".
+	 */
+	test("keypad type assertion", () => {
+		const action = new Action({
+			...source,
+			payload: {
+				...source.payload,
+				controller: "Keypad"
+			}
 		});
+
+		expect(action.isKey()).toBe(true);
+		expect(action.isDial()).toBe(false);
+	});
+
+	/**
+	 * Asserts type-checking when the controller is "Encoder".
+	 */
+	test("encoder type assertion", () => {
+		const action = new DialAction({
+			...source,
+			payload: {
+				...source.payload,
+				controller: "Encoder"
+			}
+		} as WillAppear<JsonObject>);
+
+		expect(action.isDial()).toBe(true);
+		expect(action.isKey()).toBe(false);
+	});
+
+	describe("sending", () => {
+		let action!: Action;
+		beforeAll(() => (action = new Action(source)));
 
 		/**
 		 * Asserts {@link Action.sendToPropertyInspector} forwards the command to the {@link connection}.
@@ -157,6 +200,21 @@ describe("Action", () => {
 				payload: {
 					name: "Elgato"
 				}
+			});
+		});
+
+		/**
+		 * Asserts {@link Action.showAlert} forwards the command to the {@link connection}.
+		 */
+		it("showAlert", async () => {
+			// Arrange, act.
+			await action.showAlert();
+
+			// Assert.
+			expect(connection.send).toHaveBeenCalledTimes(1);
+			expect(connection.send).toHaveBeenCalledWith<[ShowAlert]>({
+				context: action.id,
+				event: "showAlert"
 			});
 		});
 	});

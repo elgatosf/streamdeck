@@ -1,52 +1,92 @@
-import { Target, type SetImage, type SetState, type SetTitle, type ShowOk, type WillAppear } from "../../../api";
+import { DeviceType, Target, type SetImage, type SetState, type SetTitle, type ShowOk, type WillAppear } from "../../../api";
 import type { JsonObject } from "../../../common/json";
 import { connection } from "../../connection";
 import { Device } from "../../devices/device";
+import { deviceStore } from "../../devices/store";
 import { Action } from "../action";
 import { KeyAction } from "../key";
-import type { ActionContext } from "../store";
 
-jest.mock("../../devices/device");
+jest.mock("../../devices/store");
 jest.mock("../../logging");
 jest.mock("../../manifest");
 jest.mock("../../connection");
 
 describe("KeyAction", () => {
-	// Mock context.
-	const context: ActionContext = {
-		// @ts-expect-error Mocked device.
-		device: new Device(),
-		controller: "Keypad",
-		id: "ABC123",
-		manifestId: "com.elgato.test.one"
+	// Mock source.
+	const source: WillAppear<JsonObject> = {
+		action: "com.test.action.one",
+		context: "action123",
+		device: "device123",
+		event: "willAppear",
+		payload: {
+			controller: "Keypad",
+			coordinates: {
+				column: 1,
+				row: 2
+			},
+			isInMultiAction: false,
+			settings: {}
+		}
 	};
 
-	// Mock source.
-	const source: WillAppear<JsonObject>["payload"] = {
-		controller: "Keypad",
-		coordinates: {
-			column: 1,
-			row: 2
+	// Mock device.
+	const device = new Device(
+		"dev1",
+		{
+			name: "Device 1",
+			size: {
+				columns: 5,
+				rows: 3
+			},
+			type: DeviceType.StreamDeck
 		},
-		isInMultiAction: false,
-		settings: {}
-	};
+		true
+	);
+
+	beforeAll(() => jest.spyOn(deviceStore, "getDeviceById").mockReturnValue(device));
 
 	/**
 	 * Asserts the constructor of {@link KeyAction} sets the context.
 	 */
 	it("constructor sets context", () => {
 		// Arrange, act.
-		const action = new KeyAction(context, source);
+		const action = new KeyAction(source);
 
 		// Assert.
 		expect(action).toBeInstanceOf(Action);
 		expect(action.coordinates).not.toBeUndefined();
 		expect(action.coordinates?.column).toBe(1);
 		expect(action.coordinates?.row).toBe(2);
-		expect(action.device).toBe(context.device);
-		expect(action.id).toBe(context.id);
-		expect(action.manifestId).toBe(context.manifestId);
+		expect(action.device).toBe(device);
+		expect(action.id).toBe(source.context);
+		expect(action.manifestId).toBe(source.action);
+		expect(deviceStore.getDeviceById).toHaveBeenCalledTimes(1);
+		expect(deviceStore.getDeviceById).toHaveBeenLastCalledWith(source.device);
+	});
+
+	/**
+	 * Asserts the constructor of {@link DialAction} throws when the event is for a keypad.
+	 */
+	it("throws for non keypad", () => {
+		// Arrange.
+		const encoderSource: WillAppear<JsonObject> = {
+			action: "com.test.action.one",
+			context: "action1",
+			device: "dev1",
+			event: "willAppear",
+			payload: {
+				controller: "Encoder",
+				coordinates: {
+					column: 1,
+					row: 2
+				},
+				isInMultiAction: false,
+				settings: {}
+			}
+		};
+
+		// Act, assert.
+		expect(() => new KeyAction(encoderSource)).toThrow();
 	});
 
 	/**
@@ -54,9 +94,16 @@ describe("KeyAction", () => {
 	 */
 	it("does not have coordinates when multi-action", () => {
 		// Arrange, act.
-		const action = new KeyAction(context, {
-			...source,
-			isInMultiAction: true
+		const action = new KeyAction({
+			action: "action1",
+			context: "com.test.action.one",
+			device: "dev1",
+			event: "willAppear",
+			payload: {
+				controller: "Keypad",
+				settings: {},
+				isInMultiAction: true
+			}
 		});
 
 		// Assert.
@@ -64,7 +111,8 @@ describe("KeyAction", () => {
 	});
 
 	describe("sending", () => {
-		const action = new KeyAction(context, source);
+		let action!: KeyAction;
+		beforeAll(() => (action = new KeyAction(source)));
 
 		/**
 		 * Asserts {@link KeyAction.setImage} forwards the command to the {@link connection}.
@@ -130,7 +178,7 @@ describe("KeyAction", () => {
 			expect(connection.send).toHaveBeenCalledTimes(2);
 			expect(connection.send).toHaveBeenNthCalledWith<[SetTitle]>(1, {
 				event: "setTitle",
-				context: "ABC123",
+				context: action.id,
 				payload: {
 					title: "Hello world"
 				}
@@ -138,7 +186,7 @@ describe("KeyAction", () => {
 
 			expect(connection.send).toHaveBeenNthCalledWith<[SetTitle]>(2, {
 				event: "setTitle",
-				context: "ABC123",
+				context: action.id,
 				payload: {
 					state: 1,
 					target: Target.Software,

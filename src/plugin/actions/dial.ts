@@ -22,7 +22,7 @@ export class DialAction<T extends JsonObject = JsonObject> extends Action<T> {
 		super(source);
 
 		if (source.payload.controller !== "Encoder") {
-			throw new Error("Unable to create DialAction a source that isn't an Encoder");
+			throw new Error("Unable to create DialAction; source event is not a Encoder");
 		}
 
 		this.#coordinates = Object.freeze(source.payload.coordinates);

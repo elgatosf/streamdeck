@@ -1,55 +1,89 @@
-import { type SetFeedback, type SetFeedbackLayout, type SetImage, type SetTriggerDescription, type WillAppear } from "../../../api";
+import { DeviceType, type SetFeedback, type SetFeedbackLayout, type SetImage, type SetTriggerDescription, type WillAppear } from "../../../api";
 import type { JsonObject } from "../../../common/json";
 import { connection } from "../../connection";
-import { Device } from "../../devices";
+import { Device } from "../../devices/device";
+import { deviceStore } from "../../devices/store";
 import { Action } from "../action";
 import { DialAction } from "../dial";
-import type { ActionContext } from "../store";
 
+jest.mock("../../devices/store");
 jest.mock("../../logging");
 jest.mock("../../manifest");
 jest.mock("../../connection");
 
 describe("DialAction", () => {
-	// Mock context.
-	const context: ActionContext = {
-		// @ts-expect-error Mocked device.
-		device: new Device(),
-		controller: "Keypad",
-		id: "ABC123",
-		manifestId: "com.elgato.test.one"
+	// Mock source.
+	const source: WillAppear<JsonObject> = {
+		action: "com.test.action.one",
+		context: "action123",
+		device: "device123",
+		event: "willAppear",
+		payload: {
+			controller: "Encoder",
+			coordinates: {
+				column: 1,
+				row: 2
+			},
+			isInMultiAction: false,
+			settings: {}
+		}
 	};
 
-	// Mock source.
-	const source: WillAppear<JsonObject>["payload"] = {
-		controller: "Encoder",
-		coordinates: {
-			column: 1,
-			row: 2
+	// Mock device.
+	const device = new Device(
+		"device123",
+		{
+			name: "Device 1",
+			size: {
+				columns: 5,
+				rows: 3
+			},
+			type: DeviceType.StreamDeck
 		},
-		isInMultiAction: false,
-		settings: {}
-	};
+		true
+	);
+
+	beforeAll(() => jest.spyOn(deviceStore, "getDeviceById").mockReturnValue(device));
 
 	/**
-	 * Asserts the constructor of {@link DialAction} sets the context.
+	 * Asserts the constructor of {@link DialAction} sets the properties from the source.
 	 */
-	it("constructor sets context", () => {
+	it("constructor sets properties from source", () => {
 		// Arrange, act.
-		const action = new DialAction(context, source);
+		const action = new DialAction(source);
 
 		// Assert.
 		expect(action).toBeInstanceOf(Action);
 		expect(action.coordinates).not.toBeUndefined();
 		expect(action.coordinates?.column).toBe(1);
 		expect(action.coordinates?.row).toBe(2);
-		expect(action.device).toBe(context.device);
-		expect(action.id).toBe(context.id);
-		expect(action.manifestId).toBe(context.manifestId);
+		expect(action.device).toBe(device);
+		expect(action.id).toBe(source.context);
+		expect(action.manifestId).toBe(source.action);
+		expect(deviceStore.getDeviceById).toHaveBeenCalledTimes(1);
+		expect(deviceStore.getDeviceById).toHaveBeenLastCalledWith(source.device);
+	});
+
+	/**
+	 * Asserts the constructor of {@link DialAction} throws when the event is for a keypad.
+	 */
+	it("throws for non encoder", () => {
+		// Arrange.
+		const keypadSource: WillAppear<JsonObject> = {
+			...source,
+			payload: {
+				...source.payload,
+				controller: "Keypad"
+			}
+		};
+
+		// Act, assert.
+		expect(() => new DialAction(keypadSource)).toThrow();
 	});
 
 	describe("sending", () => {
-		const action = new DialAction(context, source);
+		let action!: DialAction;
+		beforeAll(() => (action = new DialAction(source)));
 
 		/**
 		 * Asserts {@link DialAction.setFeedback} forwards the command to the {@link connection}.
@@ -116,6 +150,24 @@ describe("DialAction", () => {
 				event: "setImage",
 				payload: {
 					image: "./imgs/test.png"
+				}
+			});
+		});
+
+		/**
+		 * Asserts {@link DialAction.setTitle} forwards the command to the {@link connection}.
+		 */
+		it("setTitle", async () => {
+			// Arrange, act.
+			await action.setTitle("Hello world");
+
+			// Assert.
+			expect(connection.send).toHaveBeenCalledTimes(1);
+			expect(connection.send).toHaveBeenCalledWith<[SetFeedback]>({
+				context: action.id,
+				event: "setFeedback",
+				payload: {
+					title: "Hello world"
 				}
 			});
 		});

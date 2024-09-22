@@ -1,21 +1,22 @@
-import { Device, type DeviceService } from "..";
 import type { DeviceDidConnectEvent, DeviceDidDisconnectEvent } from "../..";
 import { DeviceType, type DeviceDidConnect, type DeviceDidDisconnect } from "../../../api";
 import { type connection as Connection } from "../../connection";
+import { Device } from "../device";
+import type { DeviceService } from "../service";
 
-jest.mock("../../actions/store");
+jest.mock("../../actions/store", () => {}); // Override default mock.
 jest.mock("../../connection");
 jest.mock("../../logging");
 jest.mock("../../manifest");
 
 describe("devices", () => {
 	let connection!: typeof Connection;
-	let devices!: DeviceService;
+	let deviceService!: DeviceService;
 
 	beforeEach(async () => {
 		jest.resetModules();
 		({ connection } = await require("../../connection"));
-		({ devices } = await require("../"));
+		({ deviceService } = (await require("../service")) as typeof import("../service"));
 	});
 
 	/**
@@ -39,7 +40,7 @@ describe("devices", () => {
 		const listener = jest.fn();
 
 		// Act.
-		devices.forEach(listener);
+		deviceService.forEach(listener);
 
 		// Assert.
 		expect(listener).toHaveBeenCalledTimes(2);
@@ -58,7 +59,7 @@ describe("devices", () => {
 		connection.emit("connected", connection.registrationParameters.info);
 
 		// Act, assert: registration parameters are included.
-		expect(devices.length).toBe(1);
+		expect(deviceService.length).toBe(1);
 
 		// Act, assert: count increments with new devices.
 		const ev = {
@@ -72,7 +73,7 @@ describe("devices", () => {
 		} satisfies DeviceDidConnect;
 		connection.emit("deviceDidConnect", ev);
 
-		expect(devices.length).toBe(2);
+		expect(deviceService.length).toBe(2);
 
 		// Act, assert: count remains 2 when device disconnected
 		connection.emit("deviceDidDisconnect", {
@@ -80,7 +81,7 @@ describe("devices", () => {
 			event: "deviceDidDisconnect"
 		});
 
-		expect(devices.length).toBe(2);
+		expect(deviceService.length).toBe(2);
 	});
 
 	/**
@@ -91,9 +92,9 @@ describe("devices", () => {
 		connection.emit("connected", connection.registrationParameters.info);
 
 		// Assert.
-		expect(devices.length).toBe(1);
+		expect(deviceService.length).toBe(1);
 
-		const [device] = devices;
+		const [device] = deviceService;
 		expect(device.id).toBe(connection.registrationParameters.info.devices[0].id);
 		expect(device.isConnected).toBeFalsy();
 		expect(device.name).toBe(connection.registrationParameters.info.devices[0].name);
@@ -120,9 +121,9 @@ describe("devices", () => {
 		});
 
 		// Assert.
-		expect(devices.length).toBe(1);
+		expect(deviceService.length).toBe(1);
 
-		const [device] = devices;
+		const [device] = deviceService;
 		expect(device.id).toBe("__NEW_DEV__");
 		expect(device.isConnected).toBeTruthy();
 		expect(device.name).toBe("New Device");
@@ -151,7 +152,7 @@ describe("devices", () => {
 			});
 
 			// Act.
-			const device = devices.getDeviceById("devices.test.ts.1");
+			const device = deviceService.getDeviceById("devices.test.ts.1");
 
 			// Assert.
 			expect(device).not.toBeUndefined();
@@ -168,7 +169,7 @@ describe("devices", () => {
 		 */
 		it("unknown identifier", () => {
 			// Arrange, act, assert.
-			expect(devices.getDeviceById("__unknown")).toBeUndefined();
+			expect(deviceService.getDeviceById("__unknown")).toBeUndefined();
 		});
 	});
 
@@ -180,7 +181,7 @@ describe("devices", () => {
 		connection.emit("connected", connection.registrationParameters.info);
 
 		// Act.
-		const [device] = devices;
+		const [device] = deviceService;
 		expect(device.isConnected).toBeFalsy();
 
 		connection.emit("deviceDidConnect", {
@@ -190,7 +191,7 @@ describe("devices", () => {
 		});
 
 		// Assert.
-		expect(devices.length).toBe(1);
+		expect(deviceService.length).toBe(1);
 
 		expect(device.id).toBe(connection.registrationParameters.info.devices[0].id);
 		expect(device.isConnected).toBeTruthy();
@@ -207,7 +208,7 @@ describe("devices", () => {
 		connection.emit("connected", connection.registrationParameters.info);
 
 		// Act.
-		const [device] = devices;
+		const [device] = deviceService;
 		expect(device.isConnected).toBeFalsy();
 
 		connection.emit("deviceDidConnect", {
@@ -223,7 +224,7 @@ describe("devices", () => {
 		});
 
 		// Assert.
-		expect(devices.length).toBe(1);
+		expect(deviceService.length).toBe(1);
 
 		expect(device.id).toBe(connection.registrationParameters.info.devices[0].id);
 		expect(device.isConnected).toBeFalsy();
@@ -240,7 +241,7 @@ describe("devices", () => {
 		connection.emit("connected", connection.registrationParameters.info);
 
 		// Act.
-		const [device] = devices;
+		const [device] = deviceService;
 		expect(device.isConnected).toBeFalsy();
 
 		connection.emit("deviceDidDisconnect", {
@@ -249,7 +250,7 @@ describe("devices", () => {
 		});
 
 		// Assert.
-		expect(devices.length).toBe(1);
+		expect(deviceService.length).toBe(1);
 
 		expect(device.id).toBe(connection.registrationParameters.info.devices[0].id);
 		expect(device.isConnected).toBeFalsy();
@@ -278,7 +279,7 @@ describe("devices", () => {
 		} satisfies DeviceDidConnect;
 
 		// Act (emit).
-		const disposable = devices.onDeviceDidConnect(listener);
+		const disposable = deviceService.onDeviceDidConnect(listener);
 		connection.emit("deviceDidConnect", ev);
 
 		// Assert (emit).
@@ -310,7 +311,7 @@ describe("devices", () => {
 		} satisfies DeviceDidDisconnect;
 
 		// Act (emit).
-		const disposable = devices.onDeviceDidDisconnect(listener);
+		const disposable = deviceService.onDeviceDidDisconnect(listener);
 		connection.emit("deviceDidDisconnect", ev);
 
 		// Assert (emit).

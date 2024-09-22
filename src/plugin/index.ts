@@ -1,9 +1,9 @@
 import type { Manifest, RegistrationInfo } from "../api";
 import { I18nProvider } from "../common/i18n";
 import { registerCreateLogEntryRoute, type Logger } from "../common/logging";
-import { actionService, type ActionService } from "./actions";
+import { actionService, type ActionService } from "./actions/service";
 import { connection } from "./connection";
-import { devices, type DeviceService } from "./devices";
+import { deviceService, type DeviceService } from "./devices/service";
 import { fileSystemLocaleProvider } from "./i18n";
 import { logger } from "./logging";
 import { getManifest } from "./manifest";
@@ -36,12 +36,8 @@ export { EventEmitter, EventsOf } from "../common/event-emitter";
 export { type JsonObject, type JsonPrimitive, type JsonValue } from "../common/json";
 export { LogLevel } from "../common/logging";
 export { type MessageRequestOptions, type MessageResponder, type MessageResponse, type RouteConfiguration, type StatusCode } from "../common/messaging";
-export type { Action } from "./actions/action";
-export { action } from "./actions/decorators";
-export { type DialAction, type TriggerDescriptionOptions } from "./actions/dial";
-export { type ImageOptions, type KeyAction, type TitleOptions } from "./actions/key";
-export { SingletonAction } from "./actions/singleton-action";
-export { type Device, type DeviceService } from "./devices";
+export * from "./actions";
+export * from "./devices";
 export * from "./events";
 export { route, type MessageRequest, type PropertyInspector } from "./ui";
 export { type Logger };
@@ -62,7 +58,7 @@ export const streamDeck = {
 	 * @returns Devices namespace.
 	 */
 	get devices(): DeviceService {
-		return devices;
+		return deviceService;
 	},
 
 	/**

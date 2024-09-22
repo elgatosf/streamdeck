@@ -1,7 +1,9 @@
-import { action, type JsonObject, type MessageRequest } from "../..";
+import type { MessageRequest } from "../";
 import type { PluginCommand, SendToPropertyInspector } from "../../../api";
+import type { JsonObject } from "../../../common/json";
 import { MessageGateway, MessageResponder } from "../../../common/messaging";
 import { PromiseCompletionSource } from "../../../common/promises";
+import { action } from "../../actions";
 import { SingletonAction } from "../../actions/singleton-action";
 import { actionStore } from "../../actions/store";
 import { connection } from "../../connection";

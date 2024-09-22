@@ -1,74 +1,62 @@
-import type { WillAppear, WillDisappear } from "../../../api";
-import type { JsonObject } from "../../../common/json";
-import { DialAction } from "../dial";
-import { KeyAction } from "../key";
-import type { ActionContext } from "../store";
+import { DeviceType } from "../../../api/device";
+import type { Device } from "../../devices";
+import { deviceStore } from "../../devices/store";
 
-const { ActionStore, initializeStore: __initializeStore } = jest.requireActual<typeof import("../store")>("../store");
+const { ReadOnlyActionStore } = jest.requireActual("../store");
+const { KeyAction } = jest.requireActual("../key");
+const { DialAction } = jest.requireActual("../dial");
 
-// Mock key.
-const key = new KeyAction(
-	{
-		id: "key123",
-		manifestId: "com.elgato.test.key",
-		device: undefined!,
-		controller: "Keypad"
+jest.mock("../../devices/store");
+
+jest.spyOn(deviceStore, "getDeviceById").mockReturnValue({
+	id: "device123",
+	isConnected: true,
+	name: "Device 1",
+	size: {
+		columns: 5,
+		rows: 3
 	},
-	{
-		controller: "Keypad",
-		coordinates: {
-			column: 1,
-			row: 1
-		},
-		isInMultiAction: false,
-		settings: {}
-	}
-);
-
-// Mock dial.
-const dial = new DialAction(
-	{
-		id: "dial123",
-		manifestId: "com.elgato.test.dial",
-		device: undefined!,
-		controller: "Encoder"
-	},
-	{
-		controller: "Encoder",
-		coordinates: {
-			column: 1,
-			row: 1
-		},
-		isInMultiAction: false,
-		settings: {}
-	}
-);
+	type: DeviceType.StreamDeck
+} as unknown as Device);
 
 export const actionStore = {
-	getActionById: jest.fn().mockImplementation((id) => {
-		if (id === key.id) {
-			return key;
-		} else if (id === dial.id) {
-			return dial;
+	set: jest.fn(),
+	delete: jest.fn(),
+	getActionById: jest.fn().mockImplementation((id: string) => {
+		if (id === "dial123") {
+			return new DialAction({
+				action: "com.elgato.test.dial",
+				context: id,
+				device: "device123",
+				event: "willAppear",
+				payload: {
+					controller: "Encoder",
+					coordinates: {
+						column: 1,
+						row: 2
+					},
+					isInMultiAction: false,
+					settings: {}
+				}
+			});
 		}
 
-		return undefined;
+		return new KeyAction({
+			action: "com.elgato.test.key",
+			context: id,
+			device: "device123",
+			event: "willAppear",
+			payload: {
+				controller: "Keypad",
+				coordinates: {
+					column: 1,
+					row: 2
+				},
+				isInMultiAction: false,
+				settings: {}
+			}
+		});
 	})
 };
 
-// @ts-expect-error Underlying store is not used, but still registers on the connection.
-__initializeStore({
-	getDeviceById: jest.fn()
-});
-
-export const initializeStore = jest.fn();
-export { ActionStore };
-
-export const createContext = jest.fn().mockImplementation((source: WillAppear<JsonObject> | WillDisappear<JsonObject>) => {
-	return {
-		controller: source.payload.controller,
-		device: undefined!,
-		id: source.context,
-		manifestId: source.action
-	} satisfies ActionContext;
-});
+export { ReadOnlyActionStore };
