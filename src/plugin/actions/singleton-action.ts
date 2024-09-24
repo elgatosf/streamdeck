@@ -96,7 +96,6 @@ export class SingletonAction<T extends JsonObject = JsonObject> {
 
 	/**
 	 * Occurs when a message was sent to the plugin _from_ the property inspector. The plugin can also send messages _to_ the property inspector using {@link Action.sendToPropertyInspector}.
-	 * @deprecated Consider using {@link streamDeck.ui.registerRoute} to receive requests from the property inspector.
 	 * @param ev The event.
 	 */
 	public onSendToPlugin?(ev: SendToPluginEvent<JsonValue, T>): Promise<void> | void;
