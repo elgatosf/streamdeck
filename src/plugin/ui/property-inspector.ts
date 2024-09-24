@@ -84,7 +84,6 @@ export class PropertyInspector implements Pick<MessageGateway<Action>, "fetch"> 
 	/**
 	 * Sends the {@link payload} to the property inspector. The plugin can also receive information from the property inspector via {@link streamDeck.ui.onSendToPlugin} and {@link SingletonAction.onSendToPlugin}
 	 * allowing for bi-directional communication.
-	 * @deprecated Consider using {@link streamDeck.ui.current.fetch} to send requests to the property inspector.
 	 * @template T The type of the payload received from the property inspector.
 	 * @param payload Payload to send to the property inspector.
 	 * @returns `Promise` resolved when {@link payload} has been sent to the property inspector.

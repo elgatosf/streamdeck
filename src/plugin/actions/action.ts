@@ -54,7 +54,6 @@ export class Action<T extends JsonObject = JsonObject> extends ActionContext {
 	/**
 	 * Sends the {@link payload} to the property inspector. The plugin can also receive information from the property inspector via {@link streamDeck.ui.onSendToPlugin} and {@link SingletonAction.onSendToPlugin}
 	 * allowing for bi-directional communication.
-	 * @deprecated Consider using {@link streamDeck.ui.current.fetch} to send requests to the property inspector.
 	 * @param payload Payload to send to the property inspector.
 	 * @returns `Promise` resolved when {@link payload} has been sent to the property inspector.
 	 */

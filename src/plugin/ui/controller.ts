@@ -1,4 +1,3 @@
-import type streamDeck from "../";
 import type { DidReceivePropertyInspectorMessage } from "../../api";
 import type { IDisposable } from "../../common/disposable";
 import type { JsonObject, JsonValue } from "../../common/json";
@@ -56,7 +55,6 @@ class UIController {
 	/**
 	 * Occurs when a message was sent to the plugin _from_ the property inspector. The plugin can also send messages _to_ the property inspector using {@link UIController.current.sendMessage}
 	 * or {@link Action.sendToPropertyInspector}.
-	 * @deprecated Consider using {@link streamDeck.ui.registerRoute} to receive requests from the property inspector.
 	 * @template TPayload The type of the payload received from the property inspector.
 	 * @template TSettings The type of settings associated with the action.
 	 * @param listener Function to be invoked when the event occurs.
