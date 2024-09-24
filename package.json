@@ -27,7 +27,7 @@
 	"scripts": {
 		"build": "rm -rf ./dist && rollup --config rollup.config.mjs && npm run types",
 		"watch": "rollup --config rollup.config.mjs --watch --watch.onEnd=\"npm run types\"",
-		"types": "rm -rf ./types && mkdir ./types && cp -r ./dist/types ./",
+		"types": "rm -rf ./types && mkdir types && cp -r ./dist/types ./",
 		"lint": "eslint . --ext .ts --max-warnings 0",
 		"lint:fix": "prettier --config .prettierrc src/**/*.ts --write",
 		"preversion": "npm run build && npm test && npm run lint",
