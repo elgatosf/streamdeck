@@ -13,7 +13,6 @@
 	},
 	"include": [
 		"src/",
-		"rollup.config.ts",
 		"tests/"
 	],
 	"exclude": [

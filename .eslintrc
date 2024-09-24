@@ -11,7 +11,8 @@
 	"ignorePatterns": [
 		".github/",
 		"dist/",
-		"node_modules/"
+		"node_modules/",
+		"types/"
 	],
 	"parser": "@typescript-eslint/parser",
 	"plugins": [
