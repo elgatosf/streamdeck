@@ -38,7 +38,7 @@ export { LogLevel } from "../common/logging";
 export { type MessageRequestOptions, type MessageResponder, type MessageResponse, type RouteConfiguration, type StatusCode } from "../common/messaging";
 export * from "./actions";
 export * from "./devices";
-export * from "./events";
+export type * from "./events";
 export { route, type MessageRequest, type PropertyInspector } from "./ui";
 export { type Logger };
 

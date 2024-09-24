@@ -78,7 +78,6 @@ describe("actions", () => {
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[DialDownEvent<Settings>]>({
 				action: actionStore.getActionById(ev.context) as DialAction,
-				deviceId: ev.device,
 				payload: ev.payload,
 				type: "dialDown"
 			});
@@ -124,7 +123,6 @@ describe("actions", () => {
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[DialRotateEvent<Settings>]>({
 				action: actionStore.getActionById(ev.context) as DialAction,
-				deviceId: ev.device,
 				payload: ev.payload,
 				type: "dialRotate"
 			});
@@ -168,7 +166,6 @@ describe("actions", () => {
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[DialUpEvent<Settings>]>({
 				action: actionStore.getActionById(ev.context) as DialAction,
-				deviceId: ev.device,
 				payload: ev.payload,
 				type: "dialUp"
 			});
@@ -213,7 +210,6 @@ describe("actions", () => {
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[KeyDownEvent<Settings>]>({
 				action: actionStore.getActionById(ev.context) as KeyAction,
-				deviceId: ev.device,
 				payload: ev.payload,
 				type: "keyDown"
 			});
@@ -258,7 +254,6 @@ describe("actions", () => {
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[KeyUpEvent<Settings>]>({
 				action: actionStore.getActionById(ev.context) as KeyAction,
-				deviceId: ev.device,
 				payload: ev.payload,
 				type: "keyUp"
 			});
@@ -312,7 +307,6 @@ describe("actions", () => {
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[TitleParametersDidChangeEvent<Settings>]>({
 				action: actionStore.getActionById(ev.context) as KeyAction,
-				deviceId: ev.device,
 				payload: ev.payload,
 				type: "titleParametersDidChange"
 			});
@@ -358,7 +352,6 @@ describe("actions", () => {
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[TouchTapEvent<Settings>]>({
 				action: actionStore.getActionById(ev.context) as DialAction,
-				deviceId: ev.device,
 				payload: ev.payload,
 				type: "touchTap"
 			});
@@ -403,7 +396,6 @@ describe("actions", () => {
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[WillAppearEvent<Settings>]>({
 				action: actionStore.getActionById(ev.context) as KeyAction,
-				deviceId: ev.device,
 				payload: ev.payload,
 				type: "willAppear"
 			});
@@ -448,7 +440,6 @@ describe("actions", () => {
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[WillDisappearEvent<Settings>]>({
 				action: new ActionContext(ev),
-				deviceId: ev.device,
 				payload: ev.payload,
 				type: "willDisappear"
 			});
@@ -559,7 +550,6 @@ describe("actions", () => {
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[DialDownEvent<Settings>]>({
 				action: actionStore.getActionById(ev.context) as DialAction,
-				deviceId: ev.device,
 				payload: ev.payload,
 				type: "dialDown"
 			});
@@ -603,7 +593,6 @@ describe("actions", () => {
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[DialRotateEvent<Settings>]>({
 				action: actionStore.getActionById(ev.context) as DialAction,
-				deviceId: ev.device,
 				payload: ev.payload,
 				type: "dialRotate"
 			});
@@ -645,7 +634,6 @@ describe("actions", () => {
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[DialUpEvent<Settings>]>({
 				action: actionStore.getActionById(ev.context) as DialAction,
-				deviceId: ev.device,
 				payload: ev.payload,
 				type: "dialUp"
 			});
@@ -723,7 +711,6 @@ describe("actions", () => {
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[DidReceiveSettingsEvent<Settings>]>({
 				action: actionStore.getActionById(ev.context) as KeyAction,
-				deviceId: ev.device,
 				payload: ev.payload,
 				type: "didReceiveSettings"
 			});
@@ -766,7 +753,6 @@ describe("actions", () => {
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[KeyDownEvent<Settings>]>({
 				action: actionStore.getActionById(ev.context) as KeyAction,
-				deviceId: ev.device,
 				payload: ev.payload,
 				type: "keyDown"
 			});
@@ -809,7 +795,6 @@ describe("actions", () => {
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[KeyUpEvent<Settings>]>({
 				action: actionStore.getActionById(ev.context) as KeyAction,
-				deviceId: ev.device,
 				payload: ev.payload,
 				type: "keyUp"
 			});
@@ -841,7 +826,6 @@ describe("actions", () => {
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[PropertyInspectorDidAppearEvent<Settings>]>({
 				action: actionStore.getActionById(ev.context) as KeyAction,
-				deviceId: ev.device,
 				type: "propertyInspectorDidAppear"
 			});
 		});
@@ -872,7 +856,6 @@ describe("actions", () => {
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[PropertyInspectorDidDisappearEvent<Settings>]>({
 				action: actionStore.getActionById(ev.context) as KeyAction,
-				deviceId: ev.device,
 				type: "propertyInspectorDidDisappear"
 			});
 		});
@@ -923,7 +906,6 @@ describe("actions", () => {
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[TitleParametersDidChangeEvent<Settings>]>({
 				action: actionStore.getActionById(ev.context) as KeyAction,
-				deviceId: ev.device,
 				payload: ev.payload,
 				type: "titleParametersDidChange"
 			});
@@ -967,7 +949,6 @@ describe("actions", () => {
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[TouchTapEvent<Settings>]>({
 				action: actionStore.getActionById(ev.context) as DialAction,
-				deviceId: ev.device,
 				payload: ev.payload,
 				type: "touchTap"
 			});
@@ -1010,7 +991,6 @@ describe("actions", () => {
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[WillAppearEvent<Settings>]>({
 				action: actionStore.getActionById(ev.context) as KeyAction,
-				deviceId: ev.device,
 				payload: ev.payload,
 				type: "willAppear"
 			});
@@ -1053,7 +1033,6 @@ describe("actions", () => {
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[WillDisappearEvent<Settings>]>({
 				action: new ActionContext(ev),
-				deviceId: ev.device,
 				payload: ev.payload,
 				type: "willDisappear"
 			});

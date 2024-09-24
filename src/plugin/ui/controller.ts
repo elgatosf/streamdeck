@@ -1,11 +1,12 @@
 import type { DidReceivePropertyInspectorMessage } from "../../api";
 import type { IDisposable } from "../../common/disposable";
+import { ActionWithoutPayloadEvent } from "../../common/events/action-event";
 import type { JsonObject, JsonValue } from "../../common/json";
 import { PUBLIC_PATH_PREFIX, type RouteConfiguration } from "../../common/messaging";
 import { Action } from "../actions/action";
 import { actionStore } from "../actions/store";
 import { connection } from "../connection";
-import { ActionWithoutPayloadEvent, SendToPluginEvent, type PropertyInspectorDidAppearEvent, type PropertyInspectorDidDisappearEvent } from "../events";
+import { SendToPluginEvent, type PropertyInspectorDidAppearEvent, type PropertyInspectorDidDisappearEvent } from "../events";
 import { type MessageHandler } from "./message";
 import { type PropertyInspector } from "./property-inspector";
 import { getCurrentUI, router } from "./router";

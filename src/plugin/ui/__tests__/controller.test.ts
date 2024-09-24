@@ -56,7 +56,6 @@ describe("UIController", () => {
 		expect(listener).toHaveBeenCalledTimes(1);
 		expect(listener).toHaveBeenCalledWith<[PropertyInspectorDidAppearEvent<Settings>]>({
 			action: actionStore.getActionById(ev.context)!,
-			deviceId: ev.device,
 			type: "propertyInspectorDidAppear"
 		});
 
@@ -89,7 +88,6 @@ describe("UIController", () => {
 		expect(listener).toHaveBeenCalledTimes(1);
 		expect(listener).toHaveBeenCalledWith<[PropertyInspectorDidDisappearEvent<Settings>]>({
 			action: actionStore.getActionById(ev.context)!,
-			deviceId: ev.device,
 			type: "propertyInspectorDidDisappear"
 		});
 

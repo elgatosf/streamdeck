@@ -6,11 +6,6 @@ import { Event } from "./event";
  */
 export class ActionWithoutPayloadEvent<TSource extends Extract<PluginEvent, ActionIdentifier & DeviceIdentifier>, TAction> extends Event<TSource> {
 	/**
-	 * Device identifier the action is associated with.
-	 */
-	public readonly deviceId: string;
-
-	/**
 	 * Initializes a new instance of the {@link ActionWithoutPayloadEvent} class.
 	 * @param action Action that raised the event.
 	 * @param source Source of the event, i.e. the original message from Stream Deck.
@@ -20,7 +15,6 @@ export class ActionWithoutPayloadEvent<TSource extends Extract<PluginEvent, Acti
 		source: TSource
 	) {
 		super(source);
-		this.deviceId = source.device;
 	}
 }
 

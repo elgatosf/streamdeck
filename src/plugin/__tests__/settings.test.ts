@@ -136,7 +136,6 @@ describe("settings", () => {
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[DidReceiveSettingsEvent<Settings>]>({
 				action: actionStore.getActionById(ev.context)!,
-				deviceId: ev.device,
 				payload: ev.payload,
 				type: "didReceiveSettings"
 			});

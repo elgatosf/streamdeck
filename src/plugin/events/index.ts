@@ -29,7 +29,7 @@ import { DeviceEvent } from "./device-event";
 export { DidReceiveGlobalSettingsEvent } from "../../common/events";
 export { DidReceiveDeepLinkEvent } from "./deep-link-event";
 export { SendToPluginEvent } from "./ui-message-event";
-export { ActionEvent, ActionWithoutPayloadEvent, ApplicationEvent, DeviceEvent, Event };
+export { ApplicationEvent, DeviceEvent, Event };
 
 /**
  * Event information received from Stream Deck when a monitored application launches.

@@ -180,7 +180,6 @@ describe("settings", () => {
 				getSettings,
 				setSettings
 			},
-			deviceId: ev.device,
 			payload: ev.payload,
 			type: "didReceiveSettings"
 		});

@@ -72,7 +72,6 @@ export function onDidReceiveSettings<T extends JsonObject = JsonObject>(listener
 				getSettings,
 				setSettings
 			},
-			deviceId: ev.device,
 			payload: ev.payload,
 			type: ev.event
 		})

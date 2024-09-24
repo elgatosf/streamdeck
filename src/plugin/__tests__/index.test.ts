@@ -72,7 +72,6 @@ describe("index", () => {
 		const index = (await require("../index")) as typeof import("../index");
 
 		// Act, assert.
-		expect(index.ApplicationEvent).not.toBeUndefined();
 		expect(index.BarSubType).toBe(BarSubType);
 		expect(index.DeviceType).toBe(DeviceType);
 		expect(index.EventEmitter).toBe(EventEmitter);

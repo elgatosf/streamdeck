@@ -14,7 +14,7 @@ export { EventEmitter } from "../common/event-emitter";
 export { type JsonObject, type JsonPrimitive, type JsonValue } from "../common/json";
 export { LogLevel, type Logger } from "../common/logging";
 export { type MessageRequestOptions, type MessageResponder, type MessageResponse, type RouteConfiguration, type StatusCode } from "../common/messaging";
-export * from "./events";
+export type * from "./events";
 export { type MessageHandler, type MessageRequest } from "./plugin";
 
 const streamDeck = {
