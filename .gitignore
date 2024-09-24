@@ -6,3 +6,4 @@ coverage/
 
 # Build output
 dist/
+types/
