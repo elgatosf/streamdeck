@@ -78,6 +78,7 @@ class Connection extends EventEmitter<ExtendedUIEventMap> {
 	private async connect(port: string, uuid: string, event: string, info: RegistrationInfo, actionInfo: ActionInfo): Promise<void> {
 		if (this.canConnect) {
 			this.canConnect = false;
+			this.emit("connecting", info, actionInfo);
 
 			const webSocket = new WebSocket(`ws://127.0.0.1:${port}`);
 			webSocket.onmessage = (ev: MessageEvent<string>): void => this.tryEmit(ev);
@@ -130,6 +131,11 @@ export type ConnectionInfo = {
  * An extended event map that includes connection events.
  */
 type ExtendedUIEventMap = UIEventMap & {
+	/**
+	 * Occurs when a connecting is being established.
+	 */
+	connecting: [info: RegistrationInfo, actionInfo: ActionInfo];
+
 	/**
 	 * Occurs when a connection is established.
 	 */

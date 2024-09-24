@@ -43,11 +43,20 @@ const streamDeck = {
 	system,
 
 	/**
-	 * Occurs when the UI connects to the Stream Deck.
+	 * Occurs before the UI has established a connection with Stream Deck.
 	 * @param listener Event handler function.
 	 * @returns A disposable that removes the listener when disposed.
 	 */
-	onDidConnect: <TSettings extends JsonObject = JsonObject>(listener: (info: RegistrationInfo, actionInfo: ActionInfo<TSettings>) => void): IDisposable => {
+	onConnecting: <TSettings extends JsonObject = JsonObject>(listener: (info: RegistrationInfo, actionInfo: ActionInfo<TSettings>) => void): IDisposable => {
+		return connection.disposableOn("connecting", listener);
+	},
+
+	/**
+	 * Occurs when the UI has established a connection with Stream Deck.
+	 * @param listener Event handler function.
+	 * @returns A disposable that removes the listener when disposed.
+	 */
+	onConnected: <TSettings extends JsonObject = JsonObject>(listener: (info: RegistrationInfo, actionInfo: ActionInfo<TSettings>) => void): IDisposable => {
 		return connection.disposableOn("connected", listener);
 	}
 };

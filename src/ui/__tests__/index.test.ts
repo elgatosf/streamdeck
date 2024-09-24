@@ -39,14 +39,37 @@ describe("streamDeck", () => {
 	});
 
 	/**
-	 * Asserts {@link streamDeck.onDidConnect} is propagated when the connection emits `connected`.
+	 * Asserts {@link streamDeck.onConnecting} is propagated when the connection emits `connecting`.
 	 */
-	it("receives onDidConnect", () => {
+	it("receives onConnecting", () => {
 		// Arrange.
 		const listener = jest.fn();
 
 		// Act.
-		const disposable = streamDeck.onDidConnect(listener);
+		const disposable = streamDeck.onConnecting(listener);
+		connection.emit("connecting", registrationInfo, actionInfo);
+
+		// Assert.
+		expect(listener).toHaveBeenCalledTimes(1);
+		expect(listener).toHaveBeenCalledWith(registrationInfo, actionInfo);
+
+		// Act (dispose).
+		disposable.dispose();
+		connection.emit("connecting", registrationInfo, actionInfo);
+
+		// Assert (dispose).
+		expect(listener).toHaveBeenCalledTimes(1);
+	});
+
+	/**
+	 * Asserts {@link streamDeck.onConnected} is propagated when the connection emits `connected`.
+	 */
+	it("receives onConnected", () => {
+		// Arrange.
+		const listener = jest.fn();
+
+		// Act.
+		const disposable = streamDeck.onConnected(listener);
 		connection.emit("connected", registrationInfo, actionInfo);
 
 		// Assert.

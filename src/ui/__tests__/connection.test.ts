@@ -48,21 +48,27 @@ describe("connection", () => {
 	});
 
 	/**
-	 * Asserts `connected` is emitted once a connection has been established.
+	 * Asserts `connecting` and `connected` are emitted.
 	 */
-	it("emits connected", async () => {
+	it("emits connecting and connected", async () => {
 		// Arrange.
 		const uuid = "123_emits-connected";
+		const connectingSpy = jest.fn();
 		const connectedSpy = jest.fn();
 
 		// Act.
+		connection.on("connecting", connectingSpy);
 		connection.on("connected", connectedSpy);
+
 		await window.connectElgatoStreamDeckSocket(port, uuid, "register", JSON.stringify(registrationInfo), JSON.stringify(actionInfo));
 
 		// Assert
 		await connection.getInfo();
+		expect(connectingSpy).toHaveBeenCalledTimes(1);
+		expect(connectingSpy).toBeCalledWith<[RegistrationInfo, ActionInfo]>(registrationInfo, actionInfo);
 		expect(connectedSpy).toHaveBeenCalledTimes(1);
 		expect(connectedSpy).toBeCalledWith<[RegistrationInfo, ActionInfo]>(registrationInfo, actionInfo);
+		expect(connectingSpy.mock.invocationCallOrder[0]).toBeLessThan(connectedSpy.mock.invocationCallOrder[0]); // connecting before connected
 	});
 
 	/**
