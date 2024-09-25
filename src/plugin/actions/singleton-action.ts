@@ -1,5 +1,7 @@
 import type streamDeck from "../";
 import type { JsonObject, JsonValue } from "../../common/json";
+import type { DialAction } from "../actions/dial";
+import type { KeyAction } from "../actions/key";
 import type {
 	DialDownEvent,
 	DialRotateEvent,
@@ -16,6 +18,7 @@ import type {
 	WillDisappearEvent
 } from "../events";
 import type { Action } from "./action";
+import { actionStore } from "./store";
 
 /**
  * Provides the main bridge between the plugin and the Stream Deck allowing the plugin to send requests and receive events, e.g. when the user presses an action.
@@ -26,6 +29,14 @@ export class SingletonAction<T extends JsonObject = JsonObject> {
 	 * The universally-unique value that identifies the action within the manifest.
 	 */
 	public readonly manifestId: string | undefined;
+
+	/**
+	 * Gets the visible actions with the `manifestId` that match this instance's.
+	 * @returns The visible actions.
+	 */
+	public get actions(): IterableIterator<DialAction<T> | KeyAction<T>> {
+		return actionStore.filter((a) => a.manifestId === this.manifestId);
+	}
 
 	/**
 	 * Occurs when the user presses a dial (Stream Deck +). See also {@link SingletonAction.onDialUp}.
@@ -85,7 +96,6 @@ export class SingletonAction<T extends JsonObject = JsonObject> {
 
 	/**
 	 * Occurs when a message was sent to the plugin _from_ the property inspector. The plugin can also send messages _to_ the property inspector using {@link Action.sendToPropertyInspector}.
-	 * @deprecated Consider using {@link streamDeck.ui.registerRoute} to receive requests from the property inspector.
 	 * @param ev The event.
 	 */
 	public onSendToPlugin?(ev: SendToPluginEvent<JsonValue, T>): Promise<void> | void;

@@ -1,24 +1,26 @@
-import type { DeviceDidConnectEvent, DeviceDidDisconnectEvent } from "..";
-import { DeviceType, type DeviceDidConnect, type DeviceDidDisconnect } from "../../api";
-import { type connection as Connection } from "../connection";
-import { type Device, type DeviceCollection } from "../devices";
+import type { DeviceDidConnectEvent, DeviceDidDisconnectEvent } from "../..";
+import { DeviceType, type DeviceDidConnect, type DeviceDidDisconnect } from "../../../api";
+import { type connection as Connection } from "../../connection";
+import { Device } from "../device";
+import type { DeviceService } from "../service";
 
-jest.mock("../connection");
-jest.mock("../logging");
-jest.mock("../manifest");
+jest.mock("../../actions/store", () => {}); // Override default mock.
+jest.mock("../../connection");
+jest.mock("../../logging");
+jest.mock("../../manifest");
 
 describe("devices", () => {
 	let connection!: typeof Connection;
-	let devices!: DeviceCollection;
+	let deviceService!: DeviceService;
 
 	beforeEach(async () => {
 		jest.resetModules();
-		({ connection } = await require("../connection"));
-		({ devices } = await require("../devices"));
+		({ connection } = await require("../../connection"));
+		({ deviceService } = (await require("../service")) as typeof import("../service"));
 	});
 
 	/**
-	 * Asserts {@link DeviceCollection} can iterate over each device, and apply the specified callback function using {@link DeviceCollection.forEach}.
+	 * Asserts {@link DeviceService} can iterate over each device, and apply the specified callback function using {@link DeviceService.forEach}.
 	 */
 	it("applies callback with forEach", () => {
 		// Arrange.
@@ -38,35 +40,26 @@ describe("devices", () => {
 		const listener = jest.fn();
 
 		// Act.
-		devices.forEach(listener);
+		deviceService.forEach(listener);
 
 		// Assert.
 		expect(listener).toHaveBeenCalledTimes(2);
-		expect(listener).toHaveBeenNthCalledWith<[Device]>(1, {
-			id: connection.registrationParameters.info.devices[0].id,
-			isConnected: false,
-			name: connection.registrationParameters.info.devices[0].name,
-			size: connection.registrationParameters.info.devices[0].size,
-			type: connection.registrationParameters.info.devices[0].type
-		});
-		expect(listener).toHaveBeenNthCalledWith<[Device]>(2, {
-			id: ev.device,
-			isConnected: true,
-			name: ev.deviceInfo.name,
-			size: ev.deviceInfo.size,
-			type: ev.deviceInfo.type
-		});
+		expect(listener).toHaveBeenNthCalledWith<[Device]>(
+			1,
+			new Device(connection.registrationParameters.info.devices[0].id, connection.registrationParameters.info.devices[0], false)
+		);
+		expect(listener).toHaveBeenNthCalledWith<[Device]>(2, new Device(ev.device, ev.deviceInfo, true));
 	});
 
 	/**
-	 * Asserts {@link DeviceCollection.count} returns the count of devices.
+	 * Asserts {@link DeviceService.count} returns the count of devices.
 	 */
 	it("counts devices", () => {
 		// Arrange.
 		connection.emit("connected", connection.registrationParameters.info);
 
 		// Act, assert: registration parameters are included.
-		expect(devices.length).toBe(1);
+		expect(deviceService.length).toBe(1);
 
 		// Act, assert: count increments with new devices.
 		const ev = {
@@ -80,7 +73,7 @@ describe("devices", () => {
 		} satisfies DeviceDidConnect;
 		connection.emit("deviceDidConnect", ev);
 
-		expect(devices.length).toBe(2);
+		expect(deviceService.length).toBe(2);
 
 		// Act, assert: count remains 2 when device disconnected
 		connection.emit("deviceDidDisconnect", {
@@ -88,20 +81,20 @@ describe("devices", () => {
 			event: "deviceDidDisconnect"
 		});
 
-		expect(devices.length).toBe(2);
+		expect(deviceService.length).toBe(2);
 	});
 
 	/**
-	 * Asserts {@link DeviceCollection} tracks devices supplied by Stream Deck as part of the registration parameters.
+	 * Asserts {@link DeviceService} tracks devices supplied by Stream Deck as part of the registration parameters.
 	 */
 	it("adds devices from registration info", () => {
 		// Arrange.
 		connection.emit("connected", connection.registrationParameters.info);
 
 		// Assert.
-		expect(devices.length).toBe(1);
+		expect(deviceService.length).toBe(1);
 
-		const [device] = devices;
+		const [device] = deviceService;
 		expect(device.id).toBe(connection.registrationParameters.info.devices[0].id);
 		expect(device.isConnected).toBeFalsy();
 		expect(device.name).toBe(connection.registrationParameters.info.devices[0].name);
@@ -110,7 +103,7 @@ describe("devices", () => {
 	});
 
 	/**
-	 * Asserts {@link DeviceCollection} adds devices when they connect.
+	 * Asserts {@link DeviceService} adds devices when they connect.
 	 */
 	it("adds device on deviceDidConnect", () => {
 		// Act.
@@ -128,9 +121,9 @@ describe("devices", () => {
 		});
 
 		// Assert.
-		expect(devices.length).toBe(1);
+		expect(deviceService.length).toBe(1);
 
-		const [device] = devices;
+		const [device] = deviceService;
 		expect(device.id).toBe("__NEW_DEV__");
 		expect(device.isConnected).toBeTruthy();
 		expect(device.name).toBe("New Device");
@@ -141,7 +134,7 @@ describe("devices", () => {
 
 	describe("getDeviceById", () => {
 		/**
-		 * Asserts selecting a known device using {@link DeviceCollection.getDeviceById}.
+		 * Asserts selecting a known device using {@link DeviceService.getDeviceById}.
 		 */
 		it("known identifier", () => {
 			// Arrange.
@@ -159,7 +152,7 @@ describe("devices", () => {
 			});
 
 			// Act.
-			const device = devices.getDeviceById("devices.test.ts.1");
+			const device = deviceService.getDeviceById("devices.test.ts.1");
 
 			// Assert.
 			expect(device).not.toBeUndefined();
@@ -172,23 +165,23 @@ describe("devices", () => {
 		});
 
 		/**
-		 * Asserts selecting an unknown device using {@link DeviceCollection.getDeviceById}.
+		 * Asserts selecting an unknown device using {@link DeviceService.getDeviceById}.
 		 */
 		it("unknown identifier", () => {
 			// Arrange, act, assert.
-			expect(devices.getDeviceById("__unknown")).toBeUndefined();
+			expect(deviceService.getDeviceById("__unknown")).toBeUndefined();
 		});
 	});
 
 	/**
-	 * Asserts {@link DeviceCollection} updates devices when they connect.
+	 * Asserts {@link DeviceService} updates devices when they connect.
 	 */
 	it("updates device on deviceDidConnect", () => {
 		// Arrange.
 		connection.emit("connected", connection.registrationParameters.info);
 
 		// Act.
-		const [device] = devices;
+		const [device] = deviceService;
 		expect(device.isConnected).toBeFalsy();
 
 		connection.emit("deviceDidConnect", {
@@ -198,7 +191,7 @@ describe("devices", () => {
 		});
 
 		// Assert.
-		expect(devices.length).toBe(1);
+		expect(deviceService.length).toBe(1);
 
 		expect(device.id).toBe(connection.registrationParameters.info.devices[0].id);
 		expect(device.isConnected).toBeTruthy();
@@ -208,14 +201,14 @@ describe("devices", () => {
 	});
 
 	/**
-	 * Asserts {@link DeviceCollection} updates devices when they disconnect.
+	 * Asserts {@link DeviceService} updates devices when they disconnect.
 	 */
 	it("updates device on deviceDidDisconnect", () => {
 		// Arrange.
 		connection.emit("connected", connection.registrationParameters.info);
 
 		// Act.
-		const [device] = devices;
+		const [device] = deviceService;
 		expect(device.isConnected).toBeFalsy();
 
 		connection.emit("deviceDidConnect", {
@@ -231,7 +224,7 @@ describe("devices", () => {
 		});
 
 		// Assert.
-		expect(devices.length).toBe(1);
+		expect(deviceService.length).toBe(1);
 
 		expect(device.id).toBe(connection.registrationParameters.info.devices[0].id);
 		expect(device.isConnected).toBeFalsy();
@@ -241,14 +234,14 @@ describe("devices", () => {
 	});
 
 	/**
-	 * Asserts {@link DeviceCollection} does not track unknown devices when they disconnect.
+	 * Asserts {@link DeviceService} does not track unknown devices when they disconnect.
 	 */
 	it("ignores unknown devices on deviceDidDisconnect", () => {
 		// Arrange.
 		connection.emit("connected", connection.registrationParameters.info);
 
 		// Act.
-		const [device] = devices;
+		const [device] = deviceService;
 		expect(device.isConnected).toBeFalsy();
 
 		connection.emit("deviceDidDisconnect", {
@@ -257,7 +250,7 @@ describe("devices", () => {
 		});
 
 		// Assert.
-		expect(devices.length).toBe(1);
+		expect(deviceService.length).toBe(1);
 
 		expect(device.id).toBe(connection.registrationParameters.info.devices[0].id);
 		expect(device.isConnected).toBeFalsy();
@@ -267,7 +260,7 @@ describe("devices", () => {
 	});
 
 	/**
-	 * Asserts {@link DeviceCollection.onDeviceDidConnect} is invoked when `deviceDidConnect` is emitted.
+	 * Asserts {@link DeviceService.onDeviceDidConnect} is invoked when `deviceDidConnect` is emitted.
 	 */
 	it("receives onDeviceDidConnect", () => {
 		// Arrange
@@ -286,17 +279,13 @@ describe("devices", () => {
 		} satisfies DeviceDidConnect;
 
 		// Act (emit).
-		const disposable = devices.onDeviceDidConnect(listener);
+		const disposable = deviceService.onDeviceDidConnect(listener);
 		connection.emit("deviceDidConnect", ev);
 
 		// Assert (emit).
 		expect(listener).toHaveBeenCalledTimes(1);
 		expect(listener).toHaveBeenCalledWith<[DeviceDidConnectEvent]>({
-			device: {
-				...ev.deviceInfo,
-				id: ev.device,
-				isConnected: true
-			},
+			device: new Device(ev.device, ev.deviceInfo, true),
 			type: "deviceDidConnect"
 		});
 
@@ -309,7 +298,7 @@ describe("devices", () => {
 	});
 
 	/**
-	 * Asserts {@link DeviceCollection.onDeviceDidDisconnect} is invoked when `deviceDidDisconnect` is emitted.
+	 * Asserts {@link DeviceService.onDeviceDidDisconnect} is invoked when `deviceDidDisconnect` is emitted.
 	 */
 	it("receives onDeviceDidDisconnect", () => {
 		// Arrange
@@ -322,16 +311,13 @@ describe("devices", () => {
 		} satisfies DeviceDidDisconnect;
 
 		// Act (emit).
-		const disposable = devices.onDeviceDidDisconnect(listener);
+		const disposable = deviceService.onDeviceDidDisconnect(listener);
 		connection.emit("deviceDidDisconnect", ev);
 
 		// Assert (emit).
 		expect(listener).toHaveBeenCalledTimes(1);
 		expect(listener).toHaveBeenCalledWith<[DeviceDidDisconnectEvent]>({
-			device: {
-				...connection.registrationParameters.info.devices[0],
-				isConnected: false
-			},
+			device: new Device(connection.registrationParameters.info.devices[0].id, connection.registrationParameters.info.devices[0], false),
 			type: "deviceDidDisconnect"
 		});
 

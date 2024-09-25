@@ -2,7 +2,6 @@ import { BarSubType, DeviceType, Target } from "../../api";
 import { EventEmitter } from "../../common/event-emitter";
 import { I18nProvider } from "../../common/i18n";
 import { LogLevel } from "../../common/logging";
-import { Action } from "../actions/action";
 import { SingletonAction } from "../actions/singleton-action";
 import { connection } from "../connection";
 import streamDeckAsDefaultExport, { streamDeck } from "../index";
@@ -28,8 +27,8 @@ describe("index", () => {
 	 */
 	it("exports namespaces", async () => {
 		// Arrange.
-		const actions = await require("../actions");
-		const { devices } = await require("../devices");
+		const { actionService } = await require("../actions/service");
+		const { deviceService } = await require("../devices/service");
 		const { getManifest } = await require("../manifest");
 		const profiles = await require("../profiles");
 		const settings = await require("../settings");
@@ -37,8 +36,8 @@ describe("index", () => {
 		const { ui } = await require("../ui");
 
 		// Act, assert.
-		expect(streamDeck.actions).toBe(actions);
-		expect(streamDeck.devices).toBe(devices);
+		expect(streamDeck.actions).toBe(actionService);
+		expect(streamDeck.devices).toBe(deviceService);
 		expect(streamDeck.manifest).toBe(getManifest());
 		expect(streamDeck.profiles).toBe(profiles);
 		expect(streamDeck.settings).toBe(settings);
@@ -73,8 +72,6 @@ describe("index", () => {
 		const index = (await require("../index")) as typeof import("../index");
 
 		// Act, assert.
-		expect(index.Action).toBe(Action);
-		expect(index.ApplicationEvent).not.toBeUndefined();
 		expect(index.BarSubType).toBe(BarSubType);
 		expect(index.DeviceType).toBe(DeviceType);
 		expect(index.EventEmitter).toBe(EventEmitter);

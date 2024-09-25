@@ -1,10 +1,12 @@
 import type { SendToPropertyInspector } from "../../../api";
 import type { JsonValue } from "../../../common/json";
 import type { MessageRequestOptions } from "../../../common/messaging";
+import { actionStore } from "../../actions/store";
 import { connection } from "../../connection";
 import { PropertyInspector } from "../property-inspector";
 import { router } from "../router";
 
+jest.mock("../../actions/store");
 jest.mock("../../connection");
 jest.mock("../../logging");
 jest.mock("../../manifest");
@@ -16,15 +18,15 @@ describe("PropertyInspector", () => {
 	it("initializes context", () => {
 		// Arrange, act.
 		const pi = new PropertyInspector(router, {
-			action: "com.elgato.test.one",
-			context: "abc123",
+			action: "com.elgato.test.key",
+			context: "key123", // Mocked in actionStore.
 			device: "dev123"
 		});
 
 		// Assert.
-		expect(pi.deviceId).toBe("dev123");
-		expect(pi.id).toBe("abc123");
-		expect(pi.manifestId).toBe("com.elgato.test.one");
+		expect(actionStore.getActionById).toHaveBeenCalledTimes(1);
+		expect(actionStore.getActionById).toHaveBeenLastCalledWith("key123");
+		expect(pi.action).toEqual(actionStore.getActionById("key123"));
 	});
 
 	describe("fetch", () => {
@@ -35,7 +37,7 @@ describe("PropertyInspector", () => {
 			// Arrange.
 			const spyOnFetch = jest.spyOn(router, "fetch");
 			const pi = new PropertyInspector(router, {
-				action: "com.elgato.test.one",
+				action: "com.elgato.test.key",
 				context: "abc123",
 				device: "dev123"
 			});
@@ -55,7 +57,7 @@ describe("PropertyInspector", () => {
 			// Arrange.
 			const spyOnFetch = jest.spyOn(router, "fetch");
 			const pi = new PropertyInspector(router, {
-				action: "com.elgato.test.one",
+				action: "com.elgato.test.key",
 				context: "abc123",
 				device: "dev123"
 			});
@@ -86,8 +88,8 @@ describe("PropertyInspector", () => {
 		// Arrange.
 		const spyOnSend = jest.spyOn(connection, "send");
 		const pi = new PropertyInspector(router, {
-			action: "com.elgato.test.one",
-			context: "abc123",
+			action: "com.elgato.test.key",
+			context: "key123",
 			device: "dev123"
 		});
 
@@ -97,7 +99,7 @@ describe("PropertyInspector", () => {
 		// Assert.
 		expect(spyOnSend).toBeCalledTimes(1);
 		expect(spyOnSend).toHaveBeenLastCalledWith<[SendToPropertyInspector]>({
-			context: "abc123",
+			context: "key123",
 			event: "sendToPropertyInspector",
 			payload: {
 				message: "Hello world"

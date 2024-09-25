@@ -1,11 +1,15 @@
-import { Action, action, type JsonObject, type MessageRequest } from "../..";
+import type { MessageRequest } from "../";
 import type { PluginCommand, SendToPropertyInspector } from "../../../api";
+import type { JsonObject } from "../../../common/json";
 import { MessageGateway, MessageResponder } from "../../../common/messaging";
 import { PromiseCompletionSource } from "../../../common/promises";
+import { action } from "../../actions";
 import { SingletonAction } from "../../actions/singleton-action";
+import { actionStore } from "../../actions/store";
 import { connection } from "../../connection";
 import { route } from "../route";
 
+jest.mock("../../actions/store");
 jest.mock("../../connection");
 jest.mock("../../logging");
 jest.mock("../../manifest");
@@ -15,11 +19,11 @@ describe("route", () => {
 
 	describe("current PI has routes", () => {
 		const ev = {
-			action: "com.elgato.test.one",
-			context: "abc123"
+			action: "com.elgato.test.key",
+			context: "key123"
 		};
 
-		beforeEach(() => initialize(ev.action));
+		beforeEach(() => initialize(ev.context));
 
 		/**
 		 * Asserts {@link route} with an asynchronous result.
@@ -40,7 +44,7 @@ describe("route", () => {
 			expect(action.spyOnGetCharacters).toHaveBeenCalledTimes(1);
 			expect(action.spyOnGetCharacters).toHaveBeenLastCalledWith<[MessageRequest<Filter>, MessageResponder]>(
 				{
-					action: new Action(ev),
+					action: actionStore.getActionById(ev.context)!,
 					path: "public:/characters",
 					unidirectional: false,
 					body: {
@@ -74,7 +78,7 @@ describe("route", () => {
 			expect(action.spyOnGetCharactersSync).toHaveBeenCalledTimes(1);
 			expect(action.spyOnGetCharactersSync).toHaveBeenLastCalledWith<[MessageRequest<Filter>, MessageResponder]>(
 				{
-					action: new Action(ev),
+					action: actionStore.getActionById(ev.context)!,
 					path: "public:/characters-sync",
 					unidirectional: false,
 					body: {
@@ -101,7 +105,7 @@ describe("route", () => {
 			expect(action.spyOnSave).toHaveBeenCalledTimes(1);
 			expect(action.spyOnSave).toHaveBeenLastCalledWith<[MessageRequest<Filter>, MessageResponder]>(
 				{
-					action: new Action(ev),
+					action: actionStore.getActionById(ev.context)!,
 					path: "public:/save",
 					unidirectional: false,
 					body: undefined
@@ -116,7 +120,7 @@ describe("route", () => {
 	});
 
 	describe("current PI does not have routes", () => {
-		beforeEach(() => initialize("com.other"));
+		beforeEach(() => initialize("dial123")); // This resolves a different manifestId to the sample class below
 
 		/**
 		 * Asserts {@link route} with an asynchronous result.
@@ -170,13 +174,15 @@ describe("route", () => {
 
 	/**
 	 * Initializes the "current property inspector" for the specific action type.
-	 * @param action Action type of the current property inspector.
+	 * @param context Action context (i.e. the action's instance identifier).
 	 */
-	function initialize(action: string): void {
+	function initialize(context: string): void {
+		const action = actionStore.getActionById(context)!;
+
 		// Set the current property inspector associated with the plugin router.
 		connection.emit("propertyInspectorDidAppear", {
-			action,
-			context: "abc123",
+			action: action?.manifestId,
+			context,
 			device: "dev123",
 			event: "propertyInspectorDidAppear"
 		});
@@ -185,8 +191,8 @@ describe("route", () => {
 		piRouter = new MessageGateway<object>(
 			(payload) => {
 				connection.emit("sendToPlugin", {
-					action,
-					context: "abc123",
+					action: action.manifestId,
+					context,
 					event: "sendToPlugin",
 					payload
 				});
@@ -199,8 +205,8 @@ describe("route", () => {
 		jest.spyOn(connection, "send").mockImplementation((cmd: PluginCommand) => {
 			if (cmd.event === "sendToPropertyInspector") {
 				piRouter.process({
-					action,
-					context: "abc123",
+					action: action.manifestId,
+					context,
 					event: "sendToPropertyInspector",
 					payload: (cmd as SendToPropertyInspector<JsonObject>).payload
 				});
@@ -214,7 +220,7 @@ describe("route", () => {
 /**
  * Mock action with routes.
  */
-@action({ UUID: "com.elgato.test.one" })
+@action({ UUID: "com.elgato.test.key" })
 class ActionWithRoutes extends SingletonAction {
 	public spyOnGetCharacters = jest.fn();
 	public spyOnGetCharactersSync = jest.fn();

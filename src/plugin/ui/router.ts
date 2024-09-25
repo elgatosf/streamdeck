@@ -2,6 +2,7 @@ import type { PropertyInspectorDidAppear, PropertyInspectorDidDisappear } from "
 import type { JsonValue } from "../../common/json";
 import { MessageGateway } from "../../common/messaging";
 import { Action } from "../actions/action";
+import { actionStore } from "../actions/store";
 import { connection } from "../connection";
 import { PropertyInspector } from "./property-inspector";
 
@@ -25,7 +26,7 @@ const router = new MessageGateway<Action>(
 		if (current) {
 			await connection.send({
 				event: "sendToPropertyInspector",
-				context: current.id,
+				context: current.action.id,
 				payload
 			});
 
@@ -34,7 +35,7 @@ const router = new MessageGateway<Action>(
 
 		return false;
 	},
-	(source) => new Action(source)
+	(source) => actionStore.getActionById(source.context)!
 );
 
 /**
@@ -43,7 +44,7 @@ const router = new MessageGateway<Action>(
  * @returns `true` when the event is related to the current property inspector.
  */
 function isCurrent(ev: PropertyInspectorDidAppear | PropertyInspectorDidDisappear): boolean {
-	return current?.id === ev.context && current.manifestId === ev.action && current.deviceId === ev.device;
+	return current?.action?.id === ev.context && current?.action?.manifestId === ev.action && current?.action?.device?.id === ev.device;
 }
 
 /*

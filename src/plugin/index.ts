@@ -1,9 +1,9 @@
 import type { Manifest, RegistrationInfo } from "../api";
 import { I18nProvider } from "../common/i18n";
 import { registerCreateLogEntryRoute, type Logger } from "../common/logging";
-import * as actions from "./actions";
+import { actionService, type ActionService } from "./actions/service";
 import { connection } from "./connection";
-import { devices } from "./devices";
+import { deviceService, type DeviceService } from "./devices/service";
 import { fileSystemLocaleProvider } from "./i18n";
 import { logger } from "./logging";
 import { getManifest } from "./manifest";
@@ -31,15 +31,14 @@ export {
 	type State,
 	type Text
 } from "../api";
+export { Enumerable } from "../common/enumerable";
 export { EventEmitter, EventsOf } from "../common/event-emitter";
 export { type JsonObject, type JsonPrimitive, type JsonValue } from "../common/json";
 export { LogLevel } from "../common/logging";
 export { type MessageRequestOptions, type MessageResponder, type MessageResponse, type RouteConfiguration, type StatusCode } from "../common/messaging";
-export { Action, ImageOptions, TitleOptions, TriggerDescriptionOptions } from "./actions/action";
-export { action } from "./actions/decorators";
-export { SingletonAction } from "./actions/singleton-action";
-export { type Device } from "./devices";
-export * from "./events";
+export * from "./actions";
+export * from "./devices";
+export type * from "./events";
 export { route, type MessageRequest, type PropertyInspector } from "./ui";
 export { type Logger };
 
@@ -50,16 +49,16 @@ export const streamDeck = {
 	 * Namespace for event listeners and functionality relating to Stream Deck actions.
 	 * @returns Actions namespace.
 	 */
-	get actions(): typeof actions {
-		return actions;
+	get actions(): ActionService {
+		return actionService;
 	},
 
 	/**
 	 * Namespace for interacting with Stream Deck devices.
 	 * @returns Devices namespace.
 	 */
-	get devices(): typeof devices {
-		return devices;
+	get devices(): DeviceService {
+		return deviceService;
 	},
 
 	/**

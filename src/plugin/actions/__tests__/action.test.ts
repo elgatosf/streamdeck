@@ -1,43 +1,66 @@
-import {
-	Target,
-	type ActionIdentifier,
-	type GetSettings,
-	type SendToPropertyInspector,
-	type SetFeedback,
-	type SetFeedbackLayout,
-	type SetImage,
-	type SetSettings,
-	type SetState,
-	type SetTitle,
-	type SetTriggerDescription,
-	type ShowAlert,
-	type ShowOk
-} from "../../../api";
+import { DeviceType, type GetSettings, type SendToPropertyInspector, type SetSettings, type ShowAlert, type WillAppear } from "../../../api";
 import { Settings } from "../../../api/__mocks__/events";
+import { type JsonObject } from "../../../common/json";
 import { connection } from "../../connection";
+import { Device } from "../../devices/device";
+import { deviceStore } from "../../devices/store";
 import { Action } from "../action";
+import { DialAction } from "../dial";
 
+jest.mock("../../devices/store");
 jest.mock("../../logging");
 jest.mock("../../manifest");
 jest.mock("../../connection");
 
 describe("Action", () => {
-	/**
-	 * Asserts the constructor of {@link Action} sets the {@link Action.manifestId} and {@link Action.id}.
-	 */
-	it("constructor sets manifestId and id", () => {
-		// Arrange.
-		const source: ActionIdentifier = {
-			action: "com.elgato.test.one",
-			context: "ABC123"
-		};
+	// Mock source.
+	const source: WillAppear<JsonObject> = {
+		action: "com.test.action.one",
+		context: "action123",
+		device: "device123",
+		event: "willAppear",
+		payload: {
+			controller: "Keypad",
+			coordinates: {
+				column: 1,
+				row: 2
+			},
+			isInMultiAction: false,
+			settings: {}
+		}
+	};
 
-		// Act.
+	// Mock device.
+	const device = new Device(
+		"device123",
+		{
+			name: "Device 1",
+			size: {
+				columns: 5,
+				rows: 3
+			},
+			type: DeviceType.StreamDeck
+		},
+		true
+	);
+
+	beforeAll(() => jest.spyOn(deviceStore, "getDeviceById").mockReturnValue(device));
+
+	/**
+	 * Asserts the constructor of {@link Action} sets the properties from the source.
+	 */
+	it("constructor sets properties from source", () => {
+		// Arrange, act.
 		const action = new Action(source);
 
 		// Assert.
-		expect(action.id).toBe("ABC123");
-		expect(action.manifestId).toBe("com.elgato.test.one");
+		expect(action).toBeInstanceOf(Action);
+		expect(action.controller).toBe("Keypad");
+		expect(action.device).toBe(device);
+		expect(action.id).toBe(source.context);
+		expect(action.manifestId).toBe(source.action);
+		expect(deviceStore.getDeviceById).toHaveBeenCalledTimes(1);
+		expect(deviceStore.getDeviceById).toHaveBeenLastCalledWith(source.device);
 	});
 
 	/**
@@ -45,12 +68,9 @@ describe("Action", () => {
 	 */
 	it("getSettings", async () => {
 		// Arrange.
-		const action = new Action<Settings>({
-			action: "com.elgato.test.one",
-			context: "ABC123"
-		});
+		const action = new Action(source);
 
-		// Act (Command).
+		// Array, act (Command).
 		const settings = action.getSettings();
 
 		// Assert (Command).
@@ -107,11 +127,41 @@ describe("Action", () => {
 		});
 	});
 
-	describe("sending", () => {
+	/**
+	 * Asserts type-checking when the controller is "Keypad".
+	 */
+	test("keypad type assertion", () => {
 		const action = new Action({
-			action: "com.elgato.test.one",
-			context: "ABC123"
+			...source,
+			payload: {
+				...source.payload,
+				controller: "Keypad"
+			}
 		});
+
+		expect(action.isKey()).toBe(true);
+		expect(action.isDial()).toBe(false);
+	});
+
+	/**
+	 * Asserts type-checking when the controller is "Encoder".
+	 */
+	test("encoder type assertion", () => {
+		const action = new DialAction({
+			...source,
+			payload: {
+				...source.payload,
+				controller: "Encoder"
+			}
+		} as WillAppear<JsonObject>);
+
+		expect(action.isDial()).toBe(true);
+		expect(action.isKey()).toBe(false);
+	});
+
+	describe("sending", () => {
+		let action!: Action;
+		beforeAll(() => (action = new Action(source)));
 
 		/**
 		 * Asserts {@link Action.sendToPropertyInspector} forwards the command to the {@link connection}.
@@ -129,80 +179,6 @@ describe("Action", () => {
 				event: "sendToPropertyInspector",
 				payload: {
 					name: "Elgato"
-				}
-			});
-		});
-
-		/**
-		 * Asserts {@link Action.setFeedback} forwards the command to the {@link connection}.
-		 */
-		it("setFeedback", async () => {
-			// Arrange, act.
-			await action.setFeedback({
-				bar: 50,
-				title: "Hello world"
-			});
-
-			// Assert.
-			expect(connection.send).toHaveBeenCalledTimes(1);
-			expect(connection.send).toHaveBeenCalledWith<[SetFeedback]>({
-				context: action.id,
-				event: "setFeedback",
-				payload: {
-					bar: 50,
-					title: "Hello world"
-				}
-			});
-		});
-
-		/**
-		 * Asserts {@link Action.setFeedbackLayout} forwards the command to the {@link connection}.
-		 */
-		it("Sends setFeedbackLayout", async () => {
-			// Arrange, act.
-			await action.setFeedbackLayout("CustomLayout.json");
-
-			// Assert.
-			expect(connection.send).toHaveBeenCalledTimes(1);
-			expect(connection.send).toHaveBeenCalledWith<[SetFeedbackLayout]>({
-				context: action.id,
-				event: "setFeedbackLayout",
-				payload: {
-					layout: "CustomLayout.json"
-				}
-			});
-		});
-
-		/**
-		 * Asserts {@link Action.setImage} forwards the command to the {@link connection}.
-		 */
-		it("setImage", async () => {
-			// Arrange, act
-			await action.setImage();
-			await action.setImage("./imgs/test.png", {
-				state: 1,
-				target: Target.Hardware
-			});
-
-			// Assert.
-			expect(connection.send).toHaveBeenCalledTimes(2);
-			expect(connection.send).toHaveBeenNthCalledWith<[SetImage]>(1, {
-				context: action.id,
-				event: "setImage",
-				payload: {
-					image: undefined,
-					state: undefined,
-					target: undefined
-				}
-			});
-
-			expect(connection.send).toHaveBeenNthCalledWith<[SetImage]>(2, {
-				context: action.id,
-				event: "setImage",
-				payload: {
-					image: "./imgs/test.png",
-					state: 1,
-					target: Target.Hardware
 				}
 			});
 		});
@@ -228,86 +204,6 @@ describe("Action", () => {
 		});
 
 		/**
-		 * Asserts {@link Action.setState} forwards the command to the {@link connection}.
-		 */
-		it("setState", async () => {
-			// Arrange, act.
-			await action.setState(1);
-
-			// Assert.
-			expect(connection.send).toHaveBeenCalledTimes(1);
-			expect(connection.send).toHaveBeenCalledWith<[SetState]>({
-				context: action.id,
-				event: "setState",
-				payload: {
-					state: 1
-				}
-			});
-		});
-
-		/**
-		 * Asserts {@link Action.setTitle} forwards the command to the {@link connection}.
-		 */
-		it("setTitle", async () => {
-			// Arrange, act.
-			await action.setTitle("Hello world");
-			await action.setTitle("This is a test", { state: 1, target: Target.Software });
-
-			// Assert.
-			expect(connection.send).toHaveBeenCalledTimes(2);
-			expect(connection.send).toHaveBeenNthCalledWith<[SetTitle]>(1, {
-				event: "setTitle",
-				context: "ABC123",
-				payload: {
-					title: "Hello world"
-				}
-			});
-
-			expect(connection.send).toHaveBeenNthCalledWith<[SetTitle]>(2, {
-				event: "setTitle",
-				context: "ABC123",
-				payload: {
-					state: 1,
-					target: Target.Software,
-					title: "This is a test"
-				}
-			});
-		});
-
-		/**
-		 * Asserts {@link Action.setTriggerDescription} forwards the command to the {@link connection}.
-		 */
-		it("setTriggerDescription", async () => {
-			// Arrange, act.
-			await action.setTriggerDescription();
-			await action.setTriggerDescription({
-				longTouch: "Long-touch",
-				push: "Push",
-				rotate: "Rotate",
-				touch: "Touch"
-			});
-
-			// Assert.
-			expect(connection.send).toHaveBeenCalledTimes(2);
-			expect(connection.send).toHaveBeenNthCalledWith<[SetTriggerDescription]>(1, {
-				event: "setTriggerDescription",
-				context: action.id,
-				payload: {}
-			});
-
-			expect(connection.send).toHaveBeenNthCalledWith<[SetTriggerDescription]>(2, {
-				event: "setTriggerDescription",
-				context: action.id,
-				payload: {
-					longTouch: "Long-touch",
-					push: "Push",
-					rotate: "Rotate",
-					touch: "Touch"
-				}
-			});
-		});
-
-		/**
 		 * Asserts {@link Action.showAlert} forwards the command to the {@link connection}.
 		 */
 		it("showAlert", async () => {
@@ -319,21 +215,6 @@ describe("Action", () => {
 			expect(connection.send).toHaveBeenCalledWith<[ShowAlert]>({
 				context: action.id,
 				event: "showAlert"
-			});
-		});
-
-		/**
-		 * Asserts {@link Action.showOk} forwards the command to the {@link connection}.
-		 */
-		it("showOk", async () => {
-			// Arrange, act
-			await action.showOk();
-
-			// Assert.
-			expect(connection.send).toHaveBeenCalledTimes(1);
-			expect(connection.send).toHaveBeenCalledWith<[ShowOk]>({
-				context: action.id,
-				event: "showOk"
 			});
 		});
 	});

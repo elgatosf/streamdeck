@@ -1,32 +1,3 @@
-import {
-	createController,
-	onDialDown,
-	onDialRotate,
-	onDialUp,
-	onKeyDown,
-	onKeyUp,
-	onTitleParametersDidChange,
-	onTouchTap,
-	onWillAppear,
-	onWillDisappear,
-	registerAction
-} from "..";
-import type {
-	DialDownEvent,
-	DialRotateEvent,
-	DialUpEvent,
-	DidReceiveSettingsEvent,
-	KeyDownEvent,
-	KeyUpEvent,
-	PropertyInspectorDidAppearEvent,
-	PropertyInspectorDidDisappearEvent,
-	SendToPluginEvent,
-	SingletonAction,
-	TitleParametersDidChangeEvent,
-	TouchTapEvent,
-	WillAppearEvent,
-	WillDisappearEvent
-} from "../..";
 import type {
 	DialDown,
 	DialRotate,
@@ -43,42 +14,48 @@ import type {
 	WillDisappear
 } from "../../../api";
 import { Settings } from "../../../api/__mocks__/events";
+import { JsonObject } from "../../../common/json";
 import { connection } from "../../connection";
-import { getManifest } from "../../manifest";
-import type { onDidReceiveSettings } from "../../settings";
+import {
+	type DialDownEvent,
+	type DialRotateEvent,
+	type DialUpEvent,
+	type DidReceiveSettingsEvent,
+	type KeyDownEvent,
+	type KeyUpEvent,
+	type PropertyInspectorDidAppearEvent,
+	type PropertyInspectorDidDisappearEvent,
+	type SendToPluginEvent,
+	type TitleParametersDidChangeEvent,
+	type TouchTapEvent,
+	type WillAppearEvent,
+	type WillDisappearEvent
+} from "../../events";
 import type { UIController } from "../../ui";
-import { Action } from "../action";
+import { ActionContext } from "../context";
+import { DialAction } from "../dial";
+import { KeyAction } from "../key";
+import { actionService, type ActionService } from "../service";
+import { SingletonAction } from "../singleton-action";
+import { actionStore } from "../store";
 
+jest.mock("../store");
+jest.mock("../../devices/store");
 jest.mock("../../connection");
 jest.mock("../../logging");
 jest.mock("../../manifest");
 
 describe("actions", () => {
-	/**
-	 * Asserts {@link createController} initializes a new action.
-	 */
-	it("creates controllers", () => {
-		// Arrange, act.
-		const action = createController("abc123");
-
-		// Assert.
-		expect(action).not.toBeUndefined();
-		expect(action).toBeInstanceOf(Action);
-		expect(action.id).toBe("abc123");
-		// @ts-expect-error: manifestId is omitted, and should be an empty string.
-		expect(action.manifestId).toBe("");
-	});
-
 	describe("event emitters", () => {
 		/**
-		 * Asserts {@link onDialDown} is invoked when `dialDown` is emitted.
+		 * Asserts {@link ActionService.onDialDown} is invoked when `dialDown` is emitted.
 		 */
 		it("receives onDialDown", () => {
 			// Arrange.
 			const listener = jest.fn();
 			const ev = {
-				action: "com.elgato.test.one",
-				context: "context123",
+				action: "com.elgato.test.dial",
+				context: "dial123",
 				device: "device123",
 				event: "dialDown",
 				payload: {
@@ -94,14 +71,13 @@ describe("actions", () => {
 			} satisfies DialDown<Settings>;
 
 			// Act (emit).
-			const disposable = onDialDown(listener);
+			const disposable = actionService.onDialDown(listener);
 			connection.emit("dialDown", ev);
 
 			// Assert (emit).
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[DialDownEvent<Settings>]>({
-				action: new Action(ev),
-				deviceId: ev.device,
+				action: actionStore.getActionById(ev.context) as DialAction,
 				payload: ev.payload,
 				type: "dialDown"
 			});
@@ -115,14 +91,14 @@ describe("actions", () => {
 		});
 
 		/**
-		 * Asserts {@link onDialRotate} is invoked when `dialRotate` is emitted.
+		 * Asserts {@link ActionService.onDialRotate} is invoked when `dialRotate` is emitted.
 		 */
 		it("receives onDialRotate", () => {
 			// Arrange.
 			const listener = jest.fn();
 			const ev = {
-				action: "com.elgato.test.one",
-				context: "context123",
+				action: "com.elgato.test.dial",
+				context: "dial123",
 				device: "device123",
 				event: "dialRotate",
 				payload: {
@@ -140,14 +116,13 @@ describe("actions", () => {
 			} satisfies DialRotate<Settings>;
 
 			// Act (emit).
-			const disposable = onDialRotate(listener);
+			const disposable = actionService.onDialRotate(listener);
 			connection.emit("dialRotate", ev);
 
 			// Assert (emit).
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[DialRotateEvent<Settings>]>({
-				action: new Action(ev),
-				deviceId: ev.device,
+				action: actionStore.getActionById(ev.context) as DialAction,
 				payload: ev.payload,
 				type: "dialRotate"
 			});
@@ -161,14 +136,14 @@ describe("actions", () => {
 		});
 
 		/**
-		 * Asserts {@link onDialUp} is invoked when `dialUp` is emitted.
+		 * Asserts {@link ActionService.onDialUp} is invoked when `dialUp` is emitted.
 		 */
 		it("receives onDialUp", () => {
 			// Arrange.
 			const listener = jest.fn();
 			const ev = {
-				action: "com.elgato.test.one",
-				context: "context123",
+				action: "com.elgato.test.dial",
+				context: "dial123",
 				device: "device123",
 				event: "dialUp",
 				payload: {
@@ -184,14 +159,13 @@ describe("actions", () => {
 			} satisfies DialUp<Settings>;
 
 			// Act (emit).
-			const disposable = onDialUp(listener);
+			const disposable = actionService.onDialUp(listener);
 			connection.emit("dialUp", ev);
 
 			// Assert (emit).
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[DialUpEvent<Settings>]>({
-				action: new Action(ev),
-				deviceId: ev.device,
+				action: actionStore.getActionById(ev.context) as DialAction,
 				payload: ev.payload,
 				type: "dialUp"
 			});
@@ -205,14 +179,14 @@ describe("actions", () => {
 		});
 
 		/**
-		 * Asserts {@link onKeyDown} is invoked when `keyDown` is emitted.
+		 * Asserts {@link ActionService.onKeyDown} is invoked when `keyDown` is emitted.
 		 */
 		it("receives onKeyDown", () => {
 			// Arrange.
 			const listener = jest.fn();
 			const ev = {
-				action: "com.elgato.test.one",
-				context: "context123",
+				action: "com.elgato.test.key",
+				context: "key123",
 				device: "device123",
 				event: "keyDown",
 				payload: {
@@ -229,14 +203,13 @@ describe("actions", () => {
 			} satisfies KeyDown<Settings>;
 
 			// Act (emit).
-			const disposable = onKeyDown(listener);
+			const disposable = actionService.onKeyDown(listener);
 			connection.emit("keyDown", ev);
 
 			// Assert (emit).
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[KeyDownEvent<Settings>]>({
-				action: new Action(ev),
-				deviceId: ev.device,
+				action: actionStore.getActionById(ev.context) as KeyAction,
 				payload: ev.payload,
 				type: "keyDown"
 			});
@@ -250,14 +223,14 @@ describe("actions", () => {
 		});
 
 		/**
-		 * Asserts {@link onKeyUp} is invoked when `keyUp` is emitted.
+		 * Asserts {@link ActionService.onKeyUp} is invoked when `keyUp` is emitted.
 		 */
 		it("receives onKeyUp", () => {
 			// Arrange.
 			const listener = jest.fn();
 			const ev = {
-				action: "com.elgato.test.one",
-				context: "context123",
+				action: "com.elgato.test.key",
+				context: "key123",
 				device: "device123",
 				event: "keyUp",
 				payload: {
@@ -274,14 +247,13 @@ describe("actions", () => {
 			} satisfies KeyUp<Settings>;
 
 			// Act (emit).
-			const disposable = onKeyUp(listener);
+			const disposable = actionService.onKeyUp(listener);
 			connection.emit("keyUp", ev);
 
 			// Assert (emit).
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[KeyUpEvent<Settings>]>({
-				action: new Action(ev),
-				deviceId: ev.device,
+				action: actionStore.getActionById(ev.context) as KeyAction,
 				payload: ev.payload,
 				type: "keyUp"
 			});
@@ -295,14 +267,14 @@ describe("actions", () => {
 		});
 
 		/**
-		 * Asserts {@link onTitleParametersDidChange} is invoked when `titleParametersDidChange` is emitted.
+		 * Asserts {@link ActionService.onTitleParametersDidChange} is invoked when `titleParametersDidChange` is emitted.
 		 */
 		it("receives onTitleParametersDidChange", () => {
 			// Arrange.
 			const listener = jest.fn();
 			const ev = {
-				action: "com.elgato.test.one",
-				context: "context123",
+				action: "com.elgato.test.key",
+				context: "key123",
 				device: "device123",
 				event: "titleParametersDidChange",
 				payload: {
@@ -328,14 +300,13 @@ describe("actions", () => {
 			} satisfies TitleParametersDidChange<Settings>;
 
 			// Act (emit).
-			const disposable = onTitleParametersDidChange(listener);
+			const disposable = actionService.onTitleParametersDidChange(listener);
 			connection.emit("titleParametersDidChange", ev);
 
 			// Assert (emit).
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[TitleParametersDidChangeEvent<Settings>]>({
-				action: new Action(ev),
-				deviceId: ev.device,
+				action: actionStore.getActionById(ev.context) as KeyAction,
 				payload: ev.payload,
 				type: "titleParametersDidChange"
 			});
@@ -349,14 +320,14 @@ describe("actions", () => {
 		});
 
 		/**
-		 * Asserts {@link onTouchTap} is invoked when `touchTap` is emitted.
+		 * Asserts {@link ActionService.onTouchTap} is invoked when `touchTap` is emitted.
 		 */
 		it("receives onTouchTap", () => {
 			// Arrange.
 			const listener = jest.fn();
 			const ev = {
-				action: "com.elgato.test.one",
-				context: "context123",
+				action: "com.elgato.test.dial",
+				context: "dial123",
 				device: "device123",
 				event: "touchTap",
 				payload: {
@@ -374,14 +345,13 @@ describe("actions", () => {
 			} satisfies TouchTap<Settings>;
 
 			// Act (emit).
-			const disposable = onTouchTap(listener);
+			const disposable = actionService.onTouchTap(listener);
 			connection.emit("touchTap", ev);
 
 			// Assert (emit).
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[TouchTapEvent<Settings>]>({
-				action: new Action(ev),
-				deviceId: ev.device,
+				action: actionStore.getActionById(ev.context) as DialAction,
 				payload: ev.payload,
 				type: "touchTap"
 			});
@@ -395,14 +365,14 @@ describe("actions", () => {
 		});
 
 		/**
-		 * Asserts {@link onWillAppear} is invoked when `willAppear` is emitted.
+		 * Asserts {@link ActionService.onWillAppear} is invoked when `willAppear` is emitted.
 		 */
 		it("receives onWillAppear", () => {
 			// Arrange.
 			const listener = jest.fn();
 			const ev = {
-				action: "com.elgato.test.one",
-				context: "context123",
+				action: "com.elgato.test.key",
+				context: "key123",
 				device: "device123",
 				event: "willAppear",
 				payload: {
@@ -419,14 +389,13 @@ describe("actions", () => {
 			} satisfies WillAppear<Settings>;
 
 			// Act (emit).
-			const disposable = onWillAppear(listener);
+			const disposable = actionService.onWillAppear(listener);
 			connection.emit("willAppear", ev);
 
 			// Assert (emit).
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[WillAppearEvent<Settings>]>({
-				action: new Action(ev),
-				deviceId: ev.device,
+				action: actionStore.getActionById(ev.context) as KeyAction,
 				payload: ev.payload,
 				type: "willAppear"
 			});
@@ -440,13 +409,13 @@ describe("actions", () => {
 		});
 
 		/**
-		 * Asserts {@link onWillDisappear} is invoked when `willDisappear` is emitted.
+		 * Asserts {@link ActionService.onWillDisappear} is invoked when `willDisappear` is emitted.
 		 */
-		it("receives onWillAppear", () => {
+		it("receives onWillDisappear", () => {
 			// Arrange.
 			const listener = jest.fn();
 			const ev = {
-				action: "com.elgato.test.one",
+				action: "com.elgato.test.key",
 				context: "context123",
 				device: "device123",
 				event: "willDisappear",
@@ -464,14 +433,13 @@ describe("actions", () => {
 			} satisfies WillDisappear<Settings>;
 
 			// Act (emit).
-			const disposable = onWillDisappear(listener);
+			const disposable = actionService.onWillDisappear(listener);
 			connection.emit("willDisappear", ev);
 
 			// Assert (emit).
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[WillDisappearEvent<Settings>]>({
-				action: new Action(ev),
-				deviceId: ev.device,
+				action: new ActionContext(ev),
 				payload: ev.payload,
 				type: "willDisappear"
 			});
@@ -486,36 +454,40 @@ describe("actions", () => {
 	});
 
 	describe("registering an action", () => {
-		const manifestId = getManifest().Actions[0].UUID;
-		// 	afterEach(() => jest.clearAllMocks());
+		const keyManifestId = "com.elgato.test.key";
+		const dialManifestId = "com.elgato.test.dial";
+		const actions = jest.fn() as unknown as IterableIterator<DialAction<JsonObject> | KeyAction<JsonObject>>;
+
 		/**
-		 * Asserts {@link registerAction} validates the manifest identifier is not undefined.
+		 * Asserts {@link ActionService.registerAction} validates the manifest identifier is not undefined.
 		 */
 		it("validates the manifestId is not undefined", () => {
 			// Arrange.
 			const action: SingletonAction = {
-				manifestId: undefined
+				manifestId: undefined,
+				actions
 			};
 
 			// Act, assert.
-			expect(() => registerAction(action)).toThrow("The action's manifestId cannot be undefined.");
+			expect(() => actionService.registerAction(action)).toThrow("The action's manifestId cannot be undefined.");
 		});
 
 		/**
-		 * Asserts {@link registerAction} validates the manifest identifier exists within the manifest.
+		 * Asserts {@link ActionService.registerAction} validates the manifest identifier exists within the manifest.
 		 */
 		it("validates when action does not exist in manifest", () => {
 			// Arrange.
 			const action: SingletonAction = {
+				actions,
 				manifestId: "com.elgato.action-service.__one"
 			};
 
 			// Act, assert.
-			expect(() => registerAction(action)).toThrow("com.elgato.action-service.__one");
+			expect(() => actionService.registerAction(action)).toThrow("com.elgato.action-service.__one");
 		});
 
 		/**
-		 * Asserts {@link registerAction} ignores undefined handlers.
+		 * Asserts {@link ActionService.registerAction} ignores undefined handlers.
 		 */
 		it("ignore undefined handlers", () => {
 			// Arrange.
@@ -527,7 +499,10 @@ describe("actions", () => {
 			const spyOnPrependOnceListener = jest.spyOn(connection, "prependOnceListener");
 
 			// Act.
-			registerAction({ manifestId });
+			actionService.registerAction({
+				actions,
+				manifestId: keyManifestId
+			});
 
 			// Assert.
 			expect(spyOnAddListener).not.toHaveBeenCalled();
@@ -539,14 +514,15 @@ describe("actions", () => {
 		});
 
 		/**
-		 * Asserts {@link onDialDown} is routed to the action when `dialDown` is emitted.
+		 * Asserts {@link ActionService.onDialDown} is routed to the action when `dialDown` is emitted.
 		 */
 		it("routes onDialDown", () => {
 			// Arrange.
 			const listener = jest.fn();
+
 			const ev = {
-				action: manifestId,
-				context: "context123",
+				action: dialManifestId,
+				context: "dial123",
 				device: "device123",
 				event: "dialDown",
 				payload: {
@@ -562,8 +538,9 @@ describe("actions", () => {
 			} satisfies DialDown<Settings>;
 
 			// Act.
-			registerAction({
-				manifestId,
+			actionService.registerAction({
+				actions,
+				manifestId: ev.action,
 				onDialDown: listener
 			});
 
@@ -572,22 +549,21 @@ describe("actions", () => {
 			// Assert.
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[DialDownEvent<Settings>]>({
-				action: new Action(ev),
-				deviceId: ev.device,
+				action: actionStore.getActionById(ev.context) as DialAction,
 				payload: ev.payload,
 				type: "dialDown"
 			});
 		});
 
 		/**
-		 * Asserts {@link onDialRotate} is routed to the action when `dialRotate` is emitted.
+		 * Asserts {@link ActionService.onDialRotate} is routed to the action when `dialRotate` is emitted.
 		 */
 		it("routes onDialRotate", () => {
 			// Arrange.
 			const listener = jest.fn();
 			const ev = {
-				action: manifestId,
-				context: "context123",
+				action: dialManifestId,
+				context: "dial123",
 				device: "device123",
 				event: "dialRotate",
 				payload: {
@@ -605,8 +581,9 @@ describe("actions", () => {
 			} satisfies DialRotate<Settings>;
 
 			// Act.
-			registerAction({
-				manifestId,
+			actionService.registerAction({
+				actions,
+				manifestId: ev.action,
 				onDialRotate: listener
 			});
 
@@ -615,22 +592,21 @@ describe("actions", () => {
 			// Assert.
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[DialRotateEvent<Settings>]>({
-				action: new Action(ev),
-				deviceId: ev.device,
+				action: actionStore.getActionById(ev.context) as DialAction,
 				payload: ev.payload,
 				type: "dialRotate"
 			});
 		});
 
 		/**
-		 * Asserts {@link onDialUp} is routed to the action when `dialUp` is emitted.
+		 * Asserts {@link ActionService.onDialUp} is routed to the action when `dialUp` is emitted.
 		 */
 		it("routes onDialUp", () => {
 			// Arrange.
 			const listener = jest.fn();
 			const ev = {
-				action: manifestId,
-				context: "context123",
+				action: dialManifestId,
+				context: "dial123",
 				device: "device123",
 				event: "dialUp",
 				payload: {
@@ -646,8 +622,9 @@ describe("actions", () => {
 			} satisfies DialUp<Settings>;
 
 			// Act.
-			registerAction({
-				manifestId,
+			actionService.registerAction({
+				actions,
+				manifestId: ev.action,
 				onDialUp: listener
 			});
 
@@ -656,8 +633,7 @@ describe("actions", () => {
 			// Assert.
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[DialUpEvent<Settings>]>({
-				action: new Action(ev),
-				deviceId: ev.device,
+				action: actionStore.getActionById(ev.context) as DialAction,
 				payload: ev.payload,
 				type: "dialUp"
 			});
@@ -670,8 +646,8 @@ describe("actions", () => {
 			// Arrange
 			const listener = jest.fn();
 			const ev = {
-				action: manifestId,
-				context: "context123",
+				action: keyManifestId,
+				context: "key123",
 				event: "sendToPlugin",
 				payload: {
 					name: "Hello world"
@@ -679,8 +655,9 @@ describe("actions", () => {
 			} satisfies DidReceivePropertyInspectorMessage<Settings>;
 
 			// Act.
-			registerAction({
-				manifestId,
+			actionService.registerAction({
+				actions,
+				manifestId: ev.action,
 				onSendToPlugin: listener
 			});
 
@@ -689,7 +666,7 @@ describe("actions", () => {
 			// Assert.
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[SendToPluginEvent<Settings, Settings>]>({
-				action: new Action(ev),
+				action: actionStore.getActionById(ev.context) as KeyAction,
 				payload: {
 					name: "Hello world"
 				},
@@ -698,14 +675,14 @@ describe("actions", () => {
 		});
 
 		/**
-		 * Asserts {@link onDidReceiveSettings} is routed to the action when `didReceiveGlobalSettings` is emitted.
+		 * Asserts {@link ActionService.onDidReceiveSettings} is routed to the action when `didReceiveGlobalSettings` is emitted.
 		 */
 		it("routes onDidReceiveGlobalSettings", () => {
 			// Arrange
 			const listener = jest.fn();
 			const ev = {
-				action: manifestId,
-				context: "context123",
+				action: keyManifestId,
+				context: "key123",
 				device: "device123",
 				event: "didReceiveSettings",
 				payload: {
@@ -722,8 +699,9 @@ describe("actions", () => {
 			} satisfies DidReceiveSettings<Settings>;
 
 			// Act.
-			registerAction({
-				manifestId,
+			actionService.registerAction({
+				actions,
+				manifestId: ev.action,
 				onDidReceiveSettings: listener
 			});
 
@@ -732,22 +710,21 @@ describe("actions", () => {
 			// Assert.
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[DidReceiveSettingsEvent<Settings>]>({
-				action: new Action(ev),
-				deviceId: ev.device,
+				action: actionStore.getActionById(ev.context) as KeyAction,
 				payload: ev.payload,
 				type: "didReceiveSettings"
 			});
 		});
 
 		/**
-		 * Asserts {@link onKeyDown} is routed to the action when `keyDown` is emitted.
+		 * Asserts {@link ActionService.onKeyDown} is routed to the action when `keyDown` is emitted.
 		 */
 		it("routes onKeyDown", () => {
 			// Arrange.
 			const listener = jest.fn();
 			const ev = {
-				action: manifestId,
-				context: "context123",
+				action: keyManifestId,
+				context: "key123",
 				device: "device123",
 				event: "keyDown",
 				payload: {
@@ -764,8 +741,9 @@ describe("actions", () => {
 			} satisfies KeyDown<Settings>;
 
 			// Act.
-			registerAction({
-				manifestId,
+			actionService.registerAction({
+				actions,
+				manifestId: ev.action,
 				onKeyDown: listener
 			});
 
@@ -774,22 +752,21 @@ describe("actions", () => {
 			// Assert.
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[KeyDownEvent<Settings>]>({
-				action: new Action(ev),
-				deviceId: ev.device,
+				action: actionStore.getActionById(ev.context) as KeyAction,
 				payload: ev.payload,
 				type: "keyDown"
 			});
 		});
 
 		/**
-		 * Asserts {@link onKeyUp} is routed to the action when `keyUp` is emitted.
+		 * Asserts {@link ActionService.onKeyUp} is routed to the action when `keyUp` is emitted.
 		 */
 		it("routes onKeyUp", () => {
 			// Arrange.
 			const listener = jest.fn();
 			const ev = {
-				action: manifestId,
-				context: "context123",
+				action: keyManifestId,
+				context: "key123",
 				device: "device123",
 				event: "keyUp",
 				payload: {
@@ -806,8 +783,9 @@ describe("actions", () => {
 			} satisfies KeyUp<Settings>;
 
 			// Act.
-			registerAction({
-				manifestId,
+			actionService.registerAction({
+				actions,
+				manifestId: ev.action,
 				onKeyUp: listener
 			});
 
@@ -816,8 +794,7 @@ describe("actions", () => {
 			// Assert.
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[KeyUpEvent<Settings>]>({
-				action: new Action(ev),
-				deviceId: ev.device,
+				action: actionStore.getActionById(ev.context) as KeyAction,
 				payload: ev.payload,
 				type: "keyUp"
 			});
@@ -830,15 +807,16 @@ describe("actions", () => {
 			// Arrange
 			const listener = jest.fn();
 			const ev = {
-				action: manifestId,
-				context: "context123",
+				action: keyManifestId,
+				context: "key123",
 				device: "device123",
 				event: "propertyInspectorDidAppear"
 			} satisfies PropertyInspectorDidAppear;
 
 			// Act.
-			registerAction({
-				manifestId,
+			actionService.registerAction({
+				actions,
+				manifestId: ev.action,
 				onPropertyInspectorDidAppear: listener
 			});
 
@@ -847,8 +825,7 @@ describe("actions", () => {
 			// Assert.
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[PropertyInspectorDidAppearEvent<Settings>]>({
-				action: new Action(ev),
-				deviceId: ev.device,
+				action: actionStore.getActionById(ev.context) as KeyAction,
 				type: "propertyInspectorDidAppear"
 			});
 		});
@@ -860,15 +837,16 @@ describe("actions", () => {
 			// Arrange
 			const listener = jest.fn();
 			const ev = {
-				action: manifestId,
-				context: "context123",
+				action: keyManifestId,
+				context: "key123",
 				device: "device123",
 				event: "propertyInspectorDidDisappear"
 			} satisfies PropertyInspectorDidDisappear;
 
 			// Act (emit).
-			registerAction({
-				manifestId,
+			actionService.registerAction({
+				actions,
+				manifestId: ev.action,
 				onPropertyInspectorDidDisappear: listener
 			});
 
@@ -877,21 +855,20 @@ describe("actions", () => {
 			// Assert.
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[PropertyInspectorDidDisappearEvent<Settings>]>({
-				action: new Action(ev),
-				deviceId: ev.device,
+				action: actionStore.getActionById(ev.context) as KeyAction,
 				type: "propertyInspectorDidDisappear"
 			});
 		});
 
 		/**
-		 * Asserts {@link onTitleParametersDidChange} is routed to the action when `titleParametersDidChange` is emitted.
+		 * Asserts {@link ActionService.onTitleParametersDidChange} is routed to the action when `titleParametersDidChange` is emitted.
 		 */
 		it("routes onTitleParametersDidChange", () => {
 			// Arrange.
 			const listener = jest.fn();
 			const ev = {
-				action: manifestId,
-				context: "context123",
+				action: keyManifestId,
+				context: "key123",
 				device: "device123",
 				event: "titleParametersDidChange",
 				payload: {
@@ -917,8 +894,9 @@ describe("actions", () => {
 			} satisfies TitleParametersDidChange<Settings>;
 
 			// Act.
-			registerAction({
-				manifestId,
+			actionService.registerAction({
+				actions,
+				manifestId: ev.action,
 				onTitleParametersDidChange: listener
 			});
 
@@ -927,22 +905,21 @@ describe("actions", () => {
 			// Assert.
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[TitleParametersDidChangeEvent<Settings>]>({
-				action: new Action(ev),
-				deviceId: ev.device,
+				action: actionStore.getActionById(ev.context) as KeyAction,
 				payload: ev.payload,
 				type: "titleParametersDidChange"
 			});
 		});
 
 		/**
-		 * Asserts {@link onTouchTap} is routed to the action when `touchTap` is emitted.
+		 * Asserts {@link ActionService.onTouchTap} is routed to the action when `touchTap` is emitted.
 		 */
 		it("routes onTouchTap", () => {
 			// Arrange.
 			const listener = jest.fn();
 			const ev = {
-				action: manifestId,
-				context: "context123",
+				action: dialManifestId,
+				context: "dial123",
 				device: "device123",
 				event: "touchTap",
 				payload: {
@@ -960,8 +937,9 @@ describe("actions", () => {
 			} satisfies TouchTap<Settings>;
 
 			// Act.
-			registerAction({
-				manifestId,
+			actionService.registerAction({
+				actions,
+				manifestId: ev.action,
 				onTouchTap: listener
 			});
 
@@ -970,22 +948,21 @@ describe("actions", () => {
 			// Assert.
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[TouchTapEvent<Settings>]>({
-				action: new Action(ev),
-				deviceId: ev.device,
+				action: actionStore.getActionById(ev.context) as DialAction,
 				payload: ev.payload,
 				type: "touchTap"
 			});
 		});
 
 		/**
-		 * Asserts {@link onWillAppear} is routed to the action when `willAppear` is emitted.
+		 * Asserts {@link ActionService.onWillAppear} is routed to the action when `willAppear` is emitted.
 		 */
 		it("routes onWillAppear", () => {
 			// Arrange.
 			const listener = jest.fn();
 			const ev = {
-				action: manifestId,
-				context: "context123",
+				action: keyManifestId,
+				context: "key123",
 				device: "device123",
 				event: "willAppear",
 				payload: {
@@ -1002,8 +979,9 @@ describe("actions", () => {
 			} satisfies WillAppear<Settings>;
 
 			// Act.
-			registerAction({
-				manifestId,
+			actionService.registerAction({
+				actions,
+				manifestId: ev.action,
 				onWillAppear: listener
 			});
 
@@ -1012,22 +990,21 @@ describe("actions", () => {
 			// Assert.
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[WillAppearEvent<Settings>]>({
-				action: new Action(ev),
-				deviceId: ev.device,
+				action: actionStore.getActionById(ev.context) as KeyAction,
 				payload: ev.payload,
 				type: "willAppear"
 			});
 		});
 
 		/**
-		 * Asserts {@link onWillDisappear} is routed to the action when `willDisappear` is emitted.
+		 * Asserts {@link ActionService.onWillDisappear} is routed to the action when `willDisappear` is emitted.
 		 */
-		it("routes onWillAppear", () => {
+		it("routes onWillDisappear", () => {
 			// Arrange.
 			const listener = jest.fn();
 			const ev = {
-				action: manifestId,
-				context: "context123",
+				action: keyManifestId,
+				context: "key123",
 				device: "device123",
 				event: "willDisappear",
 				payload: {
@@ -1044,8 +1021,9 @@ describe("actions", () => {
 			} satisfies WillDisappear<Settings>;
 
 			// Act.
-			registerAction({
-				manifestId,
+			actionService.registerAction({
+				actions,
+				manifestId: ev.action,
 				onWillDisappear: listener
 			});
 
@@ -1054,8 +1032,7 @@ describe("actions", () => {
 			// Assert.
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[WillDisappearEvent<Settings>]>({
-				action: new Action(ev),
-				deviceId: ev.device,
+				action: new ActionContext(ev),
 				payload: ev.payload,
 				type: "willDisappear"
 			});

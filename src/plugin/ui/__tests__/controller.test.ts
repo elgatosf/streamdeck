@@ -1,6 +1,6 @@
 import type { DidReceivePropertyInspectorMessage, PropertyInspectorDidAppear, PropertyInspectorDidDisappear } from "../../../api";
 import { Settings } from "../../../api/__mocks__/events";
-import { Action } from "../../actions/action";
+import { actionStore } from "../../actions/store";
 import { connection } from "../../connection";
 import { PropertyInspectorDidAppearEvent, SendToPluginEvent, type PropertyInspectorDidDisappearEvent } from "../../events";
 import { ui } from "../controller";
@@ -8,6 +8,7 @@ import { PropertyInspector } from "../property-inspector";
 import * as RouterModule from "../router";
 
 jest.mock("../router");
+jest.mock("../../actions/store");
 jest.mock("../../connection");
 jest.mock("../../logging");
 jest.mock("../../manifest");
@@ -20,7 +21,7 @@ describe("UIController", () => {
 		// Arrange.
 		const pi = new PropertyInspector(RouterModule.router, {
 			action: "com.elgato.test.one",
-			context: "abc123",
+			context: "key123", // Mocked in actionStore
 			device: "dev123"
 		});
 
@@ -42,7 +43,7 @@ describe("UIController", () => {
 		const listener = jest.fn();
 		const ev = {
 			action: "com.elgato.test.one",
-			context: "context123",
+			context: "key123", // Mocked in actionStore.
 			device: "device123",
 			event: "propertyInspectorDidAppear"
 		} satisfies PropertyInspectorDidAppear;
@@ -54,8 +55,7 @@ describe("UIController", () => {
 		// Assert (emit).
 		expect(listener).toHaveBeenCalledTimes(1);
 		expect(listener).toHaveBeenCalledWith<[PropertyInspectorDidAppearEvent<Settings>]>({
-			action: new Action(ev),
-			deviceId: ev.device,
+			action: actionStore.getActionById(ev.context)!,
 			type: "propertyInspectorDidAppear"
 		});
 
@@ -75,7 +75,7 @@ describe("UIController", () => {
 		const listener = jest.fn();
 		const ev = {
 			action: "com.elgato.test.one",
-			context: "context123",
+			context: "key123", // Mocked in actionStore.
 			device: "device123",
 			event: "propertyInspectorDidDisappear"
 		} satisfies PropertyInspectorDidDisappear;
@@ -87,8 +87,7 @@ describe("UIController", () => {
 		// Assert (emit).
 		expect(listener).toHaveBeenCalledTimes(1);
 		expect(listener).toHaveBeenCalledWith<[PropertyInspectorDidDisappearEvent<Settings>]>({
-			action: new Action(ev),
-			deviceId: ev.device,
+			action: actionStore.getActionById(ev.context)!,
 			type: "propertyInspectorDidDisappear"
 		});
 
@@ -108,7 +107,7 @@ describe("UIController", () => {
 		const listener = jest.fn();
 		const ev = {
 			action: "com.elgato.test.one",
-			context: "context123",
+			context: "key123", // Mocked in actionStore.
 			event: "sendToPlugin",
 			payload: {
 				name: "Hello world"
@@ -122,7 +121,7 @@ describe("UIController", () => {
 		// Assert (emit).
 		expect(listener).toHaveBeenCalledTimes(1);
 		expect(listener).toHaveBeenCalledWith<[SendToPluginEvent<Settings, Settings>]>({
-			action: new Action(ev),
+			action: actionStore.getActionById(ev.context)!,
 			payload: {
 				name: "Hello world"
 			},

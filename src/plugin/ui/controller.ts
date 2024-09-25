@@ -1,11 +1,12 @@
-import type streamDeck from "../";
-import type { DidReceivePropertyInspectorMessage, PropertyInspectorDidAppear, PropertyInspectorDidDisappear } from "../../api";
+import type { DidReceivePropertyInspectorMessage } from "../../api";
 import type { IDisposable } from "../../common/disposable";
+import { ActionWithoutPayloadEvent } from "../../common/events/action-event";
 import type { JsonObject, JsonValue } from "../../common/json";
 import { PUBLIC_PATH_PREFIX, type RouteConfiguration } from "../../common/messaging";
 import { Action } from "../actions/action";
+import { actionStore } from "../actions/store";
 import { connection } from "../connection";
-import { ActionWithoutPayloadEvent, SendToPluginEvent, type PropertyInspectorDidAppearEvent, type PropertyInspectorDidDisappearEvent } from "../events";
+import { SendToPluginEvent, type PropertyInspectorDidAppearEvent, type PropertyInspectorDidDisappearEvent } from "../events";
 import { type MessageHandler } from "./message";
 import { type PropertyInspector } from "./property-inspector";
 import { getCurrentUI, router } from "./router";
@@ -29,7 +30,12 @@ class UIController {
 	 * @returns A disposable that, when disposed, removes the listener.
 	 */
 	public onDidAppear<T extends JsonObject = JsonObject>(listener: (ev: PropertyInspectorDidAppearEvent<T>) => void): IDisposable {
-		return connection.disposableOn("propertyInspectorDidAppear", (ev) => listener(new ActionWithoutPayloadEvent<PropertyInspectorDidAppear, Action<T>>(new Action<T>(ev), ev)));
+		return connection.disposableOn("propertyInspectorDidAppear", (ev) => {
+			const action = actionStore.getActionById(ev.context);
+			if (action) {
+				listener(new ActionWithoutPayloadEvent(action, ev));
+			}
+		});
 	}
 
 	/**
@@ -39,15 +45,17 @@ class UIController {
 	 * @returns A disposable that, when disposed, removes the listener.
 	 */
 	public onDidDisappear<T extends JsonObject = JsonObject>(listener: (ev: PropertyInspectorDidDisappearEvent<T>) => void): IDisposable {
-		return connection.disposableOn("propertyInspectorDidDisappear", (ev) =>
-			listener(new ActionWithoutPayloadEvent<PropertyInspectorDidDisappear, Action<T>>(new Action<T>(ev), ev))
-		);
+		return connection.disposableOn("propertyInspectorDidDisappear", (ev) => {
+			const action = actionStore.getActionById(ev.context);
+			if (action) {
+				listener(new ActionWithoutPayloadEvent(action, ev));
+			}
+		});
 	}
 
 	/**
 	 * Occurs when a message was sent to the plugin _from_ the property inspector. The plugin can also send messages _to_ the property inspector using {@link UIController.current.sendMessage}
 	 * or {@link Action.sendToPropertyInspector}.
-	 * @deprecated Consider using {@link streamDeck.ui.registerRoute} to receive requests from the property inspector.
 	 * @template TPayload The type of the payload received from the property inspector.
 	 * @template TSettings The type of settings associated with the action.
 	 * @param listener Function to be invoked when the event occurs.
@@ -57,7 +65,10 @@ class UIController {
 		listener: (ev: SendToPluginEvent<TPayload, TSettings>) => void
 	): IDisposable {
 		return router.disposableOn("unhandledMessage", (ev) => {
-			listener(new SendToPluginEvent<TPayload, TSettings>(new Action<TSettings>(ev), ev as DidReceivePropertyInspectorMessage<TPayload>));
+			const action = actionStore.getActionById(ev.context);
+			if (action) {
+				listener(new SendToPluginEvent<TPayload, TSettings>(action, ev as DidReceivePropertyInspectorMessage<TPayload>));
+			}
 		});
 	}
 

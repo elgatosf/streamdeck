@@ -3,18 +3,20 @@ import type { ActionIdentifier, DeviceIdentifier } from "../../api";
 import type { JsonValue } from "../../common/json";
 import { PUBLIC_PATH_PREFIX, type MessageGateway, type MessageRequestOptions, type MessageResponse } from "../../common/messaging";
 import type { Action } from "../actions/action";
-import { ActionContext } from "../actions/context";
+import type { DialAction } from "../actions/dial";
+import type { KeyAction } from "../actions/key";
 import type { SingletonAction } from "../actions/singleton-action";
+import { actionStore } from "../actions/store";
 import { connection } from "../connection";
 
 /**
  * Property inspector providing information about its context, and functions for sending and fetching messages.
  */
-export class PropertyInspector extends ActionContext implements Pick<MessageGateway<Action>, "fetch"> {
+export class PropertyInspector implements Pick<MessageGateway<Action>, "fetch"> {
 	/**
-	 * Unique identifier of the Stream Deck device this property inspector is associated with.
+	 * Action associated with the property inspector
 	 */
-	public readonly deviceId: string;
+	public readonly action: DialAction | KeyAction;
 
 	/**
 	 * Initializes a new instance of the {@link PropertyInspector} class.
@@ -25,8 +27,7 @@ export class PropertyInspector extends ActionContext implements Pick<MessageGate
 		private readonly router: MessageGateway<Action>,
 		source: ActionIdentifier & DeviceIdentifier
 	) {
-		super(source);
-		this.deviceId = source.device;
+		this.action = actionStore.getActionById(source.context)!;
 	}
 
 	/**
@@ -83,7 +84,6 @@ export class PropertyInspector extends ActionContext implements Pick<MessageGate
 	/**
 	 * Sends the {@link payload} to the property inspector. The plugin can also receive information from the property inspector via {@link streamDeck.ui.onSendToPlugin} and {@link SingletonAction.onSendToPlugin}
 	 * allowing for bi-directional communication.
-	 * @deprecated Consider using {@link streamDeck.ui.current.fetch} to send requests to the property inspector.
 	 * @template T The type of the payload received from the property inspector.
 	 * @param payload Payload to send to the property inspector.
 	 * @returns `Promise` resolved when {@link payload} has been sent to the property inspector.
@@ -91,7 +91,7 @@ export class PropertyInspector extends ActionContext implements Pick<MessageGate
 	public sendToPropertyInspector(payload: JsonValue): Promise<void> {
 		return connection.send({
 			event: "sendToPropertyInspector",
-			context: this.id,
+			context: this.action.id,
 			payload
 		});
 	}
