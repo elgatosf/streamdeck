@@ -16,7 +16,7 @@ Welcome to the Stream Deck SDK for Node.js. Designed to make creating Stream Dec
 
 The Stream Deck SDK for Node.js is currently in public beta, and is available to everyone running Stream Deck 6.4 or newer. If you're interested in building plugins and would like to know more, please join our [Marketplace Makers Discord](https://discord.gg/GehBUcu627).
 
-> Creating Stream Deck plugins with Node.js requires Node.js v20.5.1. When installing Node.js, we recommended using a version manager such as [nvm](https://github.com/creationix/nvm) (macOS) or [nvm-windows](https://github.com/coreybutler/nvm-windows) (Windows).
+> Creating Stream Deck plugins with Node.js requires Node.js v20. When installing Node.js, we recommended using a version manager such as [nvm](https://github.com/creationix/nvm) (macOS) or [nvm-windows](https://github.com/coreybutler/nvm-windows) (Windows).
 
 ## 🚀 Quick Start
 
@@ -86,22 +86,20 @@ Actions are the star of the show and enable users to interact with plugins. At t
 
 The following is an example of an action that listens for the `keyDown` event, and then sets the title of the action to "Hello world" after being pressed.
 
-> **src/actions/say-hello.ts**
->
-> ```typescript Hello world
-> import { action, KeyDownEvent, SingletonAction } from "@elgato/streamdeck";
->
-> @action({ UUID: "com.elgato.hello-world.say-hello" })
-> export class SayHelloAction extends SingletonAction {
->     /**
->      * Listen for the key down event that occurs when a user presses
->      * a Stream Deck button, and change the title of the action.
->      */
->     async onKeyDown(ev: KeyDownEvent<object>) {
->         await ev.action.setTitle("Hello world");
->     }
-> }
-> ```
+```typescript
+import { action, KeyDownEvent, SingletonAction } from "@elgato/streamdeck";
+
+@action({ UUID: "com.elgato.hello-world.say-hello" })
+export class SayHelloAction extends SingletonAction {
+    /**
+     * Listen for the key down event that occurs when a user presses
+     * a Stream Deck button, and change the title of the action.
+     */
+    async onKeyDown(ev: KeyDownEvent) {
+        await ev.action.setTitle("Hello world");
+    }
+}
+```
 
 The action's implementation must be registered in the sources' entry point`.
 
