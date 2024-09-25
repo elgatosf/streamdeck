@@ -46,7 +46,7 @@ export class KeyAction<T extends JsonObject = JsonObject> extends Action<T> {
 	 * Determines whether the key is part of a multi-action.
 	 * @returns `true` when in a multi-action; otherwise `false`.
 	 */
-	public get isInMultiAction(): boolean {
+	public isInMultiAction(): boolean {
 		return this.#source.payload.isInMultiAction;
 	}
 
