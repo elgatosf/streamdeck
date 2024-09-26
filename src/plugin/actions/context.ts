@@ -38,7 +38,7 @@ export class ActionContext {
 	 * - `Encoder` is a dial and portion of the touch strip.
 	 * @returns Controller type.
 	 */
-	public get controller(): Controller {
+	public get controllerType(): Controller {
 		return this.#source.payload.controller;
 	}
 
