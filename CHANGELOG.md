@@ -12,7 +12,35 @@
 
 # Change Log
 
-## 0.4.0-beta.x
+## 1.0.0
+
+### ✨ New
+
+-   Add action tracking, allowing access to currently visible actions.
+    -   `streamDeck.actions` — all visible actions.
+    -   `SingletonAction.actions` — visible actions that match the action's UUID.
+-   Add `setTitle` to `DialAction`, allowing you to set the title of a layout.
+-   Add `Enumerable` class for creating readonly collections.
+-   Add device information to `Action` provided in event arguments.
+-   Add iterator helpers to `streamDeck.devices` and `streamDeck.actions`.
+
+### 🐞 Fix
+
+-   Fix missing language support for Korean (ko).
+-   Fix TypeScript declaration incorrectly exporting types as classes.
+
+### ♻️ Update
+
+-   Remove `streamDeck.actions.createController` in favor of `streamDeck.actions.getActionById`.
+-   Remove `Action.sendToPropertyInspector` in favour of `streamDeck.ui.current.sendToPropertyInspector`.
+-   Remove `ev.deviceId` in favour of `ev.action.device.id`.
+-   Rename `onDidConnect` to `onConnected` within the UI.
+
+### ⬆️ Upgrading
+
+-   For information on breaking changes, and migrating to the this version, read more about [upgrading to v1.0.0](/UPGRADE.md#v1-0-0).
+
+## 0.4.0-beta
 
 ### ✨ New
 

@@ -55,7 +55,7 @@ describe("Action", () => {
 
 		// Assert.
 		expect(action).toBeInstanceOf(Action);
-		expect(action.controller).toBe("Keypad");
+		expect(action.controllerType).toBe("Keypad");
 		expect(action.device).toBe(device);
 		expect(action.id).toBe(source.context);
 		expect(action.manifestId).toBe(source.action);

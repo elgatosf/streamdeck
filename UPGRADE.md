@@ -1,9 +1,116 @@
 # Upgrade Guide
 
-**Versions**
+### Versions
 
+-   [v1.0.0](#v1-0-0)
 -   [v0.4.0](#v0-4-0)
 -   [v0.2.0](#v0-2-0)
+
+## <a id="v1-0-0"></a>v1.0.0
+
+-   [Keys and Actions](#keys-and-dials)
+-   [Action Controllers](#action-controllers)
+-   [Device ID in Events](#device-id-in-events)
+-   [sendToPropertyInspector](#sendtopropertyinspector)
+-   [UI Connection Events](#ui-connecting-events)
+
+### Keys and Dials
+
+Actions provided to events have been improved to more accurately reflect methods and information available to them. For this reason, some methods may not be available until type-narrowing within events that apply to both keys and dials.
+
+**Before**
+
+```ts
+onWillAppear(ev: WillAppearEvent): void {
+    ev.action.setFeedback({
+        title: "Hello world"
+    });
+}
+```
+
+**After**
+
+```ts
+onWillAppear(ev: WillAppearEvent): void {
+    if (ev.action.isDial()) { // <- Check the action is a dial.
+        ev.action.setFeedback({
+            title: "Hello world"
+        });
+    }
+}
+```
+
+### Action Controllers
+
+Action controllers previously accessible via `streamDeck.actions.createController` have been superseded by visible actions, accessible via `streamDeck.actions.getActionById`.
+
+**Before**
+
+```ts
+streamDeck.actions.createController(id);
+```
+
+**After**
+
+```ts
+streamDeck.actions.getActionById(id);
+```
+
+### Device ID in Events
+
+The device identifier in event arguments has been superseded by the device itself, accessible on the `action` instance.
+
+**Before**
+
+```ts
+onWillAppear(ev: WillAppearEvent): void {
+    ev.deviceId;
+}
+```
+
+**After**
+
+```ts
+onWillAppear(ev: WillAppearEvent): void {
+    ev.action.device.id;
+}
+```
+
+### sendToPropertyInspector
+
+The `Action.sendToPropertyInspector` has been removed, in favour of sending message directly to the current property inspector, to prevent sending messages to actions without a property inspector active.
+
+**Before**
+
+```ts
+onPropertyInspectorDidAppear(ev: PropertyInspectorDidAppearEvent): void {
+    ev.action.sendToPropertyInspector(...);
+}
+```
+
+**After**
+
+```ts
+onPropertyInspectorDidAppear(ev: PropertyInspectorDidAppearEvent): void {
+    streamDeck.ui.current?.sendToPropertyInspector(...);
+}
+```
+
+### UI Connecting Events
+
+The `onDidConnect` event listener has been renamed within the UI to `onConnected`, and a new `onConnecting` event listener has been added to support the start of the connection being initialized.
+
+**Before**
+
+```ts
+streamDeck.onDidConnect(listener);
+```
+
+**After**
+
+```ts
+streamDeck.onConnected(listener);
+```
 
 ## <a id="v0-4-0"></a>v0.4.0
 
