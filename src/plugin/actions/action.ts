@@ -1,12 +1,9 @@
-import type streamDeck from "../";
-
 import type { DidReceiveSettings } from "../../api";
-import type { JsonObject, JsonValue } from "../../common/json";
+import type { JsonObject } from "../../common/json";
 import { connection } from "../connection";
 import { ActionContext } from "./context";
 import type { DialAction } from "./dial";
 import type { KeyAction } from "./key";
-import type { SingletonAction } from "./singleton-action";
 
 /**
  * Provides a contextualized instance of an {@link Action}, allowing for direct communication with the Stream Deck.
@@ -49,20 +46,6 @@ export class Action<T extends JsonObject = JsonObject> extends ActionContext {
 	 */
 	public isKey(): this is KeyAction {
 		return this.controller === "Keypad";
-	}
-
-	/**
-	 * Sends the {@link payload} to the property inspector. The plugin can also receive information from the property inspector via {@link streamDeck.ui.onSendToPlugin} and {@link SingletonAction.onSendToPlugin}
-	 * allowing for bi-directional communication.
-	 * @param payload Payload to send to the property inspector.
-	 * @returns `Promise` resolved when {@link payload} has been sent to the property inspector.
-	 */
-	public sendToPropertyInspector(payload: JsonValue): Promise<void> {
-		return connection.send({
-			event: "sendToPropertyInspector",
-			context: this.id,
-			payload
-		});
 	}
 
 	/**

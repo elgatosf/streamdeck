@@ -1,4 +1,4 @@
-import { DeviceType, type GetSettings, type SendToPropertyInspector, type SetSettings, type ShowAlert, type WillAppear } from "../../../api";
+import { DeviceType, type GetSettings, type SetSettings, type ShowAlert, type WillAppear } from "../../../api";
 import { Settings } from "../../../api/__mocks__/events";
 import { type JsonObject } from "../../../common/json";
 import { connection } from "../../connection";
@@ -162,26 +162,6 @@ describe("Action", () => {
 	describe("sending", () => {
 		let action!: Action;
 		beforeAll(() => (action = new Action(source)));
-
-		/**
-		 * Asserts {@link Action.sendToPropertyInspector} forwards the command to the {@link connection}.
-		 */
-		it("sendToPropertyInspector", async () => {
-			// Arrange, act.
-			await action.sendToPropertyInspector({
-				name: "Elgato"
-			});
-
-			// Assert.
-			expect(connection.send).toHaveBeenCalledTimes(1);
-			expect(connection.send).toHaveBeenCalledWith<[SendToPropertyInspector]>({
-				context: action.id,
-				event: "sendToPropertyInspector",
-				payload: {
-					name: "Elgato"
-				}
-			});
-		});
 
 		/**
 		 * Asserts {@link Action.setSettings} forwards the command to the {@link connection}.
