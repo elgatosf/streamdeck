@@ -12,7 +12,7 @@
 
 </div>
 
-Welcome to the Stream Deck SDK. provides everything you need to create Stream Deck plugins, so you can focus on the fun stuff!
+Welcome to the Stream Deck SDK — Designed to make creating plugins for Stream Deck easy, the Stream Deck SDK provides everything you need to connect and communicate with Stream Deck app, letting you focus on the fun stuff.
 
 > Creating Stream Deck plugins with Node.js requires Node.js v20. When installing Node.js, we recommended using a version manager such as [nvm](https://github.com/creationix/nvm) (macOS) or [nvm-windows](https://github.com/coreybutler/nvm-windows) (Windows).
 
