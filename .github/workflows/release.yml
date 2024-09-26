@@ -25,7 +25,7 @@ jobs:
       - name: "🗃️ Setup Node"
         uses: actions/setup-node@v4
         with:
-          node-version: "20.8.1"
+          node-version: "20.15.0"
           registry-url: "https://registry.npmjs.org"
 
       - name: "📐 Install dependencies"
