@@ -60,7 +60,7 @@ describe("createLogger", () => {
 			// Assert.
 			expect(Logger).toHaveBeenCalledWith<[LoggerOptions]>({
 				level: LogLevel.INFO,
-				minimumLevel: LogLevel.INFO,
+				minimumLevel: LogLevel.DEBUG,
 				targets: [spyOnFileTarget.mock.instances[0]]
 			});
 		});
