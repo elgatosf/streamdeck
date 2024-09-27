@@ -150,7 +150,7 @@ export type LoggerOptions = {
 	/**
 	 * Minimum level the logger can be set to.
 	 */
-	minimumLevel?: LogLevel.INFO | LogLevel.TRACE;
+	minimumLevel?: LogLevel;
 
 	/**
 	 * Optional value that defines the scope of the logger.

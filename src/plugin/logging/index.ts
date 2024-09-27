@@ -26,7 +26,7 @@ if (isDebugMode()) {
  */
 export const logger = new Logger({
 	level: isDebugMode() ? LogLevel.DEBUG : LogLevel.INFO,
-	minimumLevel: isDebugMode() ? LogLevel.TRACE : LogLevel.INFO,
+	minimumLevel: isDebugMode() ? LogLevel.TRACE : LogLevel.DEBUG,
 	targets
 });
 

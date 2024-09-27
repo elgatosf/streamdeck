@@ -12,6 +12,12 @@
 
 # Change Log
 
+## 1.0.1
+
+### ♻️ Update
+
+-   Update minimum allowed log level in production to be `DEBUG` to assist with debugging (default remains `INFO`).
+
 ## 1.0.0
 
 ### ✨ New
