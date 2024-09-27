@@ -18,6 +18,18 @@
 
 Actions provided to events have been improved to more accurately reflect methods and information available to them. For this reason, some methods may not be available until type-narrowing within events that apply to both keys and dials.
 
+The following methods are now accessible through type-narrowing.
+
+-   `KeyAction`, narrowed using `isKey()`, provides access to:
+    -   `setImage` (options)
+    -   `setState`
+    -   `setTitle` (options)
+    -   `showOk`
+-   `DialAction`, narrowed using `isDial()`, provides access to:
+    -   `setFeedback`
+    -   `setFeedbackLayout`
+    -   `setTriggerDescription`
+
 **Before**
 
 ```ts
@@ -25,6 +37,7 @@ onWillAppear(ev: WillAppearEvent): void {
     ev.action.setFeedback({
         title: "Hello world"
     });
+    ev.action.setState(0);
 }
 ```
 
@@ -36,6 +49,8 @@ onWillAppear(ev: WillAppearEvent): void {
         ev.action.setFeedback({
             title: "Hello world"
         });
+    } else {
+        ev.action.setState(0) // <- Action is a key, as it is not a dial
     }
 }
 ```
