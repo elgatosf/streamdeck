@@ -88,8 +88,11 @@ describe("index", () => {
 		// Arrange.
 		expect(I18nProvider).toBeCalledTimes(0);
 
-		// Act, assert.
-		streamDeck.i18n;
+		// Act.
+		// eslint-disable-next-line @typescript-eslint/no-unused-expressions
+		streamDeck.i18n; // Evaluate getter.
+
+		// Assert.
 		expect(I18nProvider).toHaveBeenCalledTimes(1);
 	});
 });

@@ -6,7 +6,6 @@ export type Expect<T extends true> = T;
 /**
  * Utility type for prettifying a intersection / union type to a flat structure.
  */
-// eslint-disable-next-line @typescript-eslint/ban-types
 export type Prettify<T> = { [k in keyof T]: T[k] extends object ? Prettify<T[k]> : T[k] } & {};
 
 /**

@@ -306,7 +306,8 @@ describe("connection", () => {
 			const spyOnLoggerDebug = jest.spyOn(scopedLogger, "debug");
 
 			// Act.
-			connection.registrationParameters;
+			// eslint-disable-next-line @typescript-eslint/no-unused-expressions
+			connection.registrationParameters; // Evaluate getter.
 
 			// Assert.
 			expect(spyOnLoggerDebug).toHaveBeenCalledTimes(4);
@@ -320,9 +321,12 @@ describe("connection", () => {
 		 * Asserts the {@link Connection} creates a scoped {@link Logger}, when parsing registration parameters.
 		 */
 		it("creates a scoped logger", () => {
-			// Arrange, act.
+			// Arrange.
 			const spyOnCreateScope = jest.spyOn(logger, "createScope");
-			connection.registrationParameters;
+
+			// Act.
+			// eslint-disable-next-line @typescript-eslint/no-unused-expressions
+			connection.registrationParameters; // Evaluate getter.
 
 			// Assert.
 			expect(spyOnCreateScope).toBeCalledWith("RegistrationParameters");

@@ -115,7 +115,7 @@ export class MessageGateway<TAction> extends EventEmitter<MessageGatewayEventMap
 	 * @returns Disposable capable of removing the route handler.
 	 */
 	public route<TBody extends JsonValue = JsonValue>(path: string, handler: UnscopedMessageHandler<TAction, TBody>, options?: RouteConfiguration<TAction>): IDisposable {
-		options = { filter: () => true, ...options };
+		options = { filter: (): boolean => true, ...options };
 
 		return this.routes.disposableOn(path, async (ev: InternalRouteHandlerEventArgs<TAction, TBody>) => {
 			if (options?.filter && options.filter(ev.request.action)) {
