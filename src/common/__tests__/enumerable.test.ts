@@ -195,6 +195,40 @@ describe("Enumerable", () => {
 				expect(enumerable.length).toBe(3);
 			});
 		});
+
+		/**
+		 * With IterableIterator<T> delegate.
+		 */
+		describe("IterableIterator", () => {
+			it("iterates mutated map", () => {
+				// Arrange.
+				const fn = jest.fn();
+				const itr = function* () {
+					yield "One";
+					yield "Two";
+				};
+				const enumerable = new Enumerable(itr);
+
+				// Act, assert.
+				enumerable.forEach(fn);
+				expect(enumerable.length).toBe(2);
+				expect(fn).toHaveBeenCalledTimes(2);
+				expect(fn).toHaveBeenNthCalledWith(1, "One");
+				expect(fn).toHaveBeenNthCalledWith(2, "Two");
+			});
+
+			it("reads length", () => {
+				// Arrange.
+				const itr = function* () {
+					yield "One";
+					yield "Two";
+				};
+
+				// Act, assert.
+				const enumerable = new Enumerable(itr);
+				expect(enumerable.length).toBe(2);
+			});
+		});
 	});
 
 	/**

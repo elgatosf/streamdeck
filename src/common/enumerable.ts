@@ -31,9 +31,16 @@ export class Enumerable<T> implements IterableIterator<T> {
 			this.#items = (): IterableIterator<T> => source.values();
 			this.#length = (): number => source.size;
 		} else {
-			// IterableIterator
+			// IterableIterator delegate
 			this.#items = source;
-			this.#length = () => this.reduce((count) => count++, 0);
+			this.#length = () => {
+				let i = 0;
+				for (const _ of this) {
+					i++;
+				}
+
+				return i;
+			};
 		}
 	}
 
