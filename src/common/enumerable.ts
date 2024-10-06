@@ -63,6 +63,21 @@ export class Enumerable<T> implements IterableIterator<T> {
 	}
 
 	/**
+	 * Transforms each item within this iterator to an indexed pair, with each pair represented as an array.
+	 * @returns An iterator with each indexed pair.
+	 */
+	public asIndexedPairs(): Enumerable<[number, T]> {
+		return new Enumerable(
+			function* (this: Enumerable<T>) {
+				let i = 0;
+				for (const item of this) {
+					yield [i++, item] as [number, T];
+				}
+			}.bind(this)
+		);
+	}
+
+	/**
 	 * Produces a new iterator with the first items dropped, up to the specified limit.
 	 * @param limit The number of elements to drop from the start of the iteration.
 	 * @returns An iterator of items after the limit.

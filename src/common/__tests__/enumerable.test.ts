@@ -249,6 +249,22 @@ describe("Enumerable", () => {
 	});
 
 	/**
+	 * Asserts the iterator of an {@link asIndexedPairs}.
+	 */
+	test.only("asIndexedPairs", () => {
+		// Arrange, act.
+		const fn = jest.fn();
+		const res = enumerable.asIndexedPairs();
+
+		// Assert.
+		res.forEach(fn);
+		expect(fn).toHaveBeenCalledTimes(3);
+		expect(fn).toHaveBeenNthCalledWith(1, [0, { name: "Facecam" }]);
+		expect(fn).toHaveBeenNthCalledWith(2, [1, { name: "Stream Deck" }]);
+		expect(fn).toHaveBeenNthCalledWith(3, [2, { name: "Wave DX" }]);
+	});
+
+	/**
 	 * Provides assertions for {@link Enumerable.drop}.
 	 */
 	describe("drop", () => {
@@ -263,9 +279,9 @@ describe("Enumerable", () => {
 
 			// Act.
 			const res = enumerable.drop(1);
-			res.forEach(fn);
 
 			// Assert.
+			res.forEach(fn);
 			expect(res.length).toBe(2);
 			expect(fn).toHaveBeenCalledTimes(2);
 			expect(fn).toHaveBeenNthCalledWith(1, { name: "Stream Deck" });
@@ -278,9 +294,9 @@ describe("Enumerable", () => {
 
 			// Act.
 			const res = enumerable.drop(2);
-			res.forEach(fn);
 
 			// Assert.
+			res.forEach(fn);
 			expect(res.length).toBe(1);
 			expect(fn).toHaveBeenCalledTimes(1);
 			expect(fn).toHaveBeenCalledWith({ name: "Wave DX" });
@@ -292,9 +308,9 @@ describe("Enumerable", () => {
 
 			// Act.
 			const res = enumerable.drop(4);
-			res.forEach(fn);
 
 			// Assert.
+			res.forEach(fn);
 			expect(res.length).toBe(0);
 			expect(fn).toHaveBeenCalledTimes(0);
 		});
