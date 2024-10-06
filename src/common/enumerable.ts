@@ -84,7 +84,7 @@ export class Enumerable<T> implements IterableIterator<T> {
 	 */
 	public drop(limit: number): Enumerable<T> {
 		if (isNaN(limit) || limit < 0) {
-			throw new RangeError("limit must be a number greater than 0");
+			throw new RangeError("limit must be 0, or a positive number");
 		}
 
 		return new Enumerable(
@@ -261,6 +261,28 @@ export class Enumerable<T> implements IterableIterator<T> {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Produces a new iterator with the items, from 0, up to the specified limit.
+	 * @param limit Limit of items to take.
+	 * @returns An iterator of items from 0 to the limit.
+	 */
+	public take(limit: number): Enumerable<T> {
+		if (isNaN(limit) || limit < 0) {
+			throw new RangeError("limit must be 0, or a positive number");
+		}
+
+		return new Enumerable(
+			function* (this: Enumerable<T>) {
+				let i = 0;
+				for (const item of this) {
+					if (i++ < limit) {
+						yield item;
+					}
+				}
+			}.bind(this)
+		);
 	}
 
 	/**

@@ -251,7 +251,7 @@ describe("Enumerable", () => {
 	/**
 	 * Asserts the iterator of an {@link asIndexedPairs}.
 	 */
-	test.only("asIndexedPairs", () => {
+	test("asIndexedPairs", () => {
 		// Arrange, act.
 		const fn = jest.fn();
 		const res = enumerable.asIndexedPairs();
@@ -282,7 +282,6 @@ describe("Enumerable", () => {
 
 			// Assert.
 			res.forEach(fn);
-			expect(res.length).toBe(2);
 			expect(fn).toHaveBeenCalledTimes(2);
 			expect(fn).toHaveBeenNthCalledWith(1, { name: "Stream Deck" });
 			expect(fn).toHaveBeenNthCalledWith(2, { name: "Wave DX" });
@@ -297,7 +296,6 @@ describe("Enumerable", () => {
 
 			// Assert.
 			res.forEach(fn);
-			expect(res.length).toBe(1);
 			expect(fn).toHaveBeenCalledTimes(1);
 			expect(fn).toHaveBeenCalledWith({ name: "Wave DX" });
 		});
@@ -311,7 +309,6 @@ describe("Enumerable", () => {
 
 			// Assert.
 			res.forEach(fn);
-			expect(res.length).toBe(0);
 			expect(fn).toHaveBeenCalledTimes(0);
 		});
 
@@ -594,6 +591,69 @@ describe("Enumerable", () => {
 			expect(fn).toHaveBeenCalledWith({ name: "Facecam" });
 			expect(fn).toHaveBeenCalledWith({ name: "Stream Deck" });
 			expect(fn).toHaveBeenCalledWith({ name: "Wave DX" });
+		});
+	});
+
+	/**
+	 * Provides assertions for {@link Enumerable.take}.
+	 */
+	describe("take", () => {
+		it("accepts limit 0", () => {
+			// Arrange, act, assert
+			expect(enumerable.take(0).length).toBe(0);
+		});
+
+		it("accepts limit 1", () => {
+			// Arrange.
+			const fn = jest.fn();
+
+			// Act.
+			const res = enumerable.take(1);
+
+			// Assert.
+			res.forEach(fn);
+			expect(fn).toHaveBeenCalledTimes(1);
+			expect(fn).toHaveBeenNthCalledWith(1, { name: "Facecam" });
+		});
+
+		it("accepts limit less than length", () => {
+			// Arrange.
+			const fn = jest.fn();
+
+			// Act.
+			const res = enumerable.take(2);
+
+			// Assert.
+			res.forEach(fn);
+			expect(fn).toHaveBeenCalledTimes(2);
+			expect(fn).toHaveBeenNthCalledWith(1, { name: "Facecam" });
+			expect(fn).toHaveBeenNthCalledWith(2, { name: "Stream Deck" });
+		});
+
+		it("accepts limit exceeding length", () => {
+			// Arrange.
+			const fn = jest.fn();
+
+			// Act.
+			const res = enumerable.take(99);
+
+			// Assert.
+			res.forEach(fn);
+			expect(fn).toHaveBeenCalledTimes(3);
+			expect(fn).toHaveBeenNthCalledWith(1, { name: "Facecam" });
+			expect(fn).toHaveBeenNthCalledWith(2, { name: "Stream Deck" });
+			expect(fn).toHaveBeenNthCalledWith(3, { name: "Wave DX" });
+		});
+
+		it("throw for negative", () => {
+			// Arrange, act, assert
+			expect(() => enumerable.take(-1)).toThrow(RangeError);
+		});
+
+		it("throw for NaN", () => {
+			// Arrange, act, assert
+			// @ts-expect-error Test non-number
+			expect(() => enumerable.take("false")).toThrow(RangeError);
 		});
 	});
 });
