@@ -1,7 +1,7 @@
 /**
  * Provides a read-only iterable collection of items that also acts as a partial polyfill for iterator helpers.
  */
-export class Enumerable<T> implements IterableIterator<T> {
+export class Enumerable<T> implements Iterable<T> {
 	/**
 	 * Backing function responsible for providing the iterator of items.
 	 */
@@ -90,9 +90,9 @@ export class Enumerable<T> implements IterableIterator<T> {
 		return new Enumerable(
 			function* (this: Enumerable<T>) {
 				let i = 0;
-				for (const foo of this.#items()) {
+				for (const item of this) {
 					if (i++ >= limit) {
-						yield foo;
+						yield item;
 					}
 				}
 			}.bind(this)
@@ -105,7 +105,7 @@ export class Enumerable<T> implements IterableIterator<T> {
 	 * @returns `true` when all items satisfy the predicate; otherwise `false`.
 	 */
 	public every(predicate: (value: T) => boolean): boolean {
-		for (const item of this.#items()) {
+		for (const item of this) {
 			if (!predicate(item)) {
 				return false;
 			}
@@ -122,7 +122,7 @@ export class Enumerable<T> implements IterableIterator<T> {
 	public filter(predicate: (value: T) => boolean): Enumerable<T> {
 		return new Enumerable(
 			function* (this: Enumerable<T>) {
-				for (const item of this.#items()) {
+				for (const item of this) {
 					if (predicate(item)) {
 						yield item;
 					}
@@ -137,7 +137,7 @@ export class Enumerable<T> implements IterableIterator<T> {
 	 * @returns The first item that satisfied the predicate; otherwise `undefined`.
 	 */
 	public find(predicate: (value: T) => boolean): T | undefined {
-		for (const item of this.#items()) {
+		for (const item of this) {
 			if (predicate(item)) {
 				return item;
 			}
@@ -151,7 +151,7 @@ export class Enumerable<T> implements IterableIterator<T> {
 	 */
 	public findLast(predicate: (value: T) => boolean): T | undefined {
 		let result = undefined;
-		for (const item of this.#items()) {
+		for (const item of this) {
 			if (predicate(item)) {
 				result = item;
 			}
@@ -182,7 +182,7 @@ export class Enumerable<T> implements IterableIterator<T> {
 	 * @param fn Function to invoke against each item.
 	 */
 	public forEach(fn: (item: T) => void): void {
-		for (const item of this.#items()) {
+		for (const item of this) {
 			fn(item);
 		}
 	}
@@ -204,18 +204,11 @@ export class Enumerable<T> implements IterableIterator<T> {
 	public map<U>(mapper: (value: T) => U): Enumerable<U> {
 		return new Enumerable<U>(
 			function* (this: Enumerable<T>) {
-				for (const item of this.#items()) {
+				for (const item of this) {
 					yield mapper(item);
 				}
 			}.bind(this)
 		);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	public next(...args: [] | [undefined]): IteratorResult<T, any> {
-		return this.#items().next(...args);
 	}
 
 	/**
@@ -247,7 +240,7 @@ export class Enumerable<T> implements IterableIterator<T> {
 		}
 
 		let result = initial;
-		for (const item of this.#items()) {
+		for (const item of this) {
 			if (result === undefined) {
 				result = item;
 			} else {
@@ -259,19 +252,12 @@ export class Enumerable<T> implements IterableIterator<T> {
 	}
 
 	/**
-	 * @inheritdoc
-	 */
-	public return?<TReturn>(value?: TReturn): IteratorResult<T, TReturn | undefined> {
-		return { value, done: true };
-	}
-
-	/**
 	 * Determines whether an item in the collection exists that satisfies the specified predicate.
 	 * @param predicate Function used to search for an item.
 	 * @returns `true` when the item was found; otherwise `false`.
 	 */
 	public some(predicate: (value: T) => boolean): boolean {
-		for (const item of this.#items()) {
+		for (const item of this) {
 			if (predicate(item)) {
 				return true;
 			}
@@ -300,13 +286,6 @@ export class Enumerable<T> implements IterableIterator<T> {
 				}
 			}.bind(this)
 		);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	public throw?<TReturn>(e?: TReturn): never {
-		throw e;
 	}
 
 	/**
