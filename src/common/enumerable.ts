@@ -38,8 +38,9 @@ export class Enumerable<T> implements IterableIterator<T> {
 		} else {
 			// IterableIterator delegate
 			this.#items = source;
-			this.#length = () => {
+			this.#length = (): number => {
 				let i = 0;
+				// eslint-disable-next-line @typescript-eslint/no-unused-vars
 				for (const _ of this) {
 					i++;
 				}
@@ -69,11 +70,11 @@ export class Enumerable<T> implements IterableIterator<T> {
 
 	/**
 	 * Transforms each item within this iterator to an indexed pair, with each pair represented as an array.
-	 * @returns An iterator with each indexed pair.
+	 * @returns An iterator of indexed pairs.
 	 */
 	public asIndexedPairs(): Enumerable<[number, T]> {
 		return new Enumerable(
-			function* (this: Enumerable<T>) {
+			function* (this: Enumerable<T>): IterableIterator<[number, T]> {
 				let i = 0;
 				for (const item of this) {
 					yield [i++, item] as [number, T];
@@ -83,7 +84,7 @@ export class Enumerable<T> implements IterableIterator<T> {
 	}
 
 	/**
-	 * Produces a new iterator with the first items dropped, up to the specified limit.
+	 * Returns an iterator with the first items dropped, up to the specified limit.
 	 * @param limit The number of elements to drop from the start of the iteration.
 	 * @returns An iterator of items after the limit.
 	 */
@@ -93,7 +94,7 @@ export class Enumerable<T> implements IterableIterator<T> {
 		}
 
 		return new Enumerable(
-			function* (this: Enumerable<T>) {
+			function* (this: Enumerable<T>): IterableIterator<T> {
 				let i = 0;
 				for (const item of this) {
 					if (i++ >= limit) {
@@ -120,13 +121,13 @@ export class Enumerable<T> implements IterableIterator<T> {
 	}
 
 	/**
-	 * Returns an iterable of items that meet the specified condition.
+	 * Returns an iterator of items that meet the specified predicate..
 	 * @param predicate Function that determines which items to filter.
-	 * @yields The filtered items; items that returned `true` when invoked against the predicate.
+	 * @returns An iterator of filtered items.
 	 */
 	public filter(predicate: (value: T) => boolean): Enumerable<T> {
 		return new Enumerable(
-			function* (this: Enumerable<T>) {
+			function* (this: Enumerable<T>): IterableIterator<T> {
 				for (const item of this) {
 					if (predicate(item)) {
 						yield item;
@@ -166,13 +167,13 @@ export class Enumerable<T> implements IterableIterator<T> {
 	}
 
 	/**
-	 * Yields value of each transformed item within this iterator, by calling the specified mapper function.
+	 * Returns an iterator containing items transformed using the specified mapper function.
 	 * @param mapper Function responsible for transforming each item.
-	 * @returns An iterator of the transformed items.
+	 * @returns An iterator of transformed items.
 	 */
 	public flatMap<U>(mapper: (item: T) => IterableIterator<U>): Enumerable<U> {
 		return new Enumerable(
-			function* (this: Enumerable<T>) {
+			function* (this: Enumerable<T>): IterableIterator<U> {
 				for (const item of this) {
 					for (const mapped of mapper(item)) {
 						yield mapped;
@@ -202,13 +203,13 @@ export class Enumerable<T> implements IterableIterator<T> {
 	}
 
 	/**
-	 * Maps each item within the collection to a new structure using the specified mapping function.
+	 * Returns an iterator of mapped items using the mapper function.
 	 * @param mapper Function responsible for mapping the items.
-	 * @yields The mapped items.
+	 * @returns An iterator of mapped items.
 	 */
 	public map<U>(mapper: (value: T) => U): Enumerable<U> {
 		return new Enumerable<U>(
-			function* (this: Enumerable<T>) {
+			function* (this: Enumerable<T>): IterableIterator<U> {
 				for (const item of this) {
 					yield mapper(item);
 				}
@@ -302,7 +303,7 @@ export class Enumerable<T> implements IterableIterator<T> {
 	}
 
 	/**
-	 * Produces a new iterator with the items, from 0, up to the specified limit.
+	 * Returns an iterator with the items, from 0, up to the specified limit.
 	 * @param limit Limit of items to take.
 	 * @returns An iterator of items from 0 to the limit.
 	 */
@@ -312,7 +313,7 @@ export class Enumerable<T> implements IterableIterator<T> {
 		}
 
 		return new Enumerable(
-			function* (this: Enumerable<T>) {
+			function* (this: Enumerable<T>): IterableIterator<T> {
 				let i = 0;
 				for (const item of this) {
 					if (i++ < limit) {
@@ -326,7 +327,6 @@ export class Enumerable<T> implements IterableIterator<T> {
 	/**
 	 * Acts as if a `throw` statement is inserted in the generator's body at the current suspended position.
 	 * @param e Error to throw.
-	 * @returns The current iterator result.
 	 */
 	public throw?<TReturn>(e?: TReturn): IteratorResult<T, TReturn | undefined> {
 		throw e;

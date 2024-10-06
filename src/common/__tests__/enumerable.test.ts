@@ -360,7 +360,7 @@ describe("Enumerable", () => {
 	});
 
 	/**
-	 * Asserts the iterator of an {@link asIndexedPairs}.
+	 * Asserts the iterator of an {@link Enumerable.asIndexedPairs}.
 	 */
 	test("asIndexedPairs", () => {
 		// Arrange, act.
