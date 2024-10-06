@@ -1,11 +1,11 @@
 /**
- * Provides a read-only iterable collection of items.
+ * Provides a read-only iterable collection of items that also acts as a partial polyfill for iterator helpers.
  */
-export class Enumerable<T> {
+export class Enumerable<T> implements IterableIterator<T> {
 	/**
 	 * Backing function responsible for providing the iterator of items.
 	 */
-	readonly #items: () => Iterable<T>;
+	readonly #items: () => IterableIterator<T>;
 
 	/**
 	 * Backing function for {@link Enumerable.length}.
@@ -17,16 +17,23 @@ export class Enumerable<T> {
 	 * @param source Source that contains the items.
 	 * @returns The enumerable.
 	 */
-	constructor(source: Enumerable<T> | Map<unknown, T> | Set<T> | T[]) {
+	constructor(source: Enumerable<T> | Map<unknown, T> | Set<T> | T[] | (() => IterableIterator<T>)) {
 		if (source instanceof Enumerable) {
+			// Enumerable
 			this.#items = source.#items;
 			this.#length = source.#length;
 		} else if (Array.isArray(source)) {
-			this.#items = (): Iterable<T> => source;
+			// Array
+			this.#items = (): IterableIterator<T> => source.values();
 			this.#length = (): number => source.length;
-		} else {
+		} else if (source instanceof Map || source instanceof Set) {
+			// Map or Set
 			this.#items = (): IterableIterator<T> => source.values();
 			this.#length = (): number => source.size;
+		} else {
+			// IterableIterator
+			this.#items = source;
+			this.#length = () => this.reduce((count) => count++, 0);
 		}
 	}
 
@@ -68,12 +75,16 @@ export class Enumerable<T> {
 	 * @param predicate Function that determines which items to filter.
 	 * @yields The filtered items; items that returned `true` when invoked against the predicate.
 	 */
-	public *filter(predicate: (value: T) => boolean): IterableIterator<T> {
-		for (const item of this.#items()) {
-			if (predicate(item)) {
-				yield item;
-			}
-		}
+	public filter(predicate: (value: T) => boolean): Enumerable<T> {
+		return new Enumerable(
+			function* (this: Enumerable<T>) {
+				for (const item of this.#items()) {
+					if (predicate(item)) {
+						yield item;
+					}
+				}
+			}.bind(this)
+		);
 	}
 
 	/**
@@ -129,10 +140,21 @@ export class Enumerable<T> {
 	 * @param mapper Function responsible for mapping the items.
 	 * @yields The mapped items.
 	 */
-	public *map<U>(mapper: (value: T) => U): Iterable<U> {
-		for (const item of this.#items()) {
-			yield mapper(item);
-		}
+	public map<U>(mapper: (value: T) => U): Enumerable<U> {
+		return new Enumerable<U>(
+			function* (this: Enumerable<T>) {
+				for (const item of this.#items()) {
+					yield mapper(item);
+				}
+			}.bind(this)
+		);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public next(...args: [] | [undefined]): IteratorResult<T, any> {
+		return this.#items().next(...args);
 	}
 
 	/**
@@ -176,6 +198,13 @@ export class Enumerable<T> {
 	}
 
 	/**
+	 * @inheritdoc
+	 */
+	public return?<TReturn>(value?: TReturn): IteratorResult<T, TReturn | undefined> {
+		return { value, done: true };
+	}
+
+	/**
 	 * Determines whether an item in the collection exists that satisfies the specified predicate.
 	 * @param predicate Function used to search for an item.
 	 * @returns `true` when the item was found; otherwise `false`.
@@ -188,5 +217,20 @@ export class Enumerable<T> {
 		}
 
 		return false;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public throw?<TReturn>(e?: TReturn): never {
+		throw e;
+	}
+
+	/**
+	 * Converts this iterator to an array.
+	 * @returns The array of items from this iterator.
+	 */
+	public toArray(): T[] {
+		throw new Error("Not implemented");
 	}
 }
