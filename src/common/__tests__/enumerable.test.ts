@@ -656,4 +656,33 @@ describe("Enumerable", () => {
 			expect(() => enumerable.take("false")).toThrow(RangeError);
 		});
 	});
+
+	/**
+	 * Provides assertions for {@link Enumerable.toArray}.
+	 */
+	describe("toArray", () => {
+		it("returns a new array of items", () => {
+			// Arrange.
+			const arr = ["One", "Two"];
+			const enumerable = new Enumerable(arr);
+
+			// Act.
+			const res = enumerable.toArray();
+
+			// Assert.
+			expect(arr).toEqual(res);
+			expect(arr).not.toBe(res);
+		});
+
+		it("can return an empty array", () => {
+			// Arrange.
+			const enumerable = new Enumerable(function* () {});
+
+			// Act.
+			const res = enumerable.toArray();
+
+			// Assert
+			expect(res).toHaveLength(0);
+		});
+	});
 });

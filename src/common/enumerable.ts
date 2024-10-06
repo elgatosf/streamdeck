@@ -297,6 +297,6 @@ export class Enumerable<T> implements IterableIterator<T> {
 	 * @returns The array of items from this iterator.
 	 */
 	public toArray(): T[] {
-		throw new Error("Not implemented");
+		return Array.from(this);
 	}
 }
