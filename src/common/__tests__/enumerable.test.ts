@@ -249,6 +249,69 @@ describe("Enumerable", () => {
 	});
 
 	/**
+	 * Provides assertions for {@link Enumerable.drop}.
+	 */
+	describe("drop", () => {
+		it("accepts limit 0", () => {
+			// Arrange, act, assert
+			expect(enumerable.drop(0).length).toBe(source.length);
+		});
+
+		it("accepts limit 1", () => {
+			// Arrange.
+			const fn = jest.fn();
+
+			// Act.
+			const res = enumerable.drop(1);
+			res.forEach(fn);
+
+			// Assert.
+			expect(res.length).toBe(2);
+			expect(fn).toHaveBeenCalledTimes(2);
+			expect(fn).toHaveBeenNthCalledWith(1, { name: "Stream Deck" });
+			expect(fn).toHaveBeenNthCalledWith(2, { name: "Wave DX" });
+		});
+
+		it("accepts limit less than length", () => {
+			// Arrange.
+			const fn = jest.fn();
+
+			// Act.
+			const res = enumerable.drop(2);
+			res.forEach(fn);
+
+			// Assert.
+			expect(res.length).toBe(1);
+			expect(fn).toHaveBeenCalledTimes(1);
+			expect(fn).toHaveBeenCalledWith({ name: "Wave DX" });
+		});
+
+		it("accepts limit exceeding length", () => {
+			// Arrange.
+			const fn = jest.fn();
+
+			// Act.
+			const res = enumerable.drop(4);
+			res.forEach(fn);
+
+			// Assert.
+			expect(res.length).toBe(0);
+			expect(fn).toHaveBeenCalledTimes(0);
+		});
+
+		it("throw for negative", () => {
+			// Arrange, act, assert
+			expect(() => enumerable.drop(-1)).toThrow(RangeError);
+		});
+
+		it("throw for NaN", () => {
+			// Arrange, act, assert
+			// @ts-expect-error Test non-number
+			expect(() => enumerable.drop("false")).toThrow(RangeError);
+		});
+	});
+
+	/**
 	 * Provides assertions for {@link Enumerable.every}.
 	 */
 	describe("every", () => {

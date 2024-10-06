@@ -63,6 +63,28 @@ export class Enumerable<T> implements IterableIterator<T> {
 	}
 
 	/**
+	 * Produces a new iterator with the first items dropped, up to the specified limit.
+	 * @param limit The number of elements to drop from the start of the iteration.
+	 * @returns An iterator of items after the limit.
+	 */
+	public drop(limit: number): Enumerable<T> {
+		if (isNaN(limit) || limit < 0) {
+			throw new RangeError("limit must be a number greater than 0");
+		}
+
+		return new Enumerable(
+			function* (this: Enumerable<T>) {
+				let i = 0;
+				for (const foo of this.#items()) {
+					if (i++ >= limit) {
+						yield foo;
+					}
+				}
+			}.bind(this)
+		);
+	}
+
+	/**
 	 * Determines whether all items satisfy the specified predicate.
 	 * @param predicate Function that determines whether each item fulfils the predicate.
 	 * @returns `true` when all items satisfy the predicate; otherwise `false`.
