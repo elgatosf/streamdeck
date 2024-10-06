@@ -1,7 +1,7 @@
 /**
  * Provides a read-only iterable collection of items that also acts as a partial polyfill for iterator helpers.
  */
-export class Enumerable<T> implements Iterable<T> {
+export class Enumerable<T> implements IterableIterator<T> {
 	/**
 	 * Backing function responsible for providing the iterator of items.
 	 */
@@ -11,6 +11,11 @@ export class Enumerable<T> implements Iterable<T> {
 	 * Backing function for {@link Enumerable.length}.
 	 */
 	readonly #length: () => number;
+
+	/**
+	 * Captured iterator from the underlying iterable; used to fulfil {@link IterableIterator} methods.
+	 */
+	#iterator: Iterator<T> | undefined;
 
 	/**
 	 * Initializes a new instance of the {@link Enumerable} class.
@@ -212,6 +217,22 @@ export class Enumerable<T> implements Iterable<T> {
 	}
 
 	/**
+	 * Captures the underlying iterable, if it is not already captured, and gets the next item in the iterator.
+	 * @param args Optional values to send to the generator.
+	 * @returns An iterator result of the current iteration; when `done` is `false`, the current `value` is provided.
+	 */
+	public next(...args: [] | [undefined]): IteratorResult<T, T> {
+		this.#iterator ??= this.#items();
+		const result = this.#iterator.next(...args);
+
+		if (result.done) {
+			this.#iterator = undefined;
+		}
+
+		return result;
+	}
+
+	/**
 	 * Applies the accumulator function to each item, and returns the result.
 	 * @param accumulator Function responsible for accumulating all items within the collection.
 	 * @returns Result of accumulating each value.
@@ -252,6 +273,20 @@ export class Enumerable<T> implements Iterable<T> {
 	}
 
 	/**
+	 * Acts as if a `return` statement is inserted in the generator's body at the current suspended position.
+	 *
+	 * Please note, in the context of an {@link Enumerable}, calling {@link Enumerable.return} will clear the captured iterator,
+	 * if there is one. Subsequent calls to {@link Enumerable.next} will result in re-capturing the underlying iterable, and
+	 * yielding items from the beginning.
+	 * @param value Value to return.
+	 * @returns The value as an iterator result.
+	 */
+	public return?<TReturn>(value?: TReturn): IteratorResult<T, TReturn | undefined> {
+		this.#iterator = undefined;
+		return { done: true, value };
+	}
+
+	/**
 	 * Determines whether an item in the collection exists that satisfies the specified predicate.
 	 * @param predicate Function used to search for an item.
 	 * @returns `true` when the item was found; otherwise `false`.
@@ -286,6 +321,15 @@ export class Enumerable<T> implements Iterable<T> {
 				}
 			}.bind(this)
 		);
+	}
+
+	/**
+	 * Acts as if a `throw` statement is inserted in the generator's body at the current suspended position.
+	 * @param e Error to throw.
+	 * @returns The current iterator result.
+	 */
+	public throw?<TReturn>(e?: TReturn): IteratorResult<T, TReturn | undefined> {
+		throw e;
 	}
 
 	/**

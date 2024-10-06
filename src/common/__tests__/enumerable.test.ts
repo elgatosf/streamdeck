@@ -232,6 +232,69 @@ describe("Enumerable", () => {
 	});
 
 	/**
+	 * Asserts {@link Enumerable} implements {@link IterableIterator}.
+	 */
+	describe("IterableIterator implementation", () => {
+		describe("next", () => {
+			it("iterates all items", () => {
+				// Arrange.
+				const enumerable = new Enumerable(["One", "Two", "Three"]);
+
+				// Act, assert.
+				expect(enumerable.next()).toStrictEqual({ done: false, value: "One" });
+				expect(enumerable.next()).toStrictEqual({ done: false, value: "Two" });
+				expect(enumerable.next()).toStrictEqual({ done: false, value: "Three" });
+				expect(enumerable.next()).toStrictEqual({ done: true, value: undefined });
+			});
+
+			it("re-captures on return", () => {
+				// Arrange.
+				const enumerable = new Enumerable(["One", "Two", "Three"]);
+
+				// Act, assert (1).
+				expect(enumerable.next()).toStrictEqual({ done: false, value: "One" });
+				expect(enumerable.return?.("Stop")).toStrictEqual({ done: true, value: "Stop" });
+
+				// Act, assert (2).
+				expect(enumerable.next()).toStrictEqual({ done: false, value: "One" });
+				expect(enumerable.next()).toStrictEqual({ done: false, value: "Two" });
+				expect(enumerable.next()).toStrictEqual({ done: false, value: "Three" });
+				expect(enumerable.next()).toStrictEqual({ done: true, value: undefined });
+			});
+
+			it("does not re-capture on throw", () => {
+				// Arrange.
+				const enumerable = new Enumerable(["One", "Two", "Three"]);
+
+				// Act, assert..
+				expect(enumerable.next()).toStrictEqual({ done: false, value: "One" });
+				expect(() => enumerable.throw?.("Staged error")).toThrow("Staged error");
+				expect(enumerable.next()).toStrictEqual({ done: false, value: "Two" });
+				expect(enumerable.next()).toStrictEqual({ done: false, value: "Three" });
+				expect(enumerable.next()).toStrictEqual({ done: true, value: undefined });
+			});
+		});
+
+		test("return", () => {
+			// Arrange.
+			const enumerable = new Enumerable([1, 2, 3]);
+
+			// Act, assert.
+			const res = enumerable.return?.("Hello world");
+			expect(res?.done).toBe(true);
+			expect(res?.value).toBe("Hello world");
+		});
+
+		test("throw", () => {
+			// Arrange.
+			const enumerable = new Enumerable([1, 2, 3]);
+
+			// Act, assert.
+			expect(() => enumerable.throw?.("Hello world")).toThrow("Hello world");
+		});
+	});
+
+	/**
 	 * Asserts chaining for methods of {@link Enumerable} that support it.
 	 */
 	describe("iterator helpers", () => {
