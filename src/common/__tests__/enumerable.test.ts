@@ -469,6 +469,21 @@ describe("Enumerable", () => {
 		});
 	});
 
+	test("flatMap", () => {
+		// Arrange, act.
+		const fn = jest.fn();
+		const res = enumerable.flatMap((x) => x.name.split(" ").values());
+
+		// Assert.
+		res.forEach(fn);
+		expect(fn).toHaveBeenCalledTimes(5);
+		expect(fn).toHaveBeenNthCalledWith(1, "Facecam");
+		expect(fn).toHaveBeenNthCalledWith(2, "Stream");
+		expect(fn).toHaveBeenNthCalledWith(3, "Deck");
+		expect(fn).toHaveBeenNthCalledWith(4, "Wave");
+		expect(fn).toHaveBeenNthCalledWith(5, "DX");
+	});
+
 	/**
 	 * Provides assertions for {@link Enumerable.forEach}.
 	 */

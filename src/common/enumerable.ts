@@ -161,6 +161,23 @@ export class Enumerable<T> implements IterableIterator<T> {
 	}
 
 	/**
+	 * Yields value of each transformed item within this iterator, by calling the specified mapper function.
+	 * @param mapper Function responsible for transforming each item.
+	 * @returns An iterator of the transformed items.
+	 */
+	public flatMap<U>(mapper: (item: T) => IterableIterator<U>): Enumerable<U> {
+		return new Enumerable(
+			function* (this: Enumerable<T>) {
+				for (const item of this) {
+					for (const mapped of mapper(item)) {
+						yield mapped;
+					}
+				}
+			}.bind(this)
+		);
+	}
+
+	/**
 	 * Iterates over each item, and invokes the specified function.
 	 * @param fn Function to invoke against each item.
 	 */
