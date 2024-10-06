@@ -232,6 +232,54 @@ describe("Enumerable", () => {
 	});
 
 	/**
+	 * Asserts chaining for methods of {@link Enumerable} that support it.
+	 */
+	describe("iterator helpers", () => {
+		it("chains iterators", () => {
+			// Arrange.
+			const fn = jest.fn();
+			const source = ["One", "Two", "Three"];
+			const enumerable = new Enumerable(source);
+
+			// Act.
+			enumerable
+				.asIndexedPairs() // [0, "One"], [1, "Two"], [2, "Three"]
+				.drop(1) // [1, "Two"], [2, "Three"]
+				.flatMap(([i, value]) => [i, value].values()) // 1, "Two", 2, "Three"
+				.filter((x) => typeof x === "number") // 1, 2
+				.map((x) => {
+					return { value: x };
+				}) // { value: 1 }, { value: 2 }
+				.take(1) // { value: 1 }
+				.forEach(fn);
+
+			// Assert.
+			expect(fn).toHaveBeenCalledTimes(1);
+			expect(fn).toHaveBeenNthCalledWith(1, { value: 1 });
+		});
+
+		it("should not iterate unless necessary", () => {
+			// Arrange.
+			const fn = jest.fn();
+			const enumerable = new Enumerable(fn);
+
+			// Act.
+			enumerable
+				.asIndexedPairs()
+				.drop(1)
+				.flatMap(([i, value]) => [i, value].values())
+				.filter((x) => typeof x === "number")
+				.map((x) => {
+					return { value: x };
+				})
+				.take(1);
+
+			// Assert.
+			expect(fn).toHaveBeenCalledTimes(0);
+		});
+	});
+
+	/**
 	 * Asserts the iterator of an {@link Enumerable}.
 	 */
 	describe("iterator", () => {
