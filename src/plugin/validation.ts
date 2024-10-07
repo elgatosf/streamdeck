@@ -13,16 +13,16 @@ export function requiresVersion(minimumVersion: number, streamDeckVersion: Versi
 		major: Math.floor(minimumVersion),
 		minor: (minimumVersion % 1) * 10,
 		patch: 0,
-		build: 0
+		build: 0,
 	};
 
 	if (streamDeckVersion.compareTo(required) === -1) {
 		throw new Error(
-			`[ERR_NOT_SUPPORTED]: ${feature} requires Stream Deck version ${required.major}.${required.minor} or higher, but current version is ${streamDeckVersion.major}.${streamDeckVersion.minor}; please update Stream Deck and the "Software.MinimumVersion" in the plugin's manifest to "${required.major}.${required.minor}" or higher.`
+			`[ERR_NOT_SUPPORTED]: ${feature} requires Stream Deck version ${required.major}.${required.minor} or higher, but current version is ${streamDeckVersion.major}.${streamDeckVersion.minor}; please update Stream Deck and the "Software.MinimumVersion" in the plugin's manifest to "${required.major}.${required.minor}" or higher.`,
 		);
 	} else if (getSoftwareMinimumVersion().compareTo(required) === -1) {
 		throw new Error(
-			`[ERR_NOT_SUPPORTED]: ${feature} requires Stream Deck version ${required.major}.${required.minor} or higher; please update the "Software.MinimumVersion" in the plugin's manifest to "${required.major}.${required.minor}" or higher.`
+			`[ERR_NOT_SUPPORTED]: ${feature} requires Stream Deck version ${required.major}.${required.minor} or higher; please update the "Software.MinimumVersion" in the plugin's manifest to "${required.major}.${required.minor}" or higher.`,
 		);
 	}
 }

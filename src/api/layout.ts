@@ -31,4 +31,6 @@ export type FeedbackPayload = Record<string, Bar | GBar | Pixmap | Text | number
 /**
  * Omits immutable properties from {@template T}.
  */
-type FeedbackPayloadItem<T extends schemas.Bar | schemas.GBar | schemas.Pixmap | schemas.Text> = Partial<Omit<T, "key" | "rect" | "type">>;
+type FeedbackPayloadItem<T extends schemas.Bar | schemas.GBar | schemas.Pixmap | schemas.Text> = Partial<
+	Omit<T, "key" | "rect" | "type">
+>;

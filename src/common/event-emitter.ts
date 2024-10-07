@@ -15,7 +15,10 @@ export class EventEmitter<TMap extends EventMap<TMap>> {
 	 * @param listener Event handler function.
 	 * @returns This instance with the {@link listener} added.
 	 */
-	public addListener<TEventName extends EventsOf<TMap>, TArgs extends EventArgs<TMap, TEventName>>(eventName: TEventName, listener: (...args: TArgs) => void): this {
+	public addListener<TEventName extends EventsOf<TMap>, TArgs extends EventArgs<TMap, TEventName>>(
+		eventName: TEventName,
+		listener: (...args: TArgs) => void,
+	): this {
 		return this.on(eventName, listener);
 	}
 
@@ -25,7 +28,10 @@ export class EventEmitter<TMap extends EventMap<TMap>> {
 	 * @param listener Event handler function.
 	 * @returns A disposable that removes the listener when disposed.
 	 */
-	public disposableOn<TEventName extends EventsOf<TMap>, TArgs extends EventArgs<TMap, TEventName>>(eventName: TEventName, listener: (...args: TArgs) => void): IDisposable {
+	public disposableOn<TEventName extends EventsOf<TMap>, TArgs extends EventArgs<TMap, TEventName>>(
+		eventName: TEventName,
+		listener: (...args: TArgs) => void,
+	): IDisposable {
 		this.addListener(eventName, listener);
 		return deferredDisposable(() => this.removeListener(eventName, listener));
 	}
@@ -36,7 +42,10 @@ export class EventEmitter<TMap extends EventMap<TMap>> {
 	 * @param args Arguments supplied to each event listener.
 	 * @returns `true` when there was a listener associated with the event; otherwise `false`.
 	 */
-	public emit<TEventName extends EventsOf<TMap>, TArgs extends EventArgs<TMap, TEventName>>(eventName: TEventName, ...args: TArgs): boolean {
+	public emit<TEventName extends EventsOf<TMap>, TArgs extends EventArgs<TMap, TEventName>>(
+		eventName: TEventName,
+		...args: TArgs
+	): boolean {
 		const listeners = this.events.get(eventName);
 		if (listeners === undefined) {
 			return false;
@@ -70,7 +79,10 @@ export class EventEmitter<TMap extends EventMap<TMap>> {
 	 * @param listener Optional event listener to count.
 	 * @returns Number of event listeners.
 	 */
-	public listenerCount<TEventName extends EventsOf<TMap>, TArgs extends EventArgs<TMap, TEventName>>(eventName: TEventName, listener?: (...args: TArgs) => void): number {
+	public listenerCount<TEventName extends EventsOf<TMap>, TArgs extends EventArgs<TMap, TEventName>>(
+		eventName: TEventName,
+		listener?: (...args: TArgs) => void,
+	): number {
 		const listeners = this.events.get(eventName);
 		if (listeners === undefined || listener == undefined) {
 			return listeners?.length || 0;
@@ -91,7 +103,9 @@ export class EventEmitter<TMap extends EventMap<TMap>> {
 	 * @param eventName Name of the event.
 	 * @returns The event listeners.
 	 */
-	public listeners<TEventName extends EventsOf<TMap>, TArgs extends EventArgs<TMap, TEventName>>(eventName: TEventName): ((...args: TArgs) => void)[] {
+	public listeners<TEventName extends EventsOf<TMap>, TArgs extends EventArgs<TMap, TEventName>>(
+		eventName: TEventName,
+	): ((...args: TArgs) => void)[] {
 		return Array.from(this.events.get(eventName) || []).map(({ listener }) => listener);
 	}
 
@@ -101,7 +115,10 @@ export class EventEmitter<TMap extends EventMap<TMap>> {
 	 * @param listener Event handler function.
 	 * @returns This instance with the event {@link listener} removed.
 	 */
-	public off<TEventName extends EventsOf<TMap>, TArgs extends EventArgs<TMap, TEventName>>(eventName: TEventName, listener: (...args: TArgs) => void): this {
+	public off<TEventName extends EventsOf<TMap>, TArgs extends EventArgs<TMap, TEventName>>(
+		eventName: TEventName,
+		listener: (...args: TArgs) => void,
+	): this {
 		const listeners = this.events.get(eventName) || [];
 		for (let i = listeners.length - 1; i >= 0; i--) {
 			if (listeners[i].listener === listener) {
@@ -118,7 +135,10 @@ export class EventEmitter<TMap extends EventMap<TMap>> {
 	 * @param listener Event handler function.
 	 * @returns This instance with the event {@link listener} added.
 	 */
-	public on<TEventName extends EventsOf<TMap>, TArgs extends EventArgs<TMap, TEventName>>(eventName: TEventName, listener: (...args: TArgs) => void): this {
+	public on<TEventName extends EventsOf<TMap>, TArgs extends EventArgs<TMap, TEventName>>(
+		eventName: TEventName,
+		listener: (...args: TArgs) => void,
+	): this {
 		return this.add(eventName, (listeners) => listeners.push({ listener }));
 	}
 
@@ -128,7 +148,10 @@ export class EventEmitter<TMap extends EventMap<TMap>> {
 	 * @param listener Event handler function.
 	 * @returns This instance with the event {@link listener} added.
 	 */
-	public once<TEventName extends EventsOf<TMap>, TArgs extends EventArgs<TMap, TEventName>>(eventName: TEventName, listener: (...args: TArgs) => void): this {
+	public once<TEventName extends EventsOf<TMap>, TArgs extends EventArgs<TMap, TEventName>>(
+		eventName: TEventName,
+		listener: (...args: TArgs) => void,
+	): this {
 		return this.add(eventName, (listeners) => listeners.push({ listener, once: true }));
 	}
 
@@ -138,7 +161,10 @@ export class EventEmitter<TMap extends EventMap<TMap>> {
 	 * @param listener Event handler function.
 	 * @returns This instance with the event {@link listener} prepended.
 	 */
-	public prependListener<TEventName extends EventsOf<TMap>, TArgs extends EventArgs<TMap, TEventName>>(eventName: TEventName, listener: (...args: TArgs) => void): this {
+	public prependListener<TEventName extends EventsOf<TMap>, TArgs extends EventArgs<TMap, TEventName>>(
+		eventName: TEventName,
+		listener: (...args: TArgs) => void,
+	): this {
 		return this.add(eventName, (listeners) => listeners.splice(0, 0, { listener }));
 	}
 
@@ -148,7 +174,10 @@ export class EventEmitter<TMap extends EventMap<TMap>> {
 	 * @param listener Event handler function.
 	 * @returns This instance with the event {@link listener} prepended.
 	 */
-	public prependOnceListener<TEventName extends EventsOf<TMap>, TArgs extends EventArgs<TMap, TEventName>>(eventName: TEventName, listener: (...args: TArgs) => void): this {
+	public prependOnceListener<TEventName extends EventsOf<TMap>, TArgs extends EventArgs<TMap, TEventName>>(
+		eventName: TEventName,
+		listener: (...args: TArgs) => void,
+	): this {
 		return this.add(eventName, (listeners) => listeners.splice(0, 0, { listener, once: true }));
 	}
 
@@ -168,7 +197,10 @@ export class EventEmitter<TMap extends EventMap<TMap>> {
 	 * @param listener Event handler function.
 	 * @returns This instance with the event {@link listener} removed.
 	 */
-	public removeListener<TEventName extends EventsOf<TMap>, TArgs extends EventArgs<TMap, TEventName>>(eventName: TEventName, listener: (...args: TArgs) => void): this {
+	public removeListener<TEventName extends EventsOf<TMap>, TArgs extends EventArgs<TMap, TEventName>>(
+		eventName: TEventName,
+		listener: (...args: TArgs) => void,
+	): this {
 		return this.off(eventName, listener);
 	}
 
@@ -178,7 +210,10 @@ export class EventEmitter<TMap extends EventMap<TMap>> {
 	 * @param fn Function responsible for adding the new event handler function.
 	 * @returns This instance with event {@link listener} added.
 	 */
-	private add<TEventName extends EventsOf<TMap>>(eventName: TEventName, fn: (listeners: EventListener[]) => void): this {
+	private add<TEventName extends EventsOf<TMap>>(
+		eventName: TEventName,
+		fn: (listeners: EventListener[]) => void,
+	): this {
 		let listeners = this.events.get(eventName);
 		if (listeners === undefined) {
 			listeners = [];
@@ -205,21 +240,22 @@ type EventMap<T> = {
 /**
  * Parsed {@link EventMap} whereby each property is a `string` that denotes an event name, and the associated value type defines the listener arguments.
  */
-export type EventsOf<T> = EventMap<unknown> extends T
-	? string
-	: keyof EventMap<
-			Pick<
-				T,
-				Extract<
-					{
-						[K in keyof T]: K extends string ? K : never;
-					}[keyof T],
-					{
-						[K in keyof T]: T[K] extends unknown[] ? K : never;
-					}[keyof T]
+export type EventsOf<T> =
+	EventMap<unknown> extends T
+		? string
+		: keyof EventMap<
+				Pick<
+					T,
+					Extract<
+						{
+							[K in keyof T]: K extends string ? K : never;
+						}[keyof T],
+						{
+							[K in keyof T]: T[K] extends unknown[] ? K : never;
+						}[keyof T]
+					>
 				>
-			>
-	  >;
+			>;
 
 /**
  * Parses the event arguments for the specified event from the event map.

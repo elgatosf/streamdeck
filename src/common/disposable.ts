@@ -18,7 +18,7 @@ export function deferredDisposable(dispose: (...args: unknown[]) => void): IDisp
 
 	return {
 		[Symbol.dispose]: guardedDispose,
-		dispose: guardedDispose
+		dispose: guardedDispose,
 	};
 }
 

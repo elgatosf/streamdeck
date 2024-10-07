@@ -1,4 +1,4 @@
-import { ConsoleTarget, LogLevel, Logger, createRoutedLogTarget } from "../common/logging";
+import { ConsoleTarget, createRoutedLogTarget, Logger, LogLevel } from "../common/logging";
 import { router } from "./plugin";
 
 /**
@@ -6,5 +6,5 @@ import { router } from "./plugin";
  */
 export const logger = new Logger({
 	level: LogLevel.DEBUG,
-	targets: [new ConsoleTarget(), createRoutedLogTarget(router)]
+	targets: [new ConsoleTarget(), createRoutedLogTarget(router)],
 });

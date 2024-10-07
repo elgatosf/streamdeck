@@ -79,7 +79,7 @@ export class Enumerable<T> implements IterableIterator<T> {
 				for (const item of this) {
 					yield [i++, item] as [number, T];
 				}
-			}.bind(this)
+			}.bind(this),
 		);
 	}
 
@@ -101,7 +101,7 @@ export class Enumerable<T> implements IterableIterator<T> {
 						yield item;
 					}
 				}
-			}.bind(this)
+			}.bind(this),
 		);
 	}
 
@@ -133,7 +133,7 @@ export class Enumerable<T> implements IterableIterator<T> {
 						yield item;
 					}
 				}
-			}.bind(this)
+			}.bind(this),
 		);
 	}
 
@@ -179,7 +179,7 @@ export class Enumerable<T> implements IterableIterator<T> {
 						yield mapped;
 					}
 				}
-			}.bind(this)
+			}.bind(this),
 		);
 	}
 
@@ -213,7 +213,7 @@ export class Enumerable<T> implements IterableIterator<T> {
 				for (const item of this) {
 					yield mapper(item);
 				}
-			}.bind(this)
+			}.bind(this),
 		);
 	}
 
@@ -320,7 +320,7 @@ export class Enumerable<T> implements IterableIterator<T> {
 						yield item;
 					}
 				}
-			}.bind(this)
+			}.bind(this),
 		);
 	}
 

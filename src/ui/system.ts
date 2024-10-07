@@ -9,7 +9,7 @@ export function openUrl(url: string): Promise<void> {
 	return connection.send({
 		event: "openUrl",
 		payload: {
-			url
-		}
+			url,
+		},
 	});
 }

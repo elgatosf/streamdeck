@@ -8,7 +8,10 @@ const __cwd = cwd();
 /**
  * Internalization provider, responsible for managing localizations and translating resources.
  */
-export const i18n = new I18nProvider((window.navigator.language ? window.navigator.language.split("-")[0] : "en") as Language, xmlHttpRequestLocaleProviderSync);
+export const i18n = new I18nProvider(
+	(window.navigator.language ? window.navigator.language.split("-")[0] : "en") as Language,
+	xmlHttpRequestLocaleProviderSync,
+);
 
 /**
  * Loads a locale from the file system using `fetch`.

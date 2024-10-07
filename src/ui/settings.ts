@@ -16,7 +16,7 @@ export async function getGlobalSettings<T extends JsonObject = JsonObject>(): Pr
 		connection.once("didReceiveGlobalSettings", (ev: DidReceiveGlobalSettings<T>) => resolve(ev.payload.settings));
 		connection.send({
 			event: "getGlobalSettings",
-			context: uuid
+			context: uuid,
 		});
 	});
 }
@@ -29,7 +29,7 @@ export async function getGlobalSettings<T extends JsonObject = JsonObject>(): Pr
 export async function getSettings<T extends JsonObject = JsonObject>(): Promise<T> {
 	const {
 		uuid,
-		actionInfo: { action }
+		actionInfo: { action },
 	} = await connection.getInfo();
 
 	return new Promise((resolve) => {
@@ -37,7 +37,7 @@ export async function getSettings<T extends JsonObject = JsonObject>(): Promise<
 		connection.send({
 			event: "getSettings",
 			action,
-			context: uuid
+			context: uuid,
 		});
 	});
 }
@@ -48,12 +48,14 @@ export async function getSettings<T extends JsonObject = JsonObject>(): Promise<
  * @param listener Function to be invoked when the event occurs.
  * @returns A disposable that, when disposed, removes the listener.
  */
-export function onDidReceiveGlobalSettings<T extends JsonObject = JsonObject>(listener: (ev: DidReceiveGlobalSettingsEvent<T>) => void): IDisposable {
+export function onDidReceiveGlobalSettings<T extends JsonObject = JsonObject>(
+	listener: (ev: DidReceiveGlobalSettingsEvent<T>) => void,
+): IDisposable {
 	return connection.disposableOn("didReceiveGlobalSettings", (ev: DidReceiveGlobalSettings<T>) =>
 		listener({
 			settings: ev.payload.settings,
-			type: ev.event
-		})
+			type: ev.event,
+		}),
 	);
 }
 
@@ -63,18 +65,20 @@ export function onDidReceiveGlobalSettings<T extends JsonObject = JsonObject>(li
  * @param listener Function to be invoked when the event occurs.
  * @returns A disposable that, when disposed, removes the listener.
  */
-export function onDidReceiveSettings<T extends JsonObject = JsonObject>(listener: (ev: DidReceiveSettingsEvent<T>) => void): IDisposable {
+export function onDidReceiveSettings<T extends JsonObject = JsonObject>(
+	listener: (ev: DidReceiveSettingsEvent<T>) => void,
+): IDisposable {
 	return connection.disposableOn("didReceiveSettings", (ev: DidReceiveSettings<T>) =>
 		listener({
 			action: {
 				id: ev.context,
 				manifestId: ev.action,
 				getSettings,
-				setSettings
+				setSettings,
 			},
 			payload: ev.payload,
-			type: ev.event
-		})
+			type: ev.event,
+		}),
 	);
 }
 
@@ -94,7 +98,7 @@ export async function setGlobalSettings<T extends JsonObject>(settings: T): Prom
 	return connection.send({
 		event: "setGlobalSettings",
 		context: uuid,
-		payload: settings
+		payload: settings,
 	});
 }
 
@@ -106,13 +110,13 @@ export async function setGlobalSettings<T extends JsonObject>(settings: T): Prom
 export async function setSettings<T extends JsonObject>(settings: T): Promise<void> {
 	const {
 		uuid,
-		actionInfo: { action }
+		actionInfo: { action },
 	} = await connection.getInfo();
 
 	return connection.send({
 		event: "setSettings",
 		action,
 		context: uuid,
-		payload: settings
+		payload: settings,
 	});
 }
