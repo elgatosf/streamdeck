@@ -195,6 +195,151 @@ describe("Enumerable", () => {
 				expect(enumerable.length).toBe(3);
 			});
 		});
+
+		/**
+		 * With IterableIterator<T> delegate.
+		 */
+		describe("IterableIterator", () => {
+			it("iterates mutated map", () => {
+				// Arrange.
+				const fn = jest.fn();
+				const itr = function* () {
+					yield "One";
+					yield "Two";
+				};
+				const enumerable = new Enumerable(itr);
+
+				// Act, assert.
+				enumerable.forEach(fn);
+				expect(enumerable.length).toBe(2);
+				expect(fn).toHaveBeenCalledTimes(2);
+				expect(fn).toHaveBeenNthCalledWith(1, "One");
+				expect(fn).toHaveBeenNthCalledWith(2, "Two");
+			});
+
+			it("reads length", () => {
+				// Arrange.
+				const itr = function* () {
+					yield "One";
+					yield "Two";
+				};
+
+				// Act, assert.
+				const enumerable = new Enumerable(itr);
+				expect(enumerable.length).toBe(2);
+			});
+		});
+	});
+
+	/**
+	 * Asserts {@link Enumerable} implements {@link IterableIterator}.
+	 */
+	describe("IterableIterator implementation", () => {
+		describe("next", () => {
+			it("iterates all items", () => {
+				// Arrange.
+				const enumerable = new Enumerable(["One", "Two", "Three"]);
+
+				// Act, assert.
+				expect(enumerable.next()).toStrictEqual({ done: false, value: "One" });
+				expect(enumerable.next()).toStrictEqual({ done: false, value: "Two" });
+				expect(enumerable.next()).toStrictEqual({ done: false, value: "Three" });
+				expect(enumerable.next()).toStrictEqual({ done: true, value: undefined });
+			});
+
+			it("re-captures on return", () => {
+				// Arrange.
+				const enumerable = new Enumerable(["One", "Two", "Three"]);
+
+				// Act, assert (1).
+				expect(enumerable.next()).toStrictEqual({ done: false, value: "One" });
+				expect(enumerable.return?.("Stop")).toStrictEqual({ done: true, value: "Stop" });
+
+				// Act, assert (2).
+				expect(enumerable.next()).toStrictEqual({ done: false, value: "One" });
+				expect(enumerable.next()).toStrictEqual({ done: false, value: "Two" });
+				expect(enumerable.next()).toStrictEqual({ done: false, value: "Three" });
+				expect(enumerable.next()).toStrictEqual({ done: true, value: undefined });
+			});
+
+			it("does not re-capture on throw", () => {
+				// Arrange.
+				const enumerable = new Enumerable(["One", "Two", "Three"]);
+
+				// Act, assert..
+				expect(enumerable.next()).toStrictEqual({ done: false, value: "One" });
+				expect(() => enumerable.throw?.("Staged error")).toThrow("Staged error");
+				expect(enumerable.next()).toStrictEqual({ done: false, value: "Two" });
+				expect(enumerable.next()).toStrictEqual({ done: false, value: "Three" });
+				expect(enumerable.next()).toStrictEqual({ done: true, value: undefined });
+			});
+		});
+
+		test("return", () => {
+			// Arrange.
+			const enumerable = new Enumerable([1, 2, 3]);
+
+			// Act, assert.
+			const res = enumerable.return?.("Hello world");
+			expect(res?.done).toBe(true);
+			expect(res?.value).toBe("Hello world");
+		});
+
+		test("throw", () => {
+			// Arrange.
+			const enumerable = new Enumerable([1, 2, 3]);
+
+			// Act, assert.
+			expect(() => enumerable.throw?.("Hello world")).toThrow("Hello world");
+		});
+	});
+
+	/**
+	 * Asserts chaining for methods of {@link Enumerable} that support it.
+	 */
+	describe("iterator helpers", () => {
+		it("chains iterators", () => {
+			// Arrange.
+			const fn = jest.fn();
+			const source = ["One", "Two", "Three"];
+			const enumerable = new Enumerable(source);
+
+			// Act.
+			enumerable
+				.asIndexedPairs() // [0, "One"], [1, "Two"], [2, "Three"]
+				.drop(1) // [1, "Two"], [2, "Three"]
+				.flatMap(([i, value]) => [i, value].values()) // 1, "Two", 2, "Three"
+				.filter((x) => typeof x === "number") // 1, 2
+				.map((x) => {
+					return { value: x };
+				}) // { value: 1 }, { value: 2 }
+				.take(1) // { value: 1 }
+				.forEach(fn);
+
+			// Assert.
+			expect(fn).toHaveBeenCalledTimes(1);
+			expect(fn).toHaveBeenNthCalledWith(1, { value: 1 });
+		});
+
+		it("should not iterate unless necessary", () => {
+			// Arrange.
+			const fn = jest.fn();
+			const enumerable = new Enumerable(fn);
+
+			// Act.
+			enumerable
+				.asIndexedPairs()
+				.drop(1)
+				.flatMap(([i, value]) => [i, value].values())
+				.filter((x) => typeof x === "number")
+				.map((x) => {
+					return { value: x };
+				})
+				.take(1);
+
+			// Assert.
+			expect(fn).toHaveBeenCalledTimes(0);
+		});
 	});
 
 	/**
@@ -212,6 +357,82 @@ describe("Enumerable", () => {
 		}
 
 		expect(i).toBe(3);
+	});
+
+	/**
+	 * Asserts the iterator of an {@link Enumerable.asIndexedPairs}.
+	 */
+	test("asIndexedPairs", () => {
+		// Arrange, act.
+		const fn = jest.fn();
+		const res = enumerable.asIndexedPairs();
+
+		// Assert.
+		res.forEach(fn);
+		expect(fn).toHaveBeenCalledTimes(3);
+		expect(fn).toHaveBeenNthCalledWith(1, [0, { name: "Facecam" }]);
+		expect(fn).toHaveBeenNthCalledWith(2, [1, { name: "Stream Deck" }]);
+		expect(fn).toHaveBeenNthCalledWith(3, [2, { name: "Wave DX" }]);
+	});
+
+	/**
+	 * Provides assertions for {@link Enumerable.drop}.
+	 */
+	describe("drop", () => {
+		it("accepts limit 0", () => {
+			// Arrange, act, assert
+			expect(enumerable.drop(0).length).toBe(source.length);
+		});
+
+		it("accepts limit 1", () => {
+			// Arrange.
+			const fn = jest.fn();
+
+			// Act.
+			const res = enumerable.drop(1);
+
+			// Assert.
+			res.forEach(fn);
+			expect(fn).toHaveBeenCalledTimes(2);
+			expect(fn).toHaveBeenNthCalledWith(1, { name: "Stream Deck" });
+			expect(fn).toHaveBeenNthCalledWith(2, { name: "Wave DX" });
+		});
+
+		it("accepts limit less than length", () => {
+			// Arrange.
+			const fn = jest.fn();
+
+			// Act.
+			const res = enumerable.drop(2);
+
+			// Assert.
+			res.forEach(fn);
+			expect(fn).toHaveBeenCalledTimes(1);
+			expect(fn).toHaveBeenCalledWith({ name: "Wave DX" });
+		});
+
+		it("accepts limit exceeding length", () => {
+			// Arrange.
+			const fn = jest.fn();
+
+			// Act.
+			const res = enumerable.drop(4);
+
+			// Assert.
+			res.forEach(fn);
+			expect(fn).toHaveBeenCalledTimes(0);
+		});
+
+		it("throw for negative", () => {
+			// Arrange, act, assert
+			expect(() => enumerable.drop(-1)).toThrow(RangeError);
+		});
+
+		it("throw for NaN", () => {
+			// Arrange, act, assert
+			// @ts-expect-error Test non-number
+			expect(() => enumerable.drop("false")).toThrow(RangeError);
+		});
 	});
 
 	/**
@@ -359,6 +580,21 @@ describe("Enumerable", () => {
 		});
 	});
 
+	test("flatMap", () => {
+		// Arrange, act.
+		const fn = jest.fn();
+		const res = enumerable.flatMap((x) => x.name.split(" ").values());
+
+		// Assert.
+		res.forEach(fn);
+		expect(fn).toHaveBeenCalledTimes(5);
+		expect(fn).toHaveBeenNthCalledWith(1, "Facecam");
+		expect(fn).toHaveBeenNthCalledWith(2, "Stream");
+		expect(fn).toHaveBeenNthCalledWith(3, "Deck");
+		expect(fn).toHaveBeenNthCalledWith(4, "Wave");
+		expect(fn).toHaveBeenNthCalledWith(5, "DX");
+	});
+
 	/**
 	 * Provides assertions for {@link Enumerable.forEach}.
 	 */
@@ -481,6 +717,98 @@ describe("Enumerable", () => {
 			expect(fn).toHaveBeenCalledWith({ name: "Facecam" });
 			expect(fn).toHaveBeenCalledWith({ name: "Stream Deck" });
 			expect(fn).toHaveBeenCalledWith({ name: "Wave DX" });
+		});
+	});
+
+	/**
+	 * Provides assertions for {@link Enumerable.take}.
+	 */
+	describe("take", () => {
+		it("accepts limit 0", () => {
+			// Arrange, act, assert
+			expect(enumerable.take(0).length).toBe(0);
+		});
+
+		it("accepts limit 1", () => {
+			// Arrange.
+			const fn = jest.fn();
+
+			// Act.
+			const res = enumerable.take(1);
+
+			// Assert.
+			res.forEach(fn);
+			expect(fn).toHaveBeenCalledTimes(1);
+			expect(fn).toHaveBeenNthCalledWith(1, { name: "Facecam" });
+		});
+
+		it("accepts limit less than length", () => {
+			// Arrange.
+			const fn = jest.fn();
+
+			// Act.
+			const res = enumerable.take(2);
+
+			// Assert.
+			res.forEach(fn);
+			expect(fn).toHaveBeenCalledTimes(2);
+			expect(fn).toHaveBeenNthCalledWith(1, { name: "Facecam" });
+			expect(fn).toHaveBeenNthCalledWith(2, { name: "Stream Deck" });
+		});
+
+		it("accepts limit exceeding length", () => {
+			// Arrange.
+			const fn = jest.fn();
+
+			// Act.
+			const res = enumerable.take(99);
+
+			// Assert.
+			res.forEach(fn);
+			expect(fn).toHaveBeenCalledTimes(3);
+			expect(fn).toHaveBeenNthCalledWith(1, { name: "Facecam" });
+			expect(fn).toHaveBeenNthCalledWith(2, { name: "Stream Deck" });
+			expect(fn).toHaveBeenNthCalledWith(3, { name: "Wave DX" });
+		});
+
+		it("throw for negative", () => {
+			// Arrange, act, assert
+			expect(() => enumerable.take(-1)).toThrow(RangeError);
+		});
+
+		it("throw for NaN", () => {
+			// Arrange, act, assert
+			// @ts-expect-error Test non-number
+			expect(() => enumerable.take("false")).toThrow(RangeError);
+		});
+	});
+
+	/**
+	 * Provides assertions for {@link Enumerable.toArray}.
+	 */
+	describe("toArray", () => {
+		it("returns a new array of items", () => {
+			// Arrange.
+			const arr = ["One", "Two"];
+			const enumerable = new Enumerable(arr);
+
+			// Act.
+			const res = enumerable.toArray();
+
+			// Assert.
+			expect(arr).toEqual(res);
+			expect(arr).not.toBe(res);
+		});
+
+		it("can return an empty array", () => {
+			// Arrange.
+			const enumerable = new Enumerable(function* () {});
+
+			// Act.
+			const res = enumerable.toArray();
+
+			// Assert
+			expect(res).toHaveLength(0);
 		});
 	});
 });
