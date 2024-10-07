@@ -12,6 +12,16 @@
 
 # Change Log
 
+## 1.1.0
+
+### ✨ New
+
+-   Add [`.drop()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Iterator/drop), [`.flapMap()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Iterator/flatMap), [`.take()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Iterator/take), and [`.toArray()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Iterator/toArray) iterator helper polyfills to `Enumerable`.
+
+### ♻️ Update
+
+-   Update `SingletonAction.actions` to return an `Enumerable`.
+
 ## 1.0.1
 
 ### ♻️ Update
