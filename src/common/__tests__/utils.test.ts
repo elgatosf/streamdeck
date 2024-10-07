@@ -7,7 +7,7 @@ describe("freeze", () => {
 	it("top-level properties", () => {
 		// Arrange.
 		const obj = {
-			name: "Elgato"
+			name: "Elgato",
 		};
 
 		// Act.
@@ -22,8 +22,8 @@ describe("freeze", () => {
 		// Arrange.
 		const obj = {
 			company: {
-				name: "Elgato"
-			}
+				name: "Elgato",
+			},
 		};
 
 		// Act.

@@ -1,8 +1,8 @@
 import type { LogEntry } from "..";
-import { MessageGateway, MessageResponder, type MessageRequestOptions } from "../../messaging";
+import { MessageGateway, type MessageRequestOptions, MessageResponder } from "../../messaging";
 import { LogLevel } from "../level";
 import { Logger } from "../logger";
-import { createRoutedLogTarget, registerCreateLogEntryRoute, type JsonSafeLogEntry } from "../routing";
+import { createRoutedLogTarget, type JsonSafeLogEntry, registerCreateLogEntryRoute } from "../routing";
 
 jest.mock("../../messaging");
 
@@ -18,7 +18,7 @@ describe("createRoutedLogTarget", () => {
 		target.write({
 			data: ["Hello", "world"],
 			level: LogLevel.INFO,
-			scope: "Test"
+			scope: "Test",
 		});
 
 		// Assert.
@@ -27,10 +27,10 @@ describe("createRoutedLogTarget", () => {
 			body: {
 				level: LogLevel.INFO,
 				message: "Hello world",
-				scope: "Test"
+				scope: "Test",
 			} satisfies JsonSafeLogEntry,
 			path: expectedLoggerWritePath,
-			unidirectional: true
+			unidirectional: true,
 		});
 	});
 });
@@ -50,9 +50,9 @@ describe("registerCreateLogEntryRoute", () => {
 					action: jest.fn(),
 					path: expectedLoggerWritePath,
 					unidirectional: true,
-					body: undefined
+					body: undefined,
 				},
-				responder
+				responder,
 			);
 
 			// Assert.
@@ -75,10 +75,10 @@ describe("registerCreateLogEntryRoute", () => {
 					path: expectedLoggerWritePath,
 					unidirectional: true,
 					body: {
-						level: undefined
-					}
+						level: undefined,
+					},
 				},
-				responder
+				responder,
 			);
 
 			// Assert.
@@ -96,7 +96,7 @@ describe("registerCreateLogEntryRoute", () => {
 
 		const logger = new Logger({
 			level: LogLevel.INFO,
-			targets: [{ write: jest.fn() }]
+			targets: [{ write: jest.fn() }],
 		});
 
 		const spyOnWrite = jest.spyOn(logger, "write");
@@ -111,10 +111,10 @@ describe("registerCreateLogEntryRoute", () => {
 				body: {
 					level: LogLevel.WARN,
 					message: "Hello world",
-					scope: "Test"
-				} satisfies JsonSafeLogEntry
+					scope: "Test",
+				} satisfies JsonSafeLogEntry,
 			},
-			responder
+			responder,
 		);
 
 		// Assert.
@@ -124,7 +124,7 @@ describe("registerCreateLogEntryRoute", () => {
 		expect(spyOnWrite).toHaveBeenCalledWith<[LogEntry]>({
 			data: ["Hello world"],
 			level: LogLevel.WARN,
-			scope: "Test"
+			scope: "Test",
 		});
 		expect(responder.success).toHaveBeenCalledTimes(1);
 	});

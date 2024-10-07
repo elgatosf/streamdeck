@@ -1,5 +1,5 @@
 import type { JsonObject, JsonValue } from "../../common/json";
-import { PUBLIC_PATH_PREFIX, type MessageResponder } from "../../common/messaging";
+import { type MessageResponder, PUBLIC_PATH_PREFIX } from "../../common/messaging";
 import type { SingletonAction } from "../actions/singleton-action";
 import type { MessageHandler, MessageRequest } from "./message";
 import { router } from "./router";
@@ -9,13 +9,23 @@ import { router } from "./router";
  * @param path Path that identifies the route.
  * @returns The decorator factory.
  */
-export function route<TBody extends JsonValue = JsonValue, TSettings extends JsonObject = JsonObject, TResult extends ReturnType<MessageHandler<TBody, TSettings>> = undefined>(
-	path: string
-): (target: MessageHandler<TBody, TSettings>, context: ClassMethodDecoratorContext<SingletonAction>) => OptionalParameterMessageHandler<TBody, TSettings, TResult> | void {
-	return function (target: MessageHandler<TBody, TSettings>, context: ClassMethodDecoratorContext<SingletonAction>): void {
+export function route<
+	TBody extends JsonValue = JsonValue,
+	TSettings extends JsonObject = JsonObject,
+	TResult extends ReturnType<MessageHandler<TBody, TSettings>> = undefined,
+>(
+	path: string,
+): (
+	target: MessageHandler<TBody, TSettings>,
+	context: ClassMethodDecoratorContext<SingletonAction>,
+) => OptionalParameterMessageHandler<TBody, TSettings, TResult> | void {
+	return function (
+		target: MessageHandler<TBody, TSettings>,
+		context: ClassMethodDecoratorContext<SingletonAction>,
+	): void {
 		context.addInitializer(function () {
 			router.route(`${PUBLIC_PATH_PREFIX}${path}`, target.bind(this), {
-				filter: (source) => source.manifestId === this.manifestId
+				filter: (source) => source.manifestId === this.manifestId,
 			});
 		});
 	};
@@ -31,5 +41,5 @@ export function route<TBody extends JsonValue = JsonValue, TSettings extends Jso
  */
 type OptionalParameterMessageHandler<TBody extends JsonValue, TSettings extends JsonObject, TResult> = (
 	request?: MessageRequest<TBody, TSettings>,
-	responder?: MessageResponder
+	responder?: MessageResponder,
 ) => TResult;

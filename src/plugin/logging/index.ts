@@ -1,7 +1,7 @@
 import path from "node:path";
 import { cwd } from "node:process";
 
-import { LogLevel, Logger, stringFormatter, type LogTarget } from "../../common/logging";
+import { Logger, LogLevel, type LogTarget, stringFormatter } from "../../common/logging";
 import { ConsoleTarget } from "../../common/logging/console-target";
 import { getPluginUUID, isDebugMode } from "../common/utils";
 import { FileTarget } from "./file-target";
@@ -12,7 +12,7 @@ const fileTarget = new FileTarget({
 	fileName: getPluginUUID(),
 	format: stringFormatter(),
 	maxFileCount: 10,
-	maxSize: 50 * 1024 * 1024
+	maxSize: 50 * 1024 * 1024,
 });
 
 // Construct the log targets.
@@ -27,7 +27,7 @@ if (isDebugMode()) {
 export const logger = new Logger({
 	level: isDebugMode() ? LogLevel.DEBUG : LogLevel.INFO,
 	minimumLevel: isDebugMode() ? LogLevel.TRACE : LogLevel.DEBUG,
-	targets
+	targets,
 });
 
 process.once("uncaughtException", (err) => logger.error("Process encountered uncaught exception", err));

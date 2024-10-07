@@ -20,7 +20,7 @@ describe("route", () => {
 	describe("current PI has routes", () => {
 		const ev = {
 			action: "com.elgato.test.key",
-			context: "key123"
+			context: "key123",
 		};
 
 		beforeEach(() => initialize(ev.context));
@@ -36,7 +36,7 @@ describe("route", () => {
 
 			// Act.
 			const res = await piRouter.fetch("public:/characters", {
-				game: "World of Warcraft"
+				game: "World of Warcraft",
 			});
 
 			// Assert.
@@ -48,10 +48,10 @@ describe("route", () => {
 					path: "public:/characters",
 					unidirectional: false,
 					body: {
-						game: "World of Warcraft"
-					}
+						game: "World of Warcraft",
+					},
 				},
-				expect.any(MessageResponder)
+				expect.any(MessageResponder),
 			);
 
 			expect(res.status).toBe(200);
@@ -70,7 +70,7 @@ describe("route", () => {
 
 			// Act.
 			const res = await piRouter.fetch("public:/characters-sync", {
-				game: "Mario World"
+				game: "Mario World",
 			});
 
 			// Assert.
@@ -82,10 +82,10 @@ describe("route", () => {
 					path: "public:/characters-sync",
 					unidirectional: false,
 					body: {
-						game: "Mario World"
-					}
+						game: "Mario World",
+					},
 				},
-				expect.any(MessageResponder)
+				expect.any(MessageResponder),
 			);
 
 			expect(res.status).toBe(200);
@@ -108,9 +108,9 @@ describe("route", () => {
 					action: actionStore.getActionById(ev.context)!,
 					path: "public:/save",
 					unidirectional: false,
-					body: undefined
+					body: undefined,
 				},
-				expect.any(MessageResponder)
+				expect.any(MessageResponder),
 			);
 
 			expect(res.status).toBe(200);
@@ -129,7 +129,7 @@ describe("route", () => {
 			// Arrange, act.
 			const action = new ActionWithRoutes();
 			const res = await piRouter.fetch("public:/characters", {
-				game: "World of Warcraft"
+				game: "World of Warcraft",
 			});
 
 			// Assert.
@@ -146,7 +146,7 @@ describe("route", () => {
 			// Arrange, act.
 			const action = new ActionWithRoutes();
 			const res = await piRouter.fetch("public:/characters-sync", {
-				game: "Mario World"
+				game: "Mario World",
 			});
 
 			// Assert.
@@ -184,7 +184,7 @@ describe("route", () => {
 			action: action?.manifestId,
 			context,
 			device: "dev123",
-			event: "propertyInspectorDidAppear"
+			event: "propertyInspectorDidAppear",
 		});
 
 		// Mock a property inspector router.
@@ -194,11 +194,11 @@ describe("route", () => {
 					action: action.manifestId,
 					context,
 					event: "sendToPlugin",
-					payload
+					payload,
 				});
 				return true;
 			},
-			() => ({})
+			() => ({}),
 		);
 
 		// Intercept commands sent to the property inspector, forwarding them to the mocked property inspector router.
@@ -208,7 +208,7 @@ describe("route", () => {
 					action: action.manifestId,
 					context,
 					event: "sendToPropertyInspector",
-					payload: (cmd as SendToPropertyInspector<JsonObject>).payload
+					payload: (cmd as SendToPropertyInspector<JsonObject>).payload,
 				});
 			}
 

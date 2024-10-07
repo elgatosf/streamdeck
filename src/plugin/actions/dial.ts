@@ -49,7 +49,7 @@ export class DialAction<T extends JsonObject = JsonObject> extends Action<T> {
 		return connection.send({
 			event: "setFeedback",
 			context: this.id,
-			payload: feedback
+			payload: feedback,
 		});
 	}
 
@@ -64,8 +64,8 @@ export class DialAction<T extends JsonObject = JsonObject> extends Action<T> {
 			event: "setFeedbackLayout",
 			context: this.id,
 			payload: {
-				layout
-			}
+				layout,
+			},
 		});
 	}
 
@@ -82,8 +82,8 @@ export class DialAction<T extends JsonObject = JsonObject> extends Action<T> {
 			event: "setImage",
 			context: this.id,
 			payload: {
-				image
-			}
+				image,
+			},
 		});
 	}
 
@@ -111,7 +111,7 @@ export class DialAction<T extends JsonObject = JsonObject> extends Action<T> {
 		return connection.send({
 			event: "setTriggerDescription",
 			context: this.id,
-			payload: descriptions || {}
+			payload: descriptions || {},
 		});
 	}
 }

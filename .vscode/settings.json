@@ -1,15 +1,12 @@
 {
-	/** Prefer tabs over spaces for accessibility */
-	"editor.insertSpaces": false,
-	"editor.detectIndentation": false,
-	/* Explorer */
-	"explorer.fileNesting.enabled": true,
-	"explorer.fileNesting.patterns": {
-		"*.js": "${capture}.js.map, ${capture}.min.js, ${capture}.d.ts",
-		"*.ts": "${capture}.test.ts",
-		".editorconfig": ", .prettierrc, eslint.config.mjs",
-		"jest.config.ts": "babel.config.json",
-		"package.json": "package-lock.json, yarn.lock, pnpm-lock.yaml, .npmrc",
-		"README.md": "CHANGELOG.md, LICENSE, UPGRADE.md"
-	}
+    /* Explorer */
+    "explorer.fileNesting.enabled": true,
+    "explorer.fileNesting.patterns": {
+        "*.js": "${capture}.js.map, ${capture}.min.js, ${capture}.d.ts",
+        "*.ts": "${capture}.test.ts",
+        ".editorconfig": ", .prettierrc, eslint.config.mjs",
+        "jest.config.ts": "babel.config.json",
+        "package.json": "package-lock.json, yarn.lock, pnpm-lock.yaml, .npmrc",
+        "README.md": "CHANGELOG.md, LICENSE, UPGRADE.md"
+    }
 }

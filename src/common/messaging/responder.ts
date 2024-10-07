@@ -18,7 +18,7 @@ export class MessageResponder {
 	 */
 	constructor(
 		private readonly request: RawMessageRequest,
-		private readonly proxy: OutboundMessageProxy
+		private readonly proxy: OutboundMessageProxy,
 	) {}
 
 	/**
@@ -51,7 +51,7 @@ export class MessageResponder {
 				id: this.request.id,
 				path: this.request.path,
 				body,
-				status
+				status,
 			} satisfies RawMessageResponse);
 
 			this._responded = true;

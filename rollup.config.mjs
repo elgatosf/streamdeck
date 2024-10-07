@@ -16,7 +16,7 @@ const output = {
 	sourcemap: isWatching,
 	sourcemapPathTransform: (relativeSourcePath, sourcemapPath) => {
 		return url.pathToFileURL(resolve(dirname(sourcemapPath), relativeSourcePath)).href;
-	}
+	},
 };
 
 /**
@@ -42,13 +42,13 @@ export default [
 		input: "src/plugin/index.ts",
 		output: {
 			...output,
-			file: `dist/index.js`
+			file: `dist/index.js`,
 		},
 		external,
 		plugins: [
 			typescript({
 				tsconfig: "src/plugin/tsconfig.build.json",
-				mapRoot: isWatching ? "./" : undefined
+				mapRoot: isWatching ? "./" : undefined,
 			}),
 			nodeResolve(),
 			{
@@ -57,11 +57,11 @@ export default [
 					this.emitFile({
 						fileName: "index.d.ts",
 						source: dts("../types/plugin"),
-						type: "asset"
+						type: "asset",
 					});
-				}
-			}
-		]
+				},
+			},
+		],
 	},
 
 	/**
@@ -71,13 +71,13 @@ export default [
 		input: "src/ui/index.ts",
 		output: {
 			...output,
-			file: `dist/browser.js`
+			file: `dist/browser.js`,
 		},
 		external,
 		plugins: [
 			typescript({
 				tsconfig: "src/ui/tsconfig.build.json",
-				mapRoot: isWatching ? "./" : undefined
+				mapRoot: isWatching ? "./" : undefined,
 			}),
 			nodeResolve(),
 			{
@@ -86,10 +86,10 @@ export default [
 					this.emitFile({
 						fileName: "browser.d.ts",
 						source: dts("../types/ui"),
-						type: "asset"
+						type: "asset",
 					});
-				}
-			}
-		]
-	}
+				},
+			},
+		],
+	},
 ];

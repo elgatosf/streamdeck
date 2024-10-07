@@ -1,7 +1,12 @@
 import type streamDeck from "../";
 import type { ActionIdentifier, DeviceIdentifier } from "../../api";
 import type { JsonValue } from "../../common/json";
-import { PUBLIC_PATH_PREFIX, type MessageGateway, type MessageRequestOptions, type MessageResponse } from "../../common/messaging";
+import {
+	type MessageGateway,
+	type MessageRequestOptions,
+	type MessageResponse,
+	PUBLIC_PATH_PREFIX,
+} from "../../common/messaging";
 import type { Action } from "../actions/action";
 import type { DialAction } from "../actions/dial";
 import type { KeyAction } from "../actions/key";
@@ -25,7 +30,7 @@ export class PropertyInspector implements Pick<MessageGateway<Action>, "fetch"> 
 	 */
 	constructor(
 		private readonly router: MessageGateway<Action>,
-		source: ActionIdentifier & DeviceIdentifier
+		source: ActionIdentifier & DeviceIdentifier,
 	) {
 		this.action = actionStore.getActionById(source.context)!;
 	}
@@ -70,13 +75,16 @@ export class PropertyInspector implements Pick<MessageGateway<Action>, "fetch"> 
 	 * @param bodyOrUndefined Request body, or moot when constructing the request with {@link MessageRequestOptions}.
 	 * @returns The response.
 	 */
-	public async fetch<T extends JsonValue = JsonValue>(requestOrPath: MessageRequestOptions | string, bodyOrUndefined?: JsonValue): Promise<MessageResponse<T>> {
+	public async fetch<T extends JsonValue = JsonValue>(
+		requestOrPath: MessageRequestOptions | string,
+		bodyOrUndefined?: JsonValue,
+	): Promise<MessageResponse<T>> {
 		if (typeof requestOrPath === "string") {
 			return this.router.fetch(`${PUBLIC_PATH_PREFIX}${requestOrPath}`, bodyOrUndefined);
 		} else {
 			return this.router.fetch({
 				...requestOrPath,
-				path: `${PUBLIC_PATH_PREFIX}${requestOrPath.path}`
+				path: `${PUBLIC_PATH_PREFIX}${requestOrPath.path}`,
 			});
 		}
 	}
@@ -92,7 +100,7 @@ export class PropertyInspector implements Pick<MessageGateway<Action>, "fetch"> 
 		return connection.send({
 			event: "sendToPropertyInspector",
 			context: this.action.id,
-			payload
+			payload,
 		});
 	}
 }

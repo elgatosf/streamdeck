@@ -55,7 +55,10 @@ export type TouchTap<TSettings extends JsonObject> = ActionEventMessage<
 /**
  * Additional information about the action and event that occurred.
  */
-type EncoderPayload<TSettings extends JsonObject> = Pick<SingleActionPayload<TSettings, "Encoder">, "controller" | "settings"> & {
+type EncoderPayload<TSettings extends JsonObject> = Pick<
+	SingleActionPayload<TSettings, "Encoder">,
+	"controller" | "settings"
+> & {
 	/**
 	 * Coordinates that identify the location of the action.
 	 */

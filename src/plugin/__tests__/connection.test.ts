@@ -1,9 +1,10 @@
 import { type WS as WebSocketServer } from "jest-websocket-mock";
+
 import type { RegistrationInfo } from "..";
 import type { ApplicationDidLaunch, DidReceiveGlobalSettings, OpenUrl } from "../../api";
 import type { Settings } from "../../api/__mocks__/events";
 import { registrationInfo } from "../../api/registration/__mocks__";
-import { LogLevel, Logger } from "../../common/logging";
+import { Logger, LogLevel } from "../../common/logging";
 import { type connection as Connection } from "../connection";
 
 jest.mock("ws");
@@ -25,7 +26,7 @@ describe("connection", () => {
 	beforeEach(async () => {
 		connectionLogger = new Logger({
 			level: LogLevel.TRACE,
-			targets: [{ write: jest.fn() }]
+			targets: [{ write: jest.fn() }],
 		});
 
 		({ logger } = await require("../logging"));
@@ -63,7 +64,7 @@ describe("connection", () => {
 			// Assert
 			await expect(server).toReceiveMessage({
 				event: registerEvent[1],
-				uuid: pluginUUID[1]
+				uuid: pluginUUID[1],
 			});
 		});
 
@@ -92,22 +93,22 @@ describe("connection", () => {
 				event: "setSettings",
 				context: "abc123",
 				payload: {
-					message: "Hello world"
-				}
+					message: "Hello world",
+				},
 			});
 
 			// Assert.
 			await expect(server).toReceiveMessage({
 				event: registerEvent[1],
-				uuid: pluginUUID[1]
+				uuid: pluginUUID[1],
 			});
 
 			await expect(server).toReceiveMessage({
 				event: "setSettings",
 				context: "abc123",
 				payload: {
-					message: "Hello world"
-				}
+					message: "Hello world",
+				},
 			});
 		});
 
@@ -126,9 +127,9 @@ describe("connection", () => {
 				event: "didReceiveGlobalSettings",
 				payload: {
 					settings: {
-						name: "Elgato"
-					}
-				}
+						name: "Elgato",
+					},
+				},
 			} satisfies DidReceiveGlobalSettings<Settings>);
 
 			// Assert.
@@ -137,9 +138,9 @@ describe("connection", () => {
 				event: "didReceiveGlobalSettings",
 				payload: {
 					settings: {
-						name: "Elgato"
-					}
-				}
+						name: "Elgato",
+					},
+				},
 			});
 		});
 
@@ -156,8 +157,8 @@ describe("connection", () => {
 				await connection.send({
 					event: "openUrl",
 					payload: {
-						url: "https://www.elgato.com"
-					}
+						url: "https://www.elgato.com",
+					},
 				});
 
 				// Assert.
@@ -166,9 +167,9 @@ describe("connection", () => {
 					JSON.stringify({
 						event: "openUrl",
 						payload: {
-							url: "https://www.elgato.com"
-						}
-					} satisfies OpenUrl)
+							url: "https://www.elgato.com",
+						},
+					} satisfies OpenUrl),
 				);
 			});
 
@@ -184,8 +185,8 @@ describe("connection", () => {
 				server.send({
 					event: "applicationDidLaunch",
 					payload: {
-						application: "elgato"
-					}
+						application: "elgato",
+					},
 				} satisfies ApplicationDidLaunch);
 
 				// Assert.
@@ -194,9 +195,9 @@ describe("connection", () => {
 					JSON.stringify({
 						event: "applicationDidLaunch",
 						payload: {
-							application: "elgato"
-						}
-					} satisfies ApplicationDidLaunch)
+							application: "elgato",
+						},
+					} satisfies ApplicationDidLaunch),
 				);
 			});
 
@@ -299,7 +300,7 @@ describe("connection", () => {
 			// Arrange
 			const scopedLogger = new Logger({
 				level: LogLevel.TRACE,
-				targets: [{ write: jest.fn() }]
+				targets: [{ write: jest.fn() }],
 			});
 
 			jest.spyOn(logger, "createScope").mockReturnValueOnce(scopedLogger);
@@ -341,7 +342,7 @@ describe("connection", () => {
 
 			// Act, assert.
 			expect(() => connection.registrationParameters).toThrow(
-				"Unable to establish a connection with Stream Deck, missing command line arguments: -port, -pluginUUID, -registerEvent, -info"
+				"Unable to establish a connection with Stream Deck, missing command line arguments: -port, -pluginUUID, -registerEvent, -info",
 			);
 		});
 
@@ -353,7 +354,9 @@ describe("connection", () => {
 			process.argv = [...pluginUUID, ...registerEvent, ...info];
 
 			// Act, assert.
-			expect(() => connection.registrationParameters).toThrow("Unable to establish a connection with Stream Deck, missing command line arguments: -port");
+			expect(() => connection.registrationParameters).toThrow(
+				"Unable to establish a connection with Stream Deck, missing command line arguments: -port",
+			);
 		});
 
 		/**
@@ -364,7 +367,9 @@ describe("connection", () => {
 			process.argv = [...port, ...registerEvent, ...info];
 
 			// Act, assert.
-			expect(() => connection.registrationParameters).toThrow("Unable to establish a connection with Stream Deck, missing command line arguments: -pluginUUID");
+			expect(() => connection.registrationParameters).toThrow(
+				"Unable to establish a connection with Stream Deck, missing command line arguments: -pluginUUID",
+			);
 		});
 
 		/**
@@ -375,7 +380,9 @@ describe("connection", () => {
 			process.argv = [...port, ...pluginUUID, ...info];
 
 			// Act, assert.
-			expect(() => connection.registrationParameters).toThrow("Unable to establish a connection with Stream Deck, missing command line arguments: -registerEvent");
+			expect(() => connection.registrationParameters).toThrow(
+				"Unable to establish a connection with Stream Deck, missing command line arguments: -registerEvent",
+			);
 		});
 
 		/**
@@ -386,7 +393,9 @@ describe("connection", () => {
 			process.argv = [...port, ...pluginUUID, ...registerEvent];
 
 			// Act, assert.
-			expect(() => connection.registrationParameters).toThrow("Unable to establish a connection with Stream Deck, missing command line arguments: -info");
+			expect(() => connection.registrationParameters).toThrow(
+				"Unable to establish a connection with Stream Deck, missing command line arguments: -info",
+			);
 		});
 	});
 

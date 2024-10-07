@@ -25,7 +25,7 @@ describe("FileTarget", () => {
 			fileName: "com.elgato.test",
 			format,
 			maxFileCount: 1,
-			maxSize: 1024 * 10 * 10
+			maxSize: 1024 * 10 * 10,
 		};
 		const fileTarget = new FileTarget(options);
 
@@ -33,7 +33,7 @@ describe("FileTarget", () => {
 		const entry = {
 			level: LogLevel.INFO,
 			data: ["Hello world"],
-			scope: "Test->Logger"
+			scope: "Test->Logger",
 		};
 
 		fileTarget.write(entry);
@@ -64,7 +64,7 @@ describe("FileTarget", () => {
 				mockDirent("com.elgato.test.5.log"),
 				mockDirent("com.elgato.other.0.log"), // Ignore other file name.
 				mockDirent("com.elgato.test.0.log", true), // Ignore directories.
-				mockDirent("com.elgato.test.1.log")
+				mockDirent("com.elgato.test.1.log"),
 			]);
 
 			const options: FileTargetOptions = {
@@ -72,7 +72,7 @@ describe("FileTarget", () => {
 				fileName: "com.elgato.test",
 				format: jest.fn(),
 				maxFileCount: 3,
-				maxSize: 100
+				maxSize: 100,
 			};
 
 			// Act.
@@ -84,8 +84,16 @@ describe("FileTarget", () => {
 			expect(fs.rmSync).toHaveBeenNthCalledWith(2, path.join(options.dest, "com.elgato.test.4.log"));
 
 			expect(fs.renameSync).toHaveBeenCalledTimes(2);
-			expect(fs.renameSync).toHaveBeenNthCalledWith(1, path.join(options.dest, "com.elgato.test.1.log"), path.join(options.dest, "com.elgato.test.2.log"));
-			expect(fs.renameSync).toHaveBeenNthCalledWith(2, path.join(options.dest, "com.elgato.test.0.log"), path.join(options.dest, "com.elgato.test.1.log"));
+			expect(fs.renameSync).toHaveBeenNthCalledWith(
+				1,
+				path.join(options.dest, "com.elgato.test.1.log"),
+				path.join(options.dest, "com.elgato.test.2.log"),
+			);
+			expect(fs.renameSync).toHaveBeenNthCalledWith(
+				2,
+				path.join(options.dest, "com.elgato.test.0.log"),
+				path.join(options.dest, "com.elgato.test.1.log"),
+			);
 		});
 
 		/**
@@ -104,7 +112,7 @@ describe("FileTarget", () => {
 				fileName: "com.elgato.test",
 				format: jest.fn().mockReturnValue("x".repeat(10)),
 				maxFileCount: 3,
-				maxSize: 29
+				maxSize: 29,
 			};
 
 			const fileTarget = new FileTarget(options);
@@ -113,7 +121,7 @@ describe("FileTarget", () => {
 			const entry = {
 				level: LogLevel.ERROR,
 				data: [],
-				scope: ""
+				scope: "",
 			};
 
 			fileTarget.write(entry);
@@ -123,8 +131,16 @@ describe("FileTarget", () => {
 			expect(fs.rmSync).toHaveBeenCalledTimes(1);
 			expect(fs.rmSync).toHaveBeenLastCalledWith(path.join(options.dest, "com.elgato.test.2.log"));
 			expect(fs.renameSync).toHaveBeenCalledTimes(4); // Re-indexing occurs twice, once on construction, and then on exceeding size.
-			expect(fs.renameSync).nthCalledWith(3, path.join(options.dest, "com.elgato.test.1.log"), path.join(options.dest, "com.elgato.test.2.log"));
-			expect(fs.renameSync).nthCalledWith(4, path.join(options.dest, "com.elgato.test.0.log"), path.join(options.dest, "com.elgato.test.1.log"));
+			expect(fs.renameSync).nthCalledWith(
+				3,
+				path.join(options.dest, "com.elgato.test.1.log"),
+				path.join(options.dest, "com.elgato.test.2.log"),
+			);
+			expect(fs.renameSync).nthCalledWith(
+				4,
+				path.join(options.dest, "com.elgato.test.0.log"),
+				path.join(options.dest, "com.elgato.test.1.log"),
+			);
 		});
 	});
 
@@ -137,7 +153,7 @@ describe("FileTarget", () => {
 	function mockDirent(name: string, isDirectory = false) {
 		return {
 			name,
-			isDirectory: jest.fn().mockReturnValue(isDirectory)
+			isDirectory: jest.fn().mockReturnValue(isDirectory),
 		} as unknown as Dirent;
 	}
 });

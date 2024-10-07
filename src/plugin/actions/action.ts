@@ -27,7 +27,7 @@ export class Action<T extends JsonObject = JsonObject> extends ActionContext {
 			connection.on("didReceiveSettings", callback);
 			connection.send({
 				event: "getSettings",
-				context: this.id
+				context: this.id,
 			});
 		});
 	}
@@ -57,7 +57,7 @@ export class Action<T extends JsonObject = JsonObject> extends ActionContext {
 		return connection.send({
 			event: "setSettings",
 			context: this.id,
-			payload: settings
+			payload: settings,
 		});
 	}
 
@@ -68,7 +68,7 @@ export class Action<T extends JsonObject = JsonObject> extends ActionContext {
 	public showAlert(): Promise<void> {
 		return connection.send({
 			event: "showAlert",
-			context: this.id
+			context: this.id,
 		});
 	}
 }

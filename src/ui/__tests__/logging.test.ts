@@ -1,7 +1,6 @@
 /**
  * @jest-environment jsdom
  */
-
 import * as LoggingModule from "../../common/logging";
 import { router } from "../plugin";
 
@@ -19,7 +18,7 @@ describe("Logging", () => {
 		expect(spyOnLogger).toHaveBeenCalledTimes(1);
 		expect(spyOnLogger).toHaveBeenCalledWith<[LoggingModule.LoggerOptions]>({
 			level: LoggingModule.LogLevel.DEBUG,
-			targets: [expect.any(LoggingModule.ConsoleTarget), LoggingModule.createRoutedLogTarget(router)]
+			targets: [expect.any(LoggingModule.ConsoleTarget), LoggingModule.createRoutedLogTarget(router)],
 		});
 	});
 });

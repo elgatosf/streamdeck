@@ -1,5 +1,5 @@
 import type { DeviceDidConnectEvent, DeviceDidDisconnectEvent } from "../..";
-import { DeviceType, type DeviceDidConnect, type DeviceDidDisconnect } from "../../../api";
+import { type DeviceDidConnect, type DeviceDidDisconnect, DeviceType } from "../../../api";
 import { type connection as Connection } from "../../connection";
 import { Device } from "../device";
 import type { DeviceService } from "../service";
@@ -30,8 +30,8 @@ describe("devices", () => {
 			deviceInfo: {
 				name: "Device 1",
 				size: { columns: 8, rows: 4 },
-				type: DeviceType.StreamDeckXL
-			}
+				type: DeviceType.StreamDeckXL,
+			},
 		} satisfies DeviceDidConnect;
 
 		connection.emit("connected", connection.registrationParameters.info);
@@ -46,7 +46,11 @@ describe("devices", () => {
 		expect(listener).toHaveBeenCalledTimes(2);
 		expect(listener).toHaveBeenNthCalledWith<[Device]>(
 			1,
-			new Device(connection.registrationParameters.info.devices[0].id, connection.registrationParameters.info.devices[0], false)
+			new Device(
+				connection.registrationParameters.info.devices[0].id,
+				connection.registrationParameters.info.devices[0],
+				false,
+			),
 		);
 		expect(listener).toHaveBeenNthCalledWith<[Device]>(2, new Device(ev.device, ev.deviceInfo, true));
 	});
@@ -68,8 +72,8 @@ describe("devices", () => {
 			deviceInfo: {
 				name: "Device 1",
 				size: { columns: 8, rows: 4 },
-				type: DeviceType.StreamDeckXL
-			}
+				type: DeviceType.StreamDeckXL,
+			},
 		} satisfies DeviceDidConnect;
 		connection.emit("deviceDidConnect", ev);
 
@@ -78,7 +82,7 @@ describe("devices", () => {
 		// Act, assert: count remains 2 when device disconnected
 		connection.emit("deviceDidDisconnect", {
 			device: ev.device,
-			event: "deviceDidDisconnect"
+			event: "deviceDidDisconnect",
 		});
 
 		expect(deviceService.length).toBe(2);
@@ -114,10 +118,10 @@ describe("devices", () => {
 				name: "New Device",
 				size: {
 					columns: 8,
-					rows: 8
+					rows: 8,
 				},
-				type: DeviceType.StreamDeckMobile
-			}
+				type: DeviceType.StreamDeckMobile,
+			},
 		});
 
 		// Assert.
@@ -145,10 +149,10 @@ describe("devices", () => {
 					name: "New Device",
 					size: {
 						columns: 8,
-						rows: 8
+						rows: 8,
 					},
-					type: DeviceType.StreamDeckMobile
-				}
+					type: DeviceType.StreamDeckMobile,
+				},
 			});
 
 			// Act.
@@ -187,7 +191,7 @@ describe("devices", () => {
 		connection.emit("deviceDidConnect", {
 			event: "deviceDidConnect",
 			device: connection.registrationParameters.info.devices[0].id,
-			deviceInfo: connection.registrationParameters.info.devices[0]
+			deviceInfo: connection.registrationParameters.info.devices[0],
 		});
 
 		// Assert.
@@ -214,13 +218,13 @@ describe("devices", () => {
 		connection.emit("deviceDidConnect", {
 			event: "deviceDidConnect",
 			device: connection.registrationParameters.info.devices[0].id,
-			deviceInfo: connection.registrationParameters.info.devices[0]
+			deviceInfo: connection.registrationParameters.info.devices[0],
 		});
 
 		expect(device.isConnected).toBeTruthy();
 		connection.emit("deviceDidDisconnect", {
 			event: "deviceDidDisconnect",
-			device: connection.registrationParameters.info.devices[0].id
+			device: connection.registrationParameters.info.devices[0].id,
 		});
 
 		// Assert.
@@ -246,7 +250,7 @@ describe("devices", () => {
 
 		connection.emit("deviceDidDisconnect", {
 			event: "deviceDidDisconnect",
-			device: "__UNKNOWN_DEVICE__"
+			device: "__UNKNOWN_DEVICE__",
 		});
 
 		// Assert.
@@ -271,11 +275,11 @@ describe("devices", () => {
 				name: "Test device",
 				size: {
 					columns: 8,
-					rows: 4
+					rows: 4,
 				},
-				type: DeviceType.StreamDeckXL
+				type: DeviceType.StreamDeckXL,
 			},
-			event: "deviceDidConnect"
+			event: "deviceDidConnect",
 		} satisfies DeviceDidConnect;
 
 		// Act (emit).
@@ -286,7 +290,7 @@ describe("devices", () => {
 		expect(listener).toHaveBeenCalledTimes(1);
 		expect(listener).toHaveBeenCalledWith<[DeviceDidConnectEvent]>({
 			device: new Device(ev.device, ev.deviceInfo, true),
-			type: "deviceDidConnect"
+			type: "deviceDidConnect",
 		});
 
 		// Act (dispose).
@@ -307,7 +311,7 @@ describe("devices", () => {
 		const listener = jest.fn();
 		const ev = {
 			device: connection.registrationParameters.info.devices[0].id,
-			event: "deviceDidDisconnect"
+			event: "deviceDidDisconnect",
 		} satisfies DeviceDidDisconnect;
 
 		// Act (emit).
@@ -317,8 +321,12 @@ describe("devices", () => {
 		// Assert (emit).
 		expect(listener).toHaveBeenCalledTimes(1);
 		expect(listener).toHaveBeenCalledWith<[DeviceDidDisconnectEvent]>({
-			device: new Device(connection.registrationParameters.info.devices[0].id, connection.registrationParameters.info.devices[0], false),
-			type: "deviceDidDisconnect"
+			device: new Device(
+				connection.registrationParameters.info.devices[0].id,
+				connection.registrationParameters.info.devices[0],
+				false,
+			),
+			type: "deviceDidDisconnect",
 		});
 
 		// Act (dispose).

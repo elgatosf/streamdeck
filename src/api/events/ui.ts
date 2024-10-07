@@ -15,7 +15,10 @@ export type PropertyInspectorDidDisappear = ActionEventMessageWithoutPayload<"pr
 /**
  * Message sent between the plugin and it's respective UI.
  */
-type PluginMessage<TEvent extends string, TPayload extends JsonValue> = Omit<ActionEventMessage<TEvent, TPayload>, keyof DeviceIdentifier>;
+type PluginMessage<TEvent extends string, TPayload extends JsonValue> = Omit<
+	ActionEventMessage<TEvent, TPayload>,
+	keyof DeviceIdentifier
+>;
 
 /**
  * Occurs when a payload was received from the UI.

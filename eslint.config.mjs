@@ -6,7 +6,7 @@ import tsEslint from "typescript-eslint";
 
 export default [
 	{
-		ignores: [".github/", "dist/", "node_modules/", "types/", "*.mjs"]
+		ignores: [".github/", "dist/", "node_modules/", "types/", "*.mjs"],
 	},
 
 	/**
@@ -21,34 +21,42 @@ export default [
 	 */
 	{
 		plugins: {
-			jsdoc
+			jsdoc,
 		},
 		languageOptions: {
 			globals: {
-				...globals.node
+				...globals.node,
 			},
-			parser: tsParser
+			parser: tsParser,
 		},
 		rules: {
 			indent: [
 				"warn",
 				"tab",
 				{
-					SwitchCase: 1
-				}
+					SwitchCase: 1,
+				},
 			],
 			"jsdoc/check-tag-names": [
 				"warn",
 				{
-					definedTags: ["jest-environment"]
-				}
+					definedTags: ["jest-environment"],
+				},
 			],
 			"jsdoc/no-undefined-types": 1,
 			"jsdoc/require-jsdoc": [
 				"warn",
 				{
-					contexts: ["ClassDeclaration", "PropertyDefinition", "MethodDefinition", "TSEnumDeclaration", "TSEnumMember", "TSPropertySignature", "TSTypeAliasDeclaration"]
-				}
+					contexts: [
+						"ClassDeclaration",
+						"PropertyDefinition",
+						"MethodDefinition",
+						"TSEnumDeclaration",
+						"TSEnumMember",
+						"TSPropertySignature",
+						"TSTypeAliasDeclaration",
+					],
+				},
 			],
 			"@typescript-eslint/explicit-member-accessibility": [
 				"error",
@@ -56,9 +64,9 @@ export default [
 					accessibility: "explicit",
 
 					overrides: {
-						constructors: "no-public"
-					}
-				}
+						constructors: "no-public",
+					},
+				},
 			],
 			"@typescript-eslint/explicit-function-return-type": "warn",
 			"@typescript-eslint/member-ordering": [
@@ -102,15 +110,15 @@ export default [
 							"protected-abstract-method",
 							"protected-method",
 							"private-static-method",
-							"private-method"
+							"private-method",
 						],
 
-						order: "alphabetically"
-					}
-				}
+						order: "alphabetically",
+					},
+				},
 			],
-			"@typescript-eslint/sort-type-constituents": "warn"
-		}
+			"@typescript-eslint/sort-type-constituents": "warn",
+		},
 	},
 
 	/**
@@ -122,12 +130,12 @@ export default [
 			"jsdoc/require-jsdoc": [
 				"warn",
 				{
-					contexts: ["MethodDefinition"]
-				}
+					contexts: ["MethodDefinition"],
+				},
 			],
 			"@typescript-eslint/explicit-function-return-type": "off",
 			"@typescript-eslint/no-explicit-any": "off",
-			"@typescript-eslint/no-require-imports": "off"
-		}
-	}
+			"@typescript-eslint/no-require-imports": "off",
+		},
+	},
 ];

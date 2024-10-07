@@ -13,12 +13,12 @@ export const actionInfo: ActionInfo = {
 		isInMultiAction: false,
 		coordinates: {
 			column: 1,
-			row: 2
+			row: 2,
 		},
 		settings: {
-			message: "Hello world"
-		}
-	}
+			message: "Hello world",
+		},
+	},
 };
 
 /**
@@ -30,14 +30,14 @@ export const registrationInfo: RegistrationInfo = {
 		language: "en",
 		platform: "windows",
 		platformVersion: "11",
-		version: "99.8.6.54321"
+		version: "99.8.6.54321",
 	},
 	colors: {
 		buttonMouseOverBackgroundColor: "#ffffff",
 		buttonPressedBackgroundColor: "#ffffff",
 		buttonPressedBorderColor: "#ffffff",
 		buttonPressedTextColor: "#ffffff",
-		highlightColor: "#ffffff"
+		highlightColor: "#ffffff",
 	},
 	devicePixelRatio: 1,
 	devices: [
@@ -46,13 +46,13 @@ export const registrationInfo: RegistrationInfo = {
 			name: "Device One",
 			size: {
 				columns: 5,
-				rows: 3
+				rows: 3,
 			},
-			type: DeviceType.StreamDeck
-		}
+			type: DeviceType.StreamDeck,
+		},
 	],
 	plugin: {
 		uuid: "com.elgato.test",
-		version: "1.0"
-	}
+		version: "1.0",
+	},
 };

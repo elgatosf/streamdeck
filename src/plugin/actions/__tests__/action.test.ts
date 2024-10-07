@@ -23,11 +23,11 @@ describe("Action", () => {
 			controller: "Keypad",
 			coordinates: {
 				column: 1,
-				row: 2
+				row: 2,
 			},
 			isInMultiAction: false,
-			settings: {}
-		}
+			settings: {},
+		},
 	};
 
 	// Mock device.
@@ -37,11 +37,11 @@ describe("Action", () => {
 			name: "Device 1",
 			size: {
 				columns: 5,
-				rows: 3
+				rows: 3,
 			},
-			type: DeviceType.StreamDeck
+			type: DeviceType.StreamDeck,
 		},
-		true
+		true,
 	);
 
 	beforeAll(() => jest.spyOn(deviceStore, "getDeviceById").mockReturnValue(device));
@@ -77,7 +77,7 @@ describe("Action", () => {
 		expect(connection.send).toHaveBeenCalledTimes(1);
 		expect(connection.send).toHaveBeenLastCalledWith<[GetSettings]>({
 			event: "getSettings",
-			context: action.id
+			context: action.id,
 		});
 
 		expect(Promise.race([settings, false])).resolves.toBe(false);
@@ -92,13 +92,13 @@ describe("Action", () => {
 				controller: "Keypad",
 				coordinates: {
 					column: 0,
-					row: 0
+					row: 0,
 				},
 				isInMultiAction: false,
 				settings: {
-					name: "Other"
-				}
-			}
+					name: "Other",
+				},
+			},
 		});
 
 		connection.emit("didReceiveSettings", {
@@ -110,20 +110,20 @@ describe("Action", () => {
 				controller: "Keypad",
 				coordinates: {
 					column: 1,
-					row: 3
+					row: 3,
 				},
 				isInMultiAction: false,
 				settings: {
-					name: "Elgato"
-				}
-			}
+					name: "Elgato",
+				},
+			},
 		});
 
 		await settings;
 
 		// Assert (Event).
 		expect(await settings).toEqual<Settings>({
-			name: "Elgato"
+			name: "Elgato",
 		});
 	});
 
@@ -135,8 +135,8 @@ describe("Action", () => {
 			...source,
 			payload: {
 				...source.payload,
-				controller: "Keypad"
-			}
+				controller: "Keypad",
+			},
 		});
 
 		expect(action.isKey()).toBe(true);
@@ -151,8 +151,8 @@ describe("Action", () => {
 			...source,
 			payload: {
 				...source.payload,
-				controller: "Encoder"
-			}
+				controller: "Encoder",
+			},
 		} as WillAppear<JsonObject>);
 
 		expect(action.isDial()).toBe(true);
@@ -169,7 +169,7 @@ describe("Action", () => {
 		it("setSettings", async () => {
 			// Arrange, act.
 			await action.setSettings({
-				name: "Elgato"
+				name: "Elgato",
 			});
 
 			// Assert.
@@ -178,8 +178,8 @@ describe("Action", () => {
 				context: action.id,
 				event: "setSettings",
 				payload: {
-					name: "Elgato"
-				}
+					name: "Elgato",
+				},
 			});
 		});
 
@@ -194,7 +194,7 @@ describe("Action", () => {
 			expect(connection.send).toHaveBeenCalledTimes(1);
 			expect(connection.send).toHaveBeenCalledWith<[ShowAlert]>({
 				context: action.id,
-				event: "showAlert"
+				event: "showAlert",
 			});
 		});
 	});

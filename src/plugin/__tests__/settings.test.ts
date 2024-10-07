@@ -1,6 +1,10 @@
-import { type DidReceiveGlobalSettings, type DidReceiveSettings, type GetGlobalSettings, type SetGlobalSettings } from "../../api";
+import {
+	type DidReceiveGlobalSettings,
+	type DidReceiveSettings,
+	type GetGlobalSettings,
+	type SetGlobalSettings,
+} from "../../api";
 import { type Settings } from "../../api/__mocks__/events";
-
 import { actionStore } from "../actions/store";
 import { connection } from "../connection";
 import type { DidReceiveGlobalSettingsEvent, DidReceiveSettingsEvent } from "../events";
@@ -24,7 +28,7 @@ describe("settings", () => {
 			expect(connection.send).toHaveBeenCalledTimes(1);
 			expect(connection.send).toHaveBeenLastCalledWith({
 				event: "getGlobalSettings",
-				context: connection.registrationParameters.pluginUUID
+				context: connection.registrationParameters.pluginUUID,
 			} as GetGlobalSettings);
 
 			expect(Promise.race([settings, false])).resolves.toBe(false);
@@ -34,15 +38,15 @@ describe("settings", () => {
 				event: "didReceiveGlobalSettings",
 				payload: {
 					settings: {
-						name: "Elgato"
-					}
-				}
+						name: "Elgato",
+					},
+				},
 			});
 			await settings;
 
 			// Assert (Event).
 			expect(settings).resolves.toEqual<Settings>({
-				name: "Elgato"
+				name: "Elgato",
 			});
 		});
 
@@ -52,7 +56,7 @@ describe("settings", () => {
 		it("setGlobalSettings", async () => {
 			// Arrange, act.
 			await setGlobalSettings({
-				name: "Elgato"
+				name: "Elgato",
 			});
 
 			// Assert.
@@ -61,8 +65,8 @@ describe("settings", () => {
 				event: "setGlobalSettings",
 				context: connection.registrationParameters.pluginUUID,
 				payload: {
-					name: "Elgato"
-				}
+					name: "Elgato",
+				},
 			});
 		});
 	});
@@ -78,9 +82,9 @@ describe("settings", () => {
 				event: "didReceiveGlobalSettings",
 				payload: {
 					settings: {
-						name: "Elgato"
-					}
-				}
+						name: "Elgato",
+					},
+				},
 			} satisfies DidReceiveGlobalSettings<Settings>;
 
 			// Act (emit).
@@ -91,9 +95,9 @@ describe("settings", () => {
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[DidReceiveGlobalSettingsEvent<Settings>]>({
 				settings: {
-					name: "Elgato"
+					name: "Elgato",
 				},
-				type: "didReceiveGlobalSettings"
+				type: "didReceiveGlobalSettings",
 			});
 
 			// Act (dispose).
@@ -119,13 +123,13 @@ describe("settings", () => {
 					controller: "Keypad",
 					coordinates: {
 						column: 0,
-						row: 0
+						row: 0,
 					},
 					isInMultiAction: false,
 					settings: {
-						name: "Elgato"
-					}
-				}
+						name: "Elgato",
+					},
+				},
 			} satisfies DidReceiveSettings<Settings>;
 
 			// Act (emit).
@@ -137,7 +141,7 @@ describe("settings", () => {
 			expect(listener).toHaveBeenCalledWith<[DidReceiveSettingsEvent<Settings>]>({
 				action: actionStore.getActionById(ev.context)!,
 				payload: ev.payload,
-				type: "didReceiveSettings"
+				type: "didReceiveSettings",
 			});
 
 			// Act (dispose).

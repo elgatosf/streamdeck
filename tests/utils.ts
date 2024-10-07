@@ -11,4 +11,5 @@ export type Prettify<T> = { [k in keyof T]: T[k] extends object ? Prettify<T[k]>
 /**
  * Utility type that returns `true` when {@template T} and {@template U} are equal.
  */
-export type TypesAreEqual<T, U> = (<G>() => G extends Prettify<T> ? 1 : 2) extends <G>() => G extends Prettify<U> ? 1 : 2 ? true : false;
+export type TypesAreEqual<T, U> =
+	(<G>() => G extends Prettify<T> ? 1 : 2) extends <G>() => G extends Prettify<U> ? 1 : 2 ? true : false;

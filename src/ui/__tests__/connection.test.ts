@@ -1,8 +1,8 @@
 /**
  * @jest-environment jsdom
  */
-
 import { WS as WebSocketServer } from "jest-websocket-mock";
+
 import { ActionInfo, RegistrationInfo } from "..";
 import { type DidReceiveGlobalSettings } from "../../api";
 import { actionInfo, registrationInfo } from "../../api/registration/__mocks__/";
@@ -41,7 +41,13 @@ describe("connection", () => {
 		const uuid = "123_registers";
 
 		// Act.
-		await window.connectElgatoStreamDeckSocket(port, uuid, event, JSON.stringify(registrationInfo), JSON.stringify(actionInfo));
+		await window.connectElgatoStreamDeckSocket(
+			port,
+			uuid,
+			event,
+			JSON.stringify(registrationInfo),
+			JSON.stringify(actionInfo),
+		);
 
 		// Assert
 		await expect(server).toReceiveMessage({ event, uuid });
@@ -60,7 +66,13 @@ describe("connection", () => {
 		connection.on("connecting", connectingSpy);
 		connection.on("connected", connectedSpy);
 
-		await window.connectElgatoStreamDeckSocket(port, uuid, "register", JSON.stringify(registrationInfo), JSON.stringify(actionInfo));
+		await window.connectElgatoStreamDeckSocket(
+			port,
+			uuid,
+			"register",
+			JSON.stringify(registrationInfo),
+			JSON.stringify(actionInfo),
+		);
 
 		// Assert
 		await connection.getInfo();
@@ -77,7 +89,13 @@ describe("connection", () => {
 	it("resolve info", async () => {
 		// Arrange.
 		const uuid = "123-resolve-info";
-		await window.connectElgatoStreamDeckSocket(port, uuid, "register", JSON.stringify(registrationInfo), JSON.stringify(actionInfo));
+		await window.connectElgatoStreamDeckSocket(
+			port,
+			uuid,
+			"register",
+			JSON.stringify(registrationInfo),
+			JSON.stringify(actionInfo),
+		);
 
 		// Act.
 		const info = await connection.getInfo();
@@ -95,7 +113,13 @@ describe("connection", () => {
 		// Arrange.
 		const event = "register";
 		const uuid = "123-sends";
-		await window.connectElgatoStreamDeckSocket(port, uuid, event, JSON.stringify(registrationInfo), JSON.stringify(actionInfo));
+		await window.connectElgatoStreamDeckSocket(
+			port,
+			uuid,
+			event,
+			JSON.stringify(registrationInfo),
+			JSON.stringify(actionInfo),
+		);
 
 		// Act.
 		await connection.send({
@@ -103,14 +127,14 @@ describe("connection", () => {
 			action: "com.elgato.test.actionOne",
 			context: "abc123",
 			payload: {
-				message: "Hello world"
-			}
+				message: "Hello world",
+			},
 		});
 
 		// Assert.
 		await expect(server).toReceiveMessage({
 			event,
-			uuid
+			uuid,
 		});
 
 		await expect(server).toReceiveMessage({
@@ -118,8 +142,8 @@ describe("connection", () => {
 			action: "com.elgato.test.actionOne",
 			context: "abc123",
 			payload: {
-				message: "Hello world"
-			}
+				message: "Hello world",
+			},
 		});
 	});
 
@@ -131,16 +155,22 @@ describe("connection", () => {
 		const listener = jest.fn();
 		connection.on("didReceiveGlobalSettings", listener);
 
-		await window.connectElgatoStreamDeckSocket(port, "123-propagate-messages", "register", JSON.stringify(registrationInfo), JSON.stringify(actionInfo));
+		await window.connectElgatoStreamDeckSocket(
+			port,
+			"123-propagate-messages",
+			"register",
+			JSON.stringify(registrationInfo),
+			JSON.stringify(actionInfo),
+		);
 
 		// Act.
 		server.send({
 			event: "didReceiveGlobalSettings",
 			payload: {
 				settings: {
-					message: "Hello world"
-				}
-			}
+					message: "Hello world",
+				},
+			},
 		} satisfies DidReceiveGlobalSettings<Settings>);
 
 		// Assert.
@@ -149,9 +179,9 @@ describe("connection", () => {
 			event: "didReceiveGlobalSettings",
 			payload: {
 				settings: {
-					message: "Hello world"
-				}
-			}
+					message: "Hello world",
+				},
+			},
 		});
 	});
 });

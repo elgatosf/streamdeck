@@ -66,9 +66,9 @@ describe("manifest", () => {
 			const readSpy = jest.spyOn(fs, "readFileSync").mockReturnValueOnce(
 				JSON.stringify({
 					Software: {
-						MinimumVersion: "6.5"
-					}
-				} satisfies Pick<Manifest, "Software">)
+						MinimumVersion: "6.5",
+					},
+				} satisfies Pick<Manifest, "Software">),
 			);
 
 			// Act.

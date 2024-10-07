@@ -21,7 +21,7 @@ describe("current UI", () => {
 		const context = {
 			action: "__reset__",
 			context: "__reset__",
-			device: "__reset__"
+			device: "__reset__",
 		};
 
 		connection.emit("propertyInspectorDidAppear", { event: "propertyInspectorDidAppear", ...context });
@@ -37,7 +37,7 @@ describe("current UI", () => {
 			action: "com.elgato.test.one",
 			context: "key123",
 			device: "dev123",
-			event: "propertyInspectorDidAppear"
+			event: "propertyInspectorDidAppear",
 		});
 
 		// Act.
@@ -58,14 +58,14 @@ describe("current UI", () => {
 			action: "com.elgato.test.one",
 			context: "__first__",
 			device: "dev123",
-			event: "propertyInspectorDidAppear"
+			event: "propertyInspectorDidAppear",
 		});
 
 		connection.emit("propertyInspectorDidAppear", {
 			action: "com.elgato.test.one",
 			context: "key123",
 			device: "dev123",
-			event: "propertyInspectorDidAppear"
+			event: "propertyInspectorDidAppear",
 		});
 
 		// Act.
@@ -86,18 +86,18 @@ describe("current UI", () => {
 		const context = {
 			action: action.manifestId,
 			context: action.id,
-			device: action.device.id
+			device: action.device.id,
 		};
 
 		connection.emit("propertyInspectorDidAppear", {
 			...context,
-			event: "propertyInspectorDidAppear"
+			event: "propertyInspectorDidAppear",
 		});
 
 		expect(getCurrentUI()).not.toBeUndefined();
 		connection.emit("propertyInspectorDidDisappear", {
 			...context,
-			event: "propertyInspectorDidDisappear"
+			event: "propertyInspectorDidDisappear",
 		});
 
 		// Act.
@@ -116,24 +116,24 @@ describe("current UI", () => {
 		const context = {
 			action: action.manifestId,
 			context: action.id,
-			device: action.device.id
+			device: action.device.id,
 		};
 
 		connection.emit("propertyInspectorDidAppear", {
 			...context,
-			event: "propertyInspectorDidAppear"
+			event: "propertyInspectorDidAppear",
 		});
 
 		// Show twice (mock event race)
 		connection.emit("propertyInspectorDidAppear", {
 			...context,
-			event: "propertyInspectorDidAppear"
+			event: "propertyInspectorDidAppear",
 		});
 
 		expect(getCurrentUI()).not.toBeUndefined();
 		connection.emit("propertyInspectorDidDisappear", {
 			...context,
-			event: "propertyInspectorDidDisappear"
+			event: "propertyInspectorDidDisappear",
 		});
 
 		// Act, assert.
@@ -143,7 +143,7 @@ describe("current UI", () => {
 		// Act, assert.
 		connection.emit("propertyInspectorDidDisappear", {
 			...context,
-			event: "propertyInspectorDidDisappear"
+			event: "propertyInspectorDidDisappear",
 		});
 		expect(getCurrentUI()).toBeUndefined();
 	});
@@ -157,7 +157,7 @@ describe("current UI", () => {
 			action: "com.elgato.test.one",
 			context: "key123",
 			device: "dev123",
-			event: "propertyInspectorDidAppear"
+			event: "propertyInspectorDidAppear",
 		});
 
 		expect(getCurrentUI()).not.toBeUndefined();
@@ -165,7 +165,7 @@ describe("current UI", () => {
 			action: "com.elgato.test.one",
 			context: "dial123", // Mocked in actionStore
 			device: "dev123",
-			event: "propertyInspectorDidDisappear"
+			event: "propertyInspectorDidDisappear",
 		});
 
 		// Act.
@@ -185,14 +185,14 @@ describe("current UI", () => {
 			action: "com.elgato.test.one",
 			context: "key123",
 			device: "dev123",
-			event: "propertyInspectorDidAppear"
+			event: "propertyInspectorDidAppear",
 		});
 
 		// Act.
 		await getCurrentUI()!.fetch({
 			path: "/test",
 			unidirectional: true,
-			timeout: 1
+			timeout: 1,
 		});
 
 		// Assert.
@@ -200,7 +200,7 @@ describe("current UI", () => {
 		expect(spyOnFetch).toHaveBeenCalledWith<[MessageRequestOptions]>({
 			path: "public:/test",
 			timeout: 1,
-			unidirectional: true
+			unidirectional: true,
 		});
 	});
 });
@@ -223,9 +223,9 @@ describe("router", () => {
 					path: "/test",
 					unidirectional: false,
 					body: {
-						name: "Elgato"
-					}
-				}
+						name: "Elgato",
+					},
+				},
 			} satisfies DidReceivePropertyInspectorMessage<RawMessageRequest>;
 
 			const awaiter = new PromiseCompletionSource();
@@ -246,10 +246,10 @@ describe("router", () => {
 					path: "/test",
 					unidirectional: false,
 					body: {
-						name: "Elgato"
-					}
+						name: "Elgato",
+					},
 				},
-				expect.any(MessageResponder)
+				expect.any(MessageResponder),
 			);
 
 			// Act, assert (dispose).
@@ -280,7 +280,7 @@ describe("router", () => {
 					action: action.manifestId,
 					context: action.id,
 					device: action.device.id,
-					event: "propertyInspectorDidAppear"
+					event: "propertyInspectorDidAppear",
 				});
 
 				// Act.
@@ -299,9 +299,9 @@ describe("router", () => {
 						path: "/outbound/path-and-body",
 						unidirectional: false,
 						body: {
-							name: "Elgato"
-						}
-					}
+							name: "Elgato",
+						},
+					},
 				});
 			});
 
@@ -315,7 +315,7 @@ describe("router", () => {
 					action: action.manifestId,
 					context: action.id,
 					device: action.device.id,
-					event: "propertyInspectorDidAppear"
+					event: "propertyInspectorDidAppear",
 				});
 
 				// Act.
@@ -323,7 +323,7 @@ describe("router", () => {
 					path: "/outbound/request",
 					body: { name: "Elgato" },
 					timeout: 1000,
-					unidirectional: true
+					unidirectional: true,
 				});
 
 				jest.runAllTimers();
@@ -340,9 +340,9 @@ describe("router", () => {
 						path: "/outbound/request",
 						unidirectional: true,
 						body: {
-							name: "Elgato"
-						}
-					}
+							name: "Elgato",
+						},
+					},
 				});
 			});
 		});
@@ -356,17 +356,17 @@ describe("router", () => {
 			const ev = {
 				action: action.manifestId,
 				context: action.id,
-				device: action.device.id
+				device: action.device.id,
 			};
 
 			connection.emit("propertyInspectorDidAppear", {
 				...ev,
-				event: "propertyInspectorDidAppear"
+				event: "propertyInspectorDidAppear",
 			});
 
 			connection.emit("propertyInspectorDidDisappear", {
 				...ev,
-				event: "propertyInspectorDidDisappear"
+				event: "propertyInspectorDidDisappear",
 			});
 
 			const spyOnSend = jest.spyOn(connection, "send");
@@ -375,10 +375,10 @@ describe("router", () => {
 			const res = await router.fetch({
 				path: "/test",
 				body: {
-					name: "Elgato"
+					name: "Elgato",
 				},
 				unidirectional: true,
-				timeout: 1
+				timeout: 1,
 			});
 
 			// Assert.

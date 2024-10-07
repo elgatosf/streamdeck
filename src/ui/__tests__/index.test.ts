@@ -1,7 +1,6 @@
 /**
  * @jest-environment jsdom
  */
-
 import streamDeck from "../";
 import { DeviceType } from "../../api";
 import { actionInfo, registrationInfo } from "../../api/registration/__mocks__";
