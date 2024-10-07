@@ -1,4 +1,5 @@
 import type streamDeck from "../";
+import type { Enumerable } from "../../common/enumerable";
 import type { JsonObject, JsonValue } from "../../common/json";
 import type { DialAction } from "../actions/dial";
 import type { KeyAction } from "../actions/key";
@@ -34,7 +35,7 @@ export class SingletonAction<T extends JsonObject = JsonObject> {
 	 * Gets the visible actions with the `manifestId` that match this instance's.
 	 * @returns The visible actions.
 	 */
-	public get actions(): IterableIterator<DialAction<T> | KeyAction<T>> {
+	public get actions(): Enumerable<DialAction<T> | KeyAction<T>> {
 		return actionStore.filter((a) => a.manifestId === this.manifestId);
 	}
 
