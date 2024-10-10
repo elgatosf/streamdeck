@@ -15,9 +15,9 @@ import type {
 	TitleParametersDidChange,
 	TouchTap,
 	WillAppear,
-	WillDisappear
+	WillDisappear,
 } from "../../api";
-import { ActionWithoutPayloadEvent, Event, type ActionEvent } from "../../common/events";
+import { type ActionEvent, ActionWithoutPayloadEvent, Event } from "../../common/events";
 import type { JsonObject } from "../../common/json";
 import type { ActionContext } from "../actions/context";
 import type { DialAction } from "../actions/dial";
@@ -54,27 +54,42 @@ export type DeviceDidDisconnectEvent = DeviceEvent<DeviceDidDisconnect, Device>;
 /**
  * Event information received from Stream Deck when a dial is pressed down.
  */
-export type DialDownEvent<TSettings extends JsonObject = JsonObject> = ActionEvent<DialDown<TSettings>, DialAction<TSettings>>;
+export type DialDownEvent<TSettings extends JsonObject = JsonObject> = ActionEvent<
+	DialDown<TSettings>,
+	DialAction<TSettings>
+>;
 
 /**
  * Event information received from Stream Deck when a dial is rotated.
  */
-export type DialRotateEvent<TSettings extends JsonObject = JsonObject> = ActionEvent<DialRotate<TSettings>, DialAction<TSettings>>;
+export type DialRotateEvent<TSettings extends JsonObject = JsonObject> = ActionEvent<
+	DialRotate<TSettings>,
+	DialAction<TSettings>
+>;
 
 /**
  * Event information received from Stream Deck when a pressed dial is released.
  */
-export type DialUpEvent<TSettings extends JsonObject = JsonObject> = ActionEvent<DialUp<TSettings>, DialAction<TSettings>>;
+export type DialUpEvent<TSettings extends JsonObject = JsonObject> = ActionEvent<
+	DialUp<TSettings>,
+	DialAction<TSettings>
+>;
 
 /**
  * Event information received from Stream Deck when the plugin receives settings.
  */
-export type DidReceiveSettingsEvent<TSettings extends JsonObject = JsonObject> = ActionEvent<DidReceiveSettings<TSettings>, DialAction<TSettings> | KeyAction<TSettings>>;
+export type DidReceiveSettingsEvent<TSettings extends JsonObject = JsonObject> = ActionEvent<
+	DidReceiveSettings<TSettings>,
+	DialAction<TSettings> | KeyAction<TSettings>
+>;
 
 /**
  * Event information received from Stream Deck when a key is pressed down.
  */
-export type KeyDownEvent<TSettings extends JsonObject = JsonObject> = ActionEvent<KeyDown<TSettings>, KeyAction<TSettings>>;
+export type KeyDownEvent<TSettings extends JsonObject = JsonObject> = ActionEvent<
+	KeyDown<TSettings>,
+	KeyAction<TSettings>
+>;
 
 /**
  * Event information received from Stream Deck when a pressed key is release.
@@ -113,14 +128,23 @@ export type SystemDidWakeUpEvent = Event<SystemDidWakeUp>;
 /**
  * Event information received from Stream Deck when the touchscreen is touched.
  */
-export type TouchTapEvent<TSettings extends JsonObject = JsonObject> = ActionEvent<TouchTap<TSettings>, DialAction<TSettings>>;
+export type TouchTapEvent<TSettings extends JsonObject = JsonObject> = ActionEvent<
+	TouchTap<TSettings>,
+	DialAction<TSettings>
+>;
 
 /**
  * Event information received from Stream Deck when an action appears on the canvas.
  */
-export type WillAppearEvent<TSettings extends JsonObject = JsonObject> = ActionEvent<WillAppear<TSettings>, DialAction<TSettings> | KeyAction<TSettings>>;
+export type WillAppearEvent<TSettings extends JsonObject = JsonObject> = ActionEvent<
+	WillAppear<TSettings>,
+	DialAction<TSettings> | KeyAction<TSettings>
+>;
 
 /**
  * Event information received from Stream Deck when an action disappears from the canvas.
  */
-export type WillDisappearEvent<TSettings extends JsonObject = JsonObject> = ActionEvent<WillDisappear<TSettings>, ActionContext>;
+export type WillDisappearEvent<TSettings extends JsonObject = JsonObject> = ActionEvent<
+	WillDisappear<TSettings>,
+	ActionContext
+>;

@@ -15,5 +15,5 @@ export enum Target {
 	/**
 	 * Software only should be updated as part of the request.
 	 */
-	Software = 2
+	Software = 2,
 }

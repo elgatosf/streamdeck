@@ -1,7 +1,14 @@
 import type { Manifest, SystemDidWakeUp } from "../api";
 import type { IDisposable } from "../common/disposable";
 import { connection } from "./connection";
-import { ApplicationDidLaunchEvent, ApplicationDidTerminateEvent, ApplicationEvent, DidReceiveDeepLinkEvent, Event, SystemDidWakeUpEvent } from "./events";
+import {
+	ApplicationDidLaunchEvent,
+	ApplicationDidTerminateEvent,
+	ApplicationEvent,
+	DidReceiveDeepLinkEvent,
+	Event,
+	SystemDidWakeUpEvent,
+} from "./events";
 import { requiresVersion } from "./validation";
 
 /**
@@ -53,7 +60,7 @@ export function openUrl(url: string): Promise<void> {
 	return connection.send({
 		event: "openUrl",
 		payload: {
-			url
-		}
+			url,
+		},
 	});
 }

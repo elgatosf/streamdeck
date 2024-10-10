@@ -13,9 +13,9 @@ describe("MessageResponder", () => {
 				__type: "request",
 				id: "abc123",
 				path: "/pets",
-				unidirectional: false
+				unidirectional: false,
 			},
-			proxy
+			proxy,
 		);
 
 		// Act.
@@ -28,7 +28,7 @@ describe("MessageResponder", () => {
 			id: "abc123",
 			path: "/pets",
 			status: 200,
-			body: ["Arthur", "Izzie", "Murphy"]
+			body: ["Arthur", "Izzie", "Murphy"],
 		});
 	});
 
@@ -45,10 +45,10 @@ describe("MessageResponder", () => {
 				path: "/toggle-light",
 				unidirectional: false,
 				body: {
-					id: 123
-				}
+					id: 123,
+				},
 			},
-			proxy
+			proxy,
 		);
 
 		// Act.
@@ -61,7 +61,7 @@ describe("MessageResponder", () => {
 			id: "abc123",
 			path: "/toggle-light",
 			status: 500,
-			body: []
+			body: [],
 		});
 	});
 
@@ -76,9 +76,9 @@ describe("MessageResponder", () => {
 				__type: "request",
 				id: "abc123",
 				path: "/mute-mic",
-				unidirectional: false
+				unidirectional: false,
 			},
-			proxy
+			proxy,
 		);
 
 		// Act.
@@ -90,7 +90,7 @@ describe("MessageResponder", () => {
 			__type: "response",
 			id: "abc123",
 			path: "/mute-mic",
-			status: 501
+			status: 501,
 		});
 	});
 
@@ -105,9 +105,9 @@ describe("MessageResponder", () => {
 				__type: "request",
 				id: "abc123",
 				path: "/test",
-				unidirectional: true
+				unidirectional: true,
 			},
-			proxy
+			proxy,
 		);
 
 		// Act.
@@ -119,7 +119,7 @@ describe("MessageResponder", () => {
 			__type: "response",
 			id: "abc123",
 			path: "/test",
-			status: 200
+			status: 200,
 		});
 	});
 
@@ -136,10 +136,10 @@ describe("MessageResponder", () => {
 				path: "/test",
 				unidirectional: false,
 				body: {
-					id: 123
-				}
+					id: 123,
+				},
 			},
-			proxy
+			proxy,
 		);
 
 		// Act.
@@ -152,7 +152,7 @@ describe("MessageResponder", () => {
 			__type: "response",
 			id: "abc123",
 			path: "/test",
-			status: 200
+			status: 200,
 		});
 	});
 });

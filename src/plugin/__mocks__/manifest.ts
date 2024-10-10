@@ -1,6 +1,9 @@
 import type { Manifest } from "../../api";
 import { Version } from "../common/version";
-import type { getManifest as __getManifest, getSoftwareMinimumVersion as __getSoftwareMinimumVersion } from "../manifest";
+import type {
+	getManifest as __getManifest,
+	getSoftwareMinimumVersion as __getSoftwareMinimumVersion,
+} from "../manifest";
 
 /**
  * Mock {@link Manifest}.
@@ -13,9 +16,9 @@ export const manifest: Manifest = {
 			Icon: "imgs/actions/one",
 			States: [
 				{
-					Image: "imgs/actions/state"
-				}
-			]
+					Image: "imgs/actions/state",
+				},
+			],
 		},
 		{
 			Name: "Action Two",
@@ -23,10 +26,10 @@ export const manifest: Manifest = {
 			Icon: "imgs/actions/one",
 			States: [
 				{
-					Image: "imgs/actions/state"
-				}
-			]
-		}
+					Image: "imgs/actions/state",
+				},
+			],
+		},
 	],
 	Author: "Elgato",
 	CodePath: "index.js",
@@ -36,15 +39,15 @@ export const manifest: Manifest = {
 	OS: [
 		{
 			MinimumVersion: "11",
-			Platform: "windows"
-		}
+			Platform: "windows",
+		},
 	],
 	SDKVersion: 2,
 	Software: {
-		MinimumVersion: "6.5"
+		MinimumVersion: "6.5",
 	},
 	UUID: "com.elgato.test",
-	Version: "1.0.0"
+	Version: "1.0.0",
 };
 
 /**

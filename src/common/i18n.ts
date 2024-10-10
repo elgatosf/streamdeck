@@ -1,4 +1,4 @@
-import { supportedLanguages, type Language } from "../api";
+import { type Language, supportedLanguages } from "../api";
 import { JsonObject } from "../common/json";
 import { freeze, get } from "./utils";
 
@@ -23,7 +23,7 @@ export class I18nProvider {
 	 */
 	constructor(
 		private readonly language: Language,
-		private readonly readTranslations: TranslationsReader
+		private readonly readTranslations: TranslationsReader,
 	) {}
 
 	/**
@@ -51,7 +51,11 @@ export class I18nProvider {
 		}
 
 		// Otherwise check the language and default.
-		return get(key, this.getTranslations(language))?.toString() || get(key, this.getTranslations(I18nProvider.DEFAULT_LANGUAGE))?.toString() || key;
+		return (
+			get(key, this.getTranslations(language))?.toString() ||
+			get(key, this.getTranslations(I18nProvider.DEFAULT_LANGUAGE))?.toString() ||
+			key
+		);
 	}
 
 	/**

@@ -6,7 +6,11 @@ import { PUBLIC_PATH_PREFIX, type RouteConfiguration } from "../../common/messag
 import { Action } from "../actions/action";
 import { actionStore } from "../actions/store";
 import { connection } from "../connection";
-import { SendToPluginEvent, type PropertyInspectorDidAppearEvent, type PropertyInspectorDidDisappearEvent } from "../events";
+import {
+	type PropertyInspectorDidAppearEvent,
+	type PropertyInspectorDidDisappearEvent,
+	SendToPluginEvent,
+} from "../events";
 import { type MessageHandler } from "./message";
 import { type PropertyInspector } from "./property-inspector";
 import { getCurrentUI, router } from "./router";
@@ -29,7 +33,9 @@ class UIController {
 	 * @param listener Function to be invoked when the event occurs.
 	 * @returns A disposable that, when disposed, removes the listener.
 	 */
-	public onDidAppear<T extends JsonObject = JsonObject>(listener: (ev: PropertyInspectorDidAppearEvent<T>) => void): IDisposable {
+	public onDidAppear<T extends JsonObject = JsonObject>(
+		listener: (ev: PropertyInspectorDidAppearEvent<T>) => void,
+	): IDisposable {
 		return connection.disposableOn("propertyInspectorDidAppear", (ev) => {
 			const action = actionStore.getActionById(ev.context);
 			if (action) {
@@ -44,7 +50,9 @@ class UIController {
 	 * @param listener Function to be invoked when the event occurs.
 	 * @returns A disposable that, when disposed, removes the listener.
 	 */
-	public onDidDisappear<T extends JsonObject = JsonObject>(listener: (ev: PropertyInspectorDidDisappearEvent<T>) => void): IDisposable {
+	public onDidDisappear<T extends JsonObject = JsonObject>(
+		listener: (ev: PropertyInspectorDidDisappearEvent<T>) => void,
+	): IDisposable {
 		return connection.disposableOn("propertyInspectorDidDisappear", (ev) => {
 			const action = actionStore.getActionById(ev.context);
 			if (action) {
@@ -62,12 +70,14 @@ class UIController {
 	 * @returns A disposable that, when disposed, removes the listener.
 	 */
 	public onSendToPlugin<TPayload extends JsonValue = JsonValue, TSettings extends JsonObject = JsonObject>(
-		listener: (ev: SendToPluginEvent<TPayload, TSettings>) => void
+		listener: (ev: SendToPluginEvent<TPayload, TSettings>) => void,
 	): IDisposable {
 		return router.disposableOn("unhandledMessage", (ev) => {
 			const action = actionStore.getActionById(ev.context);
 			if (action) {
-				listener(new SendToPluginEvent<TPayload, TSettings>(action, ev as DidReceivePropertyInspectorMessage<TPayload>));
+				listener(
+					new SendToPluginEvent<TPayload, TSettings>(action, ev as DidReceivePropertyInspectorMessage<TPayload>),
+				);
 			}
 		});
 	}
@@ -89,7 +99,7 @@ class UIController {
 	public registerRoute<TBody extends JsonValue = JsonValue, TSettings extends JsonObject = JsonObject>(
 		path: string,
 		handler: MessageHandler<TBody, TSettings>,
-		options?: RouteConfiguration<Action>
+		options?: RouteConfiguration<Action>,
 	): IDisposable {
 		return router.route(`${PUBLIC_PATH_PREFIX}${path}`, handler, options);
 	}

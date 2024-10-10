@@ -11,7 +11,7 @@ import type {
 	TitleParametersDidChange,
 	TouchTap,
 	WillAppear,
-	WillDisappear
+	WillDisappear,
 } from "../../../api";
 import { Settings } from "../../../api/__mocks__/events";
 import { JsonObject } from "../../../common/json";
@@ -29,7 +29,7 @@ import {
 	type TitleParametersDidChangeEvent,
 	type TouchTapEvent,
 	type WillAppearEvent,
-	type WillDisappearEvent
+	type WillDisappearEvent,
 } from "../../events";
 import type { UIController } from "../../ui";
 import { ActionContext } from "../context";
@@ -62,12 +62,12 @@ describe("actions", () => {
 					controller: "Encoder",
 					coordinates: {
 						column: 2,
-						row: 0
+						row: 0,
 					},
 					settings: {
-						name: "Hello world"
-					}
-				}
+						name: "Hello world",
+					},
+				},
 			} satisfies DialDown<Settings>;
 
 			// Act (emit).
@@ -79,7 +79,7 @@ describe("actions", () => {
 			expect(listener).toHaveBeenCalledWith<[DialDownEvent<Settings>]>({
 				action: actionStore.getActionById(ev.context) as DialAction,
 				payload: ev.payload,
-				type: "dialDown"
+				type: "dialDown",
 			});
 
 			// Act (dispose).
@@ -105,14 +105,14 @@ describe("actions", () => {
 					controller: "Encoder",
 					coordinates: {
 						column: 2,
-						row: 0
+						row: 0,
 					},
 					pressed: false,
 					settings: {
-						name: "Hello world"
+						name: "Hello world",
 					},
-					ticks: 1
-				}
+					ticks: 1,
+				},
 			} satisfies DialRotate<Settings>;
 
 			// Act (emit).
@@ -124,7 +124,7 @@ describe("actions", () => {
 			expect(listener).toHaveBeenCalledWith<[DialRotateEvent<Settings>]>({
 				action: actionStore.getActionById(ev.context) as DialAction,
 				payload: ev.payload,
-				type: "dialRotate"
+				type: "dialRotate",
 			});
 
 			// Act (dispose).
@@ -150,12 +150,12 @@ describe("actions", () => {
 					controller: "Encoder",
 					coordinates: {
 						column: 2,
-						row: 0
+						row: 0,
 					},
 					settings: {
-						name: "Hello world"
-					}
-				}
+						name: "Hello world",
+					},
+				},
 			} satisfies DialUp<Settings>;
 
 			// Act (emit).
@@ -167,7 +167,7 @@ describe("actions", () => {
 			expect(listener).toHaveBeenCalledWith<[DialUpEvent<Settings>]>({
 				action: actionStore.getActionById(ev.context) as DialAction,
 				payload: ev.payload,
-				type: "dialUp"
+				type: "dialUp",
 			});
 
 			// Act (dispose).
@@ -193,13 +193,13 @@ describe("actions", () => {
 					controller: "Keypad",
 					coordinates: {
 						column: 2,
-						row: 0
+						row: 0,
 					},
 					isInMultiAction: false,
 					settings: {
-						name: "Hello world"
-					}
-				}
+						name: "Hello world",
+					},
+				},
 			} satisfies KeyDown<Settings>;
 
 			// Act (emit).
@@ -211,7 +211,7 @@ describe("actions", () => {
 			expect(listener).toHaveBeenCalledWith<[KeyDownEvent<Settings>]>({
 				action: actionStore.getActionById(ev.context) as KeyAction,
 				payload: ev.payload,
-				type: "keyDown"
+				type: "keyDown",
 			});
 
 			// Act (dispose).
@@ -237,13 +237,13 @@ describe("actions", () => {
 					controller: "Keypad",
 					coordinates: {
 						column: 2,
-						row: 0
+						row: 0,
 					},
 					isInMultiAction: false,
 					settings: {
-						name: "Hello world"
-					}
-				}
+						name: "Hello world",
+					},
+				},
 			} satisfies KeyUp<Settings>;
 
 			// Act (emit).
@@ -255,7 +255,7 @@ describe("actions", () => {
 			expect(listener).toHaveBeenCalledWith<[KeyUpEvent<Settings>]>({
 				action: actionStore.getActionById(ev.context) as KeyAction,
 				payload: ev.payload,
-				type: "keyUp"
+				type: "keyUp",
 			});
 
 			// Act (dispose).
@@ -281,10 +281,10 @@ describe("actions", () => {
 					controller: "Keypad",
 					coordinates: {
 						column: 2,
-						row: 0
+						row: 0,
 					},
 					settings: {
-						name: "Hello world"
+						name: "Hello world",
 					},
 					title: "Title goes here...",
 					titleParameters: {
@@ -294,9 +294,9 @@ describe("actions", () => {
 						fontUnderline: false,
 						showTitle: true,
 						titleAlignment: "bottom",
-						titleColor: "white"
-					}
-				}
+						titleColor: "white",
+					},
+				},
 			} satisfies TitleParametersDidChange<Settings>;
 
 			// Act (emit).
@@ -308,7 +308,7 @@ describe("actions", () => {
 			expect(listener).toHaveBeenCalledWith<[TitleParametersDidChangeEvent<Settings>]>({
 				action: actionStore.getActionById(ev.context) as KeyAction,
 				payload: ev.payload,
-				type: "titleParametersDidChange"
+				type: "titleParametersDidChange",
 			});
 
 			// Act (dispose).
@@ -334,14 +334,14 @@ describe("actions", () => {
 					controller: "Encoder",
 					coordinates: {
 						column: 2,
-						row: 0
+						row: 0,
 					},
 					settings: {
-						name: "Hello world"
+						name: "Hello world",
 					},
 					hold: false,
-					tapPos: [13, 13]
-				}
+					tapPos: [13, 13],
+				},
 			} satisfies TouchTap<Settings>;
 
 			// Act (emit).
@@ -353,7 +353,7 @@ describe("actions", () => {
 			expect(listener).toHaveBeenCalledWith<[TouchTapEvent<Settings>]>({
 				action: actionStore.getActionById(ev.context) as DialAction,
 				payload: ev.payload,
-				type: "touchTap"
+				type: "touchTap",
 			});
 
 			// Act (dispose).
@@ -379,13 +379,13 @@ describe("actions", () => {
 					controller: "Encoder",
 					coordinates: {
 						column: 2,
-						row: 0
+						row: 0,
 					},
 					isInMultiAction: false,
 					settings: {
-						name: "Hello world"
-					}
-				}
+						name: "Hello world",
+					},
+				},
 			} satisfies WillAppear<Settings>;
 
 			// Act (emit).
@@ -397,7 +397,7 @@ describe("actions", () => {
 			expect(listener).toHaveBeenCalledWith<[WillAppearEvent<Settings>]>({
 				action: actionStore.getActionById(ev.context) as KeyAction,
 				payload: ev.payload,
-				type: "willAppear"
+				type: "willAppear",
 			});
 
 			// Act (dispose).
@@ -423,13 +423,13 @@ describe("actions", () => {
 					controller: "Encoder",
 					coordinates: {
 						column: 2,
-						row: 0
+						row: 0,
 					},
 					isInMultiAction: false,
 					settings: {
-						name: "Hello world"
-					}
-				}
+						name: "Hello world",
+					},
+				},
 			} satisfies WillDisappear<Settings>;
 
 			// Act (emit).
@@ -441,7 +441,7 @@ describe("actions", () => {
 			expect(listener).toHaveBeenCalledWith<[WillDisappearEvent<Settings>]>({
 				action: new ActionContext(ev),
 				payload: ev.payload,
-				type: "willDisappear"
+				type: "willDisappear",
 			});
 
 			// Act (dispose).
@@ -465,7 +465,7 @@ describe("actions", () => {
 			// Arrange.
 			const action: SingletonAction = {
 				manifestId: undefined,
-				actions
+				actions,
 			};
 
 			// Act, assert.
@@ -479,7 +479,7 @@ describe("actions", () => {
 			// Arrange.
 			const action: SingletonAction = {
 				actions,
-				manifestId: "com.elgato.action-service.__one"
+				manifestId: "com.elgato.action-service.__one",
 			};
 
 			// Act, assert.
@@ -501,7 +501,7 @@ describe("actions", () => {
 			// Act.
 			actionService.registerAction({
 				actions,
-				manifestId: keyManifestId
+				manifestId: keyManifestId,
 			});
 
 			// Assert.
@@ -529,19 +529,19 @@ describe("actions", () => {
 					controller: "Encoder",
 					coordinates: {
 						column: 2,
-						row: 0
+						row: 0,
 					},
 					settings: {
-						name: "Hello world"
-					}
-				}
+						name: "Hello world",
+					},
+				},
 			} satisfies DialDown<Settings>;
 
 			// Act.
 			actionService.registerAction({
 				actions,
 				manifestId: ev.action,
-				onDialDown: listener
+				onDialDown: listener,
 			});
 
 			connection.emit("dialDown", ev);
@@ -551,7 +551,7 @@ describe("actions", () => {
 			expect(listener).toHaveBeenCalledWith<[DialDownEvent<Settings>]>({
 				action: actionStore.getActionById(ev.context) as DialAction,
 				payload: ev.payload,
-				type: "dialDown"
+				type: "dialDown",
 			});
 		});
 
@@ -570,21 +570,21 @@ describe("actions", () => {
 					controller: "Encoder",
 					coordinates: {
 						column: 2,
-						row: 0
+						row: 0,
 					},
 					pressed: false,
 					settings: {
-						name: "Hello world"
+						name: "Hello world",
 					},
-					ticks: 1
-				}
+					ticks: 1,
+				},
 			} satisfies DialRotate<Settings>;
 
 			// Act.
 			actionService.registerAction({
 				actions,
 				manifestId: ev.action,
-				onDialRotate: listener
+				onDialRotate: listener,
 			});
 
 			connection.emit("dialRotate", ev);
@@ -594,7 +594,7 @@ describe("actions", () => {
 			expect(listener).toHaveBeenCalledWith<[DialRotateEvent<Settings>]>({
 				action: actionStore.getActionById(ev.context) as DialAction,
 				payload: ev.payload,
-				type: "dialRotate"
+				type: "dialRotate",
 			});
 		});
 
@@ -613,19 +613,19 @@ describe("actions", () => {
 					controller: "Encoder",
 					coordinates: {
 						column: 2,
-						row: 0
+						row: 0,
 					},
 					settings: {
-						name: "Hello world"
-					}
-				}
+						name: "Hello world",
+					},
+				},
 			} satisfies DialUp<Settings>;
 
 			// Act.
 			actionService.registerAction({
 				actions,
 				manifestId: ev.action,
-				onDialUp: listener
+				onDialUp: listener,
 			});
 
 			connection.emit("dialUp", ev);
@@ -635,7 +635,7 @@ describe("actions", () => {
 			expect(listener).toHaveBeenCalledWith<[DialUpEvent<Settings>]>({
 				action: actionStore.getActionById(ev.context) as DialAction,
 				payload: ev.payload,
-				type: "dialUp"
+				type: "dialUp",
 			});
 		});
 
@@ -650,15 +650,15 @@ describe("actions", () => {
 				context: "key123",
 				event: "sendToPlugin",
 				payload: {
-					name: "Hello world"
-				}
+					name: "Hello world",
+				},
 			} satisfies DidReceivePropertyInspectorMessage<Settings>;
 
 			// Act.
 			actionService.registerAction({
 				actions,
 				manifestId: ev.action,
-				onSendToPlugin: listener
+				onSendToPlugin: listener,
 			});
 
 			connection.emit("sendToPlugin", ev);
@@ -668,9 +668,9 @@ describe("actions", () => {
 			expect(listener).toHaveBeenCalledWith<[SendToPluginEvent<Settings, Settings>]>({
 				action: actionStore.getActionById(ev.context) as KeyAction,
 				payload: {
-					name: "Hello world"
+					name: "Hello world",
 				},
-				type: "sendToPlugin"
+				type: "sendToPlugin",
 			});
 		});
 
@@ -689,20 +689,20 @@ describe("actions", () => {
 					controller: "Encoder",
 					coordinates: {
 						column: 2,
-						row: 0
+						row: 0,
 					},
 					isInMultiAction: false,
 					settings: {
-						name: "Hello world"
-					}
-				}
+						name: "Hello world",
+					},
+				},
 			} satisfies DidReceiveSettings<Settings>;
 
 			// Act.
 			actionService.registerAction({
 				actions,
 				manifestId: ev.action,
-				onDidReceiveSettings: listener
+				onDidReceiveSettings: listener,
 			});
 
 			connection.emit("didReceiveSettings", ev);
@@ -712,7 +712,7 @@ describe("actions", () => {
 			expect(listener).toHaveBeenCalledWith<[DidReceiveSettingsEvent<Settings>]>({
 				action: actionStore.getActionById(ev.context) as KeyAction,
 				payload: ev.payload,
-				type: "didReceiveSettings"
+				type: "didReceiveSettings",
 			});
 		});
 
@@ -731,20 +731,20 @@ describe("actions", () => {
 					controller: "Keypad",
 					coordinates: {
 						column: 2,
-						row: 0
+						row: 0,
 					},
 					isInMultiAction: false,
 					settings: {
-						name: "Hello world"
-					}
-				}
+						name: "Hello world",
+					},
+				},
 			} satisfies KeyDown<Settings>;
 
 			// Act.
 			actionService.registerAction({
 				actions,
 				manifestId: ev.action,
-				onKeyDown: listener
+				onKeyDown: listener,
 			});
 
 			connection.emit("keyDown", ev);
@@ -754,7 +754,7 @@ describe("actions", () => {
 			expect(listener).toHaveBeenCalledWith<[KeyDownEvent<Settings>]>({
 				action: actionStore.getActionById(ev.context) as KeyAction,
 				payload: ev.payload,
-				type: "keyDown"
+				type: "keyDown",
 			});
 		});
 
@@ -773,20 +773,20 @@ describe("actions", () => {
 					controller: "Keypad",
 					coordinates: {
 						column: 2,
-						row: 0
+						row: 0,
 					},
 					isInMultiAction: false,
 					settings: {
-						name: "Hello world"
-					}
-				}
+						name: "Hello world",
+					},
+				},
 			} satisfies KeyUp<Settings>;
 
 			// Act.
 			actionService.registerAction({
 				actions,
 				manifestId: ev.action,
-				onKeyUp: listener
+				onKeyUp: listener,
 			});
 
 			connection.emit("keyUp", ev);
@@ -796,7 +796,7 @@ describe("actions", () => {
 			expect(listener).toHaveBeenCalledWith<[KeyUpEvent<Settings>]>({
 				action: actionStore.getActionById(ev.context) as KeyAction,
 				payload: ev.payload,
-				type: "keyUp"
+				type: "keyUp",
 			});
 		});
 
@@ -810,14 +810,14 @@ describe("actions", () => {
 				action: keyManifestId,
 				context: "key123",
 				device: "device123",
-				event: "propertyInspectorDidAppear"
+				event: "propertyInspectorDidAppear",
 			} satisfies PropertyInspectorDidAppear;
 
 			// Act.
 			actionService.registerAction({
 				actions,
 				manifestId: ev.action,
-				onPropertyInspectorDidAppear: listener
+				onPropertyInspectorDidAppear: listener,
 			});
 
 			connection.emit("propertyInspectorDidAppear", ev);
@@ -826,7 +826,7 @@ describe("actions", () => {
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[PropertyInspectorDidAppearEvent<Settings>]>({
 				action: actionStore.getActionById(ev.context) as KeyAction,
-				type: "propertyInspectorDidAppear"
+				type: "propertyInspectorDidAppear",
 			});
 		});
 
@@ -840,14 +840,14 @@ describe("actions", () => {
 				action: keyManifestId,
 				context: "key123",
 				device: "device123",
-				event: "propertyInspectorDidDisappear"
+				event: "propertyInspectorDidDisappear",
 			} satisfies PropertyInspectorDidDisappear;
 
 			// Act (emit).
 			actionService.registerAction({
 				actions,
 				manifestId: ev.action,
-				onPropertyInspectorDidDisappear: listener
+				onPropertyInspectorDidDisappear: listener,
 			});
 
 			connection.emit("propertyInspectorDidDisappear", ev);
@@ -856,7 +856,7 @@ describe("actions", () => {
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[PropertyInspectorDidDisappearEvent<Settings>]>({
 				action: actionStore.getActionById(ev.context) as KeyAction,
-				type: "propertyInspectorDidDisappear"
+				type: "propertyInspectorDidDisappear",
 			});
 		});
 
@@ -875,10 +875,10 @@ describe("actions", () => {
 					controller: "Keypad",
 					coordinates: {
 						column: 2,
-						row: 0
+						row: 0,
 					},
 					settings: {
-						name: "Hello world"
+						name: "Hello world",
 					},
 					title: "Title goes here...",
 					titleParameters: {
@@ -888,16 +888,16 @@ describe("actions", () => {
 						fontUnderline: false,
 						showTitle: true,
 						titleAlignment: "bottom",
-						titleColor: "white"
-					}
-				}
+						titleColor: "white",
+					},
+				},
 			} satisfies TitleParametersDidChange<Settings>;
 
 			// Act.
 			actionService.registerAction({
 				actions,
 				manifestId: ev.action,
-				onTitleParametersDidChange: listener
+				onTitleParametersDidChange: listener,
 			});
 
 			connection.emit("titleParametersDidChange", ev);
@@ -907,7 +907,7 @@ describe("actions", () => {
 			expect(listener).toHaveBeenCalledWith<[TitleParametersDidChangeEvent<Settings>]>({
 				action: actionStore.getActionById(ev.context) as KeyAction,
 				payload: ev.payload,
-				type: "titleParametersDidChange"
+				type: "titleParametersDidChange",
 			});
 		});
 
@@ -926,21 +926,21 @@ describe("actions", () => {
 					controller: "Encoder",
 					coordinates: {
 						column: 2,
-						row: 0
+						row: 0,
 					},
 					settings: {
-						name: "Hello world"
+						name: "Hello world",
 					},
 					hold: false,
-					tapPos: [13, 13]
-				}
+					tapPos: [13, 13],
+				},
 			} satisfies TouchTap<Settings>;
 
 			// Act.
 			actionService.registerAction({
 				actions,
 				manifestId: ev.action,
-				onTouchTap: listener
+				onTouchTap: listener,
 			});
 
 			connection.emit("touchTap", ev);
@@ -950,7 +950,7 @@ describe("actions", () => {
 			expect(listener).toHaveBeenCalledWith<[TouchTapEvent<Settings>]>({
 				action: actionStore.getActionById(ev.context) as DialAction,
 				payload: ev.payload,
-				type: "touchTap"
+				type: "touchTap",
 			});
 		});
 
@@ -969,20 +969,20 @@ describe("actions", () => {
 					controller: "Encoder",
 					coordinates: {
 						column: 2,
-						row: 0
+						row: 0,
 					},
 					isInMultiAction: false,
 					settings: {
-						name: "Hello world"
-					}
-				}
+						name: "Hello world",
+					},
+				},
 			} satisfies WillAppear<Settings>;
 
 			// Act.
 			actionService.registerAction({
 				actions,
 				manifestId: ev.action,
-				onWillAppear: listener
+				onWillAppear: listener,
 			});
 
 			connection.emit("willAppear", ev);
@@ -992,7 +992,7 @@ describe("actions", () => {
 			expect(listener).toHaveBeenCalledWith<[WillAppearEvent<Settings>]>({
 				action: actionStore.getActionById(ev.context) as KeyAction,
 				payload: ev.payload,
-				type: "willAppear"
+				type: "willAppear",
 			});
 		});
 
@@ -1011,20 +1011,20 @@ describe("actions", () => {
 					controller: "Encoder",
 					coordinates: {
 						column: 2,
-						row: 0
+						row: 0,
 					},
 					isInMultiAction: false,
 					settings: {
-						name: "Hello world"
-					}
-				}
+						name: "Hello world",
+					},
+				},
 			} satisfies WillDisappear<Settings>;
 
 			// Act.
 			actionService.registerAction({
 				actions,
 				manifestId: ev.action,
-				onWillDisappear: listener
+				onWillDisappear: listener,
 			});
 
 			connection.emit("willDisappear", ev);
@@ -1034,7 +1034,7 @@ describe("actions", () => {
 			expect(listener).toHaveBeenCalledWith<[WillDisappearEvent<Settings>]>({
 				action: new ActionContext(ev),
 				payload: ev.payload,
-				type: "willDisappear"
+				type: "willDisappear",
 			});
 		});
 	});

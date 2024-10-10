@@ -9,13 +9,13 @@ export const deviceService = {
 			name: "Device One",
 			size: {
 				columns: 5,
-				rows: 3
+				rows: 3,
 			},
 			type: DeviceType.StreamDeckXL,
-			isConnected: true
+			isConnected: true,
 		} satisfies {
 			// Public properties only.
 			[K in keyof Device]: Device[K];
 		};
-	})
+	}),
 };

@@ -12,7 +12,7 @@ describe("MessageGateway", () => {
 		const proxy = jest.fn();
 		const provider = jest.fn().mockReturnValue({
 			id: "abc123",
-			manifestId: "com.elgato.test.one"
+			manifestId: "com.elgato.test.one",
 		});
 		const handler = jest.fn();
 		const gateway = new MessageGateway<MockAction>(proxy, provider);
@@ -29,9 +29,9 @@ describe("MessageGateway", () => {
 				path: "/test",
 				unidirectional: false,
 				body: {
-					name: "Elgato"
-				}
-			}
+					name: "Elgato",
+				},
+			},
 		} satisfies DidReceivePropertyInspectorMessage<RawMessageRequest>);
 
 		expect(handler).toHaveBeenCalledTimes(1);
@@ -39,15 +39,15 @@ describe("MessageGateway", () => {
 			{
 				action: {
 					id: "abc123",
-					manifestId: "com.elgato.test.one"
+					manifestId: "com.elgato.test.one",
 				},
 				path: "/test",
 				unidirectional: false,
 				body: {
-					name: "Elgato"
-				}
+					name: "Elgato",
+				},
 			},
-			expect.any(MessageResponder)
+			expect.any(MessageResponder),
 		);
 	});
 
@@ -90,8 +90,8 @@ describe("MessageGateway", () => {
 				__type: "request",
 				id: "abc123",
 				path: "/",
-				unidirectional: false
-			}
+				unidirectional: false,
+			},
 		} satisfies DidReceivePropertyInspectorMessage<RawMessageRequest>);
 
 		// Assert.
@@ -104,8 +104,8 @@ describe("MessageGateway", () => {
 				__type: "request",
 				id: "abc123",
 				path: "/",
-				unidirectional: false
-			}
+				unidirectional: false,
+			},
 		});
 
 		expect(unknownMessageFn).toHaveBeenCalledTimes(1);
@@ -117,8 +117,8 @@ describe("MessageGateway", () => {
 				__type: "request",
 				id: "abc123",
 				path: "/",
-				unidirectional: false
-			}
+				unidirectional: false,
+			},
 		});
 	});
 
@@ -137,7 +137,7 @@ describe("MessageGateway", () => {
 			action: "com.elgato.test.one",
 			context: "abc123",
 			event: "sendToPlugin",
-			payload: true
+			payload: true,
 		});
 
 		// Assert.
@@ -146,7 +146,7 @@ describe("MessageGateway", () => {
 			action: "com.elgato.test.one",
 			context: "abc123",
 			event: "sendToPlugin",
-			payload: true
+			payload: true,
 		});
 	});
 
@@ -164,7 +164,7 @@ describe("MessageGateway", () => {
 			},
 			() => {
 				order.push("Second");
-			}
+			},
 		];
 
 		// Act.
@@ -180,9 +180,9 @@ describe("MessageGateway", () => {
 				path: "/test",
 				unidirectional: false,
 				body: {
-					name: "Elgato"
-				}
-			} satisfies RawMessageRequest
+					name: "Elgato",
+				},
+			} satisfies RawMessageRequest,
 		});
 
 		// Assert
@@ -222,8 +222,8 @@ describe("MessageGateway", () => {
 				__type: "request",
 				id: "12345",
 				path: "/test",
-				unidirectional: false
-			}
+				unidirectional: false,
+			},
 		} satisfies DidReceivePropertyInspectorMessage<RawMessageRequest>;
 
 		const disposable = gateway.route("/test", listener);
@@ -252,7 +252,7 @@ describe("MessageGateway", () => {
 						action: "com.elgato.test.one",
 						context: "abc123",
 						event: "sendToPlugin",
-						payload: value as JsonValue
+						payload: value as JsonValue,
 					});
 				} catch (err) {
 					// SafeError is acceptable as it is used for "/error"
@@ -269,7 +269,7 @@ describe("MessageGateway", () => {
 					action: "com.elgato.test.one",
 					context: "abc123",
 					event: "sendToPropertyInspector",
-					payload: value as JsonValue
+					payload: value as JsonValue,
 				});
 
 				return true;
@@ -281,7 +281,7 @@ describe("MessageGateway", () => {
 
 			server.route("/test", (req, res) => {
 				res.success({
-					name: "Elgato"
+					name: "Elgato",
 				});
 			});
 
@@ -326,7 +326,7 @@ describe("MessageGateway", () => {
 				// Arrange, act.
 				const { body, ok, status } = await client.fetch({
 					path: "/test",
-					unidirectional: true
+					unidirectional: true,
 				});
 
 				// Assert.
@@ -368,7 +368,7 @@ describe("MessageGateway", () => {
 				// Arrange, act.
 				const { body, ok, status } = await client.fetch({
 					path: "/error",
-					unidirectional: true
+					unidirectional: true,
 				});
 
 				// Assert.
@@ -389,7 +389,7 @@ describe("MessageGateway", () => {
 				// Act.
 				const res = client.fetch({
 					path: "/test",
-					timeout: 1
+					timeout: 1,
 				});
 
 				const { body, ok, status } = await res;
@@ -427,7 +427,7 @@ describe("MessageGateway", () => {
 				// Arrange, act.
 				const { body, ok, status } = await client.fetch({
 					path: "/unknown",
-					unidirectional: true
+					unidirectional: true,
 				});
 
 				// Assert.

@@ -242,12 +242,16 @@ export type SwitchToProfile = ContextualizedCommandWithPayload<
 /**
  * Sends a message to the property inspector.
  */
-export type SendToPropertyInspector<TPayload extends JsonValue = JsonValue> = ContextualizedCommandWithPayload<"sendToPropertyInspector", TPayload>;
+export type SendToPropertyInspector<TPayload extends JsonValue = JsonValue> = ContextualizedCommandWithPayload<
+	"sendToPropertyInspector",
+	TPayload
+>;
 
 /**
  * Sends a message to the plugin.
  */
-export type SendToPlugin<TPayload extends JsonValue = JsonValue> = ActionIdentifier & CommandBaseWithPayload<"sendToPlugin", TPayload>;
+export type SendToPlugin<TPayload extends JsonValue = JsonValue> = ActionIdentifier &
+	CommandBaseWithPayload<"sendToPlugin", TPayload>;
 
 /**
  * Command sent to Stream Deck, from the plugin.

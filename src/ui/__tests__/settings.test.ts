@@ -1,13 +1,26 @@
 /**
  * @jest-environment jsdom
  */
-
 import type { DidReceiveGlobalSettingsEvent, DidReceiveSettingsEvent } from "..";
-import type { DidReceiveGlobalSettings, DidReceiveSettings, GetGlobalSettings, SetGlobalSettings, UIGetSettings, UISetSettings } from "../../api";
+import type {
+	DidReceiveGlobalSettings,
+	DidReceiveSettings,
+	GetGlobalSettings,
+	SetGlobalSettings,
+	UIGetSettings,
+	UISetSettings,
+} from "../../api";
 import { actionInfo } from "../../api/registration/__mocks__";
 import { PromiseCompletionSource } from "../../common/promises";
 import { connection } from "../connection";
-import { getGlobalSettings, getSettings, onDidReceiveGlobalSettings, onDidReceiveSettings, setGlobalSettings, setSettings } from "../settings";
+import {
+	getGlobalSettings,
+	getSettings,
+	onDidReceiveGlobalSettings,
+	onDidReceiveSettings,
+	setGlobalSettings,
+	setSettings,
+} from "../settings";
 
 jest.mock("../connection");
 
@@ -34,7 +47,7 @@ describe("settings", () => {
 		expect(spyOnSend).toHaveBeenCalledTimes(1);
 		expect(spyOnSend).toHaveBeenLastCalledWith({
 			event: "getGlobalSettings",
-			context: uuid
+			context: uuid,
 		} satisfies GetGlobalSettings);
 
 		expect(Promise.race([settings, false])).resolves.toBe(false);
@@ -44,15 +57,15 @@ describe("settings", () => {
 			event: "didReceiveGlobalSettings",
 			payload: {
 				settings: {
-					message: "Testing getGlobalSettings"
-				}
-			}
+					message: "Testing getGlobalSettings",
+				},
+			},
 		} satisfies DidReceiveGlobalSettings<Settings>);
 		await settings;
 
 		// Assert (Event).
 		expect(settings).resolves.toEqual<Settings>({
-			message: "Testing getGlobalSettings"
+			message: "Testing getGlobalSettings",
 		});
 	});
 
@@ -76,7 +89,7 @@ describe("settings", () => {
 		expect(spyOnSend).toHaveBeenLastCalledWith({
 			event: "getSettings",
 			action: actionInfo.action,
-			context: uuid
+			context: uuid,
 		} satisfies UIGetSettings);
 
 		expect(Promise.race([settings, false])).resolves.toBe(false);
@@ -91,19 +104,19 @@ describe("settings", () => {
 				controller: "Encoder",
 				coordinates: {
 					column: 1,
-					row: 0
+					row: 0,
 				},
 				isInMultiAction: false,
 				settings: {
-					message: "Testing getSettings"
-				}
-			}
+					message: "Testing getSettings",
+				},
+			},
 		} satisfies DidReceiveSettings<Settings>);
 		await settings;
 
 		// Assert (Event).
 		expect(settings).resolves.toEqual<Settings>({
-			message: "Testing getSettings"
+			message: "Testing getSettings",
 		});
 	});
 
@@ -117,9 +130,9 @@ describe("settings", () => {
 			event: "didReceiveGlobalSettings",
 			payload: {
 				settings: {
-					message: "Testing didReceiveGlobalSettings"
-				}
-			}
+					message: "Testing didReceiveGlobalSettings",
+				},
+			},
 		};
 
 		// Act.
@@ -130,9 +143,9 @@ describe("settings", () => {
 		expect(listener).toHaveBeenCalledTimes(1);
 		expect(listener).toHaveBeenCalledWith<[DidReceiveGlobalSettingsEvent<Settings>]>({
 			settings: {
-				message: "Testing didReceiveGlobalSettings"
+				message: "Testing didReceiveGlobalSettings",
 			},
-			type: "didReceiveGlobalSettings"
+			type: "didReceiveGlobalSettings",
 		});
 
 		// Act (dispose).
@@ -158,13 +171,13 @@ describe("settings", () => {
 				controller: "Keypad",
 				coordinates: {
 					column: 2,
-					row: 2
+					row: 2,
 				},
 				isInMultiAction: false,
 				settings: {
-					message: "Testing onDidReceiveSettings"
-				}
-			}
+					message: "Testing onDidReceiveSettings",
+				},
+			},
 		};
 
 		// Act.
@@ -178,10 +191,10 @@ describe("settings", () => {
 				id: ev.context,
 				manifestId: ev.action,
 				getSettings,
-				setSettings
+				setSettings,
 			},
 			payload: ev.payload,
-			type: "didReceiveSettings"
+			type: "didReceiveSettings",
 		});
 
 		// Act (dispose).
@@ -198,7 +211,7 @@ describe("settings", () => {
 	it("sends setGlobalSettings", async () => {
 		// Arrange, act.
 		await setGlobalSettings({
-			message: "Testing setGlobalSettings"
+			message: "Testing setGlobalSettings",
 		});
 
 		// Assert.
@@ -207,8 +220,8 @@ describe("settings", () => {
 			context: uuid,
 			event: "setGlobalSettings",
 			payload: {
-				message: "Testing setGlobalSettings"
-			}
+				message: "Testing setGlobalSettings",
+			},
 		});
 	});
 
@@ -218,7 +231,7 @@ describe("settings", () => {
 	it("sends setSettings", async () => {
 		// Arrange, act.
 		await setSettings({
-			message: "Testing setSettings"
+			message: "Testing setSettings",
 		});
 
 		// Assert.
@@ -228,8 +241,8 @@ describe("settings", () => {
 			context: uuid,
 			event: "setSettings",
 			payload: {
-				message: "Testing setSettings"
-			}
+				message: "Testing setSettings",
+			},
 		});
 	});
 });

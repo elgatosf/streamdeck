@@ -21,10 +21,12 @@ describe("i18n", () => {
 		const mockedXMLHttpRequest = {
 			open: jest.fn(),
 			send: jest.fn(),
-			response: JSON.stringify({ Localization: { Hello: "Hallo Welt" } })
+			response: JSON.stringify({ Localization: { Hello: "Hallo Welt" } }),
 		};
 
-		jest.spyOn(window, "location", "get").mockReturnValue({ href: "file:///c:/temp/com.elgato.test.sdPlugin/ui/pi.html" } as unknown as Location);
+		jest
+			.spyOn(window, "location", "get")
+			.mockReturnValue({ href: "file:///c:/temp/com.elgato.test.sdPlugin/ui/pi.html" } as unknown as Location);
 		jest.spyOn(window, "XMLHttpRequest").mockImplementation(() => mockedXMLHttpRequest as unknown as XMLHttpRequest);
 		jest.spyOn(window.navigator, "language", "get").mockReturnValue("de");
 
@@ -36,7 +38,11 @@ describe("i18n", () => {
 		// Assert.
 		expect(result).toBe("Hallo Welt");
 		expect(mockedXMLHttpRequest.open).toHaveBeenCalledTimes(1);
-		expect(mockedXMLHttpRequest.open).toHaveBeenCalledWith("GET", "file:///c:/temp/com.elgato.test.sdPlugin/de.json", false);
+		expect(mockedXMLHttpRequest.open).toHaveBeenCalledWith(
+			"GET",
+			"file:///c:/temp/com.elgato.test.sdPlugin/de.json",
+			false,
+		);
 	});
 
 	/**
@@ -47,10 +53,12 @@ describe("i18n", () => {
 		const mockedXMLHttpRequest = {
 			open: jest.fn(),
 			send: jest.fn(),
-			response: JSON.stringify({ Localization: { Hello: "Hello world" } })
+			response: JSON.stringify({ Localization: { Hello: "Hello world" } }),
 		};
 
-		jest.spyOn(window, "location", "get").mockReturnValue({ href: "file:///c:/temp/com.elgato.test.sdPlugin/ui/pi.html" } as unknown as Location);
+		jest
+			.spyOn(window, "location", "get")
+			.mockReturnValue({ href: "file:///c:/temp/com.elgato.test.sdPlugin/ui/pi.html" } as unknown as Location);
 		jest.spyOn(window, "XMLHttpRequest").mockImplementation(() => mockedXMLHttpRequest as unknown as XMLHttpRequest);
 		jest.spyOn(window.navigator, "language", "get").mockReturnValue("en-US");
 
@@ -62,7 +70,11 @@ describe("i18n", () => {
 		// Assert.
 		expect(result).toBe("Hello world");
 		expect(mockedXMLHttpRequest.open).toHaveBeenCalledTimes(1);
-		expect(mockedXMLHttpRequest.open).toHaveBeenCalledWith("GET", "file:///c:/temp/com.elgato.test.sdPlugin/en.json", false);
+		expect(mockedXMLHttpRequest.open).toHaveBeenCalledWith(
+			"GET",
+			"file:///c:/temp/com.elgato.test.sdPlugin/en.json",
+			false,
+		);
 	});
 });
 
@@ -73,7 +85,9 @@ describe("xmlHttpRequestLocaleProviderSync", () => {
 	let xmlHttpRequestLocaleProviderSync: typeof import("../i18n").xmlHttpRequestLocaleProviderSync;
 
 	beforeEach(async () => {
-		jest.spyOn(window, "location", "get").mockReturnValue({ href: "file:///c:/temp/com.elgato.test.sdPlugin/ui/pi.html" } as unknown as Location);
+		jest
+			.spyOn(window, "location", "get")
+			.mockReturnValue({ href: "file:///c:/temp/com.elgato.test.sdPlugin/ui/pi.html" } as unknown as Location);
 		({ xmlHttpRequestLocaleProviderSync } = await require("../i18n"));
 	});
 
@@ -89,9 +103,9 @@ describe("xmlHttpRequestLocaleProviderSync", () => {
 			send: jest.fn(),
 			response: JSON.stringify({
 				Localization: {
-					Hello: "Hello world"
-				}
-			})
+					Hello: "Hello world",
+				},
+			}),
 		};
 
 		jest.spyOn(window, "XMLHttpRequest").mockImplementation(() => mockedXMLHttpRequest as unknown as XMLHttpRequest);
@@ -102,7 +116,11 @@ describe("xmlHttpRequestLocaleProviderSync", () => {
 		// Assert.
 		expect(translations).toEqual({ Hello: "Hello world" });
 		expect(mockedXMLHttpRequest.open).toHaveBeenCalledTimes(1);
-		expect(mockedXMLHttpRequest.open).toHaveBeenCalledWith("GET", "file:///c:/temp/com.elgato.test.sdPlugin/en.json", false);
+		expect(mockedXMLHttpRequest.open).toHaveBeenCalledWith(
+			"GET",
+			"file:///c:/temp/com.elgato.test.sdPlugin/en.json",
+			false,
+		);
 		expect(mockedXMLHttpRequest.send).toHaveBeenCalledTimes(1);
 	});
 
@@ -116,7 +134,7 @@ describe("xmlHttpRequestLocaleProviderSync", () => {
 			send: jest.fn().mockImplementation(() => {
 				throw new DOMException(undefined, "NOT_FOUND_ERR");
 			}),
-			response: null
+			response: null,
 		};
 
 		jest.spyOn(window, "XMLHttpRequest").mockImplementation(() => mockedXMLHttpRequest as unknown as XMLHttpRequest);
@@ -139,7 +157,7 @@ describe("xmlHttpRequestLocaleProviderSync", () => {
 		const mockedXMLHttpRequest = {
 			open: jest.fn(),
 			send: jest.fn(),
-			response: `{"value":invalid}`
+			response: `{"value":invalid}`,
 		};
 
 		jest.spyOn(window, "XMLHttpRequest").mockImplementation(() => mockedXMLHttpRequest as unknown as XMLHttpRequest);
@@ -152,7 +170,10 @@ describe("xmlHttpRequestLocaleProviderSync", () => {
 		// Assert.
 		expect(translations).toBeNull();
 		expect(spyOnLogError).toHaveBeenCalledTimes(1);
-		expect(spyOnLogError).toHaveBeenCalledWith("Failed to load translations from file:///c:/temp/com.elgato.test.sdPlugin/es.json", expect.any(SyntaxError));
+		expect(spyOnLogError).toHaveBeenCalledWith(
+			"Failed to load translations from file:///c:/temp/com.elgato.test.sdPlugin/es.json",
+			expect.any(SyntaxError),
+		);
 	});
 
 	/**
@@ -163,7 +184,7 @@ describe("xmlHttpRequestLocaleProviderSync", () => {
 		const mockedXMLHttpRequest = {
 			open: jest.fn(),
 			send: jest.fn(),
-			response: `{"NotLocalization":"Incorrect format"}`
+			response: `{"NotLocalization":"Incorrect format"}`,
 		};
 
 		jest.spyOn(window, "XMLHttpRequest").mockImplementation(() => mockedXMLHttpRequest as unknown as XMLHttpRequest);
@@ -176,7 +197,10 @@ describe("xmlHttpRequestLocaleProviderSync", () => {
 		// Assert.
 		expect(translations).toBeNull();
 		expect(spyOnLogError).toHaveBeenCalledTimes(1);
-		expect(spyOnLogError).toHaveBeenCalledWith(`Failed to load translations from file:///c:/temp/com.elgato.test.sdPlugin/ja.json`, expect.any(TypeError));
+		expect(spyOnLogError).toHaveBeenCalledWith(
+			`Failed to load translations from file:///c:/temp/com.elgato.test.sdPlugin/ja.json`,
+			expect.any(TypeError),
+		);
 	});
 });
 
@@ -189,13 +213,17 @@ describe("cwd", () => {
 
 	it("should find folder ending in .sdPlugin", () => {
 		// Arrange, act, asset.
-		jest.spyOn(window, "location", "get").mockReturnValue({ href: "file:///c:/plugins/com.elgato.test.sdPlugin/pi.html" } as unknown as Location);
+		jest
+			.spyOn(window, "location", "get")
+			.mockReturnValue({ href: "file:///c:/plugins/com.elgato.test.sdPlugin/pi.html" } as unknown as Location);
 		expect(cwd()).toBe("file:///c:/plugins/com.elgato.test.sdPlugin/");
 	});
 
 	it("should return the entire path minus the file when .sdPlugin not found", () => {
 		// Arrange, act, asset.
-		jest.spyOn(window, "location", "get").mockReturnValue({ href: "file:///c:/test/folder/ui/pi.html" } as unknown as Location);
+		jest
+			.spyOn(window, "location", "get")
+			.mockReturnValue({ href: "file:///c:/test/folder/ui/pi.html" } as unknown as Location);
 		expect(cwd()).toBe("file:///c:/test/folder/ui/");
 	});
 });

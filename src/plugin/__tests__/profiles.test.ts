@@ -26,8 +26,8 @@ describe("profiles", () => {
 				device: "DEV1",
 				payload: {
 					profile: undefined,
-					page: undefined
-				}
+					page: undefined,
+				},
 			});
 			expect(connection.send).toHaveBeenNthCalledWith<[SwitchToProfile]>(2, {
 				event: "switchToProfile",
@@ -35,8 +35,8 @@ describe("profiles", () => {
 				device: "DEV2",
 				payload: {
 					profile: "Custom Profile (1)",
-					page: undefined
-				}
+					page: undefined,
+				},
 			});
 			expect(connection.send).toHaveBeenNthCalledWith<[SwitchToProfile]>(3, {
 				event: "switchToProfile",
@@ -44,8 +44,8 @@ describe("profiles", () => {
 				device: "DEV3",
 				payload: {
 					profile: "Custom Profile (2)",
-					page: 2
-				}
+					page: 2,
+				},
 			});
 		});
 
@@ -58,7 +58,7 @@ describe("profiles", () => {
 
 			// Act, assert.
 			expect(() => switchToProfile("DEV1", "Profile", 1)).toThrow(
-				`[ERR_NOT_SUPPORTED]: Switching to a profile page requires Stream Deck version 6.5 or higher, but current version is 6.4; please update Stream Deck and the "Software.MinimumVersion" in the plugin's manifest to "6.5" or higher.`
+				`[ERR_NOT_SUPPORTED]: Switching to a profile page requires Stream Deck version 6.5 or higher, but current version is 6.4; please update Stream Deck and the "Software.MinimumVersion" in the plugin's manifest to "6.5" or higher.`,
 			);
 		});
 	});

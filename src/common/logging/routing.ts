@@ -19,12 +19,12 @@ export function createRoutedLogTarget(router: MessageGateway<unknown>): LogTarge
 				body: {
 					level: entry.level,
 					message: format(entry),
-					scope: entry.scope
+					scope: entry.scope,
 				} satisfies JsonSafeLogEntry,
 				path: LOGGER_WRITE_PATH,
-				unidirectional: true
+				unidirectional: true,
 			});
-		}
+		},
 	};
 }
 

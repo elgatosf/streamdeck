@@ -1,8 +1,25 @@
-import type { ApplicationDidLaunch, ApplicationDidTerminate, DidReceiveDeepLink, OpenUrl, SystemDidWakeUp } from "../../api";
+import type {
+	ApplicationDidLaunch,
+	ApplicationDidTerminate,
+	DidReceiveDeepLink,
+	OpenUrl,
+	SystemDidWakeUp,
+} from "../../api";
 import { Version } from "../common/version";
 import { connection } from "../connection";
-import { ApplicationDidLaunchEvent, ApplicationDidTerminateEvent, DidReceiveDeepLinkEvent, SystemDidWakeUpEvent } from "../events";
-import { onApplicationDidLaunch, onApplicationDidTerminate, onDidReceiveDeepLink, onSystemDidWakeUp, openUrl } from "../system";
+import {
+	ApplicationDidLaunchEvent,
+	ApplicationDidTerminateEvent,
+	DidReceiveDeepLinkEvent,
+	SystemDidWakeUpEvent,
+} from "../events";
+import {
+	onApplicationDidLaunch,
+	onApplicationDidTerminate,
+	onDidReceiveDeepLink,
+	onSystemDidWakeUp,
+	openUrl,
+} from "../system";
 
 jest.mock("../connection");
 jest.mock("../logging");
@@ -18,8 +35,8 @@ describe("system", () => {
 		const ev = {
 			event: "applicationDidLaunch",
 			payload: {
-				application: "notepad.exe"
-			}
+				application: "notepad.exe",
+			},
 		} satisfies ApplicationDidLaunch;
 
 		// Act (emit).
@@ -30,7 +47,7 @@ describe("system", () => {
 		expect(listener).toHaveBeenCalledTimes(1);
 		expect(listener).toHaveBeenCalledWith<[ApplicationDidLaunchEvent]>({
 			application: "notepad.exe",
-			type: "applicationDidLaunch"
+			type: "applicationDidLaunch",
 		});
 
 		// Act (dispose).
@@ -50,8 +67,8 @@ describe("system", () => {
 		const ev = {
 			event: "applicationDidTerminate",
 			payload: {
-				application: "notepad.exe"
-			}
+				application: "notepad.exe",
+			},
 		} satisfies ApplicationDidTerminate;
 
 		// Act (emit).
@@ -62,7 +79,7 @@ describe("system", () => {
 		expect(listener).toHaveBeenCalledTimes(1);
 		expect(listener).toHaveBeenCalledWith<[ApplicationDidTerminateEvent]>({
 			application: "notepad.exe",
-			type: "applicationDidTerminate"
+			type: "applicationDidTerminate",
 		});
 
 		// Act (dispose).
@@ -83,8 +100,8 @@ describe("system", () => {
 			const ev = {
 				event: "didReceiveDeepLink",
 				payload: {
-					url: "/hello/world?foo=bar#heading"
-				}
+					url: "/hello/world?foo=bar#heading",
+				},
 			} satisfies DidReceiveDeepLink;
 
 			// Act (emit).
@@ -99,9 +116,9 @@ describe("system", () => {
 					href: ev.payload.url,
 					path: "/hello/world",
 					query: "foo=bar",
-					queryParameters: new URLSearchParams([["foo", "bar"]])
+					queryParameters: new URLSearchParams([["foo", "bar"]]),
 				},
-				type: "didReceiveDeepLink"
+				type: "didReceiveDeepLink",
 			});
 
 			// Act (dispose).
@@ -121,7 +138,7 @@ describe("system", () => {
 
 			// Act, assert.
 			expect(() => onDidReceiveDeepLink(jest.fn())).toThrow(
-				`[ERR_NOT_SUPPORTED]: Receiving deep-link messages requires Stream Deck version 6.5 or higher, but current version is 6.4; please update Stream Deck and the "Software.MinimumVersion" in the plugin's manifest to "6.5" or higher.`
+				`[ERR_NOT_SUPPORTED]: Receiving deep-link messages requires Stream Deck version 6.5 or higher, but current version is 6.4; please update Stream Deck and the "Software.MinimumVersion" in the plugin's manifest to "6.5" or higher.`,
 			);
 		});
 	});
@@ -133,7 +150,7 @@ describe("system", () => {
 		// Arrange
 		const listener = jest.fn();
 		const ev = {
-			event: "systemDidWakeUp"
+			event: "systemDidWakeUp",
 		} satisfies SystemDidWakeUp;
 
 		// Act (emit).
@@ -143,7 +160,7 @@ describe("system", () => {
 		// Assert (emit).
 		expect(listener).toHaveBeenCalledTimes(1);
 		expect(listener).toHaveBeenCalledWith<[SystemDidWakeUpEvent]>({
-			type: "systemDidWakeUp"
+			type: "systemDidWakeUp",
 		});
 
 		// Act (dispose).
@@ -166,8 +183,8 @@ describe("system", () => {
 		expect(connection.send).toHaveBeenCalledWith<[OpenUrl]>({
 			event: "openUrl",
 			payload: {
-				url: "https://www.elgato.com"
-			}
+				url: "https://www.elgato.com",
+			},
 		});
 	});
 });

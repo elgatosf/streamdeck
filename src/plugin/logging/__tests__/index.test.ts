@@ -1,5 +1,6 @@
 import path from "node:path";
-import { LogLevel, type LoggerOptions } from "../../../common/logging";
+
+import { type LoggerOptions, LogLevel } from "../../../common/logging";
 import { ConsoleTarget } from "../../../common/logging/console-target";
 import { type FileTargetOptions } from "../file-target";
 
@@ -41,7 +42,7 @@ describe("createLogger", () => {
 			expect(Logger).toHaveBeenCalledWith<[LoggerOptions]>({
 				level: LogLevel.DEBUG,
 				minimumLevel: LogLevel.TRACE,
-				targets: [expect.any(ConsoleTarget), spyOnFileTarget.mock.instances[0]]
+				targets: [expect.any(ConsoleTarget), spyOnFileTarget.mock.instances[0]],
 			});
 		});
 
@@ -61,7 +62,7 @@ describe("createLogger", () => {
 			expect(Logger).toHaveBeenCalledWith<[LoggerOptions]>({
 				level: LogLevel.INFO,
 				minimumLevel: LogLevel.DEBUG,
-				targets: [spyOnFileTarget.mock.instances[0]]
+				targets: [spyOnFileTarget.mock.instances[0]],
 			});
 		});
 	});
@@ -84,7 +85,7 @@ describe("createLogger", () => {
 			fileName: "com.elgato.test",
 			format: stringFormatter(),
 			maxFileCount: 10,
-			maxSize: 50 * 1024 * 1024
+			maxSize: 50 * 1024 * 1024,
 		});
 	});
 

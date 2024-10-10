@@ -1,4 +1,5 @@
 import WebSocket from "ws";
+
 import type { PluginCommand, PluginEventMap, RegistrationInfo } from "../api";
 import { RegistrationParameter } from "../api";
 import { EventEmitter } from "../common/event-emitter";
@@ -66,8 +67,8 @@ class Connection extends EventEmitter<ExtendedEventMap> {
 				webSocket.send(
 					JSON.stringify({
 						event: this.registrationParameters.registerEvent,
-						uuid: this.registrationParameters.pluginUUID
-					})
+						uuid: this.registrationParameters.pluginUUID,
+					}),
 				);
 
 				// Web socket established a connection with the Stream Deck and the plugin was registered.
@@ -101,7 +102,7 @@ class Connection extends EventEmitter<ExtendedEventMap> {
 			port: undefined,
 			info: undefined,
 			pluginUUID: undefined,
-			registerEvent: undefined
+			registerEvent: undefined,
 		};
 
 		const scopedLogger = logger.createScope("RegistrationParameters");
@@ -150,7 +151,9 @@ class Connection extends EventEmitter<ExtendedEventMap> {
 		validate(RegistrationParameter.Info, params.info);
 
 		if (invalidArgs.length > 0) {
-			throw new Error(`Unable to establish a connection with Stream Deck, missing command line arguments: ${invalidArgs.join(", ")}`);
+			throw new Error(
+				`Unable to establish a connection with Stream Deck, missing command line arguments: ${invalidArgs.join(", ")}`,
+			);
 		}
 
 		return params as RegistrationParameters;

@@ -26,7 +26,7 @@ describe("requiresVersion", () => {
 			// Arrange, act, assert.
 			const appVersion = new Version("1.0.0.0");
 			expect(() => requiresVersion(99, appVersion, "Test")).toThrow(
-				`[ERR_NOT_SUPPORTED]: Test requires Stream Deck version 99.0 or higher, but current version is 1.0; please update Stream Deck and the "Software.MinimumVersion" in the plugin's manifest to "99.0" or higher.`
+				`[ERR_NOT_SUPPORTED]: Test requires Stream Deck version 99.0 or higher, but current version is 1.0; please update Stream Deck and the "Software.MinimumVersion" in the plugin's manifest to "99.0" or higher.`,
 			);
 		});
 	});
@@ -49,7 +49,7 @@ describe("requiresVersion", () => {
 			// Arrange, act, assert.
 			jest.spyOn(ManifestModule, "getSoftwareMinimumVersion").mockReturnValue(new Version("1.0"));
 			expect(() => requiresVersion(99, appVersion, "Test")).toThrow(
-				`[ERR_NOT_SUPPORTED]: Test requires Stream Deck version 99.0 or higher; please update the "Software.MinimumVersion" in the plugin's manifest to "99.0" or higher.`
+				`[ERR_NOT_SUPPORTED]: Test requires Stream Deck version 99.0 or higher; please update the "Software.MinimumVersion" in the plugin's manifest to "99.0" or higher.`,
 			);
 		});
 	});

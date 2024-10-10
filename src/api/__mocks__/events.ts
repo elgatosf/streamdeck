@@ -11,8 +11,8 @@ const device = "device123";
 export const applicationDidLaunch: events.ApplicationDidLaunch = {
 	event: "applicationDidLaunch",
 	payload: {
-		application: "notepad.exe"
-	}
+		application: "notepad.exe",
+	},
 };
 
 /**
@@ -21,8 +21,8 @@ export const applicationDidLaunch: events.ApplicationDidLaunch = {
 export const applicationDidTerminate: events.ApplicationDidTerminate = {
 	event: "applicationDidTerminate",
 	payload: {
-		application: "cmd.exe"
-	}
+		application: "cmd.exe",
+	},
 };
 
 /**
@@ -35,10 +35,10 @@ export const deviceDidConnect: events.DeviceDidConnect = {
 		name: "Test Device",
 		size: {
 			columns: 8,
-			rows: 4
+			rows: 4,
 		},
-		type: DeviceType.StreamDeckXL
-	}
+		type: DeviceType.StreamDeckXL,
+	},
 };
 
 /**
@@ -46,7 +46,7 @@ export const deviceDidConnect: events.DeviceDidConnect = {
  */
 export const deviceDidDisconnect: events.DeviceDidDisconnect = {
 	event: "deviceDidDisconnect",
-	device
+	device,
 };
 
 /**
@@ -61,12 +61,12 @@ export const dialDown: events.DialDown<Settings> = {
 		controller: "Encoder",
 		coordinates: {
 			column: 3,
-			row: 0
+			row: 0,
 		},
 		settings: {
-			name: "Elgato"
-		}
-	}
+			name: "Elgato",
+		},
+	},
 };
 
 /**
@@ -81,14 +81,14 @@ export const dialRotate: events.DialRotate<Settings> = {
 		controller: "Encoder",
 		coordinates: {
 			column: 3,
-			row: 0
+			row: 0,
 		},
 		pressed: true,
 		settings: {
-			name: "Elgato"
+			name: "Elgato",
 		},
-		ticks: -2
-	}
+		ticks: -2,
+	},
 };
 
 /**
@@ -96,7 +96,7 @@ export const dialRotate: events.DialRotate<Settings> = {
  */
 export const dialUp: events.DialUp<Settings> = {
 	...dialDown,
-	event: "dialUp"
+	event: "dialUp",
 };
 
 /**
@@ -106,9 +106,9 @@ export const didReceiveGlobalSettings: events.DidReceiveGlobalSettings<Settings>
 	event: "didReceiveGlobalSettings",
 	payload: {
 		settings: {
-			name: "Elgato"
-		}
-	}
+			name: "Elgato",
+		},
+	},
 };
 
 /**
@@ -123,13 +123,13 @@ export const didReceiveSettings: events.DidReceiveSettings<Settings> = {
 		controller: "Encoder",
 		coordinates: {
 			column: 1,
-			row: 0
+			row: 0,
 		},
 		isInMultiAction: false,
 		settings: {
-			name: "Elgato"
-		}
-	}
+			name: "Elgato",
+		},
+	},
 };
 
 /**
@@ -144,14 +144,14 @@ export const keyDown: events.KeyDown<Settings> = {
 		controller: "Keypad",
 		coordinates: {
 			column: 2,
-			row: 2
+			row: 2,
 		},
 		isInMultiAction: false,
 		settings: {
-			name: "Elgato"
+			name: "Elgato",
 		},
-		state: 1
-	}
+		state: 1,
+	},
 };
 
 /**
@@ -159,7 +159,7 @@ export const keyDown: events.KeyDown<Settings> = {
  */
 export const keyUp: events.KeyUp<Settings> = {
 	...keyDown,
-	event: "keyUp"
+	event: "keyUp",
 };
 
 /**
@@ -169,7 +169,7 @@ export const propertyInspectorDidAppear: events.PropertyInspectorDidAppear = {
 	action,
 	context,
 	device,
-	event: "propertyInspectorDidAppear"
+	event: "propertyInspectorDidAppear",
 };
 
 /**
@@ -177,7 +177,7 @@ export const propertyInspectorDidAppear: events.PropertyInspectorDidAppear = {
  */
 export const propertyInspectorDidDisappear: events.PropertyInspectorDidDisappear = {
 	...propertyInspectorDidAppear,
-	event: "propertyInspectorDidDisappear"
+	event: "propertyInspectorDidDisappear",
 };
 
 /**
@@ -188,15 +188,15 @@ export const didReceivePropertyInspectorMessage: events.DidReceivePropertyInspec
 	context,
 	event: "sendToPlugin",
 	payload: {
-		name: "Elgato"
-	}
+		name: "Elgato",
+	},
 };
 
 /**
  * Mocked {@link events.SystemDidWakeUp} message.
  */
 export const systemDidWakeUp: events.SystemDidWakeUp = {
-	event: "systemDidWakeUp"
+	event: "systemDidWakeUp",
 };
 
 /**
@@ -211,10 +211,10 @@ export const titleParametersDidChange: events.TitleParametersDidChange<Settings>
 		controller: "Keypad",
 		coordinates: {
 			column: 3,
-			row: 4
+			row: 4,
 		},
 		settings: {
-			name: "Elgato"
+			name: "Elgato",
 		},
 		title: "Hello world",
 		titleParameters: {
@@ -224,10 +224,10 @@ export const titleParametersDidChange: events.TitleParametersDidChange<Settings>
 			fontUnderline: true,
 			showTitle: false,
 			titleAlignment: "middle",
-			titleColor: "#ffffff"
+			titleColor: "#ffffff",
 		},
-		state: 1
-	}
+		state: 1,
+	},
 };
 
 /**
@@ -242,14 +242,14 @@ export const touchTap: events.TouchTap<Settings> = {
 		controller: "Encoder",
 		coordinates: {
 			column: 4,
-			row: 0
+			row: 0,
 		},
 		hold: true,
 		settings: {
-			name: "Elgato"
+			name: "Elgato",
 		},
-		tapPos: [10, 50]
-	}
+		tapPos: [10, 50],
+	},
 };
 
 /**
@@ -264,14 +264,14 @@ export const willAppear: events.WillAppear<Settings> = {
 		controller: "Keypad",
 		coordinates: {
 			column: 8,
-			row: 2
+			row: 2,
 		},
 		isInMultiAction: false,
 		settings: {
-			name: "Elgato"
+			name: "Elgato",
 		},
-		state: 1
-	}
+		state: 1,
+	},
 };
 
 /**
@@ -279,7 +279,7 @@ export const willAppear: events.WillAppear<Settings> = {
  */
 export const willDisappear: events.WillDisappear<Settings> = {
 	...willAppear,
-	event: "willDisappear"
+	event: "willDisappear",
 };
 
 /**

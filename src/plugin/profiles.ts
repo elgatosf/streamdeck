@@ -23,7 +23,7 @@ export function switchToProfile(deviceId: string, profile?: string, page?: numbe
 		device: deviceId,
 		payload: {
 			page,
-			profile
-		}
+			profile,
+		},
 	});
 }

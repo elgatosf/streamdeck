@@ -16,7 +16,7 @@ import type {
 	TitleParametersDidChangeEvent,
 	TouchTapEvent,
 	WillAppearEvent,
-	WillDisappearEvent
+	WillDisappearEvent,
 } from "../events";
 import type { Action } from "./action";
 import { actionStore } from "./store";

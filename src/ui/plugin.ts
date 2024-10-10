@@ -2,13 +2,13 @@ import type { IDisposable } from "../common/disposable";
 import type { JsonObject, JsonValue } from "../common/json";
 import {
 	MessageGateway,
-	PUBLIC_PATH_PREFIX,
 	type MessageRequestOptions,
 	type MessageResponder,
 	type MessageResponse,
+	PUBLIC_PATH_PREFIX,
 	type RouteConfiguration,
 	type UnscopedMessageHandler,
-	type UnscopedMessageRequest
+	type UnscopedMessageRequest,
 } from "../common/messaging";
 import type { Action } from "./action";
 import { connection } from "./connection";
@@ -23,7 +23,7 @@ const router = new MessageGateway<Action>(
 		await sendPayload(payload);
 		return true;
 	},
-	({ context: id, action: manifestId }) => ({ id, manifestId, getSettings, setSettings }) satisfies Action
+	({ context: id, action: manifestId }) => ({ id, manifestId, getSettings, setSettings }) satisfies Action,
 );
 
 connection.on("sendToPropertyInspector", (ev) => router.process(ev));
@@ -78,13 +78,16 @@ class PluginController {
 	 * @param bodyOrUndefined Request body, or moot when constructing the request with {@link MessageRequestOptions}.
 	 * @returns The response.
 	 */
-	public async fetch<T extends JsonValue = JsonValue>(requestOrPath: MessageRequestOptions | string, bodyOrUndefined?: JsonValue): Promise<MessageResponse<T>> {
+	public async fetch<T extends JsonValue = JsonValue>(
+		requestOrPath: MessageRequestOptions | string,
+		bodyOrUndefined?: JsonValue,
+	): Promise<MessageResponse<T>> {
 		if (typeof requestOrPath === "string") {
 			return router.fetch(`${PUBLIC_PATH_PREFIX}${requestOrPath}`, bodyOrUndefined);
 		} else {
 			return router.fetch({
 				...requestOrPath,
-				path: `${PUBLIC_PATH_PREFIX}${requestOrPath.path}`
+				path: `${PUBLIC_PATH_PREFIX}${requestOrPath.path}`,
 			});
 		}
 	}
@@ -97,7 +100,7 @@ class PluginController {
 	 * @returns A disposable that, when disposed, removes the listener.
 	 */
 	public onSendToPropertyInspector<TPayload extends JsonValue = JsonValue, TSettings extends JsonObject = JsonObject>(
-		listener: (ev: SendToPropertyInspectorEvent<TPayload, TSettings>) => void
+		listener: (ev: SendToPropertyInspectorEvent<TPayload, TSettings>) => void,
 	): IDisposable {
 		return router.disposableOn("unhandledMessage", (ev) => {
 			listener({
@@ -105,10 +108,10 @@ class PluginController {
 					id: ev.context,
 					manifestId: ev.action,
 					getSettings,
-					setSettings
+					setSettings,
 				},
 				payload: ev.payload as TPayload,
-				type: "sendToPropertyInspector"
+				type: "sendToPropertyInspector",
 			});
 		});
 	}
@@ -130,7 +133,7 @@ class PluginController {
 	public registerRoute<TBody extends JsonValue = JsonValue, TSettings extends JsonObject = JsonObject>(
 		path: string,
 		handler: MessageHandler<TBody, TSettings>,
-		options?: RouteConfiguration<Action>
+		options?: RouteConfiguration<Action>,
 	): IDisposable {
 		return router.route(`${PUBLIC_PATH_PREFIX}${path}`, handler, options);
 	}
@@ -153,14 +156,14 @@ class PluginController {
 async function sendPayload(payload: JsonValue): Promise<void> {
 	const {
 		uuid,
-		actionInfo: { action }
+		actionInfo: { action },
 	} = await connection.getInfo();
 
 	return connection.send({
 		event: "sendToPlugin",
 		action,
 		context: uuid,
-		payload
+		payload,
 	});
 }
 
@@ -172,7 +175,10 @@ export { router, type PluginController };
  * @template TBody The type of the request body.
  * @template TSettings The type of the action's settings.
  */
-export type MessageRequest<TBody extends JsonValue = JsonValue, TSettings extends JsonObject = JsonObject> = UnscopedMessageRequest<Action<TSettings>, TBody>;
+export type MessageRequest<
+	TBody extends JsonValue = JsonValue,
+	TSettings extends JsonObject = JsonObject,
+> = UnscopedMessageRequest<Action<TSettings>, TBody>;
 
 /**
  * Function responsible for handling requests received from the plugin.
@@ -183,5 +189,5 @@ export type MessageRequest<TBody extends JsonValue = JsonValue, TSettings extend
  */
 export type MessageHandler<TBody extends JsonValue = JsonValue, TSettings extends JsonObject = JsonObject> = (
 	request: MessageRequest<TBody, TSettings>,
-	responder: MessageResponder
+	responder: MessageResponder,
 ) => ReturnType<UnscopedMessageHandler<Action<TSettings>, TBody>>;

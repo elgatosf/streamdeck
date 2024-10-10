@@ -26,13 +26,13 @@ function defineConfig(input, output) {
 			sourcemap: isWatching,
 			sourcemapPathTransform: (relativeSourcePath, sourcemapPath) => {
 				return url.pathToFileURL(resolve(dirname(sourcemapPath), relativeSourcePath)).href;
-			}
+			},
 		},
 		external: ["ws", "@elgato/schemas/streamdeck/plugins"],
 		plugins: [
 			typescript({
 				tsconfig: join("src", dirname(input), "tsconfig.build.json"),
-				mapRoot: isWatching ? "./" : undefined
+				mapRoot: isWatching ? "./" : undefined,
 			}),
 			nodeResolve(),
 			{
@@ -47,11 +47,11 @@ import streamDeck from ${types};
 
 export * from ${types};
 export default streamDeck;
-`
+`,
 					});
-				}
-			}
-		]
+				},
+			},
+		],
 	};
 }
 

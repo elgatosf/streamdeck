@@ -12,7 +12,6 @@ type ActionDefinition = Pick<Unpack<Manifest["Actions"]>, "UUID">;
  * @param definition The definition of the action, e.g. it's identifier, name, etc.
  * @returns The definition decorator.
  */
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function action(definition: ActionDefinition) {
 	const manifestId = definition.UUID;
 

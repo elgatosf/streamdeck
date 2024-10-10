@@ -1,7 +1,6 @@
 /**
  * @jest-environment jsdom
  */
-
 import type { OpenUrl } from "../../api";
 import { connection } from "../connection";
 import { openUrl } from "../system";
@@ -21,8 +20,8 @@ describe("system", () => {
 		expect(connection.send).toHaveBeenCalledWith<[OpenUrl]>({
 			event: "openUrl",
 			payload: {
-				url: "https://elgato.com"
-			}
+				url: "https://elgato.com",
+			},
 		});
 	});
 });

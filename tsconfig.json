@@ -1,22 +1,22 @@
 {
-	"extends": "@tsconfig/node20/tsconfig.json",
-	"compilerOptions": {
-		"customConditions": [
-			"node"
-		],
-		"lib": [
-			"es2022",
-			"esnext.disposable"
-		],
-		"module": "es2022",
-		"moduleResolution": "Bundler"
-	},
-	"include": [
-		"src/",
-		"tests/"
-	],
-	"exclude": [
-		"src/ui",
-		"node_modules/"
-	]
+    "extends": "@tsconfig/node20/tsconfig.json",
+    "compilerOptions": {
+        "customConditions": [
+            "node"
+        ],
+        "lib": [
+            "es2022",
+            "esnext.disposable"
+        ],
+        "module": "es2022",
+        "moduleResolution": "Bundler"
+    },
+    "include": [
+        "src/",
+        "tests/"
+    ],
+    "exclude": [
+        "src/ui",
+        "node_modules/"
+    ]
 }

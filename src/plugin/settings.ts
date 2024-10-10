@@ -17,7 +17,7 @@ export function getGlobalSettings<T extends JsonObject = JsonObject>(): Promise<
 		connection.once("didReceiveGlobalSettings", (ev: DidReceiveGlobalSettings<T>) => resolve(ev.payload.settings));
 		connection.send({
 			event: "getGlobalSettings",
-			context: connection.registrationParameters.pluginUUID
+			context: connection.registrationParameters.pluginUUID,
 		});
 	});
 }
@@ -28,8 +28,12 @@ export function getGlobalSettings<T extends JsonObject = JsonObject>(): Promise<
  * @param listener Function to be invoked when the event occurs.
  * @returns A disposable that, when disposed, removes the listener.
  */
-export function onDidReceiveGlobalSettings<T extends JsonObject = JsonObject>(listener: (ev: DidReceiveGlobalSettingsEvent<T>) => void): IDisposable {
-	return connection.disposableOn("didReceiveGlobalSettings", (ev: DidReceiveGlobalSettings<T>) => listener(new DidReceiveGlobalSettingsEvent(ev)));
+export function onDidReceiveGlobalSettings<T extends JsonObject = JsonObject>(
+	listener: (ev: DidReceiveGlobalSettingsEvent<T>) => void,
+): IDisposable {
+	return connection.disposableOn("didReceiveGlobalSettings", (ev: DidReceiveGlobalSettings<T>) =>
+		listener(new DidReceiveGlobalSettingsEvent(ev)),
+	);
 }
 
 /**
@@ -38,7 +42,9 @@ export function onDidReceiveGlobalSettings<T extends JsonObject = JsonObject>(li
  * @param listener Function to be invoked when the event occurs.
  * @returns A disposable that, when disposed, removes the listener.
  */
-export function onDidReceiveSettings<T extends JsonObject = JsonObject>(listener: (ev: DidReceiveSettingsEvent<T>) => void): IDisposable {
+export function onDidReceiveSettings<T extends JsonObject = JsonObject>(
+	listener: (ev: DidReceiveSettingsEvent<T>) => void,
+): IDisposable {
 	return connection.disposableOn("didReceiveSettings", (ev: DidReceiveSettings<T>) => {
 		const action = actionStore.getActionById(ev.context);
 		if (action) {
@@ -62,6 +68,6 @@ export function setGlobalSettings<T extends JsonObject>(settings: T): Promise<vo
 	return connection.send({
 		event: "setGlobalSettings",
 		context: connection.registrationParameters.pluginUUID,
-		payload: settings
+		payload: settings,
 	});
 }

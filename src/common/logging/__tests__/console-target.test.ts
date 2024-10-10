@@ -14,7 +14,7 @@ describe("ConsoleTarget", () => {
 		target.write({
 			data: ["Hello world"],
 			level: LogLevel.ERROR,
-			scope: "Test"
+			scope: "Test",
 		});
 
 		// Assert.
@@ -34,7 +34,7 @@ describe("ConsoleTarget", () => {
 		target.write({
 			data: ["Hello world"],
 			level: LogLevel.WARN,
-			scope: "Test"
+			scope: "Test",
 		});
 
 		// Assert.
@@ -48,7 +48,7 @@ describe("ConsoleTarget", () => {
 	it.each([
 		{ name: "Info", level: LogLevel.INFO },
 		{ name: "Debug", level: LogLevel.DEBUG },
-		{ name: "Trace", level: LogLevel.TRACE }
+		{ name: "Trace", level: LogLevel.TRACE },
 	])("$name writes to log", ({ level }) => {
 		// Arrange.
 		const target = new ConsoleTarget();
@@ -58,7 +58,7 @@ describe("ConsoleTarget", () => {
 		target.write({
 			data: ["Hello world"],
 			level,
-			scope: "Test"
+			scope: "Test",
 		});
 
 		// Assert.
