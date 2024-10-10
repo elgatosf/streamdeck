@@ -65,8 +65,8 @@ export class KeyAction<T extends JsonObject = JsonObject> extends Action<T> {
 			context: this.id,
 			payload: {
 				image,
-				...options
-			}
+				...options,
+			},
 		});
 	}
 
@@ -80,8 +80,8 @@ export class KeyAction<T extends JsonObject = JsonObject> extends Action<T> {
 			event: "setState",
 			context: this.id,
 			payload: {
-				state
-			}
+				state,
+			},
 		});
 	}
 
@@ -99,8 +99,8 @@ export class KeyAction<T extends JsonObject = JsonObject> extends Action<T> {
 			context: this.id,
 			payload: {
 				title,
-				...options
-			}
+				...options,
+			},
 		});
 	}
 
@@ -112,7 +112,7 @@ export class KeyAction<T extends JsonObject = JsonObject> extends Action<T> {
 	public showOk(): Promise<void> {
 		return connection.send({
 			event: "showOk",
-			context: this.id
+			context: this.id,
 		});
 	}
 }

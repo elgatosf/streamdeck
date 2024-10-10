@@ -41,7 +41,13 @@ class Connection extends EventEmitter<ExtendedUIEventMap> {
 	constructor() {
 		super();
 
-		window.connectElgatoStreamDeckSocket = (port: string, uuid: string, event: string, info: string, actionInfo: string): Promise<void> => {
+		window.connectElgatoStreamDeckSocket = (
+			port: string,
+			uuid: string,
+			event: string,
+			info: string,
+			actionInfo: string,
+		): Promise<void> => {
 			return this.connect(port, uuid, event, JSON.parse(info), JSON.parse(actionInfo));
 		};
 	}
@@ -75,7 +81,13 @@ class Connection extends EventEmitter<ExtendedUIEventMap> {
 	 * @param actionInfo Information for the action associated with the UI.
 	 * @returns A promise that is resolved when a connection has been established.
 	 */
-	private async connect(port: string, uuid: string, event: string, info: RegistrationInfo, actionInfo: ActionInfo): Promise<void> {
+	private async connect(
+		port: string,
+		uuid: string,
+		event: string,
+		info: RegistrationInfo,
+		actionInfo: ActionInfo,
+	): Promise<void> {
 		if (this.canConnect) {
 			this.canConnect = false;
 			this.emit("connecting", info, actionInfo);

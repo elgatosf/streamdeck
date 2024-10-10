@@ -12,7 +12,7 @@ export class DeviceEvent<T extends DeviceDidConnect | DeviceDidDisconnect, TDevi
 	 */
 	constructor(
 		source: T,
-		public readonly device: TDevice
+		public readonly device: TDevice,
 	) {
 		super(source);
 	}

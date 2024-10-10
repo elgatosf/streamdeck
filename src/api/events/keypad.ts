@@ -7,14 +7,20 @@ import type { DialDown, DialUp } from "./encoder";
  *
  * NB: For dials / touchscreens see {@link DialDown}.
  */
-export type KeyDown<TSettings extends JsonObject> = ActionEventMessage<"keyDown", MultiActionKeyGesturePayload<TSettings> | SingleActionPayload<TSettings, "Keypad">>;
+export type KeyDown<TSettings extends JsonObject> = ActionEventMessage<
+	"keyDown",
+	MultiActionKeyGesturePayload<TSettings> | SingleActionPayload<TSettings, "Keypad">
+>;
 
 /**
  * Occurs when the user releases a pressed action. See also {@link KeyDown}.
  *
  * NB: For dials / touchscreens see {@link DialUp}.
  */
-export type KeyUp<TSettings extends JsonObject> = ActionEventMessage<"keyUp", MultiActionKeyGesturePayload<TSettings> | SingleActionPayload<TSettings, "Keypad">>;
+export type KeyUp<TSettings extends JsonObject> = ActionEventMessage<
+	"keyUp",
+	MultiActionKeyGesturePayload<TSettings> | SingleActionPayload<TSettings, "Keypad">
+>;
 
 /**
  * Additional information about the action and event that occurred as part of a multi-action event.

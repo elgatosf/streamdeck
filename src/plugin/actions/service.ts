@@ -1,4 +1,14 @@
-import type { DialDown, DialRotate, DialUp, KeyDown, KeyUp, TitleParametersDidChange, TouchTap, WillAppear, WillDisappear } from "../../api";
+import type {
+	DialDown,
+	DialRotate,
+	DialUp,
+	KeyDown,
+	KeyUp,
+	TitleParametersDidChange,
+	TouchTap,
+	WillAppear,
+	WillDisappear,
+} from "../../api";
 import type { IDisposable } from "../../common/disposable";
 import { ActionEvent } from "../../common/events";
 import type { JsonObject } from "../../common/json";
@@ -12,7 +22,7 @@ import {
 	TitleParametersDidChangeEvent,
 	TouchTapEvent,
 	WillAppearEvent,
-	WillDisappearEvent
+	WillDisappearEvent,
 } from "../events";
 import { getManifest } from "../manifest";
 import { onDidReceiveSettings } from "../settings";
@@ -22,7 +32,7 @@ import { ActionContext } from "./context";
 import { DialAction } from "./dial";
 import { KeyAction } from "./key";
 import type { SingletonAction } from "./singleton-action";
-import { ReadOnlyActionStore, actionStore } from "./store";
+import { actionStore, ReadOnlyActionStore } from "./store";
 
 const manifest = getManifest();
 
@@ -127,7 +137,9 @@ class ActionService extends ReadOnlyActionStore {
 	 * @param listener Function to be invoked when the event occurs.
 	 * @returns A disposable that, when disposed, removes the listener.
 	 */
-	public onTitleParametersDidChange<T extends JsonObject = JsonObject>(listener: (ev: TitleParametersDidChangeEvent<T>) => void): IDisposable {
+	public onTitleParametersDidChange<T extends JsonObject = JsonObject>(
+		listener: (ev: TitleParametersDidChangeEvent<T>) => void,
+	): IDisposable {
 		return connection.disposableOn("titleParametersDidChange", (ev: TitleParametersDidChange<T>) => {
 			const action = actionStore.getActionById(ev.context);
 			if (action) {
@@ -174,8 +186,12 @@ class ActionService extends ReadOnlyActionStore {
 	 * @param listener Function to be invoked when the event occurs.
 	 * @returns A disposable that, when disposed, removes the listener.
 	 */
-	public onWillDisappear<T extends JsonObject = JsonObject>(listener: (ev: WillDisappearEvent<T>) => void): IDisposable {
-		return connection.disposableOn("willDisappear", (ev: WillDisappear<T>) => listener(new ActionEvent(new ActionContext(ev), ev)));
+	public onWillDisappear<T extends JsonObject = JsonObject>(
+		listener: (ev: WillDisappearEvent<T>) => void,
+	): IDisposable {
+		return connection.disposableOn("willDisappear", (ev: WillDisappear<T>) =>
+			listener(new ActionEvent(new ActionContext(ev), ev)),
+		);
 	}
 
 	/**
@@ -191,7 +207,9 @@ class ActionService extends ReadOnlyActionStore {
 	 *
 	 * streamDeck.actions.registerAction(new MyCustomAction());
 	 */
-	public registerAction<TAction extends SingletonAction<TSettings>, TSettings extends JsonObject = JsonObject>(action: TAction): void {
+	public registerAction<TAction extends SingletonAction<TSettings>, TSettings extends JsonObject = JsonObject>(
+		action: TAction,
+	): void {
 		if (action.manifestId === undefined) {
 			throw new Error("The action's manifestId cannot be undefined.");
 		}
@@ -204,7 +222,7 @@ class ActionService extends ReadOnlyActionStore {
 		const { manifestId } = action;
 		const route = <TEventArgs extends RoutingEvent<TSettings>>(
 			fn: (listener: (ev: TEventArgs) => void) => IDisposable,
-			listener: ((ev: TEventArgs) => Promise<void> | void) | undefined
+			listener: ((ev: TEventArgs) => Promise<void> | void) | undefined,
 		): void => {
 			const boundedListener = listener?.bind(action);
 			if (boundedListener === undefined) {

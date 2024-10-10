@@ -1,7 +1,6 @@
 /**
  * @jest-environment jsdom
  */
-
 import type { MessageRequest, SendToPropertyInspectorEvent } from "..";
 import type { DidReceivePluginMessage, SendToPlugin } from "../../api";
 import { actionInfo } from "../../api/registration/__mocks__";
@@ -9,7 +8,7 @@ import type { RawMessageRequest } from "../../common/messaging/message";
 import { MessageResponder } from "../../common/messaging/responder";
 import { PromiseCompletionSource } from "../../common/promises";
 import { connection } from "../connection";
-import { plugin, router, type PluginController } from "../plugin";
+import { plugin, type PluginController, router } from "../plugin";
 import { getSettings, setSettings } from "../settings";
 
 jest.mock("../connection");
@@ -49,9 +48,9 @@ describe("plugin", () => {
 					path: "public:/outbound/path-and-body",
 					unidirectional: false,
 					body: {
-						name: "Elgato"
-					}
-				}
+						name: "Elgato",
+					},
+				},
 			});
 		});
 
@@ -67,7 +66,7 @@ describe("plugin", () => {
 				path: "/outbound/request",
 				body: { name: "Elgato" },
 				timeout: 1000,
-				unidirectional: true
+				unidirectional: true,
 			});
 			jest.runAllTimers();
 			await req;
@@ -84,9 +83,9 @@ describe("plugin", () => {
 					path: "public:/outbound/request",
 					unidirectional: true,
 					body: {
-						name: "Elgato"
-					}
-				}
+						name: "Elgato",
+					},
+				},
 			});
 		});
 	});
@@ -102,8 +101,8 @@ describe("plugin", () => {
 			context: "action123",
 			event: "sendToPropertyInspector",
 			payload: {
-				message: "Testing onMessage"
-			}
+				message: "Testing onMessage",
+			},
 		};
 
 		// Act.
@@ -117,12 +116,12 @@ describe("plugin", () => {
 				id: "action123",
 				manifestId: "com.elgato.test.one",
 				getSettings,
-				setSettings
+				setSettings,
 			},
 			payload: {
-				message: "Testing onMessage"
+				message: "Testing onMessage",
 			},
-			type: "sendToPropertyInspector"
+			type: "sendToPropertyInspector",
 		});
 
 		// Act (dispose).
@@ -141,7 +140,7 @@ describe("plugin", () => {
 		const spyOnRoute = jest.spyOn(router, "route");
 		const handler = jest.fn();
 		const options = {
-			filter: () => true
+			filter: () => true,
 		};
 
 		// Act.
@@ -169,9 +168,9 @@ describe("plugin", () => {
 				path: "public:/receive",
 				unidirectional: false,
 				body: {
-					name: "Elgato"
-				}
-			}
+					name: "Elgato",
+				},
+			},
 		} satisfies DidReceivePluginMessage<RawMessageRequest>;
 
 		// Act.
@@ -187,15 +186,15 @@ describe("plugin", () => {
 					id: uuid,
 					manifestId: actionInfo.action,
 					getSettings,
-					setSettings
+					setSettings,
 				},
 				path: "public:/receive",
 				unidirectional: false,
 				body: {
-					name: "Elgato"
-				}
+					name: "Elgato",
+				},
 			},
-			expect.any(MessageResponder)
+			expect.any(MessageResponder),
 		);
 
 		// Act, assert (disposable).
@@ -210,7 +209,7 @@ describe("plugin", () => {
 	it("sends sendToPlugin", async () => {
 		// Arrange, act.
 		await plugin.sendToPlugin({
-			message: "Testing sendToPlugin"
+			message: "Testing sendToPlugin",
 		});
 
 		// Assert.
@@ -220,8 +219,8 @@ describe("plugin", () => {
 			context: uuid,
 			event: "sendToPlugin",
 			payload: {
-				message: "Testing sendToPlugin"
-			}
+				message: "Testing sendToPlugin",
+			},
 		});
 	});
 });

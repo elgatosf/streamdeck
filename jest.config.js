@@ -18,16 +18,16 @@ const config = {
 				jsc: {
 					parser: {
 						syntax: "typescript",
-						decorators: true
+						decorators: true,
 					},
 					transform: {
 						// Stage 3 decorators (https://swc.rs/docs/configuration/compilation#jsctransformdecoratorversion)
-						decoratorVersion: "2022-03"
-					}
-				}
-			}
-		]
-	}
+						decoratorVersion: "2022-03",
+					},
+				},
+			},
+		],
+	},
 };
 
 export default config;

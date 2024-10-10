@@ -12,7 +12,7 @@ describe("stringFormatter", () => {
 			const actual = format({
 				data: ["Hello", "World", { foo: "bar" }, true],
 				level: LogLevel.INFO,
-				scope: "Test"
+				scope: "Test",
 			});
 
 			// Assert.
@@ -29,7 +29,7 @@ describe("stringFormatter", () => {
 			const actual = format({
 				data: ["Encountered an error", err, true],
 				level: LogLevel.INFO,
-				scope: ""
+				scope: "",
 			});
 
 			expect(actual).toEqual(`Encountered an error \n${err.stack}\ntrue`);
@@ -52,7 +52,7 @@ describe("stringFormatter", () => {
 				const actual = format({
 					data: ["Hello", "World", { foo: "bar" }, true],
 					level: LogLevel.INFO,
-					scope: "Test"
+					scope: "Test",
 				});
 
 				// Assert.
@@ -69,7 +69,7 @@ describe("stringFormatter", () => {
 				const actual = format({
 					data: ["Encountered an error", err, true],
 					level: LogLevel.INFO,
-					scope: ""
+					scope: "",
 				});
 
 				expect(actual).toEqual(`${mockedDateString} INFO  Encountered an error \n${err.stack}\ntrue`);
@@ -85,28 +85,28 @@ describe("stringFormatter", () => {
 					{
 						name: "ERROR",
 						level: LogLevel.ERROR,
-						expected: `${mockedDateString} ERROR Hello world`
+						expected: `${mockedDateString} ERROR Hello world`,
 					},
 					{
 						name: "WARN",
 						level: LogLevel.WARN,
-						expected: `${mockedDateString} WARN  Hello world`
+						expected: `${mockedDateString} WARN  Hello world`,
 					},
 					{
 						name: "INFO",
 						level: LogLevel.INFO,
-						expected: `${mockedDateString} INFO  Hello world`
+						expected: `${mockedDateString} INFO  Hello world`,
 					},
 					{
 						name: "DEBUG",
 						level: LogLevel.DEBUG,
-						expected: `${mockedDateString} DEBUG Hello world`
+						expected: `${mockedDateString} DEBUG Hello world`,
 					},
 					{
 						name: "TRACE",
 						level: LogLevel.TRACE,
-						expected: `${mockedDateString} TRACE Hello world`
-					}
+						expected: `${mockedDateString} TRACE Hello world`,
+					},
 				];
 
 				it.each(testCases)("$name message", ({ level, expected }) => {
@@ -115,7 +115,7 @@ describe("stringFormatter", () => {
 					const actual = format({
 						data: ["Hello world"],
 						level,
-						scope: ""
+						scope: "",
 					});
 
 					// Assert.
@@ -132,28 +132,28 @@ describe("stringFormatter", () => {
 					{
 						name: "ERROR",
 						level: LogLevel.ERROR,
-						expected: `${mockedDateString} ERROR ${scope}: Hello world`
+						expected: `${mockedDateString} ERROR ${scope}: Hello world`,
 					},
 					{
 						name: "WARN",
 						level: LogLevel.WARN,
-						expected: `${mockedDateString} WARN  ${scope}: Hello world`
+						expected: `${mockedDateString} WARN  ${scope}: Hello world`,
 					},
 					{
 						name: "INFO",
 						level: LogLevel.INFO,
-						expected: `${mockedDateString} INFO  ${scope}: Hello world`
+						expected: `${mockedDateString} INFO  ${scope}: Hello world`,
 					},
 					{
 						name: "DEBUG",
 						level: LogLevel.DEBUG,
-						expected: `${mockedDateString} DEBUG ${scope}: Hello world`
+						expected: `${mockedDateString} DEBUG ${scope}: Hello world`,
 					},
 					{
 						name: "TRACE",
 						level: LogLevel.TRACE,
-						expected: `${mockedDateString} TRACE ${scope}: Hello world`
-					}
+						expected: `${mockedDateString} TRACE ${scope}: Hello world`,
+					},
 				];
 
 				it.each(testCases)("$name message", ({ level, expected }) => {
@@ -162,7 +162,7 @@ describe("stringFormatter", () => {
 					const actual = format({
 						data: ["Hello world"],
 						level,
-						scope
+						scope,
 					});
 
 					// Assert.

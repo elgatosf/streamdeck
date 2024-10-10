@@ -59,7 +59,7 @@ export class Logger {
 		return new Logger({
 			...this.options,
 			level: () => this.level,
-			scope: this.options.scope ? `${this.options.scope}->${scope}` : scope
+			scope: this.options.scope ? `${this.options.scope}->${scope}` : scope,
 		});
 	}
 

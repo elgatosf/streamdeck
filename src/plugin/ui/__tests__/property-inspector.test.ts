@@ -20,7 +20,7 @@ describe("PropertyInspector", () => {
 		const pi = new PropertyInspector(router, {
 			action: "com.elgato.test.key",
 			context: "key123", // Mocked in actionStore.
-			device: "dev123"
+			device: "dev123",
 		});
 
 		// Assert.
@@ -39,7 +39,7 @@ describe("PropertyInspector", () => {
 			const pi = new PropertyInspector(router, {
 				action: "com.elgato.test.key",
 				context: "abc123",
-				device: "dev123"
+				device: "dev123",
 			});
 
 			// Act.
@@ -59,7 +59,7 @@ describe("PropertyInspector", () => {
 			const pi = new PropertyInspector(router, {
 				action: "com.elgato.test.key",
 				context: "abc123",
-				device: "dev123"
+				device: "dev123",
 			});
 
 			// Act.
@@ -67,7 +67,7 @@ describe("PropertyInspector", () => {
 				path: "/hello",
 				body: { name: "Elgato" },
 				timeout: 1000,
-				unidirectional: true
+				unidirectional: true,
 			});
 
 			// Assert.
@@ -76,7 +76,7 @@ describe("PropertyInspector", () => {
 				path: "public:/hello",
 				body: { name: "Elgato" },
 				timeout: 1000,
-				unidirectional: true
+				unidirectional: true,
 			});
 		});
 	});
@@ -90,7 +90,7 @@ describe("PropertyInspector", () => {
 		const pi = new PropertyInspector(router, {
 			action: "com.elgato.test.key",
 			context: "key123",
-			device: "dev123"
+			device: "dev123",
 		});
 
 		// Act.
@@ -102,8 +102,8 @@ describe("PropertyInspector", () => {
 			context: "key123",
 			event: "sendToPropertyInspector",
 			payload: {
-				message: "Hello world"
-			}
+				message: "Hello world",
+			},
 		});
 	});
 });

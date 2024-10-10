@@ -4,7 +4,10 @@ import { Event } from "./event";
 /**
  * Provides information for an event relating to an action.
  */
-export class ActionWithoutPayloadEvent<TSource extends Extract<PluginEvent, ActionIdentifier & DeviceIdentifier>, TAction> extends Event<TSource> {
+export class ActionWithoutPayloadEvent<
+	TSource extends Extract<PluginEvent, ActionIdentifier & DeviceIdentifier>,
+	TAction,
+> extends Event<TSource> {
 	/**
 	 * Initializes a new instance of the {@link ActionWithoutPayloadEvent} class.
 	 * @param action Action that raised the event.
@@ -12,7 +15,7 @@ export class ActionWithoutPayloadEvent<TSource extends Extract<PluginEvent, Acti
 	 */
 	constructor(
 		public readonly action: TAction,
-		source: TSource
+		source: TSource,
 	) {
 		super(source);
 	}
@@ -21,10 +24,10 @@ export class ActionWithoutPayloadEvent<TSource extends Extract<PluginEvent, Acti
 /**
  * Provides information for an event relating to an action.
  */
-export class ActionEvent<TSource extends Extract<PluginEvent, ActionIdentifier & DeviceIdentifier> & PayloadEvent<TSource>, TAction> extends ActionWithoutPayloadEvent<
-	TSource,
-	TAction
-> {
+export class ActionEvent<
+	TSource extends Extract<PluginEvent, ActionIdentifier & DeviceIdentifier> & PayloadEvent<TSource>,
+	TAction,
+> extends ActionWithoutPayloadEvent<TSource, TAction> {
 	/**
 	 * Provides additional information about the event that occurred, e.g. how many `ticks` the dial was rotated, the current `state` of the action, etc.
 	 */

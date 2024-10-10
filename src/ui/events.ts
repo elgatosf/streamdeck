@@ -8,7 +8,9 @@ export { DidReceiveGlobalSettingsEvent } from "../common/events";
 /**
  * Event information received from Stream Deck when the plugin sends a message to the UI.
  */
-export type SendToPropertyInspectorEvent<TPayload extends JsonValue, TSettings extends JsonObject> = Event<DidReceivePluginMessage<TPayload>> & {
+export type SendToPropertyInspectorEvent<TPayload extends JsonValue, TSettings extends JsonObject> = Event<
+	DidReceivePluginMessage<TPayload>
+> & {
 	/**
 	 * Action that raised the event.
 	 */
@@ -23,4 +25,7 @@ export type SendToPropertyInspectorEvent<TPayload extends JsonValue, TSettings e
 /**
  * Event information received from Stream Deck when the UI receives settings.
  */
-export type DidReceiveSettingsEvent<TSettings extends JsonObject> = ActionEvent<DidReceiveSettings<TSettings>, Action<TSettings>>;
+export type DidReceiveSettingsEvent<TSettings extends JsonObject> = ActionEvent<
+	DidReceiveSettings<TSettings>,
+	Action<TSettings>
+>;

@@ -11,13 +11,13 @@ describe("getPluginUUID", () => {
 		{
 			name: "Parses with .sdPlugin suffix",
 			cwd: path.join("tests", "com.elgato.test.sdPlugin"),
-			expected: "com.elgato.test"
+			expected: "com.elgato.test",
 		},
 		{
 			name: "Parses without .sdPlugin suffix",
 			cwd: path.join("tests", "com.elgato.test"),
-			expected: "com.elgato.test"
-		}
+			expected: "com.elgato.test",
+		},
 	];
 
 	it.each(cases)("$name", async ({ cwd, expected }) => {
@@ -44,52 +44,52 @@ describe("isDebugMode", () => {
 	const cases = [
 		{
 			args: [],
-			expected: false
+			expected: false,
 		},
 		{
 			args: ["--no-addons", "--enable-source-maps"],
-			expected: false
+			expected: false,
 		},
 		{
 			args: ["--inspect=127.0.0.1:1234", "--no-addons", "--enable-source-maps"],
-			expected: true
+			expected: true,
 		},
 		{
 			args: ["--no-addons", "--enable-source-maps", "--inspect=127.0.0.1:1234"],
-			expected: true
+			expected: true,
 		},
 		{
 			args: ["--no-addons", "--inspect=127.0.0.1:1234", "--enable-source-maps"],
-			expected: true
+			expected: true,
 		},
 		{
 			args: ["--inspect"],
-			expected: true
+			expected: true,
 		},
 		{
 			args: ["--inspect=12345"],
-			expected: true
+			expected: true,
 		},
 		{
 			args: ["--inspect=127.0.0.1:1234"],
-			expected: true
+			expected: true,
 		},
 		{
 			args: ["--inspect-brk"],
-			expected: true
+			expected: true,
 		},
 		{
 			args: ["--inspect-brk=127.0.0.1:1234"],
-			expected: true
+			expected: true,
 		},
 		{
 			args: ["--inspect-port=1234"],
-			expected: true
+			expected: true,
 		},
 		{
 			args: ["--inspect-port=127.0.0.1:1234"],
-			expected: true
-		}
+			expected: true,
+		},
 	];
 
 	it.each(cases)("$args returns $expected", async ({ args, expected }) => {

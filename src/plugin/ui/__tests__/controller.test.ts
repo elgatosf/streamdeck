@@ -1,8 +1,16 @@
-import type { DidReceivePropertyInspectorMessage, PropertyInspectorDidAppear, PropertyInspectorDidDisappear } from "../../../api";
+import type {
+	DidReceivePropertyInspectorMessage,
+	PropertyInspectorDidAppear,
+	PropertyInspectorDidDisappear,
+} from "../../../api";
 import { Settings } from "../../../api/__mocks__/events";
 import { actionStore } from "../../actions/store";
 import { connection } from "../../connection";
-import { PropertyInspectorDidAppearEvent, SendToPluginEvent, type PropertyInspectorDidDisappearEvent } from "../../events";
+import {
+	PropertyInspectorDidAppearEvent,
+	type PropertyInspectorDidDisappearEvent,
+	SendToPluginEvent,
+} from "../../events";
 import { ui } from "../controller";
 import { PropertyInspector } from "../property-inspector";
 import * as RouterModule from "../router";
@@ -22,7 +30,7 @@ describe("UIController", () => {
 		const pi = new PropertyInspector(RouterModule.router, {
 			action: "com.elgato.test.one",
 			context: "key123", // Mocked in actionStore
-			device: "dev123"
+			device: "dev123",
 		});
 
 		const spyOnGetCurrentUI = jest.spyOn(RouterModule, "getCurrentUI").mockReturnValue(pi);
@@ -45,7 +53,7 @@ describe("UIController", () => {
 			action: "com.elgato.test.one",
 			context: "key123", // Mocked in actionStore.
 			device: "device123",
-			event: "propertyInspectorDidAppear"
+			event: "propertyInspectorDidAppear",
 		} satisfies PropertyInspectorDidAppear;
 
 		// Act (emit).
@@ -56,7 +64,7 @@ describe("UIController", () => {
 		expect(listener).toHaveBeenCalledTimes(1);
 		expect(listener).toHaveBeenCalledWith<[PropertyInspectorDidAppearEvent<Settings>]>({
 			action: actionStore.getActionById(ev.context)!,
-			type: "propertyInspectorDidAppear"
+			type: "propertyInspectorDidAppear",
 		});
 
 		// Act (dispose).
@@ -77,7 +85,7 @@ describe("UIController", () => {
 			action: "com.elgato.test.one",
 			context: "key123", // Mocked in actionStore.
 			device: "device123",
-			event: "propertyInspectorDidDisappear"
+			event: "propertyInspectorDidDisappear",
 		} satisfies PropertyInspectorDidDisappear;
 
 		// Act (emit).
@@ -88,7 +96,7 @@ describe("UIController", () => {
 		expect(listener).toHaveBeenCalledTimes(1);
 		expect(listener).toHaveBeenCalledWith<[PropertyInspectorDidDisappearEvent<Settings>]>({
 			action: actionStore.getActionById(ev.context)!,
-			type: "propertyInspectorDidDisappear"
+			type: "propertyInspectorDidDisappear",
 		});
 
 		// Act (dispose).
@@ -110,8 +118,8 @@ describe("UIController", () => {
 			context: "key123", // Mocked in actionStore.
 			event: "sendToPlugin",
 			payload: {
-				name: "Hello world"
-			}
+				name: "Hello world",
+			},
 		} satisfies DidReceivePropertyInspectorMessage<Settings>;
 
 		// Act (emit).
@@ -123,9 +131,9 @@ describe("UIController", () => {
 		expect(listener).toHaveBeenCalledWith<[SendToPluginEvent<Settings, Settings>]>({
 			action: actionStore.getActionById(ev.context)!,
 			payload: {
-				name: "Hello world"
+				name: "Hello world",
 			},
-			type: "sendToPlugin"
+			type: "sendToPlugin",
 		});
 
 		// Act (dispose).
@@ -144,7 +152,7 @@ describe("UIController", () => {
 		const spyOnRoute = jest.spyOn(RouterModule.router, "route");
 		const handler = jest.fn();
 		const options = {
-			filter: () => true
+			filter: () => true,
 		};
 
 		// Act.

@@ -1,6 +1,6 @@
 import type { Manifest, RegistrationInfo } from "../api";
 import { I18nProvider } from "../common/i18n";
-import { registerCreateLogEntryRoute, type Logger } from "../common/logging";
+import { type Logger, registerCreateLogEntryRoute } from "../common/logging";
 import { actionService, type ActionService } from "./actions/service";
 import { connection } from "./connection";
 import { deviceService, type DeviceService } from "./devices/service";
@@ -29,13 +29,19 @@ export {
 	type RegistrationInfo,
 	type Size,
 	type State,
-	type Text
+	type Text,
 } from "../api";
 export { Enumerable } from "../common/enumerable";
 export { EventEmitter, EventsOf } from "../common/event-emitter";
 export { type JsonObject, type JsonPrimitive, type JsonValue } from "../common/json";
 export { LogLevel } from "../common/logging";
-export { type MessageRequestOptions, type MessageResponder, type MessageResponse, type RouteConfiguration, type StatusCode } from "../common/messaging";
+export {
+	type MessageRequestOptions,
+	type MessageResponder,
+	type MessageResponse,
+	type RouteConfiguration,
+	type StatusCode,
+} from "../common/messaging";
 export * from "./actions";
 export * from "./devices";
 export type * from "./events";
@@ -131,7 +137,7 @@ export const streamDeck = {
 	 */
 	connect(): Promise<void> {
 		return connection.connect();
-	}
+	},
 };
 
 registerCreateLogEntryRoute(router, logger);

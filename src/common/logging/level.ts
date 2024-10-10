@@ -25,5 +25,5 @@ export enum LogLevel {
 	/**
 	 * Trace message used to monitor low-level information such as method calls, performance tracking, etc.
 	 */
-	TRACE = 4
+	TRACE = 4,
 }

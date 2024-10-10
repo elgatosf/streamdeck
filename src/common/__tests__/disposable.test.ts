@@ -62,7 +62,6 @@ describe("deferredDisposable", () => {
 
 			{
 				// Act.
-				// eslint-disable-next-line @typescript-eslint/no-unused-vars
 				using disposable = deferredDisposable(listener);
 				disposable[Symbol.dispose]();
 				disposable[Symbol.dispose]();
@@ -83,7 +82,6 @@ describe("deferredDisposable", () => {
 
 			{
 				// Act.
-				// eslint-disable-next-line @typescript-eslint/no-unused-vars
 				using disposable = deferredDisposable(listener);
 				disposable.dispose();
 				disposable[Symbol.dispose]();

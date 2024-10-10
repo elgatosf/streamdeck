@@ -7,7 +7,10 @@ import type { Action } from "../actions/action";
  * @template TBody The type of the request body.
  * @template TSettings The type of the action's settings.
  */
-export type MessageRequest<TBody extends JsonValue = JsonValue, TSettings extends JsonObject = JsonObject> = UnscopedMessageRequest<Action<TSettings>, TBody>;
+export type MessageRequest<
+	TBody extends JsonValue = JsonValue,
+	TSettings extends JsonObject = JsonObject,
+> = UnscopedMessageRequest<Action<TSettings>, TBody>;
 
 /**
  * Function responsible for handling requests received from the property inspector.
@@ -18,5 +21,5 @@ export type MessageRequest<TBody extends JsonValue = JsonValue, TSettings extend
  */
 export type MessageHandler<TBody extends JsonValue = JsonValue, TSettings extends JsonObject = JsonObject> = (
 	request: MessageRequest<TBody, TSettings>,
-	responder: MessageResponder
+	responder: MessageResponder,
 ) => ReturnType<UnscopedMessageHandler<Action<TSettings>, TBody>>;

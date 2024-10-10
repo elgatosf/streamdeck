@@ -8,12 +8,24 @@ import { plugin } from "./plugin";
 import * as settings from "./settings";
 import * as system from "./system";
 
-export { DeviceType, type ActionInfo, type ConnectElgatoStreamDeckSocketFn, type Controller, type RegistrationInfo } from "../api";
+export {
+	DeviceType,
+	type ActionInfo,
+	type ConnectElgatoStreamDeckSocketFn,
+	type Controller,
+	type RegistrationInfo,
+} from "../api";
 export { Enumerable } from "../common/enumerable";
 export { EventEmitter } from "../common/event-emitter";
 export { type JsonObject, type JsonPrimitive, type JsonValue } from "../common/json";
 export { LogLevel, type Logger } from "../common/logging";
-export { type MessageRequestOptions, type MessageResponder, type MessageResponse, type RouteConfiguration, type StatusCode } from "../common/messaging";
+export {
+	type MessageRequestOptions,
+	type MessageResponder,
+	type MessageResponse,
+	type RouteConfiguration,
+	type StatusCode,
+} from "../common/messaging";
 export type * from "./events";
 export { type MessageHandler, type MessageRequest } from "./plugin";
 
@@ -48,7 +60,9 @@ const streamDeck = {
 	 * @param listener Event handler function.
 	 * @returns A disposable that removes the listener when disposed.
 	 */
-	onConnecting: <TSettings extends JsonObject = JsonObject>(listener: (info: RegistrationInfo, actionInfo: ActionInfo<TSettings>) => void): IDisposable => {
+	onConnecting: <TSettings extends JsonObject = JsonObject>(
+		listener: (info: RegistrationInfo, actionInfo: ActionInfo<TSettings>) => void,
+	): IDisposable => {
 		return connection.disposableOn("connecting", listener);
 	},
 
@@ -57,9 +71,11 @@ const streamDeck = {
 	 * @param listener Event handler function.
 	 * @returns A disposable that removes the listener when disposed.
 	 */
-	onConnected: <TSettings extends JsonObject = JsonObject>(listener: (info: RegistrationInfo, actionInfo: ActionInfo<TSettings>) => void): IDisposable => {
+	onConnected: <TSettings extends JsonObject = JsonObject>(
+		listener: (info: RegistrationInfo, actionInfo: ActionInfo<TSettings>) => void,
+	): IDisposable => {
 		return connection.disposableOn("connected", listener);
-	}
+	},
 };
 
 export default streamDeck;

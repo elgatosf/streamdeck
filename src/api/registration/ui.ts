@@ -10,7 +10,13 @@ import type { MultiActionPayload, SingleActionPayload } from "../events/action";
  * @param info Information about the Stream Deck application and operating system.
  * @param actionInfo Information about the action the UI is associated with.
  */
-export type ConnectElgatoStreamDeckSocketFn = (port: string, uuid: string, event: string, info: string, actionInfo: string) => Promise<void> | void;
+export type ConnectElgatoStreamDeckSocketFn = (
+	port: string,
+	uuid: string,
+	event: string,
+	info: string,
+	actionInfo: string,
+) => Promise<void> | void;
 
 /**
  * Information about the action associated with the UI.

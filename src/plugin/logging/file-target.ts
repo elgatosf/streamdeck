@@ -76,7 +76,7 @@ export class FileTarget implements LogTarget {
 
 				prev.push({
 					path: path.join(this.options.dest, entry.name),
-					index: parseInt(match[1])
+					index: parseInt(match[1]),
 				});
 
 				return prev;

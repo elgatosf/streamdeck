@@ -164,6 +164,7 @@ Localization lookup will now return the `key` when the localization cannot be fo
 
 ```ts
 import streamDeck from "@elgato/streamdeck";
+
 streamDeck.i18n.translate("test"); // undefined
 ```
 
@@ -171,6 +172,7 @@ streamDeck.i18n.translate("test"); // undefined
 
 ```ts
 import streamDeck from "@elgato/streamdeck";
+
 streamDeck.i18n.translate("test"); // "test"
 ```
 

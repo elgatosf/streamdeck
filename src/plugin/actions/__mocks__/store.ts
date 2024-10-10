@@ -14,9 +14,9 @@ jest.spyOn(deviceStore, "getDeviceById").mockReturnValue({
 	name: "Device 1",
 	size: {
 		columns: 5,
-		rows: 3
+		rows: 3,
 	},
-	type: DeviceType.StreamDeck
+	type: DeviceType.StreamDeck,
 } as unknown as Device);
 
 export const actionStore = {
@@ -33,11 +33,11 @@ export const actionStore = {
 					controller: "Encoder",
 					coordinates: {
 						column: 1,
-						row: 2
+						row: 2,
 					},
 					isInMultiAction: false,
-					settings: {}
-				}
+					settings: {},
+				},
 			});
 		}
 
@@ -50,13 +50,13 @@ export const actionStore = {
 				controller: "Keypad",
 				coordinates: {
 					column: 1,
-					row: 2
+					row: 2,
 				},
 				isInMultiAction: false,
-				settings: {}
-			}
+				settings: {},
+			},
 		});
-	})
+	}),
 };
 
 export { ReadOnlyActionStore };

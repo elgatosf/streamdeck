@@ -5,7 +5,7 @@ describe("isRequest", () => {
 		__type: "request",
 		id: "abc123",
 		path: "/test",
-		unidirectional: false
+		unidirectional: false,
 	} satisfies RawMessageRequest;
 
 	/**
@@ -23,76 +23,76 @@ describe("isRequest", () => {
 	test.each([
 		{
 			name: "value must not be undefined",
-			request: undefined
+			request: undefined,
 		},
 		{
 			name: "value must not be null",
-			request: null
+			request: null,
 		},
 		{
 			name: "value must be an object",
-			request: true
+			request: true,
 		},
 		{
 			name: "__type must exist",
 			request: {
 				id: "abc123",
 				path: "/test",
-				unidirectional: true
-			}
+				unidirectional: true,
+			},
 		},
 		{
 			name: "id must exist",
 			request: {
 				__type: "request",
 				path: "/test",
-				unidirectional: true
-			}
+				unidirectional: true,
+			},
 		},
 		{
 			name: "path must exist",
 			request: {
 				__type: "request",
 				id: "abc123",
-				unidirectional: true
-			}
+				unidirectional: true,
+			},
 		},
 		{
 			name: "unidirectional must exist",
 			request: {
 				__type: "request",
 				id: "abc123",
-				path: "/test"
-			}
+				path: "/test",
+			},
 		},
 		{
 			name: "__type must be 'request'",
 			request: {
 				...request,
-				__type: "other"
-			}
+				__type: "other",
+			},
 		},
 		{
 			name: "id must be string",
 			request: {
 				...request,
-				id: 1
-			}
+				id: 1,
+			},
 		},
 		{
 			name: "path must be string",
 			request: {
 				...request,
-				path: false
-			}
+				path: false,
+			},
 		},
 		{
 			name: "unidirectional must be boolean",
 			request: {
 				...request,
-				unidirectional: 13
-			}
-		}
+				unidirectional: 13,
+			},
+		},
 	])("$name", ({ request }) => {
 		// Arrange, act, assert.
 		const actual = isRequest(request);
@@ -105,7 +105,7 @@ describe("isResponse", () => {
 		__type: "response",
 		id: "abc123",
 		path: "/test",
-		status: 200
+		status: 200,
 	} satisfies RawMessageResponse;
 
 	/**
@@ -123,76 +123,76 @@ describe("isResponse", () => {
 	test.each([
 		{
 			name: "value must not be undefined",
-			response: undefined
+			response: undefined,
 		},
 		{
 			name: "value must not be null",
-			response: null
+			response: null,
 		},
 		{
 			name: "value must be an object",
-			response: true
+			response: true,
 		},
 		{
 			name: "__type must exist",
 			response: {
 				id: "abc123",
 				path: "/test",
-				status: 200
-			}
+				status: 200,
+			},
 		},
 		{
 			name: "id must exist",
 			response: {
 				__type: "response",
 				path: "/test",
-				status: 200
-			}
+				status: 200,
+			},
 		},
 		{
 			name: "path must exist",
 			response: {
 				__type: "response",
 				id: "abc123",
-				status: 200
-			}
+				status: 200,
+			},
 		},
 		{
 			name: "status must exist",
 			response: {
 				__type: "response",
 				id: "abc123",
-				path: "/test"
-			}
+				path: "/test",
+			},
 		},
 		{
 			name: "__type must be 'response'",
 			response: {
 				...response,
-				__type: "other"
-			}
+				__type: "other",
+			},
 		},
 		{
 			name: "id must be string",
 			response: {
 				...response,
-				id: 1
-			}
+				id: 1,
+			},
 		},
 		{
 			name: "path must be string",
 			response: {
 				...response,
-				path: false
-			}
+				path: false,
+			},
 		},
 		{
 			name: "status must be number",
 			response: {
 				...response,
-				status: false
-			}
-		}
+				status: false,
+			},
+		},
 	])("$name", ({ response }) => {
 		// Arrange, act, assert.
 		const actual = isResponse(response);

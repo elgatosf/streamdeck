@@ -7,7 +7,7 @@ jest.spyOn(connection, "registrationParameters", "get").mockReturnValue({
 	info: registrationInfo,
 	pluginUUID: "abc123",
 	port: "12345",
-	registerEvent: "register"
+	registerEvent: "register",
 });
 
 jest.spyOn(connection, "send").mockReturnValue(Promise.resolve());

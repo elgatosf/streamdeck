@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Coordinates, WillAppear, WillDisappear, type State } from "..";
+import { Coordinates, type State, WillAppear, WillDisappear } from "..";
 import { Expect, TypesAreEqual } from "../../../../tests/utils";
 import { Settings } from "../../__mocks__/events";
 

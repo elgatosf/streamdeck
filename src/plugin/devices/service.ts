@@ -1,8 +1,8 @@
 import type { IDisposable } from "../../common/disposable";
 import { connection } from "../connection";
-import { DeviceEvent, type DeviceDidConnectEvent, type DeviceDidDisconnectEvent } from "../events";
+import { type DeviceDidConnectEvent, type DeviceDidDisconnectEvent, DeviceEvent } from "../events";
 import { Device } from "./device";
-import { ReadOnlyDeviceStore, deviceStore } from "./store";
+import { deviceStore, ReadOnlyDeviceStore } from "./store";
 
 /**
  * Provides functions, and information, for interacting with Stream Deck actions.
@@ -33,7 +33,9 @@ class DeviceService extends ReadOnlyDeviceStore {
 	 * @returns A disposable that, when disposed, removes the listener.
 	 */
 	public onDeviceDidConnect(listener: (ev: DeviceDidConnectEvent) => void): IDisposable {
-		return connection.disposableOn("deviceDidConnect", (ev) => listener(new DeviceEvent(ev, this.getDeviceById(ev.device)!)));
+		return connection.disposableOn("deviceDidConnect", (ev) =>
+			listener(new DeviceEvent(ev, this.getDeviceById(ev.device)!)),
+		);
 	}
 
 	/**
@@ -42,7 +44,9 @@ class DeviceService extends ReadOnlyDeviceStore {
 	 * @returns A disposable that, when disposed, removes the listener.
 	 */
 	public onDeviceDidDisconnect(listener: (ev: DeviceDidDisconnectEvent) => void): IDisposable {
-		return connection.disposableOn("deviceDidDisconnect", (ev) => listener(new DeviceEvent(ev, this.getDeviceById(ev.device)!)));
+		return connection.disposableOn("deviceDidDisconnect", (ev) =>
+			listener(new DeviceEvent(ev, this.getDeviceById(ev.device)!)),
+		);
 	}
 }
 

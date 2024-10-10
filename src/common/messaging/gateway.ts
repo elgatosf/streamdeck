@@ -34,7 +34,7 @@ export class MessageGateway<TAction> extends EventEmitter<MessageGatewayEventMap
 	 */
 	constructor(
 		private readonly proxy: OutboundMessageProxy,
-		private readonly actionProvider: ActionProvider<TAction>
+		private readonly actionProvider: ActionProvider<TAction>,
 	) {
 		super();
 	}
@@ -58,9 +58,17 @@ export class MessageGateway<TAction> extends EventEmitter<MessageGatewayEventMap
 	 * @param bodyOrUndefined Request body, or moot when constructing the request with {@link MessageRequestOptions}.
 	 * @returns The response.
 	 */
-	public async fetch<T extends JsonValue = JsonValue>(requestOrPath: MessageRequestOptions | string, bodyOrUndefined?: JsonValue): Promise<MessageResponse<T>> {
+	public async fetch<T extends JsonValue = JsonValue>(
+		requestOrPath: MessageRequestOptions | string,
+		bodyOrUndefined?: JsonValue,
+	): Promise<MessageResponse<T>> {
 		const id = crypto.randomUUID();
-		const { body, path, timeout = DEFAULT_TIMEOUT, unidirectional = false } = typeof requestOrPath === "string" ? { body: bodyOrUndefined, path: requestOrPath } : requestOrPath;
+		const {
+			body,
+			path,
+			timeout = DEFAULT_TIMEOUT,
+			unidirectional = false,
+		} = typeof requestOrPath === "string" ? { body: bodyOrUndefined, path: requestOrPath } : requestOrPath;
 
 		// Initialize the response handler.
 		const response = new Promise<MessageResponse<T>>((resolve) => {
@@ -74,8 +82,17 @@ export class MessageGateway<TAction> extends EventEmitter<MessageGatewayEventMap
 		});
 
 		// Start the timeout, and send the request.
-		const timeoutMonitor = setTimeout(() => this.handleResponse({ __type: "response", id, path, status: 408 }), timeout);
-		const accepted = await this.proxy({ __type: "request", body, id, path, unidirectional } satisfies RawMessageRequest);
+		const timeoutMonitor = setTimeout(
+			() => this.handleResponse({ __type: "response", id, path, status: 408 }),
+			timeout,
+		);
+		const accepted = await this.proxy({
+			__type: "request",
+			body,
+			id,
+			path,
+			unidirectional,
+		} satisfies RawMessageRequest);
 
 		// When the server did not accept the request, return a 406.
 		if (!accepted) {
@@ -90,7 +107,9 @@ export class MessageGateway<TAction> extends EventEmitter<MessageGatewayEventMap
 	 * @param message Message to process.
 	 * @returns `true` when the {@link message} was processed by this instance; otherwise `false`.
 	 */
-	public async process(message: DidReceivePluginMessage<JsonValue> | DidReceivePropertyInspectorMessage<JsonValue>): Promise<void> {
+	public async process(
+		message: DidReceivePluginMessage<JsonValue> | DidReceivePropertyInspectorMessage<JsonValue>,
+	): Promise<void> {
 		if (isRequest(message.payload)) {
 			// Server-side handling.
 			const action = this.actionProvider(message);
@@ -98,7 +117,10 @@ export class MessageGateway<TAction> extends EventEmitter<MessageGatewayEventMap
 				return;
 			}
 
-			this.emit("unhandledRequest", message as DidReceivePluginMessage<RawMessageRequest> | DidReceivePropertyInspectorMessage<RawMessageRequest>);
+			this.emit(
+				"unhandledRequest",
+				message as DidReceivePluginMessage<RawMessageRequest> | DidReceivePropertyInspectorMessage<RawMessageRequest>,
+			);
 		} else if (isResponse(message.payload) && this.handleResponse(message.payload)) {
 			// Response handled successfully.
 			return;
@@ -114,8 +136,12 @@ export class MessageGateway<TAction> extends EventEmitter<MessageGatewayEventMap
 	 * @param options Optional routing configuration.
 	 * @returns Disposable capable of removing the route handler.
 	 */
-	public route<TBody extends JsonValue = JsonValue>(path: string, handler: UnscopedMessageHandler<TAction, TBody>, options?: RouteConfiguration<TAction>): IDisposable {
-		options = { filter: () => true, ...options };
+	public route<TBody extends JsonValue = JsonValue>(
+		path: string,
+		handler: UnscopedMessageHandler<TAction, TBody>,
+		options?: RouteConfiguration<TAction>,
+	): IDisposable {
+		options = { filter: (): boolean => true, ...options };
 
 		return this.routes.disposableOn(path, async (ev: InternalRouteHandlerEventArgs<TAction, TBody>) => {
 			if (options?.filter && options.filter(ev.request.action)) {
@@ -148,12 +174,14 @@ export class MessageGateway<TAction> extends EventEmitter<MessageGatewayEventMap
 			action,
 			path: source.path,
 			unidirectional: source.unidirectional,
-			body: source.body
+			body: source.body,
 		};
 
 		// Get handlers of the path, and invoke them; filtering is applied by the handlers themselves
 		let routed = false;
-		const routes = this.routes.listeners(source.path) as ((ev: InternalRouteHandlerEventArgs<TAction>) => Promise<void>)[];
+		const routes = this.routes.listeners(source.path) as ((
+			ev: InternalRouteHandlerEventArgs<TAction>,
+		) => Promise<void>)[];
 
 		for (const route of routes) {
 			await route({
@@ -166,7 +194,7 @@ export class MessageGateway<TAction> extends EventEmitter<MessageGatewayEventMap
 					}
 
 					routed = true;
-				}
+				},
 			});
 		}
 
@@ -204,7 +232,9 @@ export class MessageGateway<TAction> extends EventEmitter<MessageGatewayEventMap
  * Represents a message received from the plugin or the property inspector.
  * @template T The type of the payload.
  */
-type PluginOrPropertyInspectorMessage<T extends JsonValue> = DidReceivePluginMessage<T> | DidReceivePropertyInspectorMessage<T>;
+type PluginOrPropertyInspectorMessage<T extends JsonValue> =
+	| DidReceivePluginMessage<T>
+	| DidReceivePropertyInspectorMessage<T>;
 
 /**
  * Event map for {@link MessageGateway}.
@@ -295,14 +325,19 @@ export type OutboundMessageProxy = (payload: JsonValue) => Promise<boolean> | bo
 /**
  * Gets the action from the specified source.
  */
-export type ActionProvider<T> = (source: DidReceivePluginMessage<JsonValue> | DidReceivePropertyInspectorMessage<JsonValue>) => T;
+export type ActionProvider<T> = (
+	source: DidReceivePluginMessage<JsonValue> | DidReceivePropertyInspectorMessage<JsonValue>,
+) => T;
 
 /**
  * Message request, received from the client.
  * @template TAction The type of the action that sent the request.
  * @template TBody The type of the request body.
  */
-export type UnscopedMessageRequest<TAction, TBody extends JsonValue = JsonValue> = Omit<RawMessageRequest, "__type" | "body" | "id"> & {
+export type UnscopedMessageRequest<TAction, TBody extends JsonValue = JsonValue> = Omit<
+	RawMessageRequest,
+	"__type" | "body" | "id"
+> & {
 	/**
 	 * Action associated with the request.
 	 */
@@ -319,7 +354,7 @@ export type UnscopedMessageRequest<TAction, TBody extends JsonValue = JsonValue>
  */
 export type UnscopedMessageHandler<TAction, TBody extends JsonValue = JsonValue> = (
 	request: UnscopedMessageRequest<TAction, TBody>,
-	response: MessageResponder
+	response: MessageResponder,
 ) => JsonValue | Promise<JsonValue | void> | void;
 
 /**

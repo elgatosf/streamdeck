@@ -36,7 +36,7 @@ function readManifest(): Manifest {
 	return JSON.parse(
 		readFileSync(path, {
 			encoding: "utf-8",
-			flag: "r"
-		}).toString()
+			flag: "r",
+		}).toString(),
 	);
 }

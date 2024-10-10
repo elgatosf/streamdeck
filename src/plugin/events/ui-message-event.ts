@@ -6,7 +6,9 @@ import type { Action } from "../actions/action";
 /**
  * Provides information for an event triggered by a message being sent to the plugin, from the property inspector.
  */
-export class SendToPluginEvent<TPayload extends JsonValue, TSettings extends JsonObject> extends Event<DidReceivePropertyInspectorMessage<TPayload>> {
+export class SendToPluginEvent<TPayload extends JsonValue, TSettings extends JsonObject> extends Event<
+	DidReceivePropertyInspectorMessage<TPayload>
+> {
 	/**
 	 * Payload sent from the property inspector.
 	 */
@@ -19,7 +21,7 @@ export class SendToPluginEvent<TPayload extends JsonValue, TSettings extends Jso
 	 */
 	constructor(
 		public readonly action: Action<TSettings>,
-		source: DidReceivePropertyInspectorMessage<TPayload>
+		source: DidReceivePropertyInspectorMessage<TPayload>,
 	) {
 		super(source);
 		this.payload = source.payload;

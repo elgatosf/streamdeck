@@ -1,4 +1,11 @@
-import { DeviceType, type SetFeedback, type SetFeedbackLayout, type SetImage, type SetTriggerDescription, type WillAppear } from "../../../api";
+import {
+	DeviceType,
+	type SetFeedback,
+	type SetFeedbackLayout,
+	type SetImage,
+	type SetTriggerDescription,
+	type WillAppear,
+} from "../../../api";
 import type { JsonObject } from "../../../common/json";
 import { connection } from "../../connection";
 import { Device } from "../../devices/device";
@@ -22,11 +29,11 @@ describe("DialAction", () => {
 			controller: "Encoder",
 			coordinates: {
 				column: 1,
-				row: 2
+				row: 2,
 			},
 			isInMultiAction: false,
-			settings: {}
-		}
+			settings: {},
+		},
 	};
 
 	// Mock device.
@@ -36,11 +43,11 @@ describe("DialAction", () => {
 			name: "Device 1",
 			size: {
 				columns: 5,
-				rows: 3
+				rows: 3,
 			},
-			type: DeviceType.StreamDeck
+			type: DeviceType.StreamDeck,
 		},
-		true
+		true,
 	);
 
 	beforeAll(() => jest.spyOn(deviceStore, "getDeviceById").mockReturnValue(device));
@@ -73,8 +80,8 @@ describe("DialAction", () => {
 			...source,
 			payload: {
 				...source.payload,
-				controller: "Keypad"
-			}
+				controller: "Keypad",
+			},
 		};
 
 		// Act, assert.
@@ -92,7 +99,7 @@ describe("DialAction", () => {
 			// Arrange, act.
 			await action.setFeedback({
 				bar: 50,
-				title: "Hello world"
+				title: "Hello world",
 			});
 
 			// Assert.
@@ -102,8 +109,8 @@ describe("DialAction", () => {
 				event: "setFeedback",
 				payload: {
 					bar: 50,
-					title: "Hello world"
-				}
+					title: "Hello world",
+				},
 			});
 		});
 
@@ -120,8 +127,8 @@ describe("DialAction", () => {
 				context: action.id,
 				event: "setFeedbackLayout",
 				payload: {
-					layout: "CustomLayout.json"
-				}
+					layout: "CustomLayout.json",
+				},
 			});
 		});
 
@@ -141,16 +148,16 @@ describe("DialAction", () => {
 				payload: {
 					image: undefined,
 					state: undefined,
-					target: undefined
-				}
+					target: undefined,
+				},
 			});
 
 			expect(connection.send).toHaveBeenNthCalledWith<[SetImage]>(2, {
 				context: action.id,
 				event: "setImage",
 				payload: {
-					image: "./imgs/test.png"
-				}
+					image: "./imgs/test.png",
+				},
 			});
 		});
 
@@ -167,8 +174,8 @@ describe("DialAction", () => {
 				context: action.id,
 				event: "setFeedback",
 				payload: {
-					title: "Hello world"
-				}
+					title: "Hello world",
+				},
 			});
 		});
 
@@ -182,7 +189,7 @@ describe("DialAction", () => {
 				longTouch: "Long-touch",
 				push: "Push",
 				rotate: "Rotate",
-				touch: "Touch"
+				touch: "Touch",
 			});
 
 			// Assert.
@@ -190,7 +197,7 @@ describe("DialAction", () => {
 			expect(connection.send).toHaveBeenNthCalledWith<[SetTriggerDescription]>(1, {
 				event: "setTriggerDescription",
 				context: action.id,
-				payload: {}
+				payload: {},
 			});
 
 			expect(connection.send).toHaveBeenNthCalledWith<[SetTriggerDescription]>(2, {
@@ -200,8 +207,8 @@ describe("DialAction", () => {
 					longTouch: "Long-touch",
 					push: "Push",
 					rotate: "Rotate",
-					touch: "Touch"
-				}
+					touch: "Touch",
+				},
 			});
 		});
 	});

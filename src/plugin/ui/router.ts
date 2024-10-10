@@ -27,7 +27,7 @@ const router = new MessageGateway<Action>(
 			await connection.send({
 				event: "sendToPropertyInspector",
 				context: current.action.id,
-				payload
+				payload,
 			});
 
 			return true;
@@ -35,7 +35,7 @@ const router = new MessageGateway<Action>(
 
 		return false;
 	},
-	(source) => actionStore.getActionById(source.context)!
+	(source) => actionStore.getActionById(source.context)!,
 );
 
 /**
@@ -44,7 +44,11 @@ const router = new MessageGateway<Action>(
  * @returns `true` when the event is related to the current property inspector.
  */
 function isCurrent(ev: PropertyInspectorDidAppear | PropertyInspectorDidDisappear): boolean {
-	return current?.action?.id === ev.context && current?.action?.manifestId === ev.action && current?.action?.device?.id === ev.device;
+	return (
+		current?.action?.id === ev.context &&
+		current?.action?.manifestId === ev.action &&
+		current?.action?.device?.id === ev.device
+	);
 }
 
 /*

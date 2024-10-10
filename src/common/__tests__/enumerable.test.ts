@@ -4,7 +4,7 @@ describe("Enumerable", () => {
 	const source = [
 		{ name: "Facecam" },
 		{ name: "Stream Deck" },
-		{ name: "Wave DX" } //
+		{ name: "Wave DX" },
 	];
 
 	const enumerable = new Enumerable(source);
@@ -98,7 +98,7 @@ describe("Enumerable", () => {
 				const fnBefore = jest.fn();
 				const map = new Map([
 					[1, "One"],
-					[2, "Two"]
+					[2, "Two"],
 				]);
 				const enumerable = new Enumerable(map);
 
@@ -127,7 +127,7 @@ describe("Enumerable", () => {
 				// Arrange (1).
 				const map = new Map([
 					[1, "One"],
-					[2, "Two"]
+					[2, "Two"],
 				]);
 
 				// Act (1).
@@ -453,7 +453,7 @@ describe("Enumerable", () => {
 			expect(every).toBeFalsy();
 			expect(fn).toHaveBeenCalledTimes(1);
 			expect(fn).toHaveBeenCalledWith({
-				name: "Facecam"
+				name: "Facecam",
 			});
 		});
 	});
@@ -672,7 +672,9 @@ describe("Enumerable", () => {
 			it("throws when empty", () => {
 				// Arrange, act, assert.
 				const empty = new Enumerable([]);
-				expect(() => empty.reduce((prev, curr) => curr)).toThrowError(new TypeError("Reduce of empty enumerable with no initial value."));
+				expect(() => empty.reduce((prev, curr) => curr)).toThrowError(
+					new TypeError("Reduce of empty enumerable with no initial value."),
+				);
 			});
 		});
 

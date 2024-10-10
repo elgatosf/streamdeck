@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
+
 import { fileSystemLocaleProvider } from "../i18n";
 import { logger } from "../logging";
 
@@ -20,9 +21,9 @@ describe("fileSystemLocaleProvider", () => {
 		const spyOnReadFileSync = jest.spyOn(fs, "readFileSync").mockReturnValue(
 			JSON.stringify({
 				Localization: {
-					Hello: "Hallo Welt"
-				}
-			})
+					Hello: "Hallo Welt",
+				},
+			}),
 		);
 
 		// Act.
@@ -66,7 +67,10 @@ describe("fileSystemLocaleProvider", () => {
 		expect(translations).toBeNull();
 		expect(spyOnReadFileSync).toHaveBeenCalledTimes(1);
 		expect(spyOnLogError).toHaveBeenCalledTimes(1);
-		expect(spyOnLogError).toHaveBeenCalledWith(`Failed to load translations from ${path.join(mockedCwd, "es.json")}`, expect.any(SyntaxError));
+		expect(spyOnLogError).toHaveBeenCalledWith(
+			`Failed to load translations from ${path.join(mockedCwd, "es.json")}`,
+			expect.any(SyntaxError),
+		);
 	});
 
 	/**
@@ -85,6 +89,9 @@ describe("fileSystemLocaleProvider", () => {
 		expect(translations).toBeNull();
 		expect(spyOnReadFileSync).toHaveBeenCalledTimes(1);
 		expect(spyOnLogError).toHaveBeenCalledTimes(1);
-		expect(spyOnLogError).toHaveBeenCalledWith(`Failed to load translations from ${path.join(mockedCwd, "ja.json")}`, expect.any(TypeError));
+		expect(spyOnLogError).toHaveBeenCalledWith(
+			`Failed to load translations from ${path.join(mockedCwd, "ja.json")}`,
+			expect.any(TypeError),
+		);
 	});
 });

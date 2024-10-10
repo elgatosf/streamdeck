@@ -1,4 +1,12 @@
-import { DeviceType, Target, type SetImage, type SetState, type SetTitle, type ShowOk, type WillAppear } from "../../../api";
+import {
+	DeviceType,
+	type SetImage,
+	type SetState,
+	type SetTitle,
+	type ShowOk,
+	Target,
+	type WillAppear,
+} from "../../../api";
 import type { JsonObject } from "../../../common/json";
 import { connection } from "../../connection";
 import { Device } from "../../devices/device";
@@ -22,11 +30,11 @@ describe("KeyAction", () => {
 			controller: "Keypad",
 			coordinates: {
 				column: 1,
-				row: 2
+				row: 2,
 			},
 			isInMultiAction: false,
-			settings: {}
-		}
+			settings: {},
+		},
 	};
 
 	// Mock device.
@@ -36,11 +44,11 @@ describe("KeyAction", () => {
 			name: "Device 1",
 			size: {
 				columns: 5,
-				rows: 3
+				rows: 3,
 			},
-			type: DeviceType.StreamDeck
+			type: DeviceType.StreamDeck,
 		},
-		true
+		true,
 	);
 
 	beforeAll(() => jest.spyOn(deviceStore, "getDeviceById").mockReturnValue(device));
@@ -78,11 +86,11 @@ describe("KeyAction", () => {
 				controller: "Encoder",
 				coordinates: {
 					column: 1,
-					row: 2
+					row: 2,
 				},
 				isInMultiAction: false,
-				settings: {}
-			}
+				settings: {},
+			},
 		};
 
 		// Act, assert.
@@ -102,8 +110,8 @@ describe("KeyAction", () => {
 			payload: {
 				controller: "Keypad",
 				settings: {},
-				isInMultiAction: true
-			}
+				isInMultiAction: true,
+			},
 		});
 
 		// Assert.
@@ -122,7 +130,7 @@ describe("KeyAction", () => {
 			await action.setImage();
 			await action.setImage("./imgs/test.png", {
 				state: 1,
-				target: Target.Hardware
+				target: Target.Hardware,
 			});
 
 			// Assert.
@@ -133,8 +141,8 @@ describe("KeyAction", () => {
 				payload: {
 					image: undefined,
 					state: undefined,
-					target: undefined
-				}
+					target: undefined,
+				},
 			});
 
 			expect(connection.send).toHaveBeenNthCalledWith<[SetImage]>(2, {
@@ -143,8 +151,8 @@ describe("KeyAction", () => {
 				payload: {
 					image: "./imgs/test.png",
 					state: 1,
-					target: Target.Hardware
-				}
+					target: Target.Hardware,
+				},
 			});
 		});
 
@@ -161,8 +169,8 @@ describe("KeyAction", () => {
 				context: action.id,
 				event: "setState",
 				payload: {
-					state: 1
-				}
+					state: 1,
+				},
 			});
 		});
 
@@ -180,8 +188,8 @@ describe("KeyAction", () => {
 				event: "setTitle",
 				context: action.id,
 				payload: {
-					title: "Hello world"
-				}
+					title: "Hello world",
+				},
 			});
 
 			expect(connection.send).toHaveBeenNthCalledWith<[SetTitle]>(2, {
@@ -190,8 +198,8 @@ describe("KeyAction", () => {
 				payload: {
 					state: 1,
 					target: Target.Software,
-					title: "This is a test"
-				}
+					title: "This is a test",
+				},
 			});
 		});
 
@@ -206,7 +214,7 @@ describe("KeyAction", () => {
 			expect(connection.send).toHaveBeenCalledTimes(1);
 			expect(connection.send).toHaveBeenCalledWith<[ShowOk]>({
 				context: action.id,
-				event: "showOk"
+				event: "showOk",
 			});
 		});
 	});

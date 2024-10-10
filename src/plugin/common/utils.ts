@@ -48,7 +48,9 @@ export type Constructor<T> = {
  * @template TLength Length of the union.
  * @template TAcc Accumulated types.
  */
-export type Enumerate<TLength extends number, TAcc extends number[] = []> = TAcc["length"] extends TLength ? TAcc[number] : Enumerate<TLength, [...TAcc, TAcc["length"]]>;
+export type Enumerate<TLength extends number, TAcc extends number[] = []> = TAcc["length"] extends TLength
+	? TAcc[number]
+	: Enumerate<TLength, [...TAcc, TAcc["length"]]>;
 
 /**
  * Unpacks the type; when the type is an array, the underlying the type is inferred.
@@ -60,4 +62,6 @@ export type Unpack<T> = T extends (infer U)[] ? U : T;
  * @template TUnion Union type being converted to a strict type.
  * @template TStrict Reference type used to remove excess properties from the inferred type.
  */
-export type StrictUnion<TUnion, TStrict = TUnion> = TStrict extends unknown ? Partial<Record<Exclude<UnionKeys<TUnion>, keyof TStrict>, never>> & TStrict : never;
+export type StrictUnion<TUnion, TStrict = TUnion> = TStrict extends unknown
+	? Partial<Record<Exclude<UnionKeys<TUnion>, keyof TStrict>, never>> & TStrict
+	: never;

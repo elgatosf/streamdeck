@@ -20,5 +20,5 @@ export enum RegistrationParameter {
 	/**
 	 * Identifies the argument that specifies the event to be sent to Stream Deck as part of the registration procedure.
 	 */
-	RegisterEvent = "-registerEvent"
+	RegisterEvent = "-registerEvent",
 }

@@ -10,7 +10,7 @@ describe("Logger", () => {
 		// Arrange.
 		const options: LoggerOptions = {
 			level: LogLevel.ERROR,
-			targets: [{ write: jest.fn() }]
+			targets: [{ write: jest.fn() }],
 		};
 
 		const logger = new Logger(options);
@@ -26,7 +26,7 @@ describe("Logger", () => {
 		expect(options.targets[0].write).toHaveBeenCalledWith<[LogEntry]>({
 			data: ["Hello world"],
 			level: LogLevel.INFO,
-			scope: ""
+			scope: "",
 		});
 	});
 
@@ -37,7 +37,7 @@ describe("Logger", () => {
 		// Arrange.
 		const options: LoggerOptions = {
 			level: LogLevel.INFO,
-			targets: [{ write: jest.fn() }, { write: jest.fn() }, { write: jest.fn() }]
+			targets: [{ write: jest.fn() }, { write: jest.fn() }, { write: jest.fn() }],
 		};
 
 		const logger = new Logger(options);
@@ -49,7 +49,7 @@ describe("Logger", () => {
 		const entry: LogEntry = {
 			data: ["Hello world"],
 			level: LogLevel.INFO,
-			scope: ""
+			scope: "",
 		};
 
 		expect(options.targets[0].write).toBeCalledTimes(1);
@@ -67,31 +67,31 @@ describe("Logger", () => {
 		it.each([
 			{
 				scopes: [],
-				scope: ""
+				scope: "",
 			},
 			{
 				scopes: ["Foo "],
-				scope: "Foo"
+				scope: "Foo",
 			},
 			{
 				scopes: ["Foo", "  "],
-				scope: "Foo"
+				scope: "Foo",
 			},
 			{
 				scopes: [" Hello", "World"],
-				scope: "Hello->World"
+				scope: "Hello->World",
 			},
 			{
 				scopes: ["One", " Two ", "Three"],
-				scope: "One->Two->Three"
-			}
+				scope: "One->Two->Three",
+			},
 		])("When scopes are $scopes", ({ scopes, scope }) => {
 			// Arrange.
 			const target = { write: jest.fn() };
 			const parent = new Logger({
 				level: LogLevel.TRACE,
 				minimumLevel: LogLevel.TRACE,
-				targets: [target]
+				targets: [target],
 			});
 
 			const logger = scopes.reduce((prev, current) => prev.createScope(current), parent);
@@ -110,10 +110,10 @@ describe("Logger", () => {
 				data: [
 					"Log error",
 					expect.objectContaining({
-						message: "error"
-					})
+						message: "error",
+					}),
 				],
-				scope
+				scope,
 			});
 
 			expect(target.write).toHaveBeenNthCalledWith<[LogEntry]>(2, {
@@ -121,10 +121,10 @@ describe("Logger", () => {
 				data: [
 					"Log warn",
 					expect.objectContaining({
-						message: "warn"
-					})
+						message: "warn",
+					}),
 				],
-				scope
+				scope,
 			});
 
 			expect(target.write).toHaveBeenNthCalledWith<[LogEntry]>(3, {
@@ -132,10 +132,10 @@ describe("Logger", () => {
 				data: [
 					"Log info",
 					expect.objectContaining({
-						message: "info"
-					})
+						message: "info",
+					}),
 				],
-				scope
+				scope,
 			});
 
 			expect(target.write).toHaveBeenNthCalledWith<[LogEntry]>(4, {
@@ -143,10 +143,10 @@ describe("Logger", () => {
 				data: [
 					"Log debug",
 					expect.objectContaining({
-						message: "debug"
-					})
+						message: "debug",
+					}),
 				],
-				scope
+				scope,
 			});
 
 			expect(target.write).toHaveBeenNthCalledWith<[LogEntry]>(5, {
@@ -154,10 +154,10 @@ describe("Logger", () => {
 				data: [
 					"Log trace",
 					expect.objectContaining({
-						message: "trace"
-					})
+						message: "trace",
+					}),
 				],
-				scope
+				scope,
 			});
 		});
 	});
@@ -229,7 +229,7 @@ describe("Logger", () => {
 			const logger = new Logger({
 				level,
 				minimumLevel: LogLevel.TRACE,
-				targets: [target]
+				targets: [target],
 			});
 
 			// Act.
@@ -248,7 +248,7 @@ describe("Logger", () => {
 			// Arrange.
 			const parent = new Logger({
 				level: LogLevel.ERROR,
-				targets: [{ write: jest.fn() }]
+				targets: [{ write: jest.fn() }],
 			});
 
 			// Act.
@@ -272,7 +272,7 @@ describe("Logger", () => {
 			// Arrange.
 			const parent = new Logger({
 				level: LogLevel.ERROR,
-				targets: [{ write: jest.fn() }]
+				targets: [{ write: jest.fn() }],
 			});
 
 			// Act.
@@ -295,7 +295,7 @@ describe("Logger", () => {
 			// Arrange.
 			const parent = new Logger({
 				level: LogLevel.ERROR,
-				targets: [{ write: jest.fn() }]
+				targets: [{ write: jest.fn() }],
 			});
 
 			// Act (1).
@@ -322,62 +322,62 @@ describe("Logger", () => {
 				minimumLevel: LogLevel.INFO,
 				name: "Can be ERROR",
 				level: LogLevel.ERROR,
-				expected: LogLevel.ERROR
+				expected: LogLevel.ERROR,
 			},
 			{
 				minimumLevel: LogLevel.TRACE,
 				name: "Can be ERROR",
 				level: LogLevel.ERROR,
-				expected: LogLevel.ERROR
+				expected: LogLevel.ERROR,
 			},
 			{
 				minimumLevel: LogLevel.INFO,
 				name: "Can be WARN",
 				level: LogLevel.WARN,
-				expected: LogLevel.WARN
+				expected: LogLevel.WARN,
 			},
 			{
 				minimumLevel: LogLevel.TRACE,
 				name: "Can be WARN",
 				level: LogLevel.WARN,
-				expected: LogLevel.WARN
+				expected: LogLevel.WARN,
 			},
 			{
 				minimumLevel: LogLevel.INFO,
 				name: "Can be INFO",
 				level: LogLevel.INFO,
-				expected: LogLevel.INFO
+				expected: LogLevel.INFO,
 			},
 			{
 				minimumLevel: LogLevel.TRACE,
 				name: "Can be INFO",
 				level: LogLevel.INFO,
-				expected: LogLevel.INFO
+				expected: LogLevel.INFO,
 			},
 			{
 				minimumLevel: LogLevel.INFO,
 				name: "Cannot be DEBUG",
 				level: LogLevel.DEBUG,
-				expected: LogLevel.INFO
+				expected: LogLevel.INFO,
 			},
 			{
 				minimumLevel: LogLevel.TRACE,
 				name: "Can be DEBUG",
 				level: LogLevel.DEBUG,
-				expected: LogLevel.DEBUG
+				expected: LogLevel.DEBUG,
 			},
 			{
 				minimumLevel: LogLevel.INFO,
 				name: "Cannot be TRACE",
 				level: LogLevel.TRACE,
-				expected: LogLevel.INFO
+				expected: LogLevel.INFO,
 			},
 			{
 				minimumLevel: LogLevel.TRACE,
 				name: "Can be TRACE",
 				level: LogLevel.TRACE,
-				expected: LogLevel.TRACE
-			}
+				expected: LogLevel.TRACE,
+			},
 		];
 
 		/**
@@ -389,7 +389,7 @@ describe("Logger", () => {
 				const options: LoggerOptions = {
 					level,
 					minimumLevel: minimumLevel as LogLevel.INFO | LogLevel.TRACE,
-					targets: [{ write: jest.fn() }]
+					targets: [{ write: jest.fn() }],
 				};
 
 				// Act.
@@ -405,7 +405,7 @@ describe("Logger", () => {
 					expect(options.targets[0].write).toHaveBeenCalledWith<[LogEntry]>({
 						level: LogLevel.WARN,
 						data: [`Log level cannot be set to ${LogLevel[level]} whilst not in debug mode.`],
-						scope: ""
+						scope: "",
 					});
 				}
 			});
@@ -420,7 +420,7 @@ describe("Logger", () => {
 				const options: LoggerOptions = {
 					level: LogLevel.ERROR,
 					minimumLevel: minimumLevel as LogLevel.INFO | LogLevel.TRACE,
-					targets: [{ write: jest.fn() }]
+					targets: [{ write: jest.fn() }],
 				};
 
 				const logger = new Logger(options);
@@ -438,7 +438,7 @@ describe("Logger", () => {
 					expect(options.targets[0].write).toHaveBeenCalledWith<[LogEntry]>({
 						level: LogLevel.WARN,
 						data: [`Log level cannot be set to ${LogLevel[level]} whilst not in debug mode.`],
-						scope: ""
+						scope: "",
 					});
 				}
 			});
