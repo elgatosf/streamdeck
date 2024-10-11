@@ -12,6 +12,12 @@
 
 # Change Log
 
+## vNext
+
+### ✨ New
+
+-   Add support for Chinese (Traditional).
+
 ## 1.1.0
 
 ### ✨ New
