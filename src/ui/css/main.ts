@@ -22,6 +22,10 @@ style.innerHTML = css`
 		text-rendering: optimizeLegibility;
 	}
 
+	body {
+		margin: 8px 8px 8px 0px;
+	}
+
 	::-webkit-scrollbar {
 		width: 4px;
 	}

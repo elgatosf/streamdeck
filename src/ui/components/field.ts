@@ -15,11 +15,7 @@ export class StreamDeckField extends LitElement {
 				align-items: baseline;
 				column-gap: 10px;
 				display: grid;
-				grid-template-columns: 85px 241px;
-			}
-			.sd-field-label > label {
-				display: block;
-				min-height: 32px;
+				grid-template-columns: 93px 1fr;
 			}
 		`,
 	];
