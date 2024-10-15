@@ -1,7 +1,9 @@
 import { type ActionInfo, type RegistrationInfo } from "../api";
 import type { IDisposable } from "../common/disposable";
 import type { JsonObject } from "../common/json";
+import "./components";
 import { connection } from "./connection";
+import "./css/main";
 import { i18n } from "./i18n";
 import { logger } from "./logging";
 import { plugin } from "./plugin";
