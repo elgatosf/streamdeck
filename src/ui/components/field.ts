@@ -15,7 +15,7 @@ export class StreamDeckField extends LitElement {
 				align-items: baseline;
 				column-gap: 10px;
 				display: grid;
-				grid-template-columns: 93px 1fr;
+				grid-template-columns: 93px 262px;
 			}
 		`,
 	];
