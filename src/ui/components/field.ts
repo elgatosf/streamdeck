@@ -5,7 +5,7 @@ import { customElement, property } from "lit/decorators.js";
  * Field that identifies an input, or group of inputs.
  */
 @customElement("sd-field")
-export class StreamDeckField extends LitElement {
+export class SDFieldElement extends LitElement {
 	/**
 	 * @inheritdoc
 	 */
@@ -60,6 +60,6 @@ declare global {
 		/**
 		 * Field that identifies an input, or group of inputs.
 		 */
-		"sd-field": StreamDeckField;
+		"sd-field": SDFieldElement;
 	}
 }
