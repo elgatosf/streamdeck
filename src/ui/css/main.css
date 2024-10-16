@@ -4,7 +4,11 @@
 	--sd-color-content-secondary: #969696;
 	--sd-font-size: 12px;
 	--sd-line-height: calc(var(--sd-font-size) * 1.333);
+	--sd-scrollbar-track-color: #262626;
+	--sd-scrollbar-thumb-color: #666666;
+}
 
+body {
 	background-color: var(--sd-background-color);
 	color: var(--sd-color-content-primary);
 	font-size: var(--sd-font-size);
@@ -15,11 +19,8 @@
 		Roboto,
 		Helvetica sans-serif;
 	line-height: var(--sd-line-height);
-	text-rendering: optimizeLegibility;
-}
-
-body {
 	margin: 8px 8px 8px 0px;
+	text-rendering: optimizeLegibility;
 }
 
 ::-webkit-scrollbar {
@@ -27,10 +28,10 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-	background-color: #262626;
+	background-color: var(--sd-scrollbar-track-color);
 }
 
 ::-webkit-scrollbar-thumb {
-	background-color: #666666;
+	background-color: var(--sd-scrollbar-thumb-color);
 	border-radius: 2px;
 }
