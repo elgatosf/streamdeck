@@ -3,13 +3,10 @@
  */
 module.exports = {
 	/**
-	 * Processes the file, transforming it to a readable state.
-	 * @param {string} sourceText Text of the file to transform.
-	 * @param {string} sourcePath Path to the file being transformed.
-	 * @param {object} options Jest options, and context, of the current transformation.
-	 * @returns The code, and optional map, of the transformed file.
+	 * Processes the file, transforming it to a readable state... of no code.
+	 * @returns An empty set of code, without a map, that mimics a transformed file.
 	 */
-	process: (sourceText, sourcePath, options) => {
+	process: () => {
 		return { code: "" };
 	},
 };
