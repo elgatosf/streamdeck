@@ -6,7 +6,12 @@ import tsEslint from "typescript-eslint";
 
 export default [
 	{
-		ignores: [".github/", "dist/", "node_modules/", "types/", "*.mjs"],
+		ignores: [
+			".github/",
+			"dist/",
+			"node_modules/",
+			"types/",
+		],
 	},
 
 	/**
@@ -118,6 +123,17 @@ export default [
 				},
 			],
 			"@typescript-eslint/sort-type-constituents": "warn",
+		},
+	},
+
+	/**
+	 * JavaScript.
+	 */
+	{
+		files: ["**/*.{js,cjs,mjs}"],
+		rules: {
+			"@typescript-eslint/explicit-function-return-type": "off",
+			"jsdoc/no-types": "off",
 		},
 	},
 

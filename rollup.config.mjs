@@ -2,6 +2,7 @@ import nodeResolve from "@rollup/plugin-node-resolve";
 import typescript from "@rollup/plugin-typescript";
 import { dirname, join, parse, resolve } from "node:path";
 import url from "node:url";
+import css from "rollup-plugin-import-css";
 
 const isWatching = !!process.env.ROLLUP_WATCH;
 const banner = `/**!
@@ -51,6 +52,10 @@ export default streamDeck;
 					});
 				},
 			},
+			css({
+				inject: true,
+				modules: false,
+			}),
 		],
 	};
 }

@@ -12,6 +12,7 @@ const config = {
 	verbose: true,
 	roots: ["src"],
 	transform: {
+		// TypeScript.
 		"^.+\\.ts$": [
 			"@swc/jest",
 			{
@@ -27,7 +28,15 @@ const config = {
 				},
 			},
 		],
+		// Transform ESM.
+		"^.+\\.(js|jsx)$": "@swc/jest",
+		// Ignore CSS files.
+		"^.+\\.css$": "<rootDir>/tests/__setup__/empty-transform.cjs",
 	},
+	transformIgnorePatterns: [
+		// Selective ESM transformation enables working with Lit.
+		"node_modules/(?!(lit-html|lit-element|lit|@lit)/)",
+	],
 };
 
 export default config;
