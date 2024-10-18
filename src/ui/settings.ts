@@ -1,8 +1,9 @@
-import type { DidReceiveGlobalSettings, DidReceiveSettings } from "../api";
+import { ActionInfo, type DidReceiveGlobalSettings, type DidReceiveSettings } from "../api";
 import type { IDisposable } from "../common/disposable";
-import type { JsonObject } from "../common/json";
+import type { JsonObject, JsonValue } from "../common/json";
 import { connection } from "./connection";
 import type { DidReceiveGlobalSettingsEvent, DidReceiveSettingsEvent } from "./events";
+import { type Setting, type SettingOptions, SettingsProvider } from "./settings/provider";
 
 /**
  * Gets the global settings associated with the plugin. Use in conjunction with {@link setGlobalSettings}.
@@ -119,4 +120,19 @@ export async function setSettings<T extends JsonObject>(settings: T): Promise<vo
 		context: uuid,
 		payload: settings,
 	});
+}
+
+const actionSettings = new SettingsProvider("didReceiveSettings", setSettings);
+connection.on("connecting", (_, actionInfo: ActionInfo) => {
+	actionSettings.initialize(actionInfo.payload.settings);
+});
+
+/**
+ * Creates a new setting hook for the specified `path`.
+ * @param path Path to the setting, for example `name` or `person.name`.
+ * @param options Options that define how the setting should function.
+ * @returns The setting hook.
+ */
+export function useSetting<T extends JsonValue>(path: string, options?: SettingOptions<T>): Setting<T> {
+	return actionSettings.use(path, options);
 }
