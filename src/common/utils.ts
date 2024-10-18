@@ -25,3 +25,8 @@ export function get(path: string, source: unknown): unknown {
  * types when parsing them using the abstract syntax tree, used when generating documentation.
  */
 export type KeyOf<T, K extends keyof T> = Omit<T[K], "">;
+
+/**
+ * Defines a type that implements a constructor that accepts an array of `any` parameters; utilized for mixins.
+ */
+export type Constructor<T = {}> = new (...args: any[]) => T;
