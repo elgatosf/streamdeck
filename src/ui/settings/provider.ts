@@ -1,6 +1,7 @@
-import type { JsonObject, JsonValue } from "..";
 import type { DidReceiveGlobalSettings, DidReceiveSettings } from "../../api";
 import { deferredDisposable } from "../../common/disposable";
+import { EventEmitter } from "../../common/event-emitter";
+import type { JsonObject, JsonValue } from "../../common/json";
 import { PromiseCompletionSource } from "../../common/promises";
 import { debounce, get, set } from "../../common/utils";
 import { connection } from "../connection";
@@ -8,7 +9,7 @@ import { connection } from "../connection";
 /**
  * Settings provider capable of creating settings that can be monitored and updated.
  */
-export class SettingsProvider {
+export class SettingsProvider extends EventEmitter<EventMap> {
 	/**
 	 * Name of the event to monitor for receiving settings.
 	 */
@@ -35,6 +36,8 @@ export class SettingsProvider {
 	 * @param save Function responsible for persisting the settings to Stream Deck.
 	 */
 	constructor(eventName: ReceivedSettingsEvent["event"], save: (settings: JsonObject) => Promise<void>) {
+		super();
+
 		this.#eventName = eventName;
 		this.#save = save;
 
@@ -57,24 +60,43 @@ export class SettingsProvider {
 	 * @returns The setting hook.
 	 */
 	public use<T extends JsonValue>(path: string, options?: SettingOptions<T>): Setting<T> {
-		const { dispose } = options?.onChange
+		// Monitor setting changes from the plugin.
+		const remoteSync = options?.onChange
 			? connection.disposableOn(this.#eventName, (ev) => options?.onChange?.(get(path, ev.payload.settings) as T))
 			: deferredDisposable(() => {});
 
-		const getter = async () => {
-			await this.#initialization.promise;
-			return get(path, this.#settings) as T;
-		};
+		// Monitor setting changes from other inputs.
+		const localSync = this.disposableOn(
+			"changing",
+			(source: Setting<JsonValue>, otherPath: string, value: JsonValue) => {
+				if (path === otherPath && source !== setting) {
+					options?.onChange?.(value as T);
+				}
+			},
+		);
 
+		// Determine setter on whether we debounce a save.
 		const setter = options?.debounceSaveTimeout
 			? debounce((value: JsonValue) => this.#set(path, value), options.debounceSaveTimeout)
 			: (value?: JsonValue) => this.#set(path, value);
 
-		return {
-			dispose,
-			get: getter,
-			set: setter,
+		// Construct the setting so we can reference it.
+		const setting = {
+			dispose: () => {
+				remoteSync.dispose();
+				localSync.dispose();
+			},
+			get: async () => {
+				await this.#initialization.promise;
+				return get(path, this.#settings) as T;
+			},
+			set: (value: T) => {
+				this.emit("changing", setting, path, value);
+				return setter(value);
+			},
 		};
+
+		return setting;
 	}
 
 	/**
@@ -94,6 +116,13 @@ export class SettingsProvider {
 		await this.#save(this.#settings);
 	}
 }
+
+/**
+ * Events that can occur within a {@link SettingsProvider}.
+ */
+type EventMap = {
+	changing: [setting: Setting<JsonValue>, value: JsonValue];
+};
 
 /**
  * Union type of events that indicate settings have been received from Stream Deck.
