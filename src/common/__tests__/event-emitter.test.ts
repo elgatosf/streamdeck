@@ -371,13 +371,13 @@ describe("EventEmitter", () => {
 		 * Event map
 		 */
 		test("event map", () => {
-			// @ts-expect-error
+			// @ts-expect-error: arguments of type `string` are not valid
 			const invalidArgs = new EventEmitter<{
 				invalid: string;
 				valid: [name: string];
 			}>();
 
-			// @ts-expect-error
+			// @ts-expect-error: key of type `Number` is not valid.
 			const invalidEventName = new EventEmitter<{
 				[1]: [name: string];
 				valid: [name: string];
@@ -389,10 +389,10 @@ describe("EventEmitter", () => {
 		 */
 		test("event name", () => {
 			type eventName = Expect<
-				TypesAreEqual<EventsOf<EventMap>, "message" | "other" | "another" | "empty" | "array" | (string & {})>
+				TypesAreEqual<EventsOf<EventMap>, "another" | "array" | "empty" | "message" | "other" | (string & {})>
 			>;
 
-			// @ts-expect-error
+			// @ts-expect-error: arguments of type `string` are not valid
 			type invalid = EventsOf<{
 				invalid: string;
 				valid: [name: string];
@@ -410,7 +410,7 @@ describe("EventEmitter", () => {
 			type multiple = Expect<TypesAreEqual<EventArgs<EventMap, "array">, [id: number, name: string]>>;
 
 			type invalid = EventArgs<
-				// @ts-expect-error
+				// @ts-expect-error: arguments of type `string` are not valid
 				{ invalid: string },
 				"invalid"
 			>;
