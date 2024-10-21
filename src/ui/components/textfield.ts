@@ -29,6 +29,12 @@ export class SDTextFieldElement extends Input<string>(LitElement) {
 				min-height: 32px;
 				width: 224px;
 			}
+			input::placeholder {
+				color: var(--sd-color-content-secondary);
+			}
+			input:disabled {
+				color: var(--sd-color-content-disabled);
+			}
 			input:focus {
 				outline: 2px #0078ff solid;
 			}

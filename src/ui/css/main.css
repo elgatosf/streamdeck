@@ -3,6 +3,7 @@
 	--sd-border-radius: 4px;
 	--sd-color-content-primary: #d8d8d8;
 	--sd-color-content-secondary: #969696;
+	--sd-color-content-disabled: #646464;
 	--sd-font-size: 12px;
 	--sd-input-background-color: #3d3d3d;
 	--sd-line-height: calc(var(--sd-font-size) * 1.333);
