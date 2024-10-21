@@ -3,8 +3,8 @@ import { property } from "lit/decorators.js";
 
 import type { JsonValue } from "..";
 import type { Constructor } from "../../common/utils";
-import { useSetting } from "../settings";
-import type { Setting } from "../settings/provider";
+import { useGlobalSetting, useSetting } from "../settings";
+import type { Setting, SettingOptions } from "../settings/provider";
 
 /**
  * Input mixin that provides common functionality for input elements that persist settings.
@@ -37,6 +37,12 @@ export const Input = <TValue extends JsonValue, TBase extends Constructor<LitEle
 		/**
 		 * @inheritdoc
 		 */
+		@property({ type: Boolean })
+		public accessor global = false;
+
+		/**
+		 * @inheritdoc
+		 */
 		@property()
 		public accessor setting: string | undefined;
 
@@ -45,7 +51,7 @@ export const Input = <TValue extends JsonValue, TBase extends Constructor<LitEle
 		 */
 		@property({ attribute: false })
 		set value(value: TValue | undefined) {
-			if (this.#updateValue(value)) {
+			if (this.#setValue(value)) {
 				this.#setting?.set(value);
 			}
 		}
@@ -74,20 +80,24 @@ export const Input = <TValue extends JsonValue, TBase extends Constructor<LitEle
 		 * @inheritdoc
 		 */
 		protected override willUpdate(_changedProperties: PropertyValueMap<any> | Map<PropertyKey, unknown>): void {
-			if (_changedProperties.has("setting")) {
+			if (_changedProperties.has("global") || _changedProperties.has("setting")) {
 				this.#setting?.dispose();
 
+				// Clear the current setting.
+				this.#setting = undefined;
 				if (this.setting === undefined) {
-					this.#setting = undefined;
 					return;
 				}
 
-				this.#setting = useSetting<TValue>(this.setting, {
-					onChange: (value) => this.#updateValue(value),
+				// Determine the options.
+				const options: SettingOptions<TValue> = {
+					onChange: (value) => this.#setValue(value),
 					debounceSaveTimeout: this.debounceSave ? 200 : undefined,
-				});
+				};
 
-				this.#setting.get().then((value) => this.#updateValue(value));
+				// Assign the new setting.
+				this.#setting = this.global ? useGlobalSetting(this.setting, options) : useSetting(this.setting, options);
+				this.#setting.get().then((value) => this.#setValue(value));
 			}
 		}
 
@@ -96,7 +106,7 @@ export const Input = <TValue extends JsonValue, TBase extends Constructor<LitEle
 		 * @param newValue New value.
 		 * @returns `true` when the value changed; otherwise `false`.
 		 */
-		#updateValue(newValue: TValue | undefined): boolean {
+		#setValue(newValue: TValue | undefined): boolean {
 			if (this.#value == newValue) {
 				return false;
 			}
@@ -120,6 +130,12 @@ export declare class InputMixin<T extends JsonValue> {
 	 * Determines whether the input is disabled; default `false`.
 	 */
 	disabled: boolean;
+
+	/**
+	 * When `true`, the setting will be persisted in the global settings, otherwise it will be persisted
+	 * in the action's settings; default `false`.
+	 */
+	global: boolean;
 
 	/**
 	 * Path to the setting where the value should be persisted, for example `name`, or `person.name`.

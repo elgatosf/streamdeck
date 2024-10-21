@@ -122,17 +122,34 @@ export async function setSettings<T extends JsonObject>(settings: T): Promise<vo
 	});
 }
 
-const actionSettings = new SettingsProvider("didReceiveSettings", setSettings);
-connection.on("connecting", (_, actionInfo: ActionInfo) => {
-	actionSettings.initialize(actionInfo.payload.settings);
-});
-
 /**
  * Creates a new setting hook for the specified `path`.
  * @param path Path to the setting, for example `name` or `person.name`.
  * @param options Options that define how the setting should function.
  * @returns The setting hook.
  */
-export function useSetting<T extends JsonValue>(path: string, options?: SettingOptions<T>): Setting<T> {
-	return actionSettings.use(path, options);
-}
+export const useSetting = (() => {
+	const actionSettings = new SettingsProvider("didReceiveSettings", setSettings);
+	connection.on("connecting", (_, actionInfo: ActionInfo) => {
+		actionSettings.initialize(actionInfo.payload.settings);
+	});
+
+	return function <T extends JsonValue>(path: string, options?: SettingOptions<T>): Setting<T> {
+		return actionSettings.use(path, options);
+	};
+})();
+
+/**
+ * Creates a new global setting hook for the specified `path`.
+ * @param path Path to the global setting, for example `name` or `person.name`.
+ * @param options Options that define how the global setting should function.
+ * @returns The global setting hook.
+ */
+export const useGlobalSetting = (() => {
+	const globalSettings = new SettingsProvider("didReceiveGlobalSettings", setGlobalSettings);
+	getGlobalSettings().then((settings) => globalSettings.initialize(settings));
+
+	return function <T extends JsonValue>(path: string, options?: SettingOptions<T>): Setting<T> {
+		return globalSettings.use(path, options);
+	};
+})();
