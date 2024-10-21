@@ -1,9 +1,12 @@
 :root {
 	--sd-background-color: #2d2d2d;
+	--sd-border-radius: 4px;
 	--sd-color-content-primary: #d8d8d8;
 	--sd-color-content-secondary: #969696;
 	--sd-font-size: 12px;
+	--sd-input-background-color: #3d3d3d;
 	--sd-line-height: calc(var(--sd-font-size) * 1.333);
+	--sd-spacing: 8px;
 	--sd-scrollbar-track-color: #262626;
 	--sd-scrollbar-thumb-color: #666666;
 }

@@ -1,4 +1,4 @@
-import { html, LitElement, type TemplateResult } from "lit";
+import { css, html, LitElement, type TemplateResult } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { ifDefined } from "lit/directives/if-defined.js";
 import { ref } from "lit/directives/ref.js";
@@ -11,6 +11,30 @@ import type { HTMLInputEvent } from "../utils";
  */
 @customElement("sd-textfield")
 export class SDTextFieldElement extends Input<string>(LitElement) {
+	/**
+	 * @inheritdoc
+	 */
+	public static styles = [
+		super.styles ?? [],
+		css`
+			input {
+				background-color: var(--sd-input-background-color);
+				border: solid 2px var(--sd-background-color);
+				border-radius: var(--sd-border-radius);
+				color: var(--sd-color-content-primary);
+				font-family: var(--sd-font-family);
+				font-size: var(--sd-font-size);
+				margin: -2px;
+				padding: 0 var(--sd-spacing);
+				min-height: 32px;
+				width: 224px;
+			}
+			input:focus {
+				outline: 2px #0078ff solid;
+			}
+		`,
+	];
+
 	/**
 	 * Initializes a new instance of the {@link SDTextFieldElement} class.
 	 */

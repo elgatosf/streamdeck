@@ -1,4 +1,4 @@
-import { LitElement, css, html, type HTMLTemplateResult } from "lit";
+import { css, html, type HTMLTemplateResult, LitElement } from "lit";
 import { customElement, property } from "lit/decorators.js";
 
 /**
@@ -16,6 +16,7 @@ export class SDFieldElement extends LitElement {
 				column-gap: 10px;
 				display: grid;
 				grid-template-columns: 93px 262px;
+				margin-bottom: calc(var(--sd-spacing) * 1.5);
 			}
 		`,
 	];
