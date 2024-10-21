@@ -1,4 +1,5 @@
-import { EventEmitter } from "../event-emitter";
+import type { Expect, TypesAreEqual } from "../../../tests/utils";
+import { type EventArgs, EventEmitter, type EventsOf } from "../event-emitter";
 
 describe("EventEmitter", () => {
 	describe("adding listeners", () => {
@@ -363,10 +364,65 @@ describe("EventEmitter", () => {
 			expect(two).toHaveBeenCalledWith("Hello world");
 		});
 	});
+
+	/* eslint-disable @typescript-eslint/no-unused-vars */
+	describe("types", () => {
+		/**
+		 * Event map
+		 */
+		test("event map", () => {
+			// @ts-expect-error: arguments of type `string` are not valid
+			const invalidArgs = new EventEmitter<{
+				invalid: string;
+				valid: [name: string];
+			}>();
+
+			// @ts-expect-error: key of type `Number` is not valid.
+			const invalidEventName = new EventEmitter<{
+				[1]: [name: string];
+				valid: [name: string];
+			}>();
+		});
+
+		/**
+		 * Event names.
+		 */
+		test("event name", () => {
+			type eventName = Expect<
+				TypesAreEqual<EventsOf<EventMap>, "another" | "array" | "empty" | "message" | "other" | (string & {})>
+			>;
+
+			// @ts-expect-error: arguments of type `string` are not valid
+			type invalid = EventsOf<{
+				invalid: string;
+				valid: [name: string];
+			}>;
+		});
+
+		/**
+		 * Event arguments.
+		 */
+		it("events args", () => {
+			type t = EventArgs<EventMap, "array">;
+
+			type empty = Expect<TypesAreEqual<EventArgs<EventMap, "empty">, []>>;
+			type single = Expect<TypesAreEqual<EventArgs<EventMap, "message">, [message: string]>>;
+			type multiple = Expect<TypesAreEqual<EventArgs<EventMap, "array">, [id: number, name: string]>>;
+
+			type invalid = EventArgs<
+				// @ts-expect-error: arguments of type `string` are not valid
+				{ invalid: string },
+				"invalid"
+			>;
+		});
+	});
+	/* eslint-enable @typescript-eslint/no-unused-vars */
 });
 
 type EventMap = {
 	message: [message: string];
 	other: [id: number];
 	another: [id: number];
+	empty: [];
+	array: [id: number, name: string];
 };
