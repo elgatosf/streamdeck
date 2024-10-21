@@ -36,8 +36,12 @@ export class SDTextFieldElement extends Input<string>(LitElement) {
 			input:disabled {
 				color: var(--color-content-disabled);
 			}
-			input:focus {
+			input:focus,
+			input:focus:invalid {
 				outline: solid var(--border-width-thick) var(--color-surface-accent);
+			}
+			input:invalid {
+				outline: solid var(--border-width-thick) var(--color-surface-negative);
 			}
 		`,
 	];
