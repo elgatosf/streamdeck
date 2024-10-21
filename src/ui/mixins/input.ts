@@ -74,6 +74,8 @@ export const Input = <TValue extends JsonValue, TBase extends Constructor<LitEle
 		public override disconnectedCallback(): void {
 			this.#setting?.dispose();
 			this.#setting = undefined;
+
+			super.disconnectedCallback();
 		}
 
 		/**
@@ -99,6 +101,8 @@ export const Input = <TValue extends JsonValue, TBase extends Constructor<LitEle
 				this.#setting = this.global ? useGlobalSetting(this.setting, options) : useSetting(this.setting, options);
 				this.#setting.get().then((value) => this.#setValue(value));
 			}
+
+			super.willUpdate(_changedProperties);
 		}
 
 		/**
