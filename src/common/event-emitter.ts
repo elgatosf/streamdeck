@@ -240,32 +240,15 @@ type EventMap<T> = {
 /**
  * Parsed {@link EventMap} whereby each property is a `string` that denotes an event name, and the associated value type defines the listener arguments.
  */
-export type EventsOf<T> =
-	EventMap<unknown> extends T
-		? string
-		: keyof EventMap<
-				Pick<
-					T,
-					Extract<
-						{
-							[K in keyof T]: K extends string ? K : never;
-						}[keyof T],
-						{
-							[K in keyof T]: T[K] extends unknown[] ? K : never;
-						}[keyof T]
-					>
-				>
-			>;
+export type EventsOf<TMap extends EventMap<TMap>> = keyof TMap | (string & {});
 
 /**
  * Parses the event arguments for the specified event from the event map.
  */
-type EventArgs<TMap, TEvent extends string> = TMap extends {
-	[k in TEvent]: infer TArgs;
-}
-	? TArgs extends [unknown]
-		? TArgs
-		: unknown[]
+export type EventArgs<TMap extends EventMap<TMap>, TEvent extends EventsOf<TMap>> = TEvent extends keyof TMap
+	? TMap[TEvent] extends unknown[]
+		? TMap[TEvent]
+		: never
 	: unknown[];
 
 /**

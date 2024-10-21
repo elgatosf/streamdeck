@@ -12,11 +12,15 @@
 
 # Change Log
 
-## vNext
+## 1.2.0
 
 ### ✨ New
 
 -   Add support for Chinese (Traditional).
+
+### 🐞 Fix
+
+-   Fix types of `EventEmitter` event arguments.
 
 ## 1.1.0
 
