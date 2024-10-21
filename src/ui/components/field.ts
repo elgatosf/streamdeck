@@ -13,10 +13,10 @@ export class SDFieldElement extends LitElement {
 		css`
 			.sd-field {
 				align-items: baseline;
-				column-gap: 10px;
+				column-gap: var(--space-xs);
 				display: grid;
-				grid-template-columns: 93px 262px;
-				margin-bottom: calc(var(--sd-spacing) * 1.5);
+				grid-template-columns: 95px 262px;
+				margin-bottom: var(--space-s);
 			}
 		`,
 	];

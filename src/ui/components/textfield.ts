@@ -18,25 +18,26 @@ export class SDTextFieldElement extends Input<string>(LitElement) {
 		super.styles ?? [],
 		css`
 			input {
-				background-color: var(--sd-input-background-color);
-				border: solid 2px var(--sd-background-color);
-				border-radius: var(--sd-border-radius);
-				color: var(--sd-color-content-primary);
-				font-family: var(--sd-font-family);
-				font-size: var(--sd-font-size);
-				margin: -2px;
-				padding: 0 var(--sd-spacing);
+				background-color: var(--color-surface);
+				border: solid var(--border-width-thick) var(--color-page);
+				border-radius: var(--rounding-m);
+				color: var(--color-content-primary);
+				font-family: var(--typography-body-m-family);
+				font-size: var(--typography-body-m-size);
+				font-weight: var(--typography-body-m-weight);
+				margin: calc(var(--border-width-thick) * -1);
+				padding: 0 var(--space-xs);
 				min-height: 32px;
 				width: 224px;
 			}
 			input::placeholder {
-				color: var(--sd-color-content-secondary);
+				color: var(--color-content-secondary);
 			}
 			input:disabled {
-				color: var(--sd-color-content-disabled);
+				color: var(--color-content-disabled);
 			}
 			input:focus {
-				outline: 2px #0078ff solid;
+				outline: solid var(--border-width-thick) var(--color-surface-accent);
 			}
 		`,
 	];
