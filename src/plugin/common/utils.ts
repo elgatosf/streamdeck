@@ -36,14 +36,6 @@ export function getPluginUUID(): string {
 type UnionKeys<T> = T extends T ? keyof T : never;
 
 /**
- * Defines a type that implements a constructor that accepts an array of `any` parameters; utilized for mixins.
- */
-export type Constructor<T> = {
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	new (...args: any[]): T;
-};
-
-/**
  * Constructs a union type of `number` for the given `TLength`. The union type is indexed from zero. Credit {@link https://stackoverflow.com/a/39495173}
  * @template TLength Length of the union.
  * @template TAcc Accumulated types.
