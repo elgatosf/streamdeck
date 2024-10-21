@@ -82,15 +82,15 @@ export class SDTextFieldElement extends Input<string>(LitElement) {
 	public accessor required = false;
 
 	/**
-	 * Type of text field; either `text` or `password`.
+	 * Type of text field; either `password` or `text`; default `text`.
 	 */
 	@property()
-	public accessor type: "text" | "password" = "text";
+	public accessor type: "password" | "text" = "text";
 
 	/**
 	 * @inheritdoc
 	 */
-	override render(): TemplateResult {
+	public override render(): TemplateResult {
 		return html`<input
 			${ref(this.focusElement)}
 			maxlength=${ifDefined(this.maxLength)}
@@ -100,16 +100,18 @@ export class SDTextFieldElement extends Input<string>(LitElement) {
 			?required=${this.required}
 			.type=${this.type || "text"}
 			.value=${this.value || ""}
-			@input=${(ev: HTMLInputEvent<HTMLInputElement>) => (this.value = ev.target.value)}
+			@input=${(ev: HTMLInputEvent<HTMLInputElement>): void => {
+				this.value = ev.target.value;
+			}}
 		/>`;
 	}
 }
 
 declare global {
-	/**
-	 * Text field capable of persisting `string` values to Stream Deck settings.
-	 */
 	interface HTMLElementTagNameMap {
+		/**
+		 * Text field capable of persisting `string` values to Stream Deck settings.
+		 */
 		"sd-textfield": SDTextFieldElement;
 	}
 }

@@ -78,10 +78,10 @@ export class SettingsProvider extends EventEmitter<EventMap> {
 		// Determine setter on whether we debounce a save.
 		const setter = options?.debounceSaveTimeout
 			? debounce((value: JsonValue) => this.#set(path, value), options.debounceSaveTimeout)
-			: (value?: JsonValue) => this.#set(path, value);
+			: (value?: JsonValue): Promise<void> => this.#set(path, value);
 
 		// Construct the setting so we can reference it.
-		const setting = {
+		const setting: Setting<T> = {
 			dispose: () => {
 				remoteSync.dispose();
 				localSync.dispose();
@@ -121,13 +121,16 @@ export class SettingsProvider extends EventEmitter<EventMap> {
  * Events that can occur within a {@link SettingsProvider}.
  */
 type EventMap = {
+	/**
+	 * Occurs when a user changes a setting.
+	 */
 	changing: [setting: Setting<JsonValue>, value: JsonValue];
 };
 
 /**
  * Union type of events that indicate settings have been received from Stream Deck.
  */
-type ReceivedSettingsEvent = DidReceiveSettings<JsonObject> | DidReceiveGlobalSettings<JsonObject>;
+type ReceivedSettingsEvent = DidReceiveGlobalSettings<JsonObject> | DidReceiveSettings<JsonObject>;
 
 /**
  * Setting persisted within Stream Deck.

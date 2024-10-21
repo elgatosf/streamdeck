@@ -1,4 +1,4 @@
-import { LitElement, type PropertyValueMap } from "lit";
+import { LitElement } from "lit";
 import { property } from "lit/decorators.js";
 import { createRef, type Ref } from "lit/directives/ref.js";
 
@@ -14,18 +14,11 @@ import type { Setting, SettingOptions } from "../settings/provider";
  */
 export const Input = <TValue extends JsonValue, TBase extends Constructor<LitElement> = typeof LitElement>(
 	superClass: TBase,
-) => {
+): Constructor<InputMixin<TValue>> & TBase => {
+	/**
+	 * Input mixin that provides common functionality for input elements that persist settings.
+	 */
 	class InputClass extends superClass {
-		/**
-		 * Setting responsible for managing the value within Stream Deck.
-		 */
-		#setting: Setting<TValue> | undefined;
-
-		/**
-		 * Private backing field for {@link InputClass.value}
-		 */
-		#value: TValue | undefined;
-
 		/**
 		 * @inheritdoc
 		 */
@@ -48,21 +41,9 @@ export const Input = <TValue extends JsonValue, TBase extends Constructor<LitEle
 		public accessor setting: string | undefined;
 
 		/**
-		 * Sets the current input value.
+		 * @inheritdoc
 		 */
-		@property({ attribute: false })
-		set value(value: TValue | undefined) {
-			if (this.#setValue(value)) {
-				this.#setting?.set(value);
-			}
-		}
-
-		/**
-		 * Gets the current input value.
-		 */
-		get value(): TValue | undefined {
-			return this.#value;
-		}
+		protected debounceSave: boolean = false;
 
 		/**
 		 * @inheritdoc
@@ -70,9 +51,32 @@ export const Input = <TValue extends JsonValue, TBase extends Constructor<LitEle
 		protected focusElement: Ref<HTMLInputElement> = createRef();
 
 		/**
-		 * @inheritdoc
+		 * Setting responsible for managing the value within Stream Deck.
 		 */
-		protected debounceSave: boolean = false;
+		#setting: Setting<TValue> | undefined;
+
+		/**
+		 * Private backing field for input's value.
+		 */
+		#value: TValue | undefined;
+
+		/**
+		 * Gets the current input value.
+		 * @returns The value.
+		 */
+		public get value(): TValue | undefined {
+			return this.#value;
+		}
+
+		/**
+		 * Sets the current input value.
+		 */
+		@property({ attribute: false })
+		public set value(value: TValue | undefined) {
+			if (this.#setValue(value)) {
+				this.#setting?.set(value);
+			}
+		}
 
 		/**
 		 * @inheritdoc
@@ -99,7 +103,7 @@ export const Input = <TValue extends JsonValue, TBase extends Constructor<LitEle
 		/**
 		 * @inheritdoc
 		 */
-		protected override willUpdate(_changedProperties: PropertyValueMap<any> | Map<PropertyKey, unknown>): void {
+		protected override willUpdate(_changedProperties: Map<PropertyKey, unknown>): void {
 			if (_changedProperties.has("global") || _changedProperties.has("setting")) {
 				this.#setting?.dispose();
 
@@ -151,23 +155,23 @@ export declare class InputMixin<T extends JsonValue> {
 	/**
 	 * Determines whether the input is disabled; default `false`.
 	 */
-	disabled: boolean;
+	public disabled: boolean;
 
 	/**
 	 * When `true`, the setting will be persisted in the global settings, otherwise it will be persisted
 	 * in the action's settings; default `false`.
 	 */
-	global: boolean;
+	public global: boolean;
 
 	/**
 	 * Path to the setting where the value should be persisted, for example `name`, or `person.name`.
 	 */
-	setting: string | undefined;
+	public setting: string | undefined;
 
 	/**
 	 * Current input value.
 	 */
-	value: T | undefined;
+	public value: T | undefined;
 
 	/**
 	 * Determines whether to debounce saving when the value changes.
@@ -182,5 +186,5 @@ export declare class InputMixin<T extends JsonValue> {
 	/**
 	 * Focuses the input.
 	 */
-	focus(): void;
+	public focus(): void;
 }
