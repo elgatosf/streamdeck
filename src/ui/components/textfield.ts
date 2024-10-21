@@ -1,6 +1,7 @@
 import { html, LitElement, type TemplateResult } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { ifDefined } from "lit/directives/if-defined.js";
+import { ref } from "lit/directives/ref.js";
 
 import { Input } from "../mixins/input";
 import type { HTMLInputEvent } from "../utils";
@@ -56,6 +57,7 @@ export class SDTextFieldElement extends Input<string>(LitElement) {
 	 */
 	override render(): TemplateResult {
 		return html`<input
+			${ref(this.focusElement)}
 			maxlength=${ifDefined(this.maxLength)}
 			pattern=${ifDefined(this.pattern)}
 			placeholder=${ifDefined(this.placeholder)}

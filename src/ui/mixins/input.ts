@@ -1,5 +1,6 @@
 import { LitElement, type PropertyValueMap } from "lit";
 import { property } from "lit/decorators.js";
+import { createRef, type Ref } from "lit/directives/ref.js";
 
 import type { JsonValue } from "..";
 import type { Constructor } from "../../common/utils";
@@ -66,6 +67,11 @@ export const Input = <TValue extends JsonValue, TBase extends Constructor<LitEle
 		/**
 		 * @inheritdoc
 		 */
+		protected focusElement: Ref<HTMLInputElement> = createRef();
+
+		/**
+		 * @inheritdoc
+		 */
 		protected debounceSave: boolean = false;
 
 		/**
@@ -76,6 +82,18 @@ export const Input = <TValue extends JsonValue, TBase extends Constructor<LitEle
 			this.#setting = undefined;
 
 			super.disconnectedCallback();
+		}
+
+		/**
+		 * @inheritdoc
+		 */
+		public focus(): void {
+			if (!this.focusElement.value) {
+				console.warn("Unable to focus input; a focus element was not specified");
+				return;
+			}
+
+			this.focusElement.value.focus();
 		}
 
 		/**
@@ -155,4 +173,14 @@ export declare class InputMixin<T extends JsonValue> {
 	 * Determines whether to debounce saving when the value changes.
 	 */
 	protected debounceSave: boolean;
+
+	/**
+	 * Element that will gain focus when calling `focus()`.
+	 */
+	protected focusElement: Ref<HTMLInputElement>;
+
+	/**
+	 * Focuses the input.
+	 */
+	focus(): void;
 }
