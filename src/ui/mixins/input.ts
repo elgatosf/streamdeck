@@ -164,12 +164,12 @@ export declare class InputMixin<T extends JsonValue> {
 	public global: boolean;
 
 	/**
-	 * Path to the setting where the value should be persisted, for example `name`, or `person.name`.
+	 * Path to the setting where the value should be persisted, for example `name`.
 	 */
 	public setting: string | undefined;
 
 	/**
-	 * Current input value.
+	 * Value of the input.
 	 */
 	public value: T | undefined;
 

@@ -1,0 +1,47 @@
+{
+    "$schema": "https://raw.githubusercontent.com/microsoft/vscode-html-languageservice/master/docs/customData.schema.json",
+    "version": 1.1,
+    "tags": [
+        {
+            "name": "sd-textfield",
+            "description": "Text field capable of persisting `string` values to Stream Deck settings.",
+            "attributes": [
+                {
+                    "name": "disabled",
+                    "description": "Determines whether the input is disabled; default `false`.",
+                    "values": [{ "name": "disabled" }]
+                },
+                {
+                    "name": "global",
+                    "description": "When `true`, the setting will be persisted in the global settings, otherwise it will be persisted in the action's settings; default `false`.",
+                    "values": [{ "name": "global" }]
+                },
+                {
+                    "name": "setting",
+                    "description": "Path to the setting where the value should be persisted, for example `name`."
+                },
+                {
+                    "name": "maxlength",
+                    "description": "Maximum length the value can be."
+                },
+                {
+                    "name": "pattern",
+                    "description": "Optional pattern to be applied when validating the value."
+                },
+                {
+                    "name": "placeholder",
+                    "description": "Optional placeholder text to be shown within the input."
+                },
+                {
+                    "name": "required",
+                    "description": "Determines whether a value is required."
+                },
+                {
+                    "name": "type",
+                    "description": "Type of text field; either `password` or `text`; default `text`.",
+                    "values": [{ "name": "password" }, { "name": "text" }]
+                }
+            ]
+        }
+    ]
+}
