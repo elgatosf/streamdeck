@@ -1,5 +1,5 @@
 import { css, html, LitElement, type TemplateResult } from "lit";
-import { customElement, property } from "lit/decorators.js";
+import { customElement, property, state } from "lit/decorators.js";
 import { ifDefined } from "lit/directives/if-defined.js";
 import { ref } from "lit/directives/ref.js";
 
@@ -88,6 +88,14 @@ export class SDTextFieldElement extends Input<string>(LitElement) {
 	public accessor type: "password" | "text" = "text";
 
 	/**
+	 * Determines whether the user has interacted with the text field; primarily used to mimic
+	 * {@link https://developer.mozilla.org/en-US/docs/Web/CSS/:user-invalid `:user-invalid`} in
+	 * conjunction with `required`
+	 */
+	@state()
+	accessor #userHasInteracted = false;
+
+	/**
 	 * @inheritdoc
 	 */
 	public override render(): TemplateResult {
@@ -97,9 +105,12 @@ export class SDTextFieldElement extends Input<string>(LitElement) {
 			pattern=${ifDefined(this.pattern)}
 			placeholder=${ifDefined(this.placeholder)}
 			?disabled=${this.disabled}
-			?required=${this.required}
+			?required=${this.#userHasInteracted && this.required}
 			.type=${this.type || "text"}
 			.value=${this.value || ""}
+			@blur=${(): void => {
+				this.#userHasInteracted = true;
+			}}
 			@input=${(ev: HTMLInputEvent<HTMLInputElement>): void => {
 				this.value = ev.target.value;
 			}}
