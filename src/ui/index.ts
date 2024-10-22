@@ -31,6 +31,7 @@ export {
 } from "../common/messaging";
 export type * from "./events";
 export { type MessageHandler, type MessageRequest } from "./plugin";
+export { type SettingSignal, type SettingSignalOptions } from "./settings/signals";
 
 const streamDeck = {
 	/**

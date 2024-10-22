@@ -3,7 +3,7 @@ import type { IDisposable } from "../common/disposable";
 import type { JsonObject, JsonValue } from "../common/json";
 import { connection } from "./connection";
 import type { DidReceiveGlobalSettingsEvent, DidReceiveSettingsEvent } from "./events";
-import { type Setting, type SettingOptions, SettingsProvider } from "./settings/provider";
+import { type SettingSignal, type SettingSignalOptions, SettingSignalProvider } from "./settings/signals";
 
 /**
  * Gets the global settings associated with the plugin. Use in conjunction with {@link setGlobalSettings}.
@@ -129,12 +129,12 @@ export async function setSettings<T extends JsonObject>(settings: T): Promise<vo
  * @returns The setting hook.
  */
 export const useSetting = (() => {
-	const actionSettings = new SettingsProvider("didReceiveSettings", setSettings);
+	const actionSettings = new SettingSignalProvider("didReceiveSettings", setSettings);
 	connection.on("connecting", (_, actionInfo: ActionInfo) => {
 		actionSettings.initialize(actionInfo.payload.settings);
 	});
 
-	return function <T extends JsonValue>(path: string, options?: SettingOptions<T>): Setting<T> {
+	return function <T extends JsonValue>(path: string, options?: SettingSignalOptions<T>): SettingSignal<T> {
 		return actionSettings.use(path, options);
 	};
 })();
@@ -146,10 +146,10 @@ export const useSetting = (() => {
  * @returns The global setting hook.
  */
 export const useGlobalSetting = (() => {
-	const globalSettings = new SettingsProvider("didReceiveGlobalSettings", setGlobalSettings);
+	const globalSettings = new SettingSignalProvider("didReceiveGlobalSettings", setGlobalSettings);
 	getGlobalSettings().then((settings) => globalSettings.initialize(settings));
 
-	return function <T extends JsonValue>(path: string, options?: SettingOptions<T>): Setting<T> {
+	return function <T extends JsonValue>(path: string, options?: SettingSignalOptions<T>): SettingSignal<T> {
 		return globalSettings.use(path, options);
 	};
 })();

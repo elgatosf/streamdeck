@@ -5,7 +5,7 @@ import { createRef, type Ref } from "lit/directives/ref.js";
 import type { JsonValue } from "..";
 import type { Constructor } from "../../common/utils";
 import { useGlobalSetting, useSetting } from "../settings";
-import type { Setting, SettingOptions } from "../settings/provider";
+import type { SettingSignal, SettingSignalOptions } from "../settings/signals";
 
 /**
  * Input mixin that provides common functionality for input elements that persist settings.
@@ -51,9 +51,9 @@ export const Input = <TValue extends JsonValue, TBase extends Constructor<LitEle
 		protected focusElement: Ref<HTMLInputElement> = createRef();
 
 		/**
-		 * Setting responsible for managing the value within Stream Deck.
+		 * Signal responsible for managing the setting within Stream Deck.
 		 */
-		#setting: Setting<TValue> | undefined;
+		#signal: SettingSignal<TValue> | undefined;
 
 		/**
 		 * Private backing field for input's value.
@@ -74,7 +74,7 @@ export const Input = <TValue extends JsonValue, TBase extends Constructor<LitEle
 		@property({ attribute: false })
 		public set value(value: TValue | undefined) {
 			if (this.#setValue(value)) {
-				this.#setting?.set(value);
+				this.#signal?.value?.set(value);
 			}
 		}
 
@@ -82,8 +82,8 @@ export const Input = <TValue extends JsonValue, TBase extends Constructor<LitEle
 		 * @inheritdoc
 		 */
 		public override disconnectedCallback(): void {
-			this.#setting?.dispose();
-			this.#setting = undefined;
+			this.#signal?.dispose();
+			this.#signal = undefined;
 
 			super.disconnectedCallback();
 		}
@@ -105,23 +105,23 @@ export const Input = <TValue extends JsonValue, TBase extends Constructor<LitEle
 		 */
 		protected override willUpdate(_changedProperties: Map<PropertyKey, unknown>): void {
 			if (_changedProperties.has("global") || _changedProperties.has("setting")) {
-				this.#setting?.dispose();
+				this.#signal?.dispose();
 
 				// Clear the current setting.
-				this.#setting = undefined;
+				this.#signal = undefined;
 				if (this.setting === undefined) {
 					return;
 				}
 
 				// Determine the options.
-				const options: SettingOptions<TValue> = {
+				const options: SettingSignalOptions<TValue> = {
 					onChange: (value) => this.#setValue(value),
 					debounceSaveTimeout: this.debounceSave ? 200 : undefined,
 				};
 
 				// Assign the new setting.
-				this.#setting = this.global ? useGlobalSetting(this.setting, options) : useSetting(this.setting, options);
-				this.#setting.get().then((value) => this.#setValue(value));
+				this.#signal = this.global ? useGlobalSetting(this.setting, options) : useSetting(this.setting, options);
+				this.#signal.value.get().then((value) => this.#setValue(value));
 			}
 
 			super.willUpdate(_changedProperties);
