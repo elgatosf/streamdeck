@@ -39,6 +39,7 @@ export default [
 				"warn",
 				"tab",
 				{
+					ignoredNodes: ["TemplateLiteral *"],
 					SwitchCase: 1,
 				},
 			],

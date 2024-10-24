@@ -1,8 +1,9 @@
-import type { DidReceiveGlobalSettings, DidReceiveSettings } from "../api";
+import { ActionInfo, type DidReceiveGlobalSettings, type DidReceiveSettings } from "../api";
 import type { IDisposable } from "../common/disposable";
-import type { JsonObject } from "../common/json";
+import type { JsonObject, JsonValue } from "../common/json";
 import { connection } from "./connection";
 import type { DidReceiveGlobalSettingsEvent, DidReceiveSettingsEvent } from "./events";
+import { type SettingSignal, type SettingSignalOptions, SettingSignalProvider } from "./settings/signals";
 
 /**
  * Gets the global settings associated with the plugin. Use in conjunction with {@link setGlobalSettings}.
@@ -120,3 +121,35 @@ export async function setSettings<T extends JsonObject>(settings: T): Promise<vo
 		payload: settings,
 	});
 }
+
+/**
+ * Creates a new setting hook for the specified `path`.
+ * @param path Path to the setting, for example `name` or `person.name`.
+ * @param options Options that define how the setting should function.
+ * @returns The setting hook.
+ */
+export const useSetting = (() => {
+	const actionSettings = new SettingSignalProvider("didReceiveSettings", setSettings);
+	connection.on("connecting", (_, actionInfo: ActionInfo) => {
+		actionSettings.initialize(actionInfo.payload.settings);
+	});
+
+	return function <T extends JsonValue>(path: string, options?: SettingSignalOptions<T>): SettingSignal<T> {
+		return actionSettings.use(path, options);
+	};
+})();
+
+/**
+ * Creates a new global setting hook for the specified `path`.
+ * @param path Path to the global setting, for example `name` or `person.name`.
+ * @param options Options that define how the global setting should function.
+ * @returns The global setting hook.
+ */
+export const useGlobalSetting = (() => {
+	const globalSettings = new SettingSignalProvider("didReceiveGlobalSettings", setGlobalSettings);
+	getGlobalSettings().then((settings) => globalSettings.initialize(settings));
+
+	return function <T extends JsonValue>(path: string, options?: SettingSignalOptions<T>): SettingSignal<T> {
+		return globalSettings.use(path, options);
+	};
+})();

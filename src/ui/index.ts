@@ -4,6 +4,7 @@ import type { JsonObject } from "../common/json";
 import "./components";
 import { connection } from "./connection";
 import "./css/main.css";
+import "./css/vars.css";
 import { i18n } from "./i18n";
 import { logger } from "./logging";
 import { plugin } from "./plugin";
@@ -30,6 +31,7 @@ export {
 } from "../common/messaging";
 export type * from "./events";
 export { type MessageHandler, type MessageRequest } from "./plugin";
+export { type SettingSignal, type SettingSignalOptions } from "./settings/signals";
 
 const streamDeck = {
 	/**
