@@ -22,6 +22,31 @@ export const Input = <TValue extends JsonValue, TBase extends Constructor<LitEle
 		/**
 		 * @inheritdoc
 		 */
+		public static shadowRootOptions = { ...LitElement.shadowRootOptions, delegatesFocus: true };
+
+		/**
+		 * Enable inputs to work with labels.
+		 */
+		public static formAssociated = true;
+
+		/**
+		 * Initializes a new instance of the {@link InputClass} class.
+		 * @param args Constructor arguments.
+		 */
+		constructor(...args: any[]) {
+			super(args);
+
+			this.addEventListener("click", (ev: MouseEvent) => {
+				if (this.focusElement.value && ev.target !== document.elementFromPoint(ev.x, ev.y)) {
+					this.focusElement.value.click();
+					ev.preventDefault();
+				}
+			});
+		}
+
+		/**
+		 * @inheritdoc
+		 */
 		@property({
 			reflect: true,
 			type: Boolean,
@@ -86,18 +111,6 @@ export const Input = <TValue extends JsonValue, TBase extends Constructor<LitEle
 			this.#signal = undefined;
 
 			super.disconnectedCallback();
-		}
-
-		/**
-		 * @inheritdoc
-		 */
-		public focus(): void {
-			if (!this.focusElement.value) {
-				console.warn("Unable to focus input; a focus element was not specified");
-				return;
-			}
-
-			this.focusElement.value.focus();
 		}
 
 		/**
@@ -179,12 +192,7 @@ export declare class InputMixin<T extends JsonValue> {
 	protected debounceSave: boolean;
 
 	/**
-	 * Element that will gain focus when calling `focus()`.
+	 * Element that will gain focus when an associated label is clicked.
 	 */
 	protected focusElement: Ref<HTMLInputElement>;
-
-	/**
-	 * Focuses the input.
-	 */
-	public focus(): void;
 }

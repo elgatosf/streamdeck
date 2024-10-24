@@ -1,6 +1,7 @@
 import { css, html, LitElement, type TemplateResult } from "lit";
 import { customElement } from "lit/decorators.js";
 import { ifDefined } from "lit/directives/if-defined.js";
+import { ref } from "lit/directives/ref.js";
 
 import { Input } from "../mixins/input";
 import type { HTMLInputEvent } from "../utils";
@@ -113,6 +114,7 @@ export class SDSwitchElement extends Input<boolean>(LitElement) {
 				}}
 			>
 				<input
+					${ref(this.focusElement)}
 					type="checkbox"
 					value=${ifDefined(this.setting)}
 					.checked=${this.value || false}
@@ -124,13 +126,6 @@ export class SDSwitchElement extends Input<boolean>(LitElement) {
 				<div class="thumb" role="button" aria-pressed=${this.on}></div>
 			</label>
 		`;
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	public override focus(): void {
-		this.on = !this.on;
 	}
 }
 
