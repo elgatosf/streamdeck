@@ -2,7 +2,7 @@ import { css, html, type HTMLTemplateResult, LitElement } from "lit";
 import { customElement, property } from "lit/decorators.js";
 
 /**
- * Field that identifies an input, or group of inputs.
+ * Element that provides a label for placeholder containing an input.
  */
 @customElement("sd-field")
 export class SDFieldElement extends LitElement {
@@ -17,6 +17,9 @@ export class SDFieldElement extends LitElement {
 				display: grid;
 				grid-template-columns: 95px 262px;
 				margin-bottom: var(--space-s);
+			}
+			.sd-field-input {
+				min-height: 32px;
 			}
 		`,
 	];
@@ -34,7 +37,7 @@ export class SDFieldElement extends LitElement {
 		return html`
 			<div class="sd-field">
 				<div class="sd-field-label">
-					<label @click=${this.#focusFirstElement}>${this.label ? this.label + ":" : undefined}</label>
+					<sd-label @click=${this.#focusFirstElement}>${this.label ? `${this.label}:` : undefined}</sd-label>
 				</div>
 				<div class="sd-field-input">
 					<slot></slot>
@@ -59,7 +62,7 @@ export class SDFieldElement extends LitElement {
 declare global {
 	interface HTMLElementTagNameMap {
 		/**
-		 * Field that identifies an input, or group of inputs.
+		 * Element that provides a label for placeholder containing an input.
 		 */
 		"sd-field": SDFieldElement;
 	}

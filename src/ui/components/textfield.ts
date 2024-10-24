@@ -7,7 +7,7 @@ import { Input } from "../mixins/input";
 import type { HTMLInputEvent } from "../utils";
 
 /**
- * Text field capable of persisting `string` values to Stream Deck settings.
+ * Element that offers persisting a `string` via a text input.
  */
 @customElement("sd-textfield")
 export class SDTextFieldElement extends Input<string>(LitElement) {
@@ -121,7 +121,7 @@ export class SDTextFieldElement extends Input<string>(LitElement) {
 declare global {
 	interface HTMLElementTagNameMap {
 		/**
-		 * Text field capable of persisting `string` values to Stream Deck settings.
+		 * Element that offers persisting a `string` via a text input.
 		 */
 		"sd-textfield": SDTextFieldElement;
 	}

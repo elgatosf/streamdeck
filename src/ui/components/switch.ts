@@ -6,7 +6,7 @@ import { Input } from "../mixins/input";
 import type { HTMLInputEvent } from "../utils";
 
 /**
- * Element that offers a binary choice, such as on/off.
+ * Element that offers persisting a `boolean` via a toggle switch.
  */
 @customElement("sd-switch")
 export class SDSwitchElement extends Input<boolean>(LitElement) {
@@ -137,7 +137,7 @@ export class SDSwitchElement extends Input<boolean>(LitElement) {
 declare global {
 	interface HTMLElementTagNameMap {
 		/**
-		 * Element that offers a binary choice, such as on/off.
+		 * Element that offers persisting a `boolean` via a toggle switch.
 		 */
 		"sd-switch": SDSwitchElement;
 	}
