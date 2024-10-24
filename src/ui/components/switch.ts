@@ -28,7 +28,7 @@ export class SDSwitchElement extends Input<boolean>(LitElement) {
 				border-radius: var(--rounding-full);
 				cursor: pointer;
 				display: inline-flex;
-				margin: var(--space-xs) var(--space-2xs) var(--space-xs) calc(var(--border-width-thick) * -1);
+				margin: 6px var(--space-2xs) 6px calc(var(--border-width-thick) * -1);
 				padding: 0px var(--space-3xs);
 				transition: 0.2;
 				height: var(--size-m);

@@ -12,14 +12,18 @@ export class SDFieldElement extends LitElement {
 	public static styles = [
 		css`
 			.sd-field {
-				align-items: baseline;
 				column-gap: var(--space-xs);
 				display: grid;
 				grid-template-columns: 95px 262px;
 				margin-bottom: var(--space-s);
+				min-height: 32px;
+			}
+			.sd-field-label {
+				padding-top: var(--space-xs);
 			}
 			.sd-field-input {
-				min-height: 32px;
+				align-items: center;
+				display: flex;
 			}
 		`,
 	];
