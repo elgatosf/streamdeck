@@ -36,10 +36,20 @@ export const Input = <TValue extends JsonValue, TBase extends Constructor<LitEle
 		constructor(...args: any[]) {
 			super(args);
 
+			// Register a click handler for native labels.
+			const internals = this.attachInternals();
 			this.addEventListener("click", (ev: MouseEvent) => {
-				if (this.focusElement.value && ev.target !== document.elementFromPoint(ev.x, ev.y)) {
-					this.focusElement.value.click();
-					ev.preventDefault();
+				const source = document.elementFromPoint(ev.x, ev.y);
+				if (source?.tagName !== "LABEL") {
+					return;
+				}
+
+				for (const label of internals.labels) {
+					if (label === source) {
+						this.focus();
+						ev.preventDefault();
+						return;
+					}
 				}
 			});
 		}
@@ -73,7 +83,12 @@ export const Input = <TValue extends JsonValue, TBase extends Constructor<LitEle
 		/**
 		 * @inheritdoc
 		 */
-		protected focusElement: Ref<HTMLInputElement> = createRef();
+		protected focusBehavior: "click" | "focus" = "focus";
+
+		/**
+		 * @inheritdoc
+		 */
+		protected focusDelegate: Ref<HTMLInputElement> = createRef();
 
 		/**
 		 * Signal responsible for managing the setting within Stream Deck.
@@ -111,6 +126,19 @@ export const Input = <TValue extends JsonValue, TBase extends Constructor<LitEle
 			this.#signal = undefined;
 
 			super.disconnectedCallback();
+		}
+
+		/**
+		 * @inheritdoc
+		 */
+		public focus() {
+			if (
+				this.focusDelegate.value &&
+				this.focusBehavior in this.focusDelegate.value &&
+				typeof this.focusDelegate.value[this.focusBehavior] === "function"
+			) {
+				this.focusDelegate.value[this.focusBehavior]();
+			}
 		}
 
 		/**
@@ -192,7 +220,17 @@ export declare class InputMixin<T extends JsonValue> {
 	protected debounceSave: boolean;
 
 	/**
+	 * Determines whether to activate `click()` or `focus()` when the delegate is gaining focus.
+	 */
+	protected focusBehavior: "click" | "focus";
+
+	/**
 	 * Element that will gain focus when an associated label is clicked.
 	 */
-	protected focusElement: Ref<HTMLInputElement>;
+	protected focusDelegate: Ref<HTMLInputElement>;
+
+	/**
+	 * Focuses the element.
+	 */
+	public focus(): void;
 }

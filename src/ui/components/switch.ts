@@ -101,6 +101,11 @@ export class SDSwitchElement extends Input<boolean>(LitElement) {
 	/**
 	 * @inheritdoc
 	 */
+	protected override focusBehavior: "click" | "focus" = "click";
+
+	/**
+	 * @inheritdoc
+	 */
 	public override render(): TemplateResult {
 		return html`
 			<label
@@ -114,7 +119,7 @@ export class SDSwitchElement extends Input<boolean>(LitElement) {
 				}}
 			>
 				<input
-					${ref(this.focusElement)}
+					${ref(this.focusDelegate)}
 					type="checkbox"
 					value=${ifDefined(this.setting)}
 					.checked=${this.value || false}

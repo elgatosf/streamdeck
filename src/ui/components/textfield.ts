@@ -100,7 +100,7 @@ export class SDTextFieldElement extends Input<string>(LitElement) {
 	 */
 	public override render(): TemplateResult {
 		return html`<input
-			${ref(this.focusElement)}
+			${ref(this.focusDelegate)}
 			maxlength=${ifDefined(this.maxLength)}
 			pattern=${ifDefined(this.pattern)}
 			placeholder=${ifDefined(this.placeholder)}
