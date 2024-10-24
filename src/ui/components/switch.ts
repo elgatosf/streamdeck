@@ -86,7 +86,7 @@ export class SDSwitchElement extends Input<boolean>(LitElement) {
 	 * Gets the on/off state of the switch.
 	 * @returns Whether the switch is on/off.
 	 */
-	public get on(): boolean {
+	public get isOn(): boolean {
 		return !!this.value;
 	}
 
@@ -94,7 +94,7 @@ export class SDSwitchElement extends Input<boolean>(LitElement) {
 	 * Sets the on/off state of the switch.
 	 * @param value The on/off state.
 	 */
-	public set on(value: boolean) {
+	public set isOn(value: boolean) {
 		this.value = value;
 	}
 
@@ -109,13 +109,18 @@ export class SDSwitchElement extends Input<boolean>(LitElement) {
 	public override render(): TemplateResult {
 		return html`
 			<label
-				aria-checked=${this.on}
+				aria-checked=${this.isOn}
 				aria-disabled=${this.disabled}
 				tabindex=${ifDefined(this.disabled ? undefined : 0)}
 				@keydown=${(ev: KeyboardEvent) => {
+					// Toggle switch on space bar key.
 					if (ev.code === "Space") {
-						this.on = !this.on;
+						this.isOn = !this.isOn;
 					}
+				}}
+				@mousedown=${(ev: MouseEvent) => {
+					// Prevent focus on mouse down.
+					ev.preventDefault();
 				}}
 			>
 				<input
@@ -125,10 +130,10 @@ export class SDSwitchElement extends Input<boolean>(LitElement) {
 					.checked=${this.value || false}
 					.disabled=${this.disabled}
 					@change=${(ev: HTMLInputEvent<HTMLInputElement>) => {
-						this.on = ev.target.checked;
+						this.isOn = ev.target.checked;
 					}}
 				/>
-				<div class="thumb" role="button" aria-pressed=${this.on}></div>
+				<div class="thumb" role="button" aria-pressed=${this.isOn}></div>
 			</label>
 		`;
 	}
