@@ -19,13 +19,14 @@ export class SDTextFieldElement extends Input<string>(LitElement) {
 		css`
 			input {
 				background-color: var(--color-surface);
-				border: solid var(--border-width-thick) var(--color-page);
+				border: none;
 				border-radius: var(--rounding-m);
 				color: var(--color-content-primary);
 				font-family: var(--typography-body-m-family);
 				font-size: var(--typography-body-m-size);
 				font-weight: var(--typography-body-m-weight);
-				margin: calc(var(--border-width-thick) * -1);
+				height: var(--size-2xl);
+				outline: none;
 				padding: 0 var(--space-xs);
 				min-height: 32px;
 				width: 224px;
@@ -37,11 +38,16 @@ export class SDTextFieldElement extends Input<string>(LitElement) {
 				color: var(--color-content-disabled);
 			}
 			input:focus,
+			input:invalid {
+				box-shadow: var(--highlight-box-shadow);
+				outline-offset: var(--highlight-outline-offset);
+			}
+			input:focus,
 			input:focus:invalid {
-				outline: solid var(--border-width-thick) var(--color-surface-accent);
+				outline: var(--highlight-outline--focus);
 			}
 			input:invalid {
-				outline: solid var(--border-width-thick) var(--color-surface-negative);
+				outline: var(--highlight-outline--invalid);
 			}
 		`,
 	];

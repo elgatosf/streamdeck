@@ -24,11 +24,12 @@ export class SDSwitchElement extends Input<boolean>(LitElement) {
 			label {
 				align-items: center;
 				background: var(--color-surface-strong);
-				border: solid var(--border-width-thick) var(--color-page);
+				border: none;
 				border-radius: var(--rounding-full);
 				cursor: pointer;
 				display: inline-flex;
-				margin: 6px var(--space-2xs) 6px calc(var(--border-width-thick) * -1);
+				margin: 6px var(--space-2xs) 6px 0;
+				outline: none;
 				padding: 0px var(--space-3xs);
 				transition: 0.2;
 				height: var(--size-m);
@@ -46,7 +47,9 @@ export class SDSwitchElement extends Input<boolean>(LitElement) {
 			}
 
 			label:focus {
-				outline: solid var(--border-width-thick) var(--color-surface-accent);
+				box-shadow: var(--highlight-box-shadow);
+				outline: var(--highlight-outline--focus);
+				outline-offset: var(--highlight-outline-offset);
 			}
 
 			input {
