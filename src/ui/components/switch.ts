@@ -86,6 +86,14 @@ export class SDSwitchElement extends Input<boolean>(LitElement) {
 	];
 
 	/**
+	 * Initializes a new instance of the {@link SDSwitchElement} class.
+	 */
+	constructor() {
+		super();
+		this.internals.role = "checkbox";
+	}
+
+	/**
 	 * Gets the on/off state of the switch.
 	 * @returns Whether the switch is on/off.
 	 */
@@ -104,11 +112,6 @@ export class SDSwitchElement extends Input<boolean>(LitElement) {
 	/**
 	 * @inheritdoc
 	 */
-	protected override focusBehavior: "click" | "focus" = "click";
-
-	/**
-	 * @inheritdoc
-	 */
 	public override render(): TemplateResult {
 		return html`
 			<label
@@ -123,7 +126,7 @@ export class SDSwitchElement extends Input<boolean>(LitElement) {
 				}}
 			>
 				<input
-					${ref(this.focusDelegate)}
+					${ref(this.inputRef)}
 					type="checkbox"
 					value=${ifDefined(this.setting)}
 					.checked=${this.value || false}
@@ -135,6 +138,14 @@ export class SDSwitchElement extends Input<boolean>(LitElement) {
 				<div class="thumb" role="button" aria-pressed=${this.isOn}></div>
 			</label>
 		`;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	protected override willUpdate(_changedProperties: Map<PropertyKey, unknown>): void {
+		super.willUpdate(_changedProperties);
+		this.internals.ariaChecked = this.isOn ? "checked" : null;
 	}
 }
 

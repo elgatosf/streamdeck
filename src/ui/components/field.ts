@@ -38,25 +38,13 @@ export class SDFieldElement extends LitElement {
 		return html`
 			<div class="sd-field">
 				<div class="sd-field-label">
-					<sd-label @click=${this.#focusFirstElement}>${this.label ? `${this.label}:` : undefined}</sd-label>
+					<sd-label for="__input">${this.label ? `${this.label}:` : undefined}</sd-label>
 				</div>
 				<div class="sd-field-input">
-					<slot></slot>
+					<slot id="__input"></slot>
 				</div>
 			</div>
 		`;
-	}
-
-	/**
-	 * Focuses the first element, that can have focus, within the field.
-	 */
-	#focusFirstElement(): void {
-		for (const el of this.querySelectorAll("*")) {
-			if ("focus" in el && typeof el.focus === "function") {
-				el.focus();
-				return;
-			}
-		}
 	}
 }
 

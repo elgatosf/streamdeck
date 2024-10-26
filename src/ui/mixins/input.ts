@@ -30,6 +30,21 @@ export const Input = <TValue extends JsonValue, TBase extends Constructor<LitEle
 		public static formAssociated = true;
 
 		/**
+		 * Element internals that allow for configuring how the element interacts with forms.
+		 */
+		protected internals: ElementInternals;
+
+		/**
+		 * Signal responsible for managing the setting within Stream Deck.
+		 */
+		#signal: SettingSignal<TValue> | undefined;
+
+		/**
+		 * Private backing field for input's value.
+		 */
+		#value: TValue | undefined;
+
+		/**
 		 * Initializes a new instance of the {@link InputClass} class.
 		 * @param args Constructor arguments.
 		 */
@@ -37,18 +52,15 @@ export const Input = <TValue extends JsonValue, TBase extends Constructor<LitEle
 			super(args);
 
 			// Register a click handler for native labels.
-			const internals = this.attachInternals();
+			this.internals = this.attachInternals();
 			this.addEventListener("click", (ev: MouseEvent) => {
 				const source = document.elementFromPoint(ev.x, ev.y);
-				if (source?.tagName !== "LABEL") {
-					return;
-				}
-
-				for (const label of internals.labels) {
-					if (label === source) {
-						this.focus();
-						ev.preventDefault();
-						return;
+				if (source?.tagName === "LABEL") {
+					for (const label of this.internals.labels) {
+						if (source === label) {
+							this.activate();
+							return;
+						}
 					}
 				}
 			});
@@ -83,22 +95,7 @@ export const Input = <TValue extends JsonValue, TBase extends Constructor<LitEle
 		/**
 		 * @inheritdoc
 		 */
-		protected focusBehavior: "click" | "focus" = "focus";
-
-		/**
-		 * @inheritdoc
-		 */
-		protected focusDelegate: Ref<HTMLInputElement> = createRef();
-
-		/**
-		 * Signal responsible for managing the setting within Stream Deck.
-		 */
-		#signal: SettingSignal<TValue> | undefined;
-
-		/**
-		 * Private backing field for input's value.
-		 */
-		#value: TValue | undefined;
+		protected inputRef: Ref<HTMLInputElement> = createRef();
 
 		/**
 		 * Gets the current input value.
@@ -121,6 +118,28 @@ export const Input = <TValue extends JsonValue, TBase extends Constructor<LitEle
 		/**
 		 * @inheritdoc
 		 */
+		public activate() {
+			// Blur the active element first.
+			if (document.activeElement && document.activeElement instanceof HTMLElement) {
+				document.activeElement.blur();
+			}
+
+			// Proxy the click to the delegate.
+			if (this.inputRef.value) {
+				switch (this.internals.role) {
+					case "checkbox":
+						this.inputRef.value.click();
+						break;
+					default:
+						this.inputRef.value.focus();
+						break;
+				}
+			}
+		}
+
+		/**
+		 * @inheritdoc
+		 */
 		public override disconnectedCallback(): void {
 			this.#signal?.dispose();
 			this.#signal = undefined;
@@ -131,41 +150,28 @@ export const Input = <TValue extends JsonValue, TBase extends Constructor<LitEle
 		/**
 		 * @inheritdoc
 		 */
-		public focus() {
-			if (
-				this.focusDelegate.value &&
-				this.focusBehavior in this.focusDelegate.value &&
-				typeof this.focusDelegate.value[this.focusBehavior] === "function"
-			) {
-				this.focusDelegate.value[this.focusBehavior]();
-			}
-		}
-
-		/**
-		 * @inheritdoc
-		 */
 		protected override willUpdate(_changedProperties: Map<PropertyKey, unknown>): void {
+			super.willUpdate(_changedProperties);
+			this.internals.ariaDisabled = this.disabled ? "disabled" : null;
+
+			// When `global` or `setting` has changed, we must update the signal.
 			if (_changedProperties.has("global") || _changedProperties.has("setting")) {
 				this.#signal?.dispose();
 
 				// Clear the current setting.
 				this.#signal = undefined;
-				if (this.setting === undefined) {
-					return;
+				if (this.setting !== undefined) {
+					// Determine the options.
+					const options: SettingSignalOptions<TValue> = {
+						onChange: (value) => this.#setValue(value),
+						debounceSaveTimeout: this.debounceSave ? 200 : undefined,
+					};
+
+					// Assign the new setting.
+					this.#signal = this.global ? useGlobalSetting(this.setting, options) : useSetting(this.setting, options);
+					this.#signal.value.get().then((value) => this.#setValue(value));
 				}
-
-				// Determine the options.
-				const options: SettingSignalOptions<TValue> = {
-					onChange: (value) => this.#setValue(value),
-					debounceSaveTimeout: this.debounceSave ? 200 : undefined,
-				};
-
-				// Assign the new setting.
-				this.#signal = this.global ? useGlobalSetting(this.setting, options) : useSetting(this.setting, options);
-				this.#signal.value.get().then((value) => this.#setValue(value));
 			}
-
-			super.willUpdate(_changedProperties);
 		}
 
 		/**
@@ -220,17 +226,38 @@ export declare class InputMixin<T extends JsonValue> {
 	protected debounceSave: boolean;
 
 	/**
-	 * Determines whether to activate `click()` or `focus()` when the delegate is gaining focus.
+	 * Element internals that allow for configuring how the element interacts with forms.
 	 */
-	protected focusBehavior: "click" | "focus";
+	protected internals: ElementInternals;
 
 	/**
-	 * Element that will gain focus when an associated label is clicked.
+	 * Element that represents the primary input element.
 	 */
-	protected focusDelegate: Ref<HTMLInputElement>;
+	protected inputRef: Ref<HTMLInputElement>;
 
 	/**
-	 * Focuses the element.
+	 * Activates the element; activation behavior is dependent on the role of the element, for example when the element
+	 * is a `"checkbox"`, it is clicked, whereas a text input gains focus.
 	 */
-	public focus(): void;
+	activate(): void;
 }
+
+/**
+ * Determines whether the specified element is activable.
+ * @param elem Element to check.
+ * @returns `true` when the element can be activated; otherwise `false`.
+ */
+export function isActivable(elem: Element): elem is HTMLElement & ActivableElement {
+	return elem instanceof HTMLElement && "activate" in elem && typeof elem.activate === "function";
+}
+
+/**
+ * Element that can be activated.
+ */
+export type ActivableElement = {
+	/**
+	 * Activates the element; activation behavior is dependent on the role of the element, for example when the element
+	 * is a `"checkbox"`, it is clicked, whereas a text input gains focus.
+	 */
+	activate(): void;
+};
