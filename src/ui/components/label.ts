@@ -27,14 +27,14 @@ export class SDLabelElement extends LitElement implements ActivableElement {
 	public override render() {
 		return html`<label
 			for=${ifDefined(this.htmlFor)}
-			@mousedown=${(ev: MouseEvent) => {
+			@click=${() => {
 				// Activate the element the label is for.
 				const target = this.#getTarget();
 				if (target) {
 					this.#activate(target);
-					ev.preventDefault();
 				}
-
+			}}
+			@mousedown=${(ev: MouseEvent) => {
 				// Disable text selection on double-click.
 				if (ev.detail > 1) {
 					ev.preventDefault();
