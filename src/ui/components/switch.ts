@@ -28,7 +28,7 @@ export class SDSwitchElement extends Input<boolean>(LitElement) {
 				border-radius: var(--rounding-full);
 				cursor: pointer;
 				display: inline-flex;
-				margin: 6px var(--space-2xs) 6px 0;
+				margin: var(--space-xs) var(--space-xs) var(--space-xs) 0;
 				outline: none;
 				padding: 0px var(--space-3xs);
 				transition: 0.2;
@@ -46,7 +46,7 @@ export class SDSwitchElement extends Input<boolean>(LitElement) {
 				background: var(--color-surface-disabled);
 			}
 
-			label:focus {
+			label:focus-visible {
 				box-shadow: var(--highlight-box-shadow);
 				outline: var(--highlight-outline--focus);
 				outline-offset: var(--highlight-outline-offset);
@@ -120,10 +120,6 @@ export class SDSwitchElement extends Input<boolean>(LitElement) {
 					if (ev.code === "Space") {
 						this.isOn = !this.isOn;
 					}
-				}}
-				@mousedown=${(ev: MouseEvent) => {
-					// Prevent focus on mouse down.
-					ev.preventDefault();
 				}}
 			>
 				<input

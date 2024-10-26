@@ -16,14 +16,11 @@ export class SDFieldElement extends LitElement {
 				display: grid;
 				grid-template-columns: 95px 262px;
 				margin-bottom: var(--space-s);
-				min-height: 32px;
 			}
 			.sd-field-label {
-				padding-top: var(--space-xs);
-			}
-			.sd-field-input {
 				align-items: center;
 				display: flex;
+				height: var(--size-2xl);
 			}
 		`,
 	];
