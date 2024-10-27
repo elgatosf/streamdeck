@@ -1,4 +1,4 @@
-import { html, LitElement } from "lit";
+import { html, LitElement, type TemplateResult } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { ifDefined } from "lit/directives/if-defined.js";
 import { createRef, ref } from "lit/directives/ref.js";
@@ -24,17 +24,27 @@ export class SDLabelElement extends LitElement implements ActivableElement {
 	/**
 	 * @inheritdoc
 	 */
-	public override render() {
+	public activate(): void {
+		const target = this.#getTarget();
+		if (target) {
+			this.#activate(target);
+		}
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public override render(): TemplateResult {
 		return html`<label
 			for=${ifDefined(this.htmlFor)}
-			@click=${() => {
+			@click=${(): void => {
 				// Activate the element the label is for.
 				const target = this.#getTarget();
 				if (target) {
 					this.#activate(target);
 				}
 			}}
-			@mousedown=${(ev: MouseEvent) => {
+			@mousedown=${(ev: MouseEvent): void => {
 				// Disable text selection on double-click.
 				if (ev.detail > 1) {
 					ev.preventDefault();
@@ -45,17 +55,7 @@ export class SDLabelElement extends LitElement implements ActivableElement {
 	}
 
 	/**
-	 * @inheritdoc
-	 */
-	activate(): void {
-		const target = this.#getTarget();
-		if (target) {
-			this.#activate(target);
-		}
-	}
-
-	/**
-	 * Activates the specified element, or the first activable element if the specified one is a {@link HTMLSlotElement}.
+	 * Activates the specified element, or the first activable element if the specified one is a slot.
 	 * @param element Element to activate.
 	 */
 	#activate(element: HTMLElement): void {

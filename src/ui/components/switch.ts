@@ -118,10 +118,10 @@ export class SDSwitchElement extends Input<boolean>(LitElement) {
 				aria-checked=${this.isOn}
 				aria-disabled=${this.disabled}
 				tabindex=${ifDefined(this.disabled ? undefined : 0)}
-				@click=${(ev: MouseEvent) => {
+				@click=${(ev: MouseEvent): void => {
 					ev.stopPropagation();
 				}}
-				@keydown=${(ev: KeyboardEvent) => {
+				@keydown=${(ev: KeyboardEvent): void => {
 					// Toggle switch on space bar key.
 					if (ev.code === "Space") {
 						this.isOn = !this.isOn;
@@ -134,7 +134,7 @@ export class SDSwitchElement extends Input<boolean>(LitElement) {
 					value=${ifDefined(this.setting)}
 					.checked=${this.value || false}
 					.disabled=${this.disabled}
-					@change=${(ev: HTMLInputEvent<HTMLInputElement>) => {
+					@change=${(ev: HTMLInputEvent<HTMLInputElement>): void => {
 						this.isOn = ev.target.checked;
 					}}
 				/>

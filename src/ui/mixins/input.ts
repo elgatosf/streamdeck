@@ -20,17 +20,27 @@ export const Input = <TValue extends JsonValue, TBase extends Constructor<LitEle
 	 */
 	class InputClass extends superClass {
 		/**
-		 * @inheritdoc
-		 */
-		public static shadowRootOptions = { ...LitElement.shadowRootOptions, delegatesFocus: true };
-
-		/**
 		 * Enable inputs to work with labels.
 		 */
 		public static formAssociated = true;
 
 		/**
-		 * Element internals that allow for configuring how the element interacts with forms.
+		 * @inheritdoc
+		 */
+		public static shadowRootOptions = { ...LitElement.shadowRootOptions, delegatesFocus: true };
+
+		/**
+		 * @inheritdoc
+		 */
+		protected debounceSave: boolean = false;
+
+		/**
+		 * @inheritdoc
+		 */
+		protected inputRef: Ref<HTMLInputElement> = createRef();
+
+		/**
+		 * @inheritdoc
 		 */
 		protected internals: ElementInternals;
 
@@ -45,9 +55,10 @@ export const Input = <TValue extends JsonValue, TBase extends Constructor<LitEle
 		#value: TValue | undefined;
 
 		/**
-		 * Initializes a new instance of the {@link InputClass} class.
+		 * Initializes a new instance of the {@link InputMixin} class.
 		 * @param args Constructor arguments.
 		 */
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		constructor(...args: any[]) {
 			super(args);
 
@@ -88,16 +99,6 @@ export const Input = <TValue extends JsonValue, TBase extends Constructor<LitEle
 		public accessor setting: string | undefined;
 
 		/**
-		 * @inheritdoc
-		 */
-		protected debounceSave: boolean = false;
-
-		/**
-		 * @inheritdoc
-		 */
-		protected inputRef: Ref<HTMLInputElement> = createRef();
-
-		/**
 		 * Gets the current input value.
 		 * @returns The value.
 		 */
@@ -118,7 +119,7 @@ export const Input = <TValue extends JsonValue, TBase extends Constructor<LitEle
 		/**
 		 * @inheritdoc
 		 */
-		public activate() {
+		public activate(): void {
 			// Blur the active element first.
 			if (document.activeElement && document.activeElement instanceof HTMLElement) {
 				document.activeElement.blur();
@@ -226,20 +227,20 @@ export declare class InputMixin<T extends JsonValue> {
 	protected debounceSave: boolean;
 
 	/**
-	 * Element internals that allow for configuring how the element interacts with forms.
-	 */
-	protected internals: ElementInternals;
-
-	/**
 	 * Element that represents the primary input element.
 	 */
 	protected inputRef: Ref<HTMLInputElement>;
 
 	/**
+	 * Element internals that allow for configuring how the element interacts with forms.
+	 */
+	protected internals: ElementInternals;
+
+	/**
 	 * Activates the element; activation behavior is dependent on the role of the element, for example when the element
 	 * is a `"checkbox"`, it is clicked, whereas a text input gains focus.
 	 */
-	activate(): void;
+	public activate(): void;
 }
 
 /**
@@ -247,7 +248,7 @@ export declare class InputMixin<T extends JsonValue> {
  * @param elem Element to check.
  * @returns `true` when the element can be activated; otherwise `false`.
  */
-export function isActivable(elem: Element): elem is HTMLElement & ActivableElement {
+export function isActivable(elem: Element): elem is ActivableElement & HTMLElement {
 	return elem instanceof HTMLElement && "activate" in elem && typeof elem.activate === "function";
 }
 
