@@ -118,6 +118,9 @@ export class SDSwitchElement extends Input<boolean>(LitElement) {
 				aria-checked=${this.isOn}
 				aria-disabled=${this.disabled}
 				tabindex=${ifDefined(this.disabled ? undefined : 0)}
+				@click=${(ev: MouseEvent) => {
+					ev.stopPropagation();
+				}}
 				@keydown=${(ev: KeyboardEvent) => {
 					// Toggle switch on space bar key.
 					if (ev.code === "Space") {
