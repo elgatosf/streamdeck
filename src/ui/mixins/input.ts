@@ -7,6 +7,8 @@ import type { Constructor } from "../../common/utils";
 import { useGlobalSetting, useSetting } from "../settings";
 import type { SettingSignal, SettingSignalOptions } from "../settings/signals";
 
+const brand = "SDInputElement" as const;
+
 /**
  * Input mixin that provides common functionality for input elements that persist settings.
  * @param superClass Class the mixin extends.
@@ -14,20 +16,15 @@ import type { SettingSignal, SettingSignalOptions } from "../settings/signals";
  */
 export const Input = <TValue extends JsonValue, TBase extends Constructor<LitElement> = typeof LitElement>(
 	superClass: TBase,
-): Constructor<InputMixin<TValue>> & TBase => {
+): Constructor<SDInputElement<TValue>> & TBase => {
 	/**
 	 * Input mixin that provides common functionality for input elements that persist settings.
 	 */
-	class InputClass extends superClass {
+	class InputMixin extends superClass {
 		/**
-		 * Enable inputs to work with labels.
+		 * Brands the mixin, allowing us to export a helper method for type-narrowing.
 		 */
-		public static formAssociated = true;
-
-		/**
-		 * @inheritdoc
-		 */
-		public static shadowRootOptions = { ...LitElement.shadowRootOptions, delegatesFocus: true };
+		public __brand = brand;
 
 		/**
 		 * @inheritdoc
@@ -40,11 +37,6 @@ export const Input = <TValue extends JsonValue, TBase extends Constructor<LitEle
 		protected inputRef: Ref<HTMLInputElement> = createRef();
 
 		/**
-		 * @inheritdoc
-		 */
-		protected internals: ElementInternals;
-
-		/**
 		 * Signal responsible for managing the setting within Stream Deck.
 		 */
 		#signal: SettingSignal<TValue> | undefined;
@@ -53,29 +45,6 @@ export const Input = <TValue extends JsonValue, TBase extends Constructor<LitEle
 		 * Private backing field for input's value.
 		 */
 		#value: TValue | undefined;
-
-		/**
-		 * Initializes a new instance of the {@link InputMixin} class.
-		 * @param args Constructor arguments.
-		 */
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		constructor(...args: any[]) {
-			super(args);
-
-			// Register a click handler for native labels.
-			this.internals = this.attachInternals();
-			this.addEventListener("click", (ev: MouseEvent) => {
-				const source = document.elementFromPoint(ev.x, ev.y);
-				if (source?.tagName === "LABEL") {
-					for (const label of this.internals.labels) {
-						if (source === label) {
-							this.activate();
-							return;
-						}
-					}
-				}
-			});
-		}
 
 		/**
 		 * @inheritdoc
@@ -119,28 +88,6 @@ export const Input = <TValue extends JsonValue, TBase extends Constructor<LitEle
 		/**
 		 * @inheritdoc
 		 */
-		public activate(): void {
-			// Blur the active element first.
-			if (document.activeElement && document.activeElement instanceof HTMLElement) {
-				document.activeElement.blur();
-			}
-
-			// Proxy the click to the delegate.
-			if (this.inputRef.value) {
-				switch (this.internals.role) {
-					case "checkbox":
-						this.inputRef.value.click();
-						break;
-					default:
-						this.inputRef.value.focus();
-						break;
-				}
-			}
-		}
-
-		/**
-		 * @inheritdoc
-		 */
 		public override disconnectedCallback(): void {
 			this.#signal?.dispose();
 			this.#signal = undefined;
@@ -151,9 +98,20 @@ export const Input = <TValue extends JsonValue, TBase extends Constructor<LitEle
 		/**
 		 * @inheritdoc
 		 */
+		public override focus(): void {
+			if (this.inputRef.value) {
+				this.inputRef.value.focus();
+			} else {
+				super.focus();
+			}
+		}
+
+		/**
+		 * @inheritdoc
+		 */
 		protected override willUpdate(_changedProperties: Map<PropertyKey, unknown>): void {
 			super.willUpdate(_changedProperties);
-			this.internals.ariaDisabled = this.disabled ? "disabled" : null;
+			this.ariaDisabled = this.disabled ? "disabled" : null;
 
 			// When `global` or `setting` has changed, we must update the signal.
 			if (_changedProperties.has("global") || _changedProperties.has("setting")) {
@@ -193,13 +151,13 @@ export const Input = <TValue extends JsonValue, TBase extends Constructor<LitEle
 		}
 	}
 
-	return InputClass as unknown as Constructor<InputMixin<TValue>> & TBase;
+	return InputMixin as unknown as Constructor<SDInputElement<TValue>> & TBase;
 };
 
 /**
  * Input mixin that provides common functionality for input elements that persist settings.
  */
-export declare class InputMixin<T extends JsonValue> {
+export declare class SDInputElement<T extends JsonValue> extends LitElement {
 	/**
 	 * Determines whether the input is disabled; default `false`.
 	 */
@@ -230,35 +188,14 @@ export declare class InputMixin<T extends JsonValue> {
 	 * Element that represents the primary input element.
 	 */
 	protected inputRef: Ref<HTMLInputElement>;
-
-	/**
-	 * Element internals that allow for configuring how the element interacts with forms.
-	 */
-	protected internals: ElementInternals;
-
-	/**
-	 * Activates the element; activation behavior is dependent on the role of the element, for example when the element
-	 * is a `"checkbox"`, it is clicked, whereas a text input gains focus.
-	 */
-	public activate(): void;
 }
 
 /**
- * Determines whether the specified element is activable.
- * @param elem Element to check.
- * @returns `true` when the element can be activated; otherwise `false`.
+ * Determines whether the specified element is a {@link SDInputElement}.
+ * @param element Element to check.
+ * @returns `true` when the element is a {@link SDInputElement}; otherwise `false`.
  */
-export function isActivable(elem: Element): elem is ActivableElement & HTMLElement {
-	return elem instanceof HTMLElement && "activate" in elem && typeof elem.activate === "function";
+export function isSDInputElement(element: HTMLElement): element is SDInputElement<JsonValue> {
+	// Helper function as mixins don't (easily) support `instanceof`.
+	return "__brand" in element && element.__brand === brand;
 }
-
-/**
- * Element that can be activated.
- */
-export type ActivableElement = {
-	/**
-	 * Activates the element; activation behavior is dependent on the role of the element, for example when the element
-	 * is a `"checkbox"`, it is clicked, whereas a text input gains focus.
-	 */
-	activate(): void;
-};
