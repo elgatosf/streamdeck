@@ -99,6 +99,7 @@ export class SDSwitchElement extends Input<boolean>(LitElement) {
 	 */
 	constructor() {
 		super();
+
 		this.role = "checkbox";
 	}
 

@@ -31,21 +31,26 @@ export class SDTextFieldElement extends Input<string>(LitElement) {
 				min-height: 32px;
 				width: 224px;
 			}
+
 			input::placeholder {
 				color: var(--color-content-secondary);
 			}
+
 			input:disabled {
 				color: var(--color-content-disabled);
 			}
+
 			input:focus,
 			input:invalid {
 				box-shadow: var(--highlight-box-shadow);
 				outline-offset: var(--highlight-outline-offset);
 			}
+
 			input:focus,
 			input:focus:invalid {
 				outline: var(--highlight-outline--focus);
 			}
+
 			input:invalid {
 				outline: var(--highlight-outline--invalid);
 			}
@@ -57,7 +62,9 @@ export class SDTextFieldElement extends Input<string>(LitElement) {
 	 */
 	constructor() {
 		super();
+
 		this.debounceSave = true;
+		this.role = "textbox";
 	}
 
 	/**

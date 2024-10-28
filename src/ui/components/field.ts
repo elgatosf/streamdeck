@@ -11,13 +11,14 @@ export class SDFieldElement extends LitElement {
 	 */
 	public static styles = [
 		css`
-			.sd-field {
+			.field {
 				column-gap: var(--space-xs);
 				display: grid;
 				grid-template-columns: 95px 262px;
 				margin-bottom: var(--space-s);
 			}
-			.sd-field-label {
+
+			.label {
 				align-items: center;
 				display: flex;
 				height: var(--size-2xl);
@@ -36,12 +37,12 @@ export class SDFieldElement extends LitElement {
 	 */
 	public render(): HTMLTemplateResult {
 		return html`
-			<div class="sd-field">
-				<div class="sd-field-label">
-					<sd-label for="__input">${this.label ? `${this.label}:` : undefined}</sd-label>
+			<div class="field">
+				<div class="label">
+					<sd-label for="input">${this.label ? `${this.label}:` : undefined}</sd-label>
 				</div>
-				<div class="sd-field-input">
-					<slot id="__input"></slot>
+				<div>
+					<slot id="input"></slot>
 				</div>
 			</div>
 		`;

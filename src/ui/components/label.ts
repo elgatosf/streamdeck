@@ -20,8 +20,8 @@ export class SDLabelElement extends LitElement {
 	 */
 	constructor() {
 		super();
-		this.role = "label";
 
+		this.role = "label";
 		this.addEventListener("click", (ev: MouseEvent) => {
 			// Stop propagation to prevent multiple triggers of nested labels.
 			ev.stopImmediatePropagation();
