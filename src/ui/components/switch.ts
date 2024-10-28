@@ -114,6 +114,10 @@ export class SDSwitchElement extends Input<boolean>(LitElement) {
 	 * Sets the on/off state of the switch.
 	 * @param value The on/off state.
 	 */
+	@property({
+		attribute: "on",
+		type: Boolean,
+	})
 	public set isOn(value: boolean) {
 		this.value = value;
 	}
@@ -153,7 +157,7 @@ export class SDSwitchElement extends Input<boolean>(LitElement) {
 					${ref(this.inputRef)}
 					type="checkbox"
 					value=${ifDefined(this.setting)}
-					.checked=${this.value || false}
+					.checked=${this.isOn}
 					.disabled=${this.disabled}
 					@change=${(ev: HTMLInputEvent<HTMLInputElement>): void => {
 						this.isOn = ev.target.checked;
