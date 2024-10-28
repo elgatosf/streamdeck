@@ -1,5 +1,5 @@
 import { css, html, LitElement, type TemplateResult } from "lit";
-import { customElement } from "lit/decorators.js";
+import { customElement, property } from "lit/decorators.js";
 import { ifDefined } from "lit/directives/if-defined.js";
 import { ref } from "lit/directives/ref.js";
 
@@ -18,18 +18,33 @@ export class SDSwitchElement extends Input<boolean>(LitElement) {
 		super.styles ?? [],
 		css`
 			/**
+			 * Containers
+			 */
+
+			sd-label {
+				outline: none;
+			}
+
+			.container {
+				align-items: center;
+				display: inline-flex;
+			}
+
+			input {
+				display: none;
+			}
+
+			/**
              * Track
              */
 
-			label {
+			.track {
 				align-items: center;
 				background: var(--color-surface-strong);
-				border: none;
 				border-radius: var(--rounding-full);
 				cursor: pointer;
 				display: inline-flex;
 				margin: var(--space-xs) var(--space-xs) var(--space-xs) 0;
-				outline: none;
 				padding: 0px var(--space-3xs);
 				transition: 0.2;
 				height: var(--size-m);
@@ -37,23 +52,19 @@ export class SDSwitchElement extends Input<boolean>(LitElement) {
 				user-select: none;
 			}
 
-			label[aria-disabled="false"]:has(input:checked) {
+			sd-label[aria-disabled="false"]:has(input:checked) .track {
 				background: var(--color-surface-accent);
 			}
 
-			label[aria-disabled="true"] {
-				cursor: default;
+			sd-label[aria-disabled="true"] .track {
 				background: var(--color-surface-disabled);
+				cursor: default;
 			}
 
-			label:focus-visible {
+			sd-label:focus-visible .track {
 				box-shadow: var(--highlight-box-shadow);
 				outline: var(--highlight-outline--focus);
 				outline-offset: var(--highlight-outline-offset);
-			}
-
-			input {
-				display: none;
 			}
 
 			/**
@@ -62,8 +73,6 @@ export class SDSwitchElement extends Input<boolean>(LitElement) {
 
 			.thumb {
 				background: var(--color-content-primary);
-				border: none;
-				outline: none;
 				border-radius: var(--rounding-full);
 				height: var(--size-s);
 				transform: translateX(0);
@@ -71,15 +80,15 @@ export class SDSwitchElement extends Input<boolean>(LitElement) {
 				width: var(--size-s);
 			}
 
-			input:checked + .thumb {
+			sd-label:has(input:checked) .thumb {
 				transform: translateX(100%);
 			}
 
-			label[aria-disabled="false"] .thumb {
+			sd-label[aria-disabled="false"] .thumb {
 				background: var(--color-surface-ondark);
 			}
 
-			label[aria-disabled="true"] .thumb {
+			sd-label[aria-disabled="true"] .thumb {
 				background: var(--color-surface-strong);
 			}
 		`,
@@ -90,7 +99,7 @@ export class SDSwitchElement extends Input<boolean>(LitElement) {
 	 */
 	constructor() {
 		super();
-		this.internals.role = "checkbox";
+		this.role = "checkbox";
 	}
 
 	/**
@@ -110,21 +119,33 @@ export class SDSwitchElement extends Input<boolean>(LitElement) {
 	}
 
 	/**
+	 * Label of the switch.
+	 */
+	@property()
+	public accessor label: string | undefined;
+
+	/**
+	 * @inheritdoc
+	 */
+	public override click() {
+		if (!this.disabled) {
+			this.isOn = !this.isOn;
+		}
+	}
+
+	/**
 	 * @inheritdoc
 	 */
 	public override render(): TemplateResult {
 		return html`
-			<label
-				aria-checked=${this.isOn}
+			<sd-label
 				aria-disabled=${this.disabled}
 				tabindex=${ifDefined(this.disabled ? undefined : 0)}
-				@click=${(ev: MouseEvent): void => {
-					ev.stopPropagation();
-				}}
 				@keydown=${(ev: KeyboardEvent): void => {
 					// Toggle switch on space bar key.
 					if (ev.code === "Space") {
 						this.isOn = !this.isOn;
+						ev.preventDefault();
 					}
 				}}
 			>
@@ -138,8 +159,13 @@ export class SDSwitchElement extends Input<boolean>(LitElement) {
 						this.isOn = ev.target.checked;
 					}}
 				/>
-				<div class="thumb" role="button" aria-pressed=${this.isOn}></div>
-			</label>
+				<div class="container">
+					<div class="track" role="button">
+						<div class="thumb"></div>
+					</div>
+					${this.label}
+				</div>
+			</sd-label>
 		`;
 	}
 
@@ -148,7 +174,7 @@ export class SDSwitchElement extends Input<boolean>(LitElement) {
 	 */
 	protected override willUpdate(_changedProperties: Map<PropertyKey, unknown>): void {
 		super.willUpdate(_changedProperties);
-		this.internals.ariaChecked = this.isOn ? "checked" : null;
+		this.ariaChecked = this.isOn ? "checked" : null;
 	}
 }
 

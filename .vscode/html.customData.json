@@ -37,6 +37,10 @@
                     "values": [{ "name": "global" }]
                 },
                 {
+                    "name": "label",
+                    "description": "Label of the switch."
+                },
+                {
                     "name": "setting",
                     "description": "Path to the setting where the value should be persisted, for example `name`."
                 }
