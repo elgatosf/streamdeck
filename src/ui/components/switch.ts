@@ -127,7 +127,7 @@ export class SDSwitchElement extends Input<boolean>(LitElement) {
 	/**
 	 * @inheritdoc
 	 */
-	public override click() {
+	public override click(): void {
 		if (!this.disabled) {
 			this.isOn = !this.isOn;
 		}
