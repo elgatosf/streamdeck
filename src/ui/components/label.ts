@@ -3,17 +3,31 @@ import { customElement, property } from "lit/decorators.js";
 import { ifDefined } from "lit/directives/if-defined.js";
 import { createRef, ref } from "lit/directives/ref.js";
 
-import { type ActivableElement, isActivable } from "../mixins/input";
+import { isSDInputElement } from "../mixins/input";
 
 /**
  * Element that provides a label for input element.
  */
 @customElement("sd-label")
-export class SDLabelElement extends LitElement implements ActivableElement {
+export class SDLabelElement extends LitElement {
 	/**
 	 * Reference to the slot element within the label of the shadow DOM.
 	 */
 	#slotRef = createRef<HTMLSlotElement>();
+
+	/**
+	 * Initializes a new instance of the {@link SDLabelElement} class.
+	 */
+	constructor() {
+		super();
+		this.role = "label";
+
+		this.addEventListener("click", (ev: MouseEvent) => {
+			// Stop propagation to prevent multiple triggers of nested labels.
+			ev.stopImmediatePropagation();
+			this.activate();
+		});
+	}
 
 	/**
 	 * Identifier of the element the label is for.
@@ -22,7 +36,7 @@ export class SDLabelElement extends LitElement implements ActivableElement {
 	public accessor htmlFor: string | undefined;
 
 	/**
-	 * @inheritdoc
+	 * Activates the input associated with this label element.
 	 */
 	public activate(): void {
 		const target = this.#getTarget();
@@ -37,13 +51,6 @@ export class SDLabelElement extends LitElement implements ActivableElement {
 	public override render(): TemplateResult {
 		return html`<label
 			for=${ifDefined(this.htmlFor)}
-			@click=${(): void => {
-				// Activate the element the label is for.
-				const target = this.#getTarget();
-				if (target) {
-					this.#activate(target);
-				}
-			}}
 			@mousedown=${(ev: MouseEvent): void => {
 				// Disable text selection on double-click.
 				if (ev.detail > 1) {
@@ -61,18 +68,13 @@ export class SDLabelElement extends LitElement implements ActivableElement {
 	#activate(element: HTMLElement): void {
 		// When the element is a regular element, attempt to activate it.
 		if (!(element instanceof HTMLSlotElement)) {
-			if (isActivable(element)) {
-				element.activate();
-			}
-
+			this.#tryActivate(element);
 			return;
 		}
 
 		// Otherwise, as we have a slot, attempt to find the first element that can be activated.
-		const elements = element.assignedElements({ flatten: true });
-		for (const elem of elements) {
-			if (elem instanceof HTMLElement && isActivable(elem)) {
-				elem.activate();
+		for (const slotElement of element.assignedElements({ flatten: true })) {
+			if (slotElement instanceof HTMLElement && this.#tryActivate(slotElement)) {
 				return;
 			}
 		}
@@ -96,6 +98,45 @@ export class SDLabelElement extends LitElement implements ActivableElement {
 
 		// Otherwise, revert to the document.
 		return document.getElementById(this.htmlFor);
+	}
+
+	/**
+	 * Attempts to activate the specified element, either clicking or focusing it.
+	 * @param element Element to attempt to activate.
+	 * @returns `true` when the element was activated; otherwise `false`.
+	 */
+	#tryActivate(element: HTMLElement): boolean {
+		// Labels can be activated.
+		if (element instanceof SDLabelElement) {
+			element.activate();
+			return true;
+		}
+
+		// Elements that should be clicked.
+		if (
+			element.role === "checkbox" ||
+			element.role === "radio" ||
+			(element instanceof HTMLInputElement && (element.type === "checkbox" || element.type === "radio"))
+		) {
+			element.click();
+			return true;
+		}
+
+		// Elements that should be focused.
+		if (
+			element.role === "button" ||
+			element.role === "textbox" ||
+			element instanceof HTMLButtonElement ||
+			element instanceof HTMLInputElement ||
+			element instanceof HTMLSelectElement ||
+			element instanceof HTMLTextAreaElement ||
+			isSDInputElement(element)
+		) {
+			element.focus();
+			return true;
+		}
+
+		return false;
 	}
 }
 
