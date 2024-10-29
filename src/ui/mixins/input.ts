@@ -139,7 +139,7 @@ export const Input = <TValue extends JsonValue, TBase extends Constructor<LitEle
 		 * @returns `true` when the value changed; otherwise `false`.
 		 */
 		#setValue(newValue: TValue | undefined): boolean {
-			if (this.#value == newValue) {
+			if (this.#value === newValue) {
 				return false;
 			}
 
