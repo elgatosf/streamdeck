@@ -23,6 +23,46 @@
             ]
         },
         {
+            "name": "sd-option",
+            "description": "Non-visual element that provides information for an option.",
+            "attributes": [
+                {
+                    "name": "disabled",
+                    "description": "Determines whether the option is disabled; default `false`.",
+                    "values": [{ "name": "disabled" }]
+                },
+                {
+                    "name": "type",
+                    "description": "Type of the value.",
+                    "values": [{ "name": "boolean" }, { "name": "number" }, { "name": "string" }]
+                },
+                {
+                    "name": "value",
+                    "description": "Value of the option."
+                }
+            ]
+        },
+        {
+            "name": "sd-radio-list",
+            "description": "Element that offers persisting a value via a list of radio options.",
+            "attributes": [
+                {
+                    "name": "disabled",
+                    "description": "Determines whether the input is disabled; default `false`.",
+                    "values": [{ "name": "disabled" }]
+                },
+                {
+                    "name": "global",
+                    "description": "When `true`, the setting will be persisted in the global settings, otherwise it will be persisted in the action's settings; default `false`.",
+                    "values": [{ "name": "global" }]
+                },
+                {
+                    "name": "setting",
+                    "description": "Path to the setting where the value should be persisted, for example `name`."
+                }
+            ]
+        },
+        {
             "name": "sd-switch",
             "description": "Element that offers persisting a `boolean` via a toggle switch.",
             "attributes": [
