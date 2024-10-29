@@ -33,7 +33,7 @@
                 },
                 {
                     "name": "type",
-                    "description": "Type of the value.",
+                    "description": "Type of the value; allows for the value to be converted to a boolean or number.",
                     "values": [{ "name": "boolean" }, { "name": "number" }, { "name": "string" }]
                 },
                 {

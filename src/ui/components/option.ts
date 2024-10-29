@@ -20,7 +20,7 @@ export class SDOptionElement extends LitElement {
 	public accessor disabled: boolean = false;
 
 	/**
-	 * Label of the option.
+	 * Label that represents the option; read from the `innerText` of the element.
 	 * @returns The label.
 	 */
 	public get label(): string {
@@ -28,19 +28,20 @@ export class SDOptionElement extends LitElement {
 	}
 
 	/**
-	 * Type of the value.
+	 * Type of the value; allows for the value to be converted to a boolean or number.
 	 */
 	@property()
 	public accessor type: "boolean" | "number" | "string" = "string";
 
 	/**
-	 * Untyped value, as defined by the `value` attribute; use {@link SDOptionElement.value} for the typed-value.
+	 * Untyped value, as defined by the `value` attribute; use `value` property for the typed-value.
 	 */
 	@property({ attribute: "value" })
 	public accessor htmlValue: string | undefined = undefined;
 
 	/**
 	 * Value of the option.
+	 * @returns The value.
 	 */
 	public get value(): boolean | number | string | undefined {
 		return this.#value;
