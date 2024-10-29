@@ -7,6 +7,8 @@ import type { Constructor } from "../../common/utils";
 import { useGlobalSetting, useSetting } from "../settings";
 import type { SettingSignal, SettingSignalOptions } from "../settings/signals";
 
+const brand = "SDInputElement" as const;
+
 /**
  * Input mixin that provides common functionality for input elements that persist settings.
  * @param superClass Class the mixin extends.
@@ -14,11 +16,36 @@ import type { SettingSignal, SettingSignalOptions } from "../settings/signals";
  */
 export const Input = <TValue extends JsonValue, TBase extends Constructor<LitElement> = typeof LitElement>(
 	superClass: TBase,
-): Constructor<InputMixin<TValue>> & TBase => {
+): Constructor<SDInputElement<TValue>> & TBase => {
 	/**
 	 * Input mixin that provides common functionality for input elements that persist settings.
 	 */
-	class InputClass extends superClass {
+	class InputMixin extends superClass {
+		/**
+		 * Brands the mixin, allowing us to export a helper method for type-narrowing.
+		 */
+		public __brand = brand;
+
+		/**
+		 * @inheritdoc
+		 */
+		protected debounceSave: boolean = false;
+
+		/**
+		 * @inheritdoc
+		 */
+		protected inputRef: Ref<HTMLInputElement> = createRef();
+
+		/**
+		 * Signal responsible for managing the setting within Stream Deck.
+		 */
+		#signal: SettingSignal<TValue> | undefined;
+
+		/**
+		 * Private backing field for input's value.
+		 */
+		#value: TValue | undefined;
+
 		/**
 		 * @inheritdoc
 		 */
@@ -39,26 +66,6 @@ export const Input = <TValue extends JsonValue, TBase extends Constructor<LitEle
 		 */
 		@property()
 		public accessor setting: string | undefined;
-
-		/**
-		 * @inheritdoc
-		 */
-		protected debounceSave: boolean = false;
-
-		/**
-		 * @inheritdoc
-		 */
-		protected focusElement: Ref<HTMLInputElement> = createRef();
-
-		/**
-		 * Signal responsible for managing the setting within Stream Deck.
-		 */
-		#signal: SettingSignal<TValue> | undefined;
-
-		/**
-		 * Private backing field for input's value.
-		 */
-		#value: TValue | undefined;
 
 		/**
 		 * Gets the current input value.
@@ -91,40 +98,39 @@ export const Input = <TValue extends JsonValue, TBase extends Constructor<LitEle
 		/**
 		 * @inheritdoc
 		 */
-		public focus(): void {
-			if (!this.focusElement.value) {
-				console.warn("Unable to focus input; a focus element was not specified");
-				return;
+		public override focus(): void {
+			if (this.inputRef.value) {
+				this.inputRef.value.focus();
+			} else {
+				super.focus();
 			}
-
-			this.focusElement.value.focus();
 		}
 
 		/**
 		 * @inheritdoc
 		 */
 		protected override willUpdate(_changedProperties: Map<PropertyKey, unknown>): void {
+			super.willUpdate(_changedProperties);
+			this.ariaDisabled = this.disabled ? "disabled" : null;
+
+			// When `global` or `setting` has changed, we must update the signal.
 			if (_changedProperties.has("global") || _changedProperties.has("setting")) {
 				this.#signal?.dispose();
 
 				// Clear the current setting.
 				this.#signal = undefined;
-				if (this.setting === undefined) {
-					return;
+				if (this.setting !== undefined) {
+					// Determine the options.
+					const options: SettingSignalOptions<TValue> = {
+						onChange: (value) => this.#setValue(value),
+						debounceSaveTimeout: this.debounceSave ? 200 : undefined,
+					};
+
+					// Assign the new setting.
+					this.#signal = this.global ? useGlobalSetting(this.setting, options) : useSetting(this.setting, options);
+					this.#signal.value.get().then((value) => this.#setValue(value));
 				}
-
-				// Determine the options.
-				const options: SettingSignalOptions<TValue> = {
-					onChange: (value) => this.#setValue(value),
-					debounceSaveTimeout: this.debounceSave ? 200 : undefined,
-				};
-
-				// Assign the new setting.
-				this.#signal = this.global ? useGlobalSetting(this.setting, options) : useSetting(this.setting, options);
-				this.#signal.value.get().then((value) => this.#setValue(value));
 			}
-
-			super.willUpdate(_changedProperties);
 		}
 
 		/**
@@ -145,13 +151,13 @@ export const Input = <TValue extends JsonValue, TBase extends Constructor<LitEle
 		}
 	}
 
-	return InputClass as unknown as Constructor<InputMixin<TValue>> & TBase;
+	return InputMixin as unknown as Constructor<SDInputElement<TValue>> & TBase;
 };
 
 /**
  * Input mixin that provides common functionality for input elements that persist settings.
  */
-export declare class InputMixin<T extends JsonValue> {
+export declare class SDInputElement<T extends JsonValue> extends LitElement {
 	/**
 	 * Determines whether the input is disabled; default `false`.
 	 */
@@ -179,12 +185,17 @@ export declare class InputMixin<T extends JsonValue> {
 	protected debounceSave: boolean;
 
 	/**
-	 * Element that will gain focus when calling `focus()`.
+	 * Element that represents the primary input element.
 	 */
-	protected focusElement: Ref<HTMLInputElement>;
+	protected inputRef: Ref<HTMLInputElement>;
+}
 
-	/**
-	 * Focuses the input.
-	 */
-	public focus(): void;
+/**
+ * Determines whether the specified element is a {@link SDInputElement}.
+ * @param element Element to check.
+ * @returns `true` when the element is a {@link SDInputElement}; otherwise `false`.
+ */
+export function isSDInputElement(element: HTMLElement): element is SDInputElement<JsonValue> {
+	// Helper function as mixins don't (easily) support `instanceof`.
+	return "__brand" in element && element.__brand === brand;
 }

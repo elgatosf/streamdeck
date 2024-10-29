@@ -2,7 +2,7 @@ import { css, html, type HTMLTemplateResult, LitElement } from "lit";
 import { customElement, property } from "lit/decorators.js";
 
 /**
- * Field that identifies an input, or group of inputs.
+ * Element that provides a label for placeholder containing an input.
  */
 @customElement("sd-field")
 export class SDFieldElement extends LitElement {
@@ -11,12 +11,17 @@ export class SDFieldElement extends LitElement {
 	 */
 	public static styles = [
 		css`
-			.sd-field {
-				align-items: baseline;
+			.field {
 				column-gap: var(--space-xs);
 				display: grid;
 				grid-template-columns: 95px 262px;
 				margin-bottom: var(--space-s);
+			}
+
+			.label {
+				align-items: center;
+				display: flex;
+				height: var(--size-2xl);
 			}
 		`,
 	];
@@ -32,34 +37,22 @@ export class SDFieldElement extends LitElement {
 	 */
 	public render(): HTMLTemplateResult {
 		return html`
-			<div class="sd-field">
-				<div class="sd-field-label">
-					<label @click=${this.#focusFirstElement}>${this.label ? this.label + ":" : undefined}</label>
+			<div class="field">
+				<div class="label">
+					<sd-label for="input">${this.label ? `${this.label}:` : undefined}</sd-label>
 				</div>
-				<div class="sd-field-input">
-					<slot></slot>
+				<div>
+					<slot id="input"></slot>
 				</div>
 			</div>
 		`;
-	}
-
-	/**
-	 * Focuses the first element, that can have focus, within the field.
-	 */
-	#focusFirstElement(): void {
-		for (const el of this.querySelectorAll("*")) {
-			if ("focus" in el && typeof el.focus === "function") {
-				el.focus();
-				return;
-			}
-		}
 	}
 }
 
 declare global {
 	interface HTMLElementTagNameMap {
 		/**
-		 * Field that identifies an input, or group of inputs.
+		 * Element that provides a label for placeholder containing an input.
 		 */
 		"sd-field": SDFieldElement;
 	}

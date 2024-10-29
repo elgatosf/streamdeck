@@ -7,7 +7,7 @@ import { Input } from "../mixins/input";
 import type { HTMLInputEvent } from "../utils";
 
 /**
- * Text field capable of persisting `string` values to Stream Deck settings.
+ * Element that offers persisting a `string` via a text input.
  */
 @customElement("sd-textfield")
 export class SDTextFieldElement extends Input<string>(LitElement) {
@@ -19,29 +19,40 @@ export class SDTextFieldElement extends Input<string>(LitElement) {
 		css`
 			input {
 				background-color: var(--color-surface);
-				border: solid var(--border-width-thick) var(--color-page);
+				border: none;
 				border-radius: var(--rounding-m);
 				color: var(--color-content-primary);
 				font-family: var(--typography-body-m-family);
 				font-size: var(--typography-body-m-size);
 				font-weight: var(--typography-body-m-weight);
-				margin: calc(var(--border-width-thick) * -1);
+				height: var(--size-2xl);
+				outline: none;
 				padding: 0 var(--space-xs);
 				min-height: 32px;
 				width: 224px;
 			}
+
 			input::placeholder {
 				color: var(--color-content-secondary);
 			}
+
 			input:disabled {
 				color: var(--color-content-disabled);
 			}
+
+			input:focus,
+			input:invalid {
+				box-shadow: var(--highlight-box-shadow);
+				outline-offset: var(--highlight-outline-offset);
+			}
+
 			input:focus,
 			input:focus:invalid {
-				outline: solid var(--border-width-thick) var(--color-surface-accent);
+				outline: var(--highlight-outline--focus);
 			}
+
 			input:invalid {
-				outline: solid var(--border-width-thick) var(--color-surface-negative);
+				outline: var(--highlight-outline--invalid);
 			}
 		`,
 	];
@@ -51,7 +62,9 @@ export class SDTextFieldElement extends Input<string>(LitElement) {
 	 */
 	constructor() {
 		super();
+
 		this.debounceSave = true;
+		this.role = "textbox";
 	}
 
 	/**
@@ -100,7 +113,7 @@ export class SDTextFieldElement extends Input<string>(LitElement) {
 	 */
 	public override render(): TemplateResult {
 		return html`<input
-			${ref(this.focusElement)}
+			${ref(this.inputRef)}
 			maxlength=${ifDefined(this.maxLength)}
 			pattern=${ifDefined(this.pattern)}
 			placeholder=${ifDefined(this.placeholder)}
@@ -121,7 +134,7 @@ export class SDTextFieldElement extends Input<string>(LitElement) {
 declare global {
 	interface HTMLElementTagNameMap {
 		/**
-		 * Text field capable of persisting `string` values to Stream Deck settings.
+		 * Element that offers persisting a `string` via a text input.
 		 */
 		"sd-textfield": SDTextFieldElement;
 	}

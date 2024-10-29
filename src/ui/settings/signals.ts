@@ -66,14 +66,11 @@ export class SettingSignalProvider extends EventEmitter<EventMap> {
 			: deferredDisposable(() => {});
 
 		// Monitor setting changes from other inputs.
-		const localSync = this.disposableOn(
-			"changing",
-			(source: SettingSignal<JsonValue>, otherPath: string, value: JsonValue) => {
-				if (path === otherPath && source !== setting) {
-					options?.onChange?.(value as T);
-				}
-			},
-		);
+		const localSync = this.disposableOn("changing", (source: SettingSignal<JsonValue>, value: JsonValue) => {
+			if (source !== setting && source.path === setting.path) {
+				options?.onChange?.(value as T);
+			}
+		});
 
 		// Determine setter on whether we debounce a save.
 		const setter = options?.debounceSaveTimeout
@@ -86,13 +83,14 @@ export class SettingSignalProvider extends EventEmitter<EventMap> {
 				remoteSync.dispose();
 				localSync.dispose();
 			},
+			path,
 			value: {
 				get: async () => {
 					await this.#initialization.promise;
 					return get(path, this.#settings) as T;
 				},
 				set: (value: T) => {
-					this.emit("changing", setting, path, value);
+					this.emit("changing", setting, value);
 					return setter(value);
 				},
 			},
@@ -144,9 +142,14 @@ export type SettingSignal<T extends JsonValue> = {
 	dispose(): void;
 
 	/**
+	 * Path of the setting.
+	 */
+	readonly path: string;
+
+	/**
 	 * Setting value.
 	 */
-	value: {
+	readonly value: {
 		/**
 		 * Gets the setting value.
 		 */

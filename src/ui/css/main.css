@@ -1,3 +1,10 @@
+:root {
+	--highlight-box-shadow: 0 0 0 var(--border-width-thick) var(--color-page);
+	--highlight-outline-offset: var(--border-width-thick);
+	--highlight-outline--focus: solid var(--border-width-thick) var(--color-surface-accent);
+	--highlight-outline--invalid: solid var(--border-width-thick) var(--color-surface-negative);
+}
+
 body {
 	background-color: var(--color-page);
 	color: var(--color-content-primary);

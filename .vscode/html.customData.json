@@ -3,8 +3,56 @@
     "version": 1.1,
     "tags": [
         {
+            "name": "sd-field",
+            "description": "Element that provides a label for placeholder containing an input.",
+            "attributes": [
+                {
+                    "name": "label",
+                    "description": "Label to show for the field."
+                }
+            ]
+        },
+        {
+            "name": "sd-label",
+            "description": "Element that provides a label for input element.",
+            "attributes": [
+                {
+                    "name": "for",
+                    "description": "Identifier of the element the label is for."
+                }
+            ]
+        },
+        {
+            "name": "sd-switch",
+            "description": "Element that offers persisting a `boolean` via a toggle switch.",
+            "attributes": [
+                {
+                    "name": "disabled",
+                    "description": "Determines whether the input is disabled; default `false`.",
+                    "values": [{ "name": "disabled" }]
+                },
+                {
+                    "name": "global",
+                    "description": "When `true`, the setting will be persisted in the global settings, otherwise it will be persisted in the action's settings; default `false`.",
+                    "values": [{ "name": "global" }]
+                },
+                {
+                    "name": "label",
+                    "description": "Label of the switch."
+                },
+                {
+                    "name": "on",
+                    "description": "Determines the on/off state of the switch."
+                },
+                {
+                    "name": "setting",
+                    "description": "Path to the setting where the value should be persisted, for example `name`."
+                }
+            ]
+        },
+        {
             "name": "sd-textfield",
-            "description": "Text field capable of persisting `string` values to Stream Deck settings.",
+            "description": "Element that offers persisting a `string` via a text input.",
             "attributes": [
                 {
                     "name": "disabled",
