@@ -5,13 +5,13 @@ import { repeat } from "lit/directives/repeat.js";
 
 import { Input } from "../mixins/input";
 import { List } from "../mixins/list";
-import { type HTMLInputEvent, preventDoubleClickSelection } from "../utils";
+import { preventDoubleClickSelection } from "../utils";
 
 /**
  * Element that offers persisting a value via a list of radio options.
  */
 @customElement("sd-radio-list")
-export class SDSwitchElement extends List(Input<string>(LitElement)) {
+export class SDSwitchElement extends List(Input<boolean | number | string>(LitElement)) {
 	/**
 	 * @inheritdoc
 	 */
@@ -121,8 +121,8 @@ export class SDSwitchElement extends List(Input<string>(LitElement)) {
 								tabindex=${ifDefined(disabled ? undefined : 0)}
 								.checked=${this.value === value}
 								.disabled=${disabled}
-								@change=${(ev: HTMLInputEvent<HTMLInputElement>): void => {
-									this.value = ev.target.value;
+								@change=${(): void => {
+									this.value = value;
 								}}
 							/>
 							<span class="indicator"></span>

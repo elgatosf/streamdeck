@@ -73,5 +73,5 @@ export type ListItem = {
 	/**
 	 * Value of the list item.
 	 */
-	value: string | undefined;
+	value: boolean | number | string | undefined;
 };

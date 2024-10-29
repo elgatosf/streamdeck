@@ -119,8 +119,8 @@ export class SDTextFieldElement extends Input<string>(LitElement) {
 			placeholder=${ifDefined(this.placeholder)}
 			?disabled=${this.disabled}
 			?required=${this.#userHasInteracted && this.required}
-			.type=${this.type || "text"}
-			.value=${this.value || ""}
+			.type=${this.type ?? "text"}
+			.value=${this.value ?? ""}
 			@blur=${(): void => {
 				this.#userHasInteracted = true;
 			}}
