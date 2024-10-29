@@ -10,8 +10,8 @@ import { preventDoubleClickSelection } from "../utils";
 /**
  * Element that offers persisting a value via a list of radio options.
  */
-@customElement("sd-radio-list")
-export class SDSwitchElement extends List(Input<boolean | number | string>(LitElement)) {
+@customElement("sd-radio-group")
+export class SDRadioGroupElement extends List(Input<boolean | number | string>(LitElement)) {
 	/**
 	 * @inheritdoc
 	 */
@@ -36,35 +36,37 @@ export class SDSwitchElement extends List(Input<boolean | number | string>(LitEl
 			 */
 
 			.indicator {
-				--radio-list-indicator-size: calc(var(--size-m) - calc(var(--border-width-thin) * 2));
+				--size: calc(var(--size-m) - calc(var(--border-width-thin) * 2));
 				align-items: center;
 				border: var(--border-width-thin) solid var(--color-content-disabled);
 				border-radius: var(--rounding-full);
 				display: inline-flex;
-				height: var(--radio-list-indicator-size);
+				height: var(--size);
 				justify-content: center;
 				margin: var(--space-xs) var(--space-xs) var(--space-xs) 0;
 				user-select: none;
-				width: var(--radio-list-indicator-size);
+				width: var(--size);
 			}
 
 			/**
 			 * Checked.
 			 */
 
-			input:checked + .indicator {
-				background: var(--color-surface-accent);
-				border-color: var(--color-content-disabled);
-				border-radius: var(--rounding-full);
-			}
+			input:checked {
+				& + .indicator {
+					background: var(--color-surface-accent);
+					border-color: var(--color-content-disabled);
+					border-radius: var(--rounding-full);
+				}
 
-			input:checked + .indicator::before {
-				content: "";
-				background: var(--color-surface-ondark);
-				border-radius: var(--rounding-full);
-				display: block;
-				height: var(--size-xs);
-				width: var(--size-xs);
+				& + .indicator::before {
+					content: "";
+					background: var(--color-surface-ondark);
+					border-radius: var(--rounding-full);
+					display: block;
+					height: var(--size-xs);
+					width: var(--size-xs);
+				}
 			}
 
 			/**
@@ -83,12 +85,14 @@ export class SDSwitchElement extends List(Input<boolean | number | string>(LitEl
 			 * Checked + disabled.
 			 */
 
-			input:checked:disabled + .indicator {
-				background-color: var(--color-surface-disabled);
-			}
+			input:checked:disabled {
+				& + .indicator {
+					background-color: var(--color-surface-disabled);
+				}
 
-			input:checked:disabled + .indicator::before {
-				background-color: var(--color-content-disabled);
+				& + .indicator::before {
+					background-color: var(--color-content-disabled);
+				}
 			}
 
 			/**
@@ -140,6 +144,6 @@ declare global {
 		/**
 		 * Element that offers persisting a value via a list of radio options.
 		 */
-		"sd-radio-list": SDSwitchElement;
+		"sd-radio-group": SDRadioGroupElement;
 	}
 }
