@@ -4,6 +4,7 @@ import { ifDefined } from "lit/directives/if-defined.js";
 import { createRef, ref } from "lit/directives/ref.js";
 
 import { isSDInputElement } from "../mixins/input";
+import { preventDoubleClickSelection } from "../utils";
 
 /**
  * Element that provides a label for input element.
@@ -49,14 +50,7 @@ export class SDLabelElement extends LitElement {
 	 * @inheritdoc
 	 */
 	public override render(): TemplateResult {
-		return html`<label
-			for=${ifDefined(this.htmlFor)}
-			@mousedown=${(ev: MouseEvent): void => {
-				// Disable text selection on double-click.
-				if (ev.detail > 1) {
-					ev.preventDefault();
-				}
-			}}
+		return html`<label for=${ifDefined(this.htmlFor)} @mousedown=${preventDoubleClickSelection}
 			><slot ${ref(this.#slotRef)}></slot>
 		</label>`;
 	}

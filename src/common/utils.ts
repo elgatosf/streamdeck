@@ -56,6 +56,33 @@ export function get(path: string, source: unknown): unknown {
 }
 
 /**
+ * Parses the specified value to a truthy boolean (using {@link https://stackoverflow.com/questions/784929/what-does-the-operator-do-in-javascript `!!` notation}).
+ * @param value Value to parse.
+ * @returns `true` when the value is truthy; otherwise `false`.
+ */
+export function parseBoolean(value: unknown): boolean | undefined {
+	return !!value;
+}
+
+/**
+ * Parses the specified value to a number (using {@link parseFloat}).
+ * @param value Value to parse.
+ * @returns The parsed value; otherwise `undefined`.
+ */
+export function parseNumber(value: unknown): number | undefined {
+	if (typeof value === "number") {
+		return value;
+	}
+
+	if (typeof value !== "string") {
+		return undefined;
+	}
+
+	value = parseFloat(value);
+	return typeof value === "number" && !isNaN(value) ? value : undefined;
+}
+
+/**
  * Sets the specified `value` on the `target` object at the desired property `path`.
  * @param path The path to the property to set.
  * @param target The target object that is being written to.
