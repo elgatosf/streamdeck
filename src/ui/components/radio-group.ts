@@ -10,7 +10,7 @@ import { preventDoubleClickSelection } from "../utils";
 /**
  * Element that offers persisting a value via a list of radio options.
  */
-@customElement("sd-radio-group")
+@customElement("sd-radiogroup")
 export class SDRadioGroupElement extends List(Input<boolean | number | string>(LitElement)) {
 	/**
 	 * @inheritdoc
@@ -144,6 +144,6 @@ declare global {
 		/**
 		 * Element that offers persisting a value via a list of radio options.
 		 */
-		"sd-radio-group": SDRadioGroupElement;
+		"sd-radiogroup": SDRadioGroupElement;
 	}
 }
