@@ -3,7 +3,7 @@
  * @param values CSS class names; when truthy, the class name will be included in the result.
  * @returns The flattened CSS class name; otherwise `undefined` when no values were truthy.
  */
-export function cls(...values: (boolean | string)[]): string {
+export function cls(...values: unknown[]): string {
 	let str = "";
 	for (const value of values) {
 		if (value) {

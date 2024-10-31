@@ -22,16 +22,31 @@ describe("cls", () => {
 		},
 		{
 			name: "truthy",
-			values: [true && "yes"],
+			// eslint-disable-next-line no-constant-binary-expression
+			values: [1 && "yes"],
 			expected: "yes",
 		},
 		{
-			name: "falsy",
-			values: [false && "no", "yes"],
+			name: "falsy undefined",
+			// eslint-disable-next-line no-constant-binary-expression
+			values: [undefined && "no", "yes"],
+			expected: "yes",
+		},
+		{
+			name: "falsy null",
+			// eslint-disable-next-line no-constant-binary-expression
+			values: [null && "no", "yes"],
+			expected: "yes",
+		},
+		{
+			name: "falsy 0",
+			// eslint-disable-next-line no-constant-binary-expression
+			values: [0 && "no", "yes"],
 			expected: "yes",
 		},
 		{
 			name: "hyphens",
+			// eslint-disable-next-line no-constant-binary-expression
 			values: [true && "container--disabled"],
 			expected: "container--disabled",
 		},

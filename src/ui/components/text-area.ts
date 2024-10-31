@@ -111,7 +111,7 @@ export class SDTextAreaElement extends Input<string>(LitElement) {
 	];
 
 	/**
-	 * Initializes a new instance of the {@link SDTextFieldElement} class.
+	 * Initializes a new instance of the {@link SDTextAreaElement} class.
 	 */
 	constructor() {
 		super();
