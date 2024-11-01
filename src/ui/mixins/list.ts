@@ -2,6 +2,7 @@ import { LitElement } from "lit";
 
 import type { Constructor } from "../../common/utils";
 import type { SDOptionElement } from "../components/option";
+import type { SDRadioElement } from "../components/radio";
 import { OptionObserver } from "../controllers/option-observer";
 
 /**
@@ -26,7 +27,7 @@ export const List = <TBase extends Constructor<LitElement> = typeof LitElement>(
 		 * @returns The list items.
 		 */
 		public get items(): Iterable<ListItem> {
-			return this.#domObserver.options.map((opt: SDOptionElement): ListItem => {
+			return this.#domObserver.options.map((opt: SDOptionElement | SDRadioElement): ListItem => {
 				return {
 					disabled: opt.disabled,
 					key: opt,
@@ -68,7 +69,7 @@ export type ListItem = {
 	/**
 	 * Label of the list item.
 	 */
-	label: string;
+	label: string | undefined;
 
 	/**
 	 * Value of the list item.

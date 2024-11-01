@@ -20,12 +20,10 @@ export class SDOptionElement extends LitElement {
 	public accessor disabled: boolean = false;
 
 	/**
-	 * Label that represents the option; read from the `innerText` of the element.
-	 * @returns The label.
+	 * Label that represents the option.
 	 */
-	public get label(): string {
-		return this.innerText;
-	}
+	@property()
+	public accessor label: string | undefined;
 
 	/**
 	 * Type of the value; allows for the value to be converted to a boolean or number.

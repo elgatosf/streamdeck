@@ -1,5 +1,6 @@
 import { ReactiveController, ReactiveControllerHost } from "lit";
 
+import { SDRadioElement } from "../components";
 import { SDOptionElement } from "../components/option";
 
 /**
@@ -9,7 +10,7 @@ export class OptionObserver implements ReactiveController {
 	/**
 	 * Current options within the host.
 	 */
-	public readonly options: SDOptionElement[];
+	public readonly options: (SDOptionElement | SDRadioElement)[];
 
 	/**
 	 * Host this controller is attached to.
@@ -31,7 +32,7 @@ export class OptionObserver implements ReactiveController {
 
 		// Add the controller, and determine the initial set of options.
 		this.#host.addController(this);
-		this.options = Array.from(this.#host.querySelectorAll("sd-option"));
+		this.options = Array.from(this.#host.querySelectorAll("sd-option, sd-radio"));
 	}
 
 	/**
@@ -60,19 +61,19 @@ export class OptionObserver implements ReactiveController {
 		mutations.forEach((mutation) => {
 			// Added.
 			for (const added of mutation.addedNodes) {
-				if (added instanceof SDOptionElement) {
+				if (this.#isObservedElement(added)) {
 					changed = true;
 					this.options.push(added);
 				}
 			}
 
 			// Removed.
-			mutation.removedNodes.forEach((node) => {
-				if (!(node instanceof SDOptionElement)) {
+			mutation.removedNodes.forEach((removed) => {
+				if (!this.#isObservedElement(removed)) {
 					return;
 				}
 
-				const index = this.options.indexOf(node);
+				const index = this.options.indexOf(removed);
 				if (index !== -1) {
 					changed = true;
 					this.options.splice(index, 1);
@@ -83,5 +84,14 @@ export class OptionObserver implements ReactiveController {
 		if (changed) {
 			this.#host.requestUpdate();
 		}
+	}
+
+	/**
+	 * Determines whether the specified node is an instance of an element this observer is tracking.
+	 * @param node Node instance to check.
+	 * @returns `true` when the node is an instance of an observed element type; otherwise `false`.
+	 */
+	#isObservedElement(node: Node): node is SDOptionElement | SDRadioElement {
+		return node instanceof SDOptionElement || node instanceof SDRadioElement;
 	}
 }
