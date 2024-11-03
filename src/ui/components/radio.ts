@@ -36,7 +36,7 @@ export class SDRadioElement extends SDOptionElement {
                  * Radio button replacement.
                  */
 
-				& span {
+				& span[role="radio"] {
 					--size: calc(var(--size-m) - calc(var(--border-width-thin) * 2));
 					align-items: center;
 					border: var(--border-width-thin) solid var(--color-content-disabled);
@@ -54,13 +54,13 @@ export class SDRadioElement extends SDOptionElement {
                  */
 
 				& input:checked {
-					& + span {
+					& + span[role="radio"] {
 						background: var(--color-surface-accent);
 						border-color: var(--color-content-disabled);
 						border-radius: var(--rounding-full);
 					}
 
-					& + span::before {
+					& + span[role="radio"]::before {
 						content: "";
 						background: var(--color-surface-ondark);
 						border-radius: var(--rounding-full);
@@ -79,7 +79,7 @@ export class SDRadioElement extends SDOptionElement {
 					color: var(--color-content-disabled);
 				}
 
-				& input:disabled + span {
+				& input:disabled + span[role="radio"] {
 					border-color: var(--color-border-subtle-disabled);
 				}
 
@@ -88,11 +88,11 @@ export class SDRadioElement extends SDOptionElement {
                  */
 
 				& input:checked:disabled {
-					& + span {
+					& + span[role="radio"] {
 						background-color: var(--color-surface-disabled);
 					}
 
-					& + span::before {
+					& + span[role="radio"]::before {
 						background-color: var(--color-content-disabled);
 					}
 				}
@@ -101,7 +101,7 @@ export class SDRadioElement extends SDOptionElement {
                  * Focus
                  */
 
-				& input:focus-visible + span {
+				& input:focus-visible + span[role="radio"] {
 					box-shadow: var(--highlight-box-shadow);
 					outline: var(--highlight-outline--focus);
 					outline-offset: var(--highlight-outline-offset);
@@ -124,6 +124,11 @@ export class SDRadioElement extends SDOptionElement {
 		type: Boolean,
 	})
 	public accessor checked: boolean = false;
+
+	/**
+	 * Fallback label, derived from the original inner text of this element when creating the render root.
+	 */
+	#fallbackLabel: string | undefined;
 
 	/**
 	 * @inheritdoc
@@ -150,30 +155,39 @@ export class SDRadioElement extends SDOptionElement {
 	/**
 	 * @inheritdoc
 	 */
-	protected override createRenderRoot(): HTMLElement | DocumentFragment {
-		// Shadow root has to be open to allow for joining named radio buttons.
-		this.innerHTML = "";
-		return this;
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	protected override render(): TemplateResult {
+	public override render(): TemplateResult {
 		return html`
-			<label class="sd-radio-container" @mousedown=${preventDoubleClickSelection}>
+			<label
+				class="sd-radio-container"
+				@mousedown=${preventDoubleClickSelection}
+				@change=${(ev: Event): void => {
+					// Propagate the change on the component.
+					ev.stopImmediatePropagation();
+					this.dispatchEvent(new Event("change"));
+				}}
+			>
 				<input
 					name=${ifDefined(this.name)}
 					type="radio"
-					value=${ifDefined(this.value)}
 					tabindex=${ifDefined(this.disabled ? undefined : 0)}
 					.checked=${this.checked}
 					.disabled=${this.disabled}
 				/>
 				<span role="radio" aria-checked=${this.checked}></span>
-				${this.label}
+				${this.label ?? this.#fallbackLabel}
 			</label>
 		`;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	protected override createRenderRoot(): HTMLElement | DocumentFragment {
+		// Shadow root has to be open to allow for joining named radio buttons.
+		this.#fallbackLabel = this.innerText;
+		this.innerHTML = "";
+
+		return this;
 	}
 }
 
