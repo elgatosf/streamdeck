@@ -16,7 +16,10 @@ export class SDOptionElement extends LitElement {
 	/**
 	 * Determines whether the option is disabled; default `false`.
 	 */
-	@property({ type: Boolean })
+	@property({
+		reflect: true,
+		type: Boolean,
+	})
 	public accessor disabled: boolean = false;
 
 	/**

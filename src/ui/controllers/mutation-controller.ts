@@ -20,6 +20,11 @@ export class MutationController<T extends Node> implements ReactiveController {
 	readonly #observer: MutationObserver;
 
 	/**
+	 * Mutation observation options.
+	 */
+	readonly #options?: MutationObserverInit;
+
+	/**
 	 * Predicate that determines if the node is tracked by the host.
 	 */
 	readonly #predicate: (node: Node) => node is T;
@@ -28,11 +33,17 @@ export class MutationController<T extends Node> implements ReactiveController {
 	 * Initializes a new instance of the {@link MutationController} class.
 	 * @param host Host to attached to.
 	 * @param predicate Function that determines if a node should be tracked.
+	 * @param options Mutation observation options; by default only `childList` is true.
 	 */
-	constructor(host: HTMLElement & ReactiveControllerHost, predicate: (node: Node) => node is T) {
+	constructor(
+		host: HTMLElement & ReactiveControllerHost,
+		predicate: (node: Node) => node is T,
+		options?: MutationObserverInit,
+	) {
 		this.#host = host;
 		this.#host.addController(this);
 		this.#predicate = predicate;
+		this.#options = options;
 
 		this.#observer = new MutationObserver((mutations: MutationRecord[]) => this.#onMutation(mutations));
 		this.#setNodesByQueryingHost();
@@ -44,6 +55,7 @@ export class MutationController<T extends Node> implements ReactiveController {
 	public hostConnected(): void {
 		this.#observer.observe(this.#host, {
 			childList: true,
+			...(this.#options || {}),
 		});
 	}
 
@@ -65,7 +77,7 @@ export class MutationController<T extends Node> implements ReactiveController {
 			requestUpdate: false,
 		};
 
-		for (const { addedNodes, removedNodes } of mutations) {
+		for (const { addedNodes, removedNodes, target, type } of mutations) {
 			// When a new node was added, simply rebuild the collection of nodes to maintain correct ordering.
 			for (const added of addedNodes) {
 				if (this.#predicate(added)) {
@@ -85,6 +97,11 @@ export class MutationController<T extends Node> implements ReactiveController {
 						result.requestUpdate = true;
 					}
 				}
+			}
+
+			// When an attribute changed, check if it originates from a tracked node.
+			if (type === "attributes" && this.#predicate(target)) {
+				result.requestUpdate = true;
 			}
 		}
 
@@ -110,6 +127,7 @@ export class MutationController<T extends Node> implements ReactiveController {
 	 * Sets the nodes associated with this instance by querying the host.
 	 */
 	#setNodesByQueryingHost(): void {
+		this.nodes.length = 0;
 		this.#host.querySelectorAll(":scope > *").forEach((node) => {
 			if (this.#predicate(node)) {
 				this.nodes.push(node);

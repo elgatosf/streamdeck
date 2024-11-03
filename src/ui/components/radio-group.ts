@@ -18,7 +18,7 @@ export class SDRadioGroupElement extends Input<boolean | number | string>(LitEle
 		super.styles ?? [],
 		...SDRadioElement.styles,
 		css`
-			::slotted(sd-radio) {
+			sd-radio {
 				display: flex;
 			}
 		`,
@@ -30,38 +30,34 @@ export class SDRadioGroupElement extends Input<boolean | number | string>(LitEle
 	readonly #childObserver = new MutationController<SDRadioElement>(
 		this,
 		(node: Node): node is SDRadioElement => node instanceof SDRadioElement,
+		{
+			attributes: true,
+			attributeFilter: ["disabled"],
+			subtree: true,
+		},
 	);
-
-	/**
-	 * Handles a child radio button changing.
-	 * @param ev Source event.
-	 */
-	readonly #handleChildChanged = (ev: Event): void => {
-		if (ev.target instanceof SDRadioElement) {
-			this.value = ev.target.value;
-		} else {
-			console.warn("Unrecognized change event in SDRadioGroupElement", ev);
-		}
-	};
 
 	/**
 	 * @inheritdoc
 	 */
 	public override render(): TemplateResult {
-		return html`
-			${repeat(
-				this.#childObserver.nodes,
-				(opt) => opt,
-				(opt, i) => {
-					opt.addEventListener("change", this.#handleChildChanged);
-					opt.checked = this.value === opt.value;
-					opt.name = "radio";
-					opt.slot = i.toString();
-
-					return html`<slot name=${i}></slot>`;
-				},
-			)}
-		`;
+		return html` ${repeat(
+			this.#childObserver.nodes,
+			(radio) => radio,
+			(radio) => html`
+				<sd-radio
+					name="radio"
+					.checked=${this.value === radio.value}
+					.label=${radio.label}
+					.disabled=${radio.disabled}
+					.value=${radio.value}
+					@change=${(): void => {
+						this.value = radio.value;
+					}}
+					>${radio.innerText}</sd-radio
+				>
+			`,
+		)}`;
 	}
 }
 

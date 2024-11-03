@@ -11,11 +11,6 @@ import { SDOptionElement } from "./option";
 @customElement("sd-radio")
 export class SDRadioElement extends SDOptionElement {
 	/**
-	 * Determines whether the shared styles have already been appended to the document.
-	 */
-	static #isStyleAppended = false;
-
-	/**
 	 * @inheritdoc
 	 */
 	public static styles = [
@@ -109,6 +104,11 @@ export class SDRadioElement extends SDOptionElement {
 			}
 		`,
 	];
+
+	/**
+	 * Determines whether the shared styles have already been appended to the document.
+	 */
+	static #isStyleAppended = false;
 
 	/**
 	 * Name of the radio button group the element is associated with.
