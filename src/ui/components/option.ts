@@ -11,7 +11,7 @@ export class SDOptionElement extends LitElement {
 	/**
 	 * Private backing field for {@link SDOptionElement.value}.
 	 */
-	#value: boolean | number | string | undefined;
+	#value: boolean | number | string | undefined | null = null;
 
 	/**
 	 * Determines whether the option is disabled; default `false`.
@@ -42,7 +42,26 @@ export class SDOptionElement extends LitElement {
 	 * @returns The value.
 	 */
 	public get value(): boolean | number | string | undefined {
+		if (this.#value === null) {
+			if (this.type === "boolean") {
+				this.#value = parseBoolean(this.htmlValue);
+			} else if (this.type === "number") {
+				this.#value = parseNumber(this.htmlValue);
+			} else {
+				this.#value = this.htmlValue;
+			}
+		}
+
 		return this.#value;
+	}
+
+	/**
+	 * Sets the value of the option, and associated type.
+	 * @param value New value.
+	 */
+	public set value(value: boolean | number | string | undefined) {
+		this.type = typeof value === "number" ? "number" : typeof value === "boolean" ? "boolean" : "string";
+		this.htmlValue = value?.toString();
 	}
 
 	/**
@@ -52,13 +71,7 @@ export class SDOptionElement extends LitElement {
 		super.willUpdate(_changedProperties);
 
 		if (_changedProperties.has("type") || _changedProperties.has("value")) {
-			if (this.type === "boolean") {
-				this.#value = parseBoolean(this.htmlValue);
-			} else if (this.type === "number") {
-				this.#value = parseNumber(this.htmlValue);
-			} else {
-				this.#value = this.htmlValue;
-			}
+			this.#value = null;
 		}
 	}
 }
