@@ -182,7 +182,7 @@ export class SDRadioElement extends SDOptionElement {
 	/**
 	 * @inheritdoc
 	 */
-	protected override createRenderRoot(): HTMLElement | DocumentFragment {
+	protected override createRenderRoot(): DocumentFragment | HTMLElement {
 		// Shadow root has to be open to allow for joining named radio buttons.
 		this.#fallbackLabel = this.innerText;
 		this.innerHTML = "";

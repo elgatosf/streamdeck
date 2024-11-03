@@ -1,17 +1,16 @@
 import { css, html, LitElement, type TemplateResult } from "lit";
 import { customElement } from "lit/decorators.js";
-import { ifDefined } from "lit/directives/if-defined.js";
 import { repeat } from "lit/directives/repeat.js";
 
+import { MutationController } from "../controllers/mutation-controller";
 import { Input } from "../mixins/input";
-import { List } from "../mixins/list";
 import { SDRadioElement } from "./radio";
 
 /**
  * Element that offers persisting a value via a list of radio options.
  */
 @customElement("sd-radiogroup")
-export class SDRadioGroupElement extends List(Input<boolean | number | string>(LitElement)) {
+export class SDRadioGroupElement extends Input<boolean | number | string>(LitElement) {
 	/**
 	 * @inheritdoc
 	 */
@@ -19,11 +18,31 @@ export class SDRadioGroupElement extends List(Input<boolean | number | string>(L
 		super.styles ?? [],
 		...SDRadioElement.styles,
 		css`
-			sd-radio {
+			::slotted(sd-radio) {
 				display: flex;
 			}
 		`,
 	];
+
+	/**
+	 * Mutation controller that tracks the child radio buttons.
+	 */
+	readonly #childObserver = new MutationController<SDRadioElement>(
+		this,
+		(node: Node): node is SDRadioElement => node instanceof SDRadioElement,
+	);
+
+	/**
+	 * Handles a child radio button changing.
+	 * @param ev Source event.
+	 */
+	readonly #handleChildChanged = (ev: Event): void => {
+		if (ev.target instanceof SDRadioElement) {
+			this.value = ev.target.value;
+		} else {
+			console.warn("Unrecognized change event in SDRadioGroupElement", ev);
+		}
+	};
 
 	/**
 	 * @inheritdoc
@@ -31,21 +50,15 @@ export class SDRadioGroupElement extends List(Input<boolean | number | string>(L
 	public override render(): TemplateResult {
 		return html`
 			${repeat(
-				this.items,
-				({ key }) => key,
-				({ disabled, label, value }) => {
-					return html`
-						<sd-radio
-							name="radio"
-							value=${ifDefined(value)}
-							.checked=${this.value === value}
-							.disabled=${disabled}
-							.label=${label}
-							@change=${(): void => {
-								this.value = value;
-							}}
-						></sd-radio>
-					`;
+				this.#childObserver.nodes,
+				(opt) => opt,
+				(opt, i) => {
+					opt.addEventListener("change", this.#handleChildChanged);
+					opt.checked = this.value === opt.value;
+					opt.name = "radio";
+					opt.slot = i.toString();
+
+					return html`<slot name=${i}></slot>`;
 				},
 			)}
 		`;

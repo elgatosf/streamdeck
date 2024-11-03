@@ -11,7 +11,7 @@ export class SDOptionElement extends LitElement {
 	/**
 	 * Private backing field for {@link SDOptionElement.value}.
 	 */
-	#value: boolean | number | string | undefined | null = null;
+	#value: boolean | number | string | null | undefined = null;
 
 	/**
 	 * Determines whether the option is disabled; default `false`.
