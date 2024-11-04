@@ -1,6 +1,6 @@
 import { ReactiveController, ReactiveControllerHost } from "lit";
 
-import { SDOptionElement } from "../components";
+import { SDOptionElement } from "../components/option";
 
 /**
  * Controller for tracking {@link SDOptionElement} within a host.
@@ -33,7 +33,7 @@ export class OptionController implements ReactiveController {
 	constructor(host: HTMLElement & ReactiveControllerHost) {
 		this.#host = host;
 		this.#host.addController(this);
-		this.#requestUpdate = () => this.#host.requestUpdate();
+		this.#requestUpdate = (): void => this.#host.requestUpdate();
 
 		this.#observer = new MutationObserver((mutations: MutationRecord[]) => this.#onMutation(mutations));
 		this.#setOptionsByQueryingHost();
@@ -60,7 +60,7 @@ export class OptionController implements ReactiveController {
 	#onMutation(mutations: MutationRecord[]): void {
 		let isOptionRemoved = false;
 
-		for (const { addedNodes, removedNodes, target, type } of mutations) {
+		for (const { addedNodes, removedNodes } of mutations) {
 			// When a new option was added, simply rebuild the collection of options to maintain correct ordering.
 			for (const added of addedNodes) {
 				if (added instanceof SDOptionElement) {
@@ -96,7 +96,11 @@ export class OptionController implements ReactiveController {
 		this.options.length = 0;
 
 		this.#host.querySelectorAll(":scope > sd-option").forEach((option) => {
-			this.options.push(<SDOptionElement>option);
+			if (!(option instanceof SDOptionElement)) {
+				return;
+			}
+
+			this.options.push(option);
 			option.addEventListener("update", this.#requestUpdate);
 		});
 

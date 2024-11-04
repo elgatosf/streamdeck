@@ -39,7 +39,7 @@ export class SDRadioGroupElement extends List(Input<boolean | number | string>(L
 						.disabled=${opt.disabled}
 						.label=${opt.label}
 						.value=${opt.value}
-						@change=${() => {
+						@change=${(): void => {
 							this.value = opt.value;
 						}}
 						>${opt.innerText}</sd-radio
