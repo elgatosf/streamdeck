@@ -1,14 +1,16 @@
 import { css, html, LitElement, type TemplateResult } from "lit";
-import { customElement, queryAssignedElements } from "lit/decorators.js";
+import { customElement } from "lit/decorators.js";
+import { repeat } from "lit/directives/repeat.js";
 
 import { Input } from "../mixins/input";
+import { List } from "../mixins/list";
 import { SDRadioElement } from "./radio";
 
 /**
  * Element that offers persisting a value via a list of radio options.
  */
 @customElement("sd-radiogroup")
-export class SDRadioGroupElement extends Input<boolean | number | string>(LitElement) {
+export class SDRadioGroupElement extends List(Input<boolean | number | string>(LitElement)) {
 	/**
 	 * @inheritdoc
 	 */
@@ -16,60 +18,35 @@ export class SDRadioGroupElement extends Input<boolean | number | string>(LitEle
 		super.styles ?? [],
 		...SDRadioElement.styles,
 		css`
-			::slotted(sd-radio) {
+			sd-radio {
 				display: flex;
 			}
 		`,
 	];
 
 	/**
-	 * Radio buttons associated with this group.
-	 */
-	@queryAssignedElements({ selector: "sd-radio" })
-	accessor #radioButtons!: Array<SDRadioElement>;
-
-	/**
 	 * @inheritdoc
 	 */
 	public override render(): TemplateResult {
 		return html`
-			<slot
-				@change=${(ev: Event): void => {
-					if (ev.target instanceof SDRadioElement) {
-						this.value = ev.target.value;
-					}
-				}}
-				@slotchange=${(): void => this.#setRadioButtonProperties()}
-			></slot>
+			${repeat(
+				this.items,
+				(opt) => opt,
+				(opt) => {
+					return html`<sd-radio
+						name="__radio"
+						.checked=${this.value === opt.value}
+						.disabled=${opt.disabled}
+						.label=${opt.label}
+						.value=${opt.value}
+						@change=${() => {
+							this.value = opt.value;
+						}}
+						>${opt.innerText}</sd-radio
+					>`;
+				},
+			)}
 		`;
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	protected override willUpdate(_changedProperties: Map<PropertyKey, unknown>): void {
-		super.willUpdate(_changedProperties);
-
-		// Reflect the necessary properties of the radio group, to its radio buttons.
-		if (_changedProperties.has("disabled") || _changedProperties.has("value")) {
-			const disabled = _changedProperties.get("disabled") !== undefined ? this.disabled : undefined;
-			this.#setRadioButtonProperties(disabled);
-		}
-	}
-
-	/**
-	 * Sets the properties of the child radio buttons, based on this parent group.
-	 * @param disabled Determines the disabled state of all radio buttons; ignored when `undefined`.
-	 */
-	#setRadioButtonProperties(disabled?: boolean): void {
-		for (const radioButton of this.#radioButtons) {
-			radioButton.name = "__radio"; // Radio buttons are scoped to this shadow root.
-			radioButton.checked = this.value === radioButton.value;
-
-			if (disabled !== undefined) {
-				radioButton.disabled = disabled;
-			}
-		}
 	}
 }
 
