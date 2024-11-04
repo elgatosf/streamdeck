@@ -163,7 +163,7 @@ export class SDRadioElement extends SDOptionElement {
 				@change=${(ev: Event): void => {
 					// Propagate the change on the component.
 					ev.stopImmediatePropagation();
-					this.dispatchEvent(new Event("change"));
+					this.dispatchEvent(new Event("change", { bubbles: true }));
 				}}
 			>
 				<input
