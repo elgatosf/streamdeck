@@ -42,6 +42,10 @@ export class SDButtonElement extends LitElement {
 						background: var(--color-surface-hover);
 					}
 
+					&:active {
+						background: var(--color-surface-pressed);
+					}
+
 					&.accent,
 					&.accent:hover,
 					&.accent:active {
@@ -57,10 +61,6 @@ export class SDButtonElement extends LitElement {
 					}
 				}
 
-				&:active {
-					background: var(--color-surface-pressed);
-				}
-
 				&:focus-visible {
 					box-shadow: var(--highlight-box-shadow);
 					outline: var(--highlight-outline--focus);
@@ -74,14 +74,6 @@ export class SDButtonElement extends LitElement {
 			}
 		`,
 	];
-
-	/**
-	 * Initializes a new instance of the {@link SDButtonElement} class.
-	 */
-	constructor() {
-		super();
-		this.role = "button";
-	}
 
 	/**
 	 * Determines whether the button is disabled; default `false`.
