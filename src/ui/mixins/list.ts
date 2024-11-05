@@ -1,8 +1,8 @@
 import { LitElement } from "lit";
 
 import type { Constructor } from "../../common/utils";
-import type { SDOptionElement } from "../components/option";
-import { OptionObserver } from "../controllers/option-observer";
+import { SDOptionElement } from "../components/option";
+import { OptionController } from "../controllers/option-controller";
 
 /**
  * List mixin that provides common functionality for input elements that have options.
@@ -17,23 +17,16 @@ export const List = <TBase extends Constructor<LitElement> = typeof LitElement>(
 	 */
 	class ListMixin extends superClass {
 		/**
-		 * Mutation observer for monitoring {@link SDOptionElement} within the shadow DOM of this instance.
+		 * Option observer for monitoring {@link SDOptionElement} within this instance.
 		 */
-		readonly #domObserver = new OptionObserver(this);
+		readonly #optionObserver = new OptionController(this);
 
 		/**
 		 * Gets the items within the list.
 		 * @returns The list items.
 		 */
-		public get items(): Iterable<ListItem> {
-			return this.#domObserver.options.map((opt: SDOptionElement): ListItem => {
-				return {
-					disabled: opt.disabled,
-					key: opt,
-					label: opt.label,
-					value: opt.value,
-				};
-			});
+		public get items(): Iterable<SDOptionElement> {
+			return this.#optionObserver.options;
 		}
 	}
 
@@ -48,30 +41,5 @@ export declare class SDListElement extends LitElement {
 	 * Gets the items within the list.
 	 * @returns The list items.
 	 */
-	public get items(): Iterable<ListItem>;
+	public get items(): Iterable<SDOptionElement>;
 }
-
-/**
- * Information about an item within a list.
- */
-export type ListItem = {
-	/**
-	 * Determines whether the list item is disabled.
-	 */
-	disabled: boolean;
-
-	/**
-	 * Unique key that identifies the list item.
-	 */
-	key: unknown;
-
-	/**
-	 * Label of the list item.
-	 */
-	label: string;
-
-	/**
-	 * Value of the list item.
-	 */
-	value: boolean | number | string | undefined;
-};

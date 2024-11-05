@@ -11,21 +11,22 @@ export class SDOptionElement extends LitElement {
 	/**
 	 * Private backing field for {@link SDOptionElement.value}.
 	 */
-	#value: boolean | number | string | undefined;
+	#value: boolean | number | string | null | undefined = null;
 
 	/**
 	 * Determines whether the option is disabled; default `false`.
 	 */
-	@property({ type: Boolean })
+	@property({
+		reflect: true,
+		type: Boolean,
+	})
 	public accessor disabled: boolean = false;
 
 	/**
-	 * Label that represents the option; read from the `innerText` of the element.
-	 * @returns The label.
+	 * Label that represents the option.
 	 */
-	public get label(): string {
-		return this.innerText;
-	}
+	@property()
+	public accessor label: string | undefined;
 
 	/**
 	 * Type of the value; allows for the value to be converted to a boolean or number.
@@ -44,7 +45,34 @@ export class SDOptionElement extends LitElement {
 	 * @returns The value.
 	 */
 	public get value(): boolean | number | string | undefined {
+		if (this.#value === null) {
+			if (this.type === "boolean") {
+				this.#value = parseBoolean(this.htmlValue);
+			} else if (this.type === "number") {
+				this.#value = parseNumber(this.htmlValue);
+			} else {
+				this.#value = this.htmlValue;
+			}
+		}
+
 		return this.#value;
+	}
+
+	/**
+	 * Sets the value of the option, and associated type.
+	 * @param value New value.
+	 */
+	public set value(value: boolean | number | string | undefined) {
+		this.type = typeof value === "number" ? "number" : typeof value === "boolean" ? "boolean" : "string";
+		this.htmlValue = value?.toString();
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	protected override update(changedProperties: Map<PropertyKey, unknown>): void {
+		super.update(changedProperties);
+		this.dispatchEvent(new Event("update"));
 	}
 
 	/**
@@ -54,13 +82,7 @@ export class SDOptionElement extends LitElement {
 		super.willUpdate(_changedProperties);
 
 		if (_changedProperties.has("type") || _changedProperties.has("value")) {
-			if (this.type === "boolean") {
-				this.#value = parseBoolean(this.htmlValue);
-			} else if (this.type === "number") {
-				this.#value = parseNumber(this.htmlValue);
-			} else {
-				this.#value = this.htmlValue;
-			}
+			this.#value = null;
 		}
 	}
 }
