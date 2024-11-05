@@ -26,33 +26,34 @@ export class SDTextFieldElement extends Input<string>(LitElement) {
 				font-size: var(--typography-body-m-size);
 				font-weight: var(--typography-body-m-weight);
 				height: var(--size-2xl);
+				min-height: var(--size-2xl);
 				outline: none;
 				padding: 0 var(--space-xs);
-				min-height: 32px;
 				width: 224px;
-			}
 
-			input::placeholder {
-				color: var(--color-content-secondary);
-			}
+				&::placeholder {
+					color: var(--color-content-secondary);
+				}
 
-			input:disabled {
-				color: var(--color-content-disabled);
-			}
+				&:disabled,
+				&:disabled::placeholder {
+					color: var(--color-content-disabled);
+				}
 
-			input:focus,
-			input:invalid {
-				box-shadow: var(--highlight-box-shadow);
-				outline-offset: var(--highlight-outline-offset);
-			}
+				&:focus,
+				&:invalid {
+					box-shadow: var(--highlight-box-shadow);
+					outline-offset: var(--highlight-outline-offset);
+				}
 
-			input:focus,
-			input:focus:invalid {
-				outline: var(--highlight-outline--focus);
-			}
+				&:focus,
+				&:focus:invalid {
+					outline: var(--highlight-outline--focus);
+				}
 
-			input:invalid {
-				outline: var(--highlight-outline--invalid);
+				&:invalid {
+					outline: var(--highlight-outline--invalid);
+				}
 			}
 		`,
 	];
@@ -112,22 +113,24 @@ export class SDTextFieldElement extends Input<string>(LitElement) {
 	 * @inheritdoc
 	 */
 	public override render(): TemplateResult {
-		return html`<input
-			${ref(this.inputRef)}
-			maxlength=${ifDefined(this.maxLength)}
-			pattern=${ifDefined(this.pattern)}
-			placeholder=${ifDefined(this.placeholder)}
-			?disabled=${this.disabled}
-			?required=${this.#userHasInteracted && this.required}
-			.type=${this.type ?? "text"}
-			.value=${this.value ?? ""}
-			@blur=${(): void => {
-				this.#userHasInteracted = true;
-			}}
-			@input=${(ev: HTMLInputEvent<HTMLInputElement>): void => {
-				this.value = ev.target.value;
-			}}
-		/>`;
+		return html`
+			<input
+				${ref(this.inputRef)}
+				maxlength=${ifDefined(this.maxLength)}
+				pattern=${ifDefined(this.pattern)}
+				placeholder=${ifDefined(this.placeholder)}
+				?disabled=${this.disabled}
+				?required=${this.#userHasInteracted && this.required}
+				.type=${this.type ?? "text"}
+				.value=${this.value ?? ""}
+				@blur=${(): void => {
+					this.#userHasInteracted = true;
+				}}
+				@input=${(ev: HTMLInputEvent<HTMLInputElement>): void => {
+					this.value = ev.target.value;
+				}}
+			/>
+		`;
 	}
 }
 
