@@ -5,7 +5,7 @@
     "main": "./dist/index.js",
     "type": "module",
     "engines": {
-        "node": "^20.5.1"
+        "node": ">=20.5.1"
     },
     "files": [
         "./dist/*.js",
@@ -83,7 +83,7 @@
         "typescript-eslint": "^8.8.0"
     },
     "dependencies": {
-        "@elgato/schemas": "^0.3.1",
+        "@elgato/schemas": "^0.4.0",
         "ws": "^8.17.1"
     }
 }
