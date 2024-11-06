@@ -23,12 +23,12 @@ export class SDSwitchElement extends Input<boolean>(LitElement) {
 
 			:host {
 				display: inline-flex;
-				margin: var(--space-xs) 0;
 			}
 
 			label {
 				align-items: center;
 				display: inline-flex;
+				margin: var(--space-xs) 0;
 				outline: none;
 
 				&:focus-visible .track {
