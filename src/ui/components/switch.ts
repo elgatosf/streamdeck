@@ -21,10 +21,14 @@ export class SDSwitchElement extends Input<boolean>(LitElement) {
 			 * Container
 			 */
 
+			:host {
+				display: inline-flex;
+				margin: var(--space-xs) 0;
+			}
+
 			label {
 				align-items: center;
 				display: inline-flex;
-				margin: var(--space-xs) 0;
 				outline: none;
 
 				&:focus-visible .track {
@@ -43,7 +47,6 @@ export class SDSwitchElement extends Input<boolean>(LitElement) {
 				background: var(--color-surface-strong);
 				border-radius: var(--rounding-full);
 				display: inline-flex;
-				margin-right: var(--space-xs);
 				padding: 0px var(--space-3xs);
 				transition: 0.2;
 				height: var(--size-m);
@@ -61,7 +64,7 @@ export class SDSwitchElement extends Input<boolean>(LitElement) {
 			}
 
 			.text {
-				margin-right: var(--space-xs);
+				margin-left: var(--space-xs);
 			}
 
 			/**

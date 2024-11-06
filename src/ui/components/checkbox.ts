@@ -18,13 +18,17 @@ export class SDCheckboxElement extends Input(LitElement) {
 		super.styles ?? [],
 		css`
 			/**
-			 * Container
-			 */
+			* Container
+			*/
+
+			:host {
+				display: inline-flex;
+				margin: var(--space-xs) 0;
+			}
 
 			label {
 				align-items: center;
 				display: inline-flex;
-				margin: var(--space-xs) 0;
 				outline: none;
 
 				&:focus-visible .checkbox {
@@ -47,7 +51,6 @@ export class SDCheckboxElement extends Input(LitElement) {
 				border-radius: var(--rounding-m);
 				box-sizing: border-box;
 				height: var(--size-m);
-				margin-right: var(--space-xs);
 				width: var(--size-m);
 				user-select: none;
 			}
@@ -57,7 +60,7 @@ export class SDCheckboxElement extends Input(LitElement) {
 			}
 
 			.text {
-				margin-right: var(--space-xs);
+				margin-left: var(--space-xs);
 			}
 
 			/**
