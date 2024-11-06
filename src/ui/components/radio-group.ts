@@ -7,7 +7,7 @@ import { List } from "../mixins/list";
 import { SDRadioElement } from "./radio";
 
 /**
- * Element that offers persisting a value via a list of radio options.
+ * Element that offers persisting a `boolean`, `number`, or `string` from a list of radio options.
  */
 @customElement("sd-radiogroup")
 export class SDRadioGroupElement extends List(Input<boolean | number | string>(LitElement)) {
@@ -53,7 +53,7 @@ export class SDRadioGroupElement extends List(Input<boolean | number | string>(L
 declare global {
 	interface HTMLElementTagNameMap {
 		/**
-		 * Element that offers persisting a value via a list of radio options.
+		 * Element that offers persisting a `boolean`, `number`, or `string` from a list of radio options.
 		 */
 		"sd-radiogroup": SDRadioGroupElement;
 	}

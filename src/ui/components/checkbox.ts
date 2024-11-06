@@ -7,7 +7,7 @@ import { Input } from "../mixins/input";
 import { type HTMLInputEvent, preventDoubleClickSelection } from "../utils";
 
 /**
- * Element that offers a boolean option in the form of a checkbox.
+ * Element that offers persisting a `boolean` via a checkbox.
  */
 @customElement("sd-checkbox")
 export class SDCheckboxElement extends Input(LitElement) {
@@ -174,7 +174,7 @@ export class SDCheckboxElement extends Input(LitElement) {
 declare global {
 	interface HTMLElementTagNameMap {
 		/**
-		 * Element that offers a boolean option in the form of a checkbox.
+		 * Element that offers persisting a `boolean` via a checkbox.
 		 */
 		"sd-checkbox": SDCheckboxElement;
 	}
