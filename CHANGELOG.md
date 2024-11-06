@@ -12,6 +12,16 @@
 
 # Change Log
 
+## 1.2.1
+
+### ♻️ Update
+
+-   Update `@elgato/schemas` dependency.
+
+### 🐞 Fix
+
+-   Fix Node.js engine requirements.
+
 ## 1.2.0
 
 ### ✨ New
