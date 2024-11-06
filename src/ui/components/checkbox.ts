@@ -23,7 +23,6 @@ export class SDCheckboxElement extends Input(LitElement) {
 
 			label {
 				align-items: center;
-				display: flex;
 				display: inline-flex;
 				margin: var(--space-xs) 0;
 				outline: none;
@@ -40,7 +39,7 @@ export class SDCheckboxElement extends Input(LitElement) {
 			}
 
 			/**
-             * Checkbox and label
+             * Checkbox and text
              */
 
 			.checkbox {
@@ -57,12 +56,12 @@ export class SDCheckboxElement extends Input(LitElement) {
 				visibility: hidden;
 			}
 
-			span {
+			.text {
 				margin-right: var(--space-xs);
 			}
 
 			/**
-             * Input and states
+             * States
              */
 
 			input {
@@ -72,26 +71,23 @@ export class SDCheckboxElement extends Input(LitElement) {
 				&:checked + .checkbox {
 					border-width: 0;
 					background-color: var(--color-surface-accent);
+					color: var(--color-content-ondark);
 
 					& > svg {
-						color: var(--color-content-ondark);
-						visibility: visible;
-					}
-				}
-
-				/* Checked and disabled */
-				&:checked:disabled + .checkbox {
-					background-color: var(--color-surface-disabled);
-
-					& > svg {
-						color: var(--color-content-disabled);
 						visibility: visible;
 					}
 				}
 
 				/* Disabled */
-				&:disabled + .checkbox {
-					border-color: var(--color-border-subtle-disabled);
+				&:disabled {
+					& + .checkbox {
+						border-color: var(--color-border-subtle-disabled);
+					}
+
+					&:checked + .checkbox {
+						background-color: var(--color-surface-disabled);
+						color: var(--color-content-disabled);
+					}
 				}
 			}
 		`,
@@ -154,6 +150,7 @@ export class SDCheckboxElement extends Input(LitElement) {
 						this.checked = ev.target.checked;
 					}}
 				/>
+
 				<div class="checkbox" role="checkbox">
 					<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" fill="currentColor" viewBox="0 0 24 24">
 						<path
@@ -161,7 +158,9 @@ export class SDCheckboxElement extends Input(LitElement) {
 						/>
 					</svg>
 				</div>
-				${this.textContent && html`<span @mousedown=${preventDoubleClickSelection}>${this.textContent}</span>`}
+
+				${this.textContent &&
+				html`<span class="text" @mousedown=${preventDoubleClickSelection}>${this.textContent}</span>`}
 				<slot hidden @slotchange=${(): void => this.requestUpdate()}></slot>
 			</label>
 		`;
