@@ -98,6 +98,14 @@ export class SDCheckboxElement extends Input(LitElement) {
 	];
 
 	/**
+	 * Initializes a new instance of the {@link SDCheckboxElement} class.
+	 */
+	constructor() {
+		super();
+		this.role = "checkbox";
+	}
+
+	/**
 	 * Gets the checked state.
 	 * @returns `true` when the checkbox is checked; otherwise `false`.
 	 */
