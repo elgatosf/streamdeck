@@ -22,6 +22,7 @@ export class SDFieldElement extends LitElement {
 				align-items: center;
 				display: flex;
 				height: var(--size-2xl);
+				width: 240px;
 			}
 		`,
 	];
