@@ -151,6 +151,7 @@ export class SDCheckboxElement extends Input(LitElement) {
 					.disabled=${this.disabled}
 					@change=${(ev: HTMLInputEvent<HTMLInputElement>): void => {
 						this.checked = ev.target.checked;
+						this.dispatchEvent(new Event("change")); // TODO: relocate this to Input for closed shadow roots
 					}}
 				/>
 
