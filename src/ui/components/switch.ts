@@ -124,12 +124,6 @@ export class SDSwitchElement extends Input<boolean>(LitElement) {
 	}
 
 	/**
-	 * Label of the switch.
-	 */
-	@property()
-	public accessor label: string | undefined;
-
-	/**
 	 * @inheritdoc
 	 */
 	public override click(): void {
@@ -168,7 +162,8 @@ export class SDSwitchElement extends Input<boolean>(LitElement) {
 					<div class="track" role="button">
 						<div class="thumb"></div>
 					</div>
-					${this.label}
+					${this.textContent}
+					<slot hidden @slotchange=${(): void => this.requestUpdate()}></slot>
 				</div>
 			</sd-label>
 		`;
