@@ -17,19 +17,44 @@ export class SDTextFieldElement extends Input<string>(LitElement) {
 	public static styles = [
 		super.styles ?? [],
 		css`
-			input {
+			.container {
+				align-items: center;
 				background-color: var(--color-surface);
-				border: none;
 				border-radius: var(--rounding-m);
+				box-sizing: border-box;
+				display: flex;
+				gap: var(--size-xs);
+				width: 240px;
+
+				&:has(input:focus),
+				&:has(input:invalid) {
+					box-shadow: var(--highlight-box-shadow);
+					outline-offset: var(--highlight-outline-offset);
+				}
+
+				&:has(input:focus),
+				&:has(input:focus:invalid) {
+					outline: var(--highlight-outline--focus);
+				}
+
+				&:has(input:invalid) {
+					outline: var(--highlight-outline--invalid);
+				}
+			}
+
+			input {
+				background-color: transparent;
+				border: none;
 				color: var(--color-content-primary);
+				flex: 1 1 auto;
 				font-family: var(--typography-body-m-family);
 				font-size: var(--typography-body-m-size);
 				font-weight: var(--typography-body-m-weight);
 				height: var(--size-2xl);
 				min-height: var(--size-2xl);
 				outline: none;
-				padding: 0 var(--space-xs);
-				width: 224px;
+				padding: 0 0 0 var(--size-xs);
+				width: 100%;
 
 				&::placeholder {
 					color: var(--color-content-secondary);
@@ -39,21 +64,21 @@ export class SDTextFieldElement extends Input<string>(LitElement) {
 				&:disabled::placeholder {
 					color: var(--color-content-disabled);
 				}
+			}
 
-				&:focus,
-				&:invalid {
-					box-shadow: var(--highlight-box-shadow);
-					outline-offset: var(--highlight-outline-offset);
-				}
+			.counter {
+				color: var(--color-content-secondary);
+				flex: 1 1 auto;
+				padding-right: var(--size-xs);
+				user-select: none;
 
-				&:focus,
-				&:focus:invalid {
-					outline: var(--highlight-outline--focus);
+				& span {
+					margin: 0 var(--size-3xs);
 				}
+			}
 
-				&:invalid {
-					outline: var(--highlight-outline--invalid);
-				}
+			input:not(:disabled) + .counter {
+				cursor: text;
 			}
 		`,
 	];
@@ -114,23 +139,38 @@ export class SDTextFieldElement extends Input<string>(LitElement) {
 	 */
 	public override render(): TemplateResult {
 		return html`
-			<input
-				${ref(this.inputRef)}
-				maxlength=${ifDefined(this.maxLength)}
-				pattern=${ifDefined(this.pattern)}
-				placeholder=${ifDefined(this.placeholder)}
-				?disabled=${this.disabled}
-				?required=${this.#userHasInteracted && this.required}
-				.type=${this.type ?? "text"}
-				.value=${this.value ?? ""}
-				@blur=${(): void => {
-					this.#userHasInteracted = true;
-				}}
-				@input=${(ev: HTMLInputEvent<HTMLInputElement>): void => {
-					this.value = ev.target.value;
-				}}
-			/>
+			<label class="container">
+				<input
+					${ref(this.inputRef)}
+					maxlength=${ifDefined(this.maxLength)}
+					pattern=${ifDefined(this.pattern)}
+					placeholder=${ifDefined(this.placeholder)}
+					?disabled=${this.disabled}
+					?required=${this.#userHasInteracted && this.required}
+					.type=${this.type ?? "text"}
+					.value=${this.value ?? ""}
+					@blur=${(): void => {
+						this.#userHasInteracted = true;
+					}}
+					@input=${(ev: HTMLInputEvent<HTMLInputElement>): void => {
+						this.value = ev.target.value;
+					}}
+				/>
+				${this.#getCounter()}
+			</label>
 		`;
+	}
+
+	/**
+	 * Gets the counter text, displayed in the lower right corner of the text area.
+	 * @returns The counter element.
+	 */
+	#getCounter(): TemplateResult | undefined {
+		if (this.maxLength) {
+			return html`<span class="counter">${this.value?.length ?? 0}<span>/</span>${this.maxLength}</span>`;
+		}
+
+		return undefined;
 	}
 }
 
