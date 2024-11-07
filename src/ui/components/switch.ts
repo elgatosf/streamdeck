@@ -4,13 +4,14 @@ import { ifDefined } from "lit/directives/if-defined.js";
 import { ref } from "lit/directives/ref.js";
 
 import { Input } from "../mixins/input";
+import { Labeled } from "../mixins/labeled";
 import { type HTMLInputEvent, preventDoubleClickSelection } from "../utils";
 
 /**
  * Element that offers persisting a `boolean` via a toggle switch.
  */
 @customElement("sd-switch")
-export class SDSwitchElement extends Input<boolean>(LitElement) {
+export class SDSwitchElement extends Labeled(Input<boolean>(LitElement)) {
 	/**
 	 * @inheritdoc
 	 */
@@ -149,6 +150,7 @@ export class SDSwitchElement extends Input<boolean>(LitElement) {
 		return html`
 			<label
 				tabindex=${ifDefined(this.disabled ? undefined : 0)}
+				@mousedown=${preventDoubleClickSelection}
 				@keydown=${(ev: KeyboardEvent): void => {
 					// Toggle switch on space bar key.
 					if (ev.code === "Space") {
@@ -172,9 +174,7 @@ export class SDSwitchElement extends Input<boolean>(LitElement) {
 					<div class="thumb"></div>
 				</div>
 
-				${this.textContent &&
-				html`<span class="text" @mousedown=${preventDoubleClickSelection}>${this.textContent}</span>`}
-				<slot hidden @slotchange=${(): void => this.requestUpdate()}></slot>
+				${this.label && html`<span class="text">${this.label}</span>`}
 			</label>
 		`;
 	}
