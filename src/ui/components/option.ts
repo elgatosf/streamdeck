@@ -2,12 +2,13 @@ import { LitElement } from "lit";
 import { customElement, property } from "lit/decorators.js";
 
 import { parseBoolean, parseNumber } from "../../common/utils";
+import { Labeled } from "../mixins/labeled";
 
 /**
  * Non-visual element that provides information for an option.
  */
 @customElement("sd-option")
-export class SDOptionElement extends LitElement {
+export class SDOptionElement extends Labeled(LitElement) {
 	/**
 	 * Private backing field for {@link SDOptionElement.value}.
 	 */
@@ -21,12 +22,6 @@ export class SDOptionElement extends LitElement {
 		type: Boolean,
 	})
 	public accessor disabled: boolean = false;
-
-	/**
-	 * Label that represents the option.
-	 */
-	@property()
-	public accessor label: string | undefined;
 
 	/**
 	 * Type of the value; allows for the value to be converted to a boolean or number.

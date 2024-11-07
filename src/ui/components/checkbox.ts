@@ -4,13 +4,14 @@ import { ifDefined } from "lit/directives/if-defined.js";
 import { ref } from "lit/directives/ref.js";
 
 import { Input } from "../mixins/input";
+import { Labeled } from "../mixins/labeled";
 import { type HTMLInputEvent, preventDoubleClickSelection } from "../utils";
 
 /**
  * Element that offers persisting a `boolean` via a checkbox.
  */
 @customElement("sd-checkbox")
-export class SDCheckboxElement extends Input(LitElement) {
+export class SDCheckboxElement extends Labeled(Input(LitElement)) {
 	/**
 	 * @inheritdoc
 	 */
@@ -136,6 +137,7 @@ export class SDCheckboxElement extends Input(LitElement) {
 		return html`
 			<label
 				tabindex=${ifDefined(this.disabled ? undefined : 0)}
+				@mousedown=${preventDoubleClickSelection}
 				@keydown=${(ev: KeyboardEvent): void => {
 					// Toggle switch on space bar key.
 					if (ev.code === "Space") {
@@ -163,9 +165,7 @@ export class SDCheckboxElement extends Input(LitElement) {
 					</svg>
 				</div>
 
-				${this.textContent &&
-				html`<span class="text" @mousedown=${preventDoubleClickSelection}>${this.textContent}</span>`}
-				<slot hidden @slotchange=${(): void => this.requestUpdate()}></slot>
+				${this.label && html`<span class="text">${this.label}</span>`}
 			</label>
 		`;
 	}

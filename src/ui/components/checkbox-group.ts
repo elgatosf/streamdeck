@@ -36,13 +36,13 @@ export class SDCheckboxGroupElement extends List(Input<(boolean | number | strin
 					return html`<sd-checkbox
 						.checked=${(this.value ?? []).findIndex((value) => value === opt.value) > -1}
 						.disabled=${opt.disabled}
+						.label=${opt.label}
 						@change=${(ev: Event): void => {
 							if (ev.target instanceof SDCheckboxElement) {
 								this.#handleChange(ev.target.checked, opt.value);
 							}
 						}}
-						>${opt.textContent}</sd-checkbox
-					>`;
+					/>`;
 				},
 			)}
 		`;
