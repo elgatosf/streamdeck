@@ -126,11 +126,6 @@ export class SDRadioElement extends SDOptionElement {
 	public accessor checked: boolean = false;
 
 	/**
-	 * Fallback label, derived from the original inner text of this element when creating the render root.
-	 */
-	#fallbackLabel: string | undefined;
-
-	/**
 	 * @inheritdoc
 	 */
 	public override connectedCallback(): void {
@@ -173,8 +168,10 @@ export class SDRadioElement extends SDOptionElement {
 					.checked=${this.checked}
 					.disabled=${this.disabled}
 				/>
+
 				<span role="radio" aria-checked=${this.checked}></span>
-				${this.label ?? this.#fallbackLabel}
+
+				${this.label}
 			</label>
 		`;
 	}
@@ -184,9 +181,7 @@ export class SDRadioElement extends SDOptionElement {
 	 */
 	protected override createRenderRoot(): DocumentFragment | HTMLElement {
 		// Shadow root has to be open to allow for joining named radio buttons.
-		this.#fallbackLabel = this.innerText;
 		this.innerHTML = "";
-
 		return this;
 	}
 }

@@ -4,13 +4,14 @@ import { ifDefined } from "lit/directives/if-defined.js";
 import { ref } from "lit/directives/ref.js";
 
 import { Input } from "../mixins/input";
-import type { HTMLInputEvent } from "../utils";
+import { Labeled } from "../mixins/labeled";
+import { type HTMLInputEvent, preventDoubleClickSelection } from "../utils";
 
 /**
  * Element that offers persisting a `boolean` via a toggle switch.
  */
 @customElement("sd-switch")
-export class SDSwitchElement extends Input<boolean>(LitElement) {
+export class SDSwitchElement extends Labeled(Input<boolean>(LitElement)) {
 	/**
 	 * @inheritdoc
 	 */
@@ -18,58 +19,41 @@ export class SDSwitchElement extends Input<boolean>(LitElement) {
 		super.styles ?? [],
 		css`
 			/**
-			 * Containers
+			 * Container
 			 */
 
-			sd-label {
-				outline: none;
-			}
-
-			.container {
-				align-items: center;
+			:host {
 				display: inline-flex;
 			}
 
-			input {
-				display: none;
+			label {
+				align-items: center;
+				display: inline-flex;
+				margin: var(--space-xs) 0;
+				outline: none;
+
+				&:focus-visible .track {
+					box-shadow: var(--highlight-box-shadow);
+					outline: var(--highlight-outline--focus);
+					outline-offset: var(--highlight-outline-offset);
+				}
 			}
 
 			/**
-             * Track
+             * Track, thumb, and text
              */
 
 			.track {
 				align-items: center;
 				background: var(--color-surface-strong);
 				border-radius: var(--rounding-full);
-				cursor: pointer;
 				display: inline-flex;
-				margin: var(--space-xs) var(--space-xs) var(--space-xs) 0;
 				padding: 0px var(--space-3xs);
 				transition: 0.2;
 				height: var(--size-m);
 				width: var(--size-xl);
 				user-select: none;
 			}
-
-			sd-label[aria-disabled="false"]:has(input:checked) .track {
-				background: var(--color-surface-accent);
-			}
-
-			sd-label[aria-disabled="true"] .track {
-				background: var(--color-surface-disabled);
-				cursor: default;
-			}
-
-			sd-label:focus-visible .track {
-				box-shadow: var(--highlight-box-shadow);
-				outline: var(--highlight-outline--focus);
-				outline-offset: var(--highlight-outline-offset);
-			}
-
-			/**
-             * Thumb
-             */
 
 			.thumb {
 				background: var(--color-content-primary);
@@ -80,16 +64,44 @@ export class SDSwitchElement extends Input<boolean>(LitElement) {
 				width: var(--size-s);
 			}
 
-			sd-label:has(input:checked) .thumb {
-				transform: translateX(100%);
+			.text {
+				margin-left: var(--space-xs);
 			}
 
-			sd-label[aria-disabled="false"] .thumb {
-				background: var(--color-surface-ondark);
-			}
+			/**
+			 * States
+			 */
 
-			sd-label[aria-disabled="true"] .thumb {
-				background: var(--color-surface-strong);
+			input {
+				display: none;
+
+				/* Checked */
+				&:checked {
+					& + .track .thumb {
+						transform: translateX(100%);
+					}
+
+					&:not(:disabled) {
+						& + .track {
+							background: var(--color-surface-accent);
+						}
+
+						& + .track .thumb {
+							background: var(--color-surface-ondark);
+						}
+					}
+				}
+
+				/* Disabled */
+				&:disabled {
+					& + .track {
+						background: var(--color-surface-disabled);
+					}
+
+					& + .track .thumb {
+						background: var(--color-surface-strong);
+					}
+				}
 			}
 		`,
 	];
@@ -99,7 +111,6 @@ export class SDSwitchElement extends Input<boolean>(LitElement) {
 	 */
 	constructor() {
 		super();
-
 		this.role = "checkbox";
 	}
 
@@ -124,12 +135,6 @@ export class SDSwitchElement extends Input<boolean>(LitElement) {
 	}
 
 	/**
-	 * Label of the switch.
-	 */
-	@property()
-	public accessor label: string | undefined;
-
-	/**
 	 * @inheritdoc
 	 */
 	public override click(): void {
@@ -143,9 +148,9 @@ export class SDSwitchElement extends Input<boolean>(LitElement) {
 	 */
 	public override render(): TemplateResult {
 		return html`
-			<sd-label
-				aria-disabled=${this.disabled}
+			<label
 				tabindex=${ifDefined(this.disabled ? undefined : 0)}
+				@mousedown=${preventDoubleClickSelection}
 				@keydown=${(ev: KeyboardEvent): void => {
 					// Toggle switch on space bar key.
 					if (ev.code === "Space") {
@@ -164,13 +169,13 @@ export class SDSwitchElement extends Input<boolean>(LitElement) {
 						this.isOn = ev.target.checked;
 					}}
 				/>
-				<div class="container">
-					<div class="track" role="button">
-						<div class="thumb"></div>
-					</div>
-					${this.label}
+
+				<div class="track" role="button">
+					<div class="thumb"></div>
 				</div>
-			</sd-label>
+
+				${this.label && html`<span class="text">${this.label}</span>`}
+			</label>
 		`;
 	}
 
