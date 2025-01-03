@@ -115,6 +115,17 @@ export class KeyAction<T extends JsonObject = JsonObject> extends Action<T> {
 			context: this.id,
 		});
 	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public override toJSON(): Object {
+		return {
+			...super.toJSON(),
+			coordinates: this.coordinates,
+			isInMultiAction: this.isInMultiAction(),
+		};
+	}
 }
 
 /**
