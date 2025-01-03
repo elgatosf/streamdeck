@@ -70,7 +70,7 @@ export class ActionContext {
 	 * Converts this instance to a serializable object.
 	 * @returns The serializable object.
 	 */
-	public toJSON(): Object {
+	public toJSON(): object {
 		return {
 			controllerType: this.controllerType,
 			device: this.device,
