@@ -65,4 +65,17 @@ export class ActionContext {
 	public get manifestId(): string {
 		return this.#source.action;
 	}
+
+	/**
+	 * Converts this instance to a serializable object.
+	 * @returns The serializable object.
+	 */
+	public toJSON(): object {
+		return {
+			controllerType: this.controllerType,
+			device: this.device,
+			id: this.id,
+			manifestId: this.manifestId,
+		};
+	}
 }

@@ -118,6 +118,40 @@ describe("KeyAction", () => {
 		expect(action.coordinates).toBeUndefined();
 	});
 
+	/**
+	 * Asserts {@link KeyAction.toJSON} includes properties.
+	 */
+	it("JSON has properties", () => {
+		// Array.
+		const action = new KeyAction({
+			action: "action1",
+			context: "com.test.action.one",
+			device: "dev1",
+			event: "willAppear",
+			payload: {
+				controller: "Keypad",
+				settings: {},
+				isInMultiAction: false,
+				coordinates: {
+					column: 1,
+					row: 2,
+				},
+			},
+		});
+
+		// Act.
+		const jsonStr = JSON.stringify(action);
+		const jsonObj: KeyAction = JSON.parse(jsonStr);
+
+		// Assert.
+		expect(jsonObj.controllerType).toBe(action.controllerType);
+		expect(jsonObj.coordinates).toStrictEqual(action.coordinates);
+		expect(jsonObj.device).toStrictEqual({ id: action.device.id });
+		expect(jsonObj.id).toBe(action.id);
+		expect(jsonObj.isInMultiAction).toBe(action.isInMultiAction());
+		expect(jsonObj.manifestId).toBe(action.manifestId);
+	});
+
 	describe("sending", () => {
 		let action!: KeyAction;
 		beforeAll(() => (action = new KeyAction(source)));
