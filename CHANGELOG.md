@@ -12,6 +12,12 @@
 
 # Change Log
 
+## 1.2.2
+
+### ♻️ Update
+
+-   Improve documentation for profile switching.
+
 ## 1.2.1
 
 ### ♻️ Update
