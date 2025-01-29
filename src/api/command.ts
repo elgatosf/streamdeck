@@ -228,7 +228,9 @@ export type SwitchToProfile = ContextualizedCommandWithPayload<
 		page?: number;
 
 		/**
-		 * Name of the profile to switch to. The name must be identical to the one provided in the manifest.
+		 * Name of the profile to switch to; the name must be identical to the one provided in the manifest.
+		 *
+		 * When not specified, Stream Deck will switch to the previous profile.
 		 */
 		profile?: string;
 	}
