@@ -12,6 +12,12 @@
 
 # Change Log
 
+## 1.2.2
+
+### ♻️ Update
+
+-   Update dependencies.
+
 ## 1.2.1
 
 ### ♻️ Update
