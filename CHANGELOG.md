@@ -17,6 +17,7 @@
 ### ♻️ Update
 
 -   Improve documentation for profile switching.
+-   Update dependencies.
 
 ## 1.2.1
 
