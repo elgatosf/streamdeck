@@ -150,11 +150,7 @@ export class SDRadioElement extends SDOptionElement {
 				/>
 
 				<span role="radio" aria-checked=${this.checked}></span>
-
-				${
-					// TODO: Add missing slot
-					undefined
-				}
+				<slot></slot>
 			</label>
 		`;
 	}
