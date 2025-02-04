@@ -7,15 +7,15 @@ import { useGlobalSetting, useSetting } from "../settings";
 import type { SettingSignal, SettingSignalOptions } from "../settings/signals";
 
 /**
- * Mixin that provides methods for persisting information to Stream Deck.
+ * Mixin that provides persisting a value to Stream Deck settings (action / global).
  * @param superClass Class the mixin extends.
  * @returns The mixin.
  */
-export const Persistable = <TValue extends JsonValue, TBase extends Constructor<LitElement> = typeof LitElement>(
+export const Persistable = <T extends JsonValue, TBase extends Constructor<LitElement> = typeof LitElement>(
 	superClass: TBase,
-): Constructor<SDPersistableElement<TValue>> & TBase => {
+): Constructor<SDPersistableElement<T>> & TBase => {
 	/**
-	 * Mixin that provides methods for persisting information to Stream Deck.
+	 * Mixin that provides persisting a value to Stream Deck settings (action / global).
 	 */
 	class PersistableMixin extends superClass {
 		/**
@@ -26,12 +26,12 @@ export const Persistable = <TValue extends JsonValue, TBase extends Constructor<
 		/**
 		 * Signal responsible for managing the setting within Stream Deck.
 		 */
-		#signal: SettingSignal<TValue> | undefined;
+		#signal: SettingSignal<T> | undefined;
 
 		/**
 		 * Private backing field for the {@link SDPersistableElement.value}.
 		 */
-		#value: TValue | undefined;
+		#value: T | undefined;
 
 		/**
 		 * @inheritdoc
@@ -52,7 +52,7 @@ export const Persistable = <TValue extends JsonValue, TBase extends Constructor<
 		 * Gets the current input value.
 		 * @returns The value.
 		 */
-		public get value(): TValue | undefined {
+		public get value(): T | undefined {
 			return this.#value;
 		}
 
@@ -66,7 +66,7 @@ export const Persistable = <TValue extends JsonValue, TBase extends Constructor<
 		 * Sets the current input value.
 		 */
 		@property({ attribute: false })
-		public set value(value: TValue | undefined) {
+		public set value(value: T | undefined) {
 			if (this.#setValue(value)) {
 				this.#signal?.value?.set(value);
 			}
@@ -96,7 +96,7 @@ export const Persistable = <TValue extends JsonValue, TBase extends Constructor<
 				this.#signal = undefined;
 				if (this.setting !== undefined) {
 					// Determine the options.
-					const options: SettingSignalOptions<TValue> = {
+					const options: SettingSignalOptions<T> = {
 						onChange: (value) => this.#setValue(value),
 						debounceSaveTimeout: this.debounceSave ? 200 : undefined,
 					};
@@ -113,7 +113,7 @@ export const Persistable = <TValue extends JsonValue, TBase extends Constructor<
 		 * @param newValue New value.
 		 * @returns `true` when the value changed; otherwise `false`.
 		 */
-		#setValue(newValue: TValue | undefined): boolean {
+		#setValue(newValue: T | undefined): boolean {
 			if (this.#value === newValue) {
 				return false;
 			}
@@ -126,11 +126,11 @@ export const Persistable = <TValue extends JsonValue, TBase extends Constructor<
 		}
 	}
 
-	return PersistableMixin as Constructor<SDPersistableElement<TValue>> & TBase;
+	return PersistableMixin as Constructor<SDPersistableElement<T>> & TBase;
 };
 
 /**
- * Mixin that provides methods for persisting information to Stream Deck.
+ * Mixin that provides persisting a value to Stream Deck settings (action / global).
  */
 export declare class SDPersistableElement<T extends JsonValue> extends LitElement {
 	/**
