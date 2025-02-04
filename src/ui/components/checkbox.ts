@@ -3,15 +3,16 @@ import { customElement } from "lit/decorators.js";
 import { ifDefined } from "lit/directives/if-defined.js";
 import { ref } from "lit/directives/ref.js";
 
-import { Input } from "../mixins/input";
-import { Labeled } from "../mixins/labeled";
+import { Input } from "../mixins/input_new";
+import { Option } from "../mixins/option";
+import { Persistable } from "../mixins/persistable";
 import { type HTMLInputEvent, preventDoubleClickSelection } from "../utils";
 
 /**
- * Element that offers persisting a `boolean` via a checkbox.
+ * Element that offers persisting a value via a checkbox.
  */
 @customElement("sd-checkbox")
-export class SDCheckboxElement extends Labeled(Input(LitElement)) {
+export class SDCheckboxElement extends Persistable(Input(Option(LitElement))) {
 	/**
 	 * @inheritdoc
 	 */
@@ -44,7 +45,7 @@ export class SDCheckboxElement extends Labeled(Input(LitElement)) {
 			}
 
 			/**
-             * Checkbox and text
+             * Checkbox and slot
              */
 
 			.checkbox {
@@ -52,16 +53,13 @@ export class SDCheckboxElement extends Labeled(Input(LitElement)) {
 				border-radius: var(--rounding-m);
 				box-sizing: border-box;
 				height: var(--size-m);
+				margin-right: var(--space-xs);
 				width: var(--size-m);
 				user-select: none;
 			}
 
 			.checkbox > svg {
 				visibility: hidden;
-			}
-
-			.text {
-				margin-left: var(--space-xs);
 			}
 
 			/**
@@ -110,7 +108,7 @@ export class SDCheckboxElement extends Labeled(Input(LitElement)) {
 	 * @returns `true` when the checkbox is checked; otherwise `false`.
 	 */
 	public get checked(): boolean {
-		return !!this.value;
+		return this.typedValue ? this.value === this.typedValue : !!this.value;
 	}
 
 	/**
@@ -118,7 +116,11 @@ export class SDCheckboxElement extends Labeled(Input(LitElement)) {
 	 * @param value Value indicating whether the checkbox is checked.
 	 */
 	public set checked(value: boolean) {
-		this.value = value;
+		if (this.typedValue) {
+			this.value = value ? this.typedValue : undefined;
+		} else {
+			this.value = value;
+		}
 	}
 
 	/**
@@ -165,7 +167,7 @@ export class SDCheckboxElement extends Labeled(Input(LitElement)) {
 					</svg>
 				</div>
 
-				${this.label && html`<span class="text">${this.label}</span>`}
+				<slot></slot>
 			</label>
 		`;
 	}
@@ -174,7 +176,7 @@ export class SDCheckboxElement extends Labeled(Input(LitElement)) {
 declare global {
 	interface HTMLElementTagNameMap {
 		/**
-		 * Element that offers persisting a `boolean` via a checkbox.
+		 * Element that offers persisting a value via a checkbox.
 		 */
 		"sd-checkbox": SDCheckboxElement;
 	}
