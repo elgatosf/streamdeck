@@ -21,7 +21,7 @@ export const Persistable = <T extends JsonValue, TBase extends Constructor<LitEl
 		/**
 		 * @inheritdoc
 		 */
-		public debounceSave: boolean = false;
+		protected debounceSave: boolean = false;
 
 		/**
 		 * Signal responsible for managing the setting within Stream Deck.
@@ -126,18 +126,13 @@ export const Persistable = <T extends JsonValue, TBase extends Constructor<LitEl
 		}
 	}
 
-	return PersistableMixin as Constructor<SDPersistableElement<T>> & TBase;
+	return PersistableMixin as unknown as Constructor<SDPersistableElement<T>> & TBase;
 };
 
 /**
  * Mixin that provides persisting a value to Stream Deck settings (action / global).
  */
 export declare class SDPersistableElement<T extends JsonValue> extends LitElement {
-	/**
-	 * Determines whether to debounce saving when the value changes.
-	 */
-	public debounceSave: boolean;
-
 	/**
 	 * When `true`, the setting will be persisted in the global settings, otherwise it will be persisted
 	 * in the action's settings; default `false`.
@@ -153,4 +148,9 @@ export declare class SDPersistableElement<T extends JsonValue> extends LitElemen
 	 * The value of the element; this is persisted when a {@link SDPersistableElement.setting} is specified.
 	 */
 	public value: T | undefined;
+
+	/**
+	 * Determines whether to debounce saving when the value changes.
+	 */
+	protected debounceSave: boolean;
 }

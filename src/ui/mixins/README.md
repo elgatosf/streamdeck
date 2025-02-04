@@ -7,10 +7,10 @@ Mixin that provides persisting a value to Stream Deck settings (action / global)
 ```mermaid
 classDiagram
     class Persistable~T~ {
-        + debounceSave: boolean
         + global: boolean
         + setting?: string
         + value?: T
+        # debounceSave: boolean
     }
 ```
 
