@@ -108,7 +108,15 @@ export class SDCheckboxElement extends Option(Input(Persistable<boolean | number
 	 * @returns `true` when the checkbox is checked; otherwise `false`.
 	 */
 	public get checked(): boolean {
-		return this.typedValue ? this.value === this.typedValue : !!this.value;
+		if (this.value === undefined) {
+			return false;
+		}
+
+		if (this.typedValue !== undefined || typeof this.value !== "boolean") {
+			return this.value === this.typedValue;
+		}
+
+		return !!this.value;
 	}
 
 	/**
@@ -170,6 +178,14 @@ export class SDCheckboxElement extends Option(Input(Persistable<boolean | number
 				<slot></slot>
 			</label>
 		`;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	protected override willUpdate(_changedProperties: Map<PropertyKey, unknown>): void {
+		super.willUpdate(_changedProperties);
+		this.ariaChecked = this.checked ? "checked" : null;
 	}
 }
 
