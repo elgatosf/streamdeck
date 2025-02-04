@@ -10,7 +10,7 @@ import { type Constructor, parseBoolean, parseNumber } from "../../common/utils"
  */
 export const Option = <TBase extends Constructor<LitElement> = typeof LitElement>(
 	superClass: TBase,
-): Constructor<SDoptionElement> & TBase => {
+): Constructor<SDOptionElement> & TBase => {
 	/**
 	 * Mixin that provides information for a selectable option.
 	 */
@@ -79,13 +79,13 @@ export const Option = <TBase extends Constructor<LitElement> = typeof LitElement
 		}
 	}
 
-	return OptionMixin as Constructor<SDoptionElement> & TBase;
+	return OptionMixin as Constructor<SDOptionElement> & TBase;
 };
 
 /**
  * Mixin that provides information for a selectable option.
  */
-export declare class SDoptionElement extends LitElement {
+export declare class SDOptionElement extends LitElement {
 	/**
 	 * Type of the value; allows for the value to be converted to a boolean or number.
 	 */
@@ -98,7 +98,7 @@ export declare class SDoptionElement extends LitElement {
 	public htmlValue: string | undefined;
 
 	/**
-	 * Typed value, parsed from the {@link SDoptionElement.type} and {@link SDoptionElement.htmlValue}.
+	 * Typed value, parsed from the {@link SDOptionElement.type} and {@link SDOptionElement.htmlValue}.
 	 */
 	public typedValue: boolean | number | string | undefined;
 }

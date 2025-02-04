@@ -4,13 +4,14 @@ import { ifDefined } from "lit/directives/if-defined.js";
 import { createRef, ref } from "lit/directives/ref.js";
 
 import { Input } from "../mixins/input";
+import { Persistable } from "../mixins/persistable";
 import { type HTMLInputEvent } from "../utils";
 
 /**
  * Element that offers persisting a `string` via a text area.
  */
 @customElement("sd-textarea")
-export class SDTextAreaElement extends Input<string>(LitElement) {
+export class SDTextAreaElement extends Input(Persistable<string>(LitElement)) {
 	/**
 	 * @inheritdoc
 	 */

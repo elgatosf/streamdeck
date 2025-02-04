@@ -3,7 +3,7 @@ import { customElement } from "lit/decorators.js";
 import { ifDefined } from "lit/directives/if-defined.js";
 import { ref } from "lit/directives/ref.js";
 
-import { Input } from "../mixins/input_new";
+import { Input } from "../mixins/input";
 import { Option } from "../mixins/option";
 import { Persistable } from "../mixins/persistable";
 import { type HTMLInputEvent, preventDoubleClickSelection } from "../utils";
@@ -12,7 +12,7 @@ import { type HTMLInputEvent, preventDoubleClickSelection } from "../utils";
  * Element that offers persisting a value via a checkbox.
  */
 @customElement("sd-checkbox")
-export class SDCheckboxElement extends Persistable(Input(Option(LitElement))) {
+export class SDCheckboxElement extends Option(Input(Persistable<boolean | number | string>(LitElement))) {
 	/**
 	 * @inheritdoc
 	 */

@@ -5,13 +5,14 @@ import { ref } from "lit/directives/ref.js";
 
 import { Input } from "../mixins/input";
 import { Labeled } from "../mixins/labeled";
+import { Persistable } from "../mixins/persistable";
 import { type HTMLInputEvent, preventDoubleClickSelection } from "../utils";
 
 /**
  * Element that offers persisting a `boolean` via a toggle switch.
  */
 @customElement("sd-switch")
-export class SDSwitchElement extends Labeled(Input<boolean>(LitElement)) {
+export class SDSwitchElement extends Labeled(Input(Persistable<boolean>(LitElement))) {
 	/**
 	 * @inheritdoc
 	 */

@@ -1,16 +1,17 @@
-import { css, html, type TemplateResult } from "lit";
+import { css, html, LitElement, type TemplateResult } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { ifDefined } from "lit/directives/if-defined.js";
 import { createRef, ref, type Ref } from "lit/directives/ref.js";
 
+import { Input } from "../mixins/input";
+import { Option } from "../mixins/option";
 import { preventDoubleClickSelection } from "../utils";
-import { SDOptionElement } from "./option";
 
 /**
  * Element that offers an option in the form of a radio.
  */
 @customElement("sd-radio")
-export class SDRadioElement extends SDOptionElement {
+export class SDRadioElement extends Option(Input(LitElement)) {
 	/**
 	 * @inheritdoc
 	 */

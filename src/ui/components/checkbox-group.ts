@@ -4,14 +4,14 @@ import { repeat } from "lit/directives/repeat.js";
 
 import { Input } from "../mixins/input";
 import { List } from "../mixins/list";
+import { Persistable } from "../mixins/persistable";
 import { SDCheckboxElement } from "./checkbox";
-import { type SDOptionElement } from "./option";
 
 /**
  * Element that offers persisting an set of values, from a group of checkbox options.
  */
 @customElement("sd-checkboxgroup")
-export class SDCheckboxGroupElement extends List(Input<(boolean | number | string)[]>(LitElement)) {
+export class SDCheckboxGroupElement extends List(Input(Persistable<(boolean | number | string)[]>(LitElement))) {
 	/**
 	 * @inheritdoc
 	 */
@@ -53,7 +53,7 @@ export class SDCheckboxGroupElement extends List(Input<(boolean | number | strin
 	 * @param checked Whether the checkbox is checked.
 	 * @param value Value the checkbox represents.
 	 */
-	#handleChange(checked: boolean, value: SDOptionElement["value"]): void {
+	#handleChange(checked: boolean, value: boolean | number | string): void {
 		if (value === undefined) {
 			return;
 		}

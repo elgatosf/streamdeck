@@ -2,13 +2,14 @@ import { css, html, LitElement, type PropertyValueMap, type TemplateResult } fro
 import { customElement } from "lit/decorators.js";
 
 import { Input } from "../mixins/input";
+import { Persistable } from "../mixins/persistable";
 import { SDRadioElement } from "./radio";
 
 /**
  * Element that offers persisting a `boolean`, `number`, or `string` from a list of radio options.
  */
 @customElement("sd-radio-group")
-export class SDRadioGroupElement extends Input<boolean | number | string>(LitElement) {
+export class SDRadioGroupElement extends Input(Persistable<boolean | number | string>(LitElement)) {
 	/**
 	 * @inheritdoc
 	 */
