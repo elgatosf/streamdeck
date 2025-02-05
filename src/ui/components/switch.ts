@@ -3,8 +3,8 @@ import { customElement, property } from "lit/decorators.js";
 import { ifDefined } from "lit/directives/if-defined.js";
 import { ref } from "lit/directives/ref.js";
 
-import { SDCheckboxElement } from ".";
 import { type HTMLInputEvent, preventDoubleClickSelection } from "../utils";
+import { SDCheckboxElement } from "./checkbox";
 
 /**
  * Element that offers persisting a value via a toggle switch.
