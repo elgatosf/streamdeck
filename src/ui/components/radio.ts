@@ -1,7 +1,7 @@
 import { css, html, LitElement, type TemplateResult } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { ifDefined } from "lit/directives/if-defined.js";
-import { createRef, ref, type Ref } from "lit/directives/ref.js";
+import { ref } from "lit/directives/ref.js";
 
 import { Input } from "../mixins/input";
 import { Option } from "../mixins/option";
@@ -125,12 +125,8 @@ export class SDRadioElement extends Option(Input(LitElement)) {
 	/**
 	 * @inheritdoc
 	 */
-	#inputRef: Ref<HTMLInputElement> = createRef();
-
-	/**
-	 * @inheritdoc
-	 */
 	public override render(): TemplateResult {
+		console.log(this.tabIndex);
 		return html`
 			<label
 				class="sd-radio-container"
@@ -142,7 +138,7 @@ export class SDRadioElement extends Option(Input(LitElement)) {
 				}}
 			>
 				<input
-					${ref(this.#inputRef)}
+					${ref(this.inputRef)}
 					name=${ifDefined(this.name)}
 					type="radio"
 					tabindex="-1"
@@ -154,13 +150,6 @@ export class SDRadioElement extends Option(Input(LitElement)) {
 				<slot></slot>
 			</label>
 		`;
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	public override focus() {
-		this.#inputRef?.value?.focus();
 	}
 }
 
