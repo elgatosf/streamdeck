@@ -6,7 +6,7 @@ import { ref } from "lit/directives/ref.js";
 import { Input } from "../mixins/input";
 import { Option } from "../mixins/option";
 import { Persistable } from "../mixins/persistable";
-import { type HTMLInputEvent, preventDoubleClickSelection } from "../utils";
+import { type HTMLEvent, preventDoubleClickSelection } from "../utils";
 
 /**
  * Element that offers persisting a value via a checkbox.
@@ -162,7 +162,7 @@ export class SDCheckboxElement extends Option(Input(Persistable<boolean | number
 					type="checkbox"
 					.checked=${this.checked}
 					.disabled=${this.disabled}
-					@change=${(ev: HTMLInputEvent<HTMLInputElement>): void => {
+					@change=${(ev: HTMLEvent<HTMLInputElement>): void => {
 						this.checked = ev.target.checked;
 						this.dispatchEvent(new Event("change", { bubbles: true })); // TODO: relocate this to Input for closed shadow roots
 					}}

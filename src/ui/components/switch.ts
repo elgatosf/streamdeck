@@ -3,7 +3,7 @@ import { customElement, property } from "lit/decorators.js";
 import { ifDefined } from "lit/directives/if-defined.js";
 import { ref } from "lit/directives/ref.js";
 
-import { type HTMLInputEvent, preventDoubleClickSelection } from "../utils";
+import { type HTMLEvent, preventDoubleClickSelection } from "../utils";
 import { SDCheckboxElement } from "./checkbox";
 
 /**
@@ -143,7 +143,7 @@ export class SDSwitchElement extends SDCheckboxElement {
 					value=${ifDefined(this.setting)}
 					.checked=${this.isOn}
 					.disabled=${this.disabled}
-					@change=${(ev: HTMLInputEvent<HTMLInputElement>): void => {
+					@change=${(ev: HTMLEvent<HTMLInputElement>): void => {
 						this.isOn = ev.target.checked;
 					}}
 				/>

@@ -5,7 +5,7 @@ import { ref } from "lit/directives/ref.js";
 
 import { Input } from "../mixins/input";
 import { Persistable } from "../mixins/persistable";
-import type { HTMLInputEvent } from "../utils";
+import type { HTMLEvent } from "../utils";
 
 /**
  * Element that offers persisting a `string` via a text input.
@@ -153,7 +153,7 @@ export class SDTextFieldElement extends Input(Persistable<string>(LitElement)) {
 					@blur=${(): void => {
 						this.#userHasInteracted = true;
 					}}
-					@input=${(ev: HTMLInputEvent<HTMLInputElement>): void => {
+					@input=${(ev: HTMLEvent<HTMLInputElement>): void => {
 						this.value = ev.target.value;
 					}}
 				/>

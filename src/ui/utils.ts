@@ -25,11 +25,11 @@ export function preventDoubleClickSelection(ev: MouseEvent): void {
 }
 
 /**
- * An event triggered by an HTML input element, that allows for the target to be typed.
+ * Information for an HTML event.
  */
-export type HTMLInputEvent<Target> = InputEvent & {
+export type HTMLEvent<TTarget, TSource = Event> = Omit<TSource, "target"> & {
 	/**
-	 * Target of the event.
+	 * Element the event was dispatched from.
 	 */
-	target: Target;
+	readonly target: TTarget;
 };
