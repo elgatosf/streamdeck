@@ -6,6 +6,10 @@ import { Persistable } from "../mixins/persistable";
 import { SDCheckboxElement } from "./checkbox";
 
 /**
+ * TODO: Consider updating keyboard interaction to function in a similar way to sd-radio-group.
+ */
+
+/**
  * Element that offers persisting an set of values, from a group of checkbox options.
  */
 @customElement("sd-checkbox-group")
