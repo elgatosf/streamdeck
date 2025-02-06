@@ -14,7 +14,7 @@ export class SDRadioElement extends Option(Input(LitElement)) {
 	/**
 	 * @inheritdoc
 	 */
-	static shadowRootOptions = { ...LitElement.shadowRootOptions, delegatesFocus: true };
+	public static shadowRootOptions = { ...LitElement.shadowRootOptions, delegatesFocus: true };
 
 	/**
 	 * @inheritdoc

@@ -1,4 +1,4 @@
-import { css, html, LitElement, type PropertyValueMap, type TemplateResult } from "lit";
+import { css, html, LitElement, type TemplateResult } from "lit";
 import { customElement } from "lit/decorators.js";
 
 import { Input } from "../mixins/input";
@@ -41,7 +41,7 @@ export class SDRadioGroupElement extends Input(Persistable<boolean | number | st
 	/**
 	 * @inheritdoc
 	 */
-	protected override update(changedProperties: PropertyValueMap<any> | Map<PropertyKey, unknown>): void {
+	protected override update(changedProperties: Map<PropertyKey, unknown>): void {
 		super.update(changedProperties);
 
 		if (changedProperties.has("value")) {
@@ -134,7 +134,7 @@ export class SDRadioGroupElement extends Input(Persistable<boolean | number | st
 
 		// When no radios are checked, make the first focusable
 		if (!foundCheckedRadio) {
-			const [first, ..._] = this.#radios;
+			const [first] = this.#radios;
 			if (first) {
 				first.tabIndex = 0;
 			}
