@@ -23,7 +23,6 @@ classDiagram
     class Input {
         + disabled: boolean
         # inputRef: Ref~HTMLInputElement~
-        + focus()
     }
 ```
 
@@ -34,8 +33,8 @@ Mixin that provides information for a selectable option.
 ```mermaid
 classDiagram
     class Option {
-        + type: "boolean" | "number" | "string"
         + htmlValue?: string
+        + type: "boolean" | "number" | "string"
         + typedValue?: boolean | number | string
     }
 ```
