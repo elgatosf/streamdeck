@@ -1,6 +1,5 @@
 import { css, html, LitElement, type TemplateResult } from "lit";
 import { customElement, property } from "lit/decorators.js";
-import { ifDefined } from "lit/directives/if-defined.js";
 import { ref } from "lit/directives/ref.js";
 
 import { Input } from "../mixins/input";
@@ -15,18 +14,20 @@ export class SDRadioElement extends Option(Input(LitElement)) {
 	/**
 	 * @inheritdoc
 	 */
+	static shadowRootOptions = { ...LitElement.shadowRootOptions, delegatesFocus: true };
+
+	/**
+	 * @inheritdoc
+	 */
 	public static styles = [
 		css`
-			label.sd-radio-container {
-				display: inline-flex;
+			label {
 				align-items: center;
+				display: inline-flex;
+				outline: none;
 
 				& input {
-					/* Hide the input, whilst still allowing focus */
-					height: 0;
-					opacity: 0;
-					position: absolute;
-					width: 0;
+					display: none;
 				}
 
 				/**
@@ -98,7 +99,7 @@ export class SDRadioElement extends Option(Input(LitElement)) {
                  * Focus
                  */
 
-				& input:focus-visible + span[role="radio"] {
+				&:focus-visible span[role="radio"] {
 					box-shadow: var(--highlight-box-shadow);
 					outline: var(--highlight-outline--focus);
 					outline-offset: var(--highlight-outline-offset);
@@ -126,10 +127,10 @@ export class SDRadioElement extends Option(Input(LitElement)) {
 	 * @inheritdoc
 	 */
 	public override render(): TemplateResult {
-		console.log(this.tabIndex);
 		return html`
 			<label
-				class="sd-radio-container"
+				${ref(this.inputRef)}
+				.tabIndex=${this.tabIndex}
 				@mousedown=${preventDoubleClickSelection}
 				@change=${(ev: Event): void => {
 					// Propagate the change on the component.
@@ -137,16 +138,9 @@ export class SDRadioElement extends Option(Input(LitElement)) {
 					this.dispatchEvent(new Event("change", { bubbles: true }));
 				}}
 			>
-				<input
-					${ref(this.inputRef)}
-					name=${ifDefined(this.name)}
-					type="radio"
-					tabindex="-1"
-					.checked=${this.checked}
-					.disabled=${this.disabled}
-				/>
-
+				<input type="radio" .checked=${this.checked} .disabled=${this.disabled} />
 				<span role="radio" aria-checked=${this.checked}></span>
+
 				<slot></slot>
 			</label>
 		`;

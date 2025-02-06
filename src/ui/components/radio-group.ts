@@ -127,23 +127,17 @@ export class SDRadioGroupElement extends Input(Persistable<boolean | number | st
 		// Set the checked state of the radios.
 		this.#radios.forEach((radio) => {
 			radio.checked = this.value === radio.typedValue;
-			setTabIndexOf(radio, radio.checked ? "0" : "-1");
+			radio.tabIndex = radio.checked ? 0 : -1;
 
 			foundCheckedRadio = foundCheckedRadio || radio.checked;
 		});
 
 		// When no radios are checked, make the first focusable
 		if (!foundCheckedRadio) {
-			setTabIndexOf(this.#radios?.at(0), "0");
-		}
-
-		/**
-		 * Sets the tabindex of the underlying input for the specified radio element.
-		 * @param radio Radio element.
-		 * @param tabindex New tab index.
-		 */
-		function setTabIndexOf(radio: SDRadioElement | undefined, tabindex: string) {
-			radio?.shadowRoot?.querySelector('input[type="radio"]')?.setAttribute("tabindex", tabindex);
+			const [first, ..._] = this.#radios;
+			if (first) {
+				first.tabIndex = 0;
+			}
 		}
 	}
 }
