@@ -152,6 +152,7 @@ export class SDCheckboxElement extends Option(Input(Persistable<boolean | number
 					// Toggle switch on space bar key.
 					if (ev.code === "Space") {
 						this.checked = !this.checked;
+						this.dispatchEvent(new Event("change", { bubbles: true })); // TODO: relocate this to Input for closed shadow roots
 						ev.preventDefault();
 					}
 				}}
@@ -163,7 +164,7 @@ export class SDCheckboxElement extends Option(Input(Persistable<boolean | number
 					.disabled=${this.disabled}
 					@change=${(ev: HTMLInputEvent<HTMLInputElement>): void => {
 						this.checked = ev.target.checked;
-						this.dispatchEvent(new Event("change")); // TODO: relocate this to Input for closed shadow roots
+						this.dispatchEvent(new Event("change", { bubbles: true })); // TODO: relocate this to Input for closed shadow roots
 					}}
 				/>
 

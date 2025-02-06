@@ -15,7 +15,6 @@ export class SDRadioGroupElement extends Input(Persistable<boolean | number | st
 	 */
 	public static styles = [
 		super.styles ?? [],
-		...SDRadioElement.styles,
 		css`
 			::slotted(sd-radio) {
 				display: flex;
@@ -36,11 +35,7 @@ export class SDRadioGroupElement extends Input(Persistable<boolean | number | st
 	 * @inheritdoc
 	 */
 	public override render(): TemplateResult {
-		return html`<slot
-			@slotchange=${this.#onSlotChange}
-			@click=${this.#onSlotClick}
-			@keydown=${this.#onSlotKeyDown}
-		></slot>`;
+		return html`<slot @slotchange=${this.#syncRadios} @click=${this.#onClick} @keydown=${this.#onKeyDown}></slot>`;
 	}
 
 	/**
@@ -50,7 +45,7 @@ export class SDRadioGroupElement extends Input(Persistable<boolean | number | st
 		super.update(changedProperties);
 
 		if (changedProperties.has("value")) {
-			this.#syncRadioButtons();
+			this.#syncRadios();
 		}
 	}
 
@@ -64,18 +59,11 @@ export class SDRadioGroupElement extends Input(Persistable<boolean | number | st
 	}
 
 	/**
-	 * Handles the slot changing, synchronizing all radios.
-	 */
-	#onSlotChange(ev: Event): void {
-		this.#syncRadioButtons();
-	}
-
-	/**
 	 * Handles a key down emitted from the slot containing the radios, allowing the user to changed the
 	 * checked state of the radios using either the space bar, or arrow keys.
 	 * @param ev Source event.
 	 */
-	#onSlotKeyDown(ev: KeyboardEvent): void {
+	#onKeyDown(ev: KeyboardEvent): void {
 		if (!this.#isRadioEvent(ev) || !["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", " "].includes(ev.key)) {
 			return;
 		}
@@ -124,7 +112,7 @@ export class SDRadioGroupElement extends Input(Persistable<boolean | number | st
 	 * Updates the current value of the radio group, based on the radio that was checked.
 	 * @param ev Source event of the click.
 	 */
-	#onSlotClick(ev: Event): void {
+	#onClick(ev: Event): void {
 		if (this.#isRadioEvent(ev) && !ev.target.disabled) {
 			this.value = ev.target.typedValue;
 		}
@@ -133,7 +121,7 @@ export class SDRadioGroupElement extends Input(Persistable<boolean | number | st
 	/**
 	 * Synchronizes radios within this group, setting their checked and focusable (tabindex) states.
 	 */
-	#syncRadioButtons(): void {
+	#syncRadios(): void {
 		let foundCheckedRadio = false;
 
 		// Set the checked state of the radios.
