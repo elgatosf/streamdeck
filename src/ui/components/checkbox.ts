@@ -146,6 +146,7 @@ export class SDCheckboxElement extends Option(Input(Persistable<boolean | number
 	public override render(): TemplateResult {
 		return html`
 			<label
+				${ref(this.inputRef)}
 				tabindex=${ifDefined(this.disabled ? undefined : 0)}
 				@mousedown=${preventDoubleClickSelection}
 				@keydown=${(ev: KeyboardEvent): void => {
@@ -158,7 +159,6 @@ export class SDCheckboxElement extends Option(Input(Persistable<boolean | number
 				}}
 			>
 				<input
-					${ref(this.inputRef)}
 					type="checkbox"
 					.checked=${this.checked}
 					.disabled=${this.disabled}
