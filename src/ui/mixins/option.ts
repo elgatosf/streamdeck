@@ -87,15 +87,15 @@ export const Option = <TBase extends Constructor<LitElement> = typeof LitElement
  */
 export declare class SDOptionElement extends LitElement {
 	/**
-	 * Type of the value; allows for the value to be converted to a boolean or number.
-	 */
-	public type: "boolean" | "number" | "string";
-
-	/**
 	 * Untyped value, as defined by the `value` attribute; use {@link SDOptionElement.typedValue} property
 	 * to access the typed-value.
 	 */
 	public htmlValue: string | undefined;
+
+	/**
+	 * Type of the value; allows for the value to be converted to a boolean or number.
+	 */
+	public type: "boolean" | "number" | "string";
 
 	/**
 	 * Typed value, parsed from the {@link SDOptionElement.type} and {@link SDOptionElement.htmlValue}.
