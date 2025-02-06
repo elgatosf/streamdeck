@@ -6,6 +6,7 @@ import { OptionController } from "../controllers/option-controller";
 
 /**
  * List mixin that provides common functionality for input elements that have options.
+ * @deprecated Previously used by group elements... may serve a purpose in the future?
  * @param superClass Class the mixin extends.
  * @returns List mixin class.
  */
