@@ -4,14 +4,15 @@ import { ifDefined } from "lit/directives/if-defined.js";
 import { ref } from "lit/directives/ref.js";
 
 import { Input } from "../mixins/input";
-import { Labeled } from "../mixins/labeled";
-import { type HTMLInputEvent, preventDoubleClickSelection } from "../utils";
+import { Option } from "../mixins/option";
+import { Persistable } from "../mixins/persistable";
+import { type HTMLEvent, preventDoubleClickSelection } from "../utils";
 
 /**
- * Element that offers persisting a `boolean` via a checkbox.
+ * Element that offers persisting a value via a checkbox.
  */
 @customElement("sd-checkbox")
-export class SDCheckboxElement extends Labeled(Input(LitElement)) {
+export class SDCheckboxElement extends Option(Input(Persistable<boolean | number | string>(LitElement))) {
 	/**
 	 * @inheritdoc
 	 */
@@ -44,7 +45,7 @@ export class SDCheckboxElement extends Labeled(Input(LitElement)) {
 			}
 
 			/**
-             * Checkbox and text
+             * Checkbox and slot
              */
 
 			.checkbox {
@@ -52,16 +53,13 @@ export class SDCheckboxElement extends Labeled(Input(LitElement)) {
 				border-radius: var(--rounding-m);
 				box-sizing: border-box;
 				height: var(--size-m);
+				margin-right: var(--space-xs);
 				width: var(--size-m);
 				user-select: none;
 			}
 
 			.checkbox > svg {
 				visibility: hidden;
-			}
-
-			.text {
-				margin-left: var(--space-xs);
 			}
 
 			/**
@@ -110,6 +108,14 @@ export class SDCheckboxElement extends Labeled(Input(LitElement)) {
 	 * @returns `true` when the checkbox is checked; otherwise `false`.
 	 */
 	public get checked(): boolean {
+		if (this.value === undefined) {
+			return false;
+		}
+
+		if (this.typedValue !== undefined || typeof this.value !== "boolean") {
+			return this.value === this.typedValue;
+		}
+
 		return !!this.value;
 	}
 
@@ -118,7 +124,11 @@ export class SDCheckboxElement extends Labeled(Input(LitElement)) {
 	 * @param value Value indicating whether the checkbox is checked.
 	 */
 	public set checked(value: boolean) {
-		this.value = value;
+		if (this.typedValue) {
+			this.value = value ? this.typedValue : undefined;
+		} else {
+			this.value = value;
+		}
 	}
 
 	/**
@@ -136,24 +146,25 @@ export class SDCheckboxElement extends Labeled(Input(LitElement)) {
 	public override render(): TemplateResult {
 		return html`
 			<label
+				${ref(this.inputRef)}
 				tabindex=${ifDefined(this.disabled ? undefined : 0)}
 				@mousedown=${preventDoubleClickSelection}
 				@keydown=${(ev: KeyboardEvent): void => {
 					// Toggle switch on space bar key.
 					if (ev.code === "Space") {
 						this.checked = !this.checked;
+						this.dispatchEvent(new Event("change", { bubbles: true })); // TODO: relocate this to Input for closed shadow roots
 						ev.preventDefault();
 					}
 				}}
 			>
 				<input
-					${ref(this.inputRef)}
 					type="checkbox"
 					.checked=${this.checked}
 					.disabled=${this.disabled}
-					@change=${(ev: HTMLInputEvent<HTMLInputElement>): void => {
+					@change=${(ev: HTMLEvent<HTMLInputElement>): void => {
 						this.checked = ev.target.checked;
-						this.dispatchEvent(new Event("change")); // TODO: relocate this to Input for closed shadow roots
+						this.dispatchEvent(new Event("change", { bubbles: true })); // TODO: relocate this to Input for closed shadow roots
 					}}
 				/>
 
@@ -165,16 +176,24 @@ export class SDCheckboxElement extends Labeled(Input(LitElement)) {
 					</svg>
 				</div>
 
-				${this.label && html`<span class="text">${this.label}</span>`}
+				<slot></slot>
 			</label>
 		`;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	protected override willUpdate(_changedProperties: Map<PropertyKey, unknown>): void {
+		super.willUpdate(_changedProperties);
+		this.ariaChecked = this.checked ? "checked" : null;
 	}
 }
 
 declare global {
 	interface HTMLElementTagNameMap {
 		/**
-		 * Element that offers persisting a `boolean` via a checkbox.
+		 * Element that offers persisting a value via a checkbox.
 		 */
 		"sd-checkbox": SDCheckboxElement;
 	}

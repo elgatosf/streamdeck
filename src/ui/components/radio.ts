@@ -1,30 +1,33 @@
-import { css, html, type TemplateResult } from "lit";
+import { css, html, LitElement, type TemplateResult } from "lit";
 import { customElement, property } from "lit/decorators.js";
-import { ifDefined } from "lit/directives/if-defined.js";
+import { ref } from "lit/directives/ref.js";
 
+import { Input } from "../mixins/input";
+import { Option } from "../mixins/option";
 import { preventDoubleClickSelection } from "../utils";
-import { SDOptionElement } from "./option";
 
 /**
- * Element that offers an option in the form of a radio button.
+ * Element that offers an option in the form of a radio.
  */
 @customElement("sd-radio")
-export class SDRadioElement extends SDOptionElement {
+export class SDRadioElement extends Option(Input(LitElement)) {
+	/**
+	 * @inheritdoc
+	 */
+	public static shadowRootOptions = { ...LitElement.shadowRootOptions, delegatesFocus: true };
+
 	/**
 	 * @inheritdoc
 	 */
 	public static styles = [
 		css`
-			label.sd-radio-container {
-				display: inline-flex;
+			label {
 				align-items: center;
+				display: inline-flex;
+				outline: none;
 
 				& input {
-					/* Hide the input, whilst still allowing focus */
-					height: 0;
-					opacity: 0;
-					position: absolute;
-					width: 0;
+					display: none;
 				}
 
 				/**
@@ -96,7 +99,7 @@ export class SDRadioElement extends SDOptionElement {
                  * Focus
                  */
 
-				& input:focus-visible + span[role="radio"] {
+				&:focus-visible span[role="radio"] {
 					box-shadow: var(--highlight-box-shadow);
 					outline: var(--highlight-outline--focus);
 					outline-offset: var(--highlight-outline-offset);
@@ -104,11 +107,6 @@ export class SDRadioElement extends SDOptionElement {
 			}
 		`,
 	];
-
-	/**
-	 * Determines whether the shared styles have already been appended to the document.
-	 */
-	static #isStyleAppended = false;
 
 	/**
 	 * Name of the radio button group the element is associated with.
@@ -128,32 +126,11 @@ export class SDRadioElement extends SDOptionElement {
 	/**
 	 * @inheritdoc
 	 */
-	public override connectedCallback(): void {
-		super.connectedCallback();
-		if (SDRadioElement.#isStyleAppended) {
-			return;
-		}
-
-		// As the root of the element is not a shadow DOM, we can't scope styles, so instead we add
-		// the styles as a <style> element to the document.
-		const style = document.createElement("style");
-		style.innerHTML = SDRadioElement.styles
-			.map((s) => s.toString())
-			.filter((s) => s !== "")
-			.join("\n");
-
-		// Only add the <style> element once.
-		SDRadioElement.#isStyleAppended = true;
-		document.head.append(style);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
 	public override render(): TemplateResult {
 		return html`
 			<label
-				class="sd-radio-container"
+				${ref(this.inputRef)}
+				.tabIndex=${this.tabIndex}
 				@mousedown=${preventDoubleClickSelection}
 				@change=${(ev: Event): void => {
 					// Propagate the change on the component.
@@ -161,35 +138,19 @@ export class SDRadioElement extends SDOptionElement {
 					this.dispatchEvent(new Event("change", { bubbles: true }));
 				}}
 			>
-				<input
-					name=${ifDefined(this.name)}
-					type="radio"
-					tabindex=${ifDefined(this.disabled ? undefined : 0)}
-					.checked=${this.checked}
-					.disabled=${this.disabled}
-				/>
-
+				<input type="radio" .checked=${this.checked} .disabled=${this.disabled} />
 				<span role="radio" aria-checked=${this.checked}></span>
 
-				${this.label}
+				<slot></slot>
 			</label>
 		`;
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	protected override createRenderRoot(): DocumentFragment | HTMLElement {
-		// Shadow root has to be open to allow for joining named radio buttons.
-		this.innerHTML = "";
-		return this;
 	}
 }
 
 declare global {
 	interface HTMLElementTagNameMap {
 		/**
-		 * Element that offers an option in the form of a radio button.
+		 * Element that offers an option in the form of a radio.
 		 */
 		"sd-radio": SDRadioElement;
 	}

@@ -1,22 +1,20 @@
-import { css, html, LitElement, type TemplateResult } from "lit";
+import { css, html, type TemplateResult } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { ifDefined } from "lit/directives/if-defined.js";
 import { ref } from "lit/directives/ref.js";
 
-import { Input } from "../mixins/input";
-import { Labeled } from "../mixins/labeled";
-import { type HTMLInputEvent, preventDoubleClickSelection } from "../utils";
+import { type HTMLEvent, preventDoubleClickSelection } from "../utils";
+import { SDCheckboxElement } from "./checkbox";
 
 /**
- * Element that offers persisting a `boolean` via a toggle switch.
+ * Element that offers persisting a value via a toggle switch.
  */
 @customElement("sd-switch")
-export class SDSwitchElement extends Labeled(Input<boolean>(LitElement)) {
+export class SDSwitchElement extends SDCheckboxElement {
 	/**
 	 * @inheritdoc
 	 */
 	public static styles = [
-		super.styles ?? [],
 		css`
 			/**
 			 * Container
@@ -49,6 +47,7 @@ export class SDSwitchElement extends Labeled(Input<boolean>(LitElement)) {
 				border-radius: var(--rounding-full);
 				display: inline-flex;
 				padding: 0px var(--space-3xs);
+				margin-right: var(--space-xs);
 				transition: 0.2;
 				height: var(--size-m);
 				width: var(--size-xl);
@@ -62,10 +61,6 @@ export class SDSwitchElement extends Labeled(Input<boolean>(LitElement)) {
 				transform: translateX(0);
 				transition: all 200ms;
 				width: var(--size-s);
-			}
-
-			.text {
-				margin-left: var(--space-xs);
 			}
 
 			/**
@@ -107,19 +102,11 @@ export class SDSwitchElement extends Labeled(Input<boolean>(LitElement)) {
 	];
 
 	/**
-	 * Initializes a new instance of the {@link SDSwitchElement} class.
-	 */
-	constructor() {
-		super();
-		this.role = "checkbox";
-	}
-
-	/**
 	 * Gets the on/off state of the switch.
 	 * @returns Whether the switch is on/off.
 	 */
 	public get isOn(): boolean {
-		return !!this.value;
+		return this.checked;
 	}
 
 	/**
@@ -131,16 +118,7 @@ export class SDSwitchElement extends Labeled(Input<boolean>(LitElement)) {
 		type: Boolean,
 	})
 	public set isOn(value: boolean) {
-		this.value = value;
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	public override click(): void {
-		if (!this.disabled) {
-			this.isOn = !this.isOn;
-		}
+		this.checked = value;
 	}
 
 	/**
@@ -165,7 +143,7 @@ export class SDSwitchElement extends Labeled(Input<boolean>(LitElement)) {
 					value=${ifDefined(this.setting)}
 					.checked=${this.isOn}
 					.disabled=${this.disabled}
-					@change=${(ev: HTMLInputEvent<HTMLInputElement>): void => {
+					@change=${(ev: HTMLEvent<HTMLInputElement>): void => {
 						this.isOn = ev.target.checked;
 					}}
 				/>
@@ -174,24 +152,16 @@ export class SDSwitchElement extends Labeled(Input<boolean>(LitElement)) {
 					<div class="thumb"></div>
 				</div>
 
-				${this.label && html`<span class="text">${this.label}</span>`}
+				<slot></slot>
 			</label>
 		`;
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	protected override willUpdate(_changedProperties: Map<PropertyKey, unknown>): void {
-		super.willUpdate(_changedProperties);
-		this.ariaChecked = this.isOn ? "checked" : null;
 	}
 }
 
 declare global {
 	interface HTMLElementTagNameMap {
 		/**
-		 * Element that offers persisting a `boolean` via a toggle switch.
+		 * Element that offers persisting a value via a toggle switch.
 		 */
 		"sd-switch": SDSwitchElement;
 	}

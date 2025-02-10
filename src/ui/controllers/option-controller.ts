@@ -4,6 +4,7 @@ import { SDOptionElement } from "../components/option";
 
 /**
  * Controller for tracking {@link SDOptionElement} within a host.
+ * @deprecated Previously used by group elements... may serve a purpose in the future?
  */
 export class OptionController implements ReactiveController {
 	/**
