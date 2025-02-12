@@ -5,13 +5,13 @@ import { SDOptionElement } from "../components/option";
 import { SDOptionGroupElement } from "../components/option-group";
 
 /**
- * Controller for a data list that is formed from slotted elements within the host.
+ * Controller capable of observing for mutations of {@link SDOptionElement} and {@link SDOptionGroupElement} within the host.
  */
-export class SlottedDataListController implements ReactiveController {
+export class OptionObserver implements ReactiveController {
 	/**
-	 * Data list managed by this controller.
+	 * Data list that contains the options observed by this controller.
 	 */
-	public readonly dataList: DataList = new DataList();
+	readonly dataList: DataList = new DataList();
 
 	/**
 	 * Host this controller is attached to.
@@ -24,7 +24,7 @@ export class SlottedDataListController implements ReactiveController {
 	readonly #observer: MutationObserver;
 
 	/**
-	 * Initializes a new instance of the {@link OptionController} class.
+	 * Initializes a new instance of the {@link OptionObserver} class.
 	 * @param host Host to attach to.
 	 */
 	constructor(host: ReactiveElement & ReactiveControllerHost) {
@@ -44,7 +44,7 @@ export class SlottedDataListController implements ReactiveController {
 			subtree: true,
 		});
 
-		this.#syncOptions();
+		this.dataList.options = this.#getOptionsOf(this.#host);
 	}
 
 	/**
@@ -64,16 +64,19 @@ export class SlottedDataListController implements ReactiveController {
 			node instanceof SDOptionElement || node instanceof SDOptionGroupElement;
 
 		for (const { addedNodes, removedNodes, target } of mutations) {
+			// Check if an option or group had its contents updated.
 			if (isOptionOrOptionGroup(target)) {
 				return true;
 			}
 
+			// Check if an option or group was added.
 			for (const added of addedNodes) {
 				if (isOptionOrOptionGroup(added)) {
 					return true;
 				}
 			}
 
+			// Check if an option or group was removed.
 			for (const removed of removedNodes) {
 				if (isOptionOrOptionGroup(removed)) {
 					return true;
@@ -90,42 +93,43 @@ export class SlottedDataListController implements ReactiveController {
 	 */
 	#onMutation(mutations: MutationRecord[]): void {
 		if (this.#isOptionOrOptionGroupMutation(mutations)) {
-			this.#syncOptions();
+			this.dataList.options = this.#getOptionsOf(this.#host);
 			this.#host.requestUpdate();
 		}
 	}
 
 	/**
-	 * Synchronizes the options from the DOM, the the {@link SlottedDataListController.dataList}.
+	 * Gets the options of the specified element.
+	 * @param parent Element to search for options, and option groups.
+	 * @returns The options within the element.
 	 */
-	#syncOptions(): void {
-		const getOptionsOf = (parent: HTMLElement) => {
-			const elements = Array.from(parent.querySelectorAll(":scope > sd-option, :scope > sd-option-group"));
-			const reducer = (options: (Option | OptionGroup)[], node: Node): (Option | OptionGroup)[] => {
-				if (node instanceof SDOptionElement) {
-					options.push(
-						new Option({
-							disabled: node.disabled,
-							label: node.textContent ?? undefined,
-							value: node.typedValue,
-						}),
-					);
-				} else if (node instanceof SDOptionGroupElement) {
-					options.push(
-						new OptionGroup({
-							children: getOptionsOf(node),
-							disabled: node.disabled,
-							label: node.label ?? "",
-						}),
-					);
-				}
+	#getOptionsOf(parent: HTMLElement) {
+		const elements = Array.from(parent.querySelectorAll(":scope > sd-option, :scope > sd-option-group"));
 
-				return options;
-			};
+		const reducer = (options: (Option | OptionGroup)[], node: Node): (Option | OptionGroup)[] => {
+			if (node instanceof SDOptionElement) {
+				// Add the option.
+				options.push(
+					new Option({
+						disabled: node.disabled,
+						label: node.textContent ?? undefined,
+						value: node.typedValue,
+					}),
+				);
+			} else if (node instanceof SDOptionGroupElement) {
+				// Add the group, and recursively discover its children.
+				options.push(
+					new OptionGroup({
+						children: this.#getOptionsOf(node),
+						disabled: node.disabled,
+						label: node.label ?? "",
+					}),
+				);
+			}
 
-			return elements.reduce(reducer, []);
+			return options;
 		};
 
-		this.dataList.options = getOptionsOf(this.#host);
+		return elements.reduce(reducer, []);
 	}
 }
