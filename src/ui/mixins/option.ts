@@ -10,13 +10,13 @@ import { type Constructor, parseBoolean, parseNumber } from "../../common/utils"
  */
 export const Option = <TBase extends Constructor<LitElement> = typeof LitElement>(
 	superClass: TBase,
-): Constructor<SDOptionElement> & TBase => {
+): Constructor<SDOptionMixin> & TBase => {
 	/**
 	 * Mixin that provides information for a selectable option.
 	 */
 	class OptionMixin extends superClass {
 		/**
-		 * Private backing field for {@link SDOptionElement.typedValue}.
+		 * Private backing field for {@link SDOptionMixin.typedValue}.
 		 */
 		#value: boolean | number | string | null | undefined = null;
 
@@ -79,15 +79,15 @@ export const Option = <TBase extends Constructor<LitElement> = typeof LitElement
 		}
 	}
 
-	return OptionMixin as Constructor<SDOptionElement> & TBase;
+	return OptionMixin as Constructor<SDOptionMixin> & TBase;
 };
 
 /**
  * Mixin that provides information for a selectable option.
  */
-export declare class SDOptionElement extends LitElement {
+export declare class SDOptionMixin extends LitElement {
 	/**
-	 * Untyped value, as defined by the `value` attribute; use {@link SDOptionElement.typedValue} property
+	 * Untyped value, as defined by the `value` attribute; use {@link SDOptionMixin.typedValue} property
 	 * to access the typed-value.
 	 */
 	public htmlValue: string | undefined;
@@ -98,7 +98,7 @@ export declare class SDOptionElement extends LitElement {
 	public type: "boolean" | "number" | "string";
 
 	/**
-	 * Typed value, parsed from the {@link SDOptionElement.type} and {@link SDOptionElement.htmlValue}.
+	 * Typed value, parsed from the {@link SDOptionMixin.type} and {@link SDOptionMixin.htmlValue}.
 	 */
 	public typedValue: boolean | number | string | undefined;
 }

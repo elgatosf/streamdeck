@@ -25,7 +25,6 @@ export class SDTextFieldElement extends Input(Persistable<string>(LitElement)) {
 				box-sizing: border-box;
 				display: flex;
 				gap: var(--size-xs);
-				width: 240px;
 
 				&:has(input:focus),
 				&:has(input:invalid) {
