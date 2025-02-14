@@ -31,9 +31,8 @@ export class SDSelectElement extends Input(Persistable<boolean | number | string
 		super.styles ?? [],
 		css`
 			:host {
-				/* Allow the width to be overridable */
+				/* Allow sizing */
 				display: flex;
-				width: 240px;
 			}
 
 			select {
