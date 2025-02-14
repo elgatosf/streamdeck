@@ -25,7 +25,7 @@ export class SDOptionGroupElement extends LitElement {
 declare global {
 	interface HTMLElementTagNameMap {
 		/**
-		 * * Non-visual element that provides a grouping of options.
+		 * Non-visual element that provides a grouping of options.
 		 */
 		"sd-option-group": SDOptionGroupElement;
 	}

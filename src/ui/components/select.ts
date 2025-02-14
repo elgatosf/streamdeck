@@ -87,7 +87,7 @@ export class SDSelectElement extends Input(Persistable<boolean | number | string
 			<select
 				${ref(this.inputRef)}
 				.disabled=${this.disabled}
-				@change=${(ev: HTMLEvent<HTMLSelectElement>) => {
+				@change=${(ev: HTMLEvent<HTMLSelectElement>): void => {
 					const selected = ev.target[ev.target.selectedIndex];
 					if (selected instanceof HTMLOptionElement) {
 						this.value = this.#parseValue(selected);
@@ -112,7 +112,7 @@ export class SDSelectElement extends Input(Persistable<boolean | number | string
 	}
 
 	/**
-	 * Parses the value from the {@link HTMLOptionElement}.
+	 * Parses the value from the option.
 	 * @param option Option to parse the value from.
 	 * @returns The value.
 	 */

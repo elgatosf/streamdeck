@@ -5,7 +5,7 @@ export class DataList {
 	/**
 	 * Options within the list.
 	 */
-	options: (Option | OptionGroup)[] = [];
+	public options: (Option | OptionGroup)[] = [];
 
 	/**
 	 * Initializes a new instance of the {@link DataList} class.
@@ -97,7 +97,7 @@ export class OptionGroup extends BaseOption {
 
 	/**
 	 * Initializes a new instance of the {@link OptionGroup} class.
-	 * @param option Initial information.
+	 * @param group Initial information.
 	 */
 	constructor(group?: Partial<OptionGroup>) {
 		super(group);

@@ -11,12 +11,12 @@ export class OptionObserver implements ReactiveController {
 	/**
 	 * Data list that contains the options observed by this controller.
 	 */
-	readonly dataList: DataList = new DataList();
+	public readonly dataList: DataList = new DataList();
 
 	/**
 	 * Host this controller is attached to.
 	 */
-	readonly #host: ReactiveElement & ReactiveControllerHost;
+	readonly #host: ReactiveControllerHost & ReactiveElement;
 
 	/**
 	 * Underlying mutation observer monitoring changes to the shadow DOM.
@@ -27,7 +27,7 @@ export class OptionObserver implements ReactiveController {
 	 * Initializes a new instance of the {@link OptionObserver} class.
 	 * @param host Host to attach to.
 	 */
-	constructor(host: ReactiveElement & ReactiveControllerHost) {
+	constructor(host: ReactiveControllerHost & ReactiveElement) {
 		this.#host = host;
 		this.#host.addController(this);
 
@@ -60,7 +60,7 @@ export class OptionObserver implements ReactiveController {
 	 * @returns `true` when a mutation is for an option, or option group; otherwise `false`.
 	 */
 	#isOptionOrOptionGroupMutation(mutations: MutationRecord[]): boolean {
-		const isOptionOrOptionGroup = (node: Node) =>
+		const isOptionOrOptionGroup = (node: Node): node is SDOptionElement | SDOptionGroupElement =>
 			node instanceof SDOptionElement || node instanceof SDOptionGroupElement;
 
 		for (const { addedNodes, removedNodes, target } of mutations) {
@@ -103,7 +103,7 @@ export class OptionObserver implements ReactiveController {
 	 * @param parent Element to search for options, and option groups.
 	 * @returns The options within the element.
 	 */
-	#getOptionsOf(parent: HTMLElement) {
+	#getOptionsOf(parent: HTMLElement): (Option | OptionGroup)[] {
 		const elements = Array.from(parent.querySelectorAll(":scope > sd-option, :scope > sd-option-group"));
 
 		const reducer = (options: (Option | OptionGroup)[], node: Node): (Option | OptionGroup)[] => {
