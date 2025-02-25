@@ -52,8 +52,8 @@ export class SDSelectElement extends Input(Persistable<boolean | number | string
 				font-family: var(--typography-body-m-family);
 				font-size: var(--typography-body-m-size);
 				font-weight: var(--typography-body-m-weight);
-				max-width: 100%;
 				padding: 0 calc(var(--space-xs) + var(--space-xs) + var(--size-m)) 0 var(--space-xs);
+				width: 100%;
 
 				&:disabled {
 					color: var(--color-content-disabled);
