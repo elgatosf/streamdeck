@@ -1,5 +1,5 @@
 import { css, type CSSResult, html, LitElement, type TemplateResult, unsafeCSS } from "lit";
-import { customElement } from "lit/decorators.js";
+import { customElement, property } from "lit/decorators.js";
 import { ifDefined } from "lit/directives/if-defined.js";
 import { ref } from "lit/directives/ref.js";
 
@@ -67,6 +67,12 @@ export class SDSelectElement extends Input(Persistable<boolean | number | string
 	];
 
 	/**
+	 * Placeholder to be shown when an option has not yet been selected.
+	 */
+	@property()
+	public accessor placeholder: string | undefined;
+
+	/**
 	 * Controller responsible for monitoring the slotted options.
 	 */
 	#options: OptionObserver;
@@ -94,6 +100,7 @@ export class SDSelectElement extends Input(Persistable<boolean | number | string
 					}
 				}}
 			>
+				<option disabled hidden selected>${this.placeholder ?? ""}</option>
 				${this.#options.dataList.map(
 					(opt) =>
 						html`<option
