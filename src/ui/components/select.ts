@@ -1,5 +1,5 @@
 import { css, type CSSResult, html, LitElement, type TemplateResult, unsafeCSS } from "lit";
-import { customElement } from "lit/decorators.js";
+import { customElement, property, state } from "lit/decorators.js";
 import { ifDefined } from "lit/directives/if-defined.js";
 import { ref } from "lit/directives/ref.js";
 
@@ -7,7 +7,10 @@ import { parseBoolean, parseNumber } from "../../common/utils";
 import { OptionObserver } from "../controllers/option-observer";
 import { Input } from "../mixins/input";
 import { Persistable } from "../mixins/persistable";
+import { useGlobalSetting, useSetting } from "../settings";
+import type { SettingSignal, SettingSignalOptions } from "../settings/signals";
 import type { HTMLEvent } from "../utils";
+import { watch } from "../utils/watch";
 
 /**
  * Gets a chevron with the specified fill color.
@@ -49,8 +52,8 @@ export class SDSelectElement extends Input(Persistable<boolean | number | string
 				font-family: var(--typography-body-m-family);
 				font-size: var(--typography-body-m-size);
 				font-weight: var(--typography-body-m-weight);
-				max-width: 100%;
 				padding: 0 calc(var(--space-xs) + var(--space-xs) + var(--size-m)) 0 var(--space-xs);
+				width: 100%;
 
 				&:disabled {
 					color: var(--color-content-disabled);
@@ -65,6 +68,32 @@ export class SDSelectElement extends Input(Persistable<boolean | number | string
 			}
 		`,
 	];
+
+	/**
+	 * Placeholder to be shown when an option has not yet been selected.
+	 */
+	@property()
+	public accessor placeholder: string | undefined;
+
+	/**
+	 * Path to the setting where the selected option's label will be persisted.
+	 *
+	 * In the event a previously selected option is no longer available, the label stored at this setting
+	 * will be rendered as an unselectable option within the select.
+	 */
+	@property({ attribute: "label-setting" })
+	public accessor labelSetting: string | undefined;
+
+	/**
+	 * Label of the (previously) selected option.
+	 */
+	@state()
+	accessor #label: string | undefined;
+
+	/**
+	 * Signal used to persist and access the label of the (previously) selected option.
+	 */
+	#labelSignal: SettingSignal<string> | undefined;
 
 	/**
 	 * Controller responsible for monitoring the slotted options.
@@ -91,9 +120,13 @@ export class SDSelectElement extends Input(Persistable<boolean | number | string
 					const selected = ev.target[ev.target.selectedIndex];
 					if (selected instanceof HTMLOptionElement) {
 						this.value = this.#parseValue(selected);
+						this.#labelSignal?.value?.set(selected.label);
 					}
 				}}
 			>
+				<option disabled hidden selected>
+					${this.value === undefined ? (this.placeholder ?? "") : (this.#label ?? this.placeholder ?? "")}
+				</option>
 				${this.#options.dataList.map(
 					(opt) =>
 						html`<option
@@ -109,6 +142,26 @@ export class SDSelectElement extends Input(Persistable<boolean | number | string
 				)}
 			</select>
 		`;
+	}
+
+	/**
+	 * Manages the settings signal used to persisted the label of the selected option.
+	 */
+	@watch(["labelSetting", "global"])
+	protected labelSettingWillUpdate(): void {
+		this.#labelSignal?.dispose();
+
+		if (this.labelSetting) {
+			const options: SettingSignalOptions<string> = {
+				onChange: (value: string | undefined) => (this.#label = value),
+			};
+
+			this.#labelSignal = this.global
+				? useGlobalSetting(this.labelSetting, options)
+				: useSetting(this.labelSetting, options);
+
+			this.#labelSignal.value.get().then(options.onChange);
+		}
 	}
 
 	/**
