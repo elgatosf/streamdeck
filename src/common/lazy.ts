@@ -3,7 +3,7 @@
  */
 export class Lazy<T> {
 	/**
-	 * Private backing field for {@link value}.
+	 * Private backing field for {@link Lazy.value}.
 	 */
 	#value: T | undefined = undefined;
 
