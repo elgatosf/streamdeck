@@ -4,6 +4,7 @@ import type {
 	DialUp,
 	KeyDown,
 	KeyUp,
+	Manifest,
 	TitleParametersDidChange,
 	TouchTap,
 	WillAppear,
@@ -12,6 +13,7 @@ import type {
 import type { IDisposable } from "../../common/disposable";
 import { ActionEvent } from "../../common/events";
 import type { JsonObject } from "../../common/json";
+import { Lazy } from "../../common/lazy";
 import { connection } from "../connection";
 import {
 	DialDownEvent,
@@ -34,7 +36,7 @@ import { KeyAction } from "./key";
 import type { SingletonAction } from "./singleton-action";
 import { actionStore, ReadOnlyActionStore } from "./store";
 
-const manifest = getManifest();
+const manifest = new Lazy<Manifest>(() => getManifest());
 
 /**
  * Provides functions, and information, for interacting with Stream Deck actions.
@@ -214,7 +216,7 @@ class ActionService extends ReadOnlyActionStore {
 			throw new Error("The action's manifestId cannot be undefined.");
 		}
 
-		if (!manifest.Actions.some((a) => a.UUID === action.manifestId)) {
+		if (!manifest.value.Actions.some((a) => a.UUID === action.manifestId)) {
 			throw new Error(`The action's manifestId was not found within the manifest: ${action.manifestId}`);
 		}
 
