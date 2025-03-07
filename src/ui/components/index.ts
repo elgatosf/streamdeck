@@ -3,6 +3,7 @@ export * from "./checkbox";
 export * from "./checkbox-group";
 export * from "./divider";
 export * from "./field";
+export * from "./icon";
 export * from "./label";
 export * from "./option";
 export * from "./option-group";
