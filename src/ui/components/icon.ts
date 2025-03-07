@@ -2,7 +2,7 @@ import * as large from "@elgato/icons/l";
 import * as medium from "@elgato/icons/m";
 import { getSvgStringMetadata, type icons, type Size } from "@elgato/icons/metadata";
 import * as small from "@elgato/icons/s";
-import { html, LitElement, type TemplateResult } from "lit";
+import { css, html, LitElement, type TemplateResult } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { guard } from "lit/directives/guard.js";
 import { unsafeHTML } from "lit/directives/unsafe-html.js";
@@ -12,6 +12,22 @@ import { unsafeHTML } from "lit/directives/unsafe-html.js";
  */
 @customElement("sd-icon")
 export class SDIconElement extends LitElement {
+	/**
+	 * @inheritdoc
+	 */
+	public static styles = [
+		super.styles ?? [],
+		css`
+			:host {
+				display: inline-flex;
+			}
+
+			svg {
+				height: 100%;
+				width: 100%;
+			}
+		`,
+	];
 	/**
 	 * Preferred icon size; default small (s).
 	 */
