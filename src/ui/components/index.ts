@@ -5,6 +5,7 @@ export * from "./divider";
 export * from "./field";
 export * from "./icon";
 export * from "./label";
+export * from "./link";
 export * from "./option";
 export * from "./option-group";
 export * from "./radio";
