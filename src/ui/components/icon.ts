@@ -8,6 +8,11 @@ import { guard } from "lit/directives/guard.js";
 import { unsafeHTML } from "lit/directives/unsafe-html.js";
 
 /**
+ * Type of icon.
+ */
+export type Icon = keyof typeof icons;
+
+/**
  * * Element for displaying an icon from the collection of {@link https://docs.elgato.com/resources/icon Elgato Icons}.
  */
 @customElement("sd-icon")
@@ -38,7 +43,7 @@ export class SDIconElement extends LitElement {
 	 * Type of icon, for example "logo-elgato".
 	 */
 	@property()
-	public accessor type: keyof typeof icons | undefined;
+	public accessor type: Icon | undefined;
 
 	/**
 	 * @inheritdoc
