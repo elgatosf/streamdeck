@@ -1,36 +1,6 @@
 import { css, html, LitElement, type TemplateResult } from "lit";
 import { customElement, property } from "lit/decorators.js";
 
-const defaultVariant = {
-	name: "default",
-	icon: "info",
-} as const;
-
-const variants = [
-	{
-		name: "danger",
-		icon: "warning",
-	},
-	{
-		name: "info",
-		icon: "info",
-	},
-	{
-		name: "success",
-		icon: "checkmark",
-	},
-	{
-		name: "warning",
-		icon: "warning",
-	},
-	defaultVariant,
-] as const;
-
-/**
- * Banner variant (theme).
- */
-export type BannerVariant = (typeof variants)[number]["name"];
-
 /**
  * Element that displays prominent information, with optional theming and dismiss button.
  */
@@ -115,7 +85,7 @@ export class SDBannerElement extends LitElement {
 	 * The theme of the banner.
 	 */
 	@property()
-	public accessor variant: BannerVariant = "default";
+	public accessor variant: Variant = "default";
 
 	/**
 	 * @inheritdoc
@@ -133,7 +103,12 @@ export class SDBannerElement extends LitElement {
 				</div>
 				${this.dismissible
 					? html`
-							<sd-link class="dismiss" @click=${() => (this.hidden = true)}>
+							<sd-link
+								class="dismiss"
+								@click=${(): void => {
+									this.hidden = true;
+								}}
+							>
 								<sd-icon type="close" size="s"></sd-icon>
 							</sd-link>
 						`
@@ -142,6 +117,36 @@ export class SDBannerElement extends LitElement {
 		`;
 	}
 }
+
+const defaultVariant = {
+	name: "default",
+	icon: "info",
+} as const;
+
+const variants = [
+	{
+		name: "danger",
+		icon: "warning",
+	},
+	{
+		name: "info",
+		icon: "info",
+	},
+	{
+		name: "success",
+		icon: "checkmark",
+	},
+	{
+		name: "warning",
+		icon: "warning",
+	},
+	defaultVariant,
+] as const;
+
+/**
+ * Banner variant (theme).
+ */
+type Variant = (typeof variants)[number]["name"];
 
 declare global {
 	interface HTMLElementTagNameMap {

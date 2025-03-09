@@ -88,7 +88,7 @@ export class SDLinkElement extends LitElement {
 	 * The link's theme variant.
 	 */
 	@property()
-	public accessor variant: "standard" | "accent" = "standard";
+	public accessor variant: "accent" | "standard" = "standard";
 
 	/**
 	 * @inheritdoc
@@ -98,7 +98,7 @@ export class SDLinkElement extends LitElement {
 			<button
 				class=${cls(this.variant === "accent" && this.variant, this.quiet && "quiet")}
 				.disabled=${this.disabled}
-				@click=${() => {
+				@click=${(): void => {
 					if (this.href) {
 						openUrl(this.href);
 					}

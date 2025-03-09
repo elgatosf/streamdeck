@@ -13,7 +13,7 @@ import { unsafeHTML } from "lit/directives/unsafe-html.js";
 export type Icon = keyof typeof icons;
 
 /**
- * * Element for displaying an icon from the collection of {@link https://docs.elgato.com/resources/icon Elgato Icons}.
+ * Element for displaying an icon from the collection of {@link https://docs.elgato.com/resources/icon Elgato Icons}.
  */
 @customElement("sd-icon")
 export class SDIconElement extends LitElement {
@@ -107,7 +107,7 @@ export class SDIconElement extends LitElement {
 declare global {
 	interface HTMLElementTagNameMap {
 		/**
-		 * * Element for displaying an icon from the collection of {@link https://docs.elgato.com/resources/icon Elgato Icons}.
+		 * Element for displaying an icon from the collection of {@link https://docs.elgato.com/resources/icon Elgato Icons}.
 		 */
 		"sd-icon": SDIconElement;
 	}
