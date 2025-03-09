@@ -24,6 +24,7 @@ export class SDLinkElement extends LitElement {
 				font-family: var(--typography-body-m-family);
 				font-size: var(--typography-body-m-size);
 				font-weight: var(--typography-body-m-weight);
+				line-height: var(--typography-body-m-line-height);
 				margin: var(--size-none);
 				padding: var(--size-none);
 				text-decoration: underline;
@@ -53,6 +54,14 @@ export class SDLinkElement extends LitElement {
 			}
 		`,
 	];
+
+	/**
+	 * Initializes a new instance of the {@link SDLinkElement} class.
+	 */
+	constructor() {
+		super();
+		this.role = "button";
+	}
 
 	/**
 	 * Determines whether the link is disabled.

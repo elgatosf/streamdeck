@@ -91,8 +91,8 @@ export class SDBannerElement extends LitElement {
 				}
 			}
 
-			sd-icon[type="close"] {
-				cursor: pointer;
+			.dismiss {
+				--typography-body-m-line-height: 0px;
 			}
 		`,
 	];
@@ -132,7 +132,11 @@ export class SDBannerElement extends LitElement {
 					<slot name="action"></slot>
 				</div>
 				${this.dismissible
-					? html`<sd-icon @click=${() => (this.hidden = true)} role="button" type="close" size="s" />`
+					? html`
+							<sd-link class="dismiss" @click=${() => (this.hidden = true)}>
+								<sd-icon type="close" size="s"></sd-icon>
+							</sd-link>
+						`
 					: undefined}
 			</article>
 		`;
