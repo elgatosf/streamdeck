@@ -24,12 +24,25 @@ export class SDIconElement extends LitElement {
 		super.styles ?? [],
 		css`
 			:host {
-				display: inline-flex;
+				display: inline-block;
+				line-height: 0;
+			}
+
+			div.s {
+				--sd-icon-size: 16px;
+			}
+
+			div.m {
+				--sd-icon-size: 20px;
+			}
+
+			div.l {
+				--sd-icon-size: 24px;
 			}
 
 			svg {
-				height: 100%;
-				width: 100%;
+				height: var(--sd-icon-size);
+				width: var(--sd-icon-size);
 			}
 		`,
 	];
@@ -50,8 +63,10 @@ export class SDIconElement extends LitElement {
 	 */
 	public override render(): TemplateResult {
 		return html`${guard([this.size, this.type], () => {
+			const className = ["s", "m", "l"].includes(this.size) ? this.size : "s";
 			const svg = this.#getSvg();
-			return unsafeHTML(svg);
+
+			return html`<div class=${className}>${unsafeHTML(svg)}</div>`;
 		})}`;
 	}
 
