@@ -12,6 +12,23 @@
 
 # Change Log
 
+## 1.3.1
+
+### 🐞 Fix
+
+-   Update reading of the manifest to be lazy to improve mocking within tests.
+
+## 1.3.0
+
+### ✨ New
+
+-   Add support for serializing enumerable collections.
+
+### ♻️ Update
+
+-   Improve documentation for profile switching.
+-   Update dependencies.
+
 ## 1.2.1
 
 ### ♻️ Update

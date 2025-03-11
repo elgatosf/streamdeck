@@ -114,6 +114,16 @@ export class DialAction<T extends JsonObject = JsonObject> extends Action<T> {
 			payload: descriptions || {},
 		});
 	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public override toJSON(): object {
+		return {
+			...super.toJSON(),
+			coordinates: this.coordinates,
+		};
+	}
 }
 
 /**

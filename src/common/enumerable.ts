@@ -339,4 +339,20 @@ export class Enumerable<T> implements IterableIterator<T> {
 	public toArray(): T[] {
 		return Array.from(this);
 	}
+
+	/**
+	 * Converts this iterator to serializable collection.
+	 * @returns The serializable collection of items.
+	 */
+	public toJSON(): T[] {
+		return this.toArray();
+	}
+
+	/**
+	 * Converts this iterator to a string.
+	 * @returns The string.
+	 */
+	public toString(): string {
+		return `${this.toArray()}`;
+	}
 }
