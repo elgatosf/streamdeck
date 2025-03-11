@@ -813,4 +813,24 @@ describe("Enumerable", () => {
 			expect(res).toHaveLength(0);
 		});
 	});
+
+	/**
+	 * Provides assertions for {@link Enumerable.toJSON}.
+	 */
+	test("toJSON", () => {
+		const arr = ["One", "Two"];
+		const enumerable = new Enumerable(arr);
+
+		expect(JSON.stringify(arr)).toEqual(JSON.stringify(enumerable));
+	});
+
+	/**
+	 * Provides assertions for {@link Enumerable.toString}.
+	 */
+	test("toString", () => {
+		const arr = ["One", "Two"];
+		const enumerable = new Enumerable(arr);
+
+		expect(arr.toString()).toEqual(enumerable.toString());
+	});
 });
