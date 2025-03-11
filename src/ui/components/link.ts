@@ -36,7 +36,7 @@ export class SDLinkElement extends LitElement {
 				&.quiet {
 					text-decoration: none;
 
-					&:hover {
+					&:hover:not(:disabled) {
 						text-decoration: underline;
 					}
 				}
