@@ -2,8 +2,8 @@ import { Version } from "./common/version";
 import { getSoftwareMinimumVersion } from "./manifest";
 
 /**
- * Validates the {@link streamDeckVersion} and manifest's `Software.MinimumVersion` are at least the {@link minimumVersion}; when the version is not fulfilled, an error is thrown with the
- * {@link feature} formatted into the message.
+ * Validates the {@link streamDeckVersion} and manifest's `Software.MinimumVersion` are at least the {@link minimumVersion};
+ * when the version is not fulfilled, an error is thrown with the {@link feature} formatted into the message.
  * @param minimumVersion Minimum required version.
  * @param streamDeckVersion Actual application version.
  * @param feature Feature that requires the version.
