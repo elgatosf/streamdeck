@@ -84,6 +84,7 @@
         "typescript-eslint": "^8.21.0"
     },
     "dependencies": {
+        "@elgato/icons": "^1.0.2",
         "@elgato/schemas": "^0.4.1",
         "lit": "^3.2.1",
         "ws": "^8.18.0"

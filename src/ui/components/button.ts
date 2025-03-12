@@ -76,6 +76,14 @@ export class SDButtonElement extends LitElement {
 	];
 
 	/**
+	 * Initializes a new instance of the {@link SDButtonElement} class.
+	 */
+	constructor() {
+		super();
+		this.role = "button";
+	}
+
+	/**
 	 * Determines whether the button is disabled; default `false`.
 	 */
 	@property({

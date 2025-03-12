@@ -35,7 +35,7 @@ const config = {
 	},
 	transformIgnorePatterns: [
 		// Selective ESM transformation enables working with Lit.
-		"node_modules/(?!(lit-html|lit-element|lit|@lit)/)",
+		"node_modules/(?!(lit-html|lit-element|lit|@lit|@elgato/icons)/)",
 	],
 };
 
