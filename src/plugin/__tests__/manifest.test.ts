@@ -83,7 +83,7 @@ describe("manifest", () => {
 		it("returns null when the manifest cannot be read", () => {
 			// Arrange.
 			jest.spyOn(fs, "existsSync").mockReturnValue(true);
-			const readSpy = jest.spyOn(fs, "readFileSync").mockReturnValueOnce("_");
+			jest.spyOn(fs, "readFileSync").mockReturnValueOnce("_");
 
 			// Act, assert.
 			expect(getSoftwareMinimumVersion()).toEqual(null);
