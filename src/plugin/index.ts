@@ -1,4 +1,4 @@
-import type { Manifest, RegistrationInfo } from "../api";
+import type { RegistrationInfo } from "../api";
 import { I18nProvider } from "../common/i18n";
 import { type Logger, registerCreateLogEntryRoute } from "../common/logging";
 import { actionService, type ActionService } from "./actions/service";
@@ -6,7 +6,6 @@ import { connection } from "./connection";
 import { deviceService, type DeviceService } from "./devices/service";
 import { fileSystemLocaleProvider } from "./i18n";
 import { logger } from "./logging";
-import { getManifest } from "./manifest";
 import * as profiles from "./profiles";
 import * as settings from "./settings";
 import * as system from "./system";
@@ -89,14 +88,6 @@ export const streamDeck = {
 	 */
 	get logger(): Logger {
 		return logger;
-	},
-
-	/**
-	 * Manifest associated with the plugin, as defined within the `manifest.json` file.
-	 * @returns The manifest.
-	 */
-	get manifest(): Manifest {
-		return getManifest();
 	},
 
 	/**

@@ -12,7 +12,7 @@ describe("manifest", () => {
 	afterEach(() => jest.resetModules());
 
 	describe("getManifest", () => {
-		it("Errors when file does not exist", () => {
+		it("errors when file does not exist", () => {
 			// Arrange.
 			const existsSync = jest.spyOn(fs, "existsSync").mockReturnValueOnce(false);
 			jest.spyOn(process, "cwd").mockReturnValueOnce("test");
@@ -23,7 +23,7 @@ describe("manifest", () => {
 			expect(existsSync).toHaveBeenCalledWith(path.join("test", "manifest.json"));
 		});
 
-		it("Parses the manifest file", () => {
+		it("parses the manifest file", () => {
 			// Arrange.
 			jest.spyOn(fs, "existsSync").mockReturnValue(true);
 			jest.spyOn(fs, "readFileSync").mockReturnValueOnce(JSON.stringify(mockManifest));
@@ -35,16 +35,16 @@ describe("manifest", () => {
 			expect(manifest).toEqual(mockManifest);
 		});
 
-		it("Errors when the manifest cannot be parsed", () => {
+		it("returns null when the manifest cannot be parsed", () => {
 			// Arrange.
 			jest.spyOn(fs, "existsSync").mockReturnValueOnce(true);
 			jest.spyOn(fs, "readFileSync").mockReturnValueOnce("_");
 
 			// Act, assert.
-			expect(getManifest).toThrowError("Unexpected token '_', \"_\" is not valid JSON");
+			expect(getManifest()).toEqual(null);
 		});
 
-		it("Caches the result", () => {
+		it("caches the result", () => {
 			// Arrange.
 			jest.spyOn(fs, "existsSync").mockReturnValue(true);
 			const readSpy = jest.spyOn(fs, "readFileSync").mockReturnValueOnce(JSON.stringify(mockManifest));
@@ -60,7 +60,7 @@ describe("manifest", () => {
 	});
 
 	describe("getSoftwareMinimumVersion", () => {
-		it("Reads the minimum version from the manifest", () => {
+		it("reads the minimum version from the manifest", () => {
 			// Arrange.
 			jest.spyOn(fs, "existsSync").mockReturnValue(true);
 			const readSpy = jest.spyOn(fs, "readFileSync").mockReturnValueOnce(
@@ -75,12 +75,21 @@ describe("manifest", () => {
 			const version = getSoftwareMinimumVersion();
 
 			// Assert.
-			expect(version.major).toEqual(6);
-			expect(version.minor).toEqual(5);
+			expect(version!.major).toEqual(6);
+			expect(version!.minor).toEqual(5);
 			expect(readSpy).toBeCalledTimes(1);
 		});
 
-		it("Caches the result", () => {
+		it("returns null when the manifest cannot be read", () => {
+			// Arrange.
+			jest.spyOn(fs, "existsSync").mockReturnValue(true);
+			const readSpy = jest.spyOn(fs, "readFileSync").mockReturnValueOnce("_");
+
+			// Act, assert.
+			expect(getSoftwareMinimumVersion()).toEqual(null);
+		});
+
+		it("caches the result", () => {
 			// Arrange.
 			jest.spyOn(fs, "existsSync").mockReturnValue(true);
 			const readSpy = jest.spyOn(fs, "readFileSync").mockReturnValueOnce(JSON.stringify(mockManifest));
