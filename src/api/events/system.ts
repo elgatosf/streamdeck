@@ -15,7 +15,7 @@ export type ApplicationDidLaunch = ApplicationEventIdentifier<"applicationDidLau
 export type ApplicationDidTerminate = ApplicationEventIdentifier<"applicationDidTerminate">;
 
 /**
- * Occurs when the plugin receives the global settings from the Stream Deck.
+ * Occurs when the plugin receives the global settings from Stream Deck.
  */
 export type DidReceiveGlobalSettings<TSettings extends JsonObject> = EventIdentifier<"didReceiveGlobalSettings"> & {
 	/**
@@ -49,6 +49,21 @@ export type DidReceiveDeepLink = EventIdentifier<"didReceiveDeepLink"> & {
  * Occurs when the computer wakes up.
  */
 export type SystemDidWakeUp = EventIdentifier<"systemDidWakeUp">;
+
+/**
+ * Occurs when the plugin receives secrets from Stream Deck.
+ */
+export type DidReceiveSecrets<T extends JsonObject> = EventIdentifier<"didReceiveSecrets"> & {
+	/**
+	 * Payload containing secrets associated with this plugin.
+	 */
+	readonly payload: {
+		/**
+		 * Secrets associated with this plugin.
+		 */
+		secrets: T;
+	};
+};
 
 /**
  * Provides information about a monitored application. See {@link ApplicationDidLaunch} and {@link ApplicationDidTerminate}.
