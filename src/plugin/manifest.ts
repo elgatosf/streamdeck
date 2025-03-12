@@ -36,8 +36,8 @@ const softwareMinimumVersion = new Lazy<Version | null>(() => {
 });
 
 /**
- * Gets the minimum version that this plugin required, as defined within the manifest.
- * @returns Minimum required version; or `null` when the plugin is DRM protected.
+ * Gets the minimum version that the plugin requires.
+ * @returns Minimum required version; otherwise `null` when the plugin is DRM protected.
  */
 export function getSoftwareMinimumVersion(): Version | null {
 	return softwareMinimumVersion.value;
@@ -45,7 +45,7 @@ export function getSoftwareMinimumVersion(): Version | null {
 
 /**
  * Gets the manifest associated with the plugin.
- * @returns The manifest; or `null` when the plugin is DRM protected.
+ * @returns The manifest; otherwise `null` when the plugin is DRM protected.
  */
 export function getManifest(): Manifest | null {
 	return manifest.value;
