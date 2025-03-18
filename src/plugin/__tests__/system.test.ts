@@ -5,6 +5,7 @@ import type {
 	OpenUrl,
 	SystemDidWakeUp,
 } from "../../api";
+import { Secrets } from "../../api/__mocks__/events";
 import { Version } from "../common/version";
 import { connection } from "../connection";
 import {
@@ -14,6 +15,7 @@ import {
 	SystemDidWakeUpEvent,
 } from "../events";
 import {
+	getSecrets,
 	onApplicationDidLaunch,
 	onApplicationDidTerminate,
 	onDidReceiveDeepLink,
@@ -185,6 +187,36 @@ describe("system", () => {
 			payload: {
 				url: "https://www.elgato.com",
 			},
+		});
+	});
+
+	it("getSecrets", async () => {
+		// Arrange, act (Command).
+		const secrets = getSecrets<Secrets>();
+
+		// Assert (Command).
+		expect(connection.send).toHaveBeenCalledTimes(1);
+		expect(connection.send).toHaveBeenLastCalledWith({
+			event: "getSecrets",
+			context: connection.registrationParameters.pluginUUID,
+		});
+
+		expect(Promise.race([secrets, false])).resolves.toBe(false);
+
+		// Act (Event).
+		connection.emit("didReceiveSecrets", {
+			event: "didReceiveSecrets",
+			payload: {
+				secrets: {
+					secret: "Elgato",
+				},
+			},
+		});
+		await secrets;
+
+		// Assert (Event).
+		expect(secrets).resolves.toEqual<Secrets>({
+			secret: "Elgato",
 		});
 	});
 });

@@ -291,3 +291,10 @@ export type Settings = {
 	 */
 	name: string;
 };
+
+export type Secrets = {
+	/**
+	 * Mock property.
+	 */
+	secret: string;
+};

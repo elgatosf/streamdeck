@@ -71,9 +71,9 @@ export function openUrl(url: string): Promise<void> {
  * Gets the secrets associated with the plugin.
  * @returns `Promise` resolved with the secrets associated with the plugin.
  */
-export function getSecrets<T extends JsonObject>(): Promise<DidReceiveSecrets<T>> {
+export function getSecrets<T extends JsonObject>(): Promise<T> {
 	return new Promise((resolve) => {
-		connection.once("didReceiveSecrets", (ev: DidReceiveSecrets<T>) => resolve(ev));
+		connection.once("didReceiveSecrets", (ev: DidReceiveSecrets<T>) => resolve(ev.payload.secrets));
 		connection.send({
 			event: "getSecrets",
 			context: connection.registrationParameters.pluginUUID,
