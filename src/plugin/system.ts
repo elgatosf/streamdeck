@@ -1,7 +1,7 @@
 import type { Manifest, SystemDidWakeUp } from "../api";
-import { DidReceiveSecrets } from "../api/events/system";
+import type { DidReceiveSecrets } from "../api/events/system";
 import type { IDisposable } from "../common/disposable";
-import { JsonObject } from "../common/json";
+import type { JsonObject } from "../common/json";
 import { connection } from "./connection";
 import {
 	ApplicationDidLaunchEvent,
