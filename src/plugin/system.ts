@@ -1,5 +1,7 @@
 import type { Manifest, SystemDidWakeUp } from "../api";
+import type { DidReceiveSecrets } from "../api/events/system";
 import type { IDisposable } from "../common/disposable";
+import type { JsonObject } from "../common/json";
 import { connection } from "./connection";
 import {
 	ApplicationDidLaunchEvent,
@@ -62,5 +64,19 @@ export function openUrl(url: string): Promise<void> {
 		payload: {
 			url,
 		},
+	});
+}
+
+/**
+ * Gets the secrets associated with the plugin.
+ * @returns `Promise` resolved with the secrets associated with the plugin.
+ */
+export function getSecrets<T extends JsonObject = JsonObject>(): Promise<T> {
+	return new Promise((resolve) => {
+		connection.once("didReceiveSecrets", (ev: DidReceiveSecrets<T>) => resolve(ev.payload.secrets));
+		connection.send({
+			event: "getSecrets",
+			context: connection.registrationParameters.pluginUUID,
+		});
 	});
 }

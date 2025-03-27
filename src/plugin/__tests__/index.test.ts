@@ -29,7 +29,6 @@ describe("index", () => {
 		// Arrange.
 		const { actionService } = await require("../actions/service");
 		const { deviceService } = await require("../devices/service");
-		const { getManifest } = await require("../manifest");
 		const profiles = await require("../profiles");
 		const settings = await require("../settings");
 		const system = await require("../system");
@@ -38,7 +37,6 @@ describe("index", () => {
 		// Act, assert.
 		expect(streamDeck.actions).toBe(actionService);
 		expect(streamDeck.devices).toBe(deviceService);
-		expect(streamDeck.manifest).toBe(getManifest());
 		expect(streamDeck.profiles).toBe(profiles);
 		expect(streamDeck.settings).toBe(settings);
 		expect(streamDeck.system).toBe(system);

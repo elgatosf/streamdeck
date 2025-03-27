@@ -74,6 +74,11 @@ export type SetGlobalSettings = ContextualizedCommandWithPayload<"setGlobalSetti
 export type GetGlobalSettings = ContextualizedCommand<"getGlobalSettings">;
 
 /**
+ * Gets secrets associated with the plugin.
+ */
+export type GetSecrets = ContextualizedCommand<"getSecrets">;
+
+/**
  * Opens the URL in the user's default browser.
  */
 export type OpenUrl = CommandBaseWithPayload<
@@ -260,6 +265,7 @@ export type SendToPlugin<TPayload extends JsonValue = JsonValue> = ActionIdentif
  */
 export type PluginCommand =
 	| GetGlobalSettings
+	| GetSecrets
 	| GetSettings
 	| LogMessage
 	| OpenUrl
