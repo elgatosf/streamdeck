@@ -13,7 +13,8 @@
         "moduleResolution": "Bundler",
         "skipLibCheck": true,
         "strict": true,
-        "target": "es2022"
+        "target": "es2022",
+        "typeRoots": ["./types"]
     },
     "include": [
         "./"
