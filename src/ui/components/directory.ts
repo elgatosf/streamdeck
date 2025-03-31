@@ -45,7 +45,7 @@ export class SDDirectoryElement extends Input(Persistable<string>(LitElement)) {
 			/>
 
 			<sd-path-picker
-				icon="folder-open"
+				icon="folder"
 				placeholder="Select a folder"
 				.disabled=${this.disabled}
 				.value=${this.value}
