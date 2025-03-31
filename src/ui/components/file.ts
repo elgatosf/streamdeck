@@ -6,7 +6,7 @@ import { ref } from "lit/directives/ref.js";
 import { Input } from "../mixins/input";
 import { Persistable } from "../mixins/persistable";
 import { type HTMLEvent } from "../utils";
-import { decodePath } from "../utils/os";
+import { decodePath, fixDirectorySeparatorChar } from "../utils/os";
 
 /**
  * Element that offers persisting the path (string) to a file, chosen from file dialog.
@@ -43,32 +43,34 @@ export class SDFileElement extends Input(Persistable<string>(LitElement)) {
 		// TODO: Add support for `multiple`.
 
 		return html`
+			<input
+				${ref(this.inputRef)}
+				accept=${ifDefined(this.accept)}
+				hidden
+				type="file"
+				.disabled=${this.disabled}
+				@change=${(ev: HTMLEvent<HTMLInputElement>): void => {
+					// Only set the value when a file was selected.
+					const path = decodePath(ev.target.value);
+					if (path !== "") {
+						this.value = path;
+					}
+				}}
+			/>
+
 			<sd-path-picker
-				format="name"
 				icon="file"
 				placeholder="Select a file"
 				.disabled=${this.disabled}
-				.path=${this.value}
+				.value=${this.value}
 				@clear=${(): void => {
 					this.value = undefined;
 				}}
-				@show=${(): void => {
+				@open=${(): void => {
 					this.inputRef.value!.click();
 				}}
 			>
-				<input
-					${ref(this.inputRef)}
-					accept=${ifDefined(this.accept)}
-					type="file"
-					.disabled=${this.disabled}
-					@change=${(ev: HTMLEvent<HTMLInputElement>): void => {
-						// Only set the value when a file was selected.
-						const path = decodePath(ev.target.value);
-						if (path !== "") {
-							this.value = path;
-						}
-					}}
-				/>
+				<span title=${ifDefined(fixDirectorySeparatorChar(this.value))}>${this.value?.split("/")?.pop()}</span>
 			</sd-path-picker>
 		`;
 	}

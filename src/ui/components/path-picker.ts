@@ -1,9 +1,7 @@
 import { css, html, LitElement, type TemplateResult } from "lit";
-import { customElement, property } from "lit/decorators.js";
-import { ifDefined } from "lit/directives/if-defined.js";
+import { customElement, property, state } from "lit/decorators.js";
 
 import { cls } from "../utils";
-import { fixDirectorySeparatorChar } from "../utils/os";
 import type { Icon } from "./icon";
 
 /**
@@ -69,19 +67,13 @@ export class SDPickerElement extends LitElement {
 	public accessor icon: Icon = "file";
 
 	/**
-	 * Format used to render the current path.
+	 * Current value.
 	 */
-	@property()
-	public accessor format: "full" | "name" = "full";
+	@state()
+	public accessor value: string[] | string | undefined;
 
 	/**
-	 * Current path.
-	 */
-	@property()
-	public accessor path: string | undefined;
-
-	/**
-	 * Placeholder text shown when there is no path.
+	 * Placeholder text shown when there is no value.
 	 */
 	@property()
 	public accessor placeholder: string | undefined;
@@ -90,36 +82,34 @@ export class SDPickerElement extends LitElement {
 	 * @inheritdoc
 	 */
 	public override render(): TemplateResult {
-		const path = this.format === "full" ? fixDirectorySeparatorChar(this.path) : this.path?.split("/")?.pop();
-
 		return html`
 			<div class="container">
-				<slot hidden></slot>
 				<div>
 					<span
-						.className=${cls("text", !this.path && "placeholder")}
-						title=${ifDefined(fixDirectorySeparatorChar(this.path))}
+						.className=${cls("text", !this.value && "placeholder")}
 						@click=${(): void => {
 							if (!this.disabled) {
-								this.dispatchEvent(new Event("show"));
+								this.dispatchEvent(new Event("open"));
 							}
 						}}
 					>
-						${path ?? this.placeholder}
+						${this.value ? html`<slot></slot>` : this.placeholder}
 					</span>
 					<sd-button
-						.disabled=${this.disabled}
 						icon="close-circle--filled"
+						title="Clear"
+						.disabled=${this.disabled}
 						@click=${(): void => {
 							this.dispatchEvent(new Event("clear"));
 						}}
 					></sd-button>
 				</div>
 				<sd-button
+					title="Open"
 					.disabled=${this.disabled}
 					.icon=${this.icon}
 					@click=${(): void => {
-						this.dispatchEvent(new Event("show"));
+						this.dispatchEvent(new Event("open"));
 					}}
 				></sd-button>
 			</div>
