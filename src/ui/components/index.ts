@@ -1,7 +1,10 @@
+import "./path-picker";
+
 export * from "./banner";
 export * from "./button";
 export * from "./checkbox";
 export * from "./checkbox-group";
+export * from "./directory";
 export * from "./divider";
 export * from "./field";
 export * from "./file";

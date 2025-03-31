@@ -1,6 +1,5 @@
 import { html, LitElement, type TemplateResult } from "lit";
-import { customElement, property } from "lit/decorators.js";
-import { ifDefined } from "lit/directives/if-defined.js";
+import { customElement } from "lit/decorators.js";
 import { ref } from "lit/directives/ref.js";
 
 import { Input } from "../mixins/input";
@@ -9,24 +8,10 @@ import { type HTMLEvent } from "../utils";
 import { decodePath } from "../utils/os";
 
 /**
- * Element that offers persisting the path (string) to a file, chosen from file dialog.
+ * Element that offers persisting the path (string) to a directory, chosen from folder dialog.
  */
-@customElement("sd-file")
-export class SDFileElement extends Input(Persistable<string>(LitElement)) {
-	/**
-	 * Comma-separated list of one or more allowed file types.
-	 * @example
-	 * ```
-	 * "video/*"
-	 * ```
-	 * @example
-	 * ```
-	 * "image/png, image/jpeg"
-	 * ```
-	 */
-	@property()
-	public accessor accept: string | undefined;
-
+@customElement("sd-directory")
+export class SDDirectoryElement extends Input(Persistable<string>(LitElement)) {
 	/**
 	 * @inheritdoc
 	 */
@@ -40,13 +25,11 @@ export class SDFileElement extends Input(Persistable<string>(LitElement)) {
 	 * @inheritdoc
 	 */
 	public override render(): TemplateResult {
-		// TODO: Add support for `multiple`.
-
 		return html`
 			<sd-path-picker
-				format="name"
-				icon="file"
-				placeholder="Select a file"
+				format="full"
+				icon="folder-open"
+				placeholder="Select a folder"
 				.disabled=${this.disabled}
 				.path=${this.value}
 				@clear=${(): void => {
@@ -58,8 +41,8 @@ export class SDFileElement extends Input(Persistable<string>(LitElement)) {
 			>
 				<input
 					${ref(this.inputRef)}
-					accept=${ifDefined(this.accept)}
 					type="file"
+					webkitdirectory
 					.disabled=${this.disabled}
 					@change=${(ev: HTMLEvent<HTMLInputElement>): void => {
 						// Only set the value when a file was selected.
@@ -77,8 +60,8 @@ export class SDFileElement extends Input(Persistable<string>(LitElement)) {
 declare global {
 	interface HTMLElementTagNameMap {
 		/**
-		 * Element that offers persisting the path (string) to a file, chosen from file dialog.
+		 * Element that offers persisting the path (string) to a directory, chosen from folder dialog.
 		 */
-		"sd-file": SDFileElement;
+		"sd-directory": SDDirectoryElement;
 	}
 }
