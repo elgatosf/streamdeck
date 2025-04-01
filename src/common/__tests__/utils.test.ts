@@ -172,6 +172,8 @@ describe("parseBoolean", () => {
 		null,
 		false,
 		0,
+		"0",
+		"false",
 	])("%s is false", (value) => {
 		expect(parseBoolean(value)).toBe(false);
 	});

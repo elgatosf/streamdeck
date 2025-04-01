@@ -61,6 +61,10 @@ export function get(path: string, source: unknown): unknown {
  * @returns `true` when the value is truthy; otherwise `false`.
  */
 export function parseBoolean(value: unknown): boolean | undefined {
+	if (typeof value === "string" && (value === "0" || value === "false")) {
+		return false;
+	}
+
 	return !!value;
 }
 
