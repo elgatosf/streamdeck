@@ -9,7 +9,7 @@ import { type HTMLEvent } from "../utils";
 import { decodePath, fixDirectorySeparatorChar } from "../utils/os";
 
 /**
- * Element that offers persisting the path (string) to a directory, chosen from folder dialog.
+ * Element that offers persisting directory path selected from a folder dialog.
  */
 @customElement("sd-directory")
 export class SDDirectoryElement extends Input(Persistable<string>(LitElement)) {
@@ -65,7 +65,7 @@ export class SDDirectoryElement extends Input(Persistable<string>(LitElement)) {
 declare global {
 	interface HTMLElementTagNameMap {
 		/**
-		 * Element that offers persisting the path (string) to a directory, chosen from folder dialog.
+		 * Element that offers persisting directory path selected from a folder dialog.
 		 */
 		"sd-directory": SDDirectoryElement;
 	}
