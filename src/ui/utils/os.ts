@@ -12,6 +12,6 @@ export function fixDirectorySeparatorChar(path: string | undefined): string | un
  * @param path The path; typically the input's value.
  * @returns Decoded path.
  */
-export function decodePath(path: string): string | undefined {
+export function decodePath(path: string): string {
 	return decodeURIComponent(path.replace(/^C:\\fakepath\\/, ""));
 }
