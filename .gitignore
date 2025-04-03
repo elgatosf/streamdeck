@@ -6,4 +6,4 @@ coverage/
 
 # Build output
 dist/
-types/
+/types/

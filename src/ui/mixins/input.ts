@@ -41,6 +41,7 @@ export const Input = <TBase extends Constructor<LitElement> = typeof LitElement>
 		 * @inheritdoc
 		 */
 		public override focus(): void {
+			// TODO: Update label support to replicate `click`, instead of `focus`.
 			if (this.inputRef.value) {
 				this.inputRef.value.focus();
 			} else {

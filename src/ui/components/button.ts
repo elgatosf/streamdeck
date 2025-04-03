@@ -3,6 +3,7 @@ import { customElement, property } from "lit/decorators.js";
 import { ifDefined } from "lit/directives/if-defined.js";
 
 import { cls } from "../utils";
+import type { Icon } from "./icon";
 
 /**
  * Element that offers a button, allowing a user to activate functionality.
@@ -35,6 +36,10 @@ export class SDButtonElement extends LitElement {
 				outline: none;
 				padding: 0 var(--space-s);
 				width: 100%;
+
+				&.icon {
+					padding: 0 var(--space-xs);
+				}
 
 				&:not(:disabled) {
 					&:hover {
@@ -99,15 +104,24 @@ export class SDButtonElement extends LitElement {
 	public accessor variant: "accent" | "danger" | undefined = undefined;
 
 	/**
+	 * Icon to show within the button; when specified, the button's contents are ignored, and only
+	 * the icon will be shown.
+	 */
+	@property()
+	public accessor icon: Icon | undefined;
+
+	/**
 	 * @inheritdoc
 	 */
 	public override render(): TemplateResult {
 		return html`
 			<button
-				class=${ifDefined(cls(this.variant === "accent" && "accent", this.variant === "danger" && "danger"))}
+				class=${ifDefined(
+					cls(this.variant === "accent" && "accent", this.variant === "danger" && "danger", this.icon && "icon"),
+				)}
 				.disabled=${this.disabled}
 			>
-				<slot></slot>
+				${this.icon ? html`<sd-icon .type=${this.icon} size="s"></sd-icon>` : html`<slot></slot>`}
 			</button>
 		`;
 	}
