@@ -3,6 +3,7 @@
 	--highlight-outline-offset: var(--border-width-thick);
 	--highlight-outline--focus: solid var(--border-width-thick) var(--color-surface-accent);
 	--highlight-outline--invalid: solid var(--border-width-thick) var(--color-surface-negative);
+	--button-border-radius: var(--rounding-m) var(--rounding-m) var(--rounding-m) var(--rounding-m);
 }
 
 body {

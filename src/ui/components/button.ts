@@ -24,7 +24,7 @@ export class SDButtonElement extends LitElement {
 				align-items: center;
 				background: var(--color-surface);
 				border: none;
-				border-radius: var(--rounding-m);
+				border-radius: var(--button-border-radius);
 				color: var(--color-content-primary);
 				display: flex;
 				font-family: var(--typography-body-m-family);
@@ -75,6 +75,10 @@ export class SDButtonElement extends LitElement {
 				&:disabled {
 					background: var(--color-surface-disabled);
 					color: var(--color-content-disabled);
+
+					&.accent {
+						background-color: var(--color-surface-hover);
+					}
 				}
 			}
 		`,
