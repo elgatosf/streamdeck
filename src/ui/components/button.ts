@@ -21,20 +21,20 @@ export class SDButtonElement extends LitElement {
 			}
 
 			button {
-				align-items: center;
 				background: var(--color-surface);
 				border: none;
 				border-radius: var(--button-border-radius);
 				color: var(--color-content-primary);
-				display: flex;
 				font-family: var(--typography-body-m-family);
 				font-size: var(--typography-body-m-size);
 				font-weight: var(--typography-body-m-weight);
 				height: var(--size-2xl);
-				justify-content: center;
 				line-height: var(--typography-body-m-line-height);
 				outline: none;
+				overflow: hidden;
 				padding: 0 var(--space-s);
+				white-space: nowrap;
+				text-overflow: ellipsis;
 				width: 100%;
 
 				&.icon {

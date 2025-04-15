@@ -29,6 +29,7 @@ export class SDRadioGroupElement extends Input(Persistable<boolean | number | st
 			::slotted(sd-radio-button) {
 				--button-border-radius: var(--rounding-none);
 				flex: 1 1 0px;
+				overflow: hidden;
 			}
 
 			::slotted(sd-radio-button:first-of-type) {
