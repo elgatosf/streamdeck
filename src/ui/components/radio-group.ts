@@ -30,7 +30,7 @@ export class SDRadioGroupElement extends Input(Persistable<boolean | number | st
 
 			::slotted(sd-radio-button) {
 				flex: 1 1 0px;
-				overflow: hidden;
+				max-width: var(--radio-button-max-width);
 			}
 
 			::slotted(sd-radio-button:focus) {
@@ -167,6 +167,7 @@ export class SDRadioGroupElement extends Input(Persistable<boolean | number | st
 			this.#type = "radios";
 		} else if (radios.every((r) => r.tagName === "SD-RADIO-BUTTON")) {
 			this.#type = "buttons";
+			this.style.setProperty("--radio-button-max-width", `${100 / radios.length}%`);
 		} else {
 			this.#type = "mixed";
 		}
