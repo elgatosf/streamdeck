@@ -20,6 +20,7 @@ export class SDRadioGroupElement extends Input(Persistable<boolean | number | st
 		css`
 			.buttons {
 				background-color: var(--color-surface);
+				border-radius: var(--rounding-m);
 				display: flex;
 			}
 
