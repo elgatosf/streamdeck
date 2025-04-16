@@ -19,6 +19,7 @@ export class SDRadioGroupElement extends Input(Persistable<boolean | number | st
 		super.styles ?? [],
 		css`
 			.buttons {
+				background-color: var(--color-surface);
 				display: flex;
 			}
 
@@ -27,17 +28,8 @@ export class SDRadioGroupElement extends Input(Persistable<boolean | number | st
 			}
 
 			::slotted(sd-radio-button) {
-				--button-border-radius: var(--rounding-none);
 				flex: 1 1 0px;
 				overflow: hidden;
-			}
-
-			::slotted(sd-radio-button:first-of-type) {
-				--button-border-radius: var(--rounding-m) var(--rounding-none) var(--rounding-none) var(--rounding-m);
-			}
-
-			::slotted(sd-radio-button:last-of-type) {
-				--button-border-radius: var(--rounding-none) var(--rounding-m) var(--rounding-m) var(--rounding-none);
 			}
 
 			::slotted(sd-radio-button:focus) {

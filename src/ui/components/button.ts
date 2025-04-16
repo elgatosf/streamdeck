@@ -23,7 +23,7 @@ export class SDButtonElement extends LitElement {
 			button {
 				background: var(--color-surface);
 				border: none;
-				border-radius: var(--button-border-radius);
+				border-radius: var(--rounding-m);
 				color: var(--color-content-primary);
 				font-family: var(--typography-body-m-family);
 				font-size: var(--typography-body-m-size);
