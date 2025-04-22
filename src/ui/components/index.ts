@@ -14,6 +14,7 @@ export * from "./link";
 export * from "./option";
 export * from "./option-group";
 export * from "./radio";
+export * from "./radio-button";
 export * from "./radio-group";
 export * from "./select";
 export * from "./switch";

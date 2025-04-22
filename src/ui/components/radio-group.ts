@@ -1,9 +1,11 @@
 import { css, html, LitElement, type TemplateResult } from "lit";
-import { customElement } from "lit/decorators.js";
+import { customElement, state } from "lit/decorators.js";
 
 import { Input } from "../mixins/input";
 import { Persistable } from "../mixins/persistable";
+import { cls } from "../utils";
 import { SDRadioElement } from "./radio";
+import { SDRadioButtonElement } from "./radio-button";
 
 /**
  * Element that offers persisting a `boolean`, `number`, or `string` from a list of radio options.
@@ -16,26 +18,55 @@ export class SDRadioGroupElement extends Input(Persistable<boolean | number | st
 	public static styles = [
 		super.styles ?? [],
 		css`
+			.buttons {
+				background-color: var(--color-surface);
+				border-radius: var(--rounding-m);
+				display: flex;
+			}
+
 			::slotted(sd-radio) {
 				display: flex;
+			}
+
+			::slotted(sd-radio-button) {
+				flex: 1 1 0px;
+				max-width: var(--radio-button-max-width);
+			}
+
+			::slotted(sd-radio-button:focus) {
+				/* Allows the outline to overlap adjacent items */
+				position: relative;
+				z-index: 1;
 			}
 		`,
 	];
 
 	/**
+	 * Type of radio options the group is responsible for.
+	 */
+	@state()
+	accessor #type: "buttons" | "mixed" | "radios" = "mixed";
+
+	/**
 	 * Gets the radios managed by this group.
 	 * @returns The radios.
 	 */
-	get #radios(): SDRadioElement[] {
+	get #radios(): (SDRadioButtonElement | SDRadioElement)[] {
 		// Is there a way to query only radios that aren't in a nested radio group without filtering?
-		return [...this.querySelectorAll("sd-radio")].filter((radio) => radio.closest("sd-radio-group") === this);
+		return [...this.querySelectorAll<SDRadioButtonElement | SDRadioElement>("sd-radio, sd-radio-button")].filter(
+			(radio) => radio.closest("sd-radio-group") === this,
+		);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	public override render(): TemplateResult {
-		return html`<slot @slotchange=${this.#syncRadios} @click=${this.#onClick} @keydown=${this.#onKeyDown}></slot>`;
+		return html`
+			<div .className=${cls(this.#type === "buttons" && "buttons")}>
+				<slot @slotchange=${this.#onSlotChange} @click=${this.#onClick} @keydown=${this.#onKeyDown}></slot>
+			</div>
+		`;
 	}
 
 	/**
@@ -50,12 +81,30 @@ export class SDRadioGroupElement extends Input(Persistable<boolean | number | st
 	}
 
 	/**
-	 * Determines whether the specified event was dispatched for a radio that is managed by this group.
+	 * Gets the radio or radio button button for the specified event target, when the radio is associated with this group.
 	 * @param ev Source event.
-	 * @returns `true` when the event was dispatched from a radio this group manages.
+	 * @returns The radio or radio button; otherwise `undefined`.
 	 */
-	#isRadioEvent(ev: Event | KeyboardEvent): ev is RadioEvent<typeof ev> {
-		return ev.target instanceof SDRadioElement && ev.target.closest("sd-radio-group") === this;
+	#getRadioForEvent(ev: Event | KeyboardEvent): SDRadioButtonElement | SDRadioElement | undefined {
+		if (!(ev.target instanceof Element)) {
+			return;
+		}
+
+		const radio = ev.target.closest<SDRadioButtonElement | SDRadioElement>("sd-radio, sd-radio-button");
+		if (radio && radio.closest("sd-radio-group") === this) {
+			return radio;
+		}
+	}
+
+	/**
+	 * Updates the current value of the radio group, based on the radio that was checked.
+	 * @param ev Source event of the click.
+	 */
+	#onClick(ev: Event): void {
+		const radio = this.#getRadioForEvent(ev);
+		if (radio && !radio.disabled) {
+			this.value = radio.typedValue;
+		}
 	}
 
 	/**
@@ -64,7 +113,8 @@ export class SDRadioGroupElement extends Input(Persistable<boolean | number | st
 	 * @param ev Source event.
 	 */
 	#onKeyDown(ev: KeyboardEvent): void {
-		if (!this.#isRadioEvent(ev) || !["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", " "].includes(ev.key)) {
+		const radio = this.#getRadioForEvent(ev);
+		if (!radio || !["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", " "].includes(ev.key)) {
 			return;
 		}
 
@@ -73,7 +123,7 @@ export class SDRadioGroupElement extends Input(Persistable<boolean | number | st
 
 		// Select radio from event source when space bar was pressed.
 		if (ev.key === " ") {
-			this.value = ev.target.typedValue;
+			this.value = radio.typedValue;
 			return;
 		}
 
@@ -82,7 +132,7 @@ export class SDRadioGroupElement extends Input(Persistable<boolean | number | st
 		// Determine starting point; either checked radio, or radio with focus (when none are checked).
 		let startIndex = radios.findIndex((radio) => radio.checked);
 		if (startIndex < 0) {
-			startIndex = radios.indexOf(ev.target);
+			startIndex = radios.indexOf(radio);
 		}
 
 		const incrementor = ev.key === "ArrowUp" || ev.key === "ArrowLeft" ? -1 : 1;
@@ -109,13 +159,27 @@ export class SDRadioGroupElement extends Input(Persistable<boolean | number | st
 	}
 
 	/**
-	 * Updates the current value of the radio group, based on the radio that was checked.
-	 * @param ev Source event of the click.
+	 * Handles the main slot within the radio group changing.
 	 */
-	#onClick(ev: Event): void {
-		if (this.#isRadioEvent(ev) && !ev.target.disabled) {
-			this.value = ev.target.typedValue;
+	#onSlotChange(): void {
+		const radios = this.#radios;
+		if (radios.every((r) => r.tagName === "SD-RADIO")) {
+			this.#type = "radios";
+		} else if (radios.every((r) => r.tagName === "SD-RADIO-BUTTON")) {
+			this.#type = "buttons";
+			this.style.setProperty("--radio-button-max-width", `${100 / radios.length}%`);
+		} else {
+			this.#type = "mixed";
 		}
+
+		if (this.#type === "mixed") {
+			console.warn(
+				"\x1B[1msd-radio-group\x1B[m should not contain both \x1B[1msd-radio\x1B[m and \x1B[1msd-radio-button\x1B[m elements.",
+				this,
+			);
+		}
+
+		this.#syncRadios();
 	}
 
 	/**
@@ -141,16 +205,6 @@ export class SDRadioGroupElement extends Input(Persistable<boolean | number | st
 		}
 	}
 }
-
-/**
- * Event that was dispatched from a radio element.
- */
-type RadioEvent<TSource> = Omit<TSource, "target"> & {
-	/**
-	 * Radio element that dispatched the event.
-	 */
-	readonly target: SDRadioElement;
-};
 
 declare global {
 	interface HTMLElementTagNameMap {

@@ -109,13 +109,7 @@ export class SDRadioElement extends Option(Input(LitElement)) {
 	];
 
 	/**
-	 * Name of the radio button group the element is associated with.
-	 */
-	@property()
-	public accessor name: string | undefined = undefined;
-
-	/**
-	 * Determines whether the radio button is checked; default `false`.
+	 * Determines whether the radio is checked; default `false`.
 	 */
 	@property({
 		reflect: true,
