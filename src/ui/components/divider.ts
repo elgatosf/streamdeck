@@ -16,7 +16,7 @@ export class SDDividerElement extends LitElement {
 				display: grid;
 				align-items: center;
 				height: var(--size-xl);
-				margin: var(--size-2xs) 0;
+				margin: var(--size-s) 0;
 			}
 
 			hr,
