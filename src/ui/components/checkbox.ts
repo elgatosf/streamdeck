@@ -1,5 +1,5 @@
 import { css, html, LitElement, type TemplateResult } from "lit";
-import { customElement } from "lit/decorators.js";
+import { customElement, property } from "lit/decorators.js";
 import { ifDefined } from "lit/directives/if-defined.js";
 import { ref } from "lit/directives/ref.js";
 
@@ -125,6 +125,10 @@ export class SDCheckboxElement extends Option(Input(Persistable<boolean | number
 	 * @returns `true` when the checkbox is checked; otherwise `false`.
 	 */
 	public get checked(): boolean {
+		if (this.setting === undefined) {
+			return this.htmlChecked;
+		}
+
 		if (this.value === undefined) {
 			return false;
 		}
@@ -141,12 +145,23 @@ export class SDCheckboxElement extends Option(Input(Persistable<boolean | number
 	 * @param value Value indicating whether the checkbox is checked.
 	 */
 	public set checked(value: boolean) {
+		this.htmlChecked = value;
 		if (this.typedValue) {
 			this.value = value ? this.typedValue : undefined;
 		} else {
 			this.value = value;
 		}
 	}
+
+	/**
+	 * Checked state as specified within HTML; this state is ignored when the element is attached to a `setting`.
+	 */
+	@property({
+		attribute: "checked",
+		reflect: true,
+		type: Boolean,
+	})
+	public accessor htmlChecked: boolean = false;
 
 	/**
 	 * Gets the visual element that represents the checkbox.
