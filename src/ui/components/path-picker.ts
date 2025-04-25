@@ -99,6 +99,7 @@ export class SDPickerElement extends LitElement {
 						icon="close-circle--filled"
 						title="Clear"
 						.disabled=${this.disabled}
+						?hidden=${this.value === undefined}
 						@click=${(): void => {
 							this.dispatchEvent(new Event("clear"));
 						}}
