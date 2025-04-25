@@ -1,6 +1,8 @@
 import { css, html, LitElement, type TemplateResult } from "lit";
 import { customElement, property } from "lit/decorators.js";
 
+import { cls } from "../utils";
+
 /**
  * Element that provides a horizontal divider, with an optional label.
  */
@@ -15,8 +17,12 @@ export class SDDividerElement extends LitElement {
 			.container {
 				display: grid;
 				align-items: center;
-				height: var(--size-xl);
+				height: 1px;
 				margin: var(--size-s) 0;
+			}
+
+			.container--labeled {
+				height: var(--size-xl);
 			}
 
 			hr,
@@ -28,6 +34,7 @@ export class SDDividerElement extends LitElement {
 				background-color: var(--color-border-subtle);
 				border: none;
 				height: 1px;
+				margin: var(--size-none);
 				width: 100%;
 			}
 
@@ -66,7 +73,7 @@ export class SDDividerElement extends LitElement {
 	 */
 	public override render(): TemplateResult {
 		return html`
-			<div class="container">
+			<div .className=${cls("container", this.label && "container--labeled")}>
 				<hr />
 				${this.label &&
 				html`

@@ -23,6 +23,10 @@ export class SDFieldElement extends LitElement {
 				display: flex;
 				height: var(--size-2xl);
 			}
+
+			::slotted(*:last-child) {
+				margin-bottom: 0px;
+			}
 		`,
 	];
 
