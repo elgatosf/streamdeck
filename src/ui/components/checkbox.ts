@@ -27,6 +27,10 @@ export class SDCheckboxElement extends Option(Input(Persistable<boolean | number
 				display: inline-flex;
 			}
 
+			:host([hidden]) {
+				display: none;
+			}
+
 			label {
 				align-items: center;
 				display: inline-flex;

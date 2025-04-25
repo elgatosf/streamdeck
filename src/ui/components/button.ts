@@ -20,6 +20,10 @@ export class SDButtonElement extends LitElement {
 				display: inline-flex;
 			}
 
+			:host([hidden]) {
+				display: none;
+			}
+
 			button {
 				background: var(--color-surface);
 				border: none;

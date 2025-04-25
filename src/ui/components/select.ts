@@ -38,6 +38,10 @@ export class SDSelectElement extends Input(Persistable<boolean | number | string
 				display: flex;
 			}
 
+			:host([hidden]) {
+				display: none;
+			}
+
 			select {
 				appearance: none;
 				background-image: ${chevron("rgb(216, 216, 216)")};

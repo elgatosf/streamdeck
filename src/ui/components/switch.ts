@@ -24,6 +24,10 @@ export class SDSwitchElement extends SDCheckboxElement {
 				display: inline-flex;
 			}
 
+			:host([hidden]) {
+				display: none;
+			}
+
 			label {
 				align-items: center;
 				display: inline-flex;
