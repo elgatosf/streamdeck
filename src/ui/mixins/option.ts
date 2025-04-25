@@ -62,14 +62,6 @@ export const Option = <TBase extends Constructor<LitElement> = typeof LitElement
 		/**
 		 * @inheritdoc
 		 */
-		protected override update(changedProperties: Map<PropertyKey, unknown>): void {
-			super.update(changedProperties);
-			this.dispatchEvent(new Event("update"));
-		}
-
-		/**
-		 * @inheritdoc
-		 */
 		protected override willUpdate(_changedProperties: Map<PropertyKey, unknown>): void {
 			super.willUpdate(_changedProperties);
 
