@@ -1,5 +1,5 @@
 import { css, html, type HTMLTemplateResult, LitElement, type TemplateResult } from "lit";
-import { customElement, property, state } from "lit/decorators.js";
+import { customElement, property, queryAssignedNodes, state } from "lit/decorators.js";
 import { ifDefined } from "lit/directives/if-defined.js";
 import { createRef, ref } from "lit/directives/ref.js";
 
@@ -122,6 +122,12 @@ export class SDTextAreaElement extends Input(Persistable<string>(LitElement)) {
 	}
 
 	/**
+	 * Value as specified within HTML; this value is ignored when the element is attached to a `setting`.
+	 */
+	@property({ attribute: "value" })
+	public accessor htmlValue: string | undefined;
+
+	/**
 	 * Maximum length the value can be.
 	 */
 	@property({
@@ -156,17 +162,24 @@ export class SDTextAreaElement extends Input(Persistable<string>(LitElement)) {
 	#containerRef = createRef<HTMLDivElement>();
 
 	/**
+	 * Nodes within the elements default slot.
+	 */
+	@queryAssignedNodes()
+	accessor nodes!: Array<Node>;
+
+	/**
 	 * @inheritdoc
 	 */
 	public override render(): TemplateResult {
+		const value = this.setting !== undefined ? this.value : this.htmlValue;
+
 		return html`
 			<div ${ref(this.#containerRef)} class="container">
 				<textarea
 					${ref(this.inputRef)}
-					id="textarea"
 					maxlength=${ifDefined(this.maxLength)}
 					placeholder=${ifDefined(this.placeholder)}
-					.value=${this.value ?? ""}
+					.value=${value ?? ""}
 					?disabled=${this.disabled}
 					?required=${this.#userHasInteracted && this.required}
 					@blur=${(): void => {
@@ -178,6 +191,13 @@ export class SDTextAreaElement extends Input(Persistable<string>(LitElement)) {
 				></textarea>
 				${this.#getCounter()}
 			</div>
+
+			<slot
+				hidden
+				@slotchange=${(): void => {
+					this.htmlValue = this.nodes.at(0)?.textContent?.trim() ?? undefined;
+				}}
+			></slot>
 		`;
 	}
 

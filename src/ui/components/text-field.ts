@@ -94,6 +94,12 @@ export class SDTextFieldElement extends Input(Persistable<string>(LitElement)) {
 	}
 
 	/**
+	 * Value as specified within HTML; this value is ignored when the element is attached to a `setting`.
+	 */
+	@property({ attribute: "value" })
+	public accessor htmlValue: string | undefined;
+
+	/**
 	 * Maximum length the value can be.
 	 */
 	@property({
@@ -138,6 +144,8 @@ export class SDTextFieldElement extends Input(Persistable<string>(LitElement)) {
 	 * @inheritdoc
 	 */
 	public override render(): TemplateResult {
+		const value = this.setting !== undefined ? this.value : this.htmlValue;
+
 		return html`
 			<label class="container">
 				<input
@@ -148,7 +156,7 @@ export class SDTextFieldElement extends Input(Persistable<string>(LitElement)) {
 					?disabled=${this.disabled}
 					?required=${this.#userHasInteracted && this.required}
 					.type=${this.type ?? "text"}
-					.value=${this.value ?? ""}
+					.value=${value ?? ""}
 					@blur=${(): void => {
 						this.#userHasInteracted = true;
 					}}
