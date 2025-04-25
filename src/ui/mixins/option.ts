@@ -16,34 +16,22 @@ export const Option = <TBase extends Constructor<LitElement> = typeof LitElement
 	 */
 	class OptionMixin extends superClass {
 		/**
-		 * Private backing field for {@link SDOptionMixin.typedValue}.
+		 * Private backing field for `htmlValue`.
 		 */
 		#value: boolean | number | string | null | undefined = null;
 
 		/**
-		 * @inheritdoc
-		 */
-		@property()
-		public accessor type: "boolean" | "number" | "string" = "string";
-
-		/**
-		 * @inheritdoc
-		 */
-		@property({ attribute: "value" })
-		public accessor htmlValue: string | undefined = undefined;
-
-		/**
-		 * Value of the option.
+		 * Value as specified within HTML.
 		 * @returns The value.
 		 */
-		public get typedValue(): boolean | number | string | undefined {
+		public get htmlValue(): boolean | number | string | undefined {
 			if (this.#value === null) {
 				if (this.type === "boolean") {
-					this.#value = parseBoolean(this.htmlValue);
+					this.#value = parseBoolean(this.htmlValueAsString);
 				} else if (this.type === "number") {
-					this.#value = parseNumber(this.htmlValue);
+					this.#value = parseNumber(this.htmlValueAsString);
 				} else {
-					this.#value = this.htmlValue;
+					this.#value = this.htmlValueAsString;
 				}
 			}
 
@@ -51,13 +39,25 @@ export const Option = <TBase extends Constructor<LitElement> = typeof LitElement
 		}
 
 		/**
-		 * Sets the value of the option, and associated type.
-		 * @param value New value.
+		 * Value as specified within HTML.
+		 * @param value The value.
 		 */
-		public set typedValue(value: boolean | number | string | undefined) {
+		public set htmlValue(value: boolean | number | string | undefined) {
 			this.type = typeof value === "number" ? "number" : typeof value === "boolean" ? "boolean" : "string";
-			this.htmlValue = value?.toString();
+			this.htmlValueAsString = value?.toString();
 		}
+
+		/**
+		 * @inheritdoc
+		 */
+		@property({ attribute: "value" })
+		public accessor htmlValueAsString: string | undefined = undefined;
+
+		/**
+		 * @inheritdoc
+		 */
+		@property()
+		public accessor type: "boolean" | "number" | "string" = "string";
 
 		/**
 		 * @inheritdoc
@@ -73,7 +73,7 @@ export const Option = <TBase extends Constructor<LitElement> = typeof LitElement
 		protected override willUpdate(_changedProperties: Map<PropertyKey, unknown>): void {
 			super.willUpdate(_changedProperties);
 
-			if (_changedProperties.has("type") || _changedProperties.has("typedValue")) {
+			if (_changedProperties.has("type") || _changedProperties.has("htmlValueAsString")) {
 				this.#value = null;
 			}
 		}
@@ -87,18 +87,17 @@ export const Option = <TBase extends Constructor<LitElement> = typeof LitElement
  */
 export declare class SDOptionMixin extends LitElement {
 	/**
-	 * Untyped value, as defined by the `value` attribute; use {@link SDOptionMixin.typedValue} property
-	 * to access the typed-value.
+	 * Value as specified within HTML.
 	 */
-	public htmlValue: string | undefined;
+	public htmlValue: boolean | number | string | undefined;
+
+	/**
+	 * Raw string value as specified within HTML.
+	 */
+	public htmlValueAsString: string | undefined;
 
 	/**
 	 * Type of the value; allows for the value to be converted to a boolean or number.
 	 */
 	public type: "boolean" | "number" | "string";
-
-	/**
-	 * Typed value, parsed from the {@link SDOptionMixin.type} and {@link SDOptionMixin.htmlValue}.
-	 */
-	public typedValue: boolean | number | string | undefined;
 }

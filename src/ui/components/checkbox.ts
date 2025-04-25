@@ -133,8 +133,8 @@ export class SDCheckboxElement extends Option(Input(Persistable<boolean | number
 			return false;
 		}
 
-		if (this.typedValue !== undefined || typeof this.value !== "boolean") {
-			return this.value === this.typedValue;
+		if (this.htmlValue !== undefined || typeof this.value !== "boolean") {
+			return this.value === this.htmlValue;
 		}
 
 		return !!this.value;
@@ -146,8 +146,8 @@ export class SDCheckboxElement extends Option(Input(Persistable<boolean | number
 	 */
 	public set checked(value: boolean) {
 		this.htmlChecked = value;
-		if (this.typedValue) {
-			this.value = value ? this.typedValue : undefined;
+		if (this.htmlValue) {
+			this.value = value ? this.htmlValue : undefined;
 		} else {
 			this.value = value;
 		}

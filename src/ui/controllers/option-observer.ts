@@ -113,7 +113,7 @@ export class OptionObserver implements ReactiveController {
 					new Option({
 						disabled: node.disabled,
 						label: node.textContent ?? undefined,
-						value: node.typedValue,
+						value: node.htmlValue,
 					}),
 				);
 			} else if (node instanceof SDOptionGroupElement) {

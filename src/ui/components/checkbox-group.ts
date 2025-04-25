@@ -61,7 +61,7 @@ export class SDCheckboxGroupElement extends Input(Persistable<(boolean | number 
 		// Ignore events that aren't associated with a checkbox this group manages.
 		if (
 			!(ev.target instanceof SDCheckboxElement) ||
-			ev.target.typedValue === undefined ||
+			ev.target.htmlValue === undefined ||
 			ev.target.closest("sd-checkbox-group") !== this
 		) {
 			return;
@@ -70,8 +70,8 @@ export class SDCheckboxGroupElement extends Input(Persistable<(boolean | number 
 		// Build a set of all checked values.
 		const checkedValues = new Set<boolean | number | string>();
 		this.#checkboxes.forEach((checkbox) => {
-			if (checkbox.checked && checkbox.typedValue !== undefined) {
-				checkedValues.add(checkbox.typedValue);
+			if (checkbox.checked && checkbox.htmlValue !== undefined) {
+				checkedValues.add(checkbox.htmlValue);
 			}
 		});
 
@@ -85,19 +85,19 @@ export class SDCheckboxGroupElement extends Input(Persistable<(boolean | number 
 		this.#checkboxes.forEach((checkbox) => {
 			// Undefined values aren't persisted resulting in unexpected UX behavior.
 			// Warn the Maker that all checkboxes within a group should have a value.
-			if (checkbox.typedValue === undefined) {
+			if (checkbox.htmlValue === undefined) {
 				console.warn(
 					"Checkbox group contains checkbox with an undefined value. Please specify a value on the checkbox",
 					checkbox,
 				);
 			}
 
-			if (!this.value || checkbox.typedValue === undefined) {
+			if (!this.value || checkbox.htmlValue === undefined) {
 				checkbox.checked = false;
 				return;
 			}
 
-			checkbox.checked = this.value.includes(checkbox.typedValue);
+			checkbox.checked = this.value.includes(checkbox.htmlValue);
 		});
 	}
 }
