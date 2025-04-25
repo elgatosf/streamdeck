@@ -100,6 +100,19 @@ export class SDCheckboxElement extends Option(Input(Persistable<boolean | number
 	];
 
 	/**
+	 * Visual element that represents the checkbox.
+	 */
+	static readonly #visualElement = html`
+		<div class="checkbox" role="checkbox">
+			<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" fill="currentColor" viewBox="0 0 24 24">
+				<path
+					d="M19.78 7.22a.75.75 0 0 1 0 1.06l-9.5 9.5a.75.75 0 0 1-1.06 0l-5-5a.75.75 0 1 1 1.06-1.06l4.47 4.47 8.97-8.97a.75.75 0 0 1 1.06 0Z"
+				/>
+			</svg>
+		</div>
+	`;
+
+	/**
 	 * Initializes a new instance of the {@link SDCheckboxElement} class.
 	 */
 	constructor() {
@@ -133,6 +146,14 @@ export class SDCheckboxElement extends Option(Input(Persistable<boolean | number
 		} else {
 			this.value = value;
 		}
+	}
+
+	/**
+	 * Gets the visual element that represents the checkbox.
+	 * @returns The element.
+	 */
+	protected get visualElement(): unknown {
+		return SDCheckboxElement.#visualElement;
 	}
 
 	/**
@@ -172,14 +193,7 @@ export class SDCheckboxElement extends Option(Input(Persistable<boolean | number
 					}}
 				/>
 
-				<div class="checkbox" role="checkbox">
-					<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" fill="currentColor" viewBox="0 0 24 24">
-						<path
-							d="M19.78 7.22a.75.75 0 0 1 0 1.06l-9.5 9.5a.75.75 0 0 1-1.06 0l-5-5a.75.75 0 1 1 1.06-1.06l4.47 4.47 8.97-8.97a.75.75 0 0 1 1.06 0Z"
-						/>
-					</svg>
-				</div>
-
+				${this.visualElement}
 				<slot></slot>
 			</label>
 		`;
