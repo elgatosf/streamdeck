@@ -113,6 +113,7 @@ export class OptionObserver implements ReactiveController {
 					new Option({
 						disabled: node.disabled,
 						label: node.textContent ?? undefined,
+						selected: node.htmlSelected,
 						value: node.htmlValue,
 					}),
 				);
