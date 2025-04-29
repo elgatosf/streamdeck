@@ -175,12 +175,13 @@ export class SDTextFieldElement extends Input(Persistable<string>(LitElement)) {
 	protected override willUpdate(_changedProperties: PropertyValues): void {
 		super.willUpdate(_changedProperties);
 
-		if (_changedProperties.has("value")) {
-			this.htmlValue = this.value;
-		}
-
-		if (_changedProperties.has("htmlValue") && this.setting === undefined) {
-			this.value = this.htmlValue;
+		// Manage non-persisted states.
+		if (this.setting === undefined) {
+			if (_changedProperties.has("value")) {
+				this.htmlValue = this.value;
+			} else if (_changedProperties.has("htmlValue")) {
+				this.value = this.htmlValue;
+			}
 		}
 	}
 
