@@ -207,8 +207,12 @@ export class SDTextAreaElement extends Input(Persistable<string>(LitElement)) {
 	protected override willUpdate(_changedProperties: Map<PropertyKey, unknown>): void {
 		super.willUpdate(_changedProperties);
 
-		if (_changedProperties.has("value") && this.#containerRef.value) {
-			this.#containerRef.value.dataset.content = this.value;
+		if (_changedProperties.has("value")) {
+			if (this.#containerRef.value) {
+				this.#containerRef.value.dataset.content = this.value;
+			}
+
+			this.htmlValue = this.value;
 		}
 	}
 

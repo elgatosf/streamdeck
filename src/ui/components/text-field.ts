@@ -1,4 +1,4 @@
-import { css, html, LitElement, type TemplateResult } from "lit";
+import { css, html, LitElement, type PropertyValues, type TemplateResult } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { ifDefined } from "lit/directives/if-defined.js";
 import { ref } from "lit/directives/ref.js";
@@ -167,6 +167,17 @@ export class SDTextFieldElement extends Input(Persistable<string>(LitElement)) {
 				${this.#getCounter()}
 			</label>
 		`;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	protected override willUpdate(_changedProperties: PropertyValues): void {
+		super.willUpdate(_changedProperties);
+
+		if (_changedProperties.has("value")) {
+			this.htmlValue = this.value;
+		}
 	}
 
 	/**
