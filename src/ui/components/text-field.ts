@@ -178,6 +178,10 @@ export class SDTextFieldElement extends Input(Persistable<string>(LitElement)) {
 		if (_changedProperties.has("value")) {
 			this.htmlValue = this.value;
 		}
+
+		if (_changedProperties.has("htmlValue") && this.setting === undefined) {
+			this.value = this.htmlValue;
+		}
 	}
 
 	/**

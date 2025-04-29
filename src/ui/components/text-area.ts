@@ -214,6 +214,10 @@ export class SDTextAreaElement extends Input(Persistable<string>(LitElement)) {
 
 			this.htmlValue = this.value;
 		}
+
+		if (_changedProperties.has("htmlValue") && this.setting === undefined) {
+			this.value = this.htmlValue;
+		}
 	}
 
 	/**
