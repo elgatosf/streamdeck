@@ -1,5 +1,5 @@
 import { LitElement } from "lit";
-import { property, state } from "lit/decorators.js";
+import { property } from "lit/decorators.js";
 
 import { type Constructor, parseBoolean, parseNumber } from "../../common/utils";
 
@@ -16,10 +16,39 @@ export const Option = <TBase extends Constructor<LitElement> = typeof LitElement
 	 */
 	class OptionMixin extends superClass {
 		/**
-		 * @inheritdoc
+		 * Private backing field for `htmlValue`.
 		 */
-		@state()
-		public accessor htmlValue: boolean | number | string | undefined = undefined;
+		#htmlValue: boolean | number | string | null | undefined = null;
+
+		/**
+		 * Value as specified within HTML.
+		 * @returns The value.
+		 */
+		public get htmlValue(): boolean | number | string | undefined {
+			if (this.#htmlValue === null) {
+				if (this.type === "boolean") {
+					this.#htmlValue = parseBoolean(this.htmlValueAsString);
+				} else if (this.type === "number") {
+					this.#htmlValue = parseNumber(this.htmlValueAsString);
+				} else {
+					this.#htmlValue = this.htmlValueAsString;
+				}
+			}
+
+			return this.#htmlValue;
+		}
+
+		/**
+		 * Value as specified within HTML.
+		 * @param value New value.
+		 */
+		@property({ attribute: false })
+		public set htmlValue(value: boolean | number | string | undefined) {
+			this.#htmlValue = value;
+
+			this.type = typeof value === "number" ? "number" : typeof value === "boolean" ? "boolean" : "string";
+			this.htmlValueAsString = value?.toString();
+		}
 
 		/**
 		 * @inheritdoc
@@ -40,27 +69,20 @@ export const Option = <TBase extends Constructor<LitElement> = typeof LitElement
 			super.willUpdate(_changedProperties);
 
 			if (_changedProperties.has("type") || _changedProperties.has("htmlValueAsString")) {
-				const htmlValue =
-					this.type === "boolean"
-						? parseBoolean(this.htmlValueAsString)
-						: this.type === "number"
-							? parseNumber(this.htmlValueAsString)
-							: this.htmlValueAsString;
+				switch (this.type) {
+					case "boolean":
+						this.htmlValue = parseBoolean(this.htmlValueAsString);
+						break;
 
-				this.#setHtmlValue(htmlValue);
-			} else if (_changedProperties.has("htmlValue")) {
-				this.#setHtmlValue(this.htmlValue);
+					case "number":
+						this.htmlValue = parseNumber(this.htmlValueAsString);
+						break;
+
+					default:
+						this.htmlValue = this.htmlValueAsString;
+						break;
+				}
 			}
-		}
-
-		/**
-		 * Sets the `htmlValue`, and its associated properties.
-		 * @param value New value.
-		 */
-		#setHtmlValue(value: boolean | number | string | undefined): void {
-			this.type = typeof value === "number" ? "number" : typeof value === "boolean" ? "boolean" : "string";
-			this.htmlValue = value;
-			this.htmlValueAsString = value?.toString();
 		}
 	}
 

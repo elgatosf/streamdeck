@@ -222,11 +222,11 @@ export class SDCheckboxElement extends Option(Input(Persistable<boolean | number
 		this.ariaChecked = this.checked ? "checked" : null;
 
 		if (this.setting === undefined) {
-			if (_changedProperties.has("htmlChecked") || _changedProperties.has("htmlValue")) {
-				this.value = this.checked ? this.htmlValue : undefined;
-			} else if (_changedProperties.has("value")) {
+			if (_changedProperties.has("value")) {
 				this.htmlValue = this.value;
 				this.checked = true;
+			} else if (_changedProperties.has("htmlChecked") || _changedProperties.has("htmlValue")) {
+				this.value = this.checked ? this.htmlValue : undefined;
 			}
 		}
 	}
