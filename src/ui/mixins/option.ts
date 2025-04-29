@@ -1,5 +1,5 @@
 import { LitElement } from "lit";
-import { property } from "lit/decorators.js";
+import { property, state } from "lit/decorators.js";
 
 import { type Constructor, parseBoolean, parseNumber } from "../../common/utils";
 
@@ -16,36 +16,10 @@ export const Option = <TBase extends Constructor<LitElement> = typeof LitElement
 	 */
 	class OptionMixin extends superClass {
 		/**
-		 * Private backing field for `htmlValue`.
+		 * @inheritdoc
 		 */
-		#value: boolean | number | string | null | undefined = null;
-
-		/**
-		 * Value as specified within HTML.
-		 * @returns The value.
-		 */
-		public get htmlValue(): boolean | number | string | undefined {
-			if (this.#value === null) {
-				if (this.type === "boolean") {
-					this.#value = parseBoolean(this.htmlValueAsString);
-				} else if (this.type === "number") {
-					this.#value = parseNumber(this.htmlValueAsString);
-				} else {
-					this.#value = this.htmlValueAsString;
-				}
-			}
-
-			return this.#value;
-		}
-
-		/**
-		 * Value as specified within HTML.
-		 * @param value The value.
-		 */
-		public set htmlValue(value: boolean | number | string | undefined) {
-			this.type = typeof value === "number" ? "number" : typeof value === "boolean" ? "boolean" : "string";
-			this.htmlValueAsString = value?.toString();
-		}
+		@state()
+		public accessor htmlValue: boolean | number | string | undefined = undefined;
 
 		/**
 		 * @inheritdoc
@@ -66,8 +40,27 @@ export const Option = <TBase extends Constructor<LitElement> = typeof LitElement
 			super.willUpdate(_changedProperties);
 
 			if (_changedProperties.has("type") || _changedProperties.has("htmlValueAsString")) {
-				this.#value = null;
+				const htmlValue =
+					this.type === "boolean"
+						? parseBoolean(this.htmlValueAsString)
+						: this.type === "number"
+							? parseNumber(this.htmlValueAsString)
+							: this.htmlValueAsString;
+
+				this.#setHtmlValue(htmlValue);
+			} else if (_changedProperties.has("htmlValue")) {
+				this.#setHtmlValue(this.htmlValue);
 			}
+		}
+
+		/**
+		 * Sets the `htmlValue`, and its associated properties.
+		 * @param value New value.
+		 */
+		#setHtmlValue(value: boolean | number | string | undefined): void {
+			this.type = typeof value === "number" ? "number" : typeof value === "boolean" ? "boolean" : "string";
+			this.htmlValue = value;
+			this.htmlValueAsString = value?.toString();
 		}
 	}
 

@@ -220,6 +220,15 @@ export class SDCheckboxElement extends Option(Input(Persistable<boolean | number
 	protected override willUpdate(_changedProperties: Map<PropertyKey, unknown>): void {
 		super.willUpdate(_changedProperties);
 		this.ariaChecked = this.checked ? "checked" : null;
+
+		if (this.setting === undefined) {
+			if (_changedProperties.has("htmlChecked") || _changedProperties.has("htmlValue")) {
+				this.value = this.checked ? this.htmlValue : undefined;
+			} else if (_changedProperties.has("value")) {
+				this.htmlValue = this.value;
+				this.checked = true;
+			}
+		}
 	}
 }
 
