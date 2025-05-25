@@ -12,6 +12,10 @@ export class SDBannerElement extends LitElement {
 	public static styles = [
 		super.styles ?? [],
 		css`
+			:host {
+				margin-bottom: var(--space-xs);
+			}
+
 			article {
 				--banner-border-color: var(--color-border-subtle);
 				--banner-icon-color: var(--color-content-primary);
@@ -20,7 +24,6 @@ export class SDBannerElement extends LitElement {
 				color: var(--color-content-secondary);
 				display: flex;
 				gap: var(--space-xs);
-				margin-bottom: var(--space-xs);
 				padding: var(--space-xs);
 			}
 

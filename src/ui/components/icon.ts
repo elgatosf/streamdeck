@@ -28,6 +28,10 @@ export class SDIconElement extends LitElement {
 				line-height: 0;
 			}
 
+			:host([hidden]) {
+				display: none;
+			}
+
 			div.s {
 				--sd-icon-size: 16px;
 			}

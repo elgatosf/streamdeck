@@ -16,9 +16,45 @@ export const Option = <TBase extends Constructor<LitElement> = typeof LitElement
 	 */
 	class OptionMixin extends superClass {
 		/**
-		 * Private backing field for {@link SDOptionMixin.typedValue}.
+		 * Private backing field for `htmlValue`.
 		 */
-		#value: boolean | number | string | null | undefined = null;
+		#htmlValue: boolean | number | string | null | undefined = null;
+
+		/**
+		 * Value as specified within HTML.
+		 * @returns The value.
+		 */
+		public get htmlValue(): boolean | number | string | undefined {
+			if (this.#htmlValue === null) {
+				if (this.type === "boolean") {
+					this.#htmlValue = parseBoolean(this.htmlValueAsString);
+				} else if (this.type === "number") {
+					this.#htmlValue = parseNumber(this.htmlValueAsString);
+				} else {
+					this.#htmlValue = this.htmlValueAsString;
+				}
+			}
+
+			return this.#htmlValue;
+		}
+
+		/**
+		 * Value as specified within HTML.
+		 * @param value New value.
+		 */
+		@property({ attribute: false })
+		public set htmlValue(value: boolean | number | string | undefined) {
+			this.#htmlValue = value;
+
+			this.type = typeof value === "number" ? "number" : typeof value === "boolean" ? "boolean" : "string";
+			this.htmlValueAsString = value?.toString();
+		}
+
+		/**
+		 * @inheritdoc
+		 */
+		@property({ attribute: "value" })
+		public accessor htmlValueAsString: string | undefined = undefined;
 
 		/**
 		 * @inheritdoc
@@ -29,52 +65,23 @@ export const Option = <TBase extends Constructor<LitElement> = typeof LitElement
 		/**
 		 * @inheritdoc
 		 */
-		@property({ attribute: "value" })
-		public accessor htmlValue: string | undefined = undefined;
-
-		/**
-		 * Value of the option.
-		 * @returns The value.
-		 */
-		public get typedValue(): boolean | number | string | undefined {
-			if (this.#value === null) {
-				if (this.type === "boolean") {
-					this.#value = parseBoolean(this.htmlValue);
-				} else if (this.type === "number") {
-					this.#value = parseNumber(this.htmlValue);
-				} else {
-					this.#value = this.htmlValue;
-				}
-			}
-
-			return this.#value;
-		}
-
-		/**
-		 * Sets the value of the option, and associated type.
-		 * @param value New value.
-		 */
-		public set typedValue(value: boolean | number | string | undefined) {
-			this.type = typeof value === "number" ? "number" : typeof value === "boolean" ? "boolean" : "string";
-			this.htmlValue = value?.toString();
-		}
-
-		/**
-		 * @inheritdoc
-		 */
-		protected override update(changedProperties: Map<PropertyKey, unknown>): void {
-			super.update(changedProperties);
-			this.dispatchEvent(new Event("update"));
-		}
-
-		/**
-		 * @inheritdoc
-		 */
 		protected override willUpdate(_changedProperties: Map<PropertyKey, unknown>): void {
 			super.willUpdate(_changedProperties);
 
-			if (_changedProperties.has("type") || _changedProperties.has("typedValue")) {
-				this.#value = null;
+			if (_changedProperties.has("type") || _changedProperties.has("htmlValueAsString")) {
+				switch (this.type) {
+					case "boolean":
+						this.htmlValue = parseBoolean(this.htmlValueAsString);
+						break;
+
+					case "number":
+						this.htmlValue = parseNumber(this.htmlValueAsString);
+						break;
+
+					default:
+						this.htmlValue = this.htmlValueAsString;
+						break;
+				}
 			}
 		}
 	}
@@ -87,18 +94,17 @@ export const Option = <TBase extends Constructor<LitElement> = typeof LitElement
  */
 export declare class SDOptionMixin extends LitElement {
 	/**
-	 * Untyped value, as defined by the `value` attribute; use {@link SDOptionMixin.typedValue} property
-	 * to access the typed-value.
+	 * Value as specified within HTML.
 	 */
-	public htmlValue: string | undefined;
+	public htmlValue: boolean | number | string | undefined;
+
+	/**
+	 * Raw string value as specified within HTML.
+	 */
+	public htmlValueAsString: string | undefined;
 
 	/**
 	 * Type of the value; allows for the value to be converted to a boolean or number.
 	 */
 	public type: "boolean" | "number" | "string";
-
-	/**
-	 * Typed value, parsed from the {@link SDOptionMixin.type} and {@link SDOptionMixin.htmlValue}.
-	 */
-	public typedValue: boolean | number | string | undefined;
 }

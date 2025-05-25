@@ -1,9 +1,6 @@
-import { css, html, type TemplateResult } from "lit";
+import { css, html } from "lit";
 import { customElement, property } from "lit/decorators.js";
-import { ifDefined } from "lit/directives/if-defined.js";
-import { ref } from "lit/directives/ref.js";
 
-import { type HTMLEvent, preventDoubleClickSelection } from "../utils";
 import { SDCheckboxElement } from "./checkbox";
 
 /**
@@ -19,10 +16,6 @@ export class SDSwitchElement extends SDCheckboxElement {
 			/**
 			 * Container
 			 */
-
-			:host {
-				display: inline-flex;
-			}
 
 			label {
 				align-items: center;
@@ -102,6 +95,15 @@ export class SDSwitchElement extends SDCheckboxElement {
 	];
 
 	/**
+	 * Visual element that represents the switch.
+	 */
+	static readonly #visualElement = html`
+		<div class="track" role="button">
+			<div class="thumb"></div>
+		</div>
+	`;
+
+	/**
 	 * Gets the on/off state of the switch.
 	 * @returns Whether the switch is on/off.
 	 */
@@ -124,37 +126,8 @@ export class SDSwitchElement extends SDCheckboxElement {
 	/**
 	 * @inheritdoc
 	 */
-	public override render(): TemplateResult {
-		return html`
-			<label
-				tabindex=${ifDefined(this.disabled ? undefined : 0)}
-				@mousedown=${preventDoubleClickSelection}
-				@keydown=${(ev: KeyboardEvent): void => {
-					// Toggle switch on space bar key.
-					if (ev.code === "Space") {
-						this.isOn = !this.isOn;
-						ev.preventDefault();
-					}
-				}}
-			>
-				<input
-					${ref(this.inputRef)}
-					type="checkbox"
-					value=${ifDefined(this.setting)}
-					.checked=${this.isOn}
-					.disabled=${this.disabled}
-					@change=${(ev: HTMLEvent<HTMLInputElement>): void => {
-						this.isOn = ev.target.checked;
-					}}
-				/>
-
-				<div class="track" role="button">
-					<div class="thumb"></div>
-				</div>
-
-				<slot></slot>
-			</label>
-		`;
+	protected override get visualElement(): unknown {
+		return SDSwitchElement.#visualElement;
 	}
 }
 

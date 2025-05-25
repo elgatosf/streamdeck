@@ -103,7 +103,7 @@ export class SDRadioGroupElement extends Input(Persistable<boolean | number | st
 	#onClick(ev: Event): void {
 		const radio = this.#getRadioForEvent(ev);
 		if (radio && !radio.disabled) {
-			this.value = radio.typedValue;
+			this.value = radio.htmlValue;
 		}
 	}
 
@@ -123,7 +123,7 @@ export class SDRadioGroupElement extends Input(Persistable<boolean | number | st
 
 		// Select radio from event source when space bar was pressed.
 		if (ev.key === " ") {
-			this.value = radio.typedValue;
+			this.value = radio.htmlValue;
 			return;
 		}
 
@@ -148,7 +148,7 @@ export class SDRadioGroupElement extends Input(Persistable<boolean | number | st
 
 			// Found available radio, update group value to trigger re-sync.
 			if (!radios[index].disabled) {
-				this.value = radios[index].typedValue;
+				this.value = radios[index].htmlValue;
 				radios[index].focus();
 
 				return;
@@ -190,7 +190,7 @@ export class SDRadioGroupElement extends Input(Persistable<boolean | number | st
 
 		// Set the checked state of the radios.
 		this.#radios.forEach((radio) => {
-			radio.checked = this.value === radio.typedValue;
+			radio.checked = this.value === radio.htmlValue;
 			radio.tabIndex = radio.checked ? 0 : -1;
 
 			foundCheckedRadio = foundCheckedRadio || radio.checked;

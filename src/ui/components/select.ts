@@ -3,6 +3,7 @@ import { customElement, property, state } from "lit/decorators.js";
 import { ifDefined } from "lit/directives/if-defined.js";
 import { ref } from "lit/directives/ref.js";
 
+import type { Option } from "../../common/data-list";
 import { parseBoolean, parseNumber } from "../../common/utils";
 import { OptionObserver } from "../controllers/option-observer";
 import { Input } from "../mixins/input";
@@ -36,6 +37,10 @@ export class SDSelectElement extends Input(Persistable<boolean | number | string
 			:host {
 				/* Allow sizing */
 				display: flex;
+			}
+
+			:host([hidden]) {
+				display: none;
 			}
 
 			select {
@@ -133,7 +138,7 @@ export class SDSelectElement extends Input(Persistable<boolean | number | string
 							data-type=${ifDefined(typeof opt.value)}
 							value=${ifDefined(opt.value)}
 							.disabled=${opt.disabled}
-							.selected=${this.value !== undefined && opt.value === this.value}
+							.selected=${this.#isSelected(opt)}
 						>
 							${opt.label}
 						</option>`,
@@ -162,6 +167,21 @@ export class SDSelectElement extends Input(Persistable<boolean | number | string
 
 			this.#labelSignal.value.get().then(options.onChange);
 		}
+	}
+
+	/**
+	 * Determines whether the specified option is selected; the option is considered selected when:
+	 * - The persisted value of this element matches the option's value.
+	 * - Or, this element's value is not persisted, and the option has the `selected` attribute specified.
+	 * @param option Option.
+	 * @returns `true` when the option is considered selected; otherwise `false`.
+	 */
+	#isSelected(option: Option): boolean {
+		if (this.setting === undefined) {
+			return option.selected || false;
+		}
+
+		return this.value !== undefined && option.value === this.value;
 	}
 
 	/**

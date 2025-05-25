@@ -1,5 +1,6 @@
 import { css, html, LitElement, type TemplateResult } from "lit";
 import { customElement, property } from "lit/decorators.js";
+import { ifDefined } from "lit/directives/if-defined.js";
 import { ref } from "lit/directives/ref.js";
 
 import { Input } from "../mixins/input";
@@ -124,7 +125,7 @@ export class SDRadioElement extends Option(Input(LitElement)) {
 		return html`
 			<label
 				${ref(this.inputRef)}
-				.tabIndex=${this.tabIndex}
+				tabindex=${ifDefined(this.disabled ? undefined : 0)}
 				@mousedown=${preventDoubleClickSelection}
 				@change=${(ev: Event): void => {
 					// Propagate the change on the component.

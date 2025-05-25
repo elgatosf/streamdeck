@@ -1,4 +1,4 @@
-import { css, html, LitElement, type TemplateResult } from "lit";
+import { css, html, LitElement, type PropertyValues, type TemplateResult } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { ifDefined } from "lit/directives/if-defined.js";
 import { ref } from "lit/directives/ref.js";
@@ -94,6 +94,12 @@ export class SDTextFieldElement extends Input(Persistable<string>(LitElement)) {
 	}
 
 	/**
+	 * Value as specified within HTML; this value is ignored when the element is attached to a `setting`.
+	 */
+	@property({ attribute: "value" })
+	public accessor htmlValue: string | undefined;
+
+	/**
 	 * Maximum length the value can be.
 	 */
 	@property({
@@ -138,6 +144,8 @@ export class SDTextFieldElement extends Input(Persistable<string>(LitElement)) {
 	 * @inheritdoc
 	 */
 	public override render(): TemplateResult {
+		const value = this.setting !== undefined ? this.value : this.htmlValue;
+
 		return html`
 			<label class="container">
 				<input
@@ -148,7 +156,7 @@ export class SDTextFieldElement extends Input(Persistable<string>(LitElement)) {
 					?disabled=${this.disabled}
 					?required=${this.#userHasInteracted && this.required}
 					.type=${this.type ?? "text"}
-					.value=${this.value ?? ""}
+					.value=${value ?? ""}
 					@blur=${(): void => {
 						this.#userHasInteracted = true;
 					}}
@@ -159,6 +167,22 @@ export class SDTextFieldElement extends Input(Persistable<string>(LitElement)) {
 				${this.#getCounter()}
 			</label>
 		`;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	protected override willUpdate(_changedProperties: PropertyValues): void {
+		super.willUpdate(_changedProperties);
+
+		// Manage non-persisted states.
+		if (this.setting === undefined) {
+			if (_changedProperties.has("value")) {
+				this.htmlValue = this.value;
+			} else if (_changedProperties.has("htmlValue")) {
+				this.value = this.htmlValue;
+			}
+		}
 	}
 
 	/**

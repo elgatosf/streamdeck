@@ -1,5 +1,5 @@
 import { LitElement } from "lit";
-import { customElement } from "lit/decorators.js";
+import { customElement, property } from "lit/decorators.js";
 
 import { Input } from "../mixins/input";
 import { Option } from "../mixins/option";
@@ -9,7 +9,14 @@ import { Option } from "../mixins/option";
  */
 @customElement("sd-option")
 export class SDOptionElement extends Option(Input(LitElement)) {
-	// Empty element, used by sd-select to render options.
+	/**
+	 * Selected state as specified within HTML; this state is ignored when the element is attached to a `setting`.
+	 */
+	@property({
+		attribute: "selected",
+		type: Boolean,
+	})
+	public accessor htmlSelected: boolean = false;
 }
 
 declare global {

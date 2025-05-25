@@ -72,6 +72,11 @@ class BaseOption {
  */
 export class Option extends BaseOption {
 	/**
+	 * Determines whether the option is selected.
+	 */
+	public selected: boolean = false;
+
+	/**
 	 * Value this option represents.
 	 */
 	public value?: boolean | number | string;
@@ -82,6 +87,7 @@ export class Option extends BaseOption {
 	 */
 	constructor(option?: Partial<Option>) {
 		super(option);
+		this.selected = option?.selected ?? false;
 		this.value = option?.value;
 	}
 }
