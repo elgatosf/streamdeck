@@ -24,8 +24,3 @@ type PluginMessage<TEvent extends string, TPayload extends JsonValue> = Omit<
  * Occurs when a payload was received from the UI.
  */
 export type DidReceivePropertyInspectorMessage<TPayload extends JsonValue> = PluginMessage<"sendToPlugin", TPayload>;
-
-/**
- * Occurs when a message was received from the plugin.
- */
-export type DidReceivePluginMessage<TPayload extends JsonValue> = PluginMessage<"sendToPropertyInspector", TPayload>;
