@@ -11,7 +11,6 @@ import type {
 	SystemDidWakeUp,
 } from "./system";
 import type {
-	DidReceivePluginMessage,
 	DidReceivePropertyInspectorMessage,
 	PropertyInspectorDidAppear,
 	PropertyInspectorDidDisappear,
@@ -39,7 +38,6 @@ export {
 	type SystemDidWakeUp,
 } from "./system";
 export {
-	type DidReceivePluginMessage,
 	type DidReceivePropertyInspectorMessage,
 	type PropertyInspectorDidAppear,
 	type PropertyInspectorDidDisappear,
@@ -85,19 +83,4 @@ export type PluginEvent =
  */
 export type PluginEventMap = {
 	[K in PluginEvent["event"]]: [event: Extract<PluginEvent, EventIdentifier<K>>];
-};
-
-/**
- * Events received by the UI, from Stream Deck.
- */
-export type UIEvent =
-	| DidReceiveGlobalSettings<JsonObject>
-	| DidReceivePluginMessage<JsonValue>
-	| DidReceiveSettings<JsonObject>;
-
-/**
- * Map of events received by the UI, from Stream Deck.
- */
-export type UIEventMap = {
-	[K in UIEvent["event"]]: [event: Extract<UIEvent, EventIdentifier<K>>];
 };
