@@ -6,6 +6,7 @@ import {
 	type DeviceDidDisconnectEvent,
 	DeviceEvent,
 } from "../events";
+import { requiresVersion } from "../validation";
 import { Device } from "./device";
 import { deviceStore, ReadOnlyDeviceStore } from "./store";
 
@@ -38,6 +39,7 @@ class DeviceService extends ReadOnlyDeviceStore {
 	 * @returns A disposable that, when disposed, removes the listener.
 	 */
 	public onDeviceDidChange(listener: (ev: DeviceDidChangeEvent) => void): IDisposable {
+		requiresVersion(7.0, connection.version, "onDeviceDidChange");
 		return connection.disposableOn("deviceDidChange", (ev) =>
 			listener(new DeviceEvent(ev, this.getDeviceById(ev.device)!)),
 		);
