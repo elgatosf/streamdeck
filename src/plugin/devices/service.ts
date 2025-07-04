@@ -1,6 +1,11 @@
 import type { IDisposable } from "../../common/disposable";
 import { connection } from "../connection";
-import { type DeviceDidConnectEvent, type DeviceDidDisconnectEvent, DeviceEvent } from "../events";
+import {
+	type DeviceDidChangeEvent,
+	type DeviceDidConnectEvent,
+	type DeviceDidDisconnectEvent,
+	DeviceEvent,
+} from "../events";
 import { Device } from "./device";
 import { deviceStore, ReadOnlyDeviceStore } from "./store";
 
@@ -25,6 +30,17 @@ class DeviceService extends ReadOnlyDeviceStore {
 				deviceStore.set(new Device(id, deviceInfo, true));
 			}
 		});
+	}
+
+	/**
+	 * Occurs when a Stream Deck device changed, for example its name or size.
+	 * @param listener Function to be invoked when the event occurs.
+	 * @returns A disposable that, when disposed, removes the listener.
+	 */
+	public onDeviceDidChange(listener: (ev: DeviceDidChangeEvent) => void): IDisposable {
+		return connection.disposableOn("deviceDidChange", (ev) =>
+			listener(new DeviceEvent(ev, this.getDeviceById(ev.device)!)),
+		);
 	}
 
 	/**

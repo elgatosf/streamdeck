@@ -1,6 +1,6 @@
 import type { JsonObject, JsonValue } from "../../common/json";
 import type { DidReceiveSettings, TitleParametersDidChange, WillAppear, WillDisappear } from "./action";
-import type { DeviceDidConnect, DeviceDidDisconnect } from "./device";
+import type { DeviceDidChange, DeviceDidConnect, DeviceDidDisconnect } from "./device";
 import type { DialDown, DialRotate, DialUp, TouchTap } from "./encoder";
 import type { KeyDown, KeyUp } from "./keypad";
 import type {
@@ -28,7 +28,7 @@ export {
 	type WillAppear,
 	type WillDisappear,
 } from "./action";
-export { type DeviceDidConnect, type DeviceDidDisconnect } from "./device";
+export { type DeviceDidChange, type DeviceDidConnect, type DeviceDidDisconnect } from "./device";
 export { type DialDown, type DialRotate, type DialUp, type TouchTap } from "./encoder";
 export { type KeyDown, type KeyUp } from "./keypad";
 export {
@@ -61,6 +61,7 @@ export type EventIdentifier<TEvent> = {
 export type PluginEvent =
 	| ApplicationDidLaunch
 	| ApplicationDidTerminate
+	| DeviceDidChange
 	| DeviceDidConnect
 	| DeviceDidDisconnect
 	| DialDown<JsonObject>

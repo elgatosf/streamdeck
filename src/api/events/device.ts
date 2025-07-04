@@ -2,6 +2,17 @@ import type { DeviceInfo } from "../device";
 import type { EventIdentifier } from "./index";
 
 /**
+ * Occurs when a Stream Deck device changed, for example its name or size.
+ */
+export type DeviceDidChange = DeviceIdentifier &
+	EventIdentifier<"deviceDidChange"> & {
+		/**
+		 * Information about the device that changed.
+		 */
+		readonly deviceInfo: DeviceInfo;
+	};
+
+/**
  * Occurs when a Stream Deck device is connected. See also {@link DeviceDidDisconnect}.
  */
 export type DeviceDidConnect = DeviceIdentifier &
