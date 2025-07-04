@@ -35,6 +35,8 @@ class DeviceService extends ReadOnlyDeviceStore {
 
 	/**
 	 * Occurs when a Stream Deck device changed, for example its name or size.
+	 *
+	 * Available from Stream Deck 7.0.
 	 * @param listener Function to be invoked when the event occurs.
 	 * @returns A disposable that, when disposed, removes the listener.
 	 */

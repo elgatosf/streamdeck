@@ -3,6 +3,8 @@ import type { EventIdentifier } from "./index";
 
 /**
  * Occurs when a Stream Deck device changed, for example its name or size.
+ *
+ * Available from Stream Deck 7.0.
  */
 export type DeviceDidChange = DeviceIdentifier &
 	EventIdentifier<"deviceDidChange"> & {
