@@ -25,10 +25,17 @@ class DeviceService extends ReadOnlyDeviceStore {
 			info.devices.forEach((dev) => deviceStore.set(new Device(dev.id, dev, false)));
 		});
 
-		// Add new devices.
+		// Add new devices that were connected.
 		connection.on("deviceDidConnect", ({ device: id, deviceInfo }) => {
 			if (!deviceStore.getDeviceById(id)) {
 				deviceStore.set(new Device(id, deviceInfo, true));
+			}
+		});
+
+		// Add new devices that were changed (Virtual Stream Deck event race).
+		connection.on("deviceDidChange", ({ device: id, deviceInfo }) => {
+			if (!deviceStore.getDeviceById(id)) {
+				deviceStore.set(new Device(id, deviceInfo, false));
 			}
 		});
 	}

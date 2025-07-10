@@ -136,6 +136,36 @@ describe("devices", () => {
 		expect(device.type).toBe(DeviceType.StreamDeckMobile);
 	});
 
+	/**
+	 * Asserts {@link DeviceService} adds devices when they change (if they are unknown).
+	 */
+	it("adds device on deviceDidChange if they are unknown", () => {
+		// Act.
+		connection.emit("deviceDidChange", {
+			event: "deviceDidChange",
+			device: "vsd",
+			deviceInfo: {
+				name: "Virtual Stream Deck",
+				size: {
+					columns: 8,
+					rows: 8,
+				},
+				type: DeviceType.StreamDeckMobile,
+			},
+		});
+
+		// Assert.
+		expect(deviceService.length).toBe(1);
+
+		const [device] = deviceService;
+		expect(device.id).toBe("vsd");
+		expect(device.isConnected).toBe(false);
+		expect(device.name).toBe("Virtual Stream Deck");
+		expect(device.size?.columns).toBe(8);
+		expect(device.size?.rows).toBe(8);
+		expect(device.type).toBe(DeviceType.StreamDeckMobile);
+	});
+
 	describe("getDeviceById", () => {
 		/**
 		 * Asserts selecting a known device using {@link DeviceService.getDeviceById}.
