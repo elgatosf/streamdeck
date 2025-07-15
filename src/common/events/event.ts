@@ -1,9 +1,9 @@
-import type { PluginEvent, UIEvent } from "../../api";
+import type { PluginEvent } from "../../api";
 
 /**
  * Provides information for events received from Stream Deck.
  */
-export class Event<T extends PluginEvent | UIEvent> {
+export class Event<T extends PluginEvent> {
 	/**
 	 * Event that occurred.
 	 */

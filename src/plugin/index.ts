@@ -1,6 +1,6 @@
 import type { RegistrationInfo } from "../api";
 import { I18nProvider } from "../common/i18n";
-import { type Logger, registerCreateLogEntryRoute } from "../common/logging";
+import { type Logger } from "../common/logging";
 import { actionService, type ActionService } from "./actions/service";
 import { connection } from "./connection";
 import { deviceService, type DeviceService } from "./devices/service";
@@ -10,7 +10,6 @@ import * as profiles from "./profiles";
 import * as settings from "./settings";
 import * as system from "./system";
 import { ui, type UIController } from "./ui";
-import { router } from "./ui/router";
 
 export {
 	BarSubType,
@@ -34,18 +33,10 @@ export { Enumerable } from "../common/enumerable";
 export { EventEmitter, EventsOf } from "../common/event-emitter";
 export { type JsonObject, type JsonPrimitive, type JsonValue } from "../common/json";
 export { LogLevel } from "../common/logging";
-export {
-	type MessageRequestOptions,
-	type MessageResponder,
-	type MessageResponse,
-	type RouteConfiguration,
-	type StatusCode,
-} from "../common/messaging";
 export * from "./actions";
 export * from "./devices";
 export type * from "./events";
-export { route, type MessageRequest, type PropertyInspector } from "./ui";
-export { type Logger };
+export { type Logger, type UIController };
 
 let i18n: I18nProvider | undefined;
 
@@ -131,5 +122,4 @@ export const streamDeck = {
 	},
 };
 
-registerCreateLogEntryRoute(router, logger);
 export default streamDeck;

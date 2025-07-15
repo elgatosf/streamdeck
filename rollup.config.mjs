@@ -31,7 +31,7 @@ function defineConfig(input, output) {
 		external: ["ws", "@elgato/schemas/streamdeck/plugins"],
 		plugins: [
 			typescript({
-				tsconfig: join("src", dirname(input), "tsconfig.build.json"),
+				tsconfig: "tsconfig.build.json",
 				mapRoot: isWatching ? "./" : undefined,
 			}),
 			nodeResolve(),
@@ -58,4 +58,4 @@ export default streamDeck;
 /**
  * Rollup configuration.
  */
-export default [defineConfig("plugin/index.ts", "index.js"), defineConfig("ui/index.ts", "browser.js")];
+export default [defineConfig("plugin/index.ts", "index.js")];
