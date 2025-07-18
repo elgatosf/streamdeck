@@ -36,6 +36,16 @@ This release focuses on preparing plugins for protection.
 
 - Remove manifest namespace.
 
+## 1.4.0
+
+### ✨ New
+
+- Add `streamDeck.devices.onDidChange` event; occurs when a device name or size changes.
+
+### ♻️ Update
+
+- Device size now reflects visible canvas size of scalable devices, for example Stream Deck Mobile and Virtual Stream Deck.
+
 ## 1.3.1
 
 ### 🐞 Fix

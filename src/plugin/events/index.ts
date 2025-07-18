@@ -1,6 +1,7 @@
 import type {
 	ApplicationDidLaunch,
 	ApplicationDidTerminate,
+	DeviceDidChange,
 	DeviceDidConnect,
 	DeviceDidDisconnect,
 	DialDown,
@@ -40,6 +41,11 @@ export type ApplicationDidLaunchEvent = ApplicationEvent<ApplicationDidLaunch>;
  * Event information received from Stream Deck when a monitored application terminates.
  */
 export type ApplicationDidTerminateEvent = ApplicationEvent<ApplicationDidTerminate>;
+
+/**
+ * Event information received from Stream Deck when a Stream Deck device changed.
+ */
+export type DeviceDidChangeEvent = DeviceEvent<DeviceDidChange, Required<Device>>;
 
 /**
  * Event information received from Stream Deck when a Stream Deck device connects.
