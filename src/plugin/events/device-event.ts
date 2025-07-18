@@ -1,10 +1,10 @@
-import type { DeviceDidConnect, DeviceDidDisconnect } from "../../api";
+import type { DeviceDidChange, DeviceDidConnect, DeviceDidDisconnect } from "../../api";
 import { Event } from "../../common/events";
 
 /**
  * Provides information for events relating to a device.
  */
-export class DeviceEvent<T extends DeviceDidConnect | DeviceDidDisconnect, TDevice> extends Event<T> {
+export class DeviceEvent<T extends DeviceDidChange | DeviceDidConnect | DeviceDidDisconnect, TDevice> extends Event<T> {
 	/**
 	 * Initializes a new instance of the {@link DeviceEvent} class.
 	 * @param source Source of the event, i.e. the original message from Stream Deck.

@@ -1,5 +1,5 @@
-import type { DeviceDidConnectEvent, DeviceDidDisconnectEvent } from "../..";
-import { type DeviceDidConnect, type DeviceDidDisconnect, DeviceType } from "../../../api";
+import type { DeviceDidChangeEvent, DeviceDidConnectEvent, DeviceDidDisconnectEvent } from "../..";
+import { type DeviceDidChange, type DeviceDidConnect, type DeviceDidDisconnect, DeviceType } from "../../../api";
 import { type connection as Connection } from "../../connection";
 import { Device } from "../device";
 import type { DeviceService } from "../service";
@@ -136,6 +136,36 @@ describe("devices", () => {
 		expect(device.type).toBe(DeviceType.StreamDeckMobile);
 	});
 
+	/**
+	 * Asserts {@link DeviceService} adds devices when they change (if they are unknown).
+	 */
+	it("adds device on deviceDidChange if they are unknown", () => {
+		// Act.
+		connection.emit("deviceDidChange", {
+			event: "deviceDidChange",
+			device: "vsd",
+			deviceInfo: {
+				name: "Virtual Stream Deck",
+				size: {
+					columns: 8,
+					rows: 8,
+				},
+				type: DeviceType.StreamDeckMobile,
+			},
+		});
+
+		// Assert.
+		expect(deviceService.length).toBe(1);
+
+		const [device] = deviceService;
+		expect(device.id).toBe("vsd");
+		expect(device.isConnected).toBe(false);
+		expect(device.name).toBe("Virtual Stream Deck");
+		expect(device.size?.columns).toBe(8);
+		expect(device.size?.rows).toBe(8);
+		expect(device.type).toBe(DeviceType.StreamDeckMobile);
+	});
+
 	describe("getDeviceById", () => {
 		/**
 		 * Asserts selecting a known device using {@link DeviceService.getDeviceById}.
@@ -261,6 +291,46 @@ describe("devices", () => {
 		expect(device.name).toBe(connection.registrationParameters.info.devices[0].name);
 		expect(device.size).toEqual(connection.registrationParameters.info.devices[0].size);
 		expect(device.type).toBe(connection.registrationParameters.info.devices[0].type);
+	});
+
+	/**
+	 * Asserts {@link DeviceService.onDeviceDidChange} is invoked when `deviceDidChange` is emitted.
+	 */
+	it("receive onDeviceDidChange", () => {
+		// Arrange
+		connection.emit("connected", connection.registrationParameters.info);
+
+		const listener = jest.fn();
+		const ev = {
+			device: connection.registrationParameters.info.devices[0].id,
+			deviceInfo: {
+				name: "Test device",
+				size: {
+					columns: 8,
+					rows: 4,
+				},
+				type: DeviceType.StreamDeckXL,
+			},
+			event: "deviceDidChange",
+		} satisfies DeviceDidChange;
+
+		// Act (emit).
+		const disposable = deviceService.onDeviceDidChange(listener);
+		connection.emit("deviceDidChange", ev);
+
+		// Assert (emit).
+		expect(listener).toHaveBeenCalledTimes(1);
+		expect(listener).toHaveBeenCalledWith<[DeviceDidChangeEvent]>({
+			device: new Device(ev.device, ev.deviceInfo, true),
+			type: "deviceDidChange",
+		});
+
+		// Act (dispose).
+		disposable.dispose();
+		connection.emit(ev.event, ev as any);
+
+		// Assert(dispose).
+		expect(listener).toHaveBeenCalledTimes(1);
 	});
 
 	/**

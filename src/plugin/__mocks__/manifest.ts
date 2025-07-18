@@ -44,7 +44,7 @@ export const manifest: Manifest = {
 	],
 	SDKVersion: 2,
 	Software: {
-		MinimumVersion: "6.5",
+		MinimumVersion: "7.0",
 	},
 	UUID: "com.elgato.test",
 	Version: "1.0.0",
@@ -53,7 +53,7 @@ export const manifest: Manifest = {
 /**
  * Mocked {@link __getSoftwareMinimumVersion}.
  */
-export const getSoftwareMinimumVersion = jest.fn().mockReturnValue(new Version("6.5"));
+export const getSoftwareMinimumVersion = jest.fn().mockReturnValue(new Version("7.0"));
 
 /**
  * Mocked {@link __getManifest}.
