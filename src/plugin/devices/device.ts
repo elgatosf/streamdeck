@@ -42,6 +42,13 @@ export class Device {
 			}
 		});
 
+		// Track changes.
+		connection.prependListener("deviceDidChange", (ev) => {
+			if (ev.device === this.id) {
+				this.#info = ev.deviceInfo;
+			}
+		});
+
 		// Set disconnected.
 		connection.prependListener("deviceDidDisconnect", (ev) => {
 			if (ev.device === this.id) {
