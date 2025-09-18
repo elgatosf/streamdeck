@@ -6,6 +6,7 @@ import { connection } from "./connection";
 import { deviceService, type DeviceService } from "./devices/service";
 import { fileSystemLocaleProvider } from "./i18n";
 import { logger } from "./logging";
+import { errorCode } from "./logging/error-code";
 import { getManifest } from "./manifest";
 import * as profiles from "./profiles";
 import * as settings from "./settings";
@@ -141,4 +142,13 @@ export const streamDeck = {
 };
 
 registerCreateLogEntryRoute(router, logger);
+
+/**
+ * Validate compatibility with manifest `SDKVersion`.
+ */
+if (streamDeck.manifest.SDKVersion >= 3) {
+	logger.error("[ERR_NOT_SUPPORTED]: Manifest SDKVersion 3 requires @elgato/streamdeck 2.0 or higher.");
+	process.exit(errorCode.incompatibleSdkVersion);
+}
+
 export default streamDeck;

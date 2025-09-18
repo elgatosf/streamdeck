@@ -12,6 +12,12 @@
 
 # Change Log
 
+## 1.4.1
+
+### ♻️ Update
+
+- Add SDK version compatibility check.
+
 ## 1.4.0
 
 ### ✨ New
