@@ -36,6 +36,14 @@ const softwareMinimumVersion = new Lazy<Version | null>(() => {
 });
 
 /**
+ * Gets the SDK version that the plugin requires.
+ * @returns SDK version; otherwise `null` when the plugin is DRM protected.
+ */
+export function getSDKVersion(): number | null {
+	return manifest.value?.SDKVersion ?? null;
+}
+
+/**
  * Gets the minimum version that the plugin requires.
  * @returns Minimum required version; otherwise `null` when the plugin is DRM protected.
  */

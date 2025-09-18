@@ -14,6 +14,7 @@ import {
 	DidReceiveDeepLinkEvent,
 	SystemDidWakeUpEvent,
 } from "../events";
+import * as manifest from "../manifest";
 import {
 	getSecrets,
 	onApplicationDidLaunch,
@@ -190,33 +191,60 @@ describe("system", () => {
 		});
 	});
 
-	it("getSecrets", async () => {
-		// Arrange, act (Command).
-		const secrets = getSecrets<Secrets>();
+	describe("getSecrets", () => {
+		it("requires SDKVersion 3 or higher", () => {
+			// Arrange.
+			jest.spyOn(manifest, "getSDKVersion").mockReturnValue(2); // Not okay
+			jest.spyOn(manifest, "getSoftwareMinimumVersion").mockReturnValue(new Version("6.9")); // Okay
 
-		// Assert (Command).
-		expect(connection.send).toHaveBeenCalledTimes(1);
-		expect(connection.send).toHaveBeenLastCalledWith({
-			event: "getSecrets",
-			context: connection.registrationParameters.pluginUUID,
+			// Act, assert.
+			expect(() => getSecrets()).toThrow(
+				`[ERR_NOT_SUPPORTED]: Secrets requires manifest SDK version 3 or higher, but found version 2; please update the "SDKVersion" in the plugin's manifest to 3 or higher.`,
+			);
 		});
 
-		expect(Promise.race([secrets, false])).resolves.toBe(false);
+		it("requires Software.MinimumVersion 6.9 or higher", () => {
+			// Arrange.
+			jest.spyOn(manifest, "getSDKVersion").mockReturnValue(3); // Okay
+			jest.spyOn(manifest, "getSoftwareMinimumVersion").mockReturnValue(new Version("6.8")); // Not okay
 
-		// Act (Event).
-		connection.emit("didReceiveSecrets", {
-			event: "didReceiveSecrets",
-			payload: {
-				secrets: {
-					secret: "Elgato",
+			// Act, assert.
+			expect(() => getSecrets()).toThrow(
+				`[ERR_NOT_SUPPORTED]: Secrets requires Stream Deck version 6.9 or higher; please update the "Software.MinimumVersion" in the plugin's manifest to "6.9" or higher.`,
+			);
+		});
+
+		it("getSecrets", async () => {
+			// Arrange, act (Command).
+			jest.spyOn(manifest, "getSDKVersion").mockReturnValue(3);
+			jest.spyOn(manifest, "getSoftwareMinimumVersion").mockReturnValue(new Version("6.9"));
+
+			const secrets = getSecrets<Secrets>();
+
+			// Assert (Command).
+			expect(connection.send).toHaveBeenCalledTimes(1);
+			expect(connection.send).toHaveBeenLastCalledWith({
+				event: "getSecrets",
+				context: connection.registrationParameters.pluginUUID,
+			});
+
+			expect(Promise.race([secrets, false])).resolves.toBe(false);
+
+			// Act (Event).
+			connection.emit("didReceiveSecrets", {
+				event: "didReceiveSecrets",
+				payload: {
+					secrets: {
+						secret: "Elgato",
+					},
 				},
-			},
-		});
-		await secrets;
+			});
+			await secrets;
 
-		// Assert (Event).
-		expect(secrets).resolves.toEqual<Secrets>({
-			secret: "Elgato",
+			// Assert (Event).
+			expect(secrets).resolves.toEqual<Secrets>({
+				secret: "Elgato",
+			});
 		});
 	});
 });
