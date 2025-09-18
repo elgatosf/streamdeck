@@ -11,7 +11,7 @@ import { getSoftwareMinimumVersion } from "./manifest";
 export function requiresVersion(minimumVersion: number, streamDeckVersion: Version, feature: string): never | void {
 	const required = {
 		major: Math.floor(minimumVersion),
-		minor: (minimumVersion % 1) * 10,
+		minor: Number(minimumVersion.toString().split(".").at(1) ?? 0), // Account for JavaScript's floating point precision.
 		patch: 0,
 		build: 0,
 	};

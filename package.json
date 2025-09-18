@@ -73,7 +73,7 @@
         "typescript-eslint": "^8.21.0"
     },
     "dependencies": {
-        "@elgato/schemas": "^0.4.1",
+        "@elgato/schemas": "^0.4.8",
         "ws": "^8.18.0"
     }
 }
