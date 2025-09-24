@@ -1,6 +1,6 @@
 {
     "name": "@elgato/streamdeck",
-    "version": "1.4.1",
+    "version": "2.0.0-alpha.2",
     "description": "The official Node.js SDK for creating Stream Deck plugins.",
     "main": "./dist/index.js",
     "type": "module",
@@ -12,18 +12,8 @@
         "./dist/*.d.ts",
         "./types/**/*d.ts"
     ],
-    "exports": {
-        ".": {
-            "browser": {
-                "default": "./dist/browser.js",
-                "types": "./dist/browser.d.ts"
-            },
-            "default": {
-                "default": "./dist/index.js",
-                "types": "./dist/index.d.ts"
-            }
-        }
-    },
+    "exports": "./dist/index.js",
+    "types": "./dist/index.d.ts",
     "scripts": {
         "build": "rm -rf ./dist && rollup --config rollup.config.mjs && npm run types",
         "watch": "rollup --config rollup.config.mjs --watch --watch.onEnd=\"npm run types\"",

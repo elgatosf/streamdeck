@@ -1,5 +1,5 @@
 import type { JsonObject, JsonValue } from "../plugin";
-import type { ActionIdentifier, DidReceiveGlobalSettings, DidReceiveSettings, State } from "./events";
+import type { DidReceiveGlobalSettings, DidReceiveSettings, State } from "./events";
 import type { FeedbackPayload } from "./layout";
 import type { Target } from "./target";
 
@@ -49,19 +49,9 @@ type ContextualizedCommandWithPayload<TCommand, TPayload> = ContextualizedComman
 export type SetSettings = ContextualizedCommandWithPayload<"setSettings", JsonObject>;
 
 /**
- * Sets the settings associated with an instance of an action.
- */
-export type UISetSettings = ActionIdentifier & SetSettings;
-
-/**
  * Gets the settings associated with an instance of an action. Causes {@link DidReceiveSettings} to be emitted.
  */
 export type GetSettings = ContextualizedCommand<"getSettings">;
-
-/**
- * Gets the settings associated with an instance of an action. Causes {@link DidReceiveSettings} to be emitted.
- */
-export type UIGetSettings = ActionIdentifier & GetSettings;
 
 /**
  * Sets the global settings associated with the plugin.
@@ -72,6 +62,11 @@ export type SetGlobalSettings = ContextualizedCommandWithPayload<"setGlobalSetti
  * Gets the global settings associated with the plugin. Causes {@link DidReceiveGlobalSettings} to be emitted.
  */
 export type GetGlobalSettings = ContextualizedCommand<"getGlobalSettings">;
+
+/**
+ * Gets secrets associated with the plugin.
+ */
+export type GetSecrets = ContextualizedCommand<"getSecrets">;
 
 /**
  * Opens the URL in the user's default browser.
@@ -250,16 +245,11 @@ export type SendToPropertyInspector<TPayload extends JsonValue = JsonValue> = Co
 >;
 
 /**
- * Sends a message to the plugin.
- */
-export type SendToPlugin<TPayload extends JsonValue = JsonValue> = ActionIdentifier &
-	CommandBaseWithPayload<"sendToPlugin", TPayload>;
-
-/**
  * Command sent to Stream Deck, from the plugin.
  */
 export type PluginCommand =
 	| GetGlobalSettings
+	| GetSecrets
 	| GetSettings
 	| LogMessage
 	| OpenUrl
@@ -275,8 +265,3 @@ export type PluginCommand =
 	| ShowAlert
 	| ShowOk
 	| SwitchToProfile;
-
-/**
- * Command sent to Stream Deck, from the property inspector.
- */
-export type UICommand = GetGlobalSettings | OpenUrl | SendToPlugin | SetGlobalSettings | UIGetSettings | UISetSettings;

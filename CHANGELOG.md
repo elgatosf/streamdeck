@@ -12,6 +12,46 @@
 
 # Change Log
 
+## 2.0.0-alpha.2
+
+### ✨ New
+
+- Add `streamDeck.devices.onDidChange` event; occurs when a device name or size changes.
+
+## 2.0.0-alpha.1
+
+This release focuses on relocating the property inspector functionality to a dedicated `@streamdeck/ui` module.
+
+### ♻️ Refactor
+
+- Remove browser import capabilities.
+- Remove property inspector types.
+- Remove routing with the property inspector.
+- Streamline sending messages to the UI:
+    - Before: `streamDeck.current.ui?.sendToPropertyInspector(...)`
+    - After: `streamDeck.current.sendToPropertyInspector(...)`
+- Relocate property inspector action information:
+    - Before: `streamDeck.current.ui?`
+    - After: `streamDeck.current.action`
+
+## 2.0.0-alpha.0
+
+### ♻️ Refactor
+
+This release focuses on preparing plugins for protection.
+
+- Remove manifest namespace.
+
+## 1.4.0
+
+### ✨ New
+
+- Add `streamDeck.devices.onDidChange` event; occurs when a device name or size changes.
+
+### ♻️ Update
+
+- Device size now reflects visible canvas size of scalable devices, for example Stream Deck Mobile and Virtual Stream Deck.
+
 ## 1.4.1
 
 ### ♻️ Update

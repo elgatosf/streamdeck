@@ -1,5 +1,7 @@
 import type { Manifest, SystemDidWakeUp } from "../api";
+import type { DidReceiveSecrets } from "../api/events/system";
 import type { IDisposable } from "../common/disposable";
+import type { JsonObject } from "../common/json";
 import { connection } from "./connection";
 import {
 	ApplicationDidLaunchEvent,
@@ -9,7 +11,7 @@ import {
 	Event,
 	SystemDidWakeUpEvent,
 } from "./events";
-import { requiresVersion } from "./validation";
+import { requiresSDKVersion, requiresVersion } from "./validation";
 
 /**
  * Occurs when a monitored application is launched. Monitored applications can be defined in the manifest via the {@link Manifest.ApplicationsToMonitor} property.
@@ -62,5 +64,22 @@ export function openUrl(url: string): Promise<void> {
 		payload: {
 			url,
 		},
+	});
+}
+
+/**
+ * Gets the secrets associated with the plugin.
+ * @returns `Promise` resolved with the secrets associated with the plugin.
+ */
+export function getSecrets<T extends JsonObject = JsonObject>(): Promise<T> {
+	requiresVersion(6.9, connection.version, "Secrets");
+	requiresSDKVersion(3, "Secrets");
+
+	return new Promise((resolve) => {
+		connection.once("didReceiveSecrets", (ev: DidReceiveSecrets<T>) => resolve(ev.payload.secrets));
+		connection.send({
+			event: "getSecrets",
+			context: connection.registrationParameters.pluginUUID,
+		});
 	});
 }

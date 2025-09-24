@@ -6,7 +6,6 @@ import { SingletonAction } from "../actions/singleton-action";
 import { connection } from "../connection";
 import streamDeckAsDefaultExport, { streamDeck } from "../index";
 import { logger } from "../logging";
-import { route } from "../ui/route";
 
 jest.mock("../../common/i18n");
 jest.mock("../logging");
@@ -29,7 +28,6 @@ describe("index", () => {
 		// Arrange.
 		const { actionService } = await require("../actions/service");
 		const { deviceService } = await require("../devices/service");
-		const { getManifest } = await require("../manifest");
 		const profiles = await require("../profiles");
 		const settings = await require("../settings");
 		const system = await require("../system");
@@ -38,7 +36,6 @@ describe("index", () => {
 		// Act, assert.
 		expect(streamDeck.actions).toBe(actionService);
 		expect(streamDeck.devices).toBe(deviceService);
-		expect(streamDeck.manifest).toBe(getManifest());
 		expect(streamDeck.profiles).toBe(profiles);
 		expect(streamDeck.settings).toBe(settings);
 		expect(streamDeck.system).toBe(system);
@@ -78,7 +75,6 @@ describe("index", () => {
 		expect(index.LogLevel).toBe(LogLevel);
 		expect(index.SingletonAction).toBe(SingletonAction);
 		expect(index.Target).toBe(Target);
-		expect(index.route).toBe(route);
 	});
 
 	/**

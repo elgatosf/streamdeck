@@ -1,18 +1,15 @@
-import type { Manifest, RegistrationInfo } from "../api";
+import type { RegistrationInfo } from "../api";
 import { I18nProvider } from "../common/i18n";
-import { type Logger, registerCreateLogEntryRoute } from "../common/logging";
+import { type Logger } from "../common/logging";
 import { actionService, type ActionService } from "./actions/service";
 import { connection } from "./connection";
 import { deviceService, type DeviceService } from "./devices/service";
 import { fileSystemLocaleProvider } from "./i18n";
 import { logger } from "./logging";
-import { errorCode } from "./logging/error-code";
-import { getManifest } from "./manifest";
 import * as profiles from "./profiles";
 import * as settings from "./settings";
 import * as system from "./system";
 import { ui, type UIController } from "./ui";
-import { router } from "./ui/router";
 
 export {
 	BarSubType,
@@ -36,18 +33,10 @@ export { Enumerable } from "../common/enumerable";
 export { EventEmitter, EventsOf } from "../common/event-emitter";
 export { type JsonObject, type JsonPrimitive, type JsonValue } from "../common/json";
 export { LogLevel } from "../common/logging";
-export {
-	type MessageRequestOptions,
-	type MessageResponder,
-	type MessageResponse,
-	type RouteConfiguration,
-	type StatusCode,
-} from "../common/messaging";
 export * from "./actions";
 export * from "./devices";
 export type * from "./events";
-export { route, type MessageRequest, type PropertyInspector } from "./ui";
-export { type Logger };
+export { type Logger, type UIController };
 
 let i18n: I18nProvider | undefined;
 
@@ -93,14 +82,6 @@ export const streamDeck = {
 	},
 
 	/**
-	 * Manifest associated with the plugin, as defined within the `manifest.json` file.
-	 * @returns The manifest.
-	 */
-	get manifest(): Manifest {
-		return getManifest();
-	},
-
-	/**
 	 * Namespace for Stream Deck profiles.
 	 * @returns Profiles namespace.
 	 */
@@ -140,15 +121,5 @@ export const streamDeck = {
 		return connection.connect();
 	},
 };
-
-registerCreateLogEntryRoute(router, logger);
-
-/**
- * Validate compatibility with manifest `SDKVersion`.
- */
-if (streamDeck.manifest.SDKVersion >= 3) {
-	logger.error("[ERR_NOT_SUPPORTED]: Manifest SDKVersion 3 requires @elgato/streamdeck 2.0 or higher.");
-	process.exit(errorCode.incompatibleSdkVersion);
-}
 
 export default streamDeck;

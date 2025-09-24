@@ -36,7 +36,7 @@ import { KeyAction } from "./key";
 import type { SingletonAction } from "./singleton-action";
 import { actionStore, ReadOnlyActionStore } from "./store";
 
-const manifest = new Lazy<Manifest>(() => getManifest());
+const manifest = new Lazy<Manifest | null>(() => getManifest());
 
 /**
  * Provides functions, and information, for interacting with Stream Deck actions.
@@ -216,7 +216,7 @@ class ActionService extends ReadOnlyActionStore {
 			throw new Error("The action's manifestId cannot be undefined.");
 		}
 
-		if (!manifest.value.Actions.some((a) => a.UUID === action.manifestId)) {
+		if (manifest.value !== null && !manifest.value.Actions.some((a) => a.UUID === action.manifestId)) {
 			throw new Error(`The action's manifestId was not found within the manifest: ${action.manifestId}`);
 		}
 
