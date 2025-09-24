@@ -28,11 +28,11 @@ This release focuses on relocating the property inspector functionality to a ded
 - Remove property inspector types.
 - Remove routing with the property inspector.
 - Streamline sending messages to the UI:
-    - Before: `streamDeck.current.ui?.sendToPropertyInspector(...)`
-    - After: `streamDeck.current.sendToPropertyInspector(...)`
+    - Before: `streamDeck.ui.current?.sendToPropertyInspector(...)`
+    - After: `streamDeck.ui.sendToPropertyInspector(...)`
 - Relocate property inspector action information:
-    - Before: `streamDeck.current.ui?`
-    - After: `streamDeck.current.action`
+    - Before: `streamDeck.ui.current?`
+    - After: `streamDeck.ui.action`
 
 ## 2.0.0-alpha.0
 
