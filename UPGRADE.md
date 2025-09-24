@@ -2,17 +2,48 @@
 
 ### Versions
 
--   [v1.0.0](#v1-0-0)
--   [v0.4.0](#v0-4-0)
--   [v0.2.0](#v0-2-0)
+- [v2.0.0](#v2-0-0)
+- [v1.0.0](#v1-0-0)
+- [v0.4.0](#v0-4-0)
+- [v0.2.0](#v0-2-0)
+
+## <a id="v2-0-0"></a>v2.0.0
+
+### Send to Property Inspector
+
+Sending payloads to the property inspector has now been streamlined, and no longer requires `.current?`.
+
+```diff
+- streamDeck.ui.current?.sendToPropertyInspector({
++ streamDeck.ui.sendToPropertyInspector({
+    message: "Hello world:
+})
+```
+
+### Property Inspector Action
+
+Accessing the action for current property inspector is now achieved using the `.action` property.
+
+```diff
+- streamDeck.ui.current;
++ streamDeck.ui.action;
+```
+
+### Manifest
+
+With the introduction of DRM protection, the manifest is now considered a protected resource, and access to `streamDeck.manifest` at runtime has been removed.
+
+### Browser Import
+
+The ability to import `@elgato/streamdeck` into the browser (property inspector) has been removed, and will soon be replaced with the upcoming Stream Deck UI library.
 
 ## <a id="v1-0-0"></a>v1.0.0
 
--   [Keys and Actions](#keys-and-dials)
--   [Action Controllers](#action-controllers)
--   [Device ID in Events](#device-id-in-events)
--   [sendToPropertyInspector](#sendtopropertyinspector)
--   [UI Connection Events](#ui-connecting-events)
+- [Keys and Actions](#keys-and-dials)
+- [Action Controllers](#action-controllers)
+- [Device ID in Events](#device-id-in-events)
+- [sendToPropertyInspector](#sendtopropertyinspector)
+- [UI Connection Events](#ui-connecting-events)
 
 ### Keys and Dials
 
@@ -20,15 +51,15 @@ Actions provided to events have been improved to more accurately reflect methods
 
 The following methods are now accessible through type-narrowing.
 
--   `KeyAction`, narrowed using `isKey()`, provides access to:
-    -   `setImage` (options)
-    -   `setState`
-    -   `setTitle` (options)
-    -   `showOk`
--   `DialAction`, narrowed using `isDial()`, provides access to:
-    -   `setFeedback`
-    -   `setFeedbackLayout`
-    -   `setTriggerDescription`
+- `KeyAction`, narrowed using `isKey()`, provides access to:
+    - `setImage` (options)
+    - `setState`
+    - `setTitle` (options)
+    - `showOk`
+- `DialAction`, narrowed using `isDial()`, provides access to:
+    - `setFeedback`
+    - `setFeedbackLayout`
+    - `setTriggerDescription`
 
 **Before**
 
@@ -129,10 +160,10 @@ streamDeck.onConnected(listener);
 
 ## <a id="v0-4-0"></a>v0.4.0
 
--   [Localization JSON structure](#localization-json-structure)
--   [Localization lookup](#localization-lookup)
--   [`PayloadObject<T>`](#payloadobjectt)
--   [JSON schemas](#json-schemas)
+- [Localization JSON structure](#localization-json-structure)
+- [Localization lookup](#localization-lookup)
+- [`PayloadObject<T>`](#payloadobjectt)
+- [JSON schemas](#json-schemas)
 
 ### Localization JSON structure
 
@@ -196,8 +227,8 @@ export class BaseAction<T extends JsonObject> extends SingletonAction<T> {
 
 Manifest and layout JSON schemas have been relocated to [`@elgato/schemas`](https://github.com/elgatosf/schemas), and are now publicly accessible:
 
--   [Manifest schema](https://schemas.elgato.com/streamdeck/plugins/manifest.json)
--   [Layout schema](https://schemas.elgato.com/streamdeck/plugins/layout.json)
+- [Manifest schema](https://schemas.elgato.com/streamdeck/plugins/manifest.json)
+- [Layout schema](https://schemas.elgato.com/streamdeck/plugins/layout.json)
 
 **Before**
 

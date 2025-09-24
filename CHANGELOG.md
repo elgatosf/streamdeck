@@ -12,35 +12,32 @@
 
 # Change Log
 
-## 2.0.0-alpha.2
+## 2.0.0-beta
+
+This releases adds support for DRM protection, and lays the foundation for the upcoming Stream Deck UI library.
 
 ### ✨ New
 
-- Add `streamDeck.devices.onDidChange` event; occurs when a device name or size changes.
-
-## 2.0.0-alpha.1
-
-This release focuses on relocating the property inspector functionality to a dedicated `@streamdeck/ui` module.
-
-### ♻️ Refactor
-
-- Remove browser import capabilities.
-- Remove property inspector types.
-- Remove routing with the property inspector.
 - Streamline sending messages to the UI:
     - Before: `streamDeck.ui.current?.sendToPropertyInspector(...)`
     - After: `streamDeck.ui.sendToPropertyInspector(...)`
-- Relocate property inspector action information:
+- Streamline property inspector action information:
     - Before: `streamDeck.ui.current?`
     - After: `streamDeck.ui.action`
 
-## 2.0.0-alpha.0
+### 🐞 Fix
+
+- Update manifest parsing to be optional.
 
 ### ♻️ Refactor
 
-This release focuses on preparing plugins for protection.
-
+- Move property inspector types and routing to Stream Deck UI library.
 - Remove manifest namespace.
+- Remove browser import (replaced with upcoming Stream Deck UI library).
+
+### ⬆️ Upgrading
+
+- For information on breaking changes, and migrating to the this version, read more about [upgrading to v2.0.0](/UPGRADE.md#v2-0-0).
 
 ## 1.4.0
 
