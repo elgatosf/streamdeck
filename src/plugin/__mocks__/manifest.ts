@@ -51,6 +51,11 @@ export const manifest: Manifest = {
 };
 
 /**
+ * Mocked `getSDKVersion`.
+ */
+export const getSDKVersion = jest.fn().mockReturnValue(3);
+
+/**
  * Mocked {@link __getSoftwareMinimumVersion}.
  */
 export const getSoftwareMinimumVersion = jest.fn().mockReturnValue(new Version("7.0"));

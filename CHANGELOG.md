@@ -12,6 +12,12 @@
 
 # Change Log
 
+## 2.0.0-alpha.2
+
+### ✨ New
+
+- Add `streamDeck.devices.onDidChange` event; occurs when a device name or size changes.
+
 ## 2.0.0-alpha.1
 
 This release focuses on relocating the property inspector functionality to a dedicated `@streamdeck/ui` module.
