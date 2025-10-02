@@ -51,7 +51,12 @@ export type SetSettings = ContextualizedCommandWithPayload<"setSettings", JsonOb
 /**
  * Gets the settings associated with an instance of an action. Causes {@link DidReceiveSettings} to be emitted.
  */
-export type GetSettings = ContextualizedCommand<"getSettings">;
+export type GetSettings = ContextualizedCommand<"getSettings"> & {
+	/**
+	 * Optional identifier that can be used to identify the response to this request.
+	 */
+	id?: string;
+};
 
 /**
  * Sets the global settings associated with the plugin.
@@ -61,7 +66,12 @@ export type SetGlobalSettings = ContextualizedCommandWithPayload<"setGlobalSetti
 /**
  * Gets the global settings associated with the plugin. Causes {@link DidReceiveGlobalSettings} to be emitted.
  */
-export type GetGlobalSettings = ContextualizedCommand<"getGlobalSettings">;
+export type GetGlobalSettings = ContextualizedCommand<"getGlobalSettings"> & {
+	/**
+	 * Optional identifier that can be used to identify the response to this request.
+	 */
+	id?: string;
+};
 
 /**
  * Gets secrets associated with the plugin.

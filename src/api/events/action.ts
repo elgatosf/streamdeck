@@ -10,7 +10,14 @@ import type { EventIdentifier } from "./index";
 export type DidReceiveSettings<TSettings extends JsonObject> = ActionEventMessage<
 	"didReceiveSettings",
 	MultiActionPayload<TSettings> | SingleActionPayload<TSettings>
->;
+> & {
+	/**
+	 * Identifier provided when requesting the settings, used to identify the source of the request.
+	 *
+	 * This is always undefined if the event is received because the settings were changed in the property inspector.
+	 */
+	readonly id?: string;
+};
 
 /**
  * Occurs when the user updates an action's title settings in the Stream Deck application.

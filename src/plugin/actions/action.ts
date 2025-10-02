@@ -1,3 +1,5 @@
+import { randomUUID } from "node:crypto";
+
 import type { DidReceiveSettings } from "../../api";
 import type { JsonObject } from "../../common/json";
 import { connection } from "../connection";
@@ -28,6 +30,7 @@ export class Action<T extends JsonObject = JsonObject> extends ActionContext {
 			connection.send({
 				event: "getSettings",
 				context: this.id,
+				id: randomUUID(),
 			});
 		});
 	}
