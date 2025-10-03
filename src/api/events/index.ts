@@ -1,5 +1,11 @@
 import type { JsonObject, JsonValue } from "../../common/json";
-import type { DidReceiveSettings, TitleParametersDidChange, WillAppear, WillDisappear } from "./action";
+import type {
+	DidReceiveResources,
+	DidReceiveSettings,
+	TitleParametersDidChange,
+	WillAppear,
+	WillDisappear,
+} from "./action";
 import type { DeviceDidChange, DeviceDidConnect, DeviceDidDisconnect } from "./device";
 import type { DialDown, DialRotate, DialUp, TouchTap } from "./encoder";
 import type { KeyDown, KeyUp } from "./keypad";
@@ -23,7 +29,9 @@ export { type DeviceIdentifier } from "./device";
 
 export {
 	type Coordinates,
+	type DidReceiveResources,
 	type DidReceiveSettings,
+	type Resources,
 	type TitleParametersDidChange,
 	type WillAppear,
 	type WillDisappear,
@@ -69,6 +77,7 @@ export type PluginEvent =
 	| DidReceiveDeepLink
 	| DidReceiveGlobalSettings<JsonObject>
 	| DidReceivePropertyInspectorMessage<JsonValue>
+	| DidReceiveResources<JsonObject>
 	| DidReceiveSecrets<JsonObject>
 	| DidReceiveSettings<JsonObject>
 	| KeyDown<JsonObject>

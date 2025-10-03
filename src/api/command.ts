@@ -79,6 +79,28 @@ export type GetGlobalSettings = ContextualizedCommand<"getGlobalSettings"> & {
 export type GetSecrets = ContextualizedCommand<"getSecrets">;
 
 /**
+ * Sets the resources (files) associated with the action; these resources are embedded into the action
+ * when it is exported, either individually, or as part of a profile.
+ */
+export type SetResources = ContextualizedCommandWithPayload<
+	"setResources",
+	{
+		[key: string]: string;
+	}
+>;
+
+/**
+ * Gets the resources (files) associated with the action; these resources are embedded into the action
+ * when it is exported, either individually, or as part of a profile.
+ */
+export type GetResources = ContextualizedCommand<"getResources"> & {
+	/**
+	 * Optional identifier that can be used to identify the response to this request.
+	 */
+	id?: string;
+};
+
+/**
  * Opens the URL in the user's default browser.
  */
 export type OpenUrl = CommandBaseWithPayload<
@@ -259,6 +281,7 @@ export type SendToPropertyInspector<TPayload extends JsonValue = JsonValue> = Co
  */
 export type PluginCommand =
 	| GetGlobalSettings
+	| GetResources
 	| GetSecrets
 	| GetSettings
 	| LogMessage
@@ -268,6 +291,7 @@ export type PluginCommand =
 	| SetFeedbackLayout
 	| SetGlobalSettings
 	| SetImage
+	| SetResources
 	| SetSettings
 	| SetState
 	| SetTitle

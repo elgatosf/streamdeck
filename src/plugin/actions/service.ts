@@ -2,6 +2,7 @@ import type {
 	DialDown,
 	DialRotate,
 	DialUp,
+	DidReceiveResources,
 	KeyDown,
 	KeyUp,
 	Manifest,
@@ -19,6 +20,7 @@ import {
 	DialDownEvent,
 	DialRotateEvent,
 	DialUpEvent,
+	DidReceiveResourcesEvent,
 	KeyDownEvent,
 	KeyUpEvent,
 	TitleParametersDidChangeEvent,
@@ -98,6 +100,27 @@ class ActionService extends ReadOnlyActionStore {
 		return connection.disposableOn("dialUp", (ev: DialUp<T>) => {
 			const action = actionStore.getActionById(ev.context);
 			if (action?.isDial()) {
+				listener(new ActionEvent(action, ev));
+			}
+		});
+	}
+
+	/**
+	 * Occurs when the resources were updated within the property inspector.
+	 * @param listener Function to be invoked when the event occurs.
+	 * @returns A disposable that, when disposed, removes the listener.
+	 */
+	public onDidReceiveResources<T extends JsonObject = JsonObject>(
+		listener: (ev: DidReceiveResourcesEvent<T>) => void,
+	): IDisposable {
+		return connection.disposableOn("didReceiveResources", (ev: DidReceiveResources<T>) => {
+			// When the id is defined, the resources were request, so we don't propagate the event.
+			if (ev.id !== undefined) {
+				return;
+			}
+
+			const action = actionStore.getActionById(ev.context);
+			if (action) {
 				listener(new ActionEvent(action, ev));
 			}
 		});
@@ -243,6 +266,7 @@ class ActionService extends ReadOnlyActionStore {
 		route(this.onDialUp, action.onDialUp);
 		route(this.onDialRotate, action.onDialRotate);
 		route(ui.onSendToPlugin, action.onSendToPlugin);
+		route(this.onDidReceiveResources, action.onDidReceiveResources);
 		route(onDidReceiveSettings, action.onDidReceiveSettings);
 		route(this.onKeyDown, action.onKeyDown);
 		route(this.onKeyUp, action.onKeyUp);
