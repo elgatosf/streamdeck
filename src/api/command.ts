@@ -81,6 +81,8 @@ export type GetSecrets = ContextualizedCommand<"getSecrets">;
 /**
  * Sets the resources (files) associated with the action; these resources are embedded into the action
  * when it is exported, either individually, or as part of a profile.
+ *
+ * Available from Stream Deck 7.1.
  */
 export type SetResources = ContextualizedCommandWithPayload<
 	"setResources",
@@ -92,6 +94,8 @@ export type SetResources = ContextualizedCommandWithPayload<
 /**
  * Gets the resources (files) associated with the action; these resources are embedded into the action
  * when it is exported, either individually, or as part of a profile.
+ *
+ * Available from Stream Deck 7.1.
  */
 export type GetResources = ContextualizedCommand<"getResources"> & {
 	/**

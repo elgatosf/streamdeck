@@ -169,6 +169,8 @@ export type SingleActionPayload<
 
 	/**
 	 * Resources (files) associated with the action.
+	 *
+	 * Available from Stream Deck 7.1.
 	 */
 	readonly resources: Resources;
 };
@@ -194,6 +196,8 @@ export type MultiActionPayload<TSettings extends JsonObject> = ActionPayload<TSe
 
 	/**
 	 * Resources (files) associated with the action.
+	 *
+	 * Available from Stream Deck 7.1.
 	 */
 	readonly resources: Resources;
 };

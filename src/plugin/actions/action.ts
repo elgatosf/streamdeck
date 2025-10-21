@@ -3,6 +3,7 @@ import { randomUUID } from "node:crypto";
 import type { DidReceiveResources, DidReceiveSettings, Resources } from "../../api";
 import type { JsonObject } from "../../common/json";
 import { connection } from "../connection";
+import { requiresVersion } from "../validation";
 import { ActionContext } from "./context";
 import type { DialAction } from "./dial";
 import type { KeyAction } from "./key";
@@ -17,9 +18,13 @@ export class Action<T extends JsonObject = JsonObject> extends ActionContext {
 	/**
 	 * Gets the resources (files) associated with this action; these resources are embedded into the
 	 * action when it is exported, either individually, or as part of a profile.
+	 *
+	 * Available from Stream Deck 7.1.
 	 * @returns The resources.
 	 */
 	public getResources(): Promise<Resources> {
+		requiresVersion(7.1, connection.version, "getResources");
+
 		return new Promise((resolve, reject) => {
 			const id = randomUUID();
 			const timeoutId = setTimeout(() => {
@@ -86,6 +91,8 @@ export class Action<T extends JsonObject = JsonObject> extends ActionContext {
 	/**
 	 * Sets the resources (files) associated with this action; these resources are embedded into the
 	 * action when it is exported, either individually, or as part of a profile.
+	 *
+	 * Available from Stream Deck 7.1.
 	 * @example
 	 * action.setResources({
 	 *   fileOne: "c:\\hello-world.txt",
@@ -95,6 +102,8 @@ export class Action<T extends JsonObject = JsonObject> extends ActionContext {
 	 * @returns `Promise` resolved when the resources are saved to Stream Deck.
 	 */
 	public setResources(resources: Resources): Promise<void> {
+		requiresVersion(7.1, connection.version, "setResources");
+
 		return connection.send({
 			event: "setResources",
 			context: this.id,
