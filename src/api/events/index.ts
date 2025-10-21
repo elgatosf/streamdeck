@@ -31,7 +31,6 @@ export {
 	type Coordinates,
 	type DidReceiveResources,
 	type DidReceiveSettings,
-	type Resources,
 	type TitleParametersDidChange,
 	type WillAppear,
 	type WillDisappear,

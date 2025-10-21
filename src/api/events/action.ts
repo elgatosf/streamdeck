@@ -1,6 +1,7 @@
 import type { Controller, DeviceType } from "@elgato/schemas/streamdeck/plugins";
 
 import type { JsonObject } from "../../common/json";
+import type { Resources } from "../resources";
 import type { DeviceIdentifier } from "./device";
 import type { EventIdentifier } from "./index";
 
@@ -237,16 +238,3 @@ export type Coordinates = {
  * Possible states an action can be in. This only applies to actions that have multiple states defined in the plugin's manifest.json file.
  */
 export type State = number;
-
-/**
- * Resources (files) associated with an action, represented as a map, for example.
- * ```
- * {
- *   fileOne: "c:\\hello-world.txt",
- *   anotherFile: "c:\\icon.png"
- * }
- * ```
- */
-export type Resources = {
-	[key: string]: string;
-};

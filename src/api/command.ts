@@ -1,6 +1,7 @@
 import type { JsonObject, JsonValue } from "../plugin";
 import type { DidReceiveGlobalSettings, DidReceiveSettings, State } from "./events";
 import type { FeedbackPayload } from "./layout";
+import type { Resources } from "./resources";
 import type { Target } from "./target";
 
 /**
@@ -84,12 +85,7 @@ export type GetSecrets = ContextualizedCommand<"getSecrets">;
  *
  * Available from Stream Deck 7.1.
  */
-export type SetResources = ContextualizedCommandWithPayload<
-	"setResources",
-	{
-		[key: string]: string;
-	}
->;
+export type SetResources = ContextualizedCommandWithPayload<"setResources", Resources>;
 
 /**
  * Gets the resources (files) associated with the action; these resources are embedded into the action
