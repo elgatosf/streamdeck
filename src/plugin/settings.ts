@@ -1,3 +1,5 @@
+import { randomUUID } from "node:crypto";
+
 import type { DidReceiveGlobalSettings, DidReceiveSettings } from "../api";
 import type { IDisposable } from "../common/disposable";
 import { ActionEvent } from "../common/events";
@@ -18,6 +20,7 @@ export function getGlobalSettings<T extends JsonObject = JsonObject>(): Promise<
 		connection.send({
 			event: "getGlobalSettings",
 			context: connection.registrationParameters.pluginUUID,
+			id: randomUUID(),
 		});
 	});
 }

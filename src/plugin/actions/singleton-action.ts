@@ -7,6 +7,7 @@ import type {
 	DialDownEvent,
 	DialRotateEvent,
 	DialUpEvent,
+	DidReceiveResourcesEvent,
 	DidReceiveSettingsEvent,
 	KeyDownEvent,
 	KeyUpEvent,
@@ -60,6 +61,12 @@ export class SingletonAction<T extends JsonObject = JsonObject> {
 	 * @param ev Information about the event, including the source action and contextual payload information.
 	 */
 	public onDialUp?(ev: DialUpEvent<T>): Promise<void> | void;
+
+	/**
+	 * Occurs when the resources were updated within the property inspector.
+	 * @param listener Function to be invoked when the event occurs.
+	 */
+	public onDidReceiveResources?(ev: DidReceiveResourcesEvent<T>): Promise<void> | void;
 
 	/**
 	 * Occurs when the settings associated with an action instance are requested using {@link Action.getSettings}, or when the the settings were updated by the property inspector.

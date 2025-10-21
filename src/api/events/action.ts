@@ -1,16 +1,43 @@
 import type { Controller, DeviceType } from "@elgato/schemas/streamdeck/plugins";
 
 import type { JsonObject } from "../../common/json";
+import type { Resources } from "../resources";
 import type { DeviceIdentifier } from "./device";
 import type { EventIdentifier } from "./index";
 
 /**
- * Occurs when the settings associated with an action instance are requested, or when the the settings were updated by the property inspector.
+ * Occurs when the settings associated with an action instance are requested, or when the the settings
+ * were updated in the property inspector.
  */
 export type DidReceiveSettings<TSettings extends JsonObject> = ActionEventMessage<
 	"didReceiveSettings",
 	MultiActionPayload<TSettings> | SingleActionPayload<TSettings>
->;
+> & {
+	/**
+	 * Identifier provided when requesting the settings, used to identify the source of the request.
+	 *
+	 * This is always undefined if the event is received because the settings were changed in the property
+	 * inspector.
+	 */
+	readonly id?: string;
+};
+
+/**
+ * Occurs when the resources associated with an action instance are requested, or when the the resources
+ * were updated in the property inspector.
+ */
+export type DidReceiveResources<TSettings extends JsonObject> = ActionEventMessage<
+	"didReceiveResources",
+	MultiActionPayload<TSettings> | SingleActionPayload<TSettings>
+> & {
+	/**
+	 * Identifier provided when requesting the resources, used to identify the source of the request.
+	 *
+	 * This is always undefined if the event is received because the resources were changed in the property
+	 * inspector.
+	 */
+	readonly id?: string;
+};
 
 /**
  * Occurs when the user updates an action's title settings in the Stream Deck application.
@@ -140,6 +167,13 @@ export type SingleActionPayload<
 	 * NB. Requires Stream Deck 6.7 when accessed from the property inspector.
 	 */
 	readonly isInMultiAction: false;
+
+	/**
+	 * Resources (files) associated with the action.
+	 *
+	 * Available from Stream Deck 7.1.
+	 */
+	readonly resources: Resources;
 };
 
 /**
@@ -160,6 +194,13 @@ export type MultiActionPayload<TSettings extends JsonObject> = ActionPayload<TSe
 	 * NB. Requires Stream Deck 6.7 when accessed from the property inspector.
 	 */
 	readonly isInMultiAction: true;
+
+	/**
+	 * Resources (files) associated with the action.
+	 *
+	 * Available from Stream Deck 7.1.
+	 */
+	readonly resources: Resources;
 };
 
 /**

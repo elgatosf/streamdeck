@@ -19,6 +19,13 @@ export type ApplicationDidTerminate = ApplicationEventIdentifier<"applicationDid
  */
 export type DidReceiveGlobalSettings<TSettings extends JsonObject> = EventIdentifier<"didReceiveGlobalSettings"> & {
 	/**
+	 * Identifier provided when requesting the settings, used to identify the source of the request.
+	 *
+	 * This is always undefined if the event is received because the settings were changed in the property inspector.
+	 */
+	readonly id?: string;
+
+	/**
 	 * Additional information about the event that occurred.
 	 */
 	readonly payload: {
