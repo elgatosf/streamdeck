@@ -114,7 +114,7 @@ class ActionService extends ReadOnlyActionStore {
 		listener: (ev: DidReceiveResourcesEvent<T>) => void,
 	): IDisposable {
 		return connection.disposableOn("didReceiveResources", (ev: DidReceiveResources<T>) => {
-			// When the id is defined, the resources were request, so we don't propagate the event.
+			// When the id is defined, the resources were requested, so we don't propagate the event.
 			if (ev.id !== undefined) {
 				return;
 			}
