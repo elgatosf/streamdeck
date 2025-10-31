@@ -91,7 +91,7 @@ export type DidReceiveSettingsEvent<TSettings extends JsonObject = JsonObject> =
 >;
 
 /**
- * Event information received from Streak Deck when the plugin receives resources.
+ * Event information received from Stream Deck when the plugin receives resources.
  */
 export type DidReceiveResourcesEvent<TSettings extends JsonObject = JsonObject> = ActionEvent<
 	DidReceiveResources<TSettings>,
