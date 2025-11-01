@@ -33,7 +33,7 @@ describe("settings", () => {
 				context: connection.registrationParameters.pluginUUID,
 			} as GetGlobalSettings);
 
-			expect(Promise.race([settings, false])).resolves.toBe(false);
+			await expect(Promise.race([settings, false])).resolves.toBe(false);
 
 			// Act (Event).
 			connection.emit("didReceiveGlobalSettings", {
@@ -47,7 +47,7 @@ describe("settings", () => {
 			await settings;
 
 			// Assert (Event).
-			expect(settings).resolves.toEqual({
+			await expect(settings).resolves.toEqual({
 				name: "Elgato",
 			} satisfies Settings);
 		});

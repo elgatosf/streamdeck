@@ -230,7 +230,7 @@ describe("system", () => {
 				context: connection.registrationParameters.pluginUUID,
 			});
 
-			expect(Promise.race([secrets, false])).resolves.toBe(false);
+			await expect(Promise.race([secrets, false])).resolves.toBe(false);
 
 			// Act (Event).
 			connection.emit("didReceiveSecrets", {
@@ -244,7 +244,7 @@ describe("system", () => {
 			await secrets;
 
 			// Assert (Event).
-			expect(secrets).resolves.toEqual({
+			await expect(secrets).resolves.toEqual({
 				secret: "Elgato",
 			} satisfies Secrets);
 		});

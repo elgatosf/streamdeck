@@ -82,7 +82,7 @@ describe("Action", () => {
 			context: action.id,
 		});
 
-		expect(Promise.race([settings, false])).resolves.toBe(false);
+		await expect(Promise.race([settings, false])).resolves.toBe(false);
 
 		// Act (Event).
 		connection.emit("didReceiveSettings", {
@@ -124,7 +124,7 @@ describe("Action", () => {
 		await settings;
 
 		// Assert (Event).
-		expect(await settings).toEqual<Settings>({
+		await expect(await settings).toEqual<Settings>({
 			name: "Elgato",
 		});
 	});
