@@ -1,3 +1,5 @@
+import { describe, expect, it } from "vitest";
+
 import { PromiseCompletionSource } from "../promises";
 
 describe("PromiseCompletionSource<T>", () => {
