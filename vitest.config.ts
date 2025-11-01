@@ -7,6 +7,9 @@ export default defineConfig({
 		include: [
 			"src/plugin/__tests__/connection.test.ts",
 			"src/plugin/actions/__tests__/action.test.ts",
+			"src/plugin/actions/__tests__/decorators.test.ts",
+			"src/plugin/actions/__tests__/dial.test.ts",
+			"src/plugin/actions/__tests__/key.test.ts",
 			"src/plugin/common/__tests__/*",
 			"src/plugin/devices/__tests__/*",
 			"src/plugin/events/__tests__/*",
