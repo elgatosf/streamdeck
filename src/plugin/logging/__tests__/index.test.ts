@@ -22,7 +22,6 @@ describe("createLogger", () => {
 
 	afterEach(() => {
 		vi.resetModules();
-		vi.clearAllMocks();
 	});
 
 	describe("default log level", () => {

@@ -1,6 +1,6 @@
 import fs, { Dirent } from "node:fs";
 import path from "node:path";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 import { LogLevel } from "../../../common/logging";
 import { FileTarget, FileTargetOptions } from "../file-target";
@@ -8,8 +8,6 @@ import { FileTarget, FileTargetOptions } from "../file-target";
 vi.mock("node:fs");
 
 describe("FileTarget", () => {
-	afterEach(() => vi.clearAllMocks());
-
 	/**
 	 * Asserts {@link FileTarget.write} writes the formatted log message to the file.
 	 */
