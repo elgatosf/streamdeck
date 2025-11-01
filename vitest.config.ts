@@ -1,0 +1,12 @@
+import { defineConfig } from "vitest/config";
+
+export default defineConfig({
+	test: {
+		environment: "node",
+		include: ["src/plugin/__tests__/connection.test.ts"],
+		setupFiles: [
+			"./tests/__setup__/global.ts",
+			"./tests/__setup__/ws.ts",
+		],
+	},
+});

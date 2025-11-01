@@ -1,4 +1,5 @@
-import { type WS as WebSocketServer } from "jest-websocket-mock";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { type WS as WebSocketServer } from "vitest-websocket-mock";
 
 import type { RegistrationInfo } from "..";
 import type { ApplicationDidLaunch, DidReceiveGlobalSettings, OpenUrl } from "../../api";
@@ -7,8 +8,7 @@ import { registrationInfo } from "../../api/registration/__mocks__";
 import { Logger, LogLevel } from "../../common/logging";
 import { type connection as Connection } from "../connection";
 
-jest.mock("ws");
-jest.mock("../logging");
+vi.mock("../logging");
 
 const port = ["-port", "12345"];
 const pluginUUID = ["-pluginUUID", "abc123"];
@@ -26,20 +26,20 @@ describe("connection", () => {
 	beforeEach(async () => {
 		connectionLogger = new Logger({
 			level: LogLevel.TRACE,
-			targets: [{ write: jest.fn() }],
+			targets: [{ write: vi.fn() }],
 		});
 
-		({ logger } = await require("../logging"));
-		jest.spyOn(logger, "createScope").mockReturnValueOnce(connectionLogger);
+		({ logger } = await import("../logging"));
+		vi.spyOn(logger, "createScope").mockReturnValueOnce(connectionLogger);
 
-		({ connection } = await require("../connection"));
+		({ connection } = await import("../connection"));
 		process.argv = [...port, ...pluginUUID, ...registerEvent, ...info];
 	});
 
 	// Reset modules to purge the state.
 	afterEach(() => {
 		process.argv = originalArgv;
-		jest.resetModules();
+		vi.resetModules();
 	});
 
 	describe("WebSocket", () => {
@@ -47,7 +47,7 @@ describe("connection", () => {
 
 		// Setup the mock server.
 		beforeEach(async () => {
-			const { WS } = await require("jest-websocket-mock");
+			const { WS } = await import("vitest-websocket-mock");
 			server = new WS(`ws://127.0.0.1:${port[1]}`, { jsonProtocol: true });
 		});
 
@@ -70,7 +70,7 @@ describe("connection", () => {
 
 		it("emits connected", async () => {
 			// Arrange.
-			const listener = jest.fn();
+			const listener = vi.fn();
 
 			// Act.
 			connection.on("connected", listener);
@@ -117,7 +117,7 @@ describe("connection", () => {
 		 */
 		it("propagates messages", async () => {
 			// Arrange.
-			const listener = jest.fn();
+			const listener = vi.fn();
 			connection.on("didReceiveGlobalSettings", listener);
 
 			await connection.connect();
@@ -150,7 +150,7 @@ describe("connection", () => {
 			 */
 			it("traces send", async () => {
 				// Arrange.
-				const spyOnTrace = jest.spyOn(connectionLogger, "trace");
+				const spyOnTrace = vi.spyOn(connectionLogger, "trace");
 				await connection.connect();
 
 				// Act.
@@ -178,7 +178,7 @@ describe("connection", () => {
 			 */
 			it("traces emit", async () => {
 				// Arrange.
-				const spyOnTrace = jest.spyOn(connectionLogger, "trace");
+				const spyOnTrace = vi.spyOn(connectionLogger, "trace");
 				await connection.connect();
 
 				// Act.
@@ -203,7 +203,7 @@ describe("connection", () => {
 
 			it("warns for unknown message", async () => {
 				// Arrange.
-				const spyOnWarn = jest.spyOn(connectionLogger, "warn");
+				const spyOnWarn = vi.spyOn(connectionLogger, "warn");
 				await connection.connect();
 
 				// Act.
@@ -219,7 +219,7 @@ describe("connection", () => {
 				const origSerializer = server.serializer;
 				server.serializer = () => "{ invalid }";
 
-				const spyOnError = jest.spyOn(connectionLogger, "error");
+				const spyOnError = vi.spyOn(connectionLogger, "error");
 				await connection.connect();
 
 				// Act.
@@ -300,11 +300,11 @@ describe("connection", () => {
 			// Arrange
 			const scopedLogger = new Logger({
 				level: LogLevel.TRACE,
-				targets: [{ write: jest.fn() }],
+				targets: [{ write: vi.fn() }],
 			});
 
-			jest.spyOn(logger, "createScope").mockReturnValueOnce(scopedLogger);
-			const spyOnLoggerDebug = jest.spyOn(scopedLogger, "debug");
+			vi.spyOn(logger, "createScope").mockReturnValueOnce(scopedLogger);
+			const spyOnLoggerDebug = vi.spyOn(scopedLogger, "debug");
 
 			// Act.
 			// eslint-disable-next-line @typescript-eslint/no-unused-expressions
@@ -323,7 +323,7 @@ describe("connection", () => {
 		 */
 		it("creates a scoped logger", () => {
 			// Arrange.
-			const spyOnCreateScope = jest.spyOn(logger, "createScope");
+			const spyOnCreateScope = vi.spyOn(logger, "createScope");
 
 			// Act.
 			// eslint-disable-next-line @typescript-eslint/no-unused-expressions
