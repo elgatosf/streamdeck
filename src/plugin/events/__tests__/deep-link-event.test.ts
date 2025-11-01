@@ -1,3 +1,5 @@
+import { describe, expect, it } from "vitest";
+
 import { DeepLinkURL } from "../deep-link-event";
 
 describe("DeepLinkURL", () => {

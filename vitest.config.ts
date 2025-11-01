@@ -6,6 +6,9 @@ export default defineConfig({
 		include: [
 			"src/plugin/__tests__/connection.test.ts",
 			"src/plugin/common/__tests__/*",
+			"src/plugin/devices/__tests__/*",
+			"src/plugin/events/__tests__/*",
+			"src/plugin/logging/__tests__/*",
 		],
 		setupFiles: [
 			"./tests/__setup__/global.ts",

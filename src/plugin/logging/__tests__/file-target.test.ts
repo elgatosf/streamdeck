@@ -1,13 +1,14 @@
 import fs, { Dirent } from "node:fs";
 import path from "node:path";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { LogLevel } from "../../../common/logging";
 import { FileTarget, FileTargetOptions } from "../file-target";
 
-jest.mock("node:fs");
+vi.mock("node:fs");
 
 describe("FileTarget", () => {
-	afterEach(() => jest.resetAllMocks());
+	afterEach(() => vi.clearAllMocks());
 
 	/**
 	 * Asserts {@link FileTarget.write} writes the formatted log message to the file.
@@ -16,9 +17,9 @@ describe("FileTarget", () => {
 		// Arrange.
 		const mockedFileDescriptor = 13;
 
-		jest.spyOn(fs, "existsSync").mockReturnValue(false);
-		jest.spyOn(fs, "openSync").mockReturnValue(mockedFileDescriptor);
-		const format = jest.fn().mockReturnValue("Hello world");
+		vi.spyOn(fs, "existsSync").mockReturnValue(false);
+		vi.spyOn(fs, "openSync").mockReturnValue(mockedFileDescriptor);
+		const format = vi.fn().mockReturnValue("Hello world");
 
 		const options: FileTargetOptions = {
 			dest: path.join("home", "test", "logs"),
@@ -55,8 +56,8 @@ describe("FileTarget", () => {
 		 */
 		it("Occurs on construction", async () => {
 			// Arrange.
-			jest.spyOn(fs, "existsSync").mockReturnValue(true);
-			jest.spyOn(fs, "readdirSync").mockReturnValue([
+			vi.spyOn(fs, "existsSync").mockReturnValue(true);
+			vi.spyOn(fs, "readdirSync").mockReturnValue([
 				mockDirent("__com.elgato.test.0.log"), // Ignored other file name.
 				mockDirent("com.elgato.test.0.log"),
 				mockDirent("com.elgato.test.log"), // Ignore invalid index format.
@@ -70,7 +71,7 @@ describe("FileTarget", () => {
 			const options: FileTargetOptions = {
 				dest: path.join("home", "test", "logs"),
 				fileName: "com.elgato.test",
-				format: jest.fn(),
+				format: vi.fn(),
 				maxFileCount: 3,
 				maxSize: 100,
 			};
@@ -103,14 +104,14 @@ describe("FileTarget", () => {
 			// Arrange.
 			const dirEntries = [mockDirent("com.elgato.test.0.log"), mockDirent("com.elgato.test.1.log")];
 
-			jest.spyOn(fs, "existsSync").mockReturnValue(true);
-			jest.spyOn(fs, "readdirSync").mockReturnValueOnce(dirEntries);
-			jest.spyOn(fs, "readdirSync").mockReturnValueOnce([...dirEntries, mockDirent("com.elgato.test.2.log")]);
+			vi.spyOn(fs, "existsSync").mockReturnValue(true);
+			vi.spyOn(fs, "readdirSync").mockReturnValueOnce(dirEntries);
+			vi.spyOn(fs, "readdirSync").mockReturnValueOnce([...dirEntries, mockDirent("com.elgato.test.2.log")]);
 
 			const options: FileTargetOptions = {
 				dest: path.join("home", "test", "logs"),
 				fileName: "com.elgato.test",
-				format: jest.fn().mockReturnValue("x".repeat(10)),
+				format: vi.fn().mockReturnValue("x".repeat(10)),
 				maxFileCount: 3,
 				maxSize: 29,
 			};
@@ -153,7 +154,7 @@ describe("FileTarget", () => {
 	function mockDirent(name: string, isDirectory = false) {
 		return {
 			name,
-			isDirectory: jest.fn().mockReturnValue(isDirectory),
-		} as unknown as Dirent;
+			isDirectory: vi.fn().mockReturnValue(isDirectory),
+		} as unknown as Dirent<NonSharedBuffer>;
 	}
 });

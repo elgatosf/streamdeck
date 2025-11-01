@@ -1,8 +1,10 @@
+import { vi } from "vitest";
+
 import { DeviceType } from "../../../api/device";
 import { type Device } from "../device";
 
 export const deviceService = {
-	getDeviceById: jest.fn().mockImplementation((id: string) => {
+	getDeviceById: vi.fn().mockImplementation((id: string) => {
 		return {
 			actions: Array.from([]).values(),
 			id,
