@@ -1,3 +1,5 @@
+import { describe, expect, it, test, vi } from "vitest";
+
 import { Enumerable } from "../enumerable";
 
 describe("Enumerable", () => {
@@ -19,7 +21,7 @@ describe("Enumerable", () => {
 		describe("Enumerable<T>", () => {
 			it("iterates enumerable", () => {
 				// Arrange.
-				const fn = jest.fn();
+				const fn = vi.fn();
 				const arr = [1, 2];
 				const source = new Enumerable(arr);
 				const enumerable = new Enumerable(source);
@@ -58,7 +60,7 @@ describe("Enumerable", () => {
 		describe("T[]", () => {
 			it("iterates mutated array", () => {
 				// Arrange.
-				const fn = jest.fn();
+				const fn = vi.fn();
 				const arr = [1, 2];
 				const enumerable = new Enumerable(arr);
 
@@ -95,7 +97,7 @@ describe("Enumerable", () => {
 		describe("Map<K, T>", () => {
 			it("iterates mutated map", () => {
 				// Arrange (1).
-				const fnBefore = jest.fn();
+				const fnBefore = vi.fn();
 				const map = new Map([
 					[1, "One"],
 					[2, "Two"],
@@ -110,7 +112,7 @@ describe("Enumerable", () => {
 				expect(fnBefore).toHaveBeenNthCalledWith(2, "Two");
 
 				// Arrange (2)
-				const fnAfter = jest.fn();
+				const fnAfter = vi.fn();
 				map.set(1, "A");
 				map.set(3, "Three");
 
@@ -152,7 +154,7 @@ describe("Enumerable", () => {
 		describe("Set<T>", () => {
 			it("iterates mutated map", () => {
 				// Arrange (1).
-				const fnBefore = jest.fn();
+				const fnBefore = vi.fn();
 				const set = new Set(["One", "Two"]);
 				const enumerable = new Enumerable(set);
 
@@ -164,7 +166,7 @@ describe("Enumerable", () => {
 				expect(fnBefore).toHaveBeenNthCalledWith(2, "Two");
 
 				// Arrange (2)
-				const fnAfter = jest.fn();
+				const fnAfter = vi.fn();
 				set.delete("One");
 				set.add("Three");
 
@@ -202,7 +204,7 @@ describe("Enumerable", () => {
 		describe("IterableIterator", () => {
 			it("iterates mutated map", () => {
 				// Arrange.
-				const fn = jest.fn();
+				const fn = vi.fn();
 				const itr = function* () {
 					yield "One";
 					yield "Two";
@@ -300,7 +302,7 @@ describe("Enumerable", () => {
 	describe("iterator helpers", () => {
 		it("chains iterators", () => {
 			// Arrange.
-			const fn = jest.fn();
+			const fn = vi.fn();
 			const source = ["One", "Two", "Three"];
 			const enumerable = new Enumerable(source);
 
@@ -323,7 +325,7 @@ describe("Enumerable", () => {
 
 		it("should not iterate unless necessary", () => {
 			// Arrange.
-			const fn = jest.fn();
+			const fn = vi.fn();
 			const enumerable = new Enumerable(fn);
 
 			// Act.
@@ -345,7 +347,7 @@ describe("Enumerable", () => {
 	/**
 	 * Asserts the iterator of an {@link Enumerable}.
 	 */
-	describe("iterator", () => {
+	test("iterator", () => {
 		// Arrange.
 		const source = ["a", "b", "c"];
 		const enumerable = new Enumerable(source);
@@ -364,7 +366,7 @@ describe("Enumerable", () => {
 	 */
 	test("asIndexedPairs", () => {
 		// Arrange, act.
-		const fn = jest.fn();
+		const fn = vi.fn();
 		const res = enumerable.asIndexedPairs();
 
 		// Assert.
@@ -386,7 +388,7 @@ describe("Enumerable", () => {
 
 		it("accepts limit 1", () => {
 			// Arrange.
-			const fn = jest.fn();
+			const fn = vi.fn();
 
 			// Act.
 			const res = enumerable.drop(1);
@@ -400,7 +402,7 @@ describe("Enumerable", () => {
 
 		it("accepts limit less than length", () => {
 			// Arrange.
-			const fn = jest.fn();
+			const fn = vi.fn();
 
 			// Act.
 			const res = enumerable.drop(2);
@@ -413,7 +415,7 @@ describe("Enumerable", () => {
 
 		it("accepts limit exceeding length", () => {
 			// Arrange.
-			const fn = jest.fn();
+			const fn = vi.fn();
 
 			// Act.
 			const res = enumerable.drop(4);
@@ -446,7 +448,7 @@ describe("Enumerable", () => {
 
 		it("evaluates lazily", () => {
 			// Arrange, act.
-			const fn = jest.fn().mockReturnValue(false);
+			const fn = vi.fn().mockReturnValue(false);
 			const every = enumerable.every(fn);
 
 			// Assert.
@@ -464,7 +466,7 @@ describe("Enumerable", () => {
 	describe("filter", () => {
 		it("filters items", () => {
 			// Arrange, act.
-			const fn = jest.fn().mockImplementation((x) => x.name !== "Stream Deck");
+			const fn = vi.fn().mockImplementation((x) => x.name !== "Stream Deck");
 			const filtered = Array.from(enumerable.filter(fn));
 
 			// Assert.
@@ -486,7 +488,7 @@ describe("Enumerable", () => {
 
 		it("dot not evaluate unless iterated", () => {
 			// Arrange, act.
-			const fn = jest.fn();
+			const fn = vi.fn();
 			enumerable.filter(fn);
 
 			// Assert.
@@ -500,7 +502,7 @@ describe("Enumerable", () => {
 	describe("find", () => {
 		it("finds the first", () => {
 			// Arrange, act.
-			const fn = jest.fn().mockImplementation((x) => x.name === "Facecam");
+			const fn = vi.fn().mockImplementation((x) => x.name === "Facecam");
 			const item = enumerable.find(fn);
 
 			// Assert.
@@ -511,7 +513,7 @@ describe("Enumerable", () => {
 
 		it("finds the last", () => {
 			// Arrange, act.
-			const fn = jest.fn().mockImplementation((x) => x.name === "Wave DX");
+			const fn = vi.fn().mockImplementation((x) => x.name === "Wave DX");
 			const item = enumerable.find(fn);
 
 			// Assert.
@@ -524,7 +526,7 @@ describe("Enumerable", () => {
 
 		it("can find nothing", () => {
 			// Arrange, act.
-			const fn = jest.fn().mockImplementation((x) => x.name === "Top secret product");
+			const fn = vi.fn().mockImplementation((x) => x.name === "Top secret product");
 			const item = enumerable.find(fn);
 
 			// Assert.
@@ -542,7 +544,7 @@ describe("Enumerable", () => {
 	describe("findLast", () => {
 		it("finds the first", () => {
 			// Arrange, act.
-			const fn = jest.fn().mockImplementation((x) => !x.name.match(/\s+/));
+			const fn = vi.fn().mockImplementation((x) => !x.name.match(/\s+/));
 			const item = enumerable.findLast(fn);
 
 			// Assert.
@@ -555,7 +557,7 @@ describe("Enumerable", () => {
 
 		it("finds the last", () => {
 			// Arrange, act.
-			const fn = jest.fn().mockImplementation((x) => x.name.match(/\s+/));
+			const fn = vi.fn().mockImplementation((x) => x.name.match(/\s+/));
 			const item = enumerable.findLast(fn);
 
 			// Assert.
@@ -568,7 +570,7 @@ describe("Enumerable", () => {
 
 		it("can find nothing", () => {
 			// Arrange, act.
-			const fn = jest.fn().mockImplementation((x) => x.name === "Top secret product");
+			const fn = vi.fn().mockImplementation((x) => x.name === "Top secret product");
 			const item = enumerable.findLast(fn);
 
 			// Assert.
@@ -582,7 +584,7 @@ describe("Enumerable", () => {
 
 	test("flatMap", () => {
 		// Arrange, act.
-		const fn = jest.fn();
+		const fn = vi.fn();
 		const res = enumerable.flatMap((x) => x.name.split(" ").values());
 
 		// Assert.
@@ -601,7 +603,7 @@ describe("Enumerable", () => {
 	describe("forEach", () => {
 		it("iterates over items", () => {
 			// Arrange, act.
-			const fn = jest.fn();
+			const fn = vi.fn();
 			enumerable.forEach(fn);
 
 			// Assert.
@@ -650,7 +652,7 @@ describe("Enumerable", () => {
 
 		it("dot not evaluate unless iterated", () => {
 			// Arrange, act.
-			const fn = jest.fn();
+			const fn = vi.fn();
 			enumerable.map(fn);
 
 			// Assert.
@@ -699,7 +701,7 @@ describe("Enumerable", () => {
 	describe("some", () => {
 		it("evaluates lazily", () => {
 			// Arrange, act, assert.
-			const fn = jest.fn().mockReturnValue(true);
+			const fn = vi.fn().mockReturnValue(true);
 			const some = enumerable.some(fn);
 
 			// Assert.
@@ -710,7 +712,7 @@ describe("Enumerable", () => {
 
 		it("evaluates all when needed", () => {
 			// Arrange, act, assert.
-			const fn = jest.fn().mockReturnValue(false);
+			const fn = vi.fn().mockReturnValue(false);
 			const some = enumerable.some(fn);
 
 			// Assert.
@@ -733,7 +735,7 @@ describe("Enumerable", () => {
 
 		it("accepts limit 1", () => {
 			// Arrange.
-			const fn = jest.fn();
+			const fn = vi.fn();
 
 			// Act.
 			const res = enumerable.take(1);
@@ -746,7 +748,7 @@ describe("Enumerable", () => {
 
 		it("accepts limit less than length", () => {
 			// Arrange.
-			const fn = jest.fn();
+			const fn = vi.fn();
 
 			// Act.
 			const res = enumerable.take(2);
@@ -760,7 +762,7 @@ describe("Enumerable", () => {
 
 		it("accepts limit exceeding length", () => {
 			// Arrange.
-			const fn = jest.fn();
+			const fn = vi.fn();
 
 			// Act.
 			const res = enumerable.take(99);
