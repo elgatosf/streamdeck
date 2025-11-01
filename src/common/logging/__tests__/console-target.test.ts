@@ -1,3 +1,5 @@
+import { describe, expect, it, vi } from "vitest";
+
 import { ConsoleTarget } from "../console-target";
 import { LogLevel } from "../level";
 
@@ -8,7 +10,7 @@ describe("ConsoleTarget", () => {
 	it("Error writes to error", () => {
 		// Arrange.
 		const target = new ConsoleTarget();
-		const spyOnConsoleError = jest.spyOn(console, "error").mockImplementationOnce(() => jest.fn());
+		const spyOnConsoleError = vi.spyOn(console, "error").mockImplementationOnce(() => vi.fn());
 
 		// Act.
 		target.write({
@@ -28,7 +30,7 @@ describe("ConsoleTarget", () => {
 	it("Warn writes to warn", () => {
 		// Arrange.
 		const target = new ConsoleTarget();
-		const spyOnConsoleWarn = jest.spyOn(console, "warn").mockImplementationOnce(() => jest.fn());
+		const spyOnConsoleWarn = vi.spyOn(console, "warn").mockImplementationOnce(() => vi.fn());
 
 		// Act.
 		target.write({
@@ -52,7 +54,7 @@ describe("ConsoleTarget", () => {
 	])("$name writes to log", ({ level }) => {
 		// Arrange.
 		const target = new ConsoleTarget();
-		const spyOnConsoleLog = jest.spyOn(console, "log").mockImplementationOnce(() => jest.fn());
+		const spyOnConsoleLog = vi.spyOn(console, "log").mockImplementationOnce(() => vi.fn());
 
 		// Act.
 		target.write({

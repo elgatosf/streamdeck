@@ -1,3 +1,5 @@
+import { beforeAll, describe, expect, it, vi } from "vitest";
+
 import { LogLevel } from "../level";
 import { Logger, LoggerOptions } from "../logger";
 import { LogEntry, LogTarget } from "../target";
@@ -10,7 +12,7 @@ describe("Logger", () => {
 		// Arrange.
 		const options: LoggerOptions = {
 			level: LogLevel.ERROR,
-			targets: [{ write: jest.fn() }],
+			targets: [{ write: vi.fn() }],
 		};
 
 		const logger = new Logger(options);
@@ -37,7 +39,7 @@ describe("Logger", () => {
 		// Arrange.
 		const options: LoggerOptions = {
 			level: LogLevel.INFO,
-			targets: [{ write: jest.fn() }, { write: jest.fn() }, { write: jest.fn() }],
+			targets: [{ write: vi.fn() }, { write: vi.fn() }, { write: vi.fn() }],
 		};
 
 		const logger = new Logger(options);
@@ -87,7 +89,7 @@ describe("Logger", () => {
 			},
 		])("When scopes are $scopes", ({ scopes, scope }) => {
 			// Arrange.
-			const target = { write: jest.fn() };
+			const target = { write: vi.fn() };
 			const parent = new Logger({
 				level: LogLevel.TRACE,
 				minimumLevel: LogLevel.TRACE,
@@ -225,7 +227,7 @@ describe("Logger", () => {
 		 */
 		function verify(act: (logger: Logger) => void, expectLog: boolean) {
 			// Arrange.
-			const target = { write: jest.fn() };
+			const target = { write: vi.fn() };
 			const logger = new Logger({
 				level,
 				minimumLevel: LogLevel.TRACE,
@@ -248,7 +250,7 @@ describe("Logger", () => {
 			// Arrange.
 			const parent = new Logger({
 				level: LogLevel.ERROR,
-				targets: [{ write: jest.fn() }],
+				targets: [{ write: vi.fn() }],
 			});
 
 			// Act.
@@ -272,7 +274,7 @@ describe("Logger", () => {
 			// Arrange.
 			const parent = new Logger({
 				level: LogLevel.ERROR,
-				targets: [{ write: jest.fn() }],
+				targets: [{ write: vi.fn() }],
 			});
 
 			// Act.
@@ -295,7 +297,7 @@ describe("Logger", () => {
 			// Arrange.
 			const parent = new Logger({
 				level: LogLevel.ERROR,
-				targets: [{ write: jest.fn() }],
+				targets: [{ write: vi.fn() }],
 			});
 
 			// Act (1).
@@ -389,7 +391,7 @@ describe("Logger", () => {
 				const options: LoggerOptions = {
 					level,
 					minimumLevel: minimumLevel as LogLevel.INFO | LogLevel.TRACE,
-					targets: [{ write: jest.fn() }],
+					targets: [{ write: vi.fn() }],
 				};
 
 				// Act.
@@ -420,7 +422,7 @@ describe("Logger", () => {
 				const options: LoggerOptions = {
 					level: LogLevel.ERROR,
 					minimumLevel: minimumLevel as LogLevel.INFO | LogLevel.TRACE,
-					targets: [{ write: jest.fn() }],
+					targets: [{ write: vi.fn() }],
 				};
 
 				const logger = new Logger(options);

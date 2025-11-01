@@ -6,6 +6,8 @@ export default defineConfig({
 		environment: "node",
 		include: [
 			"src/api/**/__tests__/*.test.ts",
+			"src/common/events/**/__tests__/*.test.ts",
+			"src/common/logging/**/__tests__/*.test.ts",
 			"src/plugin/**/__tests__/*.test.ts",
 		],
 		setupFiles: [
