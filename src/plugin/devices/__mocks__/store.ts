@@ -3,7 +3,7 @@ import { vi } from "vitest";
 import { DeviceType } from "../../../api/device";
 import { type Device } from "../device";
 
-export const deviceService = {
+export const deviceStore = {
 	getDeviceById: vi.fn().mockImplementation((id: string) => {
 		return {
 			actions: Array.from([]).values(),
