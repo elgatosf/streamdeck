@@ -8,7 +8,7 @@ export default defineConfig({
 			"src/plugin/__tests__/connection.test.ts",
 			"src/plugin/__tests__/i18n.test.ts",
 			"src/plugin/__tests__/index.test.ts",
-			//"src/plugin/__tests__/manifest.test.ts",
+			"src/plugin/__tests__/manifest.test.ts",
 			"src/plugin/__tests__/profiles.test.ts",
 			"src/plugin/__tests__/settings.test.ts",
 			"src/plugin/__tests__/system.test.ts",
