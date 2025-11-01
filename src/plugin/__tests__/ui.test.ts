@@ -1,3 +1,5 @@
+import { beforeEach, describe, expect, it, vi } from "vitest";
+
 import type {
 	DidReceivePropertyInspectorMessage,
 	PropertyInspectorDidAppear,
@@ -11,11 +13,11 @@ import { connection } from "../connection";
 import { PropertyInspectorDidAppearEvent, type PropertyInspectorDidDisappearEvent, SendToPluginEvent } from "../events";
 import { ui } from "../ui";
 
-jest.mock("../actions/store");
-jest.mock("../devices/store");
-jest.mock("../connection");
-jest.mock("../logging");
-jest.mock("../manifest");
+vi.mock("../actions/store");
+vi.mock("../devices/store");
+vi.mock("../connection");
+vi.mock("../logging");
+vi.mock("../manifest");
 
 describe("UIController", () => {
 	/**
@@ -23,7 +25,7 @@ describe("UIController", () => {
 	 */
 	it("receives onDidAppear", () => {
 		// Arrange
-		const listener = jest.fn();
+		const listener = vi.fn();
 		const ev = {
 			action: "com.elgato.test.one",
 			context: "key123", // Mocked in actionStore.
@@ -55,7 +57,7 @@ describe("UIController", () => {
 	 */
 	it("receives onDidDisappear", () => {
 		// Arrange
-		const listener = jest.fn();
+		const listener = vi.fn();
 		const ev = {
 			action: "com.elgato.test.one",
 			context: "key123", // Mocked in actionStore.
@@ -87,7 +89,7 @@ describe("UIController", () => {
 	 */
 	it("receives onSendToPlugin", () => {
 		// Arrange
-		const listener = jest.fn();
+		const listener = vi.fn();
 		const ev = {
 			action: "com.elgato.test.one",
 			context: "key123", // Mocked in actionStore.

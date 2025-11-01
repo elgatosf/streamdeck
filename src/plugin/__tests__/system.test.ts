@@ -1,3 +1,5 @@
+import { describe, expect, it, vi } from "vitest";
+
 import type {
 	ApplicationDidLaunch,
 	ApplicationDidTerminate,
@@ -24,9 +26,9 @@ import {
 	openUrl,
 } from "../system";
 
-jest.mock("../connection");
-jest.mock("../logging");
-jest.mock("../manifest");
+vi.mock("../connection");
+vi.mock("../logging");
+vi.mock("../manifest");
 
 describe("system", () => {
 	/**
@@ -34,7 +36,7 @@ describe("system", () => {
 	 */
 	it("receives onApplicationDidLaunch", () => {
 		// Arrange
-		const listener = jest.fn();
+		const listener = vi.fn();
 		const ev = {
 			event: "applicationDidLaunch",
 			payload: {
@@ -66,7 +68,7 @@ describe("system", () => {
 	 */
 	it("receives onApplicationDidTerminate", () => {
 		// Arrange
-		const listener = jest.fn();
+		const listener = vi.fn();
 		const ev = {
 			event: "applicationDidTerminate",
 			payload: {
@@ -99,7 +101,7 @@ describe("system", () => {
 		 */
 		it("propagates", () => {
 			// Arrange
-			const listener = jest.fn();
+			const listener = vi.fn();
 			const ev = {
 				event: "didReceiveDeepLink",
 				payload: {
@@ -137,10 +139,10 @@ describe("system", () => {
 		 */
 		it("validates requires 6.5 (connection)", () => {
 			// Arrange.
-			jest.spyOn(connection, "version", "get").mockReturnValueOnce(new Version("6.4"));
+			vi.spyOn(connection, "version", "get").mockReturnValueOnce(new Version("6.4"));
 
 			// Act, assert.
-			expect(() => onDidReceiveDeepLink(jest.fn())).toThrow(
+			expect(() => onDidReceiveDeepLink(vi.fn())).toThrow(
 				`[ERR_NOT_SUPPORTED]: Receiving deep-link messages requires Stream Deck version 6.5 or higher, but current version is 6.4; please update Stream Deck and the "Software.MinimumVersion" in the plugin's manifest to "6.5" or higher.`,
 			);
 		});
@@ -151,7 +153,7 @@ describe("system", () => {
 	 */
 	it("Receives onSystemDidWakeUp", () => {
 		// Arrange
-		const listener = jest.fn();
+		const listener = vi.fn();
 		const ev = {
 			event: "systemDidWakeUp",
 		} satisfies SystemDidWakeUp;
@@ -194,8 +196,8 @@ describe("system", () => {
 	describe("getSecrets", () => {
 		it("requires SDKVersion 3 or higher", () => {
 			// Arrange.
-			jest.spyOn(manifest, "getSDKVersion").mockReturnValue(2); // Not okay
-			jest.spyOn(manifest, "getSoftwareMinimumVersion").mockReturnValue(new Version("6.9")); // Okay
+			vi.spyOn(manifest, "getSDKVersion").mockReturnValue(2); // Not okay
+			vi.spyOn(manifest, "getSoftwareMinimumVersion").mockReturnValue(new Version("6.9")); // Okay
 
 			// Act, assert.
 			expect(() => getSecrets()).toThrow(
@@ -205,8 +207,8 @@ describe("system", () => {
 
 		it("requires Software.MinimumVersion 6.9 or higher", () => {
 			// Arrange.
-			jest.spyOn(manifest, "getSDKVersion").mockReturnValue(3); // Okay
-			jest.spyOn(manifest, "getSoftwareMinimumVersion").mockReturnValue(new Version("6.8")); // Not okay
+			vi.spyOn(manifest, "getSDKVersion").mockReturnValue(3); // Okay
+			vi.spyOn(manifest, "getSoftwareMinimumVersion").mockReturnValue(new Version("6.8")); // Not okay
 
 			// Act, assert.
 			expect(() => getSecrets()).toThrow(
@@ -216,8 +218,8 @@ describe("system", () => {
 
 		it("getSecrets", async () => {
 			// Arrange, act (Command).
-			jest.spyOn(manifest, "getSDKVersion").mockReturnValue(3);
-			jest.spyOn(manifest, "getSoftwareMinimumVersion").mockReturnValue(new Version("6.9"));
+			vi.spyOn(manifest, "getSDKVersion").mockReturnValue(3);
+			vi.spyOn(manifest, "getSoftwareMinimumVersion").mockReturnValue(new Version("6.9"));
 
 			const secrets = getSecrets<Secrets>();
 
@@ -242,9 +244,9 @@ describe("system", () => {
 			await secrets;
 
 			// Assert (Event).
-			expect(secrets).resolves.toEqual<Secrets>({
+			expect(secrets).resolves.toEqual({
 				secret: "Elgato",
-			});
+			} satisfies Secrets);
 		});
 	});
 });

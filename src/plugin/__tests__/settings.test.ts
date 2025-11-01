@@ -1,3 +1,5 @@
+import { describe, expect, it, vi } from "vitest";
+
 import {
 	type DidReceiveGlobalSettings,
 	type DidReceiveSettings,
@@ -10,10 +12,10 @@ import { connection } from "../connection";
 import type { DidReceiveGlobalSettingsEvent, DidReceiveSettingsEvent } from "../events";
 import { getGlobalSettings, onDidReceiveGlobalSettings, onDidReceiveSettings, setGlobalSettings } from "../settings";
 
-jest.mock("../connection");
-jest.mock("../logging");
-jest.mock("../manifest");
-jest.mock("../actions/store");
+vi.mock("../connection");
+vi.mock("../logging");
+vi.mock("../manifest");
+vi.mock("../actions/store");
 
 describe("settings", () => {
 	describe("sending", () => {
@@ -45,9 +47,9 @@ describe("settings", () => {
 			await settings;
 
 			// Assert (Event).
-			expect(settings).resolves.toEqual<Settings>({
+			expect(settings).resolves.toEqual({
 				name: "Elgato",
-			});
+			} satisfies Settings);
 		});
 
 		/**
@@ -77,7 +79,7 @@ describe("settings", () => {
 		 */
 		it("onDidReceiveGlobalSettings", () => {
 			// Arrange
-			const listener = jest.fn();
+			const listener = vi.fn();
 			const ev = {
 				event: "didReceiveGlobalSettings",
 				payload: {
@@ -113,7 +115,7 @@ describe("settings", () => {
 		 */
 		it("onDidReceiveSettings", () => {
 			// Arrange
-			const listener = jest.fn();
+			const listener = vi.fn();
 			const ev = {
 				action: "com.elgato.test.one",
 				context: "key123",

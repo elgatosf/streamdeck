@@ -1,11 +1,13 @@
+import { describe, expect, it, vi } from "vitest";
+
 import type { SwitchToProfile } from "../../api";
 import { Version } from "../common/version";
 import { connection } from "../connection";
 import { switchToProfile } from "../profiles";
 
-jest.mock("../connection");
-jest.mock("../logging");
-jest.mock("../manifest");
+vi.mock("../connection");
+vi.mock("../logging");
+vi.mock("../manifest");
 
 describe("profiles", () => {
 	describe("switchToProfile", () => {
@@ -54,7 +56,7 @@ describe("profiles", () => {
 		 */
 		it("validates page parameter requires 6.5 (connection)", () => {
 			// Arrange.
-			jest.spyOn(connection, "version", "get").mockReturnValueOnce(new Version("6.4"));
+			vi.spyOn(connection, "version", "get").mockReturnValueOnce(new Version("6.4"));
 
 			// Act, assert.
 			expect(() => switchToProfile("DEV1", "Profile", 1)).toThrow(
