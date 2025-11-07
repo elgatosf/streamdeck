@@ -29,6 +29,7 @@ describe("settings", () => {
 			expect(connection.send).toHaveBeenLastCalledWith({
 				event: "getGlobalSettings",
 				context: connection.registrationParameters.pluginUUID,
+				id: expect.any(String),
 			} as GetGlobalSettings);
 
 			expect(Promise.race([settings, false])).resolves.toBe(false);
