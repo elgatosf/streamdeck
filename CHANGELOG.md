@@ -12,6 +12,21 @@
 
 # Change Log
 
+## 2.0.0-beta.1
+
+### ✨ New
+
+- Add support for Stream Deck 7.1.
+- Add support for embedded resources.
+- Add `setResources(resources)` to action.
+- Add `getResources()` to action.
+- Add `onDidReceiveResources` to `SingletonAction`.
+
+### ♻️ Update
+
+- Update action payloads to include `resources`.
+- Update `@elgato/schemas` dependency.
+
 ## 2.0.0-beta
 
 This releases adds support for DRM protection, and lays the foundation for the upcoming Stream Deck UI library.
