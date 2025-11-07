@@ -7,6 +7,7 @@ import type {
 	DialDown,
 	DialRotate,
 	DialUp,
+	DidReceiveResources,
 	DidReceiveSettings,
 	KeyDown,
 	KeyUp,
@@ -86,6 +87,14 @@ export type DialUpEvent<TSettings extends JsonObject = JsonObject> = ActionEvent
  */
 export type DidReceiveSettingsEvent<TSettings extends JsonObject = JsonObject> = ActionEvent<
 	DidReceiveSettings<TSettings>,
+	DialAction<TSettings> | KeyAction<TSettings>
+>;
+
+/**
+ * Event information received from Stream Deck when the plugin receives resources.
+ */
+export type DidReceiveResourcesEvent<TSettings extends JsonObject = JsonObject> = ActionEvent<
+	DidReceiveResources<TSettings>,
 	DialAction<TSettings> | KeyAction<TSettings>
 >;
 

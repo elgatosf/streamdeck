@@ -80,6 +80,7 @@ describe("Action", () => {
 		expect(connection.send).toHaveBeenLastCalledWith<[GetSettings]>({
 			event: "getSettings",
 			context: action.id,
+			id: expect.any(String),
 		});
 
 		await expect(Promise.race([settings, false])).resolves.toBe(false);

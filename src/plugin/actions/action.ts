@@ -1,15 +1,54 @@
-import type { DidReceiveSettings } from "../../api";
+import { randomUUID } from "node:crypto";
+
+import type { DidReceiveResources, DidReceiveSettings, Resources } from "../../api";
 import type { JsonObject } from "../../common/json";
 import { connection } from "../connection";
+import { requiresVersion } from "../validation";
 import { ActionContext } from "./context";
 import type { DialAction } from "./dial";
 import type { KeyAction } from "./key";
+
+const REQUEST_TIMEOUT = 15 * 1000; // 15s
 
 /**
  * Provides a contextualized instance of an {@link Action}, allowing for direct communication with the Stream Deck.
  * @template T The type of settings associated with the action.
  */
 export class Action<T extends JsonObject = JsonObject> extends ActionContext {
+	/**
+	 * Gets the resources (files) associated with this action; these resources are embedded into the
+	 * action when it is exported, either individually, or as part of a profile.
+	 *
+	 * Available from Stream Deck 7.1.
+	 * @returns The resources.
+	 */
+	public getResources(): Promise<Resources> {
+		requiresVersion(7.1, connection.version, "getResources");
+
+		return new Promise((resolve, reject) => {
+			const id = randomUUID();
+			const timeoutId = setTimeout(() => {
+				connection.removeListener("didReceiveResources", callback);
+				reject("The request timed out");
+			}, REQUEST_TIMEOUT);
+
+			const callback = (ev: DidReceiveResources<JsonObject>): void => {
+				if (ev.context == this.id && ev.id === id) {
+					clearTimeout(timeoutId);
+					connection.removeListener("didReceiveResources", callback);
+					resolve(ev.payload.resources);
+				}
+			};
+
+			connection.on("didReceiveResources", callback);
+			connection.send({
+				event: "getResources",
+				context: this.id,
+				id,
+			});
+		});
+	}
+
 	/**
 	 * Gets the settings associated this action instance.
 	 * @template U The type of settings associated with the action.
@@ -28,6 +67,7 @@ export class Action<T extends JsonObject = JsonObject> extends ActionContext {
 			connection.send({
 				event: "getSettings",
 				context: this.id,
+				id: randomUUID(),
 			});
 		});
 	}
@@ -46,6 +86,29 @@ export class Action<T extends JsonObject = JsonObject> extends ActionContext {
 	 */
 	public isKey(): this is KeyAction {
 		return this.controllerType === "Keypad";
+	}
+
+	/**
+	 * Sets the resources (files) associated with this action; these resources are embedded into the
+	 * action when it is exported, either individually, or as part of a profile.
+	 *
+	 * Available from Stream Deck 7.1.
+	 * @example
+	 * action.setResources({
+	 *   fileOne: "c:\\hello-world.txt",
+	 *   anotherFile: "c:\\icon.png"
+	 * });
+	 * @param resources The resources as a map of file paths.
+	 * @returns `Promise` resolved when the resources are saved to Stream Deck.
+	 */
+	public setResources(resources: Resources): Promise<void> {
+		requiresVersion(7.1, connection.version, "setResources");
+
+		return connection.send({
+			event: "setResources",
+			context: this.id,
+			payload: resources,
+		});
 	}
 
 	/**
