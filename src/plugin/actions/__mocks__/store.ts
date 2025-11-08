@@ -1,14 +1,16 @@
+import { vi } from "vitest";
+
 import { DeviceType } from "../../../api/device";
 import type { Device } from "../../devices";
 import { deviceStore } from "../../devices/store";
 
-const { ReadOnlyActionStore } = jest.requireActual("../store");
-const { KeyAction } = jest.requireActual("../key");
-const { DialAction } = jest.requireActual("../dial");
+const { ReadOnlyActionStore } = await vi.importActual<typeof import("../store")>("../store");
+const { KeyAction } = await vi.importActual<typeof import("../key")>("../key");
+const { DialAction } = await vi.importActual<typeof import("../dial")>("../dial");
 
-jest.mock("../../devices/store");
+vi.mock("../../devices/store");
 
-jest.spyOn(deviceStore, "getDeviceById").mockReturnValue({
+vi.spyOn(deviceStore, "getDeviceById").mockReturnValue({
 	id: "device123",
 	isConnected: true,
 	name: "Device 1",
@@ -20,9 +22,9 @@ jest.spyOn(deviceStore, "getDeviceById").mockReturnValue({
 } as unknown as Device);
 
 export const actionStore = {
-	set: jest.fn(),
-	delete: jest.fn(),
-	getActionById: jest.fn().mockImplementation((id: string) => {
+	set: vi.fn(),
+	delete: vi.fn(),
+	getActionById: vi.fn().mockImplementation((id: string) => {
 		if (id === "dial123") {
 			return new DialAction({
 				action: "com.elgato.test.dial",

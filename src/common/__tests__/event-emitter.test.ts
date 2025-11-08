@@ -1,3 +1,5 @@
+import { describe, expect, it, test, vi } from "vitest";
+
 import type { Expect, TypesAreEqual } from "../../../tests/utils";
 import { type EventArgs, EventEmitter, type EventsOf } from "../event-emitter";
 
@@ -9,7 +11,7 @@ describe("EventEmitter", () => {
 		test("addListener", () => {
 			// Arrange.
 			const emitter = new EventEmitter<EventMap>();
-			const listener = jest.fn();
+			const listener = vi.fn();
 
 			// Act.
 			emitter.addListener("message", listener);
@@ -29,7 +31,7 @@ describe("EventEmitter", () => {
 		test("on", () => {
 			// Arrange.
 			const emitter = new EventEmitter<EventMap>();
-			const listener = jest.fn();
+			const listener = vi.fn();
 
 			// Act.
 			emitter.on("message", listener);
@@ -49,7 +51,7 @@ describe("EventEmitter", () => {
 		test("once", () => {
 			// Arrange.
 			const emitter = new EventEmitter<EventMap>();
-			const listener = jest.fn();
+			const listener = vi.fn();
 
 			// Act.
 			emitter.once("message", listener);
@@ -70,7 +72,7 @@ describe("EventEmitter", () => {
 		it("adds the listener", async () => {
 			// Arrange.
 			const emitter = new EventEmitter<EventMap>();
-			const listener = jest.fn();
+			const listener = vi.fn();
 
 			// Act.
 			emitter.disposableOn("message", listener);
@@ -87,7 +89,7 @@ describe("EventEmitter", () => {
 		it("can remove after emitting", async () => {
 			// Arrange.
 			const emitter = new EventEmitter<EventMap>();
-			const listener = jest.fn();
+			const listener = vi.fn();
 
 			// Act.
 			{
@@ -109,7 +111,7 @@ describe("EventEmitter", () => {
 		it("dispose", async () => {
 			// Arrange.
 			const emitter = new EventEmitter<EventMap>();
-			const listener = jest.fn();
+			const listener = vi.fn();
 			const handler = emitter.disposableOn("message", listener);
 
 			// Act.
@@ -126,7 +128,7 @@ describe("EventEmitter", () => {
 		it("[Symbol.dispose]", async () => {
 			// Arrange.
 			const emitter = new EventEmitter<EventMap>();
-			const listener = jest.fn();
+			const listener = vi.fn();
 
 			// Act.
 			{
@@ -147,7 +149,7 @@ describe("EventEmitter", () => {
 	it("emits to all listeners", () => {
 		// Arrange.
 		const emitter = new EventEmitter<EventMap>();
-		const [listener, other] = [jest.fn(), jest.fn(), jest.fn(), jest.fn()];
+		const [listener, other] = [vi.fn(), vi.fn(), vi.fn(), vi.fn()];
 
 		emitter.addListener("message", listener);
 		emitter.addListener("message", listener);
@@ -167,7 +169,7 @@ describe("EventEmitter", () => {
 	test("eventNames", () => {
 		// Arrange.
 		const emitter = new EventEmitter<EventMap>();
-		const listener = jest.fn();
+		const listener = vi.fn();
 
 		// Act, assert - no events.
 		expect(emitter.eventNames()).toStrictEqual([]);
@@ -188,12 +190,12 @@ describe("EventEmitter", () => {
 		it("with listener", () => {
 			// Arrange.
 			const emitter = new EventEmitter<EventMap>();
-			const listener = jest.fn();
+			const listener = vi.fn();
 
 			emitter.addListener("message", listener);
 			emitter.addListener("message", listener);
-			emitter.addListener("message", jest.fn());
-			emitter.addListener("other", jest.fn());
+			emitter.addListener("message", vi.fn());
+			emitter.addListener("other", vi.fn());
 
 			// Act, assert.
 			expect(emitter.listenerCount("message", listener)).toBe(2);
@@ -207,10 +209,10 @@ describe("EventEmitter", () => {
 			// Arrange.
 			const emitter = new EventEmitter<EventMap>();
 
-			emitter.addListener("message", jest.fn());
-			emitter.addListener("message", jest.fn());
-			emitter.addListener("message", jest.fn());
-			emitter.addListener("other", jest.fn());
+			emitter.addListener("message", vi.fn());
+			emitter.addListener("message", vi.fn());
+			emitter.addListener("message", vi.fn());
+			emitter.addListener("other", vi.fn());
 
 			// Act, assert.
 			expect(emitter.listenerCount("message")).toBe(3);
@@ -225,7 +227,7 @@ describe("EventEmitter", () => {
 	test("listeners", () => {
 		// Arrange.
 		const emitter = new EventEmitter<EventMap>();
-		const [one, two] = [jest.fn(), jest.fn()];
+		const [one, two] = [vi.fn(), vi.fn()];
 
 		emitter.addListener("message", one);
 		emitter.addListener("message", two);
@@ -243,7 +245,7 @@ describe("EventEmitter", () => {
 		test("prependListener", () => {
 			// Arrange.
 			const emitter = new EventEmitter<EventMap>();
-			const [on, prepend] = [jest.fn(), jest.fn()];
+			const [on, prepend] = [vi.fn(), vi.fn()];
 
 			const order: unknown[] = [];
 			on.mockImplementation(() => order.push(on));
@@ -269,7 +271,7 @@ describe("EventEmitter", () => {
 		test("prependOnceListener", () => {
 			// Arrange.
 			const emitter = new EventEmitter<EventMap>();
-			const [on, prepend] = [jest.fn(), jest.fn()];
+			const [on, prepend] = [vi.fn(), vi.fn()];
 
 			const order: unknown[] = [];
 			on.mockImplementation(() => {
@@ -300,7 +302,7 @@ describe("EventEmitter", () => {
 		test("off", () => {
 			// Arrange.
 			const emitter = new EventEmitter<EventMap>();
-			const [one, two] = [jest.fn(), jest.fn()];
+			const [one, two] = [vi.fn(), vi.fn()];
 
 			emitter.off("message", one); // Assert removing before any are added.
 
@@ -325,7 +327,7 @@ describe("EventEmitter", () => {
 		test("removeAllListeners", () => {
 			// Arrange.
 			const emitter = new EventEmitter<EventMap>();
-			const [one, two] = [jest.fn(), jest.fn()];
+			const [one, two] = [vi.fn(), vi.fn()];
 
 			emitter.on("message", one);
 			emitter.on("message", two);
@@ -347,7 +349,7 @@ describe("EventEmitter", () => {
 		test("removeListener", () => {
 			// Arrange.
 			const emitter = new EventEmitter<EventMap>();
-			const [one, two] = [jest.fn(), jest.fn()];
+			const [one, two] = [vi.fn(), vi.fn()];
 
 			emitter.on("message", one);
 			emitter.on("message", two);

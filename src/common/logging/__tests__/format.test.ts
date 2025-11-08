@@ -1,3 +1,5 @@
+import { beforeEach, describe, expect, it, test, vi } from "vitest";
+
 import { LogLevel } from "../../../common/logging";
 import { stringFormatter } from "../format";
 
@@ -40,7 +42,7 @@ describe("stringFormatter", () => {
 		const mockedDate = new Date(2000, 11, 25, 10, 30, 0, 123);
 		const mockedDateString = "2000-12-25T10:30:00.123Z";
 
-		beforeEach(() => jest.useFakeTimers().setSystemTime(mockedDate));
+		beforeEach(() => vi.useFakeTimers().setSystemTime(mockedDate));
 
 		describe("aggregating data", () => {
 			/**

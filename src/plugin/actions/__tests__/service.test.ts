@@ -1,3 +1,5 @@
+import { describe, expect, it, vi } from "vitest";
+
 import type {
 	DialDown,
 	DialRotate,
@@ -14,6 +16,7 @@ import type {
 	WillDisappear,
 } from "../../../api";
 import { Settings } from "../../../api/__mocks__/events";
+import type { Enumerable } from "../../../common/enumerable";
 import { JsonObject } from "../../../common/json";
 import { connection } from "../../connection";
 import {
@@ -39,11 +42,11 @@ import { actionService, type ActionService } from "../service";
 import { SingletonAction } from "../singleton-action";
 import { actionStore } from "../store";
 
-jest.mock("../store");
-jest.mock("../../devices/store");
-jest.mock("../../connection");
-jest.mock("../../logging");
-jest.mock("../../manifest");
+vi.mock("../store");
+vi.mock("../../devices/store");
+vi.mock("../../connection");
+vi.mock("../../logging");
+vi.mock("../../manifest");
 
 describe("actions", () => {
 	describe("event emitters", () => {
@@ -52,7 +55,7 @@ describe("actions", () => {
 		 */
 		it("receives onDialDown", () => {
 			// Arrange.
-			const listener = jest.fn();
+			const listener = vi.fn();
 			const ev = {
 				action: "com.elgato.test.dial",
 				context: "dial123",
@@ -95,7 +98,7 @@ describe("actions", () => {
 		 */
 		it("receives onDialRotate", () => {
 			// Arrange.
-			const listener = jest.fn();
+			const listener = vi.fn();
 			const ev = {
 				action: "com.elgato.test.dial",
 				context: "dial123",
@@ -140,7 +143,7 @@ describe("actions", () => {
 		 */
 		it("receives onDialUp", () => {
 			// Arrange.
-			const listener = jest.fn();
+			const listener = vi.fn();
 			const ev = {
 				action: "com.elgato.test.dial",
 				context: "dial123",
@@ -183,7 +186,7 @@ describe("actions", () => {
 		 */
 		it("receives onKeyDown", () => {
 			// Arrange.
-			const listener = jest.fn();
+			const listener = vi.fn();
 			const ev = {
 				action: "com.elgato.test.key",
 				context: "key123",
@@ -227,7 +230,7 @@ describe("actions", () => {
 		 */
 		it("receives onKeyUp", () => {
 			// Arrange.
-			const listener = jest.fn();
+			const listener = vi.fn();
 			const ev = {
 				action: "com.elgato.test.key",
 				context: "key123",
@@ -271,7 +274,7 @@ describe("actions", () => {
 		 */
 		it("receives onTitleParametersDidChange", () => {
 			// Arrange.
-			const listener = jest.fn();
+			const listener = vi.fn();
 			const ev = {
 				action: "com.elgato.test.key",
 				context: "key123",
@@ -324,7 +327,7 @@ describe("actions", () => {
 		 */
 		it("receives onTouchTap", () => {
 			// Arrange.
-			const listener = jest.fn();
+			const listener = vi.fn();
 			const ev = {
 				action: "com.elgato.test.dial",
 				context: "dial123",
@@ -369,7 +372,7 @@ describe("actions", () => {
 		 */
 		it("receives onWillAppear", () => {
 			// Arrange.
-			const listener = jest.fn();
+			const listener = vi.fn();
 			const ev = {
 				action: "com.elgato.test.key",
 				context: "key123",
@@ -413,7 +416,7 @@ describe("actions", () => {
 		 */
 		it("receives onWillDisappear", () => {
 			// Arrange.
-			const listener = jest.fn();
+			const listener = vi.fn();
 			const ev = {
 				action: "com.elgato.test.key",
 				context: "context123",
@@ -456,7 +459,7 @@ describe("actions", () => {
 	describe("registering an action", () => {
 		const keyManifestId = "com.elgato.test.key";
 		const dialManifestId = "com.elgato.test.dial";
-		const actions = jest.fn() as unknown as IterableIterator<DialAction<JsonObject> | KeyAction<JsonObject>>;
+		const actions = vi.fn() as unknown as Enumerable<DialAction<JsonObject> | KeyAction<JsonObject>>;
 
 		/**
 		 * Asserts {@link ActionService.registerAction} validates the manifest identifier is not undefined.
@@ -491,12 +494,12 @@ describe("actions", () => {
 		 */
 		it("ignore undefined handlers", () => {
 			// Arrange.
-			const spyOnAddListener = jest.spyOn(connection, "addListener");
-			const spyOnDisposableOn = jest.spyOn(connection, "disposableOn");
-			const spyOnOn = jest.spyOn(connection, "on");
-			const spyOnOnce = jest.spyOn(connection, "once");
-			const spyOnPrependListener = jest.spyOn(connection, "prependListener");
-			const spyOnPrependOnceListener = jest.spyOn(connection, "prependOnceListener");
+			const spyOnAddListener = vi.spyOn(connection, "addListener");
+			const spyOnDisposableOn = vi.spyOn(connection, "disposableOn");
+			const spyOnOn = vi.spyOn(connection, "on");
+			const spyOnOnce = vi.spyOn(connection, "once");
+			const spyOnPrependListener = vi.spyOn(connection, "prependListener");
+			const spyOnPrependOnceListener = vi.spyOn(connection, "prependOnceListener");
 
 			// Act.
 			actionService.registerAction({
@@ -518,7 +521,7 @@ describe("actions", () => {
 		 */
 		it("routes onDialDown", () => {
 			// Arrange.
-			const listener = jest.fn();
+			const listener = vi.fn();
 
 			const ev = {
 				action: dialManifestId,
@@ -560,7 +563,7 @@ describe("actions", () => {
 		 */
 		it("routes onDialRotate", () => {
 			// Arrange.
-			const listener = jest.fn();
+			const listener = vi.fn();
 			const ev = {
 				action: dialManifestId,
 				context: "dial123",
@@ -603,7 +606,7 @@ describe("actions", () => {
 		 */
 		it("routes onDialUp", () => {
 			// Arrange.
-			const listener = jest.fn();
+			const listener = vi.fn();
 			const ev = {
 				action: dialManifestId,
 				context: "dial123",
@@ -644,7 +647,7 @@ describe("actions", () => {
 		 */
 		it("routes sendToPlugin", () => {
 			// Arrange
-			const listener = jest.fn();
+			const listener = vi.fn();
 			const ev = {
 				action: keyManifestId,
 				context: "key123",
@@ -679,7 +682,7 @@ describe("actions", () => {
 		 */
 		it("routes onDidReceiveGlobalSettings", () => {
 			// Arrange
-			const listener = jest.fn();
+			const listener = vi.fn();
 			const ev = {
 				action: keyManifestId,
 				context: "key123",
@@ -721,7 +724,7 @@ describe("actions", () => {
 		 */
 		it("routes onKeyDown", () => {
 			// Arrange.
-			const listener = jest.fn();
+			const listener = vi.fn();
 			const ev = {
 				action: keyManifestId,
 				context: "key123",
@@ -763,7 +766,7 @@ describe("actions", () => {
 		 */
 		it("routes onKeyUp", () => {
 			// Arrange.
-			const listener = jest.fn();
+			const listener = vi.fn();
 			const ev = {
 				action: keyManifestId,
 				context: "key123",
@@ -805,7 +808,7 @@ describe("actions", () => {
 		 */
 		it("routes onPropertyInspectorDidAppear", () => {
 			// Arrange
-			const listener = jest.fn();
+			const listener = vi.fn();
 			const ev = {
 				action: keyManifestId,
 				context: "key123",
@@ -835,7 +838,7 @@ describe("actions", () => {
 		 */
 		it("routes onPropertyInspectorDidDisappear", () => {
 			// Arrange
-			const listener = jest.fn();
+			const listener = vi.fn();
 			const ev = {
 				action: keyManifestId,
 				context: "key123",
@@ -865,7 +868,7 @@ describe("actions", () => {
 		 */
 		it("routes onTitleParametersDidChange", () => {
 			// Arrange.
-			const listener = jest.fn();
+			const listener = vi.fn();
 			const ev = {
 				action: keyManifestId,
 				context: "key123",
@@ -916,7 +919,7 @@ describe("actions", () => {
 		 */
 		it("routes onTouchTap", () => {
 			// Arrange.
-			const listener = jest.fn();
+			const listener = vi.fn();
 			const ev = {
 				action: dialManifestId,
 				context: "dial123",
@@ -959,7 +962,7 @@ describe("actions", () => {
 		 */
 		it("routes onWillAppear", () => {
 			// Arrange.
-			const listener = jest.fn();
+			const listener = vi.fn();
 			const ev = {
 				action: keyManifestId,
 				context: "key123",
@@ -1001,7 +1004,7 @@ describe("actions", () => {
 		 */
 		it("routes onWillDisappear", () => {
 			// Arrange.
-			const listener = jest.fn();
+			const listener = vi.fn();
 			const ev = {
 				action: keyManifestId,
 				context: "key123",

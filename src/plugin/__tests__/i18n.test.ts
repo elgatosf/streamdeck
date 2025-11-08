@@ -1,24 +1,25 @@
 import fs from "node:fs";
 import path from "node:path";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { fileSystemLocaleProvider } from "../i18n";
 import { logger } from "../logging";
 
-jest.mock("../logging");
+vi.mock("../logging");
 
 describe("fileSystemLocaleProvider", () => {
 	const mockedCwd = "c:\\temp";
 
-	beforeEach(() => jest.spyOn(process, "cwd").mockReturnValue(mockedCwd));
-	afterEach(() => jest.resetAllMocks());
+	beforeEach(() => vi.spyOn(process, "cwd").mockReturnValue(mockedCwd));
+	afterEach(() => vi.resetAllMocks());
 
 	/**
 	 * Assert {@link fileSystemLocaleProvider} parses translation files.
 	 */
 	it("reads from the language JSON file", () => {
 		// Arrange.
-		jest.spyOn(fs, "existsSync").mockReturnValue(true);
-		const spyOnReadFileSync = jest.spyOn(fs, "readFileSync").mockReturnValue(
+		vi.spyOn(fs, "existsSync").mockReturnValue(true);
+		const spyOnReadFileSync = vi.spyOn(fs, "readFileSync").mockReturnValue(
 			JSON.stringify({
 				Localization: {
 					Hello: "Hallo Welt",
@@ -40,8 +41,8 @@ describe("fileSystemLocaleProvider", () => {
 	 */
 	it("returns null when the file is not found", () => {
 		// Arrange.
-		jest.spyOn(fs, "existsSync").mockReturnValue(false);
-		const spyOnReadFileSync = jest.spyOn(fs, "readFileSync");
+		vi.spyOn(fs, "existsSync").mockReturnValue(false);
+		const spyOnReadFileSync = vi.spyOn(fs, "readFileSync");
 
 		// Act.
 		const translations = fileSystemLocaleProvider("en");
@@ -56,9 +57,9 @@ describe("fileSystemLocaleProvider", () => {
 	 */
 	it("logs an error when the contents are not JSON", () => {
 		// Arrange.
-		jest.spyOn(fs, "existsSync").mockReturnValue(true);
-		const spyOnReadFileSync = jest.spyOn(fs, "readFileSync").mockReturnValue(`{"value":invalid}`);
-		const spyOnLogError = jest.spyOn(logger, "error");
+		vi.spyOn(fs, "existsSync").mockReturnValue(true);
+		const spyOnReadFileSync = vi.spyOn(fs, "readFileSync").mockReturnValue(`{"value":invalid}`);
+		const spyOnLogError = vi.spyOn(logger, "error");
 
 		// Act.
 		const translations = fileSystemLocaleProvider("es");
@@ -78,9 +79,9 @@ describe("fileSystemLocaleProvider", () => {
 	 */
 	it("logs an error when the structure is incorrect", () => {
 		// Arrange.
-		jest.spyOn(fs, "existsSync").mockReturnValue(true);
-		const spyOnReadFileSync = jest.spyOn(fs, "readFileSync").mockReturnValue(`{"NotLocalization":"Incorrect format"}`);
-		const spyOnLogError = jest.spyOn(logger, "error");
+		vi.spyOn(fs, "existsSync").mockReturnValue(true);
+		const spyOnReadFileSync = vi.spyOn(fs, "readFileSync").mockReturnValue(`{"NotLocalization":"Incorrect format"}`);
+		const spyOnLogError = vi.spyOn(logger, "error");
 
 		// Act.
 		const translations = fileSystemLocaleProvider("ja");

@@ -1,3 +1,5 @@
+import { beforeAll, describe, expect, it, vi } from "vitest";
+
 import {
 	DeviceType,
 	type SetImage,
@@ -14,10 +16,10 @@ import { deviceStore } from "../../devices/store";
 import { Action } from "../action";
 import { KeyAction } from "../key";
 
-jest.mock("../../devices/store");
-jest.mock("../../logging");
-jest.mock("../../manifest");
-jest.mock("../../connection");
+vi.mock("../../devices/store");
+vi.mock("../../logging");
+vi.mock("../../manifest");
+vi.mock("../../connection");
 
 describe("KeyAction", () => {
 	// Mock source.
@@ -51,7 +53,7 @@ describe("KeyAction", () => {
 		true,
 	);
 
-	beforeAll(() => jest.spyOn(deviceStore, "getDeviceById").mockReturnValue(device));
+	beforeAll(() => vi.spyOn(deviceStore, "getDeviceById").mockReturnValue(device));
 
 	/**
 	 * Asserts the constructor of {@link KeyAction} sets the context.

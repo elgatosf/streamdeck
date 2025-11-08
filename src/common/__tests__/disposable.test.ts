@@ -1,3 +1,5 @@
+import { describe, expect, it, vi } from "vitest";
+
 import { deferredDisposable, type IDisposable } from "../disposable";
 
 describe("deferredDisposable", () => {
@@ -7,7 +9,7 @@ describe("deferredDisposable", () => {
 		 */
 		it("invokes delegate", () => {
 			// Arrange.
-			const listener = jest.fn();
+			const listener = vi.fn();
 			const disposable = deferredDisposable(listener);
 
 			// Act.
@@ -22,7 +24,7 @@ describe("deferredDisposable", () => {
 		 */
 		it("invokes delegate once only", () => {
 			// Arrange.
-			const listener = jest.fn();
+			const listener = vi.fn();
 			const disposable = deferredDisposable(listener);
 
 			// Act.
@@ -41,7 +43,7 @@ describe("deferredDisposable", () => {
 		 */
 		it("invokes delegate", () => {
 			// Arrange.
-			const listener = jest.fn();
+			const listener = vi.fn();
 
 			{
 				// Act.
@@ -58,7 +60,7 @@ describe("deferredDisposable", () => {
 		 */
 		it("invokes delegate once only", () => {
 			// Arrange.
-			const listener = jest.fn();
+			const listener = vi.fn();
 
 			{
 				// Act.
@@ -78,7 +80,7 @@ describe("deferredDisposable", () => {
 	describe("dispose and [Symbol.dispose]", () => {
 		it("invokes delegate once only", () => {
 			// Arrange.
-			const listener = jest.fn();
+			const listener = vi.fn();
 
 			{
 				// Act.

@@ -1,9 +1,11 @@
+import { describe, expect, it, vi } from "vitest";
+
 import { Lazy } from "../lazy";
 
 describe("Lazy", () => {
 	it("loads value from factory", () => {
 		// Arrange.
-		const valueFactory = jest.fn().mockReturnValue(1);
+		const valueFactory = vi.fn().mockReturnValue(1);
 		const lazy = new Lazy(valueFactory);
 
 		// Act.
@@ -17,7 +19,7 @@ describe("Lazy", () => {
 
 	it("loads value once only", () => {
 		// Arrange.
-		const valueFactory = jest.fn().mockReturnValue(1);
+		const valueFactory = vi.fn().mockReturnValue(1);
 		const lazy = new Lazy(valueFactory);
 
 		// Act, assert.
@@ -29,7 +31,7 @@ describe("Lazy", () => {
 
 	it("re-loads value until not undefined", () => {
 		// Arrange.
-		const valueFactory = jest.fn().mockReturnValueOnce(undefined).mockReturnValueOnce(1);
+		const valueFactory = vi.fn().mockReturnValueOnce(undefined).mockReturnValueOnce(1);
 		const lazy = new Lazy(valueFactory);
 
 		// Act, assert.

@@ -1,4 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import { describe, it } from "vitest";
+
 import { DidReceiveDeepLink } from "..";
 import { Expect, TypesAreEqual } from "../../../../tests/utils";
 

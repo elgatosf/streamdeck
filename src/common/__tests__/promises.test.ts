@@ -1,19 +1,21 @@
+import { describe, expect, it } from "vitest";
+
 import { PromiseCompletionSource } from "../promises";
 
 describe("PromiseCompletionSource<T>", () => {
-	it("Defaults to pending", () => {
+	it("Defaults to pending", async () => {
 		// given, when, then.
 		const pcs = new PromiseCompletionSource<string>();
-		expect(getPromiseState(pcs.promise)).resolves.toBe("pending");
+		await expect(getPromiseState(pcs.promise)).resolves.toBe("pending");
 	});
 
-	it("Resolves after setResult", () => {
+	it("Resolves after setResult", async () => {
 		// Arrange, act.
 		const pcs = new PromiseCompletionSource<string>();
 		pcs.setResult("foo");
 
 		// Assert.
-		expect(getPromiseState(pcs.promise)).resolves.toBe("complete");
+		await expect(getPromiseState(pcs.promise)).resolves.toBe("complete");
 	});
 
 	it("Resolves with result", async () => {
@@ -25,22 +27,22 @@ describe("PromiseCompletionSource<T>", () => {
 		expect(await pcs.promise).toBe("foo");
 	});
 
-	it("Reject after setException", () => {
+	it("Reject after setException", async () => {
 		// Arrange, act.
 		const pcs = new PromiseCompletionSource<string>();
 		pcs.setException();
 
 		// Assert.
-		expect(getPromiseState(pcs.promise)).resolves.toBe("error");
+		await expect(getPromiseState(pcs.promise)).resolves.toBe("error");
 	});
 
-	it("Rejects with exception", () => {
+	it("Rejects with exception", async () => {
 		// Arrange, act.
 		const pcs = new PromiseCompletionSource<string>();
 		pcs.setException("Mock error");
 
 		// Assert.
-		expect(async () => await pcs.promise).rejects.toMatch("Mock error");
+		await expect(async () => await pcs.promise).rejects.toMatch("Mock error");
 	});
 });
 

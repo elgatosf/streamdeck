@@ -1,3 +1,5 @@
+import { beforeAll, describe, expect, it, test, vi } from "vitest";
+
 import { DeviceType, type GetSettings, type SetSettings, type ShowAlert, type WillAppear } from "../../../api";
 import { Settings } from "../../../api/__mocks__/events";
 import { type JsonObject } from "../../../common/json";
@@ -7,10 +9,10 @@ import { deviceStore } from "../../devices/store";
 import { Action } from "../action";
 import { DialAction } from "../dial";
 
-jest.mock("../../devices/store");
-jest.mock("../../logging");
-jest.mock("../../manifest");
-jest.mock("../../connection");
+vi.mock("../../devices/store");
+vi.mock("../../logging");
+vi.mock("../../manifest");
+vi.mock("../../connection");
 
 describe("Action", () => {
 	// Mock source.
@@ -44,7 +46,7 @@ describe("Action", () => {
 		true,
 	);
 
-	beforeAll(() => jest.spyOn(deviceStore, "getDeviceById").mockReturnValue(device));
+	beforeAll(() => vi.spyOn(deviceStore, "getDeviceById").mockReturnValue(device));
 
 	/**
 	 * Asserts the constructor of {@link Action} sets the properties from the source.
@@ -81,7 +83,7 @@ describe("Action", () => {
 			id: expect.any(String),
 		});
 
-		expect(Promise.race([settings, false])).resolves.toBe(false);
+		await expect(Promise.race([settings, false])).resolves.toBe(false);
 
 		// Act (Event).
 		connection.emit("didReceiveSettings", {
@@ -123,7 +125,7 @@ describe("Action", () => {
 		await settings;
 
 		// Assert (Event).
-		expect(await settings).toEqual<Settings>({
+		await expect(await settings).toEqual<Settings>({
 			name: "Elgato",
 		});
 	});

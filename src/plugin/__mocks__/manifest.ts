@@ -1,3 +1,5 @@
+import { vi } from "vitest";
+
 import type { Manifest } from "../../api";
 import { Version } from "../common/version";
 import type {
@@ -53,14 +55,14 @@ export const manifest: Manifest = {
 /**
  * Mocked `getSDKVersion`.
  */
-export const getSDKVersion = jest.fn().mockReturnValue(3);
+export const getSDKVersion = vi.fn().mockReturnValue(3);
 
 /**
  * Mocked {@link __getSoftwareMinimumVersion}.
  */
-export const getSoftwareMinimumVersion = jest.fn().mockReturnValue(new Version("7.0"));
+export const getSoftwareMinimumVersion = vi.fn().mockReturnValue(new Version("7.0"));
 
 /**
  * Mocked {@link __getManifest}.
  */
-export const getManifest = jest.fn().mockReturnValue(manifest);
+export const getManifest = vi.fn().mockReturnValue(manifest);

@@ -1,4 +1,5 @@
 import path from "node:path";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import type { isDebugMode } from "../utils";
 import { getPluginUUID } from "../utils";
@@ -22,7 +23,7 @@ describe("getPluginUUID", () => {
 
 	it.each(cases)("$name", async ({ cwd, expected }) => {
 		// Arrange, act.
-		jest.spyOn(process, "cwd").mockReturnValue(cwd);
+		vi.spyOn(process, "cwd").mockReturnValue(cwd);
 		const pluginUUID = getPluginUUID();
 
 		// Assert.
@@ -38,7 +39,7 @@ describe("isDebugMode", () => {
 	beforeEach(() => (origArgs = process.execArgv));
 	afterEach(() => {
 		process.execArgv = origArgs;
-		jest.resetModules();
+		vi.resetModules();
 	});
 
 	const cases = [
@@ -94,7 +95,7 @@ describe("isDebugMode", () => {
 
 	it.each(cases)("$args returns $expected", async ({ args, expected }) => {
 		// Arrange.
-		const { isDebugMode } = (await require("../utils")) as typeof import("../utils");
+		const { isDebugMode } = await import("../utils");
 		process.execArgv = args;
 
 		// Act, assert.
@@ -103,7 +104,7 @@ describe("isDebugMode", () => {
 
 	it("Caches result", async () => {
 		// Arrange.
-		const { isDebugMode } = (await require("../utils")) as typeof import("../utils");
+		const { isDebugMode } = await import("../utils");
 		process.execArgv = ["--inspect", "127.0.0.1"];
 
 		// Act, assert.

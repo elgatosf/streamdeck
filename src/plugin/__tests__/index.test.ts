@@ -1,3 +1,5 @@
+import { describe, expect, it, vi } from "vitest";
+
 import { BarSubType, DeviceType, Target } from "../../api";
 import { EventEmitter } from "../../common/event-emitter";
 import { I18nProvider } from "../../common/i18n";
@@ -7,10 +9,10 @@ import { connection } from "../connection";
 import streamDeckAsDefaultExport, { streamDeck } from "../index";
 import { logger } from "../logging";
 
-jest.mock("../../common/i18n");
-jest.mock("../logging");
-jest.mock("../manifest");
-jest.mock("../connection");
+vi.mock("../../common/i18n");
+vi.mock("../logging");
+vi.mock("../manifest");
+vi.mock("../connection");
 
 describe("index", () => {
 	/**
@@ -26,12 +28,12 @@ describe("index", () => {
 	 */
 	it("exports namespaces", async () => {
 		// Arrange.
-		const { actionService } = await require("../actions/service");
-		const { deviceService } = await require("../devices/service");
-		const profiles = await require("../profiles");
-		const settings = await require("../settings");
-		const system = await require("../system");
-		const { ui } = await require("../ui");
+		const { actionService } = await import("../actions/service");
+		const { deviceService } = await import("../devices/service");
+		const profiles = await import("../profiles");
+		const settings = await import("../settings");
+		const system = await import("../system");
+		const { ui } = await import("../ui");
 
 		// Act, assert.
 		expect(streamDeck.actions).toBe(actionService);
@@ -47,7 +49,7 @@ describe("index", () => {
 	 */
 	it("connects", async () => {
 		// Arrange.
-		const spyOnConnect = jest.spyOn(connection, "connect");
+		const spyOnConnect = vi.spyOn(connection, "connect");
 
 		// Act, assert.
 		await streamDeck.connect();
@@ -66,7 +68,7 @@ describe("index", () => {
 	 */
 	it("exports enums, classes, and functions", async () => {
 		// Arrange.
-		const index = (await require("../index")) as typeof import("../index");
+		const index = (await import("../index")) as typeof import("../index");
 
 		// Act, assert.
 		expect(index.BarSubType).toBe(BarSubType);

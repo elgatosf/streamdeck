@@ -1,7 +1,9 @@
+import { describe, expect, it, vi } from "vitest";
+
 import type { Language } from "../../api";
 import { I18nProvider } from "../i18n";
 
-jest.mock("../logging");
+vi.mock("../logging");
 
 describe("I18nProvider", () => {
 	/**
@@ -9,7 +11,7 @@ describe("I18nProvider", () => {
 	 */
 	it("lazily evaluates locales", () => {
 		// Arrange, act.
-		const localeProvider = jest.fn();
+		const localeProvider = vi.fn();
 		new I18nProvider("en", localeProvider);
 
 		// Assert.
@@ -21,7 +23,7 @@ describe("I18nProvider", () => {
 	 */
 	it("loads locales once", () => {
 		// Arrange
-		const localeProvider = jest.fn().mockReturnValue(null);
+		const localeProvider = vi.fn().mockReturnValue(null);
 		const i18n = new I18nProvider("en", localeProvider);
 
 		// Act.
@@ -40,7 +42,7 @@ describe("I18nProvider", () => {
 	 */
 	it("does not load unsupported locales", () => {
 		// Arrange
-		const localeProvider = jest.fn().mockReturnValue(null);
+		const localeProvider = vi.fn().mockReturnValue(null);
 		const i18n = new I18nProvider("en", localeProvider);
 
 		// Act.
@@ -54,8 +56,8 @@ describe("I18nProvider", () => {
 
 	it("t is alias of translate", () => {
 		// Arrange.
-		const i18n = new I18nProvider("en", jest.fn());
-		const spyOnTranslate = jest.spyOn(i18n, "translate");
+		const i18n = new I18nProvider("en", vi.fn());
+		const spyOnTranslate = vi.spyOn(i18n, "translate");
 
 		// Act.
 		i18n.t("test");
@@ -68,7 +70,7 @@ describe("I18nProvider", () => {
 	});
 
 	describe("translating", () => {
-		const localeProvider = jest.fn().mockImplementation((language: Language) => {
+		const localeProvider = vi.fn().mockImplementation((language: Language) => {
 			switch (language) {
 				case "de":
 					return { Hello: "Hello welt" };

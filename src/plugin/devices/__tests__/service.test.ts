@@ -1,22 +1,24 @@
+import { beforeEach, describe, expect, it, vi } from "vitest";
+
 import type { DeviceDidChangeEvent, DeviceDidConnectEvent, DeviceDidDisconnectEvent } from "../..";
 import { type DeviceDidChange, type DeviceDidConnect, type DeviceDidDisconnect, DeviceType } from "../../../api";
 import { type connection as Connection } from "../../connection";
 import { Device } from "../device";
 import type { DeviceService } from "../service";
 
-jest.mock("../../actions/store", () => {}); // Override default mock.
-jest.mock("../../connection");
-jest.mock("../../logging");
-jest.mock("../../manifest");
+vi.mock("../../actions/store", () => ({})); // Override default mock.
+vi.mock("../../connection");
+vi.mock("../../logging");
+vi.mock("../../manifest");
 
 describe("devices", () => {
 	let connection!: typeof Connection;
 	let deviceService!: DeviceService;
 
 	beforeEach(async () => {
-		jest.resetModules();
-		({ connection } = await require("../../connection"));
-		({ deviceService } = (await require("../service")) as typeof import("../service"));
+		vi.resetModules();
+		({ connection } = await import("../../connection"));
+		({ deviceService } = await import("../service"));
 	});
 
 	/**
@@ -37,7 +39,7 @@ describe("devices", () => {
 		connection.emit("connected", connection.registrationParameters.info);
 		connection.emit("deviceDidConnect", ev);
 
-		const listener = jest.fn();
+		const listener = vi.fn();
 
 		// Act.
 		deviceService.forEach(listener);
@@ -300,7 +302,7 @@ describe("devices", () => {
 		// Arrange
 		connection.emit("connected", connection.registrationParameters.info);
 
-		const listener = jest.fn();
+		const listener = vi.fn();
 		const ev = {
 			device: connection.registrationParameters.info.devices[0].id,
 			deviceInfo: {
@@ -338,7 +340,7 @@ describe("devices", () => {
 	 */
 	it("receives onDeviceDidConnect", () => {
 		// Arrange
-		const listener = jest.fn();
+		const listener = vi.fn();
 		const ev = {
 			device: "device123",
 			deviceInfo: {
@@ -378,7 +380,7 @@ describe("devices", () => {
 		// Arrange
 		connection.emit("connected", connection.registrationParameters.info);
 
-		const listener = jest.fn();
+		const listener = vi.fn();
 		const ev = {
 			device: connection.registrationParameters.info.devices[0].id,
 			event: "deviceDidDisconnect",

@@ -1,4 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import { describe, it } from "vitest";
+
 import { Coordinates, type State, WillAppear, WillDisappear } from "..";
 import { Expect, TypesAreEqual } from "../../../../tests/utils";
 import { Settings } from "../../__mocks__/events";

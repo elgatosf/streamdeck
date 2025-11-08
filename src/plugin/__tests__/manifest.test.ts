@@ -1,32 +1,34 @@
-import fs from "node:fs";
+import * as fs from "node:fs";
 import path from "node:path";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import type { Manifest } from "../../api";
 import { manifest as mockManifest } from "../__mocks__/manifest";
+
+vi.mock("node:fs");
 
 describe("manifest", () => {
 	let getManifest: typeof import("../manifest").getManifest;
 	let getSoftwareMinimumVersion: typeof import("../manifest").getSoftwareMinimumVersion;
 
-	beforeEach(async () => ({ getManifest, getSoftwareMinimumVersion } = await require("../manifest")));
-	afterEach(() => jest.resetModules());
+	beforeEach(async () => ({ getManifest, getSoftwareMinimumVersion } = await import("../manifest")));
+	afterEach(() => vi.resetModules());
 
 	describe("getManifest", () => {
 		it("errors when file does not exist", () => {
 			// Arrange.
-			const existsSync = jest.spyOn(fs, "existsSync").mockReturnValueOnce(false);
-			jest.spyOn(process, "cwd").mockReturnValueOnce("test");
+			vi.spyOn(process, "cwd").mockReturnValueOnce("test");
 
 			// Act, assert.
 			expect(getManifest).toThrowError("Failed to read manifest.json as the file does not exist.");
-			expect(existsSync).toHaveBeenCalled();
-			expect(existsSync).toHaveBeenCalledWith(path.join("test", "manifest.json"));
+			expect(fs.existsSync).toHaveBeenCalled();
+			expect(fs.existsSync).toHaveBeenCalledWith(path.join("test", "manifest.json"));
 		});
 
 		it("parses the manifest file", () => {
 			// Arrange.
-			jest.spyOn(fs, "existsSync").mockReturnValue(true);
-			jest.spyOn(fs, "readFileSync").mockReturnValueOnce(JSON.stringify(mockManifest));
+			vi.spyOn(fs, "existsSync").mockReturnValue(true);
+			vi.spyOn(fs, "readFileSync").mockReturnValueOnce(JSON.stringify(mockManifest));
 
 			// Act.
 			const manifest = getManifest();
@@ -37,8 +39,8 @@ describe("manifest", () => {
 
 		it("returns null when the manifest cannot be parsed", () => {
 			// Arrange.
-			jest.spyOn(fs, "existsSync").mockReturnValueOnce(true);
-			jest.spyOn(fs, "readFileSync").mockReturnValueOnce("_");
+			vi.spyOn(fs, "existsSync").mockReturnValueOnce(true);
+			vi.spyOn(fs, "readFileSync").mockReturnValueOnce("_");
 
 			// Act, assert.
 			expect(getManifest()).toEqual(null);
@@ -46,8 +48,8 @@ describe("manifest", () => {
 
 		it("caches the result", () => {
 			// Arrange.
-			jest.spyOn(fs, "existsSync").mockReturnValue(true);
-			const readSpy = jest.spyOn(fs, "readFileSync").mockReturnValueOnce(JSON.stringify(mockManifest));
+			vi.spyOn(fs, "existsSync").mockReturnValue(true);
+			const readSpy = vi.spyOn(fs, "readFileSync").mockReturnValueOnce(JSON.stringify(mockManifest));
 
 			// Act.
 			const manifestOne = getManifest();
@@ -62,8 +64,8 @@ describe("manifest", () => {
 	describe("getSoftwareMinimumVersion", () => {
 		it("reads the minimum version from the manifest", () => {
 			// Arrange.
-			jest.spyOn(fs, "existsSync").mockReturnValue(true);
-			const readSpy = jest.spyOn(fs, "readFileSync").mockReturnValueOnce(
+			vi.spyOn(fs, "existsSync").mockReturnValue(true);
+			const readSpy = vi.spyOn(fs, "readFileSync").mockReturnValueOnce(
 				JSON.stringify({
 					Software: {
 						MinimumVersion: "6.5",
@@ -82,8 +84,8 @@ describe("manifest", () => {
 
 		it("returns null when the manifest cannot be read", () => {
 			// Arrange.
-			jest.spyOn(fs, "existsSync").mockReturnValue(true);
-			jest.spyOn(fs, "readFileSync").mockReturnValueOnce("_");
+			vi.spyOn(fs, "existsSync").mockReturnValue(true);
+			vi.spyOn(fs, "readFileSync").mockReturnValueOnce("_");
 
 			// Act, assert.
 			expect(getSoftwareMinimumVersion()).toEqual(null);
@@ -91,8 +93,8 @@ describe("manifest", () => {
 
 		it("caches the result", () => {
 			// Arrange.
-			jest.spyOn(fs, "existsSync").mockReturnValue(true);
-			const readSpy = jest.spyOn(fs, "readFileSync").mockReturnValueOnce(JSON.stringify(mockManifest));
+			vi.spyOn(fs, "existsSync").mockReturnValue(true);
+			const readSpy = vi.spyOn(fs, "readFileSync").mockReturnValueOnce(JSON.stringify(mockManifest));
 
 			// Act.
 			const versionOne = getSoftwareMinimumVersion();
