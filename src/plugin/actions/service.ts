@@ -29,7 +29,7 @@ import {
 	WillDisappearEvent,
 } from "../events";
 import { getManifest } from "../manifest";
-import { onDidReceiveSettings } from "../settings";
+import { settings } from "../settings";
 import { ui } from "../ui";
 import { Action } from "./action";
 import { ActionContext } from "./context";
@@ -267,7 +267,7 @@ class ActionService extends ReadOnlyActionStore {
 		route(this.onDialRotate, action.onDialRotate);
 		route(ui.onSendToPlugin, action.onSendToPlugin);
 		route(this.onDidReceiveResources, action.onDidReceiveResources);
-		route(onDidReceiveSettings, action.onDidReceiveSettings);
+		route(settings.onDidReceiveSettings, action.onDidReceiveSettings);
 		route(this.onKeyDown, action.onKeyDown);
 		route(this.onKeyUp, action.onKeyUp);
 		route(ui.onDidAppear, action.onPropertyInspectorDidAppear);

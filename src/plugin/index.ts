@@ -7,7 +7,7 @@ import { deviceService, type DeviceService } from "./devices/service";
 import { fileSystemLocaleProvider } from "./i18n";
 import { logger } from "./logging";
 import * as profiles from "./profiles";
-import * as settings from "./settings";
+import { settings } from "./settings";
 import * as system from "./system";
 import { ui, type UIController } from "./ui";
 

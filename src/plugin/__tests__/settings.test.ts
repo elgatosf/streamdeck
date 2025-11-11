@@ -10,7 +10,7 @@ import { type Settings } from "../../api/__mocks__/events";
 import { actionStore } from "../actions/store";
 import { connection } from "../connection";
 import type { DidReceiveGlobalSettingsEvent, DidReceiveSettingsEvent } from "../events";
-import { getGlobalSettings, onDidReceiveGlobalSettings, onDidReceiveSettings, setGlobalSettings } from "../settings";
+import { settings } from "../settings";
 
 vi.mock("../connection");
 vi.mock("../logging");
@@ -18,6 +18,8 @@ vi.mock("../manifest");
 vi.mock("../actions/store");
 
 describe("settings", () => {
+	const { getGlobalSettings, onDidReceiveGlobalSettings, onDidReceiveSettings, setGlobalSettings } = settings;
+
 	describe("sending", () => {
 		/**
 		 * Asserts {@link getGlobalSettings} sends the command to the {@link connection}, and await the settings.
