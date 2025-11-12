@@ -1,7 +1,16 @@
 import { randomUUID } from "node:crypto";
 
-import type { DidReceiveResources, DidReceiveSettings, Resources } from "../../api";
+import type {
+	DidReceiveResources,
+	DidReceiveSettings,
+	GetResources,
+	GetSettings,
+	PluginEventMap,
+	Resources,
+} from "../../api";
+import type { EventArgs } from "../../common/event-emitter";
 import type { JsonObject } from "../../common/json";
+import { PromiseCompletionSource } from "../../common/promises";
 import { connection } from "../connection";
 import { requiresVersion } from "../validation";
 import { ActionContext } from "./context";
@@ -22,54 +31,21 @@ export class Action<T extends JsonObject = JsonObject> extends ActionContext {
 	 * Available from Stream Deck 7.1.
 	 * @returns The resources.
 	 */
-	public getResources(): Promise<Resources> {
+	public async getResources(): Promise<Resources> {
 		requiresVersion(7.1, connection.version, "getResources");
 
-		return new Promise((resolve, reject) => {
-			const id = randomUUID();
-			const timeoutId = setTimeout(() => {
-				connection.removeListener("didReceiveResources", callback);
-				reject("The request timed out");
-			}, REQUEST_TIMEOUT);
-
-			const callback = (ev: DidReceiveResources<JsonObject>): void => {
-				if (ev.context == this.id && ev.id === id) {
-					clearTimeout(timeoutId);
-					connection.removeListener("didReceiveResources", callback);
-					resolve(ev.payload.resources);
-				}
-			};
-
-			connection.on("didReceiveResources", callback);
-			connection.send({
-				event: "getResources",
-				context: this.id,
-				id,
-			});
-		});
+		const res = await this.#fetch("getResources", "didReceiveResources");
+		return res.payload.resources;
 	}
 
 	/**
 	 * Gets the settings associated this action instance.
-	 * @template U The type of settings associated with the action.
+	 * @template U The type of settings associated with the action.D
 	 * @returns Promise containing the action instance's settings.
 	 */
-	public getSettings<U extends JsonObject = T>(): Promise<U> {
-		return new Promise((resolve) => {
-			const callback = (ev: DidReceiveSettings<U>): void => {
-				if (ev.context == this.id) {
-					resolve(ev.payload.settings);
-					connection.removeListener("didReceiveSettings", callback);
-				}
-			};
-
-			connection.on("didReceiveSettings", callback);
-			connection.send({
-				event: "getSettings",
-				context: this.id,
-				id: randomUUID(),
-			});
-		});
+	public async getSettings<U extends JsonObject = T>(): Promise<U> {
+		const res = await this.#fetch("getSettings", "didReceiveSettings");
+		return res.payload.settings as U;
 	}
 
 	/**
@@ -134,4 +110,52 @@ export class Action<T extends JsonObject = JsonObject> extends ActionContext {
 			context: this.id,
 		});
 	}
+
+	/**
+	 * Fetches information from Stream Deck by sending the command, and awaiting the event.
+	 * @param command Name of the event (command) to send.
+	 * @param event Name of the event to await.
+	 * @returns The payload from the received event.
+	 */
+	async #fetch<TEvent extends DidReceiveEvent>(
+		command: GetterEvent,
+		event: TEvent,
+	): Promise<EventArgs<PluginEventMap, TEvent>[0]> {
+		const pcs = new PromiseCompletionSource<EventArgs<PluginEventMap, TEvent>[0]>();
+
+		// Set a timeout to prevent endless awaiting.
+		const timeoutId = setTimeout(() => {
+			listener.dispose();
+			pcs.setException("The request timed out");
+		}, REQUEST_TIMEOUT);
+
+		// Listen for an event that can resolve the request.
+		const listener = connection.disposableOn(event, (ev): void => {
+			// Make sure the received event is for this action.
+			if (ev.context == this.id) {
+				clearTimeout(timeoutId);
+				listener.dispose();
+				pcs.setResult(ev);
+			}
+		});
+
+		// Send the request; specifying an id signifies its a request.
+		await connection.send({
+			event: command,
+			context: this.id,
+			id: randomUUID(),
+		});
+
+		return pcs.promise;
+	}
 }
+
+/**
+ * Events that represents a request for information from Stream Deck.
+ */
+type GetterEvent = (GetResources | GetSettings)["event"];
+
+/**
+ * Events that represents a response of information from Stream Deck.
+ */
+type DidReceiveEvent = (DidReceiveResources<JsonObject> | DidReceiveSettings<JsonObject>)["event"];

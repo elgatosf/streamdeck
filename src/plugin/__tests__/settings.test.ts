@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from "vitest";
+import { afterAll, beforeAll, describe, expect, it, test, vi } from "vitest";
 
 import {
 	type DidReceiveGlobalSettings,
@@ -76,15 +76,18 @@ describe("settings", () => {
 		});
 	});
 
-	describe("receiving", () => {
+	describe("receiving emits with useExperimentalMessageIdentifiers set to false", () => {
+		beforeAll(() => (settings.useExperimentalMessageIdentifiers = false));
+
 		/**
 		 * Asserts {@link onDidReceiveGlobalSettings} is invoked when `didReceiveGlobalSettings` is emitted.
 		 */
-		it("onDidReceiveGlobalSettings", () => {
+		test.each([undefined, "12345"])("onDidReceiveGlobalSettings (id=$0)", (id: string | undefined) => {
 			// Arrange
 			const listener = vi.fn();
 			const ev = {
 				event: "didReceiveGlobalSettings",
+				id,
 				payload: {
 					settings: {
 						name: "Elgato",
@@ -116,7 +119,7 @@ describe("settings", () => {
 		/**
 		 * Asserts {@link onDidReceiveSettings} is invoked when `didReceiveSettings` is emitted.
 		 */
-		it("onDidReceiveSettings", () => {
+		test.each([undefined, "12345"])("onDidReceiveSettings (id=$0)", (id: string | undefined) => {
 			// Arrange
 			const listener = vi.fn();
 			const ev = {
@@ -124,6 +127,7 @@ describe("settings", () => {
 				context: "key123",
 				device: "device123",
 				event: "didReceiveSettings",
+				id,
 				payload: {
 					controller: "Keypad",
 					coordinates: {
@@ -134,6 +138,7 @@ describe("settings", () => {
 					settings: {
 						name: "Elgato",
 					},
+					resources: {},
 				},
 			} satisfies DidReceiveSettings<Settings>;
 
@@ -155,6 +160,63 @@ describe("settings", () => {
 
 			// Assert(dispose).
 			expect(listener).toHaveBeenCalledTimes(1);
+		});
+	});
+
+	describe("receiving does not emit with useExperimentalMessageIdentifiers set to true", () => {
+		beforeAll(() => (settings.useExperimentalMessageIdentifiers = true));
+		afterAll(() => (settings.useExperimentalMessageIdentifiers = false));
+
+		test("didReceiveGlobalSettings", () => {
+			// Arrange.
+			const listener = vi.fn();
+			const ev = {
+				event: "didReceiveGlobalSettings",
+				id: "12345",
+				payload: {
+					settings: {
+						name: "Elgato",
+					},
+				},
+			} satisfies DidReceiveGlobalSettings<Settings>;
+
+			// Act.
+			onDidReceiveGlobalSettings(listener);
+			connection.emit("didReceiveGlobalSettings", ev);
+
+			// Assert.
+			expect(listener).toHaveBeenCalledTimes(0);
+		});
+
+		test("didReceiveSettings", () => {
+			// Arrange.
+			const listener = vi.fn();
+			const ev = {
+				action: "com.elgato.test.one",
+				context: "key123",
+				device: "device123",
+				event: "didReceiveSettings",
+				id: "12345",
+				payload: {
+					controller: "Keypad",
+					coordinates: {
+						column: 0,
+						row: 0,
+					},
+					isInMultiAction: false,
+					settings: {
+						name: "Elgato",
+					},
+					resources: {},
+				},
+			} satisfies DidReceiveSettings<Settings>;
+
+			// Act.
+			onDidReceiveSettings(listener);
+			connection.emit("didReceiveSettings", ev);
+
+			// Assert.
+			expect(listener).toHaveBeenCalledTimes(0);
 		});
 	});
 });

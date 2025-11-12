@@ -46,7 +46,7 @@ export const manifest: Manifest = {
 	],
 	SDKVersion: 2,
 	Software: {
-		MinimumVersion: "7.0",
+		MinimumVersion: "7.1",
 	},
 	UUID: "com.elgato.test",
 	Version: "1.0.0",
@@ -60,7 +60,7 @@ export const getSDKVersion = vi.fn().mockReturnValue(3);
 /**
  * Mocked {@link __getSoftwareMinimumVersion}.
  */
-export const getSoftwareMinimumVersion = vi.fn().mockReturnValue(new Version("7.0"));
+export const getSoftwareMinimumVersion = vi.fn().mockReturnValue(new Version(manifest.Software.MinimumVersion));
 
 /**
  * Mocked {@link __getManifest}.

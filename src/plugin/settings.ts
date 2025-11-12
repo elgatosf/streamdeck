@@ -7,8 +7,35 @@ import type { JsonObject } from "../common/json";
 import { actionStore } from "./actions/store";
 import { connection } from "./connection";
 import { DidReceiveGlobalSettingsEvent, DidReceiveSettingsEvent } from "./events";
+import { requiresVersion } from "./validation";
+
+let __useExperimentalMessageIdentifiers = false;
 
 export const settings = {
+	/**
+	 * Available from Stream Deck 7.1; determines whether message identifiers should be sent when getting
+	 * action-instance or global settings.
+	 *
+	 * When `true`, the did-receive events associated with settings are only emitted when the action-instance
+	 * or global settings are changed in the property inspector.
+	 * @returns The value.
+	 */
+	get useExperimentalMessageIdentifiers(): boolean {
+		return __useExperimentalMessageIdentifiers;
+	},
+
+	/**
+	 * Available from Stream Deck 7.1; determines whether message identifiers should be sent when getting
+	 * action-instance or global settings.
+	 *
+	 * When `true`, the did-receive events associated with settings are only emitted when the action-instance
+	 * or global settings are changed in the property inspector.
+	 */
+	set useExperimentalMessageIdentifiers(value: boolean) {
+		requiresVersion(7.1, connection.version, "Message identifiers");
+		__useExperimentalMessageIdentifiers = value;
+	},
+
 	/**
 	 * Gets the global settings associated with the plugin.
 	 * @template T The type of global settings associated with the plugin.
@@ -35,9 +62,14 @@ export const settings = {
 	onDidReceiveGlobalSettings: <T extends JsonObject = JsonObject>(
 		listener: (ev: DidReceiveGlobalSettingsEvent<T>) => void,
 	): IDisposable => {
-		return connection.disposableOn("didReceiveGlobalSettings", (ev: DidReceiveGlobalSettings<T>) =>
-			listener(new DidReceiveGlobalSettingsEvent(ev)),
-		);
+		return connection.disposableOn("didReceiveGlobalSettings", (ev: DidReceiveGlobalSettings<T>) => {
+			// Do nothing when the global settings were requested.
+			if (settings.useExperimentalMessageIdentifiers && ev.id) {
+				return;
+			}
+
+			listener(new DidReceiveGlobalSettingsEvent(ev));
+		});
 	},
 
 	/**
@@ -51,6 +83,11 @@ export const settings = {
 		listener: (ev: DidReceiveSettingsEvent<T>) => void,
 	): IDisposable => {
 		return connection.disposableOn("didReceiveSettings", (ev: DidReceiveSettings<T>) => {
+			// Do nothing when the action's settings were requested.
+			if (settings.useExperimentalMessageIdentifiers && ev.id) {
+				return;
+			}
+
 			const action = actionStore.getActionById(ev.context);
 			if (action) {
 				listener(new ActionEvent(action, ev));
