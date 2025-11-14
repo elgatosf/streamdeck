@@ -9,7 +9,8 @@
             "esnext.disposable"
         ],
         "module": "es2022",
-        "moduleResolution": "Bundler"
+        "moduleResolution": "Bundler",
+        "verbatimModuleSyntax": true
     },
     "include": [
         "src/",

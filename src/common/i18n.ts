@@ -1,5 +1,5 @@
 import { type Language, supportedLanguages } from "../api";
-import { JsonObject } from "../common/json";
+import type { JsonObject } from "../common/json";
 import { freeze, get } from "./utils";
 
 /**

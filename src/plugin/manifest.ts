@@ -1,7 +1,7 @@
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 
-import { Manifest } from "../api";
+import { type Manifest } from "../api";
 import { Lazy } from "../common/lazy";
 import { Version } from "./common/version";
 

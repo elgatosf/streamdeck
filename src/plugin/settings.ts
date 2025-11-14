@@ -7,7 +7,7 @@ import type { JsonObject } from "../common/json";
 import { Action } from "./actions/action";
 import { actionStore } from "./actions/store";
 import { connection } from "./connection";
-import { DidReceiveGlobalSettingsEvent, DidReceiveSettingsEvent } from "./events";
+import { DidReceiveGlobalSettingsEvent, type DidReceiveSettingsEvent } from "./events";
 
 /**
  * Gets the global settings associated with the plugin. Use in conjunction with {@link setGlobalSettings}.

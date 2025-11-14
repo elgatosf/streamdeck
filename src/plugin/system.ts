@@ -4,12 +4,12 @@ import type { IDisposable } from "../common/disposable";
 import type { JsonObject } from "../common/json";
 import { connection } from "./connection";
 import {
-	ApplicationDidLaunchEvent,
-	ApplicationDidTerminateEvent,
+	type ApplicationDidLaunchEvent,
+	type ApplicationDidTerminateEvent,
 	ApplicationEvent,
 	DidReceiveDeepLinkEvent,
 	Event,
-	SystemDidWakeUpEvent,
+	type SystemDidWakeUpEvent,
 } from "./events";
 import { requiresSDKVersion, requiresVersion } from "./validation";
 

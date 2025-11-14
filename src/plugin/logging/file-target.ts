@@ -1,4 +1,4 @@
-import fs, { Dirent } from "node:fs";
+import fs, { type Dirent } from "node:fs";
 import path from "node:path";
 
 import { type LogEntry, type LogEntryFormatter, type LogTarget } from "../../common/logging";

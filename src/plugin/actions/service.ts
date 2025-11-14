@@ -16,7 +16,7 @@ import { ActionEvent } from "../../common/events";
 import type { JsonObject } from "../../common/json";
 import { Lazy } from "../../common/lazy";
 import { connection } from "../connection";
-import {
+import type {
 	DialDownEvent,
 	DialRotateEvent,
 	DialUpEvent,
