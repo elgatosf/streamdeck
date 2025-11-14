@@ -1,4 +1,4 @@
-import type { Controller, DeviceType } from "@elgato/schemas/streamdeck/plugins";
+import type { Controller } from "@elgato/schemas/streamdeck/plugins";
 
 import type { JsonObject } from "../../common/json.js";
 import type { Resources } from "../resources.js";
@@ -228,8 +228,10 @@ export type Coordinates = {
 	readonly column: number;
 
 	/**
-	 * Row the action instance is located on, indexed from 0. *NB* When the device is {@link DeviceType.StreamDeckPlus} the row can be 0 for keys (`Keypad`), and will _always_ be 0
-	 * for dials (`Encoder`); to differentiate between actions types, cross-check the value of `controller` found on {@link WillAppear.payload}.
+	 * Row the action instance is located on, indexed from 0.
+	 *
+	 * Note: When the device is Stream Deck +, the row can be 0 for keys (`Keypad`), and will _always_
+	 * be 0 for dials (`Encoder`); to differentiate between actions types, cross-check the `controller`.
 	 */
 	readonly row: number;
 };

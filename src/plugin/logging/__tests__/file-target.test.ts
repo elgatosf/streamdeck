@@ -149,7 +149,7 @@ describe("FileTarget", () => {
 	 * @param isDirectory Mock value of {@link Dirent.isDirectory}.
 	 * @returns The mocked {@link Dirent}.
 	 */
-	function mockDirent(name: string, isDirectory = false) {
+	function mockDirent(name: string, isDirectory = false): Dirent<NonSharedBuffer> {
 		return {
 			name,
 			isDirectory: vi.fn().mockReturnValue(isDirectory),

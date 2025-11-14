@@ -87,8 +87,9 @@ export class FileTarget implements LogTarget {
 	}
 
 	/**
-	 * Re-indexes the existing log files associated with this file target, removing old log files whose index exceeds the {@link FileTargetOptions.maxFileCount}, and renaming the
-	 * remaining log files, leaving index "0" free for a new log file.
+	 * Re-indexes the existing log files associated with this file target, removing old log files whose
+	 * index exceeds the max file count, and renaming the remaining log files, leaving index "0" free
+	 * for a new log file.
 	 */
 	private reIndex(): void {
 		// When the destination directory is new, create it, and return.
@@ -134,8 +135,8 @@ export type FileTargetOptions = {
 	dest: string;
 
 	/**
-	 * Name of the log file. The filename extension will be `.log`, and the file will be indexed, e.g. when {@link FileTargetOptions.fileName} is `com.elgato.test`, the resulting output
-	 * filename will be `com.elgato.test.1.log`.
+	 * Name of the log file. The filename extension will be `.log`, and the file will be indexed, e.g.
+	 * when the file name is `com.elgato.test`, the resulting output filename will be `com.elgato.test.1.log`.
 	 */
 	fileName: string;
 
@@ -145,12 +146,14 @@ export type FileTargetOptions = {
 	format: LogEntryFormatter;
 
 	/**
-	 * Maximum number of files that can be created as part of the target before old logs should be truncated and removed.
+	 * Maximum number of files that can be created as part of the target before old logs should be
+	 * truncated and removed.
 	 */
 	maxFileCount: number;
 
 	/**
-	 * Maximum size of a log file; when exceeded, file rotation occurs and older log files are removed based on {@link FileTargetOptions.maxFileCount}.
+	 * Maximum size of a log file; when exceeded, file rotation occurs and older log files are removed
+	 * based on `maxFileCount`.
 	 */
 	maxSize: number;
 };

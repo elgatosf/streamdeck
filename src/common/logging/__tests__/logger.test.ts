@@ -225,7 +225,7 @@ describe("Logger", () => {
 		 * @param act Function responsible for logging to the {@link Logger}, e.g. {@link Logger.error}, {@link Logger.warn}, etc.
 		 * @param expectLog Whether a log was expected to be written.
 		 */
-		function verify(act: (logger: Logger) => void, expectLog: boolean) {
+		function verify(act: (logger: Logger) => void, expectLog: boolean): void {
 			// Arrange.
 			const target = { write: vi.fn() };
 			const logger = new Logger({

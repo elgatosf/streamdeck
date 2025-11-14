@@ -217,7 +217,7 @@ describe("connection", () => {
 			it("errors invalid JSON", async () => {
 				// Arrange.
 				const origSerializer = server.serializer;
-				server.serializer = () => "{ invalid }";
+				server.serializer = (): string => "{ invalid }";
 
 				const spyOnError = vi.spyOn(connectionLogger, "error");
 				await connection.connect();

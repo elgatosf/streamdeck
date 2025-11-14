@@ -249,8 +249,8 @@ export type SwitchToProfile = ContextualizedCommandWithPayload<
 	"switchToProfile",
 	{
 		/**
-		 * Optional page to show when switching to the {@link SwitchToProfile.profile}, indexed from 0. When `undefined`, the page that was previously visible (when switching away
-		 * from the profile will be made visible.
+		 * Optional page to show when switching to the profile, indexed from 0. When `undefined`, the
+		 * page that was previously visible (when switching away from the profile will be made visible.
 		 */
 		page?: number;
 

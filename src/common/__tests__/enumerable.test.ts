@@ -205,7 +205,7 @@ describe("Enumerable", () => {
 			it("iterates mutated map", () => {
 				// Arrange.
 				const fn = vi.fn();
-				const itr = function* () {
+				const itr = function* (): Generator {
 					yield "One";
 					yield "Two";
 				};
@@ -221,7 +221,7 @@ describe("Enumerable", () => {
 
 			it("reads length", () => {
 				// Arrange.
-				const itr = function* () {
+				const itr = function* (): Generator {
 					yield "One";
 					yield "Two";
 				};
