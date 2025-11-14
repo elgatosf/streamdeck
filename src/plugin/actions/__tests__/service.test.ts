@@ -1,24 +1,27 @@
-import { describe, expect, it, vi } from "vitest";
+import { beforeAll, describe, expect, it, vi } from "vitest";
 
 import type { Settings } from "../../../api/__mocks__/events.js";
-import type {
-	DialDown,
-	DialRotate,
-	DialUp,
-	DidReceivePropertyInspectorMessage,
-	DidReceiveSettings,
-	KeyDown,
-	KeyUp,
-	PropertyInspectorDidAppear,
-	PropertyInspectorDidDisappear,
-	TitleParametersDidChange,
-	TouchTap,
-	WillAppear,
-	WillDisappear,
+import {
+	DeviceType,
+	type DialDown,
+	type DialRotate,
+	type DialUp,
+	type DidReceivePropertyInspectorMessage,
+	type DidReceiveSettings,
+	type KeyDown,
+	type KeyUp,
+	type PropertyInspectorDidAppear,
+	type PropertyInspectorDidDisappear,
+	type TitleParametersDidChange,
+	type TouchTap,
+	type WillAppear,
+	type WillDisappear,
 } from "../../../api/index.js";
 import type { Enumerable } from "../../../common/enumerable.js";
 import type { JsonObject } from "../../../common/json.js";
 import { connection } from "../../connection.js";
+import { Device } from "../../devices/device.js";
+import { deviceStore } from "../../devices/store.js";
 import {
 	type DialDownEvent,
 	type DialRotateEvent,
@@ -42,13 +45,30 @@ import { actionService, type ActionService } from "../service.js";
 import { SingletonAction } from "../singleton-action.js";
 import { actionStore } from "../store.js";
 
+vi.mock("../connection.js");
 vi.mock("../store.js");
-vi.mock("../../devices/store.js");
-vi.mock("../../connection.js");
 vi.mock("../../logging/index.js");
 vi.mock("../../manifest.js");
 
 describe("actions", () => {
+	// Add a mock device.
+	beforeAll(() => {
+		deviceStore.set(
+			new Device(
+				"device123",
+				{
+					name: "Device One",
+					size: {
+						columns: 5,
+						rows: 3,
+					},
+					type: DeviceType.StreamDeckXL,
+				},
+				true,
+			),
+		);
+	});
+
 	describe("event emitters", () => {
 		/**
 		 * Asserts {@link ActionService.onDialDown} is invoked when `dialDown` is emitted.

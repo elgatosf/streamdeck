@@ -1,7 +1,8 @@
-import { describe, expect, it, vi } from "vitest";
+import { beforeAll, describe, expect, it, vi } from "vitest";
 
 import { type Settings } from "../../api/__mocks__/events.js";
 import {
+	DeviceType,
 	type DidReceiveGlobalSettings,
 	type DidReceiveSettings,
 	type GetGlobalSettings,
@@ -9,6 +10,8 @@ import {
 } from "../../api/index.js";
 import { actionStore } from "../actions/store.js";
 import { connection } from "../connection.js";
+import { Device } from "../devices/device.js";
+import { deviceStore } from "../devices/store.js";
 import type { DidReceiveGlobalSettingsEvent, DidReceiveSettingsEvent } from "../events/index.js";
 import { getGlobalSettings, onDidReceiveGlobalSettings, onDidReceiveSettings, setGlobalSettings } from "../settings.js";
 
@@ -18,6 +21,24 @@ vi.mock("../manifest.js");
 vi.mock("../actions/store.js");
 
 describe("settings", () => {
+	// Add a mock device.
+	beforeAll(() => {
+		deviceStore.set(
+			new Device(
+				"device123",
+				{
+					name: "Device One",
+					size: {
+						columns: 5,
+						rows: 3,
+					},
+					type: DeviceType.StreamDeckXL,
+				},
+				true,
+			),
+		);
+	});
+
 	describe("sending", () => {
 		/**
 		 * Asserts {@link getGlobalSettings} sends the command to the {@link connection}, and await the settings.
