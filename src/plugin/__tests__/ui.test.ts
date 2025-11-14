@@ -1,23 +1,27 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
+import type { Settings } from "../../api/__mocks__/events.js";
 import type {
 	DidReceivePropertyInspectorMessage,
 	PropertyInspectorDidAppear,
 	PropertyInspectorDidDisappear,
 	SendToPropertyInspector,
-} from "../../api";
-import { Settings } from "../../api/__mocks__/events";
-import { KeyAction } from "../actions/key";
-import { actionStore } from "../actions/store";
-import { connection } from "../connection";
-import { PropertyInspectorDidAppearEvent, type PropertyInspectorDidDisappearEvent, SendToPluginEvent } from "../events";
-import { ui } from "../ui";
+} from "../../api/index.js";
+import { KeyAction } from "../actions/key.js";
+import { actionStore } from "../actions/store.js";
+import { connection } from "../connection.js";
+import {
+	type PropertyInspectorDidAppearEvent,
+	type PropertyInspectorDidDisappearEvent,
+	SendToPluginEvent,
+} from "../events/index.js";
+import { ui } from "../ui.js";
 
-vi.mock("../actions/store");
-vi.mock("../devices/store");
-vi.mock("../connection");
-vi.mock("../logging");
-vi.mock("../manifest");
+vi.mock("../actions/store.js");
+vi.mock("../devices/store.js");
+vi.mock("../connection.js");
+vi.mock("../logging/index.js");
+vi.mock("../manifest.js");
 
 describe("UIController", () => {
 	/**

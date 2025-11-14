@@ -1,13 +1,13 @@
 import { describe, expect, it, vi } from "vitest";
 
-import type { SwitchToProfile } from "../../api";
-import { Version } from "../common/version";
-import { connection } from "../connection";
-import { switchToProfile } from "../profiles";
+import type { SwitchToProfile } from "../../api/index.js";
+import { Version } from "../common/version.js";
+import { connection } from "../connection.js";
+import { switchToProfile } from "../profiles.js";
 
-vi.mock("../connection");
-vi.mock("../logging");
-vi.mock("../manifest");
+vi.mock("../connection.js");
+vi.mock("../logging/index.js");
+vi.mock("../manifest.js");
 
 describe("profiles", () => {
 	describe("switchToProfile", () => {

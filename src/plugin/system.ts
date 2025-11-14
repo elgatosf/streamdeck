@@ -1,8 +1,8 @@
-import type { Manifest, SystemDidWakeUp } from "../api";
-import type { DidReceiveSecrets } from "../api/events/system";
-import type { IDisposable } from "../common/disposable";
-import type { JsonObject } from "../common/json";
-import { connection } from "./connection";
+import type { DidReceiveSecrets } from "../api/events/system.js";
+import type { Manifest, SystemDidWakeUp } from "../api/index.js";
+import type { IDisposable } from "../common/disposable.js";
+import type { JsonObject } from "../common/json.js";
+import { connection } from "./connection.js";
 import {
 	type ApplicationDidLaunchEvent,
 	type ApplicationDidTerminateEvent,
@@ -10,8 +10,8 @@ import {
 	DidReceiveDeepLinkEvent,
 	Event,
 	type SystemDidWakeUpEvent,
-} from "./events";
-import { requiresSDKVersion, requiresVersion } from "./validation";
+} from "./events/index.js";
+import { requiresSDKVersion, requiresVersion } from "./validation.js";
 
 /**
  * Occurs when a monitored application is launched. Monitored applications can be defined in the manifest via the {@link Manifest.ApplicationsToMonitor} property.

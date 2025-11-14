@@ -7,18 +7,18 @@ import {
 	type SetImage,
 	type SetTriggerDescription,
 	type WillAppear,
-} from "../../../api";
-import type { JsonObject } from "../../../common/json";
-import { connection } from "../../connection";
-import { Device } from "../../devices/device";
-import { deviceStore } from "../../devices/store";
-import { Action } from "../action";
-import { DialAction } from "../dial";
+} from "../../../api/index.js";
+import type { JsonObject } from "../../../common/json.js";
+import { connection } from "../../connection.js";
+import { Device } from "../../devices/device.js";
+import { deviceStore } from "../../devices/store.js";
+import { Action } from "../action.js";
+import { DialAction } from "../dial.js";
 
-vi.mock("../../devices/store");
-vi.mock("../../logging");
-vi.mock("../../manifest");
-vi.mock("../../connection");
+vi.mock("../../devices/store.js");
+vi.mock("../../logging/index.js");
+vi.mock("../../manifest.js");
+vi.mock("../../connection.js");
 
 describe("DialAction", () => {
 	// Mock source.
@@ -34,6 +34,7 @@ describe("DialAction", () => {
 				row: 2,
 			},
 			isInMultiAction: false,
+			resources: {},
 			settings: {},
 		},
 	};
@@ -102,6 +103,7 @@ describe("DialAction", () => {
 			event: "willAppear",
 			payload: {
 				controller: "Encoder",
+				resources: {},
 				settings: {},
 				isInMultiAction: false,
 				coordinates: {

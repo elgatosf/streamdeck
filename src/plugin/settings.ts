@@ -1,13 +1,13 @@
 import { randomUUID } from "node:crypto";
 
-import type { DidReceiveGlobalSettings, DidReceiveSettings } from "../api";
-import type { IDisposable } from "../common/disposable";
-import { ActionEvent } from "../common/events";
-import type { JsonObject } from "../common/json";
-import { Action } from "./actions/action";
-import { actionStore } from "./actions/store";
-import { connection } from "./connection";
-import { DidReceiveGlobalSettingsEvent, type DidReceiveSettingsEvent } from "./events";
+import type { DidReceiveGlobalSettings, DidReceiveSettings } from "../api/index.js";
+import type { IDisposable } from "../common/disposable.js";
+import { ActionEvent } from "../common/events/index.js";
+import type { JsonObject } from "../common/json.js";
+import { Action } from "./actions/action.js";
+import { actionStore } from "./actions/store.js";
+import { connection } from "./connection.js";
+import { DidReceiveGlobalSettingsEvent, type DidReceiveSettingsEvent } from "./events/index.js";
 
 /**
  * Gets the global settings associated with the plugin. Use in conjunction with {@link setGlobalSettings}.

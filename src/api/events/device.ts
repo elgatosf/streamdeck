@@ -1,5 +1,5 @@
-import type { DeviceInfo } from "../device";
-import type { EventIdentifier } from "./index";
+import type { DeviceInfo } from "../device.js";
+import type { EventIdentifier } from "./index.js";
 
 /**
  * Occurs when a Stream Deck device changed, for example its name or size.

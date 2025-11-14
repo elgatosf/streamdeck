@@ -1,16 +1,16 @@
-import type { DidReceivePropertyInspectorMessage } from "../api";
-import type { IDisposable } from "../common/disposable";
-import { ActionWithoutPayloadEvent } from "../common/events/action-event";
-import type { JsonObject, JsonValue } from "../common/json";
-import type { DialAction, KeyAction } from "./actions";
-import { Action } from "./actions/action";
-import { actionStore } from "./actions/store";
-import { connection } from "./connection";
+import type { DidReceivePropertyInspectorMessage } from "../api/index.js";
+import type { IDisposable } from "../common/disposable.js";
+import { ActionWithoutPayloadEvent } from "../common/events/action-event.js";
+import type { JsonObject, JsonValue } from "../common/json.js";
+import { Action } from "./actions/action.js";
+import type { DialAction, KeyAction } from "./actions/index.js";
+import { actionStore } from "./actions/store.js";
+import { connection } from "./connection.js";
 import {
 	type PropertyInspectorDidAppearEvent,
 	type PropertyInspectorDidDisappearEvent,
 	SendToPluginEvent,
-} from "./events";
+} from "./events/index.js";
 
 /**
  * Controller capable of sending/receiving payloads with the property inspector, and listening for events.

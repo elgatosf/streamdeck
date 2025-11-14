@@ -1,6 +1,6 @@
 import { describe, expect, it, test, vi } from "vitest";
 
-import { Enumerable } from "../enumerable";
+import { Enumerable } from "../enumerable.js";
 
 describe("Enumerable", () => {
 	const source = [

@@ -1,7 +1,7 @@
 import fs, { type Dirent } from "node:fs";
 import path from "node:path";
 
-import { type LogEntry, type LogEntryFormatter, type LogTarget } from "../../common/logging";
+import { type LogEntry, type LogEntryFormatter, type LogTarget } from "../../common/logging/index.js";
 
 /**
  * Provides a {@link LogTarget} capable of logging to a local file system.

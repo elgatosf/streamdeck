@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 
-import { ConsoleTarget } from "../console-target";
-import { LogLevel } from "../level";
+import { ConsoleTarget } from "../console-target.js";
+import { LogLevel } from "../level.js";
 
 describe("ConsoleTarget", () => {
 	/**

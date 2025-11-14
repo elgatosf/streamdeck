@@ -1,4 +1,4 @@
-import { LogLevel } from "./level";
+import { LogLevel } from "./level.js";
 
 /**
  * A log target capable of capturing a log entry, e.g. to the file system, console, etc.

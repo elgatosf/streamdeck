@@ -1,8 +1,8 @@
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import type { isDebugMode } from "../utils";
-import { getPluginUUID } from "../utils";
+import type { isDebugMode } from "../utils.js";
+import { getPluginUUID } from "../utils.js";
 
 /**
  * Asserts {@link getPluginUUID} is correctly parsed from the current working directory.
@@ -95,7 +95,7 @@ describe("isDebugMode", () => {
 
 	it.each(cases)("$args returns $expected", async ({ args, expected }) => {
 		// Arrange.
-		const { isDebugMode } = await import("../utils");
+		const { isDebugMode } = await import("../utils.js");
 		process.execArgv = args;
 
 		// Act, assert.
@@ -104,7 +104,7 @@ describe("isDebugMode", () => {
 
 	it("Caches result", async () => {
 		// Arrange.
-		const { isDebugMode } = await import("../utils");
+		const { isDebugMode } = await import("../utils.js");
 		process.execArgv = ["--inspect", "127.0.0.1"];
 
 		// Act, assert.

@@ -1,6 +1,6 @@
-import { type Language, supportedLanguages } from "../api";
-import type { JsonObject } from "../common/json";
-import { freeze, get } from "./utils";
+import { type Language, supportedLanguages } from "../api/index.js";
+import type { JsonObject } from "../common/json.js";
+import { freeze, get } from "./utils.js";
 
 /**
  * Internalization provider, responsible for managing localizations and translating resources.

@@ -1,14 +1,14 @@
 import { vi } from "vitest";
 
-import { DeviceType } from "../../../api/device";
-import type { Device } from "../../devices";
-import { deviceStore } from "../../devices/store";
+import { DeviceType } from "../../../api/device.js";
+import type { Device } from "../../devices/index.js";
+import { deviceStore } from "../../devices/store.js";
 
-const { ReadOnlyActionStore } = await vi.importActual<typeof import("../store")>("../store");
-const { KeyAction } = await vi.importActual<typeof import("../key")>("../key");
-const { DialAction } = await vi.importActual<typeof import("../dial")>("../dial");
+const { ReadOnlyActionStore } = await vi.importActual<typeof import("../store.js")>("../store");
+const { KeyAction } = await vi.importActual<typeof import("../key.js")>("../key");
+const { DialAction } = await vi.importActual<typeof import("../dial.js")>("../dial");
 
-vi.mock("../../devices/store");
+vi.mock("../../devices/store.js");
 
 vi.spyOn(deviceStore, "getDeviceById").mockReturnValue({
 	id: "device123",
@@ -38,6 +38,7 @@ export const actionStore = {
 						row: 2,
 					},
 					isInMultiAction: false,
+					resources: {},
 					settings: {},
 				},
 			});
@@ -55,6 +56,7 @@ export const actionStore = {
 					row: 2,
 				},
 				isInMultiAction: false,
+				resources: {},
 				settings: {},
 			},
 		});

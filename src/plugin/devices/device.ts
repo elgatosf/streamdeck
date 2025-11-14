@@ -1,8 +1,8 @@
-import type { DeviceInfo, DeviceType, Size } from "../../api";
-import type { DialAction } from "../actions/dial";
-import type { KeyAction } from "../actions/key";
-import { actionStore } from "../actions/store";
-import { connection } from "../connection";
+import type { DeviceInfo, DeviceType, Size } from "../../api/index.js";
+import type { DialAction } from "../actions/dial.js";
+import type { KeyAction } from "../actions/key.js";
+import { actionStore } from "../actions/store.js";
+import { connection } from "../connection.js";
 
 /**
  * Provides information about a device.

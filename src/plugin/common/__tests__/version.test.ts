@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { Version } from "../version";
+import { Version } from "../version.js";
 
 /**
  * Asserts string values are correctly parsed to {@link Version}.

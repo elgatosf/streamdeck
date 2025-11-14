@@ -1,5 +1,5 @@
-import type { DeviceInfo } from "../device";
-import type { Language } from "../i18n";
+import type { DeviceInfo } from "../device.js";
+import type { Language } from "../i18n.js";
 
 /**
  * Information about the Stream Deck application, the plugin, the user's operating system, user's Stream Deck devices, etc.

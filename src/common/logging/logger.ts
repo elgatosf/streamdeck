@@ -1,5 +1,5 @@
-import { LogLevel } from "./level";
-import type { LogEntry, LogEntryData, LogTarget } from "./target";
+import { LogLevel } from "./level.js";
+import type { LogEntry, LogEntryData, LogTarget } from "./target.js";
 
 /**
  * Logger capable of forwarding messages to a {@link LogTarget}.

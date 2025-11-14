@@ -2,8 +2,8 @@ import fs, { Dirent } from "node:fs";
 import path from "node:path";
 import { describe, expect, it, vi } from "vitest";
 
-import { LogLevel } from "../../../common/logging";
-import { FileTarget, FileTargetOptions } from "../file-target";
+import { LogLevel } from "../../../common/logging/index.js";
+import { FileTarget, type FileTargetOptions } from "../file-target.js";
 
 vi.mock("node:fs");
 

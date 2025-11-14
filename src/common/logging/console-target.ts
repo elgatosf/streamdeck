@@ -1,5 +1,5 @@
-import { LogLevel } from "./level";
-import type { LogEntry, LogTarget } from "./target";
+import { LogLevel } from "./level.js";
+import type { LogEntry, LogTarget } from "./target.js";
 
 /**
  * Provides a {@link LogTarget} that logs to the console.

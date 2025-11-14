@@ -1,7 +1,7 @@
-import type { DidReceivePropertyInspectorMessage } from "../../api";
-import { Event } from "../../common/events";
-import type { JsonObject, JsonValue } from "../../common/json";
-import type { Action } from "../actions/action";
+import type { DidReceivePropertyInspectorMessage } from "../../api/index.js";
+import { Event } from "../../common/events/index.js";
+import type { JsonObject, JsonValue } from "../../common/json.js";
+import type { Action } from "../actions/action.js";
 
 /**
  * Provides information for an event triggered by a message being sent to the plugin, from the property inspector.

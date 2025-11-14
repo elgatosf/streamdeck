@@ -1,11 +1,11 @@
 import { vi } from "vitest";
 
-import type { Manifest } from "../../api";
-import { Version } from "../common/version";
+import type { Manifest } from "../../api/index.js";
+import { Version } from "../common/version.js";
 import type {
 	getManifest as __getManifest,
 	getSoftwareMinimumVersion as __getSoftwareMinimumVersion,
-} from "../manifest";
+} from "../manifest.js";
 
 /**
  * Mock {@link Manifest}.

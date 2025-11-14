@@ -1,22 +1,22 @@
 import { describe, expect, it, vi } from "vitest";
 
+import type { Secrets } from "../../api/__mocks__/events.js";
 import type {
 	ApplicationDidLaunch,
 	ApplicationDidTerminate,
 	DidReceiveDeepLink,
 	OpenUrl,
 	SystemDidWakeUp,
-} from "../../api";
-import { Secrets } from "../../api/__mocks__/events";
-import { Version } from "../common/version";
-import { connection } from "../connection";
+} from "../../api/index.js";
+import { Version } from "../common/version.js";
+import { connection } from "../connection.js";
 import {
-	ApplicationDidLaunchEvent,
-	ApplicationDidTerminateEvent,
+	type ApplicationDidLaunchEvent,
+	type ApplicationDidTerminateEvent,
 	DidReceiveDeepLinkEvent,
-	SystemDidWakeUpEvent,
-} from "../events";
-import * as manifest from "../manifest";
+	type SystemDidWakeUpEvent,
+} from "../events/index.js";
+import * as manifest from "../manifest.js";
 import {
 	getSecrets,
 	onApplicationDidLaunch,
@@ -24,11 +24,11 @@ import {
 	onDidReceiveDeepLink,
 	onSystemDidWakeUp,
 	openUrl,
-} from "../system";
+} from "../system.js";
 
-vi.mock("../connection");
-vi.mock("../logging");
-vi.mock("../manifest");
+vi.mock("../connection.js");
+vi.mock("../logging/index.js");
+vi.mock("../manifest.js");
 
 describe("system", () => {
 	/**

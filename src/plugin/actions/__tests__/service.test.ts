@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 
+import type { Settings } from "../../../api/__mocks__/events.js";
 import type {
 	DialDown,
 	DialRotate,
@@ -14,11 +15,10 @@ import type {
 	TouchTap,
 	WillAppear,
 	WillDisappear,
-} from "../../../api";
-import { Settings } from "../../../api/__mocks__/events";
-import type { Enumerable } from "../../../common/enumerable";
-import { JsonObject } from "../../../common/json";
-import { connection } from "../../connection";
+} from "../../../api/index.js";
+import type { Enumerable } from "../../../common/enumerable.js";
+import type { JsonObject } from "../../../common/json.js";
+import { connection } from "../../connection.js";
 import {
 	type DialDownEvent,
 	type DialRotateEvent,
@@ -33,20 +33,20 @@ import {
 	type TouchTapEvent,
 	type WillAppearEvent,
 	type WillDisappearEvent,
-} from "../../events";
-import type { UIController } from "../../ui";
-import { ActionContext } from "../context";
-import { DialAction } from "../dial";
-import { KeyAction } from "../key";
-import { actionService, type ActionService } from "../service";
-import { SingletonAction } from "../singleton-action";
-import { actionStore } from "../store";
+} from "../../events/index.js";
+import type { UIController } from "../../ui.js";
+import { ActionContext } from "../context.js";
+import { DialAction } from "../dial.js";
+import { KeyAction } from "../key.js";
+import { actionService, type ActionService } from "../service.js";
+import { SingletonAction } from "../singleton-action.js";
+import { actionStore } from "../store.js";
 
-vi.mock("../store");
-vi.mock("../../devices/store");
-vi.mock("../../connection");
-vi.mock("../../logging");
-vi.mock("../../manifest");
+vi.mock("../store.js");
+vi.mock("../../devices/store.js");
+vi.mock("../../connection.js");
+vi.mock("../../logging/index.js");
+vi.mock("../../manifest.js");
 
 describe("actions", () => {
 	describe("event emitters", () => {
@@ -67,6 +67,7 @@ describe("actions", () => {
 						column: 2,
 						row: 0,
 					},
+					resources: {},
 					settings: {
 						name: "Hello world",
 					},
@@ -111,6 +112,7 @@ describe("actions", () => {
 						row: 0,
 					},
 					pressed: false,
+					resources: {},
 					settings: {
 						name: "Hello world",
 					},
@@ -155,6 +157,7 @@ describe("actions", () => {
 						column: 2,
 						row: 0,
 					},
+					resources: {},
 					settings: {
 						name: "Hello world",
 					},
@@ -199,6 +202,7 @@ describe("actions", () => {
 						row: 0,
 					},
 					isInMultiAction: false,
+					resources: {},
 					settings: {
 						name: "Hello world",
 					},
@@ -243,6 +247,7 @@ describe("actions", () => {
 						row: 0,
 					},
 					isInMultiAction: false,
+					resources: {},
 					settings: {
 						name: "Hello world",
 					},
@@ -286,6 +291,7 @@ describe("actions", () => {
 						column: 2,
 						row: 0,
 					},
+					resources: {},
 					settings: {
 						name: "Hello world",
 					},
@@ -339,6 +345,7 @@ describe("actions", () => {
 						column: 2,
 						row: 0,
 					},
+					resources: {},
 					settings: {
 						name: "Hello world",
 					},
@@ -385,6 +392,7 @@ describe("actions", () => {
 						row: 0,
 					},
 					isInMultiAction: false,
+					resources: {},
 					settings: {
 						name: "Hello world",
 					},
@@ -429,6 +437,7 @@ describe("actions", () => {
 						row: 0,
 					},
 					isInMultiAction: false,
+					resources: {},
 					settings: {
 						name: "Hello world",
 					},
@@ -534,6 +543,7 @@ describe("actions", () => {
 						column: 2,
 						row: 0,
 					},
+					resources: {},
 					settings: {
 						name: "Hello world",
 					},
@@ -576,6 +586,7 @@ describe("actions", () => {
 						row: 0,
 					},
 					pressed: false,
+					resources: {},
 					settings: {
 						name: "Hello world",
 					},
@@ -618,6 +629,7 @@ describe("actions", () => {
 						column: 2,
 						row: 0,
 					},
+					resources: {},
 					settings: {
 						name: "Hello world",
 					},
@@ -695,6 +707,7 @@ describe("actions", () => {
 						row: 0,
 					},
 					isInMultiAction: false,
+					resources: {},
 					settings: {
 						name: "Hello world",
 					},
@@ -737,6 +750,7 @@ describe("actions", () => {
 						row: 0,
 					},
 					isInMultiAction: false,
+					resources: {},
 					settings: {
 						name: "Hello world",
 					},
@@ -779,6 +793,7 @@ describe("actions", () => {
 						row: 0,
 					},
 					isInMultiAction: false,
+					resources: {},
 					settings: {
 						name: "Hello world",
 					},
@@ -880,6 +895,7 @@ describe("actions", () => {
 						column: 2,
 						row: 0,
 					},
+					resources: {},
 					settings: {
 						name: "Hello world",
 					},
@@ -931,6 +947,7 @@ describe("actions", () => {
 						column: 2,
 						row: 0,
 					},
+					resources: {},
 					settings: {
 						name: "Hello world",
 					},
@@ -975,6 +992,7 @@ describe("actions", () => {
 						row: 0,
 					},
 					isInMultiAction: false,
+					resources: {},
 					settings: {
 						name: "Hello world",
 					},
@@ -1017,6 +1035,7 @@ describe("actions", () => {
 						row: 0,
 					},
 					isInMultiAction: false,
+					resources: {},
 					settings: {
 						name: "Hello world",
 					},

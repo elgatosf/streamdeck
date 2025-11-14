@@ -1,21 +1,21 @@
 import { describe, expect, it, vi } from "vitest";
 
+import { type Settings } from "../../api/__mocks__/events.js";
 import {
 	type DidReceiveGlobalSettings,
 	type DidReceiveSettings,
 	type GetGlobalSettings,
 	type SetGlobalSettings,
-} from "../../api";
-import { type Settings } from "../../api/__mocks__/events";
-import { actionStore } from "../actions/store";
-import { connection } from "../connection";
-import type { DidReceiveGlobalSettingsEvent, DidReceiveSettingsEvent } from "../events";
-import { getGlobalSettings, onDidReceiveGlobalSettings, onDidReceiveSettings, setGlobalSettings } from "../settings";
+} from "../../api/index.js";
+import { actionStore } from "../actions/store.js";
+import { connection } from "../connection.js";
+import type { DidReceiveGlobalSettingsEvent, DidReceiveSettingsEvent } from "../events/index.js";
+import { getGlobalSettings, onDidReceiveGlobalSettings, onDidReceiveSettings, setGlobalSettings } from "../settings.js";
 
-vi.mock("../connection");
-vi.mock("../logging");
-vi.mock("../manifest");
-vi.mock("../actions/store");
+vi.mock("../connection.js");
+vi.mock("../logging/index.js");
+vi.mock("../manifest.js");
+vi.mock("../actions/store.js");
 
 describe("settings", () => {
 	describe("sending", () => {
@@ -129,6 +129,7 @@ describe("settings", () => {
 						row: 0,
 					},
 					isInMultiAction: false,
+					resources: {},
 					settings: {
 						name: "Elgato",
 					},

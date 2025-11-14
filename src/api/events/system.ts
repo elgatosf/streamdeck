@@ -1,6 +1,6 @@
-import type { Manifest } from "../";
-import type { JsonObject } from "../../common/json";
-import type { EventIdentifier } from "./index";
+import type { JsonObject } from "../../common/json.js";
+import type { Manifest } from "../index.js";
+import type { EventIdentifier } from "./index.js";
 
 /**
  * Occurs when a monitored application is launched. Monitored applications can be defined in the `manifest.json` file via the {@link Manifest.ApplicationsToMonitor} property. See also

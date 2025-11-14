@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 
-import { deferredDisposable, type IDisposable } from "../disposable";
+import { deferredDisposable, type IDisposable } from "../disposable.js";
 
 describe("deferredDisposable", () => {
 	describe("dispose", () => {

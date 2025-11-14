@@ -1,7 +1,7 @@
 import { vi } from "vitest";
 
-import { DeviceType } from "../../../api/device";
-import { type Device } from "../device";
+import { DeviceType } from "../../../api/device.js";
+import { type Device } from "../device.js";
 
 export const deviceStore = {
 	getDeviceById: vi.fn().mockImplementation((id: string) => {

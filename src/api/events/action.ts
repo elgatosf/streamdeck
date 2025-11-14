@@ -1,9 +1,9 @@
 import type { Controller, DeviceType } from "@elgato/schemas/streamdeck/plugins";
 
-import type { JsonObject } from "../../common/json";
-import type { Resources } from "../resources";
-import type { DeviceIdentifier } from "./device";
-import type { EventIdentifier } from "./index";
+import type { JsonObject } from "../../common/json.js";
+import type { Resources } from "../resources.js";
+import type { DeviceIdentifier } from "./device.js";
+import type { EventIdentifier } from "./index.js";
 
 /**
  * Occurs when the settings associated with an action instance are requested, or when the the settings

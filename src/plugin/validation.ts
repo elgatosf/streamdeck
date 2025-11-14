@@ -1,5 +1,5 @@
-import { Version } from "./common/version";
-import { getSDKVersion, getSoftwareMinimumVersion } from "./manifest";
+import { Version } from "./common/version.js";
+import { getSDKVersion, getSoftwareMinimumVersion } from "./manifest.js";
 
 /**
  * Validates the `SDKVersion` within the manifest fulfils the minimum required version for the specified

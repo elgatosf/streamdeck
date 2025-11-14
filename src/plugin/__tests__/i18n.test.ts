@@ -2,10 +2,10 @@ import fs from "node:fs";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { fileSystemLocaleProvider } from "../i18n";
-import { logger } from "../logging";
+import { fileSystemLocaleProvider } from "../i18n.js";
+import { logger } from "../logging/index.js";
 
-vi.mock("../logging");
+vi.mock("../logging/index.js");
 
 describe("fileSystemLocaleProvider", () => {
 	const mockedCwd = "c:\\temp";
