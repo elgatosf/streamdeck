@@ -2,22 +2,20 @@
     "name": "@elgato/streamdeck",
     "version": "2.0.0-beta.1",
     "description": "The official Node.js SDK for creating Stream Deck plugins.",
-    "main": "./dist/index.js",
+    "main": "./dist/plugin/index.js",
     "type": "module",
     "engines": {
         "node": ">=20.5.1"
     },
     "files": [
-        "./dist/*.js",
-        "./dist/*.d.ts",
-        "./types/**/*d.ts"
+        "./dist/**/*.js",
+        "./dist/**/*.d.ts"
     ],
-    "exports": "./dist/index.js",
-    "types": "./dist/index.d.ts",
+    "exports": "./dist/plugin/index.js",
+    "types": "./dist/plugin/index.d.ts",
     "scripts": {
-        "build": "rm -rf ./dist && rollup --config rollup.config.mjs && npm run types",
-        "watch": "rollup --config rollup.config.mjs --watch --watch.onEnd=\"npm run types\"",
-        "types": "rm -rf ./types && mkdir types && cp -r ./dist/types ./",
+        "build": "rm -rf ./dist && tsc -p tsconfig.build.json",
+        "watch": "rm -rf ./dist && tsc -p tsconfig.build.json -w",
         "lint": "eslint --max-warnings 0",
         "lint:fix": "prettier . --write",
         "preversion": "npm run build && npm test && npm run lint",
@@ -51,8 +49,6 @@
     "devDependencies": {
         "@elgato/prettier-config": "^0.2.4",
         "@eslint/js": "^9.18.0",
-        "@rollup/plugin-node-resolve": "^16.0.0",
-        "@rollup/plugin-typescript": "^12.1.2",
         "@tsconfig/node20": "^20.1.4",
         "@types/eslint__js": "^8.42.3",
         "@types/node": "^24.5.2",
@@ -64,7 +60,6 @@
         "eslint-plugin-jsdoc": "^50.6.2",
         "mock-socket": "^9.3.1",
         "prettier": "^3.4.2",
-        "rollup": "^4.32.0",
         "tslib": "^2.8.1",
         "typescript": "^5.7.3",
         "typescript-eslint": "^8.21.0",
