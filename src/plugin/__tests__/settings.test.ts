@@ -1,23 +1,44 @@
-import { describe, expect, it, vi } from "vitest";
+import { beforeAll, describe, expect, it, vi } from "vitest";
 
+import { type Settings } from "../../api/__mocks__/events.js";
 import {
+	DeviceType,
 	type DidReceiveGlobalSettings,
 	type DidReceiveSettings,
 	type GetGlobalSettings,
 	type SetGlobalSettings,
-} from "../../api";
-import { type Settings } from "../../api/__mocks__/events";
-import { actionStore } from "../actions/store";
-import { connection } from "../connection";
-import type { DidReceiveGlobalSettingsEvent, DidReceiveSettingsEvent } from "../events";
-import { getGlobalSettings, onDidReceiveGlobalSettings, onDidReceiveSettings, setGlobalSettings } from "../settings";
+} from "../../api/index.js";
+import { actionStore } from "../actions/store.js";
+import { connection } from "../connection.js";
+import { Device } from "../devices/device.js";
+import { deviceStore } from "../devices/store.js";
+import type { DidReceiveGlobalSettingsEvent, DidReceiveSettingsEvent } from "../events/index.js";
+import { getGlobalSettings, onDidReceiveGlobalSettings, onDidReceiveSettings, setGlobalSettings } from "../settings.js";
 
-vi.mock("../connection");
-vi.mock("../logging");
-vi.mock("../manifest");
-vi.mock("../actions/store");
+vi.mock("../connection.js");
+vi.mock("../logging/index.js");
+vi.mock("../manifest.js");
+vi.mock("../actions/store.js");
 
 describe("settings", () => {
+	// Add a mock device.
+	beforeAll(() => {
+		deviceStore.set(
+			new Device(
+				"device123",
+				{
+					name: "Device One",
+					size: {
+						columns: 5,
+						rows: 3,
+					},
+					type: DeviceType.StreamDeckXL,
+				},
+				true,
+			),
+		);
+	});
+
 	describe("sending", () => {
 		/**
 		 * Asserts {@link getGlobalSettings} sends the command to the {@link connection}, and await the settings.
@@ -129,6 +150,7 @@ describe("settings", () => {
 						row: 0,
 					},
 					isInMultiAction: false,
+					resources: {},
 					settings: {
 						name: "Elgato",
 					},

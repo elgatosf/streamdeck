@@ -1,6 +1,6 @@
 import { describe, expect, it, test, vi } from "vitest";
 
-import { Enumerable } from "../enumerable";
+import { Enumerable } from "../enumerable.js";
 
 describe("Enumerable", () => {
 	const source = [
@@ -205,7 +205,7 @@ describe("Enumerable", () => {
 			it("iterates mutated map", () => {
 				// Arrange.
 				const fn = vi.fn();
-				const itr = function* () {
+				const itr = function* (): Generator {
 					yield "One";
 					yield "Two";
 				};
@@ -221,7 +221,7 @@ describe("Enumerable", () => {
 
 			it("reads length", () => {
 				// Arrange.
-				const itr = function* () {
+				const itr = function* (): Generator {
 					yield "One";
 					yield "Two";
 				};

@@ -13,6 +13,7 @@ defaults:
 jobs:
   Release:
     runs-on: "windows-latest"
+    timeout-minutes: 10
 
     permissions:
       contents: read

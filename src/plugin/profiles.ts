@@ -1,5 +1,5 @@
-import { connection } from "./connection";
-import { requiresVersion } from "./validation";
+import { connection } from "./connection.js";
+import { requiresVersion } from "./validation.js";
 
 /**
  * Requests the Stream Deck switches the current profile of the specified {@link deviceId} to the {@link profile}; when no {@link profile} is provided the previously active profile

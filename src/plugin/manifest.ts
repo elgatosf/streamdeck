@@ -1,9 +1,9 @@
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 
-import { Manifest } from "../api";
-import { Lazy } from "../common/lazy";
-import { Version } from "./common/version";
+import { type Manifest } from "../api/index.js";
+import { Lazy } from "../common/lazy.js";
+import { Version } from "./common/version.js";
 
 const manifest = new Lazy<Manifest | null>(() => {
 	const path = join(process.cwd(), "manifest.json");

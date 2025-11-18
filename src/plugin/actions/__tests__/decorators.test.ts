@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
-import { action } from "../decorators";
-import { SingletonAction } from "../singleton-action";
+import { action } from "../decorators.js";
+import { SingletonAction } from "../singleton-action.js";
 
 describe("action decorator", () => {
 	it("sets the manifestId on untyped action", () => {

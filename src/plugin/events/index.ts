@@ -18,19 +18,19 @@ import type {
 	TouchTap,
 	WillAppear,
 	WillDisappear,
-} from "../../api";
-import { type ActionEvent, ActionWithoutPayloadEvent, Event } from "../../common/events";
-import type { JsonObject } from "../../common/json";
-import type { ActionContext } from "../actions/context";
-import type { DialAction } from "../actions/dial";
-import type { KeyAction } from "../actions/key";
-import type { Device } from "../devices";
-import { ApplicationEvent } from "./application-event";
-import { DeviceEvent } from "./device-event";
+} from "../../api/index.js";
+import { type ActionEvent, ActionWithoutPayloadEvent, Event } from "../../common/events/index.js";
+import type { JsonObject } from "../../common/json.js";
+import type { ActionContext } from "../actions/context.js";
+import type { DialAction } from "../actions/dial.js";
+import type { KeyAction } from "../actions/key.js";
+import type { Device } from "../devices/index.js";
+import { ApplicationEvent } from "./application-event.js";
+import { DeviceEvent } from "./device-event.js";
 
-export { DidReceiveGlobalSettingsEvent } from "../../common/events";
-export { DidReceiveDeepLinkEvent } from "./deep-link-event";
-export { SendToPluginEvent } from "./ui-message-event";
+export { DidReceiveGlobalSettingsEvent } from "../../common/events/index.js";
+export { DidReceiveDeepLinkEvent } from "./deep-link-event.js";
+export { SendToPluginEvent } from "./ui-message-event.js";
 export { ApplicationEvent, DeviceEvent, Event };
 
 /**

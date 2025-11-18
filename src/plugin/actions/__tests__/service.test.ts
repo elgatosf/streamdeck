@@ -1,24 +1,27 @@
-import { describe, expect, it, vi } from "vitest";
+import { beforeAll, describe, expect, it, vi } from "vitest";
 
-import type {
-	DialDown,
-	DialRotate,
-	DialUp,
-	DidReceivePropertyInspectorMessage,
-	DidReceiveSettings,
-	KeyDown,
-	KeyUp,
-	PropertyInspectorDidAppear,
-	PropertyInspectorDidDisappear,
-	TitleParametersDidChange,
-	TouchTap,
-	WillAppear,
-	WillDisappear,
-} from "../../../api";
-import { Settings } from "../../../api/__mocks__/events";
-import type { Enumerable } from "../../../common/enumerable";
-import { JsonObject } from "../../../common/json";
-import { connection } from "../../connection";
+import type { Settings } from "../../../api/__mocks__/events.js";
+import {
+	DeviceType,
+	type DialDown,
+	type DialRotate,
+	type DialUp,
+	type DidReceivePropertyInspectorMessage,
+	type DidReceiveSettings,
+	type KeyDown,
+	type KeyUp,
+	type PropertyInspectorDidAppear,
+	type PropertyInspectorDidDisappear,
+	type TitleParametersDidChange,
+	type TouchTap,
+	type WillAppear,
+	type WillDisappear,
+} from "../../../api/index.js";
+import type { Enumerable } from "../../../common/enumerable.js";
+import type { JsonObject } from "../../../common/json.js";
+import { connection } from "../../connection.js";
+import { Device } from "../../devices/device.js";
+import { deviceStore } from "../../devices/store.js";
 import {
 	type DialDownEvent,
 	type DialRotateEvent,
@@ -33,22 +36,39 @@ import {
 	type TouchTapEvent,
 	type WillAppearEvent,
 	type WillDisappearEvent,
-} from "../../events";
-import type { UIController } from "../../ui";
-import { ActionContext } from "../context";
-import { DialAction } from "../dial";
-import { KeyAction } from "../key";
-import { actionService, type ActionService } from "../service";
-import { SingletonAction } from "../singleton-action";
-import { actionStore } from "../store";
+} from "../../events/index.js";
+import type { UIController } from "../../ui.js";
+import { ActionContext } from "../context.js";
+import { DialAction } from "../dial.js";
+import { KeyAction } from "../key.js";
+import { actionService, type ActionService } from "../service.js";
+import { SingletonAction } from "../singleton-action.js";
+import { actionStore } from "../store.js";
 
-vi.mock("../store");
-vi.mock("../../devices/store");
-vi.mock("../../connection");
-vi.mock("../../logging");
-vi.mock("../../manifest");
+vi.mock("../connection.js");
+vi.mock("../store.js");
+vi.mock("../../logging/index.js");
+vi.mock("../../manifest.js");
 
 describe("actions", () => {
+	// Add a mock device.
+	beforeAll(() => {
+		deviceStore.set(
+			new Device(
+				"device123",
+				{
+					name: "Device One",
+					size: {
+						columns: 5,
+						rows: 3,
+					},
+					type: DeviceType.StreamDeckXL,
+				},
+				true,
+			),
+		);
+	});
+
 	describe("event emitters", () => {
 		/**
 		 * Asserts {@link ActionService.onDialDown} is invoked when `dialDown` is emitted.
@@ -67,6 +87,7 @@ describe("actions", () => {
 						column: 2,
 						row: 0,
 					},
+					resources: {},
 					settings: {
 						name: "Hello world",
 					},
@@ -111,6 +132,7 @@ describe("actions", () => {
 						row: 0,
 					},
 					pressed: false,
+					resources: {},
 					settings: {
 						name: "Hello world",
 					},
@@ -155,6 +177,7 @@ describe("actions", () => {
 						column: 2,
 						row: 0,
 					},
+					resources: {},
 					settings: {
 						name: "Hello world",
 					},
@@ -199,6 +222,7 @@ describe("actions", () => {
 						row: 0,
 					},
 					isInMultiAction: false,
+					resources: {},
 					settings: {
 						name: "Hello world",
 					},
@@ -243,6 +267,7 @@ describe("actions", () => {
 						row: 0,
 					},
 					isInMultiAction: false,
+					resources: {},
 					settings: {
 						name: "Hello world",
 					},
@@ -286,6 +311,7 @@ describe("actions", () => {
 						column: 2,
 						row: 0,
 					},
+					resources: {},
 					settings: {
 						name: "Hello world",
 					},
@@ -339,6 +365,7 @@ describe("actions", () => {
 						column: 2,
 						row: 0,
 					},
+					resources: {},
 					settings: {
 						name: "Hello world",
 					},
@@ -385,6 +412,7 @@ describe("actions", () => {
 						row: 0,
 					},
 					isInMultiAction: false,
+					resources: {},
 					settings: {
 						name: "Hello world",
 					},
@@ -429,6 +457,7 @@ describe("actions", () => {
 						row: 0,
 					},
 					isInMultiAction: false,
+					resources: {},
 					settings: {
 						name: "Hello world",
 					},
@@ -534,6 +563,7 @@ describe("actions", () => {
 						column: 2,
 						row: 0,
 					},
+					resources: {},
 					settings: {
 						name: "Hello world",
 					},
@@ -576,6 +606,7 @@ describe("actions", () => {
 						row: 0,
 					},
 					pressed: false,
+					resources: {},
 					settings: {
 						name: "Hello world",
 					},
@@ -618,6 +649,7 @@ describe("actions", () => {
 						column: 2,
 						row: 0,
 					},
+					resources: {},
 					settings: {
 						name: "Hello world",
 					},
@@ -695,6 +727,7 @@ describe("actions", () => {
 						row: 0,
 					},
 					isInMultiAction: false,
+					resources: {},
 					settings: {
 						name: "Hello world",
 					},
@@ -737,6 +770,7 @@ describe("actions", () => {
 						row: 0,
 					},
 					isInMultiAction: false,
+					resources: {},
 					settings: {
 						name: "Hello world",
 					},
@@ -779,6 +813,7 @@ describe("actions", () => {
 						row: 0,
 					},
 					isInMultiAction: false,
+					resources: {},
 					settings: {
 						name: "Hello world",
 					},
@@ -880,6 +915,7 @@ describe("actions", () => {
 						column: 2,
 						row: 0,
 					},
+					resources: {},
 					settings: {
 						name: "Hello world",
 					},
@@ -931,6 +967,7 @@ describe("actions", () => {
 						column: 2,
 						row: 0,
 					},
+					resources: {},
 					settings: {
 						name: "Hello world",
 					},
@@ -975,6 +1012,7 @@ describe("actions", () => {
 						row: 0,
 					},
 					isInMultiAction: false,
+					resources: {},
 					settings: {
 						name: "Hello world",
 					},
@@ -1017,6 +1055,7 @@ describe("actions", () => {
 						row: 0,
 					},
 					isInMultiAction: false,
+					resources: {},
 					settings: {
 						name: "Hello world",
 					},

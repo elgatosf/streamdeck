@@ -1,12 +1,12 @@
 import { randomUUID } from "node:crypto";
 
-import type { DidReceiveResources, DidReceiveSettings, Resources } from "../../api";
-import type { JsonObject } from "../../common/json";
-import { connection } from "../connection";
-import { requiresVersion } from "../validation";
-import { ActionContext } from "./context";
-import type { DialAction } from "./dial";
-import type { KeyAction } from "./key";
+import type { DidReceiveResources, DidReceiveSettings, Resources } from "../../api/index.js";
+import type { JsonObject } from "../../common/json.js";
+import { connection } from "../connection.js";
+import { requiresVersion } from "../validation.js";
+import { ActionContext } from "./context.js";
+import type { DialAction } from "./dial.js";
+import type { KeyAction } from "./key.js";
 
 const REQUEST_TIMEOUT = 15 * 1000; // 15s
 

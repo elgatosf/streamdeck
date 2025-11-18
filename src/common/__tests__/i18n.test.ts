@@ -1,9 +1,9 @@
 import { describe, expect, it, vi } from "vitest";
 
-import type { Language } from "../../api";
-import { I18nProvider } from "../i18n";
+import type { Language } from "../../api/index.js";
+import { I18nProvider } from "../i18n.js";
 
-vi.mock("../logging");
+vi.mock("../logging/index.js");
 
 describe("I18nProvider", () => {
 	/**

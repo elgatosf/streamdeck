@@ -1,18 +1,18 @@
 import { beforeAll, describe, expect, it, test, vi } from "vitest";
 
-import { DeviceType, type GetSettings, type SetSettings, type ShowAlert, type WillAppear } from "../../../api";
-import { Settings } from "../../../api/__mocks__/events";
-import { type JsonObject } from "../../../common/json";
-import { connection } from "../../connection";
-import { Device } from "../../devices/device";
-import { deviceStore } from "../../devices/store";
-import { Action } from "../action";
-import { DialAction } from "../dial";
+import type { Settings } from "../../../api/__mocks__/events.js";
+import { DeviceType, type GetSettings, type SetSettings, type ShowAlert, type WillAppear } from "../../../api/index.js";
+import type { JsonObject } from "../../../common/json.js";
+import { connection } from "../../connection.js";
+import { Device } from "../../devices/device.js";
+import { deviceStore } from "../../devices/store.js";
+import { Action } from "../action.js";
+import { DialAction } from "../dial.js";
 
-vi.mock("../../devices/store");
-vi.mock("../../logging");
-vi.mock("../../manifest");
-vi.mock("../../connection");
+vi.mock("../../devices/store.js");
+vi.mock("../../logging/index.js");
+vi.mock("../../manifest.js");
+vi.mock("../../connection.js");
 
 describe("Action", () => {
 	// Mock source.
@@ -28,6 +28,7 @@ describe("Action", () => {
 				row: 2,
 			},
 			isInMultiAction: false,
+			resources: {},
 			settings: {},
 		},
 	};
@@ -98,6 +99,7 @@ describe("Action", () => {
 					row: 0,
 				},
 				isInMultiAction: false,
+				resources: {},
 				settings: {
 					name: "Other",
 				},
@@ -116,6 +118,7 @@ describe("Action", () => {
 					row: 3,
 				},
 				isInMultiAction: false,
+				resources: {},
 				settings: {
 					name: "Elgato",
 				},

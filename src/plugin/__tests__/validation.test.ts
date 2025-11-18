@@ -1,10 +1,10 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { Version } from "../common/version";
-import * as ManifestModule from "../manifest";
-import { requiresVersion } from "../validation";
+import { Version } from "../common/version.js";
+import * as ManifestModule from "../manifest.js";
+import { requiresVersion } from "../validation.js";
 
-vi.mock("../manifest");
+vi.mock("../manifest.js");
 
 /**
  * Provides assertions for {@link requiresVersion}.

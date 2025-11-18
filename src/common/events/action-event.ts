@@ -1,5 +1,5 @@
-import type { ActionIdentifier, DeviceIdentifier, PluginEvent } from "../../api";
-import { Event } from "./event";
+import type { ActionIdentifier, DeviceIdentifier, PluginEvent } from "../../api/index.js";
+import { Event } from "./event.js";
 
 /**
  * Provides information for an event relating to an action.

@@ -1,15 +1,15 @@
-import type { RegistrationInfo } from "../api";
-import { I18nProvider } from "../common/i18n";
-import { type Logger } from "../common/logging";
-import { actionService, type ActionService } from "./actions/service";
-import { connection } from "./connection";
-import { deviceService, type DeviceService } from "./devices/service";
-import { fileSystemLocaleProvider } from "./i18n";
-import { logger } from "./logging";
-import * as profiles from "./profiles";
-import * as settings from "./settings";
-import * as system from "./system";
-import { ui, type UIController } from "./ui";
+import type { RegistrationInfo } from "../api/index.js";
+import { I18nProvider } from "../common/i18n.js";
+import { type Logger } from "../common/logging/index.js";
+import { actionService, type ActionService } from "./actions/service.js";
+import { connection } from "./connection.js";
+import { deviceService, type DeviceService } from "./devices/service.js";
+import { fileSystemLocaleProvider } from "./i18n.js";
+import { logger } from "./logging/index.js";
+import * as profiles from "./profiles.js";
+import * as settings from "./settings.js";
+import * as system from "./system.js";
+import { ui, type UIController } from "./ui.js";
 
 export {
 	BarSubType,
@@ -28,14 +28,14 @@ export {
 	type Size,
 	type State,
 	type Text,
-} from "../api";
-export { Enumerable } from "../common/enumerable";
-export { EventEmitter, EventsOf } from "../common/event-emitter";
-export { type JsonObject, type JsonPrimitive, type JsonValue } from "../common/json";
-export { LogLevel } from "../common/logging";
-export * from "./actions";
-export * from "./devices";
-export type * from "./events";
+} from "../api/index.js";
+export { Enumerable } from "../common/enumerable.js";
+export { EventEmitter, type EventsOf } from "../common/event-emitter.js";
+export { type JsonObject, type JsonPrimitive, type JsonValue } from "../common/json.js";
+export { LogLevel } from "../common/logging/index.js";
+export * from "./actions/index.js";
+export * from "./devices/index.js";
+export type * from "./events/index.js";
 export { type Logger, type UIController };
 
 let i18n: I18nProvider | undefined;

@@ -1,5 +1,5 @@
-import { DeviceType } from "../device";
-import type * as events from "../events";
+import { DeviceType } from "../device.js";
+import type * as events from "../events/index.js";
 
 const action = "com.elgato.test.one";
 const context = "context123";
@@ -63,6 +63,7 @@ export const dialDown: events.DialDown<Settings> = {
 			column: 3,
 			row: 0,
 		},
+		resources: {},
 		settings: {
 			name: "Elgato",
 		},
@@ -84,6 +85,7 @@ export const dialRotate: events.DialRotate<Settings> = {
 			row: 0,
 		},
 		pressed: true,
+		resources: {},
 		settings: {
 			name: "Elgato",
 		},
@@ -126,6 +128,7 @@ export const didReceiveSettings: events.DidReceiveSettings<Settings> = {
 			row: 0,
 		},
 		isInMultiAction: false,
+		resources: {},
 		settings: {
 			name: "Elgato",
 		},
@@ -147,6 +150,7 @@ export const keyDown: events.KeyDown<Settings> = {
 			row: 2,
 		},
 		isInMultiAction: false,
+		resources: {},
 		settings: {
 			name: "Elgato",
 		},
@@ -213,6 +217,7 @@ export const titleParametersDidChange: events.TitleParametersDidChange<Settings>
 			column: 3,
 			row: 4,
 		},
+		resources: {},
 		settings: {
 			name: "Elgato",
 		},
@@ -245,6 +250,7 @@ export const touchTap: events.TouchTap<Settings> = {
 			row: 0,
 		},
 		hold: true,
+		resources: {},
 		settings: {
 			name: "Elgato",
 		},
@@ -267,6 +273,7 @@ export const willAppear: events.WillAppear<Settings> = {
 			row: 2,
 		},
 		isInMultiAction: false,
+		resources: {},
 		settings: {
 			name: "Elgato",
 		},

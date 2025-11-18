@@ -8,18 +8,18 @@ import {
 	type ShowOk,
 	Target,
 	type WillAppear,
-} from "../../../api";
-import type { JsonObject } from "../../../common/json";
-import { connection } from "../../connection";
-import { Device } from "../../devices/device";
-import { deviceStore } from "../../devices/store";
-import { Action } from "../action";
-import { KeyAction } from "../key";
+} from "../../../api/index.js";
+import type { JsonObject } from "../../../common/json.js";
+import { connection } from "../../connection.js";
+import { Device } from "../../devices/device.js";
+import { deviceStore } from "../../devices/store.js";
+import { Action } from "../action.js";
+import { KeyAction } from "../key.js";
 
-vi.mock("../../devices/store");
-vi.mock("../../logging");
-vi.mock("../../manifest");
-vi.mock("../../connection");
+vi.mock("../../devices/store.js");
+vi.mock("../../logging/index.js");
+vi.mock("../../manifest.js");
+vi.mock("../../connection.js");
 
 describe("KeyAction", () => {
 	// Mock source.
@@ -35,6 +35,7 @@ describe("KeyAction", () => {
 				row: 2,
 			},
 			isInMultiAction: false,
+			resources: {},
 			settings: {},
 		},
 	};
@@ -91,6 +92,7 @@ describe("KeyAction", () => {
 					row: 2,
 				},
 				isInMultiAction: false,
+				resources: {},
 				settings: {},
 			},
 		};
@@ -111,8 +113,9 @@ describe("KeyAction", () => {
 			event: "willAppear",
 			payload: {
 				controller: "Keypad",
-				settings: {},
 				isInMultiAction: true,
+				resources: {},
+				settings: {},
 			},
 		});
 
@@ -132,12 +135,13 @@ describe("KeyAction", () => {
 			event: "willAppear",
 			payload: {
 				controller: "Keypad",
-				settings: {},
-				isInMultiAction: false,
 				coordinates: {
 					column: 1,
 					row: 2,
 				},
+				isInMultiAction: false,
+				resources: {},
+				settings: {},
 			},
 		});
 

@@ -1,22 +1,22 @@
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { type LoggerOptions, LogLevel } from "../../../common/logging";
-import { ConsoleTarget } from "../../../common/logging/console-target";
-import { type FileTargetOptions } from "../file-target";
+import { ConsoleTarget } from "../../../common/logging/console-target.js";
+import { type LoggerOptions, LogLevel } from "../../../common/logging/index.js";
+import { type FileTargetOptions } from "../file-target.js";
 
-vi.mock("../file-target");
-vi.mock("../../../common/logging");
-vi.mock("../../common/utils");
+vi.mock("../file-target.js");
+vi.mock("../../../common/logging/index.js");
+vi.mock("../../common/utils.js");
 
 describe("createLogger", () => {
 	const mockedCwd = path.join("stream-deck", "tests");
-	let utils: typeof import("../../common/utils");
+	let utils: typeof import("../../common/utils.js");
 
 	beforeEach(async () => {
 		vi.spyOn(process, "cwd").mockReturnValue(mockedCwd);
 
-		utils = await import("../../common/utils");
+		utils = await import("../../common/utils.js");
 		vi.spyOn(utils, "getPluginUUID").mockReturnValue("com.elgato.test");
 	});
 
@@ -31,11 +31,11 @@ describe("createLogger", () => {
 		it("is DEBUG when isDebugMode() is true", async () => {
 			// Arrange.
 			vi.spyOn(utils, "isDebugMode").mockReturnValue(true);
-			const spyOnFileTarget = vi.spyOn(await import("../file-target"), "FileTarget");
-			const { Logger } = await import("../../../common/logging");
+			const spyOnFileTarget = vi.spyOn(await import("../file-target.js"), "FileTarget");
+			const { Logger } = await import("../../../common/logging/index.js");
 
 			// Act.
-			await import("../index");
+			await import("../index.js");
 
 			// Assert.
 			expect(spyOnFileTarget).toHaveBeenCalledTimes(1);
@@ -52,11 +52,11 @@ describe("createLogger", () => {
 		it("is INFO when isDebugMode() is false", async () => {
 			// Arrange.
 			vi.spyOn(utils, "isDebugMode").mockReturnValue(false);
-			const spyOnFileTarget = vi.spyOn(await import("../file-target"), "FileTarget");
-			const { Logger } = await import("../../../common/logging");
+			const spyOnFileTarget = vi.spyOn(await import("../file-target.js"), "FileTarget");
+			const { Logger } = await import("../../../common/logging/index.js");
 
 			// Act.
-			await import("../index");
+			await import("../index.js");
 
 			// Assert.
 			expect(Logger).toHaveBeenCalledWith<[LoggerOptions]>({
@@ -73,11 +73,11 @@ describe("createLogger", () => {
 	it("initializes the file target from the cwd", async () => {
 		// Arrange.
 		vi.spyOn(utils, "isDebugMode").mockReturnValue(false);
-		const { FileTarget } = await import("../file-target");
-		const { stringFormatter } = await import("../../../common/logging");
+		const { FileTarget } = await import("../file-target.js");
+		const { stringFormatter } = await import("../../../common/logging/index.js");
 
 		// Act.
-		await import("../index");
+		await import("../index.js");
 
 		// Assert.
 		expect(FileTarget).toHaveBeenLastCalledWith<[FileTargetOptions]>({
@@ -95,7 +95,7 @@ describe("createLogger", () => {
 	it("logs when an uncaught exception is thrown", async () => {
 		// Arrange.
 		const spyOnProcessOnce = vi.spyOn(process, "once");
-		const { logger } = await import("../index");
+		const { logger } = await import("../index.js");
 		const spyOnLogger = vi.spyOn(logger, "error");
 
 		// Act.

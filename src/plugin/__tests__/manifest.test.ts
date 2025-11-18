@@ -2,16 +2,16 @@ import * as fs from "node:fs";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import type { Manifest } from "../../api";
-import { manifest as mockManifest } from "../__mocks__/manifest";
+import type { Manifest } from "../../api/index.js";
+import { manifest as mockManifest } from "../__mocks__/manifest.js";
 
 vi.mock("node:fs");
 
 describe("manifest", () => {
-	let getManifest: typeof import("../manifest").getManifest;
-	let getSoftwareMinimumVersion: typeof import("../manifest").getSoftwareMinimumVersion;
+	let getManifest: typeof import("../manifest.js").getManifest;
+	let getSoftwareMinimumVersion: typeof import("../manifest.js").getSoftwareMinimumVersion;
 
-	beforeEach(async () => ({ getManifest, getSoftwareMinimumVersion } = await import("../manifest")));
+	beforeEach(async () => ({ getManifest, getSoftwareMinimumVersion } = await import("../manifest.js")));
 	afterEach(() => vi.resetModules());
 
 	describe("getManifest", () => {

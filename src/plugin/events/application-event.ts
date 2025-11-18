@@ -1,5 +1,5 @@
-import type { ApplicationDidLaunch, ApplicationDidTerminate } from "../../api";
-import { Event } from "../../common/events";
+import type { ApplicationDidLaunch, ApplicationDidTerminate } from "../../api/index.js";
+import { Event } from "../../common/events/index.js";
 
 /**
  * Provides information for events relating to an application.

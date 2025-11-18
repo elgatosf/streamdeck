@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { freeze, get } from "../utils";
+import { freeze, get } from "../utils.js";
 
 /**
  * Provides assertions for {@link freeze}.

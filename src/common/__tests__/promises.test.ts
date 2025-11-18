@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { PromiseCompletionSource } from "../promises";
+import { PromiseCompletionSource } from "../promises.js";
 
 describe("PromiseCompletionSource<T>", () => {
 	it("Defaults to pending", async () => {

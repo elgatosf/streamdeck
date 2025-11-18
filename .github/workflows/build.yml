@@ -30,6 +30,7 @@ jobs:
         os: ["macos-latest", "windows-latest"]
 
     runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
 
     steps:
       - name: "📥 Checkout"
