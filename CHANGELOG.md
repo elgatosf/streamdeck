@@ -14,6 +14,10 @@
 
 ## 2.0.0-beta.2
 
+### 🐞 Fix
+
+- Add `resources` to dial event payloads.
+
 ### ♻️ Refactor
 
 - Update module resolution to `NodeNext` for better interoperability.
