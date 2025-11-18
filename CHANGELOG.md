@@ -12,6 +12,13 @@
 
 # Change Log
 
+## 2.0.0-beta.2
+
+### ♻️ Refactor
+
+- Update module resolution to `NodeNext` for better interoperability.
+- Remove rollup bundling to improve dependency resolution.
+
 ## 2.0.0-beta.1
 
 ### ✨ New
