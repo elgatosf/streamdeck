@@ -1,8 +1,8 @@
-import type { JsonObject, JsonValue } from "../plugin";
-import type { DidReceiveGlobalSettings, DidReceiveSettings, State } from "./events";
-import type { FeedbackPayload } from "./layout";
-import type { Resources } from "./resources";
-import type { Target } from "./target";
+import type { JsonObject, JsonValue } from "../common/json.js";
+import type { DidReceiveGlobalSettings, DidReceiveSettings, State } from "./events/index.js";
+import type { FeedbackPayload } from "./layout.js";
+import type { Resources } from "./resources.js";
+import type { Target } from "./target.js";
 
 /**
  * Command sent to Stream Deck.
@@ -249,8 +249,8 @@ export type SwitchToProfile = ContextualizedCommandWithPayload<
 	"switchToProfile",
 	{
 		/**
-		 * Optional page to show when switching to the {@link SwitchToProfile.profile}, indexed from 0. When `undefined`, the page that was previously visible (when switching away
-		 * from the profile will be made visible.
+		 * Optional page to show when switching to the profile, indexed from 0. When `undefined`, the
+		 * page that was previously visible (when switching away from the profile will be made visible.
 		 */
 		page?: number;
 

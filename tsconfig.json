@@ -8,8 +8,10 @@
             "es2022",
             "esnext.disposable"
         ],
-        "module": "es2022",
-        "moduleResolution": "Bundler"
+        "module": "NodeNext",
+        "moduleResolution": "NodeNext",
+        "noEmit": true,
+        "verbatimModuleSyntax": true
     },
     "include": [
         "src/",

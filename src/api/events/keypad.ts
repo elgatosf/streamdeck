@@ -1,6 +1,6 @@
-import type { JsonObject } from "../../common/json";
-import type { ActionEventMessage, MultiActionPayload, SingleActionPayload, State } from "./action";
-import type { DialDown, DialUp } from "./encoder";
+import type { JsonObject } from "../../common/json.js";
+import type { ActionEventMessage, MultiActionPayload, SingleActionPayload, State } from "./action.js";
+import type { DialDown, DialUp } from "./encoder.js";
 
 /**
  * Occurs when the user presses a action down. See also {@link KeyUp}.

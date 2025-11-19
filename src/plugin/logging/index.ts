@@ -1,10 +1,10 @@
 import path from "node:path";
 import { cwd } from "node:process";
 
-import { Logger, LogLevel, type LogTarget, stringFormatter } from "../../common/logging";
-import { ConsoleTarget } from "../../common/logging/console-target";
-import { getPluginUUID, isDebugMode } from "../common/utils";
-import { FileTarget } from "./file-target";
+import { ConsoleTarget } from "../../common/logging/console-target.js";
+import { Logger, LogLevel, type LogTarget, stringFormatter } from "../../common/logging/index.js";
+import { getPluginUUID, isDebugMode } from "../common/utils.js";
+import { FileTarget } from "./file-target.js";
 
 // Log all entires to a log file.
 const fileTarget = new FileTarget({

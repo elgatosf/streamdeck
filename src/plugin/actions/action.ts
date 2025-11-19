@@ -7,15 +7,15 @@ import type {
 	GetSettings,
 	PluginEventMap,
 	Resources,
-} from "../../api";
-import type { EventArgs } from "../../common/event-emitter";
-import type { JsonObject } from "../../common/json";
-import { PromiseCompletionSource } from "../../common/promises";
-import { connection } from "../connection";
-import { requiresVersion } from "../validation";
-import { ActionContext } from "./context";
-import type { DialAction } from "./dial";
-import type { KeyAction } from "./key";
+} from "../../api/index.js";
+import type { EventArgs } from "../../common/event-emitter.js";
+import type { JsonObject } from "../../common/json.js";
+import { PromiseCompletionSource } from "../../common/promises.js";
+import { connection } from "../connection.js";
+import { requiresVersion } from "../validation.js";
+import { ActionContext } from "./context.js";
+import type { DialAction } from "./dial.js";
+import type { KeyAction } from "./key.js";
 
 const REQUEST_TIMEOUT = 15 * 1000; // 15s
 

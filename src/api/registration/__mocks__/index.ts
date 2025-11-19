@@ -1,5 +1,5 @@
-import { type ActionInfo, type RegistrationInfo } from "../";
-import { DeviceType } from "../../device";
+import { DeviceType } from "../../device.js";
+import { type ActionInfo, type RegistrationInfo } from "../index.js";
 
 /**
  * Mocked {@link ActionInfo}.
@@ -15,6 +15,7 @@ export const actionInfo: ActionInfo = {
 			column: 1,
 			row: 2,
 		},
+		resources: {},
 		settings: {
 			message: "Hello world",
 		},

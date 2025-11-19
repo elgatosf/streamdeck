@@ -1,8 +1,8 @@
 import { beforeAll, describe, expect, it, vi } from "vitest";
 
-import { LogLevel } from "../level";
-import { Logger, LoggerOptions } from "../logger";
-import { LogEntry, LogTarget } from "../target";
+import { LogLevel } from "../level.js";
+import { Logger, type LoggerOptions } from "../logger.js";
+import type { LogEntry, LogTarget } from "../target.js";
 
 describe("Logger", () => {
 	/**
@@ -225,7 +225,7 @@ describe("Logger", () => {
 		 * @param act Function responsible for logging to the {@link Logger}, e.g. {@link Logger.error}, {@link Logger.warn}, etc.
 		 * @param expectLog Whether a log was expected to be written.
 		 */
-		function verify(act: (logger: Logger) => void, expectLog: boolean) {
+		function verify(act: (logger: Logger) => void, expectLog: boolean): void {
 			// Arrange.
 			const target = { write: vi.fn() };
 			const logger = new Logger({

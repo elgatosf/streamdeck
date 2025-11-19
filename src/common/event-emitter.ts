@@ -1,4 +1,4 @@
-import { deferredDisposable, type IDisposable } from "./disposable";
+import { deferredDisposable, type IDisposable } from "./disposable.js";
 
 /**
  * An event emitter that enables the listening for, and emitting of, events.

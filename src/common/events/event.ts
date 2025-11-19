@@ -1,4 +1,4 @@
-import type { PluginEvent } from "../../api";
+import type { PluginEvent } from "../../api/index.js";
 
 /**
  * Provides information for events received from Stream Deck.

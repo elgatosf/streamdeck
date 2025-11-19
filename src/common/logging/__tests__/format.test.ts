@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, test, vi } from "vitest";
 
-import { LogLevel } from "../../../common/logging";
-import { stringFormatter } from "../format";
+import { stringFormatter } from "../format.js";
+import { LogLevel } from "../level.js";
 
 describe("stringFormatter", () => {
 	describe("data only", () => {

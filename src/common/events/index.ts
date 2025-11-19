@@ -1,3 +1,3 @@
-export { ActionEvent, ActionWithoutPayloadEvent } from "./action-event";
-export { Event } from "./event";
-export { DidReceiveGlobalSettingsEvent } from "./settings-event";
+export { ActionEvent, ActionWithoutPayloadEvent } from "./action-event.js";
+export { Event } from "./event.js";
+export { DidReceiveGlobalSettingsEvent } from "./settings-event.js";

@@ -1,14 +1,14 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { type WS as WebSocketServer } from "vitest-websocket-mock";
 
-import type { RegistrationInfo } from "..";
-import type { ApplicationDidLaunch, DidReceiveGlobalSettings, OpenUrl } from "../../api";
-import type { Settings } from "../../api/__mocks__/events";
-import { registrationInfo } from "../../api/registration/__mocks__";
-import { Logger, LogLevel } from "../../common/logging";
-import { type connection as Connection } from "../connection";
+import type { Settings } from "../../api/__mocks__/events.js";
+import type { ApplicationDidLaunch, DidReceiveGlobalSettings, OpenUrl } from "../../api/index.js";
+import { registrationInfo } from "../../api/registration/__mocks__/index.js";
+import { Logger, LogLevel } from "../../common/logging/index.js";
+import { type connection as Connection } from "../connection.js";
+import type { RegistrationInfo } from "../index.js";
 
-vi.mock("../logging");
+vi.mock("../logging/index.js");
 
 const port = ["-port", "12345"];
 const pluginUUID = ["-pluginUUID", "abc123"];
@@ -29,10 +29,10 @@ describe("connection", () => {
 			targets: [{ write: vi.fn() }],
 		});
 
-		({ logger } = await import("../logging"));
+		({ logger } = await import("../logging/index.js"));
 		vi.spyOn(logger, "createScope").mockReturnValueOnce(connectionLogger);
 
-		({ connection } = await import("../connection"));
+		({ connection } = await import("../connection.js"));
 		process.argv = [...port, ...pluginUUID, ...registerEvent, ...info];
 	});
 
@@ -217,7 +217,7 @@ describe("connection", () => {
 			it("errors invalid JSON", async () => {
 				// Arrange.
 				const origSerializer = server.serializer;
-				server.serializer = () => "{ invalid }";
+				server.serializer = (): string => "{ invalid }";
 
 				const spyOnError = vi.spyOn(connectionLogger, "error");
 				await connection.connect();

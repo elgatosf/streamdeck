@@ -1,7 +1,7 @@
 import { describe, expect, it, test, vi } from "vitest";
 
-import type { Expect, TypesAreEqual } from "../../../tests/utils";
-import { type EventArgs, EventEmitter, type EventsOf } from "../event-emitter";
+import type { Expect, TypesAreEqual } from "../../../tests/utils.js";
+import { type EventArgs, EventEmitter, type EventsOf } from "../event-emitter.js";
 
 describe("EventEmitter", () => {
 	describe("adding listeners", () => {

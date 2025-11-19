@@ -1,5 +1,5 @@
-import { Enumerable } from "../../common/enumerable";
-import type { Device } from "./device";
+import { Enumerable } from "../../common/enumerable.js";
+import type { Device } from "./device.js";
 
 const __items = new Map<string, Device>();
 

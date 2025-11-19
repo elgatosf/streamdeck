@@ -1,8 +1,7 @@
-import type streamDeck from "../";
-import type { Enumerable } from "../../common/enumerable";
-import type { JsonObject, JsonValue } from "../../common/json";
-import type { DialAction } from "../actions/dial";
-import type { KeyAction } from "../actions/key";
+import type { Enumerable } from "../../common/enumerable.js";
+import type { JsonObject, JsonValue } from "../../common/json.js";
+import type { DialAction } from "../actions/dial.js";
+import type { KeyAction } from "../actions/key.js";
 import type {
 	DialDownEvent,
 	DialRotateEvent,
@@ -18,9 +17,10 @@ import type {
 	TouchTapEvent,
 	WillAppearEvent,
 	WillDisappearEvent,
-} from "../events";
-import type { Action } from "./action";
-import { actionStore } from "./store";
+} from "../events/index.js";
+import type streamDeck from "../index.js";
+import type { Action } from "./action.js";
+import { actionStore } from "./store.js";
 
 /**
  * Provides the main bridge between the plugin and the Stream Deck allowing the plugin to send requests and receive events, e.g. when the user presses an action.

@@ -1,14 +1,14 @@
-import type { IDisposable } from "../../common/disposable";
-import { connection } from "../connection";
+import type { IDisposable } from "../../common/disposable.js";
+import { connection } from "../connection.js";
 import {
 	type DeviceDidChangeEvent,
 	type DeviceDidConnectEvent,
 	type DeviceDidDisconnectEvent,
 	DeviceEvent,
-} from "../events";
-import { requiresVersion } from "../validation";
-import { Device } from "./device";
-import { deviceStore, ReadOnlyDeviceStore } from "./store";
+} from "../events/index.js";
+import { requiresVersion } from "../validation.js";
+import { Device } from "./device.js";
+import { deviceStore, ReadOnlyDeviceStore } from "./store.js";
 
 /**
  * Provides functions, and information, for interacting with Stream Deck actions.

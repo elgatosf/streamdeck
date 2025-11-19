@@ -1,15 +1,20 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import type { DeviceDidChangeEvent, DeviceDidConnectEvent, DeviceDidDisconnectEvent } from "../..";
-import { type DeviceDidChange, type DeviceDidConnect, type DeviceDidDisconnect, DeviceType } from "../../../api";
-import { type connection as Connection } from "../../connection";
-import { Device } from "../device";
-import type { DeviceService } from "../service";
+import {
+	type DeviceDidChange,
+	type DeviceDidConnect,
+	type DeviceDidDisconnect,
+	DeviceType,
+} from "../../../api/index.js";
+import { type connection as Connection } from "../../connection.js";
+import type { DeviceDidChangeEvent, DeviceDidConnectEvent, DeviceDidDisconnectEvent } from "../../index.js";
+import { Device } from "../device.js";
+import type { DeviceService } from "../service.js";
 
-vi.mock("../../actions/store", () => ({})); // Override default mock.
-vi.mock("../../connection");
-vi.mock("../../logging");
-vi.mock("../../manifest");
+vi.mock("../../actions/store.js", () => ({})); // Override default mock.
+vi.mock("../../connection.js");
+vi.mock("../../logging/index.js");
+vi.mock("../../manifest.js");
 
 describe("devices", () => {
 	let connection!: typeof Connection;
@@ -17,8 +22,8 @@ describe("devices", () => {
 
 	beforeEach(async () => {
 		vi.resetModules();
-		({ connection } = await import("../../connection"));
-		({ deviceService } = await import("../service"));
+		({ connection } = await import("../../connection.js"));
+		({ deviceService } = await import("../service.js"));
 	});
 
 	/**

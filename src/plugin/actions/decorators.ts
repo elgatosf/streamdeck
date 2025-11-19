@@ -1,6 +1,6 @@
-import type { Manifest } from "../../api";
-import type { Constructor, Unpack } from "../common/utils";
-import type { SingletonAction } from "./singleton-action";
+import type { Manifest } from "../../api/index.js";
+import type { Constructor, Unpack } from "../common/utils.js";
+import type { SingletonAction } from "./singleton-action.js";
 
 /**
  * Definition used to define an action.

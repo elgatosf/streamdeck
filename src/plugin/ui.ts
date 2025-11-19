@@ -1,16 +1,15 @@
-import type { DidReceivePropertyInspectorMessage } from "../api";
-import type { IDisposable } from "../common/disposable";
-import { ActionWithoutPayloadEvent } from "../common/events/action-event";
-import type { JsonObject, JsonValue } from "../common/json";
-import type { DialAction, KeyAction } from "./actions";
-import { Action } from "./actions/action";
-import { actionStore } from "./actions/store";
-import { connection } from "./connection";
+import type { DidReceivePropertyInspectorMessage } from "../api/index.js";
+import type { IDisposable } from "../common/disposable.js";
+import { ActionWithoutPayloadEvent } from "../common/events/action-event.js";
+import type { JsonObject, JsonValue } from "../common/json.js";
+import type { DialAction, KeyAction } from "./actions/index.js";
+import { actionStore } from "./actions/store.js";
+import { connection } from "./connection.js";
 import {
 	type PropertyInspectorDidAppearEvent,
 	type PropertyInspectorDidDisappearEvent,
 	SendToPluginEvent,
-} from "./events";
+} from "./events/index.js";
 
 /**
  * Controller capable of sending/receiving payloads with the property inspector, and listening for events.
@@ -60,7 +59,8 @@ class UIController {
 	}
 
 	/**
-	 * Occurs when the property inspector associated with the action becomes visible, i.e. the user selected an action in the Stream Deck application. See also {@link UIController.onDidDisappear}.
+	 * Occurs when the property inspector associated with the action becomes visible, i.e. the user
+	 * selected an action in the Stream Deck application..
 	 * @template T The type of settings associated with the action.
 	 * @param listener Function to be invoked when the event occurs.
 	 * @returns A disposable that, when disposed, removes the listener.
@@ -77,7 +77,8 @@ class UIController {
 	}
 
 	/**
-	 * Occurs when the property inspector associated with the action becomes destroyed, i.e. the user unselected the action in the Stream Deck application. See also {@link UIController.onDidAppear}.
+	 * Occurs when the property inspector associated with the action disappears, i.e. the user unselected
+	 * the action in the Stream Deck application.
 	 * @template T The type of settings associated with the action.
 	 * @param listener Function to be invoked when the event occurs.
 	 * @returns A disposable that, when disposed, removes the listener.
@@ -94,8 +95,7 @@ class UIController {
 	}
 
 	/**
-	 * Occurs when a message was sent to the plugin _from_ the property inspector. The plugin can also send messages _to_ the property inspector using {@link UIController.action.sendMessage}
-	 * or {@link Action.sendToPropertyInspector}.
+	 * Occurs when a message was sent to the plugin _from_ the property inspector.
 	 * @template TPayload The type of the payload received from the property inspector.
 	 * @template TSettings The type of settings associated with the action.
 	 * @param listener Function to be invoked when the event occurs.

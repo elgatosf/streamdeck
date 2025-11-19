@@ -1,6 +1,6 @@
 import { vi } from "vitest";
 
-import { Logger, type LoggerOptions, LogLevel } from "../../../common/logging";
+import { Logger, type LoggerOptions, LogLevel } from "../../../common/logging/index.js";
 
 const options: LoggerOptions = {
 	level: LogLevel.TRACE,

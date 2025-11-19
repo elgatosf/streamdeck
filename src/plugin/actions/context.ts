@@ -1,7 +1,7 @@
-import type { Controller, WillAppear, WillDisappear } from "../../api";
-import type { JsonObject } from "../../common/json";
-import type { Device } from "../devices";
-import { deviceStore } from "../devices/store";
+import type { Controller, WillAppear, WillDisappear } from "../../api/index.js";
+import type { JsonObject } from "../../common/json.js";
+import type { Device } from "../devices/index.js";
+import { deviceStore } from "../devices/store.js";
 
 /**
  * Provides information about an instance of a Stream Deck action.

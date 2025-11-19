@@ -1,6 +1,6 @@
-import type { JsonObject } from "../../common/json";
-import type { ActionIdentifier, DeviceIdentifier } from "../events";
-import type { MultiActionPayload, SingleActionPayload } from "../events/action";
+import type { JsonObject } from "../../common/json.js";
+import type { ActionIdentifier, MultiActionPayload, SingleActionPayload } from "../events/action.js";
+import type { DeviceIdentifier } from "../events/device.js";
 
 /**
  * Connects to the Stream Deck, enabling the UI to interact with the plugin, and access the Stream Deck API.

@@ -1,18 +1,18 @@
 import { describe, expect, it, vi } from "vitest";
 
-import { BarSubType, DeviceType, Target } from "../../api";
-import { EventEmitter } from "../../common/event-emitter";
-import { I18nProvider } from "../../common/i18n";
-import { LogLevel } from "../../common/logging";
-import { SingletonAction } from "../actions/singleton-action";
-import { connection } from "../connection";
-import streamDeckAsDefaultExport, { streamDeck } from "../index";
-import { logger } from "../logging";
+import { BarSubType, DeviceType, Target } from "../../api/index.js";
+import { EventEmitter } from "../../common/event-emitter.js";
+import { I18nProvider } from "../../common/i18n.js";
+import { LogLevel } from "../../common/logging/index.js";
+import { SingletonAction } from "../actions/singleton-action.js";
+import { connection } from "../connection.js";
+import streamDeckAsDefaultExport, { streamDeck } from "../index.js";
+import { logger } from "../logging/index.js";
 
-vi.mock("../../common/i18n");
-vi.mock("../logging");
-vi.mock("../manifest");
-vi.mock("../connection");
+vi.mock("../../common/i18n.js");
+vi.mock("../logging/index.js");
+vi.mock("../manifest.js");
+vi.mock("../connection.js");
 
 describe("index", () => {
 	/**
@@ -28,12 +28,12 @@ describe("index", () => {
 	 */
 	it("exports namespaces", async () => {
 		// Arrange.
-		const { actionService } = await import("../actions/service");
-		const { deviceService } = await import("../devices/service");
-		const profiles = await import("../profiles");
-		const { settings } = await import("../settings");
-		const system = await import("../system");
-		const { ui } = await import("../ui");
+		const { actionService } = await import("../actions/service.js");
+		const { deviceService } = await import("../devices/service.js");
+		const profiles = await import("../profiles.js");
+		const { settings } = await import("../settings.js");
+		const system = await import("../system.js");
+		const { ui } = await import("../ui.js");
 
 		// Act, assert.
 		expect(streamDeck.actions).toBe(actionService);
@@ -68,7 +68,7 @@ describe("index", () => {
 	 */
 	it("exports enums, classes, and functions", async () => {
 		// Arrange.
-		const index = (await import("../index")) as typeof import("../index");
+		const index = (await import("../index.js")) as typeof import("../index.js");
 
 		// Act, assert.
 		expect(index.BarSubType).toBe(BarSubType);

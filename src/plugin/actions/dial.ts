@@ -1,8 +1,8 @@
-import type { Coordinates, FeedbackPayload, SetTriggerDescription, WillAppear } from "../../api";
-import type { JsonObject } from "../../common/json";
-import type { KeyOf } from "../../common/utils";
-import { connection } from "../connection";
-import { Action } from "./action";
+import type { Coordinates, FeedbackPayload, SetTriggerDescription, WillAppear } from "../../api/index.js";
+import type { JsonObject } from "../../common/json.js";
+import type { KeyOf } from "../../common/utils.js";
+import { connection } from "../connection.js";
+import { Action } from "./action.js";
 
 /**
  * Provides a contextualized instance of a dial action.

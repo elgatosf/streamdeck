@@ -1,6 +1,6 @@
-import type { JsonObject } from "../../common/json";
-import type { ActionEventMessage, Coordinates, SingleActionPayload } from "./action";
-import type { KeyDown, KeyUp } from "./keypad";
+import type { JsonObject } from "../../common/json.js";
+import type { ActionEventMessage, Coordinates, SingleActionPayload } from "./action.js";
+import type { KeyDown, KeyUp } from "./keypad.js";
 
 /**
  * Occurs when the user presses a dial (Stream Deck +). See also {@link DialUp}.
@@ -57,7 +57,7 @@ export type TouchTap<TSettings extends JsonObject> = ActionEventMessage<
  */
 type EncoderPayload<TSettings extends JsonObject> = Pick<
 	SingleActionPayload<TSettings, "Encoder">,
-	"controller" | "settings"
+	"controller" | "resources" | "settings"
 > & {
 	/**
 	 * Coordinates that identify the location of the action.

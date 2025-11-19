@@ -1,6 +1,6 @@
-import { Enumerable } from "../../common/enumerable";
-import type { DialAction } from "./dial";
-import type { KeyAction } from "./key";
+import { Enumerable } from "../../common/enumerable.js";
+import type { DialAction } from "./dial.js";
+import type { KeyAction } from "./key.js";
 
 const __items = new Map<string, DialAction | KeyAction>();
 

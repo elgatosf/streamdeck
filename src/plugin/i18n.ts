@@ -1,10 +1,10 @@
 import fs from "node:fs";
 import path from "node:path";
 
-import { type Language } from "../api";
-import { parseLocalizations } from "../common/i18n";
-import { type JsonObject } from "../common/json";
-import { logger } from "./logging";
+import { type Language } from "../api/index.js";
+import { parseLocalizations } from "../common/i18n.js";
+import { type JsonObject } from "../common/json.js";
+import { logger } from "./logging/index.js";
 
 /**
  * Loads a locale from the file system.

@@ -1,7 +1,7 @@
-export type { Action } from "./action";
-export type { ActionContext } from "./context";
-export { action } from "./decorators";
-export type { DialAction, TriggerDescriptionOptions } from "./dial";
-export type { ImageOptions, KeyAction, TitleOptions } from "./key";
-export type { ActionService } from "./service";
-export { SingletonAction } from "./singleton-action";
+export type { Action } from "./action.js";
+export type { ActionContext } from "./context.js";
+export { action } from "./decorators.js";
+export type { DialAction, TriggerDescriptionOptions } from "./dial.js";
+export type { ImageOptions, KeyAction, TitleOptions } from "./key.js";
+export type { ActionService } from "./service.js";
+export { SingletonAction } from "./singleton-action.js";

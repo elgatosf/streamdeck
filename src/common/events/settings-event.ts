@@ -1,6 +1,6 @@
-import type { DidReceiveGlobalSettings } from "../../api";
-import type { JsonObject } from "../json";
-import { Event } from "./event";
+import type { DidReceiveGlobalSettings } from "../../api/index.js";
+import type { JsonObject } from "../json.js";
+import { Event } from "./event.js";
 
 /**
  * Provides event information for when the plugin received the global settings.

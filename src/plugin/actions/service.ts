@@ -10,13 +10,13 @@ import type {
 	TouchTap,
 	WillAppear,
 	WillDisappear,
-} from "../../api";
-import type { IDisposable } from "../../common/disposable";
-import { ActionEvent } from "../../common/events";
-import type { JsonObject } from "../../common/json";
-import { Lazy } from "../../common/lazy";
-import { connection } from "../connection";
-import {
+} from "../../api/index.js";
+import type { IDisposable } from "../../common/disposable.js";
+import { ActionEvent } from "../../common/events/index.js";
+import type { JsonObject } from "../../common/json.js";
+import { Lazy } from "../../common/lazy.js";
+import { connection } from "../connection.js";
+import type {
 	DialDownEvent,
 	DialRotateEvent,
 	DialUpEvent,
@@ -27,16 +27,16 @@ import {
 	TouchTapEvent,
 	WillAppearEvent,
 	WillDisappearEvent,
-} from "../events";
-import { getManifest } from "../manifest";
-import { settings } from "../settings";
-import { ui } from "../ui";
-import { Action } from "./action";
-import { ActionContext } from "./context";
-import { DialAction } from "./dial";
-import { KeyAction } from "./key";
-import type { SingletonAction } from "./singleton-action";
-import { actionStore, ReadOnlyActionStore } from "./store";
+} from "../events/index.js";
+import { getManifest } from "../manifest.js";
+import { settings } from "../settings.js";
+import { ui } from "../ui.js";
+import { Action } from "./action.js";
+import { ActionContext } from "./context.js";
+import { DialAction } from "./dial.js";
+import { KeyAction } from "./key.js";
+import type { SingletonAction } from "./singleton-action.js";
+import { actionStore, ReadOnlyActionStore } from "./store.js";
 
 const manifest = new Lazy<Manifest | null>(() => getManifest());
 

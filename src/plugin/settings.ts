@@ -1,13 +1,13 @@
 import { randomUUID } from "node:crypto";
 
-import type { DidReceiveGlobalSettings, DidReceiveSettings } from "../api";
-import type { IDisposable } from "../common/disposable";
-import { ActionEvent } from "../common/events";
-import type { JsonObject } from "../common/json";
-import { actionStore } from "./actions/store";
-import { connection } from "./connection";
-import { DidReceiveGlobalSettingsEvent, DidReceiveSettingsEvent } from "./events";
-import { requiresVersion } from "./validation";
+import type { DidReceiveGlobalSettings, DidReceiveSettings } from "../api/index.js";
+import type { IDisposable } from "../common/disposable.js";
+import { ActionEvent } from "../common/events/index.js";
+import type { JsonObject } from "../common/json.js";
+import { actionStore } from "./actions/store.js";
+import { connection } from "./connection.js";
+import { DidReceiveGlobalSettingsEvent, type DidReceiveSettingsEvent } from "./events/index.js";
+import { requiresVersion } from "./validation.js";
 
 let __useExperimentalMessageIdentifiers = false;
 
