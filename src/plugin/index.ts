@@ -1,5 +1,6 @@
-import type { RegistrationInfo } from "../api/index.js";
-import { I18nProvider } from "../common/i18n.js";
+import { I18nProvider } from "@elgato/utils/i18n";
+
+import type { Language, RegistrationInfo } from "../api/index.js";
 import { type Logger } from "../common/logging/index.js";
 import { actionService, type ActionService } from "./actions/service.js";
 import { connection } from "./connection.js";
@@ -36,7 +37,7 @@ export * from "./devices/index.js";
 export type * from "./events/index.js";
 export { type Logger, type UIController };
 
-let i18n: I18nProvider | undefined;
+let i18n: I18nProvider<Language> | undefined;
 
 export const streamDeck = {
 	/**
@@ -59,8 +60,8 @@ export const streamDeck = {
 	 * Internalization provider, responsible for managing localizations and translating resources.
 	 * @returns Internalization provider.
 	 */
-	get i18n(): I18nProvider {
-		return (i18n ??= new I18nProvider(this.info.application.language, fileSystemLocaleProvider));
+	get i18n(): I18nProvider<Language> {
+		return (i18n ??= new I18nProvider<Language>(this.info.application.language, fileSystemLocaleProvider));
 	},
 
 	/**

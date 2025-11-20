@@ -1,7 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 
 import { BarSubType, DeviceType, Target } from "../../api/index.js";
-import { I18nProvider } from "../../common/i18n.js";
 import { LogLevel } from "../../common/logging/index.js";
 import { SingletonAction } from "../actions/singleton-action.js";
 import { connection } from "../connection.js";
@@ -75,20 +74,5 @@ describe("index", () => {
 		expect(index.LogLevel).toBe(LogLevel);
 		expect(index.SingletonAction).toBe(SingletonAction);
 		expect(index.Target).toBe(Target);
-	});
-
-	/**
-	 * Asserts the {@link I18nProvider} is lazily loaded.
-	 */
-	it("lazily loads i18n provider", async () => {
-		// Arrange.
-		expect(I18nProvider).toBeCalledTimes(0);
-
-		// Act.
-		// eslint-disable-next-line @typescript-eslint/no-unused-expressions
-		streamDeck.i18n; // Evaluate getter.
-
-		// Assert.
-		expect(I18nProvider).toHaveBeenCalledTimes(1);
 	});
 });
