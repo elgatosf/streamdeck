@@ -1,8 +1,8 @@
+import { EventEmitter } from "@elgato/utils";
 import WebSocket from "ws";
 
 import type { PluginCommand, PluginEventMap, RegistrationInfo } from "../api/index.js";
 import { RegistrationParameter } from "../api/index.js";
-import { EventEmitter } from "../common/event-emitter.js";
 import { PromiseCompletionSource } from "../common/promises.js";
 import { Version } from "./common/version.js";
 import { logger } from "./logging/index.js";

@@ -29,7 +29,6 @@ export {
 	type State,
 	type Text,
 } from "../api/index.js";
-export { EventEmitter, type EventsOf } from "../common/event-emitter.js";
 export { type JsonObject, type JsonPrimitive, type JsonValue } from "../common/json.js";
 export { LogLevel } from "../common/logging/index.js";
 export * from "./actions/index.js";
