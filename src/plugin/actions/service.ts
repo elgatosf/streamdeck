@@ -1,5 +1,4 @@
-import type { IDisposable } from "@elgato/utils";
-import { Lazy } from "@elgato/utils";
+import { type IDisposable, type JsonObject, Lazy } from "@elgato/utils";
 
 import type {
 	DialDown,
@@ -15,7 +14,6 @@ import type {
 	WillDisappear,
 } from "../../api/index.js";
 import { ActionEvent } from "../../common/events/index.js";
-import type { JsonObject } from "../../common/json.js";
 import { connection } from "../connection.js";
 import type {
 	DialDownEvent,

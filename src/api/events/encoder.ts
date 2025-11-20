@@ -1,4 +1,5 @@
-import type { JsonObject } from "../../common/json.js";
+import type { JsonObject } from "@elgato/utils";
+
 import type { ActionEventMessage, Coordinates, SingleActionPayload } from "./action.js";
 import type { KeyDown, KeyUp } from "./keypad.js";
 

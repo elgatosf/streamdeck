@@ -1,6 +1,5 @@
-import type { Enumerable } from "@elgato/utils";
+import type { Enumerable, JsonObject, JsonValue } from "@elgato/utils";
 
-import type { JsonObject, JsonValue } from "../../common/json.js";
 import type { DialAction } from "../actions/dial.js";
 import type { KeyAction } from "../actions/key.js";
 import type {

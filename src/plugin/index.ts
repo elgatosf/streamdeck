@@ -30,7 +30,6 @@ export {
 	type State,
 	type Text,
 } from "../api/index.js";
-export { type JsonObject, type JsonPrimitive, type JsonValue } from "../common/json.js";
 export { LogLevel } from "../common/logging/index.js";
 export * from "./actions/index.js";
 export * from "./devices/index.js";

@@ -1,4 +1,5 @@
-import type { JsonObject } from "../../common/json.js";
+import type { JsonObject } from "@elgato/utils";
+
 import type { ActionEventMessage, MultiActionPayload, SingleActionPayload, State } from "./action.js";
 import type { DialDown, DialUp } from "./encoder.js";
 

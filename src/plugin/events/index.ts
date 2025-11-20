@@ -1,3 +1,5 @@
+import type { JsonObject } from "@elgato/utils";
+
 import type {
 	ApplicationDidLaunch,
 	ApplicationDidTerminate,
@@ -20,7 +22,6 @@ import type {
 	WillDisappear,
 } from "../../api/index.js";
 import { type ActionEvent, ActionWithoutPayloadEvent, Event } from "../../common/events/index.js";
-import type { JsonObject } from "../../common/json.js";
 import type { ActionContext } from "../actions/context.js";
 import type { DialAction } from "../actions/dial.js";
 import type { KeyAction } from "../actions/key.js";

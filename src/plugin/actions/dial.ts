@@ -1,7 +1,6 @@
-import type { KeyOf } from "@elgato/utils";
+import type { JsonObject, KeyOf } from "@elgato/utils";
 
 import type { Coordinates, FeedbackPayload, SetTriggerDescription, WillAppear } from "../../api/index.js";
-import type { JsonObject } from "../../common/json.js";
 import { connection } from "../connection.js";
 import { Action } from "./action.js";
 

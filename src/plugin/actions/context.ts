@@ -1,5 +1,6 @@
+import type { JsonObject } from "@elgato/utils";
+
 import type { Controller, WillAppear, WillDisappear } from "../../api/index.js";
-import type { JsonObject } from "../../common/json.js";
 import type { Device } from "../devices/index.js";
 import { deviceStore } from "../devices/store.js";
 

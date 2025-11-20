@@ -1,6 +1,7 @@
+import type { JsonObject, JsonValue } from "@elgato/utils";
+
 import type { DidReceivePropertyInspectorMessage } from "../../api/index.js";
 import { Event } from "../../common/events/index.js";
-import type { JsonObject, JsonValue } from "../../common/json.js";
 import type { Action } from "../actions/action.js";
 
 /**
