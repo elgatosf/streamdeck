@@ -3,12 +3,12 @@ import type { IDisposable, JsonObject } from "@elgato/utils";
 import type { DidReceiveSecrets } from "../api/events/system.js";
 import type { Manifest, SystemDidWakeUp } from "../api/index.js";
 import { connection } from "./connection.js";
+import { ApplicationEvent } from "./events/application-event.js";
+import { Event } from "./events/event.js";
 import {
 	type ApplicationDidLaunchEvent,
 	type ApplicationDidTerminateEvent,
-	ApplicationEvent,
 	DidReceiveDeepLinkEvent,
-	Event,
 	type SystemDidWakeUpEvent,
 } from "./events/index.js";
 import { requiresSDKVersion, requiresVersion } from "./validation.js";

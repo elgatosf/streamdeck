@@ -1,12 +1,8 @@
 import type { IDisposable } from "@elgato/utils";
 
 import { connection } from "../connection.js";
-import {
-	type DeviceDidChangeEvent,
-	type DeviceDidConnectEvent,
-	type DeviceDidDisconnectEvent,
-	DeviceEvent,
-} from "../events/index.js";
+import { DeviceEvent } from "../events/device-event.js";
+import type { DeviceDidChangeEvent, DeviceDidConnectEvent, DeviceDidDisconnectEvent } from "../events/index.js";
 import { requiresVersion } from "../validation.js";
 import { Device } from "./device.js";
 import { deviceStore, ReadOnlyDeviceStore } from "./store.js";

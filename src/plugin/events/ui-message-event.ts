@@ -1,8 +1,8 @@
 import type { JsonObject, JsonValue } from "@elgato/utils";
 
 import type { DidReceivePropertyInspectorMessage } from "../../api/index.js";
-import { Event } from "../../common/events/index.js";
 import type { Action } from "../actions/action.js";
+import { Event } from "./event.js";
 
 /**
  * Provides information for an event triggered by a message being sent to the plugin, from the property inspector.

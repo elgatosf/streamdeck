@@ -13,8 +13,8 @@ import type {
 	WillAppear,
 	WillDisappear,
 } from "../../api/index.js";
-import { ActionEvent } from "../../common/events/index.js";
 import { connection } from "../connection.js";
+import { ActionEvent } from "../events/action-event.js";
 import type {
 	DialDownEvent,
 	DialRotateEvent,
