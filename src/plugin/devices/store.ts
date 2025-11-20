@@ -1,4 +1,5 @@
-import { Enumerable } from "../../common/enumerable.js";
+import { Enumerable } from "@elgato/utils";
+
 import type { Device } from "./device.js";
 
 const __items = new Map<string, Device>();

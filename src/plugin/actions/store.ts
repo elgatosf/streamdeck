@@ -1,4 +1,5 @@
-import { Enumerable } from "../../common/enumerable.js";
+import { Enumerable } from "@elgato/utils";
+
 import type { DialAction } from "./dial.js";
 import type { KeyAction } from "./key.js";
 
