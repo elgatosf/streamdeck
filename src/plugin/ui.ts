@@ -1,5 +1,6 @@
+import type { IDisposable } from "@elgato/utils";
+
 import type { DidReceivePropertyInspectorMessage } from "../api/index.js";
-import type { IDisposable } from "../common/disposable.js";
 import { ActionWithoutPayloadEvent } from "../common/events/action-event.js";
 import type { JsonObject, JsonValue } from "../common/json.js";
 import type { DialAction, KeyAction } from "./actions/index.js";

@@ -1,6 +1,7 @@
+import type { IDisposable } from "@elgato/utils";
+
 import type { DidReceiveSecrets } from "../api/events/system.js";
 import type { Manifest, SystemDidWakeUp } from "../api/index.js";
-import type { IDisposable } from "../common/disposable.js";
 import type { JsonObject } from "../common/json.js";
 import { connection } from "./connection.js";
 import {

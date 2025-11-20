@@ -63,6 +63,7 @@
     },
     "dependencies": {
         "@elgato/schemas": "^0.4.10",
+        "@elgato/utils": "^0.4.1",
         "ws": "^8.18.0"
     }
 }

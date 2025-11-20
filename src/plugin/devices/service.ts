@@ -1,4 +1,5 @@
-import type { IDisposable } from "../../common/disposable.js";
+import type { IDisposable } from "@elgato/utils";
+
 import { connection } from "../connection.js";
 import {
 	type DeviceDidChangeEvent,
