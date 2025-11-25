@@ -7,7 +7,7 @@ import { deviceService, type DeviceService } from "./devices/service.js";
 import { fileSystemLocaleProvider } from "./i18n.js";
 import { logger } from "./logging/index.js";
 import * as profiles from "./profiles.js";
-import * as settings from "./settings.js";
+import { settings } from "./settings.js";
 import * as system from "./system.js";
 import { ui, type UIController } from "./ui.js";
 
