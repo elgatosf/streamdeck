@@ -1,4 +1,4 @@
-import type { JsonObject, KeyOf } from "@elgato/utils";
+import type { JsonObject } from "@elgato/utils";
 
 import type { Coordinates, SetImage, SetTitle, State, WillAppear } from "../../api/index.js";
 import { connection } from "../connection.js";
@@ -131,9 +131,9 @@ export class KeyAction<T extends JsonObject = JsonObject> extends Action<T> {
 /**
  * Options that define how to render an image associated with an action.
  */
-export type ImageOptions = Omit<KeyOf<SetImage, "payload">, "image">;
+export type ImageOptions = Omit<SetImage["payload"], "image">;
 
 /**
  * Options that define how to render a title associated with an action.
  */
-export type TitleOptions = Omit<KeyOf<SetTitle, "payload">, "title">;
+export type TitleOptions = Omit<SetTitle["payload"], "title">;

@@ -1,4 +1,4 @@
-import type { JsonObject, KeyOf } from "@elgato/utils";
+import type { JsonObject } from "@elgato/utils";
 
 import type { Coordinates, FeedbackPayload, SetTriggerDescription, WillAppear } from "../../api/index.js";
 import { connection } from "../connection.js";
@@ -129,4 +129,4 @@ export class DialAction<T extends JsonObject = JsonObject> extends Action<T> {
 /**
  * Options that define the trigger descriptions associated with an action.
  */
-export type TriggerDescriptionOptions = KeyOf<SetTriggerDescription, "payload">;
+export type TriggerDescriptionOptions = SetTriggerDescription["payload"];
