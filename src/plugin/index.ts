@@ -1,7 +1,7 @@
 import { I18nProvider } from "@elgato/utils/i18n";
+import type { Logger } from "@elgato/utils/logging";
 
 import type { Language, RegistrationInfo } from "../api/index.js";
-import { type Logger } from "../common/logging/index.js";
 import { actionService, type ActionService } from "./actions/service.js";
 import { connection } from "./connection.js";
 import { deviceService, type DeviceService } from "./devices/service.js";
@@ -30,7 +30,6 @@ export {
 	type State,
 	type Text,
 } from "../api/index.js";
-export { LogLevel } from "../common/logging/index.js";
 export * from "./actions/index.js";
 export * from "./devices/index.js";
 export type * from "./events/index.js";

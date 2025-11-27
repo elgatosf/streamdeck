@@ -1,7 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 
 import { BarSubType, DeviceType, Target } from "../../api/index.js";
-import { LogLevel } from "../../common/logging/index.js";
 import { SingletonAction } from "../actions/singleton-action.js";
 import { connection } from "../connection.js";
 import streamDeckAsDefaultExport, { streamDeck } from "../index.js";
@@ -71,7 +70,6 @@ describe("index", () => {
 		// Act, assert.
 		expect(index.BarSubType).toBe(BarSubType);
 		expect(index.DeviceType).toBe(DeviceType);
-		expect(index.LogLevel).toBe(LogLevel);
 		expect(index.SingletonAction).toBe(SingletonAction);
 		expect(index.Target).toBe(Target);
 	});
