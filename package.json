@@ -1,6 +1,6 @@
 {
     "name": "@elgato/streamdeck",
-    "version": "2.0.0-beta.2",
+    "version": "2.0.0-beta.3",
     "description": "The official Node.js SDK for creating Stream Deck plugins.",
     "main": "./dist/plugin/index.js",
     "type": "module",
