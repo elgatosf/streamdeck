@@ -33,7 +33,7 @@ export {
 export * from "./actions/index.js";
 export * from "./devices/index.js";
 export type * from "./events/index.js";
-export { type Logger, type UIController };
+export { type UIController };
 
 let i18n: I18nProvider<Language> | undefined;
 
