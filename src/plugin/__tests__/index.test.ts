@@ -28,7 +28,7 @@ describe("index", () => {
 		const { actionService } = await import("../actions/service.js");
 		const { deviceService } = await import("../devices/service.js");
 		const profiles = await import("../profiles.js");
-		const settings = await import("../settings.js");
+		const { settings } = await import("../settings.js");
 		const system = await import("../system.js");
 		const { ui } = await import("../ui.js");
 

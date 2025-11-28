@@ -12,6 +12,12 @@
 
 # Change Log
 
+## 2.0.0-beta.3
+
+### ✨ New
+
+- Add support for experimental message identifiers introduced in Stream Deck 7.1.
+
 ## 2.0.0-beta.2
 
 ### 🐞 Fix

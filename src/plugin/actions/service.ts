@@ -28,7 +28,7 @@ import type {
 	WillDisappearEvent,
 } from "../events/index.js";
 import { getManifest } from "../manifest.js";
-import { onDidReceiveSettings } from "../settings.js";
+import { settings } from "../settings.js";
 import { ui } from "../ui.js";
 import { Action } from "./action.js";
 import { ActionContext } from "./context.js";
@@ -266,7 +266,7 @@ class ActionService extends ReadOnlyActionStore {
 		route(this.onDialRotate, action.onDialRotate);
 		route(ui.onSendToPlugin, action.onSendToPlugin);
 		route(this.onDidReceiveResources, action.onDidReceiveResources);
-		route(onDidReceiveSettings, action.onDidReceiveSettings);
+		route(settings.onDidReceiveSettings, action.onDidReceiveSettings);
 		route(this.onKeyDown, action.onKeyDown);
 		route(this.onKeyUp, action.onKeyUp);
 		route(ui.onDidAppear, action.onPropertyInspectorDidAppear);
