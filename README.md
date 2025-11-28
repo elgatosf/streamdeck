@@ -5,7 +5,7 @@
 # Stream Deck SDK
 
 [![SDK documentation](https://img.shields.io/badge/Documentation-2ea043?labelColor=grey&logo=gitbook&logoColor=white)](https://docs.elgato.com/sdk)
-[![Elgato homepage](https://img.shields.io/badge/Elgato-3431cf?labelColor=grey&logo=data:image/svg+xml;base64,PHN2ZyByb2xlPSJpbWciIHZpZXdCb3g9IjAgMCAyNCAyNCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48dGl0bGU+RWxnYXRvPC90aXRsZT48cGF0aCBmaWxsPSIjZmZmZmZmIiBkPSJtMTMuODgxOCA4LjM5NjQuMDI2MS4wMTk2IDkuOTQ5NCA1LjcxNzJjLS40ODg0IDIuNzI5LTEuOTE5NiA1LjIyMjMtNC4wMzg0IDcuMDI1M0ExMS45MjYyIDExLjkyNjIgMCAwIDEgMTIuMDk3IDI0Yy0zLjE5MjUgMC02LjE5MzktMS4yNDc3LTguNDUyNy0zLjUxNDRDMS4zODY4IDE4LjIxODguMTQyNyAxNS4yMDQ0LjE0MjcgMTJjMC0zLjIwNDIgMS4yNDQtNi4yMTg3IDMuNTAxNS04LjQ4NTRDNS45MDE5IDEuMjQ4IDguOTAzMiAwIDEyLjA5NyAwYzIuNDM5NCAwIDQuNzg0Ny43MzMzIDYuNzgzIDIuMTE4NyAxLjk1MjYgMS4zNTQgMy40NDY2IDMuMjM1NyA0LjMyMjcgNS40NDIyLjExMTIuMjgyOS4yMTQ5LjU3MzYuMzA1MS44NjU3bC0yLjEyNTUgMS4yMzU5YTkuNDkyNCA5LjQ5MjQgMCAwIDAtLjI2MTktLjg2OTRjLTEuMzU0LTMuODMwMy00Ljk4MTMtNi40MDQ4LTkuMDIzNy02LjQwNDhDNi44MTcxIDIuMzg4MyAyLjUyMiA2LjcwMDUgMi41MjIgMTJjMCA1LjI5OTUgNC4yOTUgOS42MTE1IDkuNTc0OCA5LjYxMTUgMi4wNTIgMCA0LjAwODQtLjY0NDIgNS42NTk2LTEuODY0NyAxLjYxNzItMS4xOTU1IDIuODAzNi0yLjgzMzcgMy40MzA5LTQuNzM2NGwuMDA2NS0uMDQxOUw5LjU5MDYgOC4zMDQ4djcuMjI1Nmw0LjAwMDQtMi4zMTM4IDIuMDYgMS4xODExLTUuOTk2MiAzLjQ2ODgtMi4xMi0xLjIxMjZWNy4xOTQzbDIuMTE3NC0xLjIyNDUgNC4yMzA5IDIuNDI3OS0uMDAxMy0uMDAxMyIvPjwvc3ZnPg==)](https://elgato.com)
+[![Elgato homepage](https://img.shields.io/badge/Elgato-3431cf?labelColor=grey&logo=elgato)](https://elgato.com)
 [![Join the Marketplace Makers Discord](https://img.shields.io/badge/Marketplace%20Makers-5662f6?labelColor=grey&logo=discord&logoColor=white)](https://discord.gg/GehBUcu627)
 [![Stream Deck npm package](https://img.shields.io/npm/v/%40elgato/streamdeck?logo=npm&logoColor=white)](https://www.npmjs.com/package/@elgato/streamdeck)
 [![Build status](https://img.shields.io/github/actions/workflow/status/elgatosf/streamdeck/build.yml?branch=main&label=Build&logo=GitHub)](https://github.com/elgatosf/streamdeck/actions)
@@ -60,8 +60,8 @@ After creating a plugin with `streamdeck create` you'll be provided with a local
 
 The `package.json` provides two scripts for building the plugin.
 
--   `npm run build` - builds the plugin.
--   `npm run watch` - continuously watches for changes, and hot-reloads the plugin after build.
+- `npm run build` - builds the plugin.
+- `npm run watch` - continuously watches for changes, and hot-reloads the plugin after build.
 
 ## 🎛️ Actions
 
@@ -90,7 +90,8 @@ Plugins can be debugged using any Node.js debugger, for example Visual Studio Co
 
 You can configure debugging within the [manifest's Node.js configuration](https://docs.elgato.com/streamdeck/sdk/references/manifest#nodejs).
 
-<!-- prettier-ignore -->
+<!-- prettier-ignore-start -->
+
 ```jsonc
 {
     // ...
@@ -105,17 +106,17 @@ You can configure debugging within the [manifest's Node.js configuration](https:
 
 There are four available options when configuring the `Debug` property within the manifest:
 
--   `"enabled"` - the plugin will run with [`--inspect`](https://nodejs.org/api/cli.html#--inspecthostport) allowing debuggers to connect.
--   `"break"` - the plugin will launch with [`--inspect-brk`](https://nodejs.org/api/cli.html#--inspect-brkhostport) and will await a debugger attaching before running.
--   `string` - a collection of [CLI arguments](https://nodejs.org/api/cli.html) supplied to the plugin.
--   `undefined` - debugging is disabled.
+- `"enabled"` - the plugin will run with [`--inspect`](https://nodejs.org/api/cli.html#--inspecthostport) allowing debuggers to connect.
+- `"break"` - the plugin will launch with [`--inspect-brk`](https://nodejs.org/api/cli.html#--inspect-brkhostport) and will await a debugger attaching before running.
+- `string` - a collection of [CLI arguments](https://nodejs.org/api/cli.html) supplied to the plugin.
+- `undefined` - debugging is disabled.
 
 > When running the plugin in either debug mode `"enabled"` or `"break"`, a random available port will be allocated to the debug listener each time the plugin launches. If you wish to listen on a specific port, the `Debug` value can be set to a string of CLI arguments, for example to listen on port `12345`, the `Debug` value would be `--inspect=127.0.0.1:12345`.
 
 ## 📖 Further Reading
 
--   [Making your first changes](https://docs.elgato.com/streamdeck/sdk/introduction/your-first-changes).
--   Learn about [key](https://docs.elgato.com/streamdeck/sdk/guides/keys) and [dial](https://docs.elgato.com/streamdeck/sdk/guides/dials) actions.
--   Understand your plugin's metadata within the [manifest JSON file](https://docs.elgato.com/streamdeck/sdk/references/manifest)
--   Bundle your plugin for [distribution](https://docs.elgato.com/streamdeck/sdk/guides/distribution).
--   Explore [Stream Deck plugin samples](https://github.com/elgatosf/streamdeck-plugin-samples)
+- [Making your first changes](https://docs.elgato.com/streamdeck/sdk/introduction/your-first-changes).
+- Learn about [key](https://docs.elgato.com/streamdeck/sdk/guides/keys) and [dial](https://docs.elgato.com/streamdeck/sdk/guides/dials) actions.
+- Understand your plugin's metadata within the [manifest JSON file](https://docs.elgato.com/streamdeck/sdk/references/manifest)
+- Bundle your plugin for [distribution](https://docs.elgato.com/streamdeck/sdk/guides/distribution).
+- Explore [Stream Deck plugin samples](https://github.com/elgatosf/streamdeck-plugin-samples)
