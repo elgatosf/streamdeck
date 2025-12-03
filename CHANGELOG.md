@@ -12,64 +12,34 @@
 
 # Change Log
 
-## 2.0.0-beta.3
+## 2.0.0
 
 ### ✨ New
 
-- Add support for experimental message identifiers introduced in Stream Deck 7.1.
-
-## 2.0.0-beta.2
-
-### 🐞 Fix
-
-- Add `resources` to dial event payloads.
+- Added support for DRM protection.
+- Added support for embedded resources.
+- Added `onDidReceiveResources` to `SingletonAction`.
+- Added `setResources(resources)` to action.
+- Added `getResources()` to action.
+- Added support for experimental message identifiers.
 
 ### ♻️ Refactor
 
-- Update module resolution to `NodeNext` for better interoperability.
-- Remove rollup bundling to improve dependency resolution.
-
-## 2.0.0-beta.1
-
-### ✨ New
-
-- Add support for Stream Deck 7.1.
-- Add support for embedded resources.
-- Add `setResources(resources)` to action.
-- Add `getResources()` to action.
-- Add `onDidReceiveResources` to `SingletonAction`.
-
-### ♻️ Update
-
-- Update action payloads to include `resources`.
-- Update `@elgato/schemas` dependency.
-
-## 2.0.0-beta
-
-This releases adds support for DRM protection, and lays the foundation for the upcoming Stream Deck UI library.
-
-### ✨ New
-
-- Streamline sending messages to the UI:
+- Streamlined sending messages to the UI:
     - Before: `streamDeck.ui.current?.sendToPropertyInspector(...)`
     - After: `streamDeck.ui.sendToPropertyInspector(...)`
-- Streamline property inspector action information:
+- Streamlined property inspector action information:
     - Before: `streamDeck.ui.current?`
     - After: `streamDeck.ui.action`
+- Removed manifest namespace.
+- Removed browser import.
+- Removed property inspector types and routing.
+- Updated module resolution to `NodeNext` for better interoperability.
+- Removed rollup bundling to improve dependency resolution.
 
 ### 🐞 Fix
 
-- Update manifest parsing to be optional.
-
-### ♻️ Refactor
-
-- Move property inspector types and routing to Stream Deck UI library.
-- Remove manifest namespace.
-- Remove browser import (replaced with upcoming Stream Deck UI library).
-
-### ⬆️ Upgrading
-
-- For information on breaking changes, and migrating to the this version, read more about [upgrading to v2.0.0](/UPGRADE.md#v2-0-0).
+- Updated manifest parsing to be optional.
 
 ## 1.4.0
 
@@ -174,10 +144,6 @@ This releases adds support for DRM protection, and lays the foundation for the u
 - Remove `ev.deviceId` in favour of `ev.action.device.id`.
 - Rename `onDidConnect` to `onConnected` within the UI.
 
-### ⬆️ Upgrading
-
-- For information on breaking changes, and migrating to the this version, read more about [upgrading to v1.0.0](/UPGRADE.md#v1-0-0).
-
 ## 0.4.0-beta
 
 ### ✨ New
@@ -207,10 +173,6 @@ This releases adds support for DRM protection, and lays the foundation for the u
 - Update routing to prevent exposure of internal messages.
 - Update build to export Stream Deck API types.
 - Update `ws` dependency.
-
-### ⬆️ Upgrading
-
-- For information on breaking changes, and migrating to the this version, read more about [upgrading to v0.4.0](/UPGRADE.md#v0-4-0).
 
 ## 0.3.0
 
@@ -269,10 +231,6 @@ This releases adds support for DRM protection, and lays the foundation for the u
 
 - Correctly validate paths without extensions in manifest JSON schema.
 - Default `text-overflow` set to `ellipsis` in layout JSON schema.
-
-### ⬆️ Upgrading
-
-- For information on breaking changes, and migrating to the this version, read more about [upgrading to v0.2.0](/UPGRADE.md#v0-2-0).
 
 ## 0.1.0
 
