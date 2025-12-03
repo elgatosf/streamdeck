@@ -1,9 +1,8 @@
+import { Logger, type LoggerOptions } from "@elgato/utils/logging";
 import { vi } from "vitest";
 
-import { Logger, type LoggerOptions, LogLevel } from "../../../common/logging/index.js";
-
 const options: LoggerOptions = {
-	level: LogLevel.TRACE,
+	level: "trace",
 	targets: [{ write: vi.fn() }],
 };
 

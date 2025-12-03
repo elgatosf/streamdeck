@@ -1,13 +1,11 @@
+import { ConsoleTarget, type LoggerOptions } from "@elgato/utils/logging";
+import { type FileTargetOptions } from "@elgato/utils/logging/file-target";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { ConsoleTarget } from "../../../common/logging/console-target.js";
-import { type LoggerOptions, LogLevel } from "../../../common/logging/index.js";
-import { type FileTargetOptions } from "../file-target.js";
-
-vi.mock("../file-target.js");
-vi.mock("../../../common/logging/index.js");
 vi.mock("../../common/utils.js");
+vi.mock("@elgato/utils/logging");
+vi.mock("@elgato/utils/logging/file-target");
 
 describe("createLogger", () => {
 	const mockedCwd = path.join("stream-deck", "tests");
@@ -26,13 +24,13 @@ describe("createLogger", () => {
 
 	describe("default log level", () => {
 		/**
-		 * Asserts the default logger has {@link LogLevel.DEBUG} when debug mode is `true`.
+		 * Asserts the default log level in development.
 		 */
 		it("is DEBUG when isDebugMode() is true", async () => {
 			// Arrange.
 			vi.spyOn(utils, "isDebugMode").mockReturnValue(true);
-			const spyOnFileTarget = vi.spyOn(await import("../file-target.js"), "FileTarget");
-			const { Logger } = await import("../../../common/logging/index.js");
+			const spyOnFileTarget = vi.spyOn(await import("@elgato/utils/logging/file-target"), "FileTarget");
+			const { Logger } = await import("@elgato/utils/logging");
 
 			// Act.
 			await import("../index.js");
@@ -40,28 +38,28 @@ describe("createLogger", () => {
 			// Assert.
 			expect(spyOnFileTarget).toHaveBeenCalledTimes(1);
 			expect(Logger).toHaveBeenCalledWith<[LoggerOptions]>({
-				level: LogLevel.DEBUG,
-				minimumLevel: LogLevel.TRACE,
+				level: "debug",
+				minimumLevel: "trace",
 				targets: [expect.any(ConsoleTarget), spyOnFileTarget.mock.instances[0]],
 			});
 		});
 
 		/**
-		 * Asserts the default logger has {@link LogLevel.INFO} when debug mode is `false`.
+		 * Asserts the default log level in production.
 		 */
 		it("is INFO when isDebugMode() is false", async () => {
 			// Arrange.
 			vi.spyOn(utils, "isDebugMode").mockReturnValue(false);
-			const spyOnFileTarget = vi.spyOn(await import("../file-target.js"), "FileTarget");
-			const { Logger } = await import("../../../common/logging/index.js");
+			const spyOnFileTarget = vi.spyOn(await import("@elgato/utils/logging/file-target"), "FileTarget");
+			const { Logger } = await import("@elgato/utils/logging");
 
 			// Act.
 			await import("../index.js");
 
 			// Assert.
 			expect(Logger).toHaveBeenCalledWith<[LoggerOptions]>({
-				level: LogLevel.INFO,
-				minimumLevel: LogLevel.DEBUG,
+				level: "info",
+				minimumLevel: "debug",
 				targets: [spyOnFileTarget.mock.instances[0]],
 			});
 		});
@@ -73,8 +71,8 @@ describe("createLogger", () => {
 	it("initializes the file target from the cwd", async () => {
 		// Arrange.
 		vi.spyOn(utils, "isDebugMode").mockReturnValue(false);
-		const { FileTarget } = await import("../file-target.js");
-		const { stringFormatter } = await import("../../../common/logging/index.js");
+		const { FileTarget } = await import("@elgato/utils/logging/file-target");
+		const { stringFormatter } = await import("@elgato/utils/logging");
 
 		// Act.
 		await import("../index.js");

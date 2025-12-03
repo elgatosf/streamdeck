@@ -1,3 +1,5 @@
+import type { JsonObject } from "@elgato/utils";
+
 import type {
 	ApplicationDidLaunch,
 	ApplicationDidTerminate,
@@ -19,19 +21,18 @@ import type {
 	WillAppear,
 	WillDisappear,
 } from "../../api/index.js";
-import { type ActionEvent, ActionWithoutPayloadEvent, Event } from "../../common/events/index.js";
-import type { JsonObject } from "../../common/json.js";
 import type { ActionContext } from "../actions/context.js";
 import type { DialAction } from "../actions/dial.js";
 import type { KeyAction } from "../actions/key.js";
 import type { Device } from "../devices/index.js";
+import { ActionEvent, ActionWithoutPayloadEvent } from "./action-event.js";
 import { ApplicationEvent } from "./application-event.js";
 import { DeviceEvent } from "./device-event.js";
+import { Event } from "./event.js";
 
-export { DidReceiveGlobalSettingsEvent } from "../../common/events/index.js";
 export { DidReceiveDeepLinkEvent } from "./deep-link-event.js";
+export { DidReceiveGlobalSettingsEvent } from "./global-settings-event.js";
 export { SendToPluginEvent } from "./ui-message-event.js";
-export { ApplicationEvent, DeviceEvent, Event };
 
 /**
  * Event information received from Stream Deck when a monitored application launches.

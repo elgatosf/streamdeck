@@ -1,3 +1,4 @@
+import { type EventArgs, type JsonObject, withResolvers } from "@elgato/utils";
 import { randomUUID } from "node:crypto";
 
 import type {
@@ -8,9 +9,6 @@ import type {
 	PluginEventMap,
 	Resources,
 } from "../../api/index.js";
-import type { EventArgs } from "../../common/event-emitter.js";
-import type { JsonObject } from "../../common/json.js";
-import { PromiseCompletionSource } from "../../common/promises.js";
 import { connection } from "../connection.js";
 import { requiresVersion } from "../validation.js";
 import { ActionContext } from "./context.js";
@@ -121,12 +119,12 @@ export class Action<T extends JsonObject = JsonObject> extends ActionContext {
 		command: GetterEvent,
 		event: TEvent,
 	): Promise<EventArgs<PluginEventMap, TEvent>[0]> {
-		const pcs = new PromiseCompletionSource<EventArgs<PluginEventMap, TEvent>[0]>();
+		const { resolve, reject, promise } = withResolvers<EventArgs<PluginEventMap, TEvent>[0]>();
 
 		// Set a timeout to prevent endless awaiting.
 		const timeoutId = setTimeout(() => {
 			listener.dispose();
-			pcs.setException("The request timed out");
+			reject("The request timed out");
 		}, REQUEST_TIMEOUT);
 
 		// Listen for an event that can resolve the request.
@@ -135,7 +133,7 @@ export class Action<T extends JsonObject = JsonObject> extends ActionContext {
 			if (ev.context == this.id) {
 				clearTimeout(timeoutId);
 				listener.dispose();
-				pcs.setResult(ev);
+				resolve(ev);
 			}
 		});
 
@@ -146,7 +144,7 @@ export class Action<T extends JsonObject = JsonObject> extends ActionContext {
 			id: randomUUID(),
 		});
 
-		return pcs.promise;
+		return promise;
 	}
 }
 

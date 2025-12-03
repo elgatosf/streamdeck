@@ -1,11 +1,10 @@
+import type { IDisposable, JsonObject } from "@elgato/utils";
 import { randomUUID } from "node:crypto";
 
 import type { DidReceiveGlobalSettings, DidReceiveSettings } from "../api/index.js";
-import type { IDisposable } from "../common/disposable.js";
-import { ActionEvent } from "../common/events/index.js";
-import type { JsonObject } from "../common/json.js";
 import { actionStore } from "./actions/store.js";
 import { connection } from "./connection.js";
+import { ActionEvent } from "./events/action-event.js";
 import { DidReceiveGlobalSettingsEvent, type DidReceiveSettingsEvent } from "./events/index.js";
 import { requiresVersion } from "./validation.js";
 

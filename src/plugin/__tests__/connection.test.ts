@@ -1,10 +1,10 @@
+import { Logger } from "@elgato/utils/logging";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { type WS as WebSocketServer } from "vitest-websocket-mock";
 
 import type { Settings } from "../../api/__mocks__/events.js";
 import type { ApplicationDidLaunch, DidReceiveGlobalSettings, OpenUrl } from "../../api/index.js";
 import { registrationInfo } from "../../api/registration/__mocks__/index.js";
-import { Logger, LogLevel } from "../../common/logging/index.js";
 import { type connection as Connection } from "../connection.js";
 import type { RegistrationInfo } from "../index.js";
 
@@ -25,7 +25,7 @@ describe("connection", () => {
 	// Re-import the connection to ensure a fresh state.
 	beforeEach(async () => {
 		connectionLogger = new Logger({
-			level: LogLevel.TRACE,
+			level: "trace",
 			targets: [{ write: vi.fn() }],
 		});
 
@@ -299,7 +299,7 @@ describe("connection", () => {
 		it("logs arguments", () => {
 			// Arrange
 			const scopedLogger = new Logger({
-				level: LogLevel.TRACE,
+				level: "trace",
 				targets: [{ write: vi.fn() }],
 			});
 

@@ -1,4 +1,5 @@
-import type { JsonValue } from "../../common/json.js";
+import type { JsonValue } from "@elgato/utils";
+
 import type { ActionEventMessage, ActionEventMessageWithoutPayload } from "./action.js";
 import type { DeviceIdentifier } from "./device.js";
 

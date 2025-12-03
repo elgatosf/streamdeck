@@ -1,6 +1,6 @@
 import type { Controller } from "@elgato/schemas/streamdeck/plugins";
+import type { JsonObject } from "@elgato/utils";
 
-import type { JsonObject } from "../../common/json.js";
 import type { Resources } from "../resources.js";
 import type { DeviceIdentifier } from "./device.js";
 import type { EventIdentifier } from "./index.js";

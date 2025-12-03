@@ -1,9 +1,8 @@
+import { EventEmitter, withResolvers } from "@elgato/utils";
 import WebSocket from "ws";
 
 import type { PluginCommand, PluginEventMap, RegistrationInfo } from "../api/index.js";
 import { RegistrationParameter } from "../api/index.js";
-import { EventEmitter } from "../common/event-emitter.js";
-import { PromiseCompletionSource } from "../common/promises.js";
 import { Version } from "./common/version.js";
 import { logger } from "./logging/index.js";
 
@@ -29,7 +28,7 @@ class Connection extends EventEmitter<ExtendedEventMap> {
 	/**
 	 * Underlying web socket connection.
 	 */
-	private connection = new PromiseCompletionSource<WebSocket>();
+	private connection = withResolvers<WebSocket>();
 
 	/**
 	 * Logger scoped to the connection.
@@ -72,7 +71,7 @@ class Connection extends EventEmitter<ExtendedEventMap> {
 				);
 
 				// Web socket established a connection with the Stream Deck and the plugin was registered.
-				this.connection.setResult(webSocket);
+				this.connection.resolve(webSocket);
 				this.emit("connected", this.registrationParameters.info);
 			};
 		}

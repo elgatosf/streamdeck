@@ -1,10 +1,9 @@
+import { ConsoleTarget, Logger, type LogTarget, stringFormatter } from "@elgato/utils/logging";
+import { FileTarget } from "@elgato/utils/logging/file-target.js";
 import path from "node:path";
 import { cwd } from "node:process";
 
-import { ConsoleTarget } from "../../common/logging/console-target.js";
-import { Logger, LogLevel, type LogTarget, stringFormatter } from "../../common/logging/index.js";
 import { getPluginUUID, isDebugMode } from "../common/utils.js";
-import { FileTarget } from "./file-target.js";
 
 // Log all entires to a log file.
 const fileTarget = new FileTarget({
@@ -25,8 +24,8 @@ if (isDebugMode()) {
  * Logger responsible for capturing log messages.
  */
 export const logger = new Logger({
-	level: isDebugMode() ? LogLevel.DEBUG : LogLevel.INFO,
-	minimumLevel: isDebugMode() ? LogLevel.TRACE : LogLevel.DEBUG,
+	level: isDebugMode() ? "debug" : "info",
+	minimumLevel: isDebugMode() ? "trace" : "debug",
 	targets,
 });
 

@@ -1,3 +1,5 @@
+import { type IDisposable, type JsonObject, Lazy } from "@elgato/utils";
+
 import type {
 	DialDown,
 	DialRotate,
@@ -11,11 +13,8 @@ import type {
 	WillAppear,
 	WillDisappear,
 } from "../../api/index.js";
-import type { IDisposable } from "../../common/disposable.js";
-import { ActionEvent } from "../../common/events/index.js";
-import type { JsonObject } from "../../common/json.js";
-import { Lazy } from "../../common/lazy.js";
 import { connection } from "../connection.js";
+import { ActionEvent } from "../events/action-event.js";
 import type {
 	DialDownEvent,
 	DialRotateEvent,

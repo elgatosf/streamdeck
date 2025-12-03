@@ -1,5 +1,6 @@
+import type { JsonObject } from "@elgato/utils";
+
 import type { DidReceiveGlobalSettings } from "../../api/index.js";
-import type { JsonObject } from "../json.js";
 import { Event } from "./event.js";
 
 /**

@@ -1,5 +1,5 @@
 import type { DeviceDidChange, DeviceDidConnect, DeviceDidDisconnect } from "../../api/index.js";
-import { Event } from "../../common/events/index.js";
+import { Event } from "./event.js";
 
 /**
  * Provides information for events relating to a device.

@@ -1,4 +1,5 @@
-import type { JsonObject } from "../../common/json.js";
+import type { JsonObject } from "@elgato/utils";
+
 import type { Manifest } from "../index.js";
 import type { EventIdentifier } from "./index.js";
 
