@@ -50,7 +50,7 @@ export class Action<T extends JsonObject = JsonObject> extends ActionContext {
 	 * Determines whether this instance is a dial.
 	 * @returns `true` when this instance is a dial; otherwise `false`.
 	 */
-	public isDial(): this is DialAction {
+	public isDial(): this is DialAction<T> {
 		return this.controllerType === "Encoder";
 	}
 
@@ -58,7 +58,7 @@ export class Action<T extends JsonObject = JsonObject> extends ActionContext {
 	 * Determines whether this instance is a key.
 	 * @returns `true` when this instance is a key; otherwise `false`.
 	 */
-	public isKey(): this is KeyAction {
+	public isKey(): this is KeyAction<T> {
 		return this.controllerType === "Keypad";
 	}
 
