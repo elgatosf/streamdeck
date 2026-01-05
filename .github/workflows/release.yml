@@ -17,7 +17,7 @@ jobs:
 
     permissions:
       contents: read
-      id-token: write
+      id-token: write # Required for OIDC
 
     steps:
       - name: "📥 Checkout"
@@ -47,8 +47,6 @@ jobs:
 
       - name: "📤 Publish"
         run: npm publish --provenance --access public --tag ${{ steps.pkg.outputs.version-tag }}
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
   Documentation:
     runs-on: "ubuntu-latest"
