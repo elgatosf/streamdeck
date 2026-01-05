@@ -12,6 +12,12 @@
 
 # Change Log
 
+## 2.0.1
+
+### 🐞 Fix
+
+- Retain settings type when type-narrowing from `Action<T>` to `KeyAction<T>` or `DialAction<T>`(fhollermayer) [#132](https://github.com/elgatosf/streamdeck/pull/132).
+
 ## 2.0.0
 
 ### ✨ New
