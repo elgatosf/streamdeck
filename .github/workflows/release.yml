@@ -26,7 +26,7 @@ jobs:
       - name: "🗃️ Setup Node"
         uses: actions/setup-node@v4
         with:
-          node-version: "20.19.5"
+          node-version: "24"
           registry-url: "https://registry.npmjs.org"
 
       - name: "📐 Install dependencies"
@@ -46,7 +46,7 @@ jobs:
         id: pkg
 
       - name: "📤 Publish"
-        run: npm publish --provenance --access public --tag ${{ steps.pkg.outputs.version-tag }}
+        run: npm publish --tag ${{ steps.pkg.outputs.version-tag }}
 
   Documentation:
     runs-on: "ubuntu-latest"
