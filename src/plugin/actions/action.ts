@@ -86,15 +86,25 @@ export class Action<T extends JsonObject = JsonObject> extends ActionContext {
 	}
 
 	/**
-	 * Sets the {@link settings} associated with this action instance. Use in conjunction with {@link Action.getSettings}.
-	 * @param settings Settings to persist.
+	 * Sets the {@link settings} associated with this action instance. See also {@link Action.getSettings}.
+	 * 
+	 * In addition to passing a settings object directly, this method also supports a functional
+	 * updater. When a function is provided, it will be invoked with the current settings and must
+	 * return the updated settings, either synchronously or asynchronously.
+	 * @param settings Either a settings object to persist, or a function that receives the current
+	 * settings and returns the new settings (or a Promise resolving to them).
 	 * @returns `Promise` resolved when the {@link settings} are sent to Stream Deck.
 	 */
-	public setSettings<U extends JsonObject = T>(settings: U): Promise<void> {
+	public async setSettings<U extends JsonObject = T>(settings: U | ((settings: U) => Promise<U> | U)): Promise<void> {
+
+		const payload = typeof settings === "function"
+			? await settings(await this.getSettings())
+			: settings;
+
 		return connection.send({
 			event: "setSettings",
 			context: this.id,
-			payload: settings,
+			payload,
 		});
 	}
 
