@@ -10,6 +10,17 @@ import { requiresVersion } from "./validation.js";
 
 let __useExperimentalMessageIdentifiers = false;
 
+const getGlobalSettings = <T extends JsonObject = JsonObject>(): Promise<T> => {
+	return new Promise((resolve) => {
+		connection.once("didReceiveGlobalSettings", (ev: DidReceiveGlobalSettings<T>) => resolve(ev.payload.settings));
+		connection.send({
+			event: "getGlobalSettings",
+			context: connection.registrationParameters.pluginUUID,
+			id: randomUUID(),
+		});
+	});
+};
+
 export const settings = {
 	/**
 	 * Available from Stream Deck 7.1; determines whether message identifiers should be sent when getting
@@ -40,16 +51,7 @@ export const settings = {
 	 * @template T The type of global settings associated with the plugin.
 	 * @returns Promise containing the plugin's global settings.
 	 */
-	getGlobalSettings: <T extends JsonObject = JsonObject>(): Promise<T> => {
-		return new Promise((resolve) => {
-			connection.once("didReceiveGlobalSettings", (ev: DidReceiveGlobalSettings<T>) => resolve(ev.payload.settings));
-			connection.send({
-				event: "getGlobalSettings",
-				context: connection.registrationParameters.pluginUUID,
-				id: randomUUID(),
-			});
-		});
-	},
+	getGlobalSettings,
 
 	/**
 	 * Occurs when the global settings are requested, or when the the global settings were updated in
@@ -104,11 +106,16 @@ export const settings = {
 	 *   connectedDate: new Date()
 	 * })
 	 */
-	setGlobalSettings: async <T extends JsonObject>(settings: T): Promise<void> => {
+	setGlobalSettings: async <T extends JsonObject>(settings: T | ((current: T) => Promise<T> | T)): Promise<void> => {
+
+		const payload = typeof settings === "function"
+			? await settings(await getGlobalSettings())
+			: settings;
+
 		await connection.send({
 			event: "setGlobalSettings",
 			context: connection.registrationParameters.pluginUUID,
-			payload: settings,
+			payload,
 		});
 	},
 };
