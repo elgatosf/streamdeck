@@ -1,0 +1,47 @@
+name: Feature request
+description: Suggest a new feature or enhancement.
+labels: ["triage"]
+type: "Feature"
+
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: Clear and concise summary of the feature being requested.
+    validations:
+      required: true
+
+  - type: textarea
+    id: example
+    attributes:
+      label: Examples
+      description: An example of how you envision this feature working, or references to similar implementations.
+      placeholder: |
+        ```ts
+        // Example usage
+        ```
+    validations:
+      required: true
+
+  - type: textarea
+    id: impact
+    attributes:
+      label: Impact
+      description: What problem does this feature solve, or what is the potential benefit.
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      description: Have you considered any alternative solutions or workarounds?
+
+  - type: checkboxes
+    id: contribution
+    attributes:
+      label: Contribution
+      description: Are you interested in contributing to implementing this feature?
+      options:
+        - label: I am interested in contributing
