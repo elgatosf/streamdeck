@@ -1,0 +1,14 @@
+blank_issues_enabled: true
+
+contact_links:
+  - name: Documentation
+    url: https://docs.elgato.com/sdk/
+    about: Check the official Stream Deck SDK documentation.
+
+  - name: Maker Discord
+    url: https://discord.gg/GehBUcu627
+    about: Join the community Discord for support and discussions.
+
+  - name: Community Support
+    url: https://github.com/elgatosf/streamdeck/discussions
+    about: Ask questions and discuss with the community.

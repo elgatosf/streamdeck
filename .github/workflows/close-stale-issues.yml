@@ -18,6 +18,8 @@ jobs:
         with:
           close-issue-message: "This issue was closed because it has been inactive for one week since being marked as stale."
           stale-issue-label: "stale"
+          exempt-issue-labels: "on hold,planned,triage"
+          exempt-issue-milestones: true
           # Never mark PRs as stale
           days-before-pr-stale: -1
           days-before-pr-close: -1
