@@ -4,20 +4,22 @@ Thank you for your interest in contributing to the Stream Deck SDK! We welcome c
 
 ## Table of Contents
 
-- [Code of Conduct](#code-of-conduct)
-- [Contributing](#contributing)
-    - [Feature Requests](#feature-requests)
-    - [Fixing Issues](#fixing-issues)
-- [AI Policy](#ai-policy)
-- [Development](#development)
-    - [Prerequisites](#rrerequisites)
-    - [Installation](#installation)
-- [Testing](#testing)
-    - [Running Tests](#running-tests)
-    - [Writing Tests](#writing-tests)
-- [Code Style](#code-style)
-    - [Linting](#linting)
-    - [Style Guidelines](#style-guidelines)
+- [Contributing to Stream Deck SDK](#contributing-to-stream-deck-sdk)
+	- [Table of Contents](#table-of-contents)
+	- [Code of Conduct](#code-of-conduct)
+	- [Contributing](#contributing)
+		- [Feature Requests](#feature-requests)
+		- [Fixing Issues](#fixing-issues)
+	- [AI Policy](#ai-policy)
+	- [Development](#development)
+		- [Prerequisites](#prerequisites)
+		- [Installation](#installation)
+	- [Testing](#testing)
+		- [Running Tests](#running-tests)
+		- [Writing Tests](#writing-tests)
+	- [Code Style](#code-style)
+		- [Linting](#linting)
+		- [Style Guidelines](#style-guidelines)
 
 ## Code of Conduct
 
