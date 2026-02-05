@@ -74,9 +74,9 @@ We welcome contributions that leverage AI tools as assistants in the development
     npm run build
     ```
 
-3. Watch for changes during development:
+3. Start development environment:
     ```bash
-    npm run watch
+    npm run dev
     ```
 
 ## Testing

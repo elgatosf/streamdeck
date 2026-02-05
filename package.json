@@ -15,7 +15,7 @@
     "types": "./dist/plugin/index.d.ts",
     "scripts": {
         "build": "rm -rf ./dist && tsc -p tsconfig.build.json",
-        "watch": "rm -rf ./dist && tsc -p tsconfig.build.json -w",
+        "dev": "rm -rf ./dist && tsc -p tsconfig.build.json -w",
         "lint": "eslint --max-warnings 0",
         "lint:fix": "prettier . --write",
         "preversion": "npm run build && npm test && npm run lint",
@@ -46,9 +46,10 @@
         "url": "https://github.com/elgatosf/streamdeck/issues"
     },
     "homepage": "https://github.com/elgatosf/streamdeck#readme",
+    "packageManager": "pnpm@10.18.0",
     "devDependencies": {
         "@elgato/eslint-config": "^0.3.1",
-        "@elgato/prettier-config": "^0.2.6",
+        "@elgato/prettier-config": "^0.3.3",
         "@tsconfig/node20": "^20.1.4",
         "@types/node": "^24.5.2",
         "@types/ws": "^8.5.14",
