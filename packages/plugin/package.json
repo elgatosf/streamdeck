@@ -1,0 +1,69 @@
+{
+    "name": "@elgato/streamdeck",
+    "version": "2.0.1",
+    "description": "The official Node.js SDK for creating Stream Deck plugins.",
+    "main": "./dist/plugin/index.js",
+    "type": "module",
+    "engines": {
+        "node": ">=20.5.1"
+    },
+    "files": [
+        "./dist/**/*.js",
+        "./dist/**/*.d.ts"
+    ],
+    "exports": "./dist/plugin/index.js",
+    "types": "./dist/plugin/index.d.ts",
+    "scripts": {
+        "build": "rm -rf ./dist && tsc -p tsconfig.build.json",
+        "dev": "rm -rf ./dist && tsc -p tsconfig.build.json -w",
+        "lint": "eslint --max-warnings 0",
+        "lint:fix": "prettier . --write",
+        "preversion": "npm run build && npm test && npm run lint",
+        "test": "vitest --run --reporter verbose",
+        "test:coverage": "vitest run --coverage",
+        "test:watch": "vitest"
+    },
+    "prettier": "@elgato/prettier-config",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/elgatosf/streamdeck.git"
+    },
+    "keywords": [
+        "elgato",
+        "stream deck",
+        "plugin",
+        "sdk",
+        "framework",
+        "marketplace",
+        "maker"
+    ],
+    "author": {
+        "name": "Elgato",
+        "url": "https://www.elgato.com"
+    },
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/elgatosf/streamdeck/issues"
+    },
+    "homepage": "https://github.com/elgatosf/streamdeck#readme",
+    "devDependencies": {
+        "@elgato/eslint-config": "^0.3.1",
+        "@elgato/prettier-config": "^0.3.3",
+        "@tsconfig/node20": "^20.1.4",
+        "@types/node": "^24.5.2",
+        "@types/ws": "^8.5.14",
+        "@vitest/coverage-v8": "^3.2.4",
+        "eslint": "^9.18.0",
+        "mock-socket": "^9.3.1",
+        "prettier": "^3.4.2",
+        "tslib": "^2.8.1",
+        "typescript": "^5.7.3",
+        "vitest": "^3.2.4",
+        "vitest-websocket-mock": "^0.5.0"
+    },
+    "dependencies": {
+        "@elgato/schemas": "^0.4.10",
+        "@elgato/utils": "^0.4.1",
+        "ws": "^8.18.0"
+    }
+}
