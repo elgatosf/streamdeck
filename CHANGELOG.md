@@ -12,6 +12,12 @@
 
 # Change Log
 
+## 2.0.2
+
+### ♻️ Update
+
+- Update schemas and external dependencies.
+
 ## 2.0.1
 
 ### 🐞 Fix
