@@ -1,4 +1,5 @@
 import type { IDisposable, JsonObject } from "@elgato/utils";
+import { withResolvers } from "@elgato/utils";
 import { randomUUID } from "node:crypto";
 
 import type { DidReceiveGlobalSettings, DidReceiveSettings } from "../api/index.js";
@@ -7,6 +8,8 @@ import { connection } from "./connection.js";
 import { ActionEvent } from "./events/action-event.js";
 import { DidReceiveGlobalSettingsEvent, type DidReceiveSettingsEvent } from "./events/index.js";
 import { requiresVersion } from "./validation.js";
+
+const REQUEST_TIMEOUT = 15 * 1000; // 15s
 
 let __useExperimentalMessageIdentifiers = false;
 
@@ -41,14 +44,29 @@ export const settings = {
 	 * @returns Promise containing the plugin's global settings.
 	 */
 	getGlobalSettings: <T extends JsonObject = JsonObject>(): Promise<T> => {
-		return new Promise((resolve) => {
-			connection.once("didReceiveGlobalSettings", (ev: DidReceiveGlobalSettings<T>) => resolve(ev.payload.settings));
-			connection.send({
-				event: "getGlobalSettings",
-				context: connection.registrationParameters.pluginUUID,
-				id: randomUUID(),
-			});
+		const id = randomUUID();
+		const { promise, resolve, reject } = withResolvers<T>();
+	
+		const timeoutId = setTimeout(() => {
+			listener.dispose();
+			reject(new Error("getGlobalSettings timed out"));
+		}, REQUEST_TIMEOUT);
+	
+		const listener = connection.disposableOn("didReceiveGlobalSettings", (ev: DidReceiveGlobalSettings<T>): void => {
+			if (ev.id === id) {
+				clearTimeout(timeoutId);
+				listener.dispose();
+	    		resolve(ev.payload.settings);
+	    	}
 		});
+	
+		connection.send({
+			event: "getGlobalSettings",
+			context: connection.registrationParameters.pluginUUID,
+			id,
+		});
+	
+		return promise;
 	},
 
 	/**
