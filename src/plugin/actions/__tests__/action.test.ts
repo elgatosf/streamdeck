@@ -1,7 +1,7 @@
 import { beforeAll, describe, expect, it, test, vi } from "vitest";
 
 import type { Settings } from "../../../api/__mocks__/events.js";
-import { DeviceType, type GetSettings, type SetSettings, type ShowAlert, type WillAppear } from "../../../api/index.js";
+import { DeviceType, type DidReceiveSettings, type GetSettings, type SetSettings, type ShowAlert, type WillAppear } from "../../../api/index.js";
 import type { JsonObject } from "../../../common/json.js";
 import { connection } from "../../connection.js";
 import { Device } from "../../devices/device.js";
@@ -169,25 +169,77 @@ describe("Action", () => {
 		let action!: Action;
 		beforeAll(() => (action = new Action(source)));
 
-		/**
-		 * Asserts {@link Action.setSettings} forwards the command to the {@link connection}.
-		 */
-		it("setSettings", async () => {
-			// Arrange, act.
-			await action.setSettings({
-				name: "Elgato",
+		describe("setSettings", async () => {
+
+			/**
+			 * Asserts {@link Action.setSettings} forwards the command to the {@link connection}.
+			 */
+			it("with object", async () => {
+				// Arrange, act.
+				await action.setSettings({
+					name: "Elgato",
+				});
+
+				// Assert.
+				expect(connection.send).toHaveBeenCalledTimes(1);
+				expect(connection.send).toHaveBeenCalledWith<[SetSettings]>({
+					context: action.id,
+					event: "setSettings",
+					payload: {
+						name: "Elgato",
+					},
+				});
 			});
 
-			// Assert.
-			expect(connection.send).toHaveBeenCalledTimes(1);
-			expect(connection.send).toHaveBeenCalledWith<[SetSettings]>({
-				context: action.id,
-				event: "setSettings",
-				payload: {
-					name: "Elgato",
-				},
+			it("with callback", async () => {
+
+				// Arrange
+
+				const current = {
+					name: "Current",
+				}
+				const expected = {
+					name: "Changed",
+				};
+
+				const callback = vi.fn(() => expected);
+
+				const didReceiveSettingsEvent: DidReceiveSettings<typeof current> = {
+					action: "any.acton",
+					context: action.id,
+					event: "didReceiveSettings",
+					device: "any",
+					payload: {
+						controller: "Keypad",
+						coordinates: {
+							column: 0,
+							row: 0,
+						},
+						isInMultiAction: false,
+						resources: {},
+						settings: current,
+					},
+				};
+
+				// Act
+
+				const execution = action.setSettings(callback);
+
+				connection.emit("didReceiveSettings", didReceiveSettingsEvent);
+
+				await execution;
+
+				// Assert
+
+				expect(callback).toHaveBeenCalledTimes(1);
+				expect(callback).toHaveBeenCalledWith(current);
+				expect(connection.send).toHaveBeenCalledWith(
+					expect.objectContaining({
+						payload: expected,
+					}));
 			});
 		});
+
 
 		/**
 		 * Asserts {@link Action.showAlert} forwards the command to the {@link connection}.

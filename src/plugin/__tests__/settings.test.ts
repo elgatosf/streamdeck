@@ -76,25 +76,66 @@ describe("settings", () => {
 			} satisfies Settings);
 		});
 
-		/**
-		 * Asserts {@link setGlobalSettings} sends the command to the {@link connection}.
-		 */
-		it("setGlobalSettings", async () => {
-			// Arrange, act.
-			await setGlobalSettings({
-				name: "Elgato",
+		describe("setGlobalSettings", () => {
+
+			/**
+			 * Asserts {@link setGlobalSettings} sends the command to the {@link connection}.
+			 */
+			it("with object", async () => {
+				// Arrange, act.
+				await setGlobalSettings({
+					name: "Elgato",
+				});
+
+				// Assert.
+				expect(connection.send).toHaveBeenCalledTimes(1);
+				expect(connection.send).toHaveBeenCalledWith<[SetGlobalSettings]>({
+					event: "setGlobalSettings",
+					context: connection.registrationParameters.pluginUUID,
+					payload: {
+						name: "Elgato",
+					},
+				});
 			});
 
-			// Assert.
-			expect(connection.send).toHaveBeenCalledTimes(1);
-			expect(connection.send).toHaveBeenCalledWith<[SetGlobalSettings]>({
-				event: "setGlobalSettings",
-				context: connection.registrationParameters.pluginUUID,
-				payload: {
-					name: "Elgato",
-				},
+			/**
+			 * Asserts {@link setGlobalSettings} invokes the provided callback with the current settings 
+			 * object and passes the return value via send command using {@link connection}.
+			 */
+			it("with callback", async () => {
+
+				// Arrange
+
+				const current = {
+					name: "Current"
+				}
+				const didReceiveGlobalSettingsEvent: DidReceiveGlobalSettings<typeof current> = {
+					event: "didReceiveGlobalSettings",
+					payload: {
+						settings: current,
+					},
+				};
+				const expected = {
+					name: "Changed",
+				}
+				const callback = vi.fn(() => expected);
+
+				// Act
+
+				const execution = setGlobalSettings(callback);
+				connection.emit("didReceiveGlobalSettings", didReceiveGlobalSettingsEvent);
+				await execution;
+
+				// Assert
+
+				expect(callback).toHaveBeenCalledTimes(1);
+				expect(callback).toHaveBeenCalledWith(current);
+				expect(connection.send).toHaveBeenCalledWith(
+					expect.objectContaining({
+						payload: expected,
+					}));
 			});
-		});
+		})
 	});
 
 	describe("receiving emits with useExperimentalMessageIdentifiers set to false", () => {
