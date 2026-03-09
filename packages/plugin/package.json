@@ -47,23 +47,23 @@
     },
     "homepage": "https://github.com/elgatosf/streamdeck#readme",
     "devDependencies": {
-        "@elgato/eslint-config": "^0.3.1",
+        "@elgato/eslint-config": "^0.3.2",
         "@elgato/prettier-config": "^0.3.3",
-        "@tsconfig/node20": "^20.1.4",
-        "@types/node": "^24.5.2",
-        "@types/ws": "^8.5.14",
+        "@tsconfig/node20": "^20.1.9",
+        "@types/node": "^24.12.0",
+        "@types/ws": "^8.18.1",
         "@vitest/coverage-v8": "^3.2.4",
-        "eslint": "^9.18.0",
+        "eslint": "^9.39.4",
         "mock-socket": "^9.3.1",
-        "prettier": "^3.4.2",
+        "prettier": "^3.8.1",
         "tslib": "^2.8.1",
-        "typescript": "^5.7.3",
+        "typescript": "^5.9.3",
         "vitest": "^3.2.4",
         "vitest-websocket-mock": "^0.5.0"
     },
     "dependencies": {
-        "@elgato/schemas": "^0.4.10",
-        "@elgato/utils": "^0.4.1",
-        "ws": "^8.18.0"
+        "@elgato/schemas": "^0.4.14",
+        "@elgato/utils": "^0.4.4",
+        "ws": "^8.19.0"
     }
 }
