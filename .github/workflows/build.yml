@@ -2,21 +2,9 @@
 name: Build
 
 on:
-  push:
-    branches:
-      - "main"
-      - "releases/*"
-    paths-ignore:
-      - "assets/**"
-      - "**.md"
-
   pull_request:
     branches:
-      - "main"
-      - "releases/*"
-    paths-ignore:
-      - "assets/**"
-      - "**.md"
+      - "*"
 
 defaults:
   run:
@@ -26,11 +14,14 @@ jobs:
   Build:
     strategy:
       matrix:
-        node_version: ["20.19.5", "24.9.0"]
+        node_version: [20, 24]
         os: ["macos-latest", "windows-latest"]
 
     runs-on: ${{ matrix.os }}
     timeout-minutes: 10
+
+    permissions:
+      contents: read
 
     steps:
       - name: "📥 Checkout"
@@ -43,6 +34,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node_version }}
+          cache: "pnpm"
 
       - name: "📐 Install dependencies"
         run: pnpm install --frozen-lockfile
