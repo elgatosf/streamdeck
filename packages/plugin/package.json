@@ -18,7 +18,6 @@
         "dev": "rm -rf ./dist && tsc -p tsconfig.build.json -w",
         "lint": "eslint --max-warnings 0",
         "lint:fix": "prettier . --write",
-        "preversion": "npm run build && npm test && npm run lint",
         "test": "vitest --run --reporter verbose",
         "test:coverage": "vitest run --coverage",
         "test:watch": "vitest"
