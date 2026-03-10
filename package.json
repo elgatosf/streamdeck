@@ -4,7 +4,9 @@
         "build": "turbo run build",
         "dev": "turbo run dev",
         "lint": "turbo run lint",
+        "lint:fix": "turbo run lint:fix",
         "test": "turbo run test",
+        "test:coverage": "turbo run test:coverage",
         "test:watch": "turbo run test:watch"
     },
     "packageManager": "pnpm@10.18.0",

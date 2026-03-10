@@ -57,26 +57,26 @@ We welcome contributions that leverage AI tools as assistants in the development
 
 ### Prerequisites
 
-- **Node.js v20.5.1 or higher** - we recommend using a version manager such as [nvm](https://github.com/nvm-sh/nvm) (macOS) or [nvm-windows](https://github.com/coreybutler/nvm-windows) (Windows).
-- **npm** (comes with Node.js).
+- **Node.js 24 or higher** - we recommend using a version manager such as [nvm](https://github.com/nvm-sh/nvm) (macOS) or [nvm-windows](https://github.com/coreybutler/nvm-windows) (Windows).
+- **pnpm** - available from [pnpm.io](https://pnpm.io/).
 
 ### Installation
 
 1. Install dependencies:
 
-    ```bash
-    npm install
+    ```
+    pnpm install
     ```
 
 2. Build the project:
 
-    ```bash
-    npm run build
+    ```
+    pnpm build
     ```
 
 3. Start development environment:
-    ```bash
-    npm run dev
+    ```
+    pnpm dev
     ```
 
 ## Testing
@@ -87,19 +87,19 @@ We use [Vitest](https://vitest.dev/) for testing. Please ensure all tests pass b
 
 - Run all tests:
 
-    ```bash
-    npm test
+    ```
+    pnpm test
     ```
 
 - Run tests in watch mode:
 
-    ```bash
-    npm run test:watch
+    ```
+    pnpm test:watch
     ```
 
 - Run tests with coverage:
-    ```bash
-    npm run test:coverage
+    ```
+    pnpm test:coverage
     ```
 
 ### Writing Tests
@@ -118,12 +118,12 @@ This project uses ESLint and Prettier to maintain consistent code style.
 - Check for linting errors:
 
     ```bash
-    npm run lint
+    pnpm lint
     ```
 
 - Auto-fix linting and formatting issues:
     ```bash
-    npm run lint:fix
+    pnpm lint:fix
     ```
 
 ### Style Guidelines

@@ -11,7 +11,11 @@
             "persistent": true
         },
         "lint": {},
+        "lint:fix": {},
         "test": {
+            "outputs": ["coverage/**"]
+        },
+        "test:coverage": {
             "outputs": ["coverage/**"]
         },
         "test:watch": {
