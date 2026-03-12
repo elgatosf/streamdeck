@@ -7,6 +7,7 @@ import { connection } from "../../connection.js";
 import { Device } from "../../devices/device.js";
 import { deviceStore } from "../../devices/store.js";
 import { Action } from "../action.js";
+import { settingsCache } from "../cache.js";
 import { DialAction } from "../dial.js";
 
 vi.mock("../../devices/store.js");
@@ -64,6 +65,73 @@ describe("Action", () => {
 		expect(action.manifestId).toBe(source.action);
 		expect(deviceStore.getDeviceById).toHaveBeenCalledTimes(1);
 		expect(deviceStore.getDeviceById).toHaveBeenLastCalledWith(source.device);
+	});
+
+	/**
+	 * Asserts {@link Action.getSettings} returns cached settings when the cache is valid.
+	 */
+	it("getSettings returns cached settings", async () => {
+		// Arrange.
+		const action = new Action(source);
+		const cachedSettings = { name: "Cached" };
+		settingsCache.set(action.id, cachedSettings);
+
+		// Act.
+		const result = await action.getSettings();
+
+		// Assert.
+		expect(result).toEqual(cachedSettings);
+		expect(connection.send).not.toHaveBeenCalled();
+
+		// Cleanup.
+		settingsCache.delete(action.id);
+	});
+
+	/**
+	 * Asserts {@link Action.getSettings} fetches from Stream Deck when the cache is invalid.
+	 */
+	it("getSettings fetches when cache is invalidated", async () => {
+		// Arrange.
+		const action = new Action(source);
+		settingsCache.set(action.id, { name: "Old" });
+		settingsCache.invalidate(action.id);
+
+		// Act.
+		const settings = action.getSettings();
+
+		// Assert (Command sent).
+		expect(connection.send).toHaveBeenCalledTimes(1);
+		expect(connection.send).toHaveBeenLastCalledWith<[GetSettings]>({
+			event: "getSettings",
+			context: action.id,
+			id: expect.any(String),
+		});
+
+		// Act (Event).
+		connection.emit("didReceiveSettings", {
+			action: action.manifestId,
+			context: action.id,
+			event: "didReceiveSettings",
+			device: "device123",
+			payload: {
+				controller: "Keypad",
+				coordinates: {
+					column: 1,
+					row: 2,
+				},
+				isInMultiAction: false,
+				resources: {},
+				settings: {
+					name: "Refreshed",
+				},
+			},
+		});
+
+		// Assert (Event).
+		await expect(settings).resolves.toEqual({ name: "Refreshed" });
+
+		// Cleanup.
+		settingsCache.delete(action.id);
 	});
 
 	/**
@@ -168,6 +236,24 @@ describe("Action", () => {
 	describe("sending", () => {
 		let action!: Action;
 		beforeAll(() => (action = new Action(source)));
+
+		/**
+		 * Asserts {@link Action.setSettings} invalidates the settings cache.
+		 */
+		it("setSettings invalidates cache", async () => {
+			// Arrange.
+			const action = new Action(source);
+			settingsCache.set(action.id, { name: "Cached" });
+
+			// Act.
+			await action.setSettings({ name: "Updated" });
+
+			// Assert.
+			expect(settingsCache.get(action.id)).toBeUndefined();
+
+			// Cleanup.
+			settingsCache.delete(action.id);
+		});
 
 		/**
 		 * Asserts {@link Action.setSettings} forwards the command to the {@link connection}.

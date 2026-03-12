@@ -11,6 +11,7 @@ import type {
 } from "../../api/index.js";
 import { connection } from "../connection.js";
 import { requiresVersion } from "../validation.js";
+import { settingsCache } from "./cache.js";
 import { ActionContext } from "./context.js";
 import type { DialAction } from "./dial.js";
 import type { KeyAction } from "./key.js";
@@ -42,6 +43,11 @@ export class Action<T extends JsonObject = JsonObject> extends ActionContext {
 	 * @returns Promise containing the action instance's settings.
 	 */
 	public async getSettings<U extends JsonObject = T>(): Promise<U> {
+		const cached = settingsCache.get(this.id);
+		if (cached !== undefined) {
+			return cached as U;
+		}
+
 		const res = await this.#fetch("getSettings", "didReceiveSettings");
 		return res.payload.settings as U;
 	}
@@ -91,6 +97,7 @@ export class Action<T extends JsonObject = JsonObject> extends ActionContext {
 	 * @returns `Promise` resolved when the {@link settings} are sent to Stream Deck.
 	 */
 	public setSettings<U extends JsonObject = T>(settings: U): Promise<void> {
+		settingsCache.invalidate(this.id);
 		return connection.send({
 			event: "setSettings",
 			context: this.id,
