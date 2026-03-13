@@ -49,6 +49,7 @@ export class Action<T extends JsonObject = JsonObject> extends ActionContext {
 		}
 
 		const res = await this.#fetch("getSettings", "didReceiveSettings");
+		settingsCache.set(this.id, res.payload.settings);
 		return res.payload.settings as U;
 	}
 

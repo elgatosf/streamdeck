@@ -1,8 +1,8 @@
+import type { JsonObject } from "@elgato/utils";
 import { beforeAll, describe, expect, it, test, vi } from "vitest";
 
 import type { Settings } from "../../../api/__mocks__/events.js";
 import { DeviceType, type GetSettings, type SetSettings, type ShowAlert, type WillAppear } from "../../../api/index.js";
-import type { JsonObject } from "../../../common/json.js";
 import { connection } from "../../connection.js";
 import { Device } from "../../devices/device.js";
 import { deviceStore } from "../../devices/store.js";
@@ -129,6 +129,13 @@ describe("Action", () => {
 
 		// Assert (Event).
 		await expect(settings).resolves.toEqual({ name: "Refreshed" });
+		expect(settingsCache.get(action.id)).toEqual({ name: "Refreshed" });
+
+		// Act (Repeat).
+		await expect(action.getSettings()).resolves.toEqual({ name: "Refreshed" });
+
+		// Assert (Repeat).
+		expect(connection.send).toHaveBeenCalledTimes(1);
 
 		// Cleanup.
 		settingsCache.delete(action.id);

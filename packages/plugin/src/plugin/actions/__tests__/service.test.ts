@@ -1,3 +1,4 @@
+import type { Enumerable, JsonObject } from "@elgato/utils";
 import { beforeAll, describe, expect, it, vi } from "vitest";
 
 import type { Settings } from "../../../api/__mocks__/events.js";
@@ -17,8 +18,6 @@ import {
 	type WillAppear,
 	type WillDisappear,
 } from "../../../api/index.js";
-import type { Enumerable } from "../../../common/enumerable.js";
-import type { JsonObject } from "../../../common/json.js";
 import { connection } from "../../connection.js";
 import { Device } from "../../devices/device.js";
 import { deviceStore } from "../../devices/store.js";
@@ -38,6 +37,7 @@ import {
 	type WillDisappearEvent,
 } from "../../events/index.js";
 import type { UIController } from "../../ui.js";
+import { settingsCache } from "../cache.js";
 import { ActionContext } from "../context.js";
 import { DialAction } from "../dial.js";
 import { KeyAction } from "../key.js";
@@ -482,6 +482,122 @@ describe("actions", () => {
 
 			// Assert(dispose).
 			expect(listener).toHaveBeenCalledTimes(1);
+		});
+
+		/**
+		 * Asserts the settings cache is not recreated when a late didReceiveSettings event arrives for a missing action.
+		 */
+		it("ignores didReceiveSettings for missing action context", () => {
+			// Arrange.
+			const context = "missing-action-context";
+			settingsCache.delete(context);
+			vi.mocked(actionStore.getActionById).mockReturnValueOnce(undefined);
+
+			const ev = {
+				action: "com.elgato.test.key",
+				context,
+				device: "device123",
+				event: "didReceiveSettings",
+				payload: {
+					controller: "Keypad",
+					coordinates: {
+						column: 0,
+						row: 0,
+					},
+					isInMultiAction: false,
+					resources: {},
+					settings: {
+						name: "Late settings",
+					},
+				},
+			} satisfies DidReceiveSettings<Settings>;
+
+			// Act.
+			connection.emit("didReceiveSettings", ev);
+
+			// Assert.
+			expect(settingsCache.get(context)).toBeUndefined();
+
+			// Cleanup.
+			settingsCache.delete(context);
+		});
+
+		/**
+		 * Asserts settings cache lifecycle updates for appear, settings updates, and disappear events.
+		 */
+		it("updates settings cache on willAppear/didReceiveSettings and clears on willDisappear", () => {
+			// Arrange.
+			const context = "cache-lifecycle-context";
+			settingsCache.delete(context);
+
+			const willAppear = {
+				action: "com.elgato.test.key",
+				context,
+				device: "device123",
+				event: "willAppear",
+				payload: {
+					controller: "Keypad",
+					coordinates: {
+						column: 1,
+						row: 1,
+					},
+					isInMultiAction: false,
+					resources: {},
+					settings: {
+						name: "FromAppear",
+					},
+				},
+			} satisfies WillAppear<Settings>;
+
+			const didReceiveSettings = {
+				action: "com.elgato.test.key",
+				context,
+				device: "device123",
+				event: "didReceiveSettings",
+				payload: {
+					controller: "Keypad",
+					coordinates: {
+						column: 1,
+						row: 1,
+					},
+					isInMultiAction: false,
+					resources: {},
+					settings: {
+						name: "Updated",
+					},
+				},
+			} satisfies DidReceiveSettings<Settings>;
+
+			const willDisappear = {
+				action: "com.elgato.test.key",
+				context,
+				device: "device123",
+				event: "willDisappear",
+				payload: {
+					controller: "Keypad",
+					coordinates: {
+						column: 1,
+						row: 1,
+					},
+					isInMultiAction: false,
+					resources: {},
+					settings: {
+						name: "Updated",
+					},
+				},
+			} satisfies WillDisappear<Settings>;
+
+			// Act, assert (set on appear).
+			connection.emit("willAppear", willAppear);
+			expect(settingsCache.get(context)).toEqual({ name: "FromAppear" });
+
+			// Act, assert (update on settings event).
+			connection.emit("didReceiveSettings", didReceiveSettings);
+			expect(settingsCache.get(context)).toEqual({ name: "Updated" });
+
+			// Act, assert (delete on disappear).
+			connection.emit("willDisappear", willDisappear);
+			expect(settingsCache.get(context)).toBeUndefined();
 		});
 	});
 
