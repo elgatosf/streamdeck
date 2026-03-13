@@ -59,7 +59,9 @@ class ActionService extends ReadOnlyActionStore {
 
 		// Update the settings cache when settings are received.
 		connection.prependListener("didReceiveSettings", (ev) => {
-			settingsCache.set(ev.context, ev.payload.settings);
+			if (actionStore.getActionById(ev.context) !== undefined) {
+				settingsCache.set(ev.context, ev.payload.settings);
+			}
 		});
 
 		// Remove the action from the store.
