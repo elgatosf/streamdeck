@@ -1,11 +1,12 @@
 import type { JsonObject } from "@elgato/utils";
-import { beforeAll, describe, expect, it, test, vi } from "vitest";
+import { afterEach, beforeAll, describe, expect, it, test, vi } from "vitest";
 
 import type { Settings } from "../../../api/__mocks__/events.js";
 import { DeviceType, type GetSettings, type SetSettings, type ShowAlert, type WillAppear } from "../../../api/index.js";
 import { connection } from "../../connection.js";
 import { Device } from "../../devices/device.js";
 import { deviceStore } from "../../devices/store.js";
+import { logger } from "../../logging/index.js";
 import { Action } from "../action.js";
 import { settingsCache } from "../cache.js";
 import { DialAction } from "../dial.js";
@@ -49,6 +50,10 @@ describe("Action", () => {
 	);
 
 	beforeAll(() => vi.spyOn(deviceStore, "getDeviceById").mockReturnValue(device));
+	afterEach(() => {
+		settingsCache.delete(source.context);
+		vi.clearAllMocks();
+	});
 
 	/**
 	 * Asserts the constructor of {@link Action} sets the properties from the source.
@@ -74,6 +79,7 @@ describe("Action", () => {
 		// Arrange.
 		const action = new Action(source);
 		const cachedSettings = { name: "Cached" };
+		const spyOnTrace = vi.spyOn(logger, "trace");
 		settingsCache.set(action.id, cachedSettings);
 
 		// Act.
@@ -82,6 +88,15 @@ describe("Action", () => {
 		// Assert.
 		expect(result).toEqual(cachedSettings);
 		expect(connection.send).not.toHaveBeenCalled();
+		expect(spyOnTrace).toHaveBeenCalledTimes(1);
+		expect(spyOnTrace).toHaveBeenCalledWith(
+			JSON.stringify({
+				event: "getSettings",
+				context: action.id,
+				source: "cache",
+				settings: cachedSettings,
+			}),
+		);
 
 		// Cleanup.
 		settingsCache.delete(action.id);
@@ -93,6 +108,7 @@ describe("Action", () => {
 	it("getSettings fetches when cache is deleted", async () => {
 		// Arrange.
 		const action = new Action(source);
+		const spyOnTrace = vi.spyOn(logger, "trace");
 		settingsCache.set(action.id, { name: "Old" });
 		settingsCache.delete(action.id);
 
@@ -136,6 +152,17 @@ describe("Action", () => {
 
 		// Assert (Repeat).
 		expect(connection.send).toHaveBeenCalledTimes(1);
+		expect(spyOnTrace).toHaveBeenCalledTimes(1);
+		expect(spyOnTrace).toHaveBeenCalledWith(
+			JSON.stringify({
+				event: "getSettings",
+				context: action.id,
+				source: "cache",
+				settings: {
+					name: "Refreshed",
+				},
+			}),
+		);
 
 		// Cleanup.
 		settingsCache.delete(action.id);

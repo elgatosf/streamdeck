@@ -10,6 +10,7 @@ import type {
 	Resources,
 } from "../../api/index.js";
 import { connection } from "../connection.js";
+import { logger } from "../logging/index.js";
 import { requiresVersion } from "../validation.js";
 import { settingsCache } from "./cache.js";
 import { ActionContext } from "./context.js";
@@ -45,6 +46,14 @@ export class Action<T extends JsonObject = JsonObject> extends ActionContext {
 	public async getSettings<U extends JsonObject = T>(): Promise<U> {
 		const cached = settingsCache.get(this.id);
 		if (cached !== undefined) {
+			logger.trace(
+				JSON.stringify({
+					event: "getSettings",
+					context: this.id,
+					source: "cache",
+					settings: cached,
+				}),
+			);
 			return cached as U;
 		}
 
