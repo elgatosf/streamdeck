@@ -97,7 +97,7 @@ export class Action<T extends JsonObject = JsonObject> extends ActionContext {
 	 * @returns `Promise` resolved when the {@link settings} are sent to Stream Deck.
 	 */
 	public setSettings<U extends JsonObject = T>(settings: U): Promise<void> {
-		settingsCache.invalidate(this.id);
+		settingsCache.delete(this.id);
 		return connection.send({
 			event: "setSettings",
 			context: this.id,

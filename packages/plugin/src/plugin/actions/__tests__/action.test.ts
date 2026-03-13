@@ -88,13 +88,13 @@ describe("Action", () => {
 	});
 
 	/**
-	 * Asserts {@link Action.getSettings} fetches from Stream Deck when the cache is invalid.
+	 * Asserts {@link Action.getSettings} fetches from Stream Deck when the cache is deleted.
 	 */
-	it("getSettings fetches when cache is invalidated", async () => {
+	it("getSettings fetches when cache is deleted", async () => {
 		// Arrange.
 		const action = new Action(source);
 		settingsCache.set(action.id, { name: "Old" });
-		settingsCache.invalidate(action.id);
+		settingsCache.delete(action.id);
 
 		// Act.
 		const settings = action.getSettings();
