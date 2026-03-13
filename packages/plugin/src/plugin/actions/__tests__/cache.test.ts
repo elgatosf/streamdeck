@@ -23,34 +23,25 @@ describe("settingsCache", () => {
 	});
 
 	/**
-	 * Asserts {@link settingsCache.get} returns `undefined` after cache is invalidated.
+	 * Asserts {@link settingsCache.delete} removes the entry and get returns `undefined`.
 	 */
-	it("get returns undefined after invalidate", () => {
+	it("get returns undefined after delete", () => {
 		// Arrange.
 		settingsCache.set("action2", { name: "Test" });
 
 		// Act.
-		settingsCache.invalidate("action2");
+		settingsCache.delete("action2");
 
 		// Assert.
 		expect(settingsCache.get("action2")).toBeUndefined();
 	});
 
 	/**
-	 * Asserts {@link settingsCache.invalidate} is a no-op for unknown ids.
+	 * Asserts {@link settingsCache.set} overwrites an existing entry.
 	 */
-	it("invalidate is no-op for unknown id", () => {
-		// Act, assert.
-		expect(() => settingsCache.invalidate("nonexistent")).not.toThrow();
-	});
-
-	/**
-	 * Asserts {@link settingsCache.set} re-validates a previously invalidated entry.
-	 */
-	it("set re-validates invalidated entry", () => {
+	it("set overwrites existing entry", () => {
 		// Arrange.
 		settingsCache.set("action3", { name: "First" });
-		settingsCache.invalidate("action3");
 
 		// Act.
 		settingsCache.set("action3", { name: "Second" });
