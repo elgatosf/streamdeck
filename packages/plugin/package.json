@@ -20,7 +20,8 @@
         "lint:fix": "prettier . --write",
         "test": "vitest --run --reporter verbose",
         "test:coverage": "vitest run --coverage",
-        "test:watch": "vitest"
+        "test:watch": "vitest",
+        "prepack": "cp ../../README.md . && cp ../../LICENSE ."
     },
     "prettier": "@elgato/prettier-config",
     "repository": {

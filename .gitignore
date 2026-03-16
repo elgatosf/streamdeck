@@ -7,3 +7,7 @@ coverage/
 
 # Build output
 dist/
+
+# Shared package files
+packages/plugin/README.md
+packages/plugin/LICENSE
