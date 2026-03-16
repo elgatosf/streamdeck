@@ -23,7 +23,8 @@ class SettingsCache {
 	 * @returns The cached settings when present; otherwise `undefined`.
 	 */
 	public get(id: string): JsonObject | undefined {
-		return this.#entries.get(id);
+		const settings = this.#entries.get(id);
+		return settings !== undefined ? structuredClone(settings) : undefined;
 	}
 
 	/**
@@ -32,7 +33,7 @@ class SettingsCache {
 	 * @param settings The settings to cache.
 	 */
 	public set(id: string, settings: JsonObject): void {
-		this.#entries.set(id, settings);
+		this.#entries.set(id, structuredClone(settings));
 	}
 }
 
