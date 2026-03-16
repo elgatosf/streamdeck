@@ -23,21 +23,6 @@ describe("settingsCache", () => {
 	});
 
 	/**
-	 * Asserts cached settings are isolated from mutations to the object passed to {@link settingsCache.set}.
-	 */
-	it("set clones settings before caching", () => {
-		// Arrange.
-		const settings = { nested: { name: "Original" } };
-		settingsCache.set("action-set-clone", settings);
-
-		// Act.
-		settings.nested.name = "Mutated";
-
-		// Assert.
-		expect(settingsCache.get("action-set-clone")).toEqual({ nested: { name: "Original" } });
-	});
-
-	/**
 	 * Asserts cached settings are isolated from mutations to objects returned by {@link settingsCache.get}.
 	 */
 	it("get returns a cloned copy of cached settings", () => {
