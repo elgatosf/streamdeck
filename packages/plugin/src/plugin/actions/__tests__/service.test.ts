@@ -1,5 +1,5 @@
 import type { Enumerable, JsonObject } from "@elgato/utils";
-import { beforeAll, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 
 import type { Settings } from "../../../api/__mocks__/events.js";
 import {
@@ -38,6 +38,7 @@ import {
 } from "../../events/index.js";
 import type { UIController } from "../../ui.js";
 import { settingsCache } from "../cache.js";
+import { actionConfig } from "../config.js";
 import { ActionContext } from "../context.js";
 import { DialAction } from "../dial.js";
 import { KeyAction } from "../key.js";
@@ -67,6 +68,11 @@ describe("actions", () => {
 				true,
 			),
 		);
+	});
+
+	afterEach(() => {
+		actionConfig.useExperimentalMessageIdentifiers = false;
+		vi.clearAllMocks();
 	});
 
 	describe("event emitters", () => {
@@ -489,6 +495,7 @@ describe("actions", () => {
 		 */
 		it("ignores didReceiveSettings for missing action context", () => {
 			// Arrange.
+			actionConfig.useExperimentalMessageIdentifiers = true;
 			const context = "missing-action-context";
 			settingsCache.delete(context);
 			vi.mocked(actionStore.getActionById).mockReturnValueOnce(undefined);
@@ -527,6 +534,7 @@ describe("actions", () => {
 		 */
 		it("updates settings cache on willAppear/didReceiveSettings and clears on willDisappear", () => {
 			// Arrange.
+			actionConfig.useExperimentalMessageIdentifiers = true;
 			const context = "cache-lifecycle-context";
 			settingsCache.delete(context);
 
