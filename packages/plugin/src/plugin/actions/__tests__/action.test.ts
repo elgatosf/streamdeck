@@ -9,6 +9,7 @@ import { deviceStore } from "../../devices/store.js";
 import { logger } from "../../logging/index.js";
 import { Action } from "../action.js";
 import { settingsCache } from "../cache.js";
+import { actionConfig } from "../config.js";
 import { DialAction } from "../dial.js";
 
 vi.mock("../../devices/store.js");
@@ -51,6 +52,7 @@ describe("Action", () => {
 
 	beforeAll(() => vi.spyOn(deviceStore, "getDeviceById").mockReturnValue(device));
 	afterEach(() => {
+		actionConfig.useExperimentalMessageIdentifiers = false;
 		settingsCache.delete(source.context);
 		vi.clearAllMocks();
 	});
@@ -77,6 +79,7 @@ describe("Action", () => {
 	 */
 	it("getSettings returns cached settings", async () => {
 		// Arrange.
+		actionConfig.useExperimentalMessageIdentifiers = true;
 		const action = new Action(source);
 		const cachedSettings = { name: "Cached" };
 		const spyOnTrace = vi.spyOn(logger, "trace");
@@ -107,6 +110,7 @@ describe("Action", () => {
 	 */
 	it("getSettings fetches when cache is deleted", async () => {
 		// Arrange.
+		actionConfig.useExperimentalMessageIdentifiers = true;
 		const action = new Action(source);
 		const spyOnTrace = vi.spyOn(logger, "trace");
 		settingsCache.set(action.id, { name: "Old" });
@@ -173,6 +177,7 @@ describe("Action", () => {
 	 */
 	it("getSettings", async () => {
 		// Arrange.
+		actionConfig.useExperimentalMessageIdentifiers = true;
 		const action = new Action(source);
 
 		// Array, act (Command).
