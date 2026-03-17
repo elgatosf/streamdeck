@@ -33,7 +33,7 @@ class SettingsCache {
 	 * @param settings The settings to cache.
 	 */
 	public set(id: string, settings: JsonObject): void {
-		this.#entries.set(id, settings);
+		this.#entries.set(id, structuredClone(settings));
 	}
 }
 

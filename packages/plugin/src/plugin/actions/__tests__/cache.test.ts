@@ -42,6 +42,21 @@ describe("settingsCache", () => {
 	});
 
 	/**
+	 * Asserts cached settings are isolated from mutations to the object passed to {@link settingsCache.set}.
+	 */
+	it("set stores a cloned copy of the provided settings", () => {
+		// Arrange.
+		const settings = { nested: { name: "Original" } };
+		settingsCache.set("action-set-clone", settings);
+
+		// Act.
+		settings.nested.name = "Mutated";
+
+		// Assert.
+		expect(settingsCache.get("action-set-clone")).toEqual({ nested: { name: "Original" } });
+	});
+
+	/**
 	 * Asserts {@link settingsCache.delete} removes the entry and get returns `undefined`.
 	 */
 	it("get returns undefined after delete", () => {
