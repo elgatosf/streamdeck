@@ -1,14 +1,18 @@
 # yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
-name: Release
+name: Build and release
 
 on:
   push:
-    tags:
-      - "*"
+    branches:
+      - "main"
 
 defaults:
   run:
     shell: bash
+
+concurrency:
+  group: release
+  cancel-in-progress: false
 
 jobs:
   Release:
@@ -16,37 +20,45 @@ jobs:
     timeout-minutes: 10
 
     permissions:
-      contents: read
+      contents: write # Push git tags
       id-token: write # Required for OIDC
 
     steps:
       - name: "📥 Checkout"
         uses: actions/checkout@v4
 
+      - name: "⚙️ Configure Git"
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: "📦 Setup pnpm"
+        uses: pnpm/action-setup@v4
+
       - name: "🗃️ Setup Node"
         uses: actions/setup-node@v4
         with:
-          node-version: "24"
+          node-version: 24
+          cache: "pnpm"
           registry-url: "https://registry.npmjs.org"
 
       - name: "📐 Install dependencies"
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: "🏗️ Build"
-        run: npm run build
+        run: pnpm run build
 
       - name: "🖌️ Lint"
-        run: npm run lint
+        run: pnpm run lint
 
       - name: "🧪 Test"
-        run: npm run test
-
-      - name: "📖 Retrieve package information"
-        uses: geekyeggo/npm-pkg@v1
-        id: pkg
+        run: pnpm run test
 
       - name: "📤 Publish"
-        run: npm publish --tag ${{ steps.pkg.outputs.version-tag }}
+        run: pnpm changeset publish
+
+      - name: "🏷️ Push tags"
+        run: git push --tags
 
   Documentation:
     runs-on: "ubuntu-latest"

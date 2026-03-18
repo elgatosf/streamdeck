@@ -1,32 +1,20 @@
-<!--
-
-## {version}
-
-⚠️ Breaking change
-✨ New
-🐞 Fix
-♻️ Refactor / Enhance / Update
-⬆️ Upgrading
-
--->
-
 # Change Log
 
 ## 2.0.2
 
-### ♻️ Update
+### Patch Changes
 
 - Update schemas and external dependencies.
 
 ## 2.0.1
 
-### 🐞 Fix
+### Patch Changes
 
 - Retain settings type when type-narrowing from `Action<T>` to `KeyAction<T>` or `DialAction<T>`(fhollermayer) [#132](https://github.com/elgatosf/streamdeck/pull/132).
 
 ## 2.0.0
 
-### ✨ New
+### Major Changes
 
 - Added support for DRM protection.
 - Added support for embedded resources.
@@ -34,9 +22,6 @@
 - Added `setResources(resources)` to action.
 - Added `getResources()` to action.
 - Added support for experimental message identifiers.
-
-### ♻️ Refactor
-
 - Streamlined sending messages to the UI:
     - Before: `streamDeck.ui.current?.sendToPropertyInspector(...)`
     - After: `streamDeck.ui.sendToPropertyInspector(...)`
@@ -48,93 +33,65 @@
 - Removed property inspector types and routing.
 - Updated module resolution to `NodeNext` for better interoperability.
 - Removed rollup bundling to improve dependency resolution.
-
-### 🐞 Fix
-
 - Updated manifest parsing to be optional.
-
-## 1.4.0
-
-### ✨ New
-
-- Add `streamDeck.devices.onDidChange` event; occurs when a device name or size changes.
-
-### ♻️ Update
-
-- Device size now reflects visible canvas size of scalable devices, for example Stream Deck Mobile and Virtual Stream Deck.
 
 ## 1.4.1
 
-### ♻️ Update
+### Patch Changes
 
 - Add SDK version compatibility check.
 
 ## 1.4.0
 
-### ✨ New
+### Minor Changes
 
 - Add `streamDeck.devices.onDidChange` event; occurs when a device name or size changes.
-
-### ♻️ Update
-
 - Device size now reflects visible canvas size of scalable devices, for example Stream Deck Mobile and Virtual Stream Deck.
 
 ## 1.3.1
 
-### 🐞 Fix
+### Patch Changes
 
 - Update reading of the manifest to be lazy to improve mocking within tests.
 
 ## 1.3.0
 
-### ✨ New
+### Minor Changes
 
 - Add support for serializing enumerable collections.
-
-### ♻️ Update
-
 - Improve documentation for profile switching.
 - Update dependencies.
 
 ## 1.2.1
 
-### ♻️ Update
+### Patch Changes
 
 - Update `@elgato/schemas` dependency.
-
-### 🐞 Fix
-
 - Fix Node.js engine requirements.
 
 ## 1.2.0
 
-### ✨ New
+### Minor Changes
 
 - Add support for Chinese (Traditional).
-
-### 🐞 Fix
-
 - Fix types of `EventEmitter` event arguments.
 
 ## 1.1.0
 
-### ✨ New
+### Minor Changes
 
 - Add [`.drop()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Iterator/drop), [`.flapMap()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Iterator/flatMap), [`.take()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Iterator/take), and [`.toArray()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Iterator/toArray) iterator helper polyfills to `Enumerable`.
-
-### ♻️ Update
-
 - Update `SingletonAction.actions` to return an `Enumerable`.
 
 ## 1.0.1
 
-### ♻️ Update
+### Patch Changes
 
 - Update minimum allowed log level in production to be `DEBUG` to assist with debugging (default remains `INFO`).
 
 ## 1.0.0
 
-### ✨ New
+### Minor Changes
 
 - Add action tracking, allowing access to currently visible actions.
     - `streamDeck.actions` — all visible actions.
@@ -143,14 +100,8 @@
 - Add `Enumerable` class for creating readonly collections.
 - Add device information to `Action` provided in event arguments.
 - Add iterator helpers to `streamDeck.devices` and `streamDeck.actions`.
-
-### 🐞 Fix
-
 - Fix missing language support for Korean (ko).
 - Fix TypeScript declaration incorrectly exporting types as classes.
-
-### ♻️ Update
-
 - Remove `streamDeck.actions.createController` in favor of `streamDeck.actions.getActionById`.
 - Remove `Action.sendToPropertyInspector` in favour of `streamDeck.ui.current.sendToPropertyInspector`.
 - Remove `ev.deviceId` in favour of `ev.action.device.id`.
@@ -158,7 +109,7 @@
 
 ## 0.4.0-beta
 
-### ✨ New
+### Minor Changes
 
 - Package can now be imported in both Node.js and the browser (in the scope of a property inspector).
 - Add support for property inspector.
@@ -167,17 +118,11 @@
     - Add `streamDeck.system` namespace for system-related operations.
     - Add `streamDeck.plugin` namespace for bi-direction communication with the plugin and the UI.
 - Add `isInMultiAction` to the property inspector's action information.
-
-### 🐞 Fix
-
 - `Coordinates` type could erroneously have a non-number type for `row`.
 - Fix support for allowed types within payloads.
 - Fix localization lookup to index from `Localization`.
 - Fix race condition when tracking the property inspector.
 - Fix `streamDeck.setGlobalSettings` to require settings that extend `JsonObject`.
-
-### ♻️ Update
-
 - Update layout and manifest references to propagate from [`@elgato/schemas`](https://github.com/elgatosf/schemas).
 - Localization lookup will now return the key if the resource is not defined.
 - Update structure of JSON localizations.
@@ -188,35 +133,24 @@
 
 ## 0.3.0
 
-### ✨ New
+### Minor Changes
 
 - Add cross-compatible event emitter with type support.
 - Add pattern validation for manifest's `Version`.
 - Add validation of colors defined within the manifest.
-
-### 🐞 Fix
-
 - Fix `PayloadObject` not being exported; enables inheritance of actions.
 - Fix manifest layout not allowing `$A0` as a pre-defined value.
-
-### ♻️ Update
-
 - Update manifest file path validation to prevent referencing a file outside of the plugin directory.
 - Update manifest file path validation to allow periods.
 - Update manifest UUID validation to allow more than 3 segments.
 - Update manifest UUID validation to prevent underscores.
 - Update documentation of `Actions[].Image` to reflect support for .gif files.
 - Update default export to be named (improving VSCode intellisense).
-
-### 🗑️ Remove
-
 - Remove `$A2` incorrectly being listed as a pre-defined layout.
 
 ## 0.2.0
 
-### ✨ New
-
-#### Stream Deck 6.5
+### Minor Changes
 
 - Add support for receiving messages via deep-linking.
     - URL format: `streamdeck://plugins/message/<PLUGIN_UUID>/<MESSAGE>`
@@ -224,29 +158,20 @@
 - Add support for switching to a specific profile page when calling `switchToProfile`.
 - Add `controller` information to `WillAppear` and `WillDisappear` events for multi-actions.
 - Add support for Node.js plugins with the `.cjs` or `.mjs` file extensions.
-
-#### Node.js SDK
-
 - Add `profiles`, `settings`, `system`, and `ui` namespaces.
 - Add `streamDeck.actions.createController(id)` to enable the control of a contextualized action.
 - Add `streamDeck.devices.getDeviceBy(deviceId)` to enable the selection of a device by identifier.
 - Add `length`, `forEach`, and `[Symbol.iterator]` to `streamDeck.devices` to enable iteration.
-
-### ♻️ Improvements
-
 - Refactor `streamDeck.devices` to namespace.
 - Update manifest JSON schema to support Stream Deck 6.5.
 - Improve enum support in manifest and layout JSON schemas.
 - Node.js runtime updated to v20.8.1.
-
-### 🐞 Bug Fixes
-
 - Correctly validate paths without extensions in manifest JSON schema.
 - Default `text-overflow` set to `ellipsis` in layout JSON schema.
 
 ## 0.1.0
 
-### ✨ New
+### Minor Changes
 
 - Add Stream Deck communication client (see `streamDeck.client`).
 - Add support for receiving all events (Stream Deck 6.4).
