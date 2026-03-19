@@ -1,5 +1,17 @@
 # Change Log
 
+## 2.0.4
+
+### Patch Changes
+
+- bd96e2f: Fixed npm access.
+
+## 2.0.3
+
+### Patch Changes
+
+- 548f78e: Added support for continuous deployment.
+
 ## 2.0.2
 
 ### Patch Changes

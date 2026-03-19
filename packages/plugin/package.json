@@ -1,6 +1,6 @@
 {
     "name": "@elgato/streamdeck",
-    "version": "2.0.2",
+    "version": "2.0.4",
     "description": "The official Node.js SDK for creating Stream Deck plugins.",
     "main": "./dist/plugin/index.js",
     "type": "module",
@@ -20,7 +20,8 @@
         "lint:fix": "prettier . --write",
         "test": "vitest --run --reporter verbose",
         "test:coverage": "vitest run --coverage",
-        "test:watch": "vitest"
+        "test:watch": "vitest",
+        "prepack": "cp ../../README.md . && cp ../../LICENSE ."
     },
     "prettier": "@elgato/prettier-config",
     "repository": {
