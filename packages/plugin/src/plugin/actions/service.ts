@@ -70,9 +70,7 @@ class ActionService extends ReadOnlyActionStore {
 		// Remove the action from the store.
 		connection.prependListener("willDisappear", (ev) => {
 			actionStore.delete(ev.context);
-			if (actionConfig.useExperimentalMessageIdentifiers) {
-				settingsCache.delete(ev.context);
-			}
+			settingsCache.delete(ev.context);
 		});
 	}
 
