@@ -31,6 +31,8 @@ import { getManifest } from "../manifest.js";
 import { settings } from "../settings.js";
 import { ui } from "../ui.js";
 import { Action } from "./action.js";
+import { settingsCache } from "./cache.js";
+import { actionConfig } from "./config.js";
 import { ActionContext } from "./context.js";
 import { DialAction } from "./dial.js";
 import { KeyAction } from "./key.js";
@@ -53,10 +55,23 @@ class ActionService extends ReadOnlyActionStore {
 		connection.prependListener("willAppear", (ev) => {
 			const action = ev.payload.controller === "Encoder" ? new DialAction(ev) : new KeyAction(ev);
 			actionStore.set(action);
+			if (actionConfig.useExperimentalMessageIdentifiers) {
+				settingsCache.set(ev.context, ev.payload.settings);
+			}
+		});
+
+		// Update the settings cache when settings are received.
+		connection.prependListener("didReceiveSettings", (ev) => {
+			if (actionConfig.useExperimentalMessageIdentifiers && actionStore.getActionById(ev.context) !== undefined) {
+				settingsCache.set(ev.context, ev.payload.settings);
+			}
 		});
 
 		// Remove the action from the store.
-		connection.prependListener("willDisappear", (ev) => actionStore.delete(ev.context));
+		connection.prependListener("willDisappear", (ev) => {
+			actionStore.delete(ev.context);
+			settingsCache.delete(ev.context);
+		});
 	}
 
 	/**

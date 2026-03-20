@@ -10,7 +10,10 @@ import type {
 	Resources,
 } from "../../api/index.js";
 import { connection } from "../connection.js";
+import { logger } from "../logging/index.js";
 import { requiresVersion } from "../validation.js";
+import { settingsCache } from "./cache.js";
+import { actionConfig } from "./config.js";
 import { ActionContext } from "./context.js";
 import type { DialAction } from "./dial.js";
 import type { KeyAction } from "./key.js";
@@ -42,7 +45,25 @@ export class Action<T extends JsonObject = JsonObject> extends ActionContext {
 	 * @returns Promise containing the action instance's settings.
 	 */
 	public async getSettings<U extends JsonObject = T>(): Promise<U> {
+		if (actionConfig.useExperimentalMessageIdentifiers) {
+			const cached = settingsCache.get(this.id);
+			if (cached !== undefined) {
+				logger.trace(
+					JSON.stringify({
+						event: "getSettings",
+						context: this.id,
+						source: "cache",
+						settings: cached,
+					}),
+				);
+				return cached as U;
+			}
+		}
+
 		const res = await this.#fetch("getSettings", "didReceiveSettings");
+		if (actionConfig.useExperimentalMessageIdentifiers) {
+			settingsCache.set(this.id, res.payload.settings);
+		}
 		return res.payload.settings as U;
 	}
 
@@ -86,15 +107,16 @@ export class Action<T extends JsonObject = JsonObject> extends ActionContext {
 	}
 
 	/**
-	 * Sets the {@link settings} associated with this action instance. Use in conjunction with {@link Action.getSettings}.
-	 * @param settings Settings to persist.
-	 * @returns `Promise` resolved when the {@link settings} are sent to Stream Deck.
+	 * Sets the settings associated with this action instance. Use in conjunction with {@link Action.getSettings}.
+	 * @param value Settings to persist.
+	 * @returns `Promise` resolved when the settings are sent to Stream Deck.
 	 */
-	public setSettings<U extends JsonObject = T>(settings: U): Promise<void> {
+	public setSettings<U extends JsonObject = T>(value: U): Promise<void> {
+		settingsCache.delete(this.id);
 		return connection.send({
 			event: "setSettings",
 			context: this.id,
-			payload: settings,
+			payload: value,
 		});
 	}
 
