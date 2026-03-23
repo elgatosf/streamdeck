@@ -101,7 +101,7 @@ describe("Action", () => {
 			expect(connection.send).not.toHaveBeenCalled();
 			expect(spyOnTrace).toHaveBeenCalledTimes(1);
 			expect(spyOnTrace).toHaveBeenCalledWith(
-				JSON.stringify({    
+				JSON.stringify({
 					event: "getSettings",
 					context: action.id,
 					source: "cache",
