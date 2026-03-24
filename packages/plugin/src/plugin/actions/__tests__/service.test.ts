@@ -490,44 +490,6 @@ describe("actions", () => {
 			expect(listener).toHaveBeenCalledTimes(1);
 		});
 
-		/**
-		 * Asserts the settings cache is not recreated when a late didReceiveSettings event arrives for a missing action.
-		 */
-		it("ignores didReceiveSettings for missing action context", () => {
-			// Arrange.
-			actionConfig.useExperimentalMessageIdentifiers = true;
-			const context = "missing-action-context";
-			settingsCache.delete(context);
-			vi.mocked(actionStore.getActionById).mockReturnValueOnce(undefined);
-
-			const ev = {
-				action: "com.elgato.test.key",
-				context,
-				device: "device123",
-				event: "didReceiveSettings",
-				payload: {
-					controller: "Keypad",
-					coordinates: {
-						column: 0,
-						row: 0,
-					},
-					isInMultiAction: false,
-					resources: {},
-					settings: {
-						name: "Late settings",
-					},
-				},
-			} satisfies DidReceiveSettings<Settings>;
-
-			// Act.
-			connection.emit("didReceiveSettings", ev);
-
-			// Assert.
-			expect(settingsCache.get(context)).toBeUndefined();
-
-			// Cleanup.
-			settingsCache.delete(context);
-		});
 
 		/**
 		 * Asserts settings cache lifecycle updates for appear, settings updates, and disappear events.
