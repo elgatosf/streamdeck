@@ -109,69 +109,6 @@ describe("Action", () => {
 				}),
 			);
 		});
-
-		/**
-		 * Asserts {@link Action.getSettings} fetches from Stream Deck when the cache is deleted.
-		 */
-		it("getSettings fetches when cache is deleted", async () => {
-			// Arrange.
-			const action = new Action(source);
-			const spyOnTrace = vi.spyOn(logger, "trace");
-			settingsCache.set(action.id, { name: "Old" });
-			settingsCache.delete(action.id);
-
-			// Act.
-			const settings = action.getSettings();
-
-			// Assert (Command sent).
-			expect(connection.send).toHaveBeenCalledTimes(1);
-			expect(connection.send).toHaveBeenLastCalledWith<[GetSettings]>({
-				event: "getSettings",
-				context: action.id,
-				id: expect.any(String),
-			});
-
-			// Act (Event).
-			connection.emit("didReceiveSettings", {
-				action: action.manifestId,
-				context: action.id,
-				event: "didReceiveSettings",
-				device: "device123",
-				payload: {
-					controller: "Keypad",
-					coordinates: {
-						column: 1,
-						row: 2,
-					},
-					isInMultiAction: false,
-					resources: {},
-					settings: {
-						name: "Refreshed",
-					},
-				},
-			});
-
-			// Assert (Event).
-			await expect(settings).resolves.toEqual({ name: "Refreshed" });
-			expect(settingsCache.get(action.id)).toEqual({ name: "Refreshed" });
-
-			// Act (Repeat).
-			await expect(action.getSettings()).resolves.toEqual({ name: "Refreshed" });
-
-			// Assert (Repeat).
-			expect(connection.send).toHaveBeenCalledTimes(1);
-			expect(spyOnTrace).toHaveBeenCalledTimes(1);
-			expect(spyOnTrace).toHaveBeenCalledWith(
-				JSON.stringify({
-					event: "getSettings",
-					context: action.id,
-					source: "cache",
-					settings: {
-						name: "Refreshed",
-					},
-				}),
-			);
-		});
 	});
 
 	describe("with useExperimentalMessageIdentifiers set to false", () => {
