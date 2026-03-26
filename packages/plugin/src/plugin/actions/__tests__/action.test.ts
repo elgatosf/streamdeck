@@ -1,12 +1,15 @@
-import { beforeAll, describe, expect, it, test, vi } from "vitest";
+import type { JsonObject } from "@elgato/utils";
+import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, test, vi } from "vitest";
 
 import type { Settings } from "../../../api/__mocks__/events.js";
 import { DeviceType, type GetSettings, type SetSettings, type ShowAlert, type WillAppear } from "../../../api/index.js";
-import type { JsonObject } from "../../../common/json.js";
 import { connection } from "../../connection.js";
 import { Device } from "../../devices/device.js";
 import { deviceStore } from "../../devices/store.js";
+import { logger } from "../../logging/index.js";
 import { Action } from "../action.js";
+import { settingsCache } from "../cache.js";
+import { actionConfig } from "../config.js";
 import { DialAction } from "../dial.js";
 
 vi.mock("../../devices/store.js");
@@ -48,6 +51,11 @@ describe("Action", () => {
 	);
 
 	beforeAll(() => vi.spyOn(deviceStore, "getDeviceById").mockReturnValue(device));
+	afterEach(() => {
+		actionConfig.useExperimentalMessageIdentifiers = false;
+		settingsCache.delete(source.context);
+		vi.clearAllMocks();
+	});
 
 	/**
 	 * Asserts the constructor of {@link Action} sets the properties from the source.
@@ -66,70 +74,186 @@ describe("Action", () => {
 		expect(deviceStore.getDeviceById).toHaveBeenLastCalledWith(source.device);
 	});
 
-	/**
-	 * Asserts {@link Action.getSettings} requests the settings from the connection.
-	 */
-	it("getSettings", async () => {
-		// Arrange.
-		const action = new Action(source);
-
-		// Array, act (Command).
-		const settings = action.getSettings();
-
-		// Assert (Command).
-		expect(connection.send).toHaveBeenCalledTimes(1);
-		expect(connection.send).toHaveBeenLastCalledWith<[GetSettings]>({
-			event: "getSettings",
-			context: action.id,
-			id: expect.any(String),
+	describe("with useExperimentalMessageIdentifiers set to true", () => {
+		beforeEach(() => {
+			actionConfig.useExperimentalMessageIdentifiers = true;
 		});
 
-		await expect(Promise.race([settings, false])).resolves.toBe(false);
-
-		// Act (Event).
-		connection.emit("didReceiveSettings", {
-			action: "com.other.test.one",
-			context: "__other__", // Other action.
-			event: "didReceiveSettings",
-			device: "device123",
-			payload: {
-				controller: "Keypad",
-				coordinates: {
-					column: 0,
-					row: 0,
-				},
-				isInMultiAction: false,
-				resources: {},
-				settings: {
-					name: "Other",
-				},
-			},
+		afterAll(() => {
+			actionConfig.useExperimentalMessageIdentifiers = false;
 		});
 
-		connection.emit("didReceiveSettings", {
-			action: action.manifestId,
-			context: action.id, // Correct action.
-			event: "didReceiveSettings",
-			device: "device123",
-			payload: {
-				controller: "Keypad",
-				coordinates: {
-					column: 1,
-					row: 3,
-				},
-				isInMultiAction: false,
-				resources: {},
-				settings: {
-					name: "Elgato",
-				},
-			},
+		/**
+		 * Asserts {@link Action.getSettings} returns cached settings when the cache is valid.
+		 */
+		it("getSettings returns cached settings", async () => {
+			// Arrange.
+			const action = new Action(source);
+			const cachedSettings = { name: "Cached" };
+			const spyOnTrace = vi.spyOn(logger, "trace");
+			settingsCache.set(action.id, cachedSettings);
+
+			// Act.
+			const result = await action.getSettings();
+
+			// Assert.
+			expect(result).toEqual(cachedSettings);
+			expect(connection.send).not.toHaveBeenCalled();
+			expect(spyOnTrace).toHaveBeenCalledTimes(1);
+			expect(spyOnTrace).toHaveBeenCalledWith(
+				JSON.stringify({
+					event: "getSettings",
+					context: action.id,
+					source: "cache",
+					settings: cachedSettings,
+				}),
+			);
+		});
+	});
+
+	describe("with useExperimentalMessageIdentifiers set to false", () => {
+		beforeAll(() => {
+			actionConfig.useExperimentalMessageIdentifiers = false;
 		});
 
-		await settings;
+		/**
+		 * Asserts {@link Action.getSettings} ignores cached settings when experimental message identifiers are disabled.
+		 */
+		it("getSettings ignores cached settings", async () => {
+			// Arrange.
+			const action = new Action(source);
+			const spyOnTrace = vi.spyOn(logger, "trace");
+			settingsCache.set(action.id, { name: "Cached" });
 
-		// Assert (Event).
-		await expect(await settings).toEqual<Settings>({
-			name: "Elgato",
+			// Act.
+			const settings = action.getSettings();
+
+			// Assert (Command sent instead of cache hit).
+			expect(connection.send).toHaveBeenCalledTimes(1);
+			expect(connection.send).toHaveBeenLastCalledWith<[GetSettings]>({
+				event: "getSettings",
+				context: action.id,
+				id: expect.any(String),
+			});
+			expect(spyOnTrace).not.toHaveBeenCalled();
+
+			// Act (Event).
+			connection.emit("didReceiveSettings", {
+				action: action.manifestId,
+				context: action.id,
+				event: "didReceiveSettings",
+				device: "device123",
+				payload: {
+					controller: "Keypad",
+					coordinates: {
+						column: 1,
+						row: 2,
+					},
+					isInMultiAction: false,
+					resources: {},
+					settings: {
+						name: "Fresh",
+					},
+				},
+			});
+
+			// Assert.
+			await expect(settings).resolves.toEqual({ name: "Fresh" });
+			expect(settingsCache.get(action.id)).toEqual({ name: "Cached" });
+		});
+
+		/**
+		 * Asserts {@link Action.getSettings} requests settings from the connection and does not populate cache.
+		 */
+		it("getSettings fetches without populating cache", async () => {
+			// Arrange.
+			const action = new Action(source);
+
+			// Array, act (Command).
+			const settings = action.getSettings();
+
+			// Assert (Command).
+			expect(connection.send).toHaveBeenCalledTimes(1);
+			expect(connection.send).toHaveBeenLastCalledWith<[GetSettings]>({
+				event: "getSettings",
+				context: action.id,
+				id: expect.any(String),
+			});
+
+			await expect(Promise.race([settings, false])).resolves.toBe(false);
+
+			// Act (Event).
+			connection.emit("didReceiveSettings", {
+				action: "com.other.test.one",
+				context: "__other__", // Other action.
+				event: "didReceiveSettings",
+				device: "device123",
+				payload: {
+					controller: "Keypad",
+					coordinates: {
+						column: 0,
+						row: 0,
+					},
+					isInMultiAction: false,
+					resources: {},
+					settings: {
+						name: "Other",
+					},
+				},
+			});
+
+			connection.emit("didReceiveSettings", {
+				action: action.manifestId,
+				context: action.id, // Correct action.
+				event: "didReceiveSettings",
+				device: "device123",
+				payload: {
+					controller: "Keypad",
+					coordinates: {
+						column: 1,
+						row: 3,
+					},
+					isInMultiAction: false,
+					resources: {},
+					settings: {
+						name: "Elgato",
+					},
+				},
+			});
+
+			// Assert (Event).
+			await expect(settings).resolves.toEqual({
+				name: "Elgato",
+			} satisfies Settings);
+			expect(settingsCache.get(action.id)).toBeUndefined();
+
+			// Act (Repeat).
+			const nextSettings = action.getSettings();
+
+			// Assert (Repeat command).
+			expect(connection.send).toHaveBeenCalledTimes(2);
+
+			connection.emit("didReceiveSettings", {
+				action: action.manifestId,
+				context: action.id,
+				event: "didReceiveSettings",
+				device: "device123",
+				payload: {
+					controller: "Keypad",
+					coordinates: {
+						column: 1,
+						row: 3,
+					},
+					isInMultiAction: false,
+					resources: {},
+					settings: {
+						name: "Elgato Again",
+					},
+				},
+			});
+
+			await expect(nextSettings).resolves.toEqual({ name: "Elgato Again" });
+			expect(settingsCache.get(action.id)).toBeUndefined();
 		});
 	});
 
@@ -168,6 +292,24 @@ describe("Action", () => {
 	describe("sending", () => {
 		let action!: Action;
 		beforeAll(() => (action = new Action(source)));
+
+		/**
+		 * Asserts {@link Action.setSettings} invalidates the settings cache.
+		 */
+		it("setSettings invalidates cache", async () => {
+			// Arrange.
+			const action = new Action(source);
+			settingsCache.set(action.id, { name: "Cached" });
+
+			// Act.
+			await action.setSettings({ name: "Updated" });
+
+			// Assert.
+			expect(settingsCache.get(action.id)).toBeUndefined();
+
+			// Cleanup.
+			settingsCache.delete(action.id);
+		});
 
 		/**
 		 * Asserts {@link Action.setSettings} forwards the command to the {@link connection}.
