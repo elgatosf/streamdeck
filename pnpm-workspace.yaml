@@ -1,2 +1,7 @@
 packages:
   - "packages/*"
+
+minimumReleaseAge: 1440
+minimumReleaseAgeExclude:
+  - "@elgato/*"
+  - "@streamdeck/*"
