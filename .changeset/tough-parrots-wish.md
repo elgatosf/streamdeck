@@ -1,5 +1,5 @@
 ---
-"@elgato/streamdeck": patch
+"@elgato/streamdeck": minor
 ---
 
 Add cache for action settings
