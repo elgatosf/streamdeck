@@ -14,7 +14,7 @@
 
 Welcome to the Stream Deck SDK — Designed to make creating plugins for Stream Deck easy, the Stream Deck SDK provides everything you need to connect and communicate with Stream Deck app, letting you focus on the fun stuff.
 
-> Creating Stream Deck plugins with Node.js requires Node.js v20. When installing Node.js, we recommended using a version manager such as [nvm](https://github.com/creationix/nvm) (macOS) or [nvm-windows](https://github.com/coreybutler/nvm-windows) (Windows).
+> Creating Stream Deck plugins with Node.js requires Node.js 24 or higher, and Stream Deck 7.1 or higher. When installing Node.js, we recommended using a version manager such as [nvm](https://github.com/creationix/nvm) (macOS) or [nvm-windows](https://github.com/coreybutler/nvm-windows) (Windows).
 
 ## 🚀 Quick Start
 
@@ -96,7 +96,7 @@ You can configure debugging within the [manifest's Node.js configuration](https:
 {
     // ...
     "Nodejs": {
-        "Version": "20",
+        "Version": "24",
         "Debug": "enabled"
     },
 }
