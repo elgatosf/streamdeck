@@ -1,13 +1,15 @@
-# Node.js
+# Tooling
 .turbo
+.wireit
 node_modules/
 
 # Tests
 coverage/
 
 # Build output
+bin/
 dist/
 
 # Shared package files
 packages/plugin/README.md
-packages/plugin/LICENSE
+packages/**/LICENSE

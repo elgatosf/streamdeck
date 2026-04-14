@@ -1,0 +1,107 @@
+{
+    "name": "@elgato/cli",
+    "version": "1.7.4",
+    "description": "Stream Deck CLI tool for building with Stream Deck.",
+    "bin": {
+        "streamdeck": "bin/streamdeck.mjs",
+        "sd": "bin/streamdeck.mjs"
+    },
+    "type": "module",
+    "main": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "files": [
+        "./{bin,dist}/*.{js,cjs,mjs}",
+        "./{bin,dist}/*.d.{cts,ts}",
+        "./template"
+    ],
+    "engines": {
+        "node": ">=20.1.0"
+    },
+    "scripts": {
+        "build": "wireit",
+        "build:bin": "wireit",
+        "build:exports": "wireit",
+        "dev": "rolldown --config rolldown.config.ts --watch",
+        "dev:exports": "tsup --watch",
+        "lint": "eslint --max-warnings 0",
+        "lint:fix": "prettier \"./src/**/*.ts\" --write",
+        "prepack": "cp ../../LICENSE ."
+    },
+    "wireit": {
+        "build": {
+            "dependencies": [
+                "build:bin",
+                "build:exports"
+            ]
+        },
+        "build:bin": {
+            "command": "rolldown --config rolldown.config.ts ",
+            "clean": true,
+            "output": [
+                "bin/"
+            ]
+        },
+        "build:exports": {
+            "command": "tsup",
+            "clean": true,
+            "output": [
+                "dist/"
+            ]
+        }
+    },
+    "prettier": "@elgato/prettier-config",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/elgatosf/cli.git"
+    },
+    "keywords": [
+        "elgato",
+        "stream deck",
+        "plugin",
+        "cli",
+        "marketplace",
+        "maker"
+    ],
+    "author": {
+        "name": "Elgato",
+        "url": "https://www.elgato.com"
+    },
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/elgatosf/streamdeck/issues"
+    },
+    "homepage": "https://docs.elgato.com/cli",
+    "dependencies": {
+        "@elgato/schemas": "^0.4.14",
+        "@humanwhocodes/momoa": "^3.0.0",
+        "@zip.js/zip.js": "^2.7.54",
+        "ajv": "^8.17.1",
+        "chalk": "^5.4.1",
+        "commander": "^13.0.0",
+        "ejs": "^3.1.10",
+        "find-process": "^1.4.10",
+        "ignore": "^7.0.3",
+        "inquirer": "^12.3.2",
+        "is-interactive": "^2.0.0",
+        "lodash": "^4.17.21",
+        "log-symbols": "^7.0.0",
+        "rage-edit": "^1.2.0",
+        "semver": "^7.6.3",
+        "tar": "^7.5.3"
+    },
+    "devDependencies": {
+        "@elgato/eslint-config": "^0.1.0",
+        "@elgato/prettier-config": "^0.2.4",
+        "@tsconfig/node20": "^20.1.4",
+        "@types/ejs": "^3.1.5",
+        "@types/inquirer": "^9.0.7",
+        "@types/lodash": "^4.17.14",
+        "@types/node": "^22.10.7",
+        "@types/semver": "^7.5.8",
+        "rolldown": "1.0.0-rc.8",
+        "tslib": "^2.8.1",
+        "tsup": "^8.5.1",
+        "typescript": "^5.7.3",
+        "wireit": "^0.14.12"
+    }
+}

@@ -1,0 +1,24 @@
+{
+    "extends": "@tsconfig/node20/tsconfig.json",
+    "compilerOptions": {
+        "customConditions": [
+            "node"
+        ],
+        "lib": [
+            "es2022",
+            "esnext.disposable"
+        ],
+        "module": "ES2022",
+        "moduleResolution": "Bundler",
+        "types": ["node"]
+    },
+    "include": [
+        "src/",
+        "rolldown.config.ts"
+    ],
+    "exclude": [
+        "bin",
+        "node_modules",
+        "template"
+    ]
+}
