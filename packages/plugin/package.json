@@ -45,7 +45,7 @@
     "bugs": {
         "url": "https://github.com/elgatosf/streamdeck/issues"
     },
-    "homepage": "https://github.com/elgatosf/streamdeck#readme",
+    "homepage": "https://docs.elgato.com/sdk",
     "devDependencies": {
         "@elgato/eslint-config": "^0.3.2",
         "@elgato/prettier-config": "^0.3.3",

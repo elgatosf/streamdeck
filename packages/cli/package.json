@@ -52,7 +52,7 @@
     "prettier": "@elgato/prettier-config",
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/elgatosf/cli.git"
+        "url": "git+https://github.com/elgatosf/streamdeck.git"
     },
     "keywords": [
         "elgato",
