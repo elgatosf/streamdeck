@@ -3,7 +3,7 @@ import { defineConfig } from "tsup";
 const banner = {
 	js: `/**!
  * @author Elgato
- * @module elgato/streamdeck
+ * @module elgato/cli
  * @license MIT
  * @copyright Copyright (c) Corsair Memory Inc.
  */`,
