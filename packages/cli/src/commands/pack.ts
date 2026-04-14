@@ -49,7 +49,7 @@ export const pack = command<PackOptions>(
 			} else {
 				stdout
 					.error("File already exists")
-					.log("Specify a different -o|-output location, or -f|--force saving to overwrite the existing file")
+					.log("Specify a different [-o, --output] location, or [-f, --force] saving to overwrite the existing file")
 					.exit(1);
 			}
 		}

@@ -17,13 +17,13 @@ program
 program
 	.command("unlink")
 	.argument("<uuid>")
-	.option("-d|--delete", "Enable deletion of non-linked plugins.")
+	.option("-d, --delete", "Enable deletion of non-linked plugins.")
 	.description("Unlinks the plugin from Stream Deck.")
 	.action((uuid, opts) => unlink({ uuid, ...opts }));
 
 program
 	.command("list")
-	.option("-a|--all", "Show all plugins", false)
+	.option("-a, --all", "Show all plugins", false)
 	.description("Display list of installed plugins.")
 	.action((opts) => list(opts));
 
@@ -44,7 +44,7 @@ program
 program
 	.command("dev")
 	.description("Enables developer mode.")
-	.option("-d|--disable", "Disables developer mode", false)
+	.option("-d, --disable", "Disables developer mode", false)
 	.action(({ disable }) => setDeveloperMode({ disable }));
 
 program
@@ -61,8 +61,8 @@ program
 	.description("Creates a .streamDeckPlugin file from the plugin.")
 	.argument("[path]", "Path of the plugin to pack")
 	.option("--dry-run", "Generates a report without creating a package", false)
-	.option("-f|--force", "Forces saving, overwriting an package if it exists", false)
-	.option("-o|--output <output>", "Specifies the path for the output directory")
+	.option("-f, --force", "Forces saving, overwriting an package if it exists", false)
+	.option("-o, --output <output>", "Specifies the path for the output directory")
 	.option("--version <version>", "Plugin version; value will be written to the manifest")
 	.option("--force-update-check", "Forces an update check", false)
 	.option("--no-update-check", "Disables updating schemas", true)

@@ -38,7 +38,7 @@ export const validate = command<ValidateOptions>(async (options, stdout) => {
 
 	// Check for conflicting options.
 	if (!options.updateCheck && options.forceUpdateCheck) {
-		console.log(`error: option '--force-update-check' cannot be used with option '--no-update-check'`);
+		stdout.error("Option '--force-update-check' cannot be used with option '--no-update-check'");
 		fail();
 	}
 
