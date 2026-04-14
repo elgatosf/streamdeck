@@ -6,7 +6,7 @@ const banner = `#!/usr/bin/env node
 
 /**!
  * @author Elgato
- * @module elgato/streamdeck
+ * @module elgato/cli
  * @license MIT
  * @copyright Copyright (c) Corsair Memory Inc.
  */`;
