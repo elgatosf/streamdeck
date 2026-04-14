@@ -195,7 +195,7 @@ export async function readJsonFile<T>(path: string): Promise<JsonFile<T>> {
 			},
 		};
 	} catch (cause) {
-		throw new Error(`Failed to pase JSON file, ${path}`, { cause });
+		throw new Error(`Failed to parse JSON file, ${path}`, { cause });
 	}
 }
 
