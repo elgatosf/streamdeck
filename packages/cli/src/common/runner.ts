@@ -13,7 +13,7 @@ import { Readable } from "node:stream";
  * @param options Options used to determine how the {@link command} should be run.
  * @returns The result of running the command. **NB.** when the command is detached, the result is always 0.
  */
-export function run(command: string, options?: RunOptions): Promise<number> {
+export function run(command: string, options?: RunOptions): Promise<number | null> {
 	if (options?.detached) {
 		return forget(command, options);
 	}
@@ -24,11 +24,12 @@ export function run(command: string, options?: RunOptions): Promise<number> {
 
 		// Begin gathering the stderr, and wait for the child process to finish.
 		const stderr = stderrReader(child);
-		child.on("exit", (code: number) => {
-			if (code > 0) {
+		child.on("exit", (code: number | null) => {
+			if (!code || code > 0) {
 				stderr.then((value) => {
 					console.log(value);
-					reject(code);
+				}).finally(() => {
+					reject(code)
 				});
 			} else {
 				resolve(0);
@@ -42,7 +43,7 @@ export function run(command: string, options?: RunOptions): Promise<number> {
  * @param url URL to run.
  * @returns The result of running the command.
  */
-export function runUrl(url: string): Promise<number> {
+export function runUrl(url: string): Promise<number | null> {
 	if (platform() === "win32") {
 		return run(`start ${url}`);
 	} else {
