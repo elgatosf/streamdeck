@@ -5,7 +5,7 @@ import { runUrl } from "../common/runner";
 import { isPluginInstalled, isStreamDeckRunning } from "../stream-deck";
 
 /**
- * Stops the first plugin that matches the given {@link StopOptions.uuid}.
+ * Stops the first plugin that matches the given UUID.
  */
 export const stop = command<StopOptions>(async ({ uuid }, output) => {
 	output.spin(`Stopping ${uuid}`);

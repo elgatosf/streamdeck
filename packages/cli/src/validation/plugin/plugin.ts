@@ -73,7 +73,7 @@ export type LayoutFile = LocationRef<JsonLocation> & {
  */
 export type PluginContext = {
 	/**
-	 * Gets a value indicating whether the {@link PluginContext.id} is valid.
+	 * Gets a value indicating whether the `id` is valid.
 	 */
 	readonly hasValidId: boolean;
 

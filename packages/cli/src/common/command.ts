@@ -6,7 +6,8 @@ import { createConsole, createQuietConsole, StdOut } from "./stdout";
 
 // eslint-disable-next-line jsdoc/require-param
 /**
- * Wraps a command delegate; when invoked all options are provided, and the output and logger are constructed based on {@link GlobalOptions.quiet} global option.
+ * Wraps a command delegate; when invoked all options are provided, and the output and logger are constructed
+ * based on whether the command should be quiet.
  * @param fn The command function to execute.
  * @param defaultOptions Fallback options supplied to the command when optional-options are not specified by the caller.
  * @returns The command.

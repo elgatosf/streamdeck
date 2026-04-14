@@ -226,7 +226,7 @@ type DependencyConfig = {
 	mode: "dev" | "prod";
 
 	/**
-	 * Local path or npm version of the dependency to be used when {@link DependencyConfig.mode} is `dev`.
+	 * Local path or npm version of the dependency to be used when `mode` is `dev`.
 	 */
 	version: string;
 };

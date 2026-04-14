@@ -5,7 +5,7 @@ import { runUrl } from "../common/runner";
 import { isPluginInstalled, isStreamDeckRunning } from "../stream-deck";
 
 /**
- * Restarts the first plugin that matches the given {@link RestartOptions.uuid}.
+ * Restarts the first plugin that matches the given UUID.
  */
 export const restart = command<RestartOptions>(
 	async ({ uuid, noStart }, output) => {

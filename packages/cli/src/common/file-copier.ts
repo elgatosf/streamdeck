@@ -25,7 +25,8 @@ class FileCopier {
 	constructor(private readonly options: Required<Options>) {}
 
 	/**
-	 * Copies the {@link path}, relative to the {@link FileOrDirectoryPath.source}, renders all templates, and outputs the contents to the {@link path} relative to the {@link FileOrDirectoryPath.dest}.
+	 * Copies the {@link path} relative to the source, renders all templates, and outputs the contents
+	 * to the {@link path} relative to the destination.
 	 * @param path The relative path to render and copy.
 	 * @param destination Optional path, relative destination, whereby the items will be copied to.
 	 */
