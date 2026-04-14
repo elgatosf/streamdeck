@@ -90,14 +90,16 @@
         "tar": "^7.5.3"
     },
     "devDependencies": {
-        "@elgato/eslint-config": "^0.1.0",
-        "@elgato/prettier-config": "^0.2.4",
+        "@elgato/eslint-config": "^0.3.2",
+        "@elgato/prettier-config": "^0.3.3",
         "@tsconfig/node20": "^20.1.4",
         "@types/ejs": "^3.1.5",
         "@types/inquirer": "^9.0.7",
         "@types/lodash": "^4.17.14",
         "@types/node": "^22.10.7",
         "@types/semver": "^7.5.8",
+        "eslint": "^9.39.4",
+        "prettier": "^3.8.1",
         "rolldown": "1.0.0-rc.8",
         "tslib": "^2.8.1",
         "tsup": "^8.5.1",

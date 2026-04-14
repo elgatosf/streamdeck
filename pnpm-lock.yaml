@@ -67,11 +67,11 @@ importers:
         version: 7.5.13
     devDependencies:
       '@elgato/eslint-config':
-        specifier: ^0.1.0
-        version: 0.1.0(@eslint/js@9.39.4)(eslint-plugin-jsdoc@54.7.0(eslint@9.39.4))(eslint@9.39.4)(typescript-eslint@8.54.0(eslint@9.39.4)(typescript@5.9.3))(typescript@5.9.3)
+        specifier: ^0.3.2
+        version: 0.3.2(@eslint/js@9.39.4)(eslint-plugin-jsdoc@54.7.0(eslint@9.39.4))(eslint@9.39.4)(typescript-eslint@8.54.0(eslint@9.39.4)(typescript@5.9.3))(typescript@5.9.3)
       '@elgato/prettier-config':
-        specifier: ^0.2.4
-        version: 0.2.6(@trivago/prettier-plugin-sort-imports@5.2.2(prettier@3.8.1))(prettier-plugin-multiline-arrays@4.1.4(prettier@3.8.1))(prettier@3.8.1)
+        specifier: ^0.3.3
+        version: 0.3.3(prettier@3.8.1)
       '@tsconfig/node20':
         specifier: ^20.1.4
         version: 20.1.9
@@ -90,6 +90,12 @@ importers:
       '@types/semver':
         specifier: ^7.5.8
         version: 7.7.1
+      eslint:
+        specifier: ^9.39.4
+        version: 9.39.4
+      prettier:
+        specifier: ^3.8.1
+        version: 3.8.1
       rolldown:
         specifier: 1.0.0-rc.8
         version: 1.0.0-rc.8(@emnapi/core@1.9.2)(@emnapi/runtime@1.9.2)
@@ -280,15 +286,6 @@ packages:
     resolution: {integrity: sha512-LdGi0s4y+H9XJj87m/sBBy5aIxl8kN9haI3IV9Znnyx5eKoLHkwuCAzrB77GHZp3uEacCiCYDvRTefrItYh1uw==}
     engines: {node: '>=22'}
 
-  '@elgato/eslint-config@0.1.0':
-    resolution: {integrity: sha512-BKLdQpJogXgz9NJ1UkoycUfa67Y8af/6Z0xQJ/gNTf3G6s78mUSyJWdZj5BakPyqxiFZkBMTlQxFAuaVIaniMQ==}
-    peerDependencies:
-      '@eslint/js': ^9.26.0
-      eslint: ^9.26.0
-      eslint-plugin-jsdoc: ^50.6.14
-      typescript: ^5.8.3
-      typescript-eslint: ^8.32.0
-
   '@elgato/eslint-config@0.3.2':
     resolution: {integrity: sha512-onsTRVpVo/RzuGFuah3SDpNe3+geOafa6btDa9zoVp0y6WpAejJZWGyXxj9/QWQBL82z+liWrMhJvHXhyxOwag==}
     peerDependencies:
@@ -297,13 +294,6 @@ packages:
       eslint-plugin-jsdoc: ^54.1.1
       typescript: ^5.8.3
       typescript-eslint: ^8.32.0
-
-  '@elgato/prettier-config@0.2.6':
-    resolution: {integrity: sha512-+UwI8tqf8i5Qkfzi7UfhgQu4K15DjeT6SrVrTnW3IifmlA+cILE2kqExoo9Sp4Wz1yv9Iq2eSURAyzW51CljjQ==}
-    peerDependencies:
-      '@trivago/prettier-plugin-sort-imports': ^5.2.1
-      prettier: ^3.4.2
-      prettier-plugin-multiline-arrays: ^3.0.6
 
   '@elgato/prettier-config@0.3.3':
     resolution: {integrity: sha512-SjRNvSCAPPfbUMlFryAW28vLm+vqpadvtoncUr4SqvI2gVCp3T3cnOwWgFswX8NdUMMtTdEvh42p9wxGzLzzKg==}
@@ -2686,14 +2676,6 @@ snapshots:
       luxon: 3.7.2
       type-fest: 5.4.4
 
-  '@elgato/eslint-config@0.1.0(@eslint/js@9.39.4)(eslint-plugin-jsdoc@54.7.0(eslint@9.39.4))(eslint@9.39.4)(typescript-eslint@8.54.0(eslint@9.39.4)(typescript@5.9.3))(typescript@5.9.3)':
-    dependencies:
-      '@eslint/js': 9.39.4
-      eslint: 9.39.4
-      eslint-plugin-jsdoc: 54.7.0(eslint@9.39.4)
-      typescript: 5.9.3
-      typescript-eslint: 8.54.0(eslint@9.39.4)(typescript@5.9.3)
-
   '@elgato/eslint-config@0.3.2(@eslint/js@9.39.4)(eslint-plugin-jsdoc@54.7.0(eslint@9.39.4))(eslint@9.39.4)(typescript-eslint@8.54.0(eslint@9.39.4)(typescript@5.9.3))(typescript@5.9.3)':
     dependencies:
       '@eslint/js': 9.39.4
@@ -2701,12 +2683,6 @@ snapshots:
       eslint-plugin-jsdoc: 54.7.0(eslint@9.39.4)
       typescript: 5.9.3
       typescript-eslint: 8.54.0(eslint@9.39.4)(typescript@5.9.3)
-
-  '@elgato/prettier-config@0.2.6(@trivago/prettier-plugin-sort-imports@5.2.2(prettier@3.8.1))(prettier-plugin-multiline-arrays@4.1.4(prettier@3.8.1))(prettier@3.8.1)':
-    dependencies:
-      '@trivago/prettier-plugin-sort-imports': 5.2.2(prettier@3.8.1)
-      prettier: 3.8.1
-      prettier-plugin-multiline-arrays: 4.1.4(prettier@3.8.1)
 
   '@elgato/prettier-config@0.3.3(prettier@3.8.1)':
     dependencies:
