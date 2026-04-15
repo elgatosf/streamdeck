@@ -1,0 +1,94 @@
+{
+	"$schema": "../../../../../../streamdeck/plugins/manifest.json",
+	"Actions": [
+		{
+			"Controllers": ["Encoder", "Keypad"],
+			"DisableAutomaticStates": true,
+			"DisableCaching": false,
+			"Encoder": {
+				"background": "background",
+				"Icon": "icon",
+				"layout": "$A0",
+				"StackColor": "#000000",
+				"TriggerDescription": {
+					"LongTouch": "Long touch",
+					"Push": "Push",
+					"Rotate": "Rotate",
+					"Touch": "Touch"
+				}
+			},
+			"Icon": "action-icon",
+			"Name": "Action One",
+			"OS": ["mac", "windows"],
+			"PropertyInspectorPath": "action.html",
+			"States": [
+				{
+					"FontFamily": "Arial",
+					"FontSize": 12,
+					"FontStyle": "Bold",
+					"FontUnderline": true,
+					"Image": "action-state-image",
+					"MultiActionImage": "action-state-multi-action-image",
+					"Name": "Action State One",
+					"ShowTitle": true,
+					"Title": "State One",
+					"TitleAlignment": "bottom",
+					"TitleColor": "#000000"
+				}
+			],
+			"SupportURL": "https://help.elgato.com",
+			"SupportedInKeyLogicActions": true,
+			"SupportedInMultiActions": true,
+			"Tooltip": "This is the tooltip",
+			"UserTitleEnabled": true,
+			"UUID": "com.elgato.test.one",
+			"VisibleInActionsList": true
+		}
+	],
+	"ApplicationsToMonitor": {
+		"mac": ["finder"],
+		"windows": ["explorer.exe"]
+	},
+	"Author": "Elgato",
+	"Category": "Testing",
+	"CategoryIcon": "category-icon",
+	"CodePath": "main.js",
+	"CodePathMac": "main-darwin.js",
+	"CodePathWin": "main-windows.js",
+	"DefaultWindowSize": [500, 650],
+	"Description": "Manifest version 6.4",
+	"Icon": "icon",
+	"Name": "Test Manifest",
+	"Nodejs": {
+		"Debug": "break",
+		"GenerateProfilerOutput": false,
+		"Version": "24"
+	},
+	"OS": [
+		{
+			"MinimumVersion": "13",
+			"Platform": "mac"
+		},
+		{
+			"MinimumVersion": "10",
+			"Platform": "windows"
+		}
+	],
+	"Profiles": [
+		{
+			"DeviceType": 7,
+			"DontAutoSwitchWhenInstalled": true,
+			"Name": "Test Profile",
+			"Readonly": true
+		}
+	],
+	"PropertyInspectorPath": "pi.html",
+	"SDKVersion": 3,
+	"Software": {
+		"MinimumVersion": "7.2"
+	},
+	"SupportURL": "https://help.elgato.com",
+	"URL": "https://www.elgato.com",
+	"UUID": "com.elgato.test",
+	"Version": "1.0.0.0"
+}

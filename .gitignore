@@ -1,5 +1,6 @@
 # Node.js
 .turbo
+.wireit
 node_modules/
 
 # Tests
@@ -7,6 +8,7 @@ coverage/
 
 # Build output
 dist/
+packages/schemas/streamdeck
 
 # Shared package files
 packages/plugin/README.md

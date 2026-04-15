@@ -1,0 +1,17 @@
+{
+    "extends": "@tsconfig/node20/tsconfig.json",
+    "compilerOptions": {
+        "customConditions": ["node"],
+        "module": "ES2022",
+        "moduleResolution": "Bundler",
+        "paths": {
+            "@tests": ["./tests/validate"]
+        },
+        "types": ["jest", "node"]
+    },
+    "include": [
+        "**/*.ts",
+        "**/*.d.ts"
+    ],
+    "exclude": ["node_modules"]
+}

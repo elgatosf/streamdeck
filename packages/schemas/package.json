@@ -1,0 +1,120 @@
+{
+    "name": "@elgato/schemas",
+    "version": "0.4.15",
+    "description": "Collection of schemas, and TypeScript declarations, to support the creation and validation of Stream Deck SDK files",
+    "exports": {
+        ".": {
+            "import": "./dist/index.mjs",
+            "require": "./dist/index.cjs",
+            "types": "./dist/index.d.ts"
+        },
+        "./streamdeck/plugins": {
+            "import": "./dist/streamdeck/plugins/index.mjs",
+            "require": "./dist/streamdeck/plugins/index.cjs",
+            "types": "./dist/streamdeck/plugins/index.d.ts"
+        },
+        "./streamdeck/plugins/json": {
+            "import": "./dist/streamdeck/plugins/json.mjs",
+            "require": "./dist/streamdeck/plugins/json.cjs",
+            "types": "./dist/streamdeck/plugins/json.d.ts"
+        },
+        "./streamdeck/plugins/layout.json": {
+            "default": "./streamdeck/plugins/layout.json"
+        },
+        "./streamdeck/plugins/manifest.json": {
+            "default": "./streamdeck/plugins/manifest.json"
+        }
+    },
+    "files": [
+        "dist/"
+    ],
+    "scripts": {
+        "build": "wireit",
+        "build:exports": "wireit",
+        "build:schemas": "wireit",
+        "clean": "rm -rf ./dist/ && rm -rf ./streamdeck/",
+        "lint": "eslint . --ext .ts --max-warnings 0",
+        "test": "wireit",
+        "test:ci": "jest",
+        "test:watch": "nodemon --watch src --ext ts --exec \"npm run test\"",
+        "prepack": "cp ../../LICENSE ."
+    },
+    "wireit": {
+        "build": {
+            "dependencies": [
+                "build:exports",
+                "build:schemas"
+            ]
+        },
+        "build:exports": {
+            "command": "rollup --config rollup.config.ts --configPlugin typescript",
+            "clean": true,
+            "output": [
+                "dist/**/*{.cjs,.d.ts,.mjs}"
+            ],
+            "dependencies": [
+                "build:schemas"
+            ]
+        },
+        "build:schemas": {
+            "command": "node -r @swc-node/register ./scripts/build.ts",
+            "clean": true,
+            "output": [
+                "dist/**/*.json"
+            ]
+        },
+        "test": {
+            "command": "jest",
+            "dependencies": [
+                "build:schemas"
+            ]
+        }
+    },
+    "prettier": "@elgato/prettier-config",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/elgatosf/streamdeck.git"
+    },
+    "keywords": [
+        "elgato",
+        "stream deck",
+        "sdk",
+        "json",
+        "schemas"
+    ],
+    "author": {
+        "name": "Elgato",
+        "url": "https://www.elgato.com"
+    },
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/elgatosf/streamdeck/issues"
+    },
+    "homepage": "https://docs.elgato.com/sdk",
+    "devDependencies": {
+        "@elgato/eslint-config": "^0.3.2",
+        "@elgato/prettier-config": "^0.3.3",
+        "@jest/globals": "29.7.0",
+        "@rollup/plugin-json": "^6.1.0",
+        "@rollup/plugin-node-resolve": "^16.0.0",
+        "@rollup/plugin-typescript": "^12.1.2",
+        "@swc-node/register": "1.10.9",
+        "@swc/core": "^1.10.7",
+        "@swc/jest": "^0.2.37",
+        "@tsconfig/node20": "^20.1.4",
+        "@types/jest": "^29.5.14",
+        "@types/json-schema": "^7.0.15",
+        "@types/node": "^22.10.7",
+        "ajv": "^8.17.1",
+        "eslint": "^9.39.4",
+        "expect": "29.7.0",
+        "jest": "^29.7.0",
+        "nodemon": "^3.1.9",
+        "prettier": "^3.8.1",
+        "rollup": "^4.30.1",
+        "rollup-plugin-dts": "^6.1.1",
+        "ts-json-schema-generator": "^2.3.0",
+        "typescript": "^5.7.3",
+        "wireit": "^0.14.12"
+    }
+}
