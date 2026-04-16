@@ -1,5 +1,15 @@
 # Change Log
 
+## 2.1.0
+
+### Minor Changes
+
+- 56fa44e: Add cache for action settings.
+
+### Patch Changes
+
+- a884b77: Updated readme to specify Node.js 24 and Stream Deck 7.1 requirements.
+
 ## 2.0.4
 
 ### Patch Changes
