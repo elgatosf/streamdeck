@@ -25,12 +25,14 @@ export function run(command: string, options?: RunOptions): Promise<number | nul
 		// Begin gathering the stderr, and wait for the child process to finish.
 		const stderr = stderrReader(child);
 		child.on("exit", (code: number | null) => {
-			if (!code || code > 0) {
-				stderr.then((value) => {
-					console.log(value);
-				}).finally(() => {
-					reject(code)
-				});
+			if (code === null || code > 0) {
+				stderr
+					.then((value) => {
+						console.log(value);
+					})
+					.finally(() => {
+						reject(code);
+					});
 			} else {
 				resolve(0);
 			}
