@@ -11,6 +11,7 @@
         "module": "NodeNext",
         "moduleResolution": "NodeNext",
         "noEmit": true,
+        "types": ["node"],
         "verbatimModuleSyntax": true
     },
     "include": [
