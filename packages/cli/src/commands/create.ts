@@ -245,7 +245,7 @@ async function renderTemplate(destination: string, pluginInfo: PluginInfo): Prom
  * @param pluginInfo Information about the plugin.
  */
 async function finalize(destination: string, pluginInfo: PluginInfo): Promise<void> {
-	createTemplateRenderer(destination, pluginInfo, { isPreBuild: false }).copy("rollup.config.mjs.ejs");
+	await createTemplateRenderer(destination, pluginInfo, { isPreBuild: false }).copy("rollup.config.mjs.ejs");
 
 	await link({
 		path: path.join(destination, `${pluginInfo.uuid}.sdPlugin`),
