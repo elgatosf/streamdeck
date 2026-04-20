@@ -10,7 +10,7 @@ import type { ReadableStream } from "node:stream/web";
 import { command } from "../common/command";
 import { StdoutError } from "../common/stdout";
 import { getPluginId } from "../stream-deck";
-import { type FileInfo, getFiles, mkdirIfNotExists, readJsonFile, sizeAsString } from "../system/fs";
+import { type FileInfo, getFiles, type JsonFile, mkdirIfNotExists, readJsonFile, sizeAsString } from "../system/fs";
 import { defaultOptions, validate, type ValidateOptions } from "./validate";
 
 /**
@@ -185,12 +185,12 @@ async function getPackageContents(
  * @returns Object that allows for the versioning to be undone.
  */
 async function version(path: string, version: string | null): Promise<VersionReverter> {
+	let manifest: JsonFile<Manifest> | undefined;
 	const manifestPath = resolve(path, "manifest.json");
 	const write = (contents: string): void => writeFileSync(manifestPath, contents, { encoding: "utf-8" });
-	let original: string | undefined;
 
 	if (existsSync(manifestPath)) {
-		const manifest = await readJsonFile<Manifest>(manifestPath);
+		manifest = await readJsonFile<Manifest>(manifestPath);
 
 		// Ensure the version in the manifest has the correct number of segments, [{major}.{minor}.{patch}.{build}]
 		version ??= manifest.value.Version?.toString() || "";
@@ -201,8 +201,8 @@ async function version(path: string, version: string | null): Promise<VersionRev
 
 	return {
 		undo: (): void => {
-			if (original !== undefined) {
-				write(original);
+			if (manifest?.contents) {
+				write(manifest.contents);
 			}
 		},
 	};

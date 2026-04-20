@@ -175,6 +175,7 @@ export async function readJsonFile<T>(path: string): Promise<JsonFile<T>> {
 		const value = JSON.parse(contents) as T;
 
 		return {
+			contents,
 			value,
 			stringify(): string {
 				// Detect the original line ending style (CRLF or LF)
@@ -203,6 +204,11 @@ export async function readJsonFile<T>(path: string): Promise<JsonFile<T>> {
  * A JSON file with its parsed value and a method to stringify it while preserving formatting.
  */
 export type JsonFile<T> = {
+	/**
+	 * Original contents of the JSON file.
+	 */
+	readonly contents: string;
+
 	/**
 	 * The parsed value of the JSON file.
 	 */
