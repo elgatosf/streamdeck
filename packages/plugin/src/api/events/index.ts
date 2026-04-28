@@ -1,5 +1,6 @@
 import type { JsonObject, JsonValue } from "@elgato/utils";
 
+import type { AssistantActionContextRequest, AssistantToolRequest } from "../assistant.js";
 import type {
 	DidReceiveResources,
 	DidReceiveSettings,
@@ -51,6 +52,7 @@ export {
 	type PropertyInspectorDidAppear,
 	type PropertyInspectorDidDisappear,
 } from "./ui.js";
+export type { AssistantToolRequest };
 
 /**
  * Represents an event that is emitted by Stream Deck.
@@ -68,6 +70,8 @@ export type EventIdentifier<TEvent> = {
 export type PluginEvent =
 	| ApplicationDidLaunch
 	| ApplicationDidTerminate
+	| AssistantActionContextRequest
+	| AssistantToolRequest
 	| DeviceDidChange
 	| DeviceDidConnect
 	| DeviceDidDisconnect

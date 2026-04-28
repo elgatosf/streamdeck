@@ -1,5 +1,6 @@
 import type { JsonObject, JsonValue } from "@elgato/utils";
 
+import type { AssistantActionContextResponse, AssistantToolResponse } from "./assistant.js";
 import type { DidReceiveGlobalSettings, DidReceiveSettings, State } from "./events/index.js";
 import type { FeedbackPayload } from "./layout.js";
 import type { Resources } from "./resources.js";
@@ -281,6 +282,8 @@ export type SendToPropertyInspector<TPayload extends JsonValue = JsonValue> = Co
  * Command sent to Stream Deck, from the plugin.
  */
 export type PluginCommand =
+	| AssistantActionContextResponse
+	| AssistantToolResponse
 	| GetGlobalSettings
 	| GetResources
 	| GetSecrets
