@@ -1,7 +1,7 @@
 import * as z from "zod";
 import type { JSONSchema } from "zod/v4/core";
 
-import { methods } from "./dispatchers/config-method-dispatcher.js";
+import { methods } from "./dispatchers/method-dispatcher.js";
 import type { AssistantMethodOptions } from "./method-options.js";
 
 /**
