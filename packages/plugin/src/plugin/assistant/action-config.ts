@@ -1,11 +1,11 @@
 import * as z from "zod";
 
-import type { ConfigMethodDefinition } from "./config-method-definition.js";
+import type { AssistantMethodDefinition } from "./method-definition.js";
 
 /**
  * Provides context associated with an action, allowing for it to be configured automatically.
  */
-export interface ConfigContext {
+export interface AssistantActionConfig {
 	/**
 	 * Schema that defines the structure of the settings associated with an action.
 	 */
@@ -14,5 +14,5 @@ export interface ConfigContext {
 	/**
 	 * Methods that can be used when automatically configuring an action.
 	 */
-	methods?: ConfigMethodDefinition[];
+	methods?: AssistantMethodDefinition[];
 }

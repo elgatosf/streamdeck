@@ -1,15 +1,15 @@
 import * as z from "zod";
 import type { JSONSchema } from "zod/v4/core";
 
-import type { ConfigMethodOptions } from "./config-method-options.js";
 import { methods } from "./dispatchers/config-method-dispatcher.js";
+import type { AssistantMethodOptions } from "./method-options.js";
 
 /**
  * Defines a method that can be used when automatically configuring an action.
  * @param methodConfig Configuration that defines the method.
  * @returns The method's definition.
  * @example
- * defineConfigMethod({
+ * defineAssistantMethod({
  * 	name: "get_user_id",
  * 	description: "Searches for a specific user by their name.",
  * 	inputSchema: z.object({
@@ -21,16 +21,16 @@ import { methods } from "./dispatchers/config-method-dispatcher.js";
  * 	}
  * })
  */
-export function defineConfigMethod<I extends z.ZodObject | undefined, O extends z.ZodType>(
-	methodConfig: ConfigMethodOptions<I, O>,
-): ConfigMethodDefinition {
+export function defineAssistantMethod<I extends z.ZodObject | undefined, O extends z.ZodType>(
+	methodConfig: AssistantMethodOptions<I, O>,
+): AssistantMethodDefinition {
 	const { name, description, inputSchema, outputSchema } = methodConfig;
 
 	if (methods.has(name)) {
 		throw new Error(`A method with the same name has already been defined: ${name}`);
 	}
 
-	const method: ConfigMethodDefinition = {
+	const method: AssistantMethodDefinition = {
 		[__brand]: __brand,
 		name,
 		description,
@@ -38,7 +38,10 @@ export function defineConfigMethod<I extends z.ZodObject | undefined, O extends 
 		outputSchema: z.toJSONSchema(outputSchema),
 	};
 
-	methods.set(methodConfig.name, methodConfig as unknown as ConfigMethodOptions<z.ZodObject | undefined, z.ZodObject>);
+	methods.set(
+		methodConfig.name,
+		methodConfig as unknown as AssistantMethodOptions<z.ZodObject | undefined, z.ZodObject>,
+	);
 	return method;
 }
 
@@ -47,7 +50,7 @@ declare const __brand: unique symbol;
 /**
  * Defines a method that can be used when automatically configuring an action.
  * @example
- * defineConfigMethod({
+ * defineAssistantMethod({
  * 	name: "get_user_id",
  * 	description: "Searches for a specific user by their name.",
  * 	inputSchema: z.object({
@@ -59,7 +62,7 @@ declare const __brand: unique symbol;
  * 	}
  * })
  */
-export interface ConfigMethodDefinition {
+export interface AssistantMethodDefinition {
 	/**
 	 * Name that identifies the method; must be unique amongst all methods exposed by the plugin.
 	 */

@@ -2,7 +2,7 @@ import type { Enumerable, JsonObject, JsonValue } from "@elgato/utils";
 
 import type { DialAction } from "../actions/dial.js";
 import type { KeyAction } from "../actions/key.js";
-import type { ConfigContext } from "../assistant/config-context.js";
+import type { AssistantActionConfig } from "../assistant/action-config.js";
 import type {
 	DialDownEvent,
 	DialRotateEvent,
@@ -31,7 +31,7 @@ export class SingletonAction<T extends JsonObject = JsonObject> {
 	/**
 	 * Provides context that allows for an action to be configured automatically.
 	 */
-	public static readonly configContext?: ConfigContext | undefined;
+	public static readonly assistantConfig?: AssistantActionConfig | undefined;
 
 	/**
 	 * The universally-unique value that identifies the action within the manifest.

@@ -35,6 +35,14 @@ export * from "./devices/index.js";
 export type * from "./events/index.js";
 export { type UIController };
 
+// --------------------------------------------------
+// Assistant
+// --------------------------------------------------
+
+export type { AssistantActionConfig } from "./assistant/action-config.js";
+export { defineAssistantMethod, type AssistantMethodDefinition } from "./assistant/method-definition.js";
+export type { AssistantMethodOptions } from "./assistant/method-options.js";
+
 let i18n: I18nProvider<Language> | undefined;
 
 export const streamDeck = {

@@ -3,12 +3,12 @@ import z from "zod";
 import type { DidReceiveConfigurationContextMessage } from "../../../api/assistant/did-receive-configuration-context-message.js";
 import { connection } from "../../connection.js";
 import { logger } from "../../logging/index.js";
-import type { ConfigContext } from "../config-context.js";
+import type { AssistantActionConfig } from "../action-config.js";
 
 /**
  * Configuration contexts registered by the plugin.
  */
-export const configContexts = new Map<string, ConfigContext>();
+export const actionConfigs = new Map<string, AssistantActionConfig>();
 
 /**
  * Dispatches the request for an action's configuration context.
@@ -21,7 +21,7 @@ connection.on("getConfigurationContext", async (ev) => {
 		connection.send({
 			event: "didReceiveConfigurationContext",
 			id,
-			payload: await getConfigContext(action),
+			payload: await getConfig(action),
 		});
 	} catch (err) {
 		// An unexpected error occurred, log it and return an error.
@@ -46,8 +46,8 @@ connection.on("getConfigurationContext", async (ev) => {
  * @param action The action identifier as defined within the manifest.
  * @returns Configuration context associated with the action.
  */
-async function getConfigContext(action: string): Promise<DidReceiveConfigurationContextMessage["payload"]> {
-	const configContext = configContexts.get(action);
+async function getConfig(action: string): Promise<DidReceiveConfigurationContextMessage["payload"]> {
+	const configContext = actionConfigs.get(action);
 
 	// Configuration context was not found.
 	if (!configContext) {

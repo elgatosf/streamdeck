@@ -3,7 +3,7 @@ import z from "zod";
 /**
  * Defines a method that can be used when automatically configuring an action.
  */
-export interface ConfigMethodOptions<I extends z.ZodObject | undefined, O extends z.ZodType> {
+export interface AssistantMethodOptions<I extends z.ZodObject | undefined, O extends z.ZodType> {
 	/**
 	 * Name that identifies the method; must be unique amongst all methods exposed by the plugin.
 	 */

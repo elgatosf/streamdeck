@@ -5,12 +5,12 @@ import type { DidInvokeMethodMessage } from "../../../api/assistant/did-invoke-m
 import type { InvokeMethodMessage } from "../../../api/assistant/invoke-method-message.js";
 import { connection } from "../../connection.js";
 import { logger } from "../../logging/index.js";
-import type { ConfigMethodOptions } from "../config-method-options.js";
+import type { AssistantMethodOptions } from "../method-options.js";
 
 /**
  * Configuration methods that have been registered by the plugin.
  */
-export const methods = new Map<string, ConfigMethodOptions<z.ZodObject | undefined, z.ZodObject>>();
+export const methods = new Map<string, AssistantMethodOptions<z.ZodObject | undefined, z.ZodObject>>();
 
 /**
  * Dispatches the request to invoke a method exposed by the plugin.
