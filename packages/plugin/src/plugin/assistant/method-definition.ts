@@ -45,7 +45,7 @@ export function defineAssistantMethod<I extends z.ZodObject | undefined, O exten
 	return method;
 }
 
-declare const __brand: unique symbol;
+const __brand = Symbol();
 
 /**
  * Defines a method that can be used when automatically configuring an action.

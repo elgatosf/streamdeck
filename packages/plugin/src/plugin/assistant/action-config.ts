@@ -9,7 +9,7 @@ export interface AssistantActionConfig {
 	/**
 	 * Schema that defines the structure of the settings associated with an action.
 	 */
-	settingsSchema: z.ZodType | (() => Promise<z.ZodType>) | (() => z.ZodType);
+	settingsSchema: z.ZodObject | (() => Promise<z.ZodObject>) | (() => z.ZodObject);
 
 	/**
 	 * Methods that can be used when automatically configuring an action.
