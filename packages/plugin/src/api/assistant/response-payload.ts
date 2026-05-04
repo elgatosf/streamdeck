@@ -4,14 +4,19 @@
 export type ResponsePayload<T> =
 	| {
 			/**
-			 * Error code used to identify the error.
+			 * Information for the error that occurred.
 			 */
-			readonly code: number;
+			readonly error: {
+				/**
+				 * Error code used to identify the error.
+				 */
+				readonly code: number;
 
-			/**
-			 * User-friendly error message.
-			 */
-			readonly message: string;
+				/**
+				 * User-friendly error message.
+				 */
+				readonly message: string;
+			};
 	  }
 	| {
 			/**

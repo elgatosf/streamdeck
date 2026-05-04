@@ -33,8 +33,10 @@ connection.on("invokeMethod", async (ev) => {
 			event: "didInvokeMethod",
 			id,
 			payload: {
-				code: -32603,
-				message: err instanceof Error ? err.message : "Encountered an unexpected error",
+				error: {
+					code: -32603,
+					message: err instanceof Error ? err.message : "Encountered an unexpected error",
+				},
 			},
 		});
 	}
@@ -53,8 +55,10 @@ async function invoke(payload: InvokeMethodMessage["payload"]): Promise<DidInvok
 	if (!method) {
 		logger.error(`Failed to invoke method: "${name}" has no function handler.`);
 		return {
-			code: -32601,
-			message: `Method does not exist: "${name}"`,
+			error: {
+				code: -32601,
+				message: `Method does not exist: "${name}"`,
+			},
 		};
 	}
 
@@ -64,8 +68,10 @@ async function invoke(payload: InvokeMethodMessage["payload"]): Promise<DidInvok
 		if (!success) {
 			logger.error(`Failed to invoke method: "${name}" does not accept the provided arguments.`, args);
 			return {
-				code: -32602,
-				message: "Invalid method parameter(s).",
+				error: {
+					code: -32602,
+					message: "Invalid method parameter(s).",
+				},
 			};
 		}
 	}

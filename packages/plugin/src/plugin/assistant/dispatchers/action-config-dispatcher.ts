@@ -34,8 +34,10 @@ connection.on("getConfigurationContext", async (ev) => {
 			event: "didReceiveConfigurationContext",
 			id,
 			payload: {
-				code: -32603,
-				message: err instanceof Error ? err.message : "Encountered an unexpected error.",
+				error: {
+					code: -32603,
+					message: err instanceof Error ? err.message : "Encountered an unexpected error.",
+				},
 			},
 		});
 	}
@@ -53,8 +55,10 @@ async function getConfig(action: string): Promise<DidReceiveConfigurationContext
 	if (!configContext) {
 		logger.warn(`Failed to configure action: "${action}" does not have a configuration context.`);
 		return {
-			code: -32601,
-			message: `Configuration context does not exist for "${action}".`,
+			error: {
+				code: -32601,
+				message: `Configuration context does not exist for "${action}".`,
+			},
 		};
 	}
 
