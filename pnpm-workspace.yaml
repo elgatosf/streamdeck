@@ -1,7 +1,10 @@
 packages:
   - "packages/*"
 
-minimumReleaseAge: 1440
+blockExoticSubdeps: true
+trustPolicy: no-downgrade
+
+minimumReleaseAge: 10080 # 1 week
 minimumReleaseAgeExclude:
   - "@elgato/*"
   - "@streamdeck/*"
