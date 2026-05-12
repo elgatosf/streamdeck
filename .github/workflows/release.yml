@@ -39,8 +39,9 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: 24
-          cache: "pnpm"
           registry-url: "https://registry.npmjs.org"
+          # Never cache (https://codeql.github.com/codeql-query-help/actions/actions-cache-poisoning-direct-cache/#recommendation)
+          # cache: "pnpm"
 
       - name: "📐 Install dependencies"
         run: pnpm install --frozen-lockfile
