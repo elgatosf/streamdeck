@@ -40,7 +40,7 @@ jobs:
         with:
           node-version: 24
           registry-url: "https://registry.npmjs.org"
-          # Never cache (https://codeql.github.com/codeql-query-help/actions/actions-cache-poisoning-direct-cache/#recommendation)
+          # Avoid caching https://codeql.github.com/codeql-query-help/actions/actions-cache-poisoning-direct-cache/#recommendation
           # cache: "pnpm"
 
       - name: "📐 Install dependencies"
