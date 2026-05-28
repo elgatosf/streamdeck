@@ -1,4 +1,7 @@
 import { withResolvers } from "@elgato/utils";
+import { mkdtemp, readFile, rm } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import type { WillAppear } from "../../../api/index.js";
@@ -20,11 +23,16 @@ describe("debug socket", () => {
 	let debug: Awaited<typeof import("../adapter.js")>["debug"];
 	let connection: Awaited<typeof import("../../connection.js")>["connection"];
 	let debugSocket: Awaited<typeof import("../socket.js")>["debugSocket"];
+	let cwd: string;
+	let originalCwd: string;
 
 	beforeEach(async () => {
 		vi.resetModules();
 		vi.doUnmock("ws");
 		({ default: WebSocket } = await import("ws"));
+		originalCwd = process.cwd();
+		cwd = await mkdtemp(join(tmpdir(), "streamdeck-debug-test-"));
+		process.chdir(cwd);
 		({ debug } = await import("../adapter.js"));
 		({ connection } = await import("../../connection.js"));
 		({ debugSocket } = await import("../socket.js"));
@@ -32,14 +40,14 @@ describe("debug socket", () => {
 
 	afterEach(async () => {
 		await debugSocket.stop();
+		process.chdir(originalCwd);
+		await rm(cwd, { force: true, recursive: true });
 		vi.clearAllMocks();
 	});
 
-	it("serves snapshot requests over websocket", async () => {
+	it("writes the port file and serves snapshot requests", async () => {
 		await debug.start();
-
-		const client = new WebSocket(getSocketUrl());
-		await open(client);
+		const client = await connect();
 
 		const response = await getSnapshot(client);
 		expect(JSON.parse(response)).toEqual({
@@ -51,11 +59,9 @@ describe("debug socket", () => {
 		client.close();
 	});
 
-	it("forwards snapshot change notifications to the connected websocket client", async () => {
+	it("forwards snapshot change notifications to the connected client", async () => {
 		await debug.start();
-
-		const client = new WebSocket(getSocketUrl());
-		await open(client);
+		const client = await connect();
 
 		const notification = receive(client);
 		connection.emit("willAppear", createKeyWillAppear());
@@ -68,6 +74,38 @@ describe("debug socket", () => {
 
 		client.close();
 	});
+
+	it("removes the port file when stopped", async () => {
+		await debug.start();
+		await readPort();
+
+		await debugSocket.stop();
+		await expect(readPort()).rejects.toThrow();
+	});
+
+	/**
+	 * Reads the port the plugin advertised in its bundle.
+	 * @returns Advertised port.
+	 */
+	async function readPort(): Promise<number> {
+		const data = await readFile(join(cwd, ".debug", "vscode-debug.json"), "utf-8");
+		return (JSON.parse(data) as { port: number }).port;
+	}
+
+	/**
+	 * Connects a websocket client to the debug socket.
+	 * @returns Opened websocket client.
+	 */
+	async function connect(): Promise<WebSocketClient> {
+		const client = new WebSocket(`ws://127.0.0.1:${await readPort()}`);
+
+		const opened = withResolvers<void>();
+		client.once("open", () => opened.resolve());
+		client.once("error", (err) => opened.reject(err));
+		await opened.promise;
+
+		return client;
+	}
 });
 
 /**
@@ -93,25 +131,6 @@ function createKeyWillAppear(): WillAppear<{ count: number }> {
 			},
 		},
 	};
-}
-
-/**
- * Gets the test websocket URL.
- * @returns Test websocket URL.
- */
-function getSocketUrl(): string {
-	return "ws://127.0.0.1:13345";
-}
-
-/**
- * Waits for the websocket client to open.
- * @param client Websocket client.
- */
-async function open(client: WebSocketClient): Promise<void> {
-	const opened = withResolvers<void>();
-	client.once("open", () => opened.resolve());
-	client.once("error", (err) => opened.reject(err));
-	await opened.promise;
 }
 
 /**

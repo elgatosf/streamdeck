@@ -1,23 +1,24 @@
-import { withResolvers, type JsonValue } from "@elgato/utils";
+import { type JsonValue } from "@elgato/utils";
 import type { RpcSender } from "@elgato/utils/rpc";
+import { mkdir, rm, writeFile } from "node:fs/promises";
+import type { AddressInfo } from "node:net";
+import { dirname, join } from "node:path";
 import WebSocket, { WebSocketServer, type RawData } from "ws";
 
-import { connection } from "../connection.js";
 import { logger } from "../logging/index.js";
 
+// The plugin's working directory is its .sdPlugin bundle (see manifest.ts), so the debug file lives alongside the manifest.
+const debugFile = join(process.cwd(), ".debug", "vscode-debug.json");
+
 /**
- * Hosts the internal debug adapter over a localhost websocket.
+ * Hosts the internal debug adapter over a localhost websocket and writes its port into the
+ * plugin bundle so the VS Code extension can discover and connect to it.
  */
 class DebugSocket {
 	/**
-	 * Offset applied to the Stream Deck websocket port to derive the debug websocket port.
+	 * Connected VS Code debug client.
 	 */
-	static readonly #debugPortOffset = 1000;
-
-	/**
-	 * Logger scoped to the debug websocket transport.
-	 */
-	readonly #logger = logger.createScope("DebugSocket");
+	#client: WebSocket | undefined;
 
 	/**
 	 * RPC host bound to the websocket transport.
@@ -30,40 +31,33 @@ class DebugSocket {
 	#server: WebSocketServer | undefined;
 
 	/**
-	 * Currently connected debug client.
-	 */
-	#client: WebSocket | undefined;
-
-	/**
-	 * Promise representing startup of the websocket server.
-	 */
-	#startPromise: Promise<void> | undefined;
-
-	/**
-	 * Starts the debug websocket server.
+	 * Starts the debug websocket server and writes its port for the VS Code extension.
 	 * @param rpcHost RPC host bound to the websocket transport.
-	 * @returns A promise resolved when the websocket server is listening.
 	 */
 	public async start(rpcHost: DebugSocketRpcHost): Promise<void> {
+		if (this.#server) {
+			return;
+		}
+
 		this.#rpcHost = rpcHost;
+		rpcHost.attachRpc((message) => this.#send(message));
 
-		if (this.#startPromise) {
-			return this.#startPromise;
-		}
+		const server = new WebSocketServer({ host: "127.0.0.1", port: 0 });
+		this.#server = server;
+		server.on("connection", (socket) => this.#onConnection(socket));
+		await new Promise<void>((resolve, reject) => {
+			server.once("listening", () => resolve());
+			server.once("error", (err) => reject(err));
+		});
 
-		this.#startPromise = this.#listen();
-
-		try {
-			await this.#startPromise;
-		} catch (err) {
-			this.#startPromise = undefined;
-			throw err;
-		}
+		const { port } = server.address() as AddressInfo;
+		await mkdir(dirname(debugFile), { recursive: true });
+		await writeFile(debugFile, JSON.stringify({ port }), "utf-8");
+		logger.debug(`Debug websocket listening on 127.0.0.1:${port}`);
 	}
 
 	/**
-	 * Stops the debug websocket server.
-	 * @returns A promise resolved when the websocket server is closed.
+	 * Stops the debug websocket server and removes its port file.
 	 */
 	public async stop(): Promise<void> {
 		this.#client?.close();
@@ -71,133 +65,43 @@ class DebugSocket {
 
 		const server = this.#server;
 		this.#server = undefined;
-		this.#startPromise = undefined;
-
 		if (server) {
-			const closed = withResolvers<void>();
-			server.close((err) => {
-				if (err) {
-					closed.reject(err);
-					return;
-				}
-
-				closed.resolve();
-			});
-
-			await closed.promise;
+			await rm(debugFile, { force: true });
+			await new Promise<void>((resolve) => server.close(() => resolve()));
 		}
 	}
 
 	/**
-	 * Port used by the debug websocket server.
-	 * @returns Plugin-specific debug websocket port.
+	 * Binds a newly connected VS Code debug client.
+	 * @param socket Connected websocket.
 	 */
-	get #port(): number {
-		const port = Number(connection.registrationParameters.port);
-		if (!Number.isInteger(port) || port < 0) {
-			throw new Error(`Invalid Stream Deck connection port: ${connection.registrationParameters.port}`);
-		}
-
-		return port + DebugSocket.#debugPortOffset;
-	}
-
-	/**
-	 * Begins listening for debug websocket connections.
-	 * @returns A promise resolved after the server is listening.
-	 */
-	async #listen(): Promise<void> {
-		if (!this.#rpcHost) {
-			throw new Error("Debug websocket started without an RPC host");
-		}
-
-		this.#rpcHost.attachRpc(async (message) => {
-			await this.#send(message);
-		});
-
-		const server = new WebSocketServer({
-			host: "127.0.0.1",
-			port: this.#port,
-		});
-
-		this.#server = server;
-		server.on("connection", (socket) => this.#handleConnection(socket));
-		server.on("error", (err) => {
-			this.#logger.error("Failed to host debug websocket", err);
-		});
-
-		const listening = withResolvers<void>();
-		server.once("listening", () => listening.resolve());
-		server.once("error", (err) => listening.reject(err));
-		await listening.promise;
-
-		const address = server.address();
-		if (!address || typeof address === "string") {
-			throw new Error("Debug websocket did not expose a TCP address");
-		}
-
-		this.#logger.debug(`Debug websocket listening on ws://127.0.0.1:${address.port}`);
-	}
-
-	/**
-	 * Handles a newly connected debug client.
-	 * @param socket Connected websocket client.
-	 */
-	#handleConnection(socket: WebSocket): void {
-		if (this.#client && this.#client !== socket && this.#client.readyState === WebSocket.OPEN) {
-			this.#client.close(1000, "Replaced by a new debug client");
-		}
-
+	#onConnection(socket: WebSocket): void {
+		this.#client?.close();
 		this.#client = socket;
+		socket.on("message", (data) => this.#onMessage(data));
 		socket.on("close", () => {
 			if (this.#client === socket) {
 				this.#client = undefined;
 			}
 		});
-		socket.on("error", (err) => {
-			this.#logger.error("Debug websocket client error", err);
-		});
-		socket.on("message", (data) => {
-			void this.#handleMessage(data);
-		});
 	}
 
 	/**
-	 * Handles a message sent by the connected debug client.
+	 * Forwards a JSON-RPC message from the client to the RPC host.
 	 * @param data Raw websocket message.
 	 */
-	async #handleMessage(data: RawData): Promise<void> {
-		try {
-			const handled = await this.#rpcHost?.receive(JSON.parse(data.toString())) ?? false;
-			if (!handled) {
-				this.#logger.warn(`Unhandled debug RPC message: ${data.toString()}`);
-			}
-		} catch (err) {
-			this.#logger.error(`Failed to process debug websocket message: ${data.toString()}`, err);
-		}
+	async #onMessage(data: RawData): Promise<void> {
+		await this.#rpcHost?.receive(JSON.parse(data.toString()));
 	}
 
 	/**
-	 * Sends a JSON-RPC payload to the active websocket client.
+	 * Sends a JSON-RPC message to the connected client.
 	 * @param message Message to send.
-	 * @returns A promise resolved when the message is written.
 	 */
 	async #send(message: unknown): Promise<void> {
-		const client = this.#client;
-		if (!client || client.readyState !== WebSocket.OPEN) {
-			return;
+		if (this.#client?.readyState === WebSocket.OPEN) {
+			this.#client.send(JSON.stringify(message));
 		}
-
-		const sent = withResolvers<void>();
-		client.send(JSON.stringify(message), (err) => {
-			if (err) {
-				sent.reject(err);
-				return;
-			}
-
-			sent.resolve();
-		});
-
-		await sent.promise;
 	}
 }
 
