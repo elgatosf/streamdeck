@@ -115,7 +115,8 @@ class DebugAdapter {
 	 */
 	public attachRpc(send: RpcSender): void {
 		this.#rpc = createRpcServerClient(send);
-		this.#rpc.addMethod(debugRpcMethods.getSnapshot, () => this.getSnapshot());
+		this.#rpc.addMethod("streamDeck.debug.getSnapshot", () => this.getSnapshot());
+		this.#rpc.addMethod<SetSettingsParams>("streamDeck.debug.setSettings", (params) => this.#setSettings(params));
 	}
 
 	/**
@@ -197,6 +198,44 @@ class DebugAdapter {
 	}
 
 	/**
+	 * Persists settings for a tracked action instance and re-publishes the snapshot.
+	 * @param params Context and settings to persist.
+	 * @returns `true` when the instance was known and the update was sent.
+	 */
+	async #setSettings(params: SetSettingsParams | undefined): Promise<boolean> {
+		const { context, settings } = params ?? {};
+		if (typeof context !== "string" || !this.#isJsonObject(settings)) {
+			return false;
+		}
+
+		const instance = this.#instances.get(context);
+		if (!instance) {
+			return false;
+		}
+
+		await connection.send({
+			event: "setSettings",
+			context,
+			payload: settings,
+		});
+
+		// Stream Deck does not echo a didReceiveSettings for setSettings, so update the
+		// tracked instance optimistically to keep the published snapshot in sync.
+		instance.settings = settings;
+		this.#publishChanges();
+		return true;
+	}
+
+	/**
+	 * Determines whether a value is a JSON object.
+	 * @param value Value to inspect.
+	 * @returns `true` when the value is a non-array object.
+	 */
+	#isJsonObject(value: unknown): value is JsonObject {
+		return typeof value === "object" && value !== null && !Array.isArray(value);
+	}
+
+	/**
 	 * Gets the name associated with a device identifier.
 	 * @param id Device identifier.
 	 * @returns Device name when known; otherwise the identifier.
@@ -209,7 +248,7 @@ class DebugAdapter {
 	 * Schedules publication of the latest snapshot when it changed.
 	 */
 	#publishChanges(): void {
-		void this.#notifyIfChanged();
+		this.#notifyIfChanged();
 	}
 
 	/**
@@ -225,7 +264,7 @@ class DebugAdapter {
 
 		this.#lastSnapshot = serialized;
 		if (this.#rpc) {
-			await this.#rpc.notify(debugRpcMethods.snapshotChanged, snapshot);
+			await this.#rpc.notify("streamDeck.debug.snapshotChanged", snapshot);
 		}
 	}
 
@@ -286,17 +325,20 @@ class DebugAdapter {
  */
 export const debug = new DebugAdapter();
 
-const debugRpcMethods = {
+/**
+ * Parameters for the `streamDeck.debug.setSettings` RPC method.
+ */
+type SetSettingsParams = {
 	/**
-	 * Request the current debug state snapshot.
+	 * Context identifier of the action instance to update.
 	 */
-	getSnapshot: "streamDeck.debug.getSnapshot",
+	context: string;
 
 	/**
-	 * Notification emitted when the debug state snapshot changes.
+	 * Settings to persist for the action instance.
 	 */
-	snapshotChanged: "streamDeck.debug.snapshotChanged",
-} as const;
+	settings: JsonObject;
+};
 
 /**
  * Serializable snapshot of the plugin's debug state.
