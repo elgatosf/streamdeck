@@ -1,10 +1,11 @@
 import { withResolvers } from "@elgato/utils";
-import { mkdtemp, readFile, rm } from "node:fs/promises";
-import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { createConnection, type Socket } from "node:net";
+import { platform } from "node:os";
+import { access } from "node:fs/promises";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import type { WillAppear } from "../../../api/index.js";
+import { getDebugPipePath } from "../pipe-path.js";
 
 vi.mock("../../connection.js");
 vi.mock("../../common/utils.js", async () => {
@@ -18,21 +19,16 @@ vi.mock("../../common/utils.js", async () => {
 vi.mock("../../manifest.js");
 vi.mock("../../logging/index.js");
 
+// The plugin SDK derives its debug socket path from the (mocked) manifest UUID.
+const pipePath = getDebugPipePath("com.elgato.test");
+
 describe("debug socket", () => {
-	let WebSocket: Awaited<typeof import("ws")>["default"];
 	let debug: Awaited<typeof import("../adapter.js")>["debug"];
 	let connection: Awaited<typeof import("../../connection.js")>["connection"];
 	let debugSocket: Awaited<typeof import("../socket.js")>["debugSocket"];
-	let cwd: string;
-	let originalCwd: string;
 
 	beforeEach(async () => {
 		vi.resetModules();
-		vi.doUnmock("ws");
-		({ default: WebSocket } = await import("ws"));
-		originalCwd = process.cwd();
-		cwd = await mkdtemp(join(tmpdir(), "streamdeck-debug-test-"));
-		process.chdir(cwd);
 		({ debug } = await import("../adapter.js"));
 		({ connection } = await import("../../connection.js"));
 		({ debugSocket } = await import("../socket.js"));
@@ -40,12 +36,10 @@ describe("debug socket", () => {
 
 	afterEach(async () => {
 		await debugSocket.stop();
-		process.chdir(originalCwd);
-		await rm(cwd, { force: true, recursive: true });
 		vi.clearAllMocks();
 	});
 
-	it("writes the port file and serves snapshot requests", async () => {
+	it("serves snapshot requests over the debug socket", async () => {
 		await debug.start();
 		const client = await connect();
 
@@ -56,7 +50,7 @@ describe("debug socket", () => {
 			result: debug.getSnapshot(),
 		});
 
-		client.close();
+		client.destroy();
 	});
 
 	it("forwards snapshot change notifications to the connected client", async () => {
@@ -72,40 +66,20 @@ describe("debug socket", () => {
 			params: debug.getSnapshot(),
 		});
 
-		client.close();
+		client.destroy();
 	});
 
-	it("removes the port file when stopped", async () => {
+	it("removes the socket file when stopped", async () => {
 		await debug.start();
-		await readPort();
+		if (platform() !== "win32") {
+			await expect(access(pipePath)).resolves.toBeUndefined();
+		}
 
 		await debugSocket.stop();
-		await expect(readPort()).rejects.toThrow();
+		if (platform() !== "win32") {
+			await expect(access(pipePath)).rejects.toThrow();
+		}
 	});
-
-	/**
-	 * Reads the port the plugin advertised in its bundle.
-	 * @returns Advertised port.
-	 */
-	async function readPort(): Promise<number> {
-		const data = await readFile(join(cwd, ".debug", "vscode-debug.json"), "utf-8");
-		return (JSON.parse(data) as { port: number }).port;
-	}
-
-	/**
-	 * Connects a websocket client to the debug socket.
-	 * @returns Opened websocket client.
-	 */
-	async function connect(): Promise<WebSocketClient> {
-		const client = new WebSocket(`ws://127.0.0.1:${await readPort()}`);
-
-		const opened = withResolvers<void>();
-		client.once("open", () => opened.resolve());
-		client.once("error", (err) => opened.reject(err));
-		await opened.promise;
-
-		return client;
-	}
 });
 
 /**
@@ -134,33 +108,58 @@ function createKeyWillAppear(): WillAppear<{ count: number }> {
 }
 
 /**
- * Requests a snapshot over the websocket client.
- * @param client Websocket client.
+ * Connects a client to the debug socket.
+ * @returns Connected socket client.
+ */
+async function connect(): Promise<Socket> {
+	const client = createConnection(pipePath);
+	client.setEncoding("utf-8");
+
+	const opened = withResolvers<void>();
+	client.once("connect", () => opened.resolve());
+	client.once("error", (err) => opened.reject(err));
+	await opened.promise;
+
+	return client;
+}
+
+/**
+ * Requests a snapshot over the socket client.
+ * @param client Socket client.
  * @returns JSON-RPC response message.
  */
-function getSnapshot(client: WebSocketClient): Promise<string> {
+function getSnapshot(client: Socket): Promise<string> {
 	const response = receive(client);
-	client.send(
-		JSON.stringify({
+	client.write(
+		`${JSON.stringify({
 			id: "request-1",
 			jsonrpc: "2.0",
 			method: "streamDeck.debug.getSnapshot",
-		}),
+		})}\n`,
 	);
 
 	return response;
 }
 
 /**
- * Receives the next websocket message from the client.
- * @param client Websocket client.
- * @returns Received message.
+ * Receives the next newline-delimited message from the client.
+ * @param client Socket client.
+ * @returns Received message, without its trailing newline.
  */
-function receive(client: WebSocketClient): Promise<string> {
+function receive(client: Socket): Promise<string> {
 	const message = withResolvers<string>();
-	client.once("message", (data) => message.resolve(data.toString()));
+
+	let buffer = "";
+	const onData = (chunk: string): void => {
+		buffer += chunk;
+		const newline = buffer.indexOf("\n");
+		if (newline !== -1) {
+			client.off("data", onData);
+			message.resolve(buffer.slice(0, newline));
+		}
+	};
+
+	client.on("data", onData);
 	client.once("error", (err) => message.reject(err));
 	return message.promise;
 }
-
-type WebSocketClient = InstanceType<Awaited<typeof import("ws")>["default"]>;

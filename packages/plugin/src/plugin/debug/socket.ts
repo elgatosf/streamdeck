@@ -1,40 +1,44 @@
 import { type JsonValue } from "@elgato/utils";
 import type { RpcSender } from "@elgato/utils/rpc";
-import { mkdir, rm, writeFile } from "node:fs/promises";
-import type { AddressInfo } from "node:net";
-import { dirname, join } from "node:path";
-import WebSocket, { WebSocketServer, type RawData } from "ws";
+import { rm } from "node:fs/promises";
+import { createServer, type Server, type Socket } from "node:net";
+import { platform } from "node:os";
 
 import { logger } from "../logging/index.js";
-
-// The plugin's working directory is its .sdPlugin bundle (see manifest.ts), so the debug file lives alongside the manifest.
-const debugFile = join(process.cwd(), ".debug", "vscode-debug.json");
+import { getDebugPipePath } from "./pipe-path.js";
 
 /**
- * Hosts the internal debug adapter over a localhost websocket and writes its port into the
- * plugin bundle so the VS Code extension can discover and connect to it.
+ * Hosts the internal debug adapter over a named pipe (Windows) or Unix domain socket
+ * (macOS/Linux) whose path is derived from the plugin UUID, so the VS Code extension can
+ * discover and connect to it without any port handshake.
  */
 class DebugSocket {
 	/**
 	 * Connected VS Code debug client.
 	 */
-	#client: WebSocket | undefined;
+	#client: Socket | undefined;
 
 	/**
-	 * RPC host bound to the websocket transport.
+	 * Path the server is currently listening on.
+	 */
+	#path: string | undefined;
+
+	/**
+	 * RPC host bound to the socket transport.
 	 */
 	#rpcHost: DebugSocketRpcHost | undefined;
 
 	/**
-	 * Underlying websocket server.
+	 * Underlying socket server.
 	 */
-	#server: WebSocketServer | undefined;
+	#server: Server | undefined;
 
 	/**
-	 * Starts the debug websocket server and writes its port for the VS Code extension.
-	 * @param rpcHost RPC host bound to the websocket transport.
+	 * Starts the debug socket server on the UUID-derived path so the VS Code extension can connect.
+	 * @param rpcHost RPC host bound to the socket transport.
+	 * @param uuid Plugin UUID used to derive the pipe path.
 	 */
-	public async start(rpcHost: DebugSocketRpcHost): Promise<void> {
+	public async start(rpcHost: DebugSocketRpcHost, uuid: string): Promise<void> {
 		if (this.#server) {
 			return;
 		}
@@ -42,44 +46,74 @@ class DebugSocket {
 		this.#rpcHost = rpcHost;
 		rpcHost.attachRpc((message) => this.#send(message));
 
-		const server = new WebSocketServer({ host: "127.0.0.1", port: 0 });
+		const path = getDebugPipePath(uuid);
+		this.#path = path;
+
+		// A Unix domain socket leaves a file behind if the previous process crashed; remove any
+		// stale socket before listening to avoid EADDRINUSE. Windows named pipes self-clean.
+		if (platform() !== "win32") {
+			await rm(path, { force: true });
+		}
+
+		const server = createServer((socket) => this.#onConnection(socket));
 		this.#server = server;
-		server.on("connection", (socket) => this.#onConnection(socket));
 		await new Promise<void>((resolve, reject) => {
 			server.once("listening", () => resolve());
 			server.once("error", (err) => reject(err));
+			server.listen(path);
 		});
 
-		const { port } = server.address() as AddressInfo;
-		await mkdir(dirname(debugFile), { recursive: true });
-		await writeFile(debugFile, JSON.stringify({ port }), "utf-8");
-		logger.debug(`Debug websocket listening on 127.0.0.1:${port}`);
+		logger.debug(`Debug socket listening on ${path}`);
 	}
 
 	/**
-	 * Stops the debug websocket server and removes its port file.
+	 * Stops the debug socket server and removes its socket file.
 	 */
 	public async stop(): Promise<void> {
-		this.#client?.close();
+		this.#client?.destroy();
 		this.#client = undefined;
 
 		const server = this.#server;
+		const path = this.#path;
 		this.#server = undefined;
+		this.#path = undefined;
 		if (server) {
-			await rm(debugFile, { force: true });
 			await new Promise<void>((resolve) => server.close(() => resolve()));
+			if (path && platform() !== "win32") {
+				await rm(path, { force: true });
+			}
 		}
 	}
 
 	/**
 	 * Binds a newly connected VS Code debug client.
-	 * @param socket Connected websocket.
+	 * @param socket Connected socket.
 	 */
-	#onConnection(socket: WebSocket): void {
-		this.#client?.close();
+	#onConnection(socket: Socket): void {
+		this.#client?.destroy();
 		this.#client = socket;
-		socket.on("message", (data) => this.#onMessage(data));
+
+		let buffer = "";
+		socket.setEncoding("utf-8");
+		socket.on("data", (chunk: string) => {
+			buffer += chunk;
+			let newline = buffer.indexOf("\n");
+			while (newline !== -1) {
+				const line = buffer.slice(0, newline);
+				buffer = buffer.slice(newline + 1);
+				if (line.length > 0) {
+					void this.#onMessage(line);
+				}
+
+				newline = buffer.indexOf("\n");
+			}
+		});
 		socket.on("close", () => {
+			if (this.#client === socket) {
+				this.#client = undefined;
+			}
+		});
+		socket.on("error", () => {
 			if (this.#client === socket) {
 				this.#client = undefined;
 			}
@@ -88,10 +122,10 @@ class DebugSocket {
 
 	/**
 	 * Forwards a JSON-RPC message from the client to the RPC host.
-	 * @param data Raw websocket message.
+	 * @param line Newline-delimited JSON message.
 	 */
-	async #onMessage(data: RawData): Promise<void> {
-		await this.#rpcHost?.receive(JSON.parse(data.toString()));
+	async #onMessage(line: string): Promise<void> {
+		await this.#rpcHost?.receive(JSON.parse(line));
 	}
 
 	/**
@@ -99,29 +133,29 @@ class DebugSocket {
 	 * @param message Message to send.
 	 */
 	async #send(message: unknown): Promise<void> {
-		if (this.#client?.readyState === WebSocket.OPEN) {
-			this.#client.send(JSON.stringify(message));
+		if (this.#client && !this.#client.destroyed) {
+			this.#client.write(`${JSON.stringify(message)}\n`);
 		}
 	}
 }
 
 /**
- * Singleton debug websocket transport.
+ * Singleton debug socket transport.
  */
 export const debugSocket = new DebugSocket();
 
 /**
- * Minimal RPC host interface required by the debug websocket transport.
+ * Minimal RPC host interface required by the debug socket transport.
  */
 type DebugSocketRpcHost = {
 	/**
-	 * Attaches the websocket transport to the RPC host.
+	 * Attaches the socket transport to the RPC host.
 	 * @param send Sender used for outbound JSON-RPC messages.
 	 */
 	attachRpc(send: RpcSender): void;
 
 	/**
-	 * Attempts to process a JSON-RPC payload received from the websocket client.
+	 * Attempts to process a JSON-RPC payload received from the socket client.
 	 * @param value Received JSON value.
 	 * @returns `true` when the value was handled by the RPC host.
 	 */

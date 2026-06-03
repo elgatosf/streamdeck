@@ -190,10 +190,11 @@ class DebugAdapter {
 			return;
 		}
 
+		const uuid = this.#getManifest()?.UUID ?? connection.registrationParameters.info.plugin.uuid;
 		try {
-			await debugSocket.start(this);
+			await debugSocket.start(this, uuid);
 		} catch (err) {
-			logger.warn("Failed to start debug websocket", err);
+			logger.warn("Failed to start debug socket", err);
 		}
 	}
 
