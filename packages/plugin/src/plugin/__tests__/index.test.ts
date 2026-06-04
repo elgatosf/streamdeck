@@ -3,7 +3,7 @@ import { describe, expect, it, vi } from "vitest";
 import { BarSubType, DeviceType, Target } from "../../api/index.js";
 import { SingletonAction } from "../actions/singleton-action.js";
 import { connection } from "../connection.js";
-import { debug } from "../debug/adapter.js";
+import { debug } from "../bridge/adapter.js";
 import streamDeckAsDefaultExport, { streamDeck } from "../index.js";
 import { logger } from "../logging/index.js";
 

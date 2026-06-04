@@ -4,7 +4,7 @@ import type { Logger } from "@elgato/utils/logging";
 import type { Language, RegistrationInfo } from "../api/index.js";
 import { actionService, type ActionService } from "./actions/service.js";
 import { connection } from "./connection.js";
-import { debug } from "./debug/adapter.js";
+import { debug } from "./bridge/adapter.js";
 import { deviceService, type DeviceService } from "./devices/service.js";
 import { fileSystemLocaleProvider } from "./i18n.js";
 import { logger } from "./logging/index.js";
