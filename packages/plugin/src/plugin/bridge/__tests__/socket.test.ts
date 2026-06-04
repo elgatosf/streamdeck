@@ -5,7 +5,7 @@ import { access } from "node:fs/promises";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import type { WillAppear } from "../../../api/index.js";
-import { getDebugPipePath } from "../pipe-path.js";
+import { getPipePath } from "../pipe-path.js";
 
 vi.mock("../../connection.js");
 vi.mock("../../common/utils.js", async () => {
@@ -19,42 +19,41 @@ vi.mock("../../common/utils.js", async () => {
 vi.mock("../../manifest.js");
 vi.mock("../../logging/index.js");
 
-// The plugin SDK derives its debug socket path from the (mocked) manifest UUID.
-const pipePath = getDebugPipePath("com.elgato.test");
+const pipePath = getPipePath("com.elgato.test");
 
-describe("debug socket", () => {
-	let debug: Awaited<typeof import("../adapter.js")>["debug"];
+describe("bridge socket", () => {
+	let bridge: Awaited<typeof import("../adapter.js")>["bridge"];
 	let connection: Awaited<typeof import("../../connection.js")>["connection"];
-	let debugSocket: Awaited<typeof import("../socket.js")>["debugSocket"];
+	let socket: Awaited<typeof import("../socket.js")>["socket"];
 
 	beforeEach(async () => {
 		vi.resetModules();
-		({ debug } = await import("../adapter.js"));
+		({ bridge } = await import("../adapter.js"));
 		({ connection } = await import("../../connection.js"));
-		({ debugSocket } = await import("../socket.js"));
+		({ socket } = await import("../socket.js"));
 	});
 
 	afterEach(async () => {
-		await debugSocket.stop();
+		await socket.stop();
 		vi.clearAllMocks();
 	});
 
 	it("serves snapshot requests over the debug socket", async () => {
-		await debug.start();
+		await bridge.start();
 		const client = await connect();
 
 		const response = await getSnapshot(client);
 		expect(JSON.parse(response)).toEqual({
 			id: "request-1",
 			jsonrpc: "2.0",
-			result: debug.getSnapshot(),
+			result: bridge.getSnapshot(),
 		});
 
 		client.destroy();
 	});
 
 	it("forwards snapshot change notifications to the connected client", async () => {
-		await debug.start();
+		await bridge.start();
 		const client = await connect();
 
 		const notification = receive(client);
@@ -62,20 +61,20 @@ describe("debug socket", () => {
 
 		expect(JSON.parse(await notification)).toEqual({
 			jsonrpc: "2.0",
-			method: "streamDeck.debug.snapshotChanged",
-			params: debug.getSnapshot(),
+			method: "streamDeck.bridge.snapshotChanged",
+			params: bridge.getSnapshot(),
 		});
 
 		client.destroy();
 	});
 
 	it("removes the socket file when stopped", async () => {
-		await debug.start();
+		await bridge.start();
 		if (platform() !== "win32") {
 			await expect(access(pipePath)).resolves.toBeUndefined();
 		}
 
-		await debugSocket.stop();
+		await socket.stop();
 		if (platform() !== "win32") {
 			await expect(access(pipePath)).rejects.toThrow();
 		}
@@ -134,7 +133,7 @@ function getSnapshot(client: Socket): Promise<string> {
 		`${JSON.stringify({
 			id: "request-1",
 			jsonrpc: "2.0",
-			method: "streamDeck.debug.getSnapshot",
+			method: "streamDeck.bridge.getSnapshot",
 		})}\n`,
 	);
 

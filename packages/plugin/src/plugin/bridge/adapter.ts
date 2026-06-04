@@ -13,12 +13,12 @@ import { isDebugMode } from "../common/utils.js";
 import { connection } from "../connection.js";
 import { logger } from "../logging/index.js";
 import { getManifest } from "../manifest.js";
-import { debugSocket } from "./socket.js";
+import { socket } from "./socket.js";
 
 /**
- * Internal JSON-RPC adapter that projects connection events into a serialized debug state snapshot.
+ * Internal JSON-RPC adapter that projects connection events into a serialized plugin snapshot.
  */
-class DebugAdapter {
+class BridgeAdapter {
 	/**
 	 * Tracked device names indexed by device identifier.
 	 */
@@ -55,7 +55,7 @@ class DebugAdapter {
 	#seededDevices = false;
 
 	/**
-	 * Initializes a new debug adapter instance.
+	 * Initializes a new bridge adapter instance.
 	 */
 	constructor() {
 		this.#disposables.push(
@@ -115,8 +115,8 @@ class DebugAdapter {
 	 */
 	public attachRpc(send: RpcSender): void {
 		this.#rpc = createRpcServerClient(send);
-		this.#rpc.addMethod("streamDeck.debug.getSnapshot", () => this.getSnapshot());
-		this.#rpc.addMethod<SetSettingsParams>("streamDeck.debug.setSettings", (params) => this.#setSettings(params));
+		this.#rpc.addMethod("streamDeck.bridge.getSnapshot", () => this.getSnapshot());
+		this.#rpc.addMethod<SetSettingsParams>("streamDeck.bridge.setSettings", (params) => this.#setSettings(params));
 	}
 
 	/**
@@ -127,14 +127,14 @@ class DebugAdapter {
 	}
 
 	/**
-	 * Builds the current debug state snapshot.
-	 * @returns Current debug state snapshot.
+	 * Builds the current plugin snapshot.
+	 * @returns Current plugin snapshot.
 	 */
-	public getSnapshot(): DebugSnapshot {
+	public getSnapshot(): PluginSnapshot {
 		this.#seedDevices();
 
 		const manifestActions = this.#getManifest()?.Actions ?? [];
-		const groups = new Map<string, DebugActionState>();
+		const groups = new Map<string, ActionState>();
 
 		manifestActions.forEach((action) => {
 			groups.set(action.UUID, {
@@ -182,7 +182,7 @@ class DebugAdapter {
 	}
 
 	/**
-	 * Starts the adapter's debug transport when the plugin is running in debug mode.
+	 * Starts the bridge transport when the plugin is running in debug mode.
 	 * @returns A promise resolved when startup is complete.
 	 */
 	public async start(): Promise<void> {
@@ -192,9 +192,9 @@ class DebugAdapter {
 
 		const uuid = this.#getManifest()?.UUID ?? connection.registrationParameters.info.plugin.uuid;
 		try {
-			await debugSocket.start(this, uuid);
+			await socket.start(this, uuid);
 		} catch (err) {
-			logger.warn("Failed to start debug socket", err);
+			logger.warn("Failed to start bridge socket", err);
 		}
 	}
 
@@ -265,7 +265,7 @@ class DebugAdapter {
 
 		this.#lastSnapshot = serialized;
 		if (this.#rpc) {
-			await this.#rpc.notify("streamDeck.debug.snapshotChanged", snapshot);
+			await this.#rpc.notify("streamDeck.bridge.snapshotChanged", snapshot);
 		}
 	}
 
@@ -297,7 +297,7 @@ class DebugAdapter {
 	 * @param payload Action payload associated with a visible instance.
 	 * @returns Normalized position snapshot.
 	 */
-	#toPosition(payload: DidReceiveSettings<JsonObject>["payload"] | WillAppear<JsonObject>["payload"]): DebugPosition {
+	#toPosition(payload: DidReceiveSettings<JsonObject>["payload"] | WillAppear<JsonObject>["payload"]): ActionPosition {
 		if (payload.controller === "Encoder") {
 			return {
 				column: payload.coordinates.column,
@@ -322,12 +322,12 @@ class DebugAdapter {
 }
 
 /**
- * Singleton internal debug adapter.
+ * Singleton bridge adapter.
  */
-export const debug = new DebugAdapter();
+export const bridge = new BridgeAdapter();
 
 /**
- * Parameters for the `streamDeck.debug.setSettings` RPC method.
+ * Parameters for the `streamDeck.bridge.setSettings` RPC method.
  */
 type SetSettingsParams = {
 	/**
@@ -342,28 +342,28 @@ type SetSettingsParams = {
 };
 
 /**
- * Serializable snapshot of the plugin's debug state.
+ * Serializable snapshot of the plugin's visible action state.
  */
-type DebugSnapshot = {
+type PluginSnapshot = {
 	/**
 	 * Actions known to the plugin, including currently visible instances.
 	 */
-	actions: DebugActionState[];
+	actions: ActionState[];
 
 	/**
 	 * Plugin metadata associated with the snapshot.
 	 */
-	plugin: DebugPluginState;
+	plugin: PluginState;
 };
 
 /**
  * Snapshot of a manifest action and its currently visible instances.
  */
-type DebugActionState = {
+type ActionState = {
 	/**
 	 * Visible instances associated with the action.
 	 */
-	instances: DebugActionInstanceState[];
+	instances: ActionInstanceState[];
 
 	/**
 	 * Human-readable action name.
@@ -379,7 +379,7 @@ type DebugActionState = {
 /**
  * Snapshot of a visible action instance.
  */
-type DebugActionInstanceState = {
+type ActionInstanceState = {
 	/**
 	 * Unique context identifier for the action instance.
 	 */
@@ -398,7 +398,7 @@ type DebugActionInstanceState = {
 	/**
 	 * Normalized position information for the instance.
 	 */
-	position: DebugPosition;
+	position: ActionPosition;
 
 	/**
 	 * Persisted action settings.
@@ -407,9 +407,9 @@ type DebugActionInstanceState = {
 };
 
 /**
- * Serializable plugin information exposed by the debug state snapshot.
+ * Serializable plugin information exposed by the snapshot.
  */
-type DebugPluginState = {
+type PluginState = {
 	/**
 	 * Human-readable plugin name.
 	 */
@@ -429,7 +429,7 @@ type DebugPluginState = {
 /**
  * Normalized position associated with an action instance.
  */
-type DebugPosition =
+type ActionPosition =
 	| {
 		/**
 		 * Dial column reported by Stream Deck.
@@ -501,11 +501,10 @@ type InternalInstanceState = {
 	/**
 	 * Normalized position for the instance.
 	 */
-	position: DebugPosition;
+	position: ActionPosition;
 
 	/**
 	 * Last known settings associated with the instance.
 	 */
 	settings: JsonObject;
 };
-

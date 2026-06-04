@@ -7,7 +7,7 @@ vi.mock("../../connection.js");
 vi.mock("../../manifest.js");
 
 describe("debug adapter", () => {
-	let adapter: Awaited<typeof import("../adapter.js")>["debug"];
+	let adapter: Awaited<typeof import("../adapter.js")>["bridge"];
 	let connection: Awaited<typeof import("../../connection.js")>["connection"];
 	let sent: Array<JsonRpcRequest | JsonRpcResponse>;
 
@@ -16,7 +16,7 @@ describe("debug adapter", () => {
 		sent = [];
 
 		({ connection } = await import("../../connection.js"));
-		({ debug: adapter } = await import("../adapter.js"));
+		({ bridge: adapter } = await import("../adapter.js"));
 		adapter.attachRpc(async (value) => {
 			sent.push(value);
 		});
@@ -70,7 +70,7 @@ describe("debug adapter", () => {
 		expect(sent).toEqual([
 			{
 				jsonrpc: "2.0",
-				method: "streamDeck.debug.snapshotChanged",
+				method: "streamDeck.bridge.snapshotChanged",
 				params: adapter.getSnapshot(),
 			},
 		]);
@@ -121,7 +121,7 @@ describe("debug adapter", () => {
 		const handled = await adapter.receive({
 			id: "request-1",
 			jsonrpc: "2.0",
-			method: "streamDeck.debug.getSnapshot",
+			method: "streamDeck.bridge.getSnapshot",
 		});
 
 		expect(handled).toBe(true);
@@ -145,17 +145,17 @@ describe("debug adapter", () => {
 			};
 		});
 		vi.doMock("../socket.js", () => ({
-			debugSocket: {
+			socket: {
 				start: vi.fn().mockResolvedValue(undefined),
 			},
 		}));
 
-		const { debug } = await import("../adapter.js");
-		const { debugSocket } = await import("../socket.js");
+		const { bridge } = await import("../adapter.js");
+		const { socket } = await import("../socket.js");
 
-		await debug.start();
+		await bridge.start();
 
-		expect(debugSocket.start).not.toHaveBeenCalled();
+		expect(socket.start).not.toHaveBeenCalled();
 	});
 });
 

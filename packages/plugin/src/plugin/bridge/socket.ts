@@ -5,16 +5,16 @@ import { createServer, type Server, type Socket } from "node:net";
 import { platform } from "node:os";
 
 import { logger } from "../logging/index.js";
-import { getDebugPipePath } from "./pipe-path.js";
+import { getPipePath } from "./pipe-path.js";
 
 /**
- * Hosts the internal debug adapter over a named pipe (Windows) or Unix domain socket
+ * Hosts the bridge adapter over a named pipe (Windows) or Unix domain socket
  * (macOS/Linux) whose path is derived from the plugin UUID, so the VS Code extension can
  * discover and connect to it without any port handshake.
  */
-class DebugSocket {
+class BridgeSocket {
 	/**
-	 * Connected VS Code debug client.
+	 * Connected VS Code client.
 	 */
 	#client: Socket | undefined;
 
@@ -26,7 +26,7 @@ class DebugSocket {
 	/**
 	 * RPC host bound to the socket transport.
 	 */
-	#rpcHost: DebugSocketRpcHost | undefined;
+	#rpcHost: SocketRpcHost | undefined;
 
 	/**
 	 * Underlying socket server.
@@ -34,11 +34,11 @@ class DebugSocket {
 	#server: Server | undefined;
 
 	/**
-	 * Starts the debug socket server on the UUID-derived path so the VS Code extension can connect.
+	 * Starts the bridge socket server on the UUID-derived path so the VS Code extension can connect.
 	 * @param rpcHost RPC host bound to the socket transport.
 	 * @param uuid Plugin UUID used to derive the pipe path.
 	 */
-	public async start(rpcHost: DebugSocketRpcHost, uuid: string): Promise<void> {
+	public async start(rpcHost: SocketRpcHost, uuid: string): Promise<void> {
 		if (this.#server) {
 			return;
 		}
@@ -46,7 +46,7 @@ class DebugSocket {
 		this.#rpcHost = rpcHost;
 		rpcHost.attachRpc((message) => this.#send(message));
 
-		const path = getDebugPipePath(uuid);
+		const path = getPipePath(uuid);
 		this.#path = path;
 
 		// A Unix domain socket leaves a file behind if the previous process crashed; remove any
@@ -63,11 +63,11 @@ class DebugSocket {
 			server.listen(path);
 		});
 
-		logger.debug(`Debug socket listening on ${path}`);
+		logger.debug(`Bridge socket listening on ${path}`);
 	}
 
 	/**
-	 * Stops the debug socket server and removes its socket file.
+	 * Stops the bridge socket server and removes its socket file.
 	 */
 	public async stop(): Promise<void> {
 		this.#client?.destroy();
@@ -86,7 +86,7 @@ class DebugSocket {
 	}
 
 	/**
-	 * Binds a newly connected VS Code debug client.
+	 * Binds a newly connected VS Code client.
 	 * @param socket Connected socket.
 	 */
 	#onConnection(socket: Socket): void {
@@ -140,14 +140,14 @@ class DebugSocket {
 }
 
 /**
- * Singleton debug socket transport.
+ * Singleton bridge socket transport.
  */
-export const debugSocket = new DebugSocket();
+export const socket = new BridgeSocket();
 
 /**
- * Minimal RPC host interface required by the debug socket transport.
+ * Minimal RPC host interface required by the bridge socket transport.
  */
-type DebugSocketRpcHost = {
+type SocketRpcHost = {
 	/**
 	 * Attaches the socket transport to the RPC host.
 	 * @param send Sender used for outbound JSON-RPC messages.

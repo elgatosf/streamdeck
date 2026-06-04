@@ -1,5 +1,5 @@
 import { vi } from "vitest";
 
-export const debug = {
+export const bridge = {
 	start: vi.fn().mockResolvedValue(undefined),
 };
