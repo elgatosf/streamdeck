@@ -1,4 +1,5 @@
-import { withResolvers } from "@elgato/utils";
+import { type JsonValue, withResolvers } from "@elgato/utils";
+import type { RpcSender } from "@elgato/utils/rpc";
 import { createConnection, type Socket } from "node:net";
 import { platform } from "node:os";
 import { access } from "node:fs/promises";
@@ -63,6 +64,51 @@ describe("bridge socket", () => {
 			jsonrpc: "2.0",
 			method: "streamDeck.bridge.snapshotChanged",
 			params: bridge.getSnapshot(),
+		});
+
+		client.destroy();
+	});
+
+	it("rebinds the RPC host for an active socket when started again", async () => {
+		await bridge.start();
+		const client = await connect();
+		let send: RpcSender | undefined;
+
+		await socket.start(
+			{
+				attachRpc: (nextSend) => {
+					send = nextSend;
+				},
+				receive: async (value: JsonValue) => {
+					const id = getRequestId(value);
+					if (!id || !send) {
+						return false;
+					}
+
+					await send({
+						id,
+						jsonrpc: "2.0",
+						result: "rebound",
+					});
+					return true;
+				},
+			},
+			"com.elgato.test",
+		);
+
+		const response = receive(client);
+		client.write(
+			`${JSON.stringify({
+				id: "request-1",
+				jsonrpc: "2.0",
+				method: "test.rebound",
+			})}\n`,
+		);
+
+		expect(JSON.parse(await response)).toEqual({
+			id: "request-1",
+			jsonrpc: "2.0",
+			result: "rebound",
 		});
 
 		client.destroy();
@@ -138,6 +184,19 @@ function getSnapshot(client: Socket): Promise<string> {
 	);
 
 	return response;
+}
+
+/**
+ * Gets a JSON-RPC request id from a received message.
+ * @param value Received JSON value.
+ * @returns Request id when present.
+ */
+function getRequestId(value: JsonValue): string | undefined {
+	if (typeof value !== "object" || value === null || Array.isArray(value)) {
+		return undefined;
+	}
+
+	return typeof value.id === "string" ? value.id : undefined;
 }
 
 /**

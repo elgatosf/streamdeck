@@ -39,12 +39,14 @@ class BridgeSocket {
 	 * @param uuid Plugin UUID used to derive the pipe path.
 	 */
 	public async start(rpcHost: SocketRpcHost, uuid: string): Promise<void> {
+		this.#rpcHost = rpcHost;
 		if (this.#server) {
+			if (this.#client) {
+				this.#attachRpc(this.#client);
+			}
+
 			return;
 		}
-
-		this.#rpcHost = rpcHost;
-		rpcHost.attachRpc((message) => this.#send(message));
 
 		const path = getPipePath(uuid);
 		this.#path = path;
@@ -92,17 +94,22 @@ class BridgeSocket {
 	#onConnection(socket: Socket): void {
 		this.#client?.destroy();
 		this.#client = socket;
+		this.#attachRpc(socket);
 
 		let buffer = "";
 		socket.setEncoding("utf-8");
-		socket.on("data", (chunk: string) => {
+		socket.on("data", async (chunk: string) => {
 			buffer += chunk;
 			let newline = buffer.indexOf("\n");
 			while (newline !== -1) {
 				const line = buffer.slice(0, newline);
 				buffer = buffer.slice(newline + 1);
 				if (line.length > 0) {
-					void this.#onMessage(line);
+					try {
+						await this.#onMessage(socket, line);
+					} catch {
+						// Ignore malformed or stale bridge messages; reconnect will refresh state.
+					}
 				}
 
 				newline = buffer.indexOf("\n");
@@ -121,20 +128,34 @@ class BridgeSocket {
 	}
 
 	/**
+	 * Attaches the RPC host to a socket-specific sender.
+	 * @param socket Socket used by the RPC sender.
+	 */
+	#attachRpc(socket: Socket): void {
+		this.#rpcHost?.attachRpc((message) => this.#send(socket, message));
+	}
+
+	/**
 	 * Forwards a JSON-RPC message from the client to the RPC host.
+	 * @param socket Socket that received the message.
 	 * @param line Newline-delimited JSON message.
 	 */
-	async #onMessage(line: string): Promise<void> {
+	async #onMessage(socket: Socket, line: string): Promise<void> {
+		if (this.#client !== socket) {
+			return;
+		}
+
 		await this.#rpcHost?.receive(JSON.parse(line));
 	}
 
 	/**
 	 * Sends a JSON-RPC message to the connected client.
+	 * @param socket Socket associated with the RPC exchange.
 	 * @param message Message to send.
 	 */
-	async #send(message: unknown): Promise<void> {
-		if (this.#client && !this.#client.destroyed) {
-			this.#client.write(`${JSON.stringify(message)}\n`);
+	async #send(socket: Socket, message: unknown): Promise<void> {
+		if (this.#client === socket && !socket.destroyed) {
+			socket.write(`${JSON.stringify(message)}\n`);
 		}
 	}
 }
