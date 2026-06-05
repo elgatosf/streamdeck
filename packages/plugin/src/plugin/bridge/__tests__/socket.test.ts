@@ -56,6 +56,7 @@ describe("bridge socket", () => {
 	it("forwards snapshot change notifications to the connected client", async () => {
 		await bridge.start();
 		const client = await connect();
+		await getSnapshot(client); // Wait for the initial snapshot response to ensure the RPC connection is ready.
 
 		const notification = receive(client);
 		connection.emit("willAppear", createKeyWillAppear());
