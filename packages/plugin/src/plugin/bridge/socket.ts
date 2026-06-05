@@ -105,11 +105,7 @@ class BridgeSocket {
 				const line = buffer.slice(0, newline);
 				buffer = buffer.slice(newline + 1);
 				if (line.length > 0) {
-					try {
-						await this.#onMessage(socket, line);
-					} catch {
-						// Ignore malformed or stale bridge messages; reconnect will refresh state.
-					}
+					await this.#onMessage(socket, line);
 				}
 
 				newline = buffer.indexOf("\n");
@@ -145,7 +141,11 @@ class BridgeSocket {
 			return;
 		}
 
-		await this.#rpcHost?.receive(JSON.parse(line));
+		try {
+			await this.#rpcHost?.receive(JSON.parse(line));
+		} catch {
+			// Ignore malformed or stale bridge messages; reconnect will refresh state.
+		}
 	}
 
 	/**
