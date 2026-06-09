@@ -50,6 +50,11 @@ class BridgeAdapter {
 	#lastSnapshot = "";
 
 	/**
+	 * Tail of the serialized publication promise chain.
+	 */
+	#publishQueue: Promise<void> = Promise.resolve();
+
+	/**
 	 * Determines whether registration devices have been seeded into the internal device map.
 	 */
 	#seededDevices = false;
@@ -244,9 +249,16 @@ class BridgeAdapter {
 	}
 
 	/**
+	 * Enqueues a snapshot publication, ensuring notifications are emitted in call order.
+	 */
+	#publishChanges(): void {
+		this.#publishQueue = this.#publishQueue.then(() => this.#doPublish());
+	}
+
+	/**
 	 * Publishes the current snapshot when it differs from the last emitted state.
 	 */
-	async #publishChanges(): Promise<void> {
+	async #doPublish(): Promise<void> {
 		try {
 			const snapshot = this.getSnapshot();
 			const serialized = JSON.stringify(snapshot);
