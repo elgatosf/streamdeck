@@ -246,26 +246,23 @@ class BridgeAdapter {
 	}
 
 	/**
-	 * Schedules publication of the latest snapshot when it changed.
-	 */
-	#publishChanges(): void {
-		this.#notifyIfChanged();
-	}
-
-	/**
 	 * Publishes the current snapshot when it differs from the last emitted state.
 	 */
-	async #notifyIfChanged(): Promise<void> {
-		const snapshot = this.getSnapshot();
-		const serialized = JSON.stringify(snapshot);
+	async #publishChanges(): Promise<void> {
+		try {
+			const snapshot = this.getSnapshot();
+			const serialized = JSON.stringify(snapshot);
 
-		if (serialized === this.#lastSnapshot) {
-			return;
-		}
+			if (serialized === this.#lastSnapshot) {
+				return;
+			}
 
-		this.#lastSnapshot = serialized;
-		if (this.#rpc) {
-			await this.#rpc.notify("streamDeck.bridge.snapshotChanged", snapshot);
+			this.#lastSnapshot = serialized;
+			if (this.#rpc) {
+				await this.#rpc.notify("streamDeck.bridge.snapshotChanged", snapshot);
+			}
+		} catch {
+			// Swallow transport errors to avoid disrupting the plugin;
 		}
 	}
 
