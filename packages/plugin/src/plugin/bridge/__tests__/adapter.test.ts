@@ -134,7 +134,7 @@ describe("debug adapter", () => {
 		]);
 	});
 
-	it("does not start the websocket transport outside debug mode", async () => {
+	it("does not start the socket transport outside debug mode", async () => {
 		vi.resetModules();
 		vi.doMock("../../common/utils.js", async () => {
 			const actual = await vi.importActual<typeof import("../../common/utils.js")>("../../common/utils.js");
