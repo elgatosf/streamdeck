@@ -49,7 +49,6 @@ class BridgeSocket {
 		}
 
 		const path = getPipePath(uuid);
-		this.#path = path;
 
 		// A Unix domain socket leaves a file behind if the previous process crashed; remove any
 		// stale socket before listening to avoid EADDRINUSE. Windows named pipes self-clean.
@@ -58,13 +57,14 @@ class BridgeSocket {
 		}
 
 		const server = createServer((socket) => this.#onConnection(socket));
-		this.#server = server;
 		await new Promise<void>((resolve, reject) => {
 			server.once("listening", () => resolve());
 			server.once("error", (err) => reject(err));
 			server.listen(path);
 		});
 
+		this.#server = server;
+		this.#path = path;
 		logger.debug(`Bridge socket listening on ${path}`);
 	}
 

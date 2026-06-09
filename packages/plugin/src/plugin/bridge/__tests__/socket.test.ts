@@ -1,6 +1,7 @@
 import { type JsonValue, withResolvers } from "@elgato/utils";
 import type { RpcSender } from "@elgato/utils/rpc";
-import { createConnection, type Socket } from "node:net";
+import { EventEmitter } from "node:events";
+import { createConnection, type Server, type Socket } from "node:net";
 import { platform } from "node:os";
 import { access } from "node:fs/promises";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
@@ -113,6 +114,53 @@ describe("bridge socket", () => {
 		});
 
 		client.destroy();
+	});
+
+	it("retries listening after a startup error", async () => {
+		vi.resetModules();
+		const listen = vi.fn();
+
+		vi.doMock("node:net", () => ({
+			createServer: vi.fn(() => {
+				const server = new EventEmitter() as EventEmitter & Pick<Server, "close" | "listen">;
+				server.close = ((callback?: (err?: Error) => void) => {
+					callback?.();
+					return server;
+				}) as Server["close"];
+				server.listen = ((path: string) => {
+					listen(path);
+					const attempt = listen.mock.calls.length;
+
+					queueMicrotask(() => {
+						if (attempt === 1) {
+							server.emit("error", new Error("address in use"));
+						} else {
+							server.emit("listening");
+						}
+					});
+
+					return server;
+				}) as Server["listen"];
+
+				return server;
+			}),
+		}));
+
+		try {
+			const { socket: retrySocket } = await import("../socket.js");
+			const rpcHost = {
+				attachRpc: vi.fn(),
+				receive: vi.fn().mockResolvedValue(false),
+			};
+
+			await expect(retrySocket.start(rpcHost, "com.elgato.test")).rejects.toThrow("address in use");
+			await expect(retrySocket.start(rpcHost, "com.elgato.test")).resolves.toBeUndefined();
+			await retrySocket.stop();
+		} finally {
+			vi.doUnmock("node:net");
+		}
+
+		expect(listen).toHaveBeenCalledTimes(2);
 	});
 
 	it("removes the socket file when stopped", async () => {
