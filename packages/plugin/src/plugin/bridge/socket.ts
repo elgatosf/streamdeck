@@ -1,4 +1,4 @@
-import { type JsonValue } from "@elgato/utils";
+import { type JsonValue, withResolvers } from "@elgato/utils";
 import type { RpcSender } from "@elgato/utils/rpc";
 import { rm } from "node:fs/promises";
 import { createServer, type Server, type Socket } from "node:net";
@@ -97,15 +97,29 @@ class BridgeSocket {
 		this.#attachRpc(socket);
 
 		let buffer = "";
+		let messageReceived = Promise.resolve();
+		const receiveMessage = async (line: string): Promise<void> => {
+			const previousMessageReceived = messageReceived;
+			const received = withResolvers<void>();
+			messageReceived = received.promise;
+
+			try {
+				await previousMessageReceived;
+				await this.#onMessage(socket, line);
+			} finally {
+				received.resolve();
+			}
+		};
+
 		socket.setEncoding("utf-8");
-		socket.on("data", async (chunk: string) => {
+		socket.on("data", (chunk: string) => {
 			buffer += chunk;
 			let newline = buffer.indexOf("\n");
 			while (newline !== -1) {
 				const line = buffer.slice(0, newline);
 				buffer = buffer.slice(newline + 1);
 				if (line.length > 0) {
-					await this.#onMessage(socket, line);
+					receiveMessage(line);
 				}
 
 				newline = buffer.indexOf("\n");

@@ -64,8 +64,9 @@ describe("debug adapter", () => {
 		});
 	});
 
-	it("publishes snapshot changes for visible instances", () => {
+	it("publishes snapshot changes for visible instances", async () => {
 		connection.emit("willAppear", createKeyWillAppear());
+		await waitForMessages(sent, 1);
 
 		expect(sent).toEqual([
 			{
@@ -93,11 +94,13 @@ describe("debug adapter", () => {
 		});
 	});
 
-	it("updates settings, device details, and removals from connection events", () => {
+	it("updates settings, device details, and removals from connection events", async () => {
 		connection.emit("willAppear", createKeyWillAppear());
+		await waitForMessages(sent, 1);
 		clearMessages(sent);
 
 		connection.emit("didReceiveSettings", createDidReceiveSettings());
+		await waitForMessages(sent, 1);
 		expect(adapter.getSnapshot().actions[0].instances[0]?.settings).toEqual({
 			count: 7,
 		});
@@ -105,17 +108,20 @@ describe("debug adapter", () => {
 
 		clearMessages(sent);
 		connection.emit("deviceDidChange", createDeviceDidChange());
+		await waitForMessages(sent, 1);
 		expect(adapter.getSnapshot().actions[0].instances[0]?.device).toBe("Renamed Device");
 		expect(sent).toHaveLength(1);
 
 		clearMessages(sent);
 		connection.emit("willDisappear", createWillDisappear());
+		await waitForMessages(sent, 1);
 		expect(adapter.getSnapshot().actions[0].instances).toEqual([]);
 		expect(sent).toHaveLength(1);
 	});
 
 	it("responds to getSnapshot RPC requests", async () => {
 		connection.emit("willAppear", createKeyWillAppear());
+		await waitForMessages(sent, 1);
 		clearMessages(sent);
 
 		const handled = await adapter.receive({
@@ -165,6 +171,17 @@ describe("debug adapter", () => {
  */
 function clearMessages(messages: Array<JsonRpcRequest | JsonRpcResponse>): void {
 	messages.splice(0, messages.length);
+}
+
+/**
+ * Waits for the adapter's queued JSON-RPC messages to be sent.
+ * @param messages Recorded messages.
+ * @param length Expected message count.
+ */
+async function waitForMessages(messages: Array<JsonRpcRequest | JsonRpcResponse>, length: number): Promise<void> {
+	await vi.waitFor(() => {
+		expect(messages).toHaveLength(length);
+	});
 }
 
 /**
