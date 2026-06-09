@@ -47,7 +47,7 @@ class BridgeAdapter {
 	/**
 	 * Last serialized snapshot emitted by the adapter.
 	 */
-	#lastSnapshot: string;
+	#lastSnapshot = "";
 
 	/**
 	 * Determines whether registration devices have been seeded into the internal device map.
@@ -105,8 +105,6 @@ class BridgeAdapter {
 				}
 			}),
 		);
-
-		this.#lastSnapshot = JSON.stringify(this.getSnapshot());
 	}
 
 	/**
