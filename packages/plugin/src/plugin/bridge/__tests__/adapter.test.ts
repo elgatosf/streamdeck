@@ -36,11 +36,14 @@ describe("debug adapter", () => {
 						{
 							context: "ctx_001",
 							controller: "Keypad",
-							device: "Device One",
-							position: {
+							coordinates: {
 								column: 2,
-								kind: "key",
 								row: 3,
+							},
+							device: "Device One",
+							isInMultiAction: false,
+							resources: {
+								thumbnail: "imgs/key.png",
 							},
 							settings: {
 								count: 42,
@@ -77,20 +80,21 @@ describe("debug adapter", () => {
 		]);
 	});
 
-	it("normalizes dial and multi-action positions", () => {
+	it("preserves coordinates and multi-action state", () => {
 		connection.emit("willAppear", createDialWillAppear());
 
-		expect(adapter.getSnapshot().actions[1].instances[0]?.position).toEqual({
+		expect(adapter.getSnapshot().actions[1].instances[0]?.coordinates).toEqual({
 			column: 1,
-			index: 1,
-			kind: "dial",
 			row: 0,
 		});
 
 		connection.emit("willAppear", createMultiActionWillAppear());
 
-		expect(adapter.getSnapshot().actions[0].instances[0]?.position).toEqual({
-			kind: "multi-action",
+		const instance = adapter.getSnapshot().actions[0].instances[0];
+		expect(instance?.isInMultiAction).toBe(true);
+		expect(instance?.coordinates).toEqual({
+			column: 4,
+			row: 2,
 		});
 	});
 
@@ -103,6 +107,9 @@ describe("debug adapter", () => {
 		await waitForMessages(sent, 1);
 		expect(adapter.getSnapshot().actions[0].instances[0]?.settings).toEqual({
 			count: 7,
+		});
+		expect(adapter.getSnapshot().actions[0].instances[0]?.resources).toEqual({
+			thumbnail: "imgs/updated.png",
 		});
 		expect(sent).toHaveLength(1);
 
@@ -220,7 +227,9 @@ function createDidReceiveSettings(): DidReceiveSettings<{ count: number }> {
 				row: 3,
 			},
 			isInMultiAction: false,
-			resources: {},
+			resources: {
+				thumbnail: "imgs/updated.png",
+			},
 			settings: {
 				count: 7,
 			},
@@ -245,7 +254,9 @@ function createDialWillAppear(): WillAppear<{ target: string }> {
 				row: 0,
 			},
 			isInMultiAction: false,
-			resources: {},
+			resources: {
+				thumbnail: "imgs/dial.png",
+			},
 			settings: {
 				target: "master",
 			},
@@ -270,7 +281,9 @@ function createKeyWillAppear(): WillAppear<{ count: number }> {
 				row: 3,
 			},
 			isInMultiAction: false,
-			resources: {},
+			resources: {
+				thumbnail: "imgs/key.png",
+			},
 			settings: {
 				count: 42,
 			},
@@ -290,6 +303,10 @@ function createMultiActionWillAppear(): WillAppear<{ count: number }> {
 		event: "willAppear",
 		payload: {
 			controller: "Keypad",
+			coordinates: {
+				column: 4,
+				row: 2,
+			},
 			isInMultiAction: true,
 			resources: {},
 			settings: {

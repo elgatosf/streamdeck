@@ -2,10 +2,12 @@ import type { IDisposable, JsonObject, JsonValue } from "@elgato/utils";
 import { createRpcServerClient, type RpcSender } from "@elgato/utils/rpc";
 
 import type {
+	Coordinates,
 	DeviceDidChange,
 	DeviceDidConnect,
 	DidReceiveSettings,
 	Manifest,
+	Resources,
 	WillAppear,
 	WillDisappear,
 } from "../../api/index.js";
@@ -81,22 +83,29 @@ class BridgeAdapter {
 				if (!instance) {
 					return;
 				}
+				const payload = ev.payload as PayloadWithCoordinates;
 
 				instance.controller = ev.payload.controller;
 				instance.deviceId = ev.device;
-				instance.position = this.#toPosition(ev.payload);
+				instance.isInMultiAction = payload.isInMultiAction ?? false;
+				instance.coordinates = payload.coordinates;
+				instance.resources = payload.resources ?? {};
 				instance.settings = ev.payload.settings;
 				this.#publishChanges();
 			}),
 		);
 		this.#disposables.push(
 			connection.disposableOn("willAppear", (ev: WillAppear<JsonObject>) => {
+				const payload = ev.payload as PayloadWithCoordinates;
+
 				this.#instances.set(ev.context, {
 					context: ev.context,
 					controller: ev.payload.controller,
 					deviceId: ev.device,
+					isInMultiAction: payload.isInMultiAction ?? false,
 					manifestId: ev.action,
-					position: this.#toPosition(ev.payload),
+					coordinates: payload.coordinates,
+					resources: payload.resources ?? {},
 					settings: ev.payload.settings,
 				});
 
@@ -157,8 +166,10 @@ class BridgeAdapter {
 			action.instances.push({
 				context: instance.context,
 				controller: instance.controller,
+				coordinates: instance.coordinates,
 				device: this.#getDeviceName(instance.deviceId),
-				position: instance.position,
+				isInMultiAction: instance.isInMultiAction,
+				resources: instance.resources,
 				settings: instance.settings,
 			});
 
@@ -298,34 +309,6 @@ class BridgeAdapter {
 	#getManifest(): Manifest | null {
 		return (this.#manifest ??= getManifest());
 	}
-
-	/**
-	 * Converts raw Stream Deck payload coordinates into a normalized position object.
-	 * @param payload Action payload associated with a visible instance.
-	 * @returns Normalized position snapshot.
-	 */
-	#toPosition(payload: DidReceiveSettings<JsonObject>["payload"] | WillAppear<JsonObject>["payload"]): ActionPosition {
-		if (payload.controller === "Encoder") {
-			return {
-				column: payload.coordinates.column,
-				index: payload.coordinates.column,
-				kind: "dial",
-				row: payload.coordinates.row,
-			};
-		}
-
-		if (payload.isInMultiAction) {
-			return {
-				kind: "multi-action",
-			};
-		}
-
-		return {
-			column: payload.coordinates.column,
-			kind: "key",
-			row: payload.coordinates.row,
-		};
-	}
 }
 
 /**
@@ -398,14 +381,24 @@ type ActionInstanceState = {
 	controller: "Encoder" | "Keypad";
 
 	/**
+	 * Coordinates associated with the instance.
+	 */
+	coordinates: Coordinates;
+
+	/**
 	 * Name of the device the instance is currently shown on.
 	 */
 	device: string;
 
 	/**
-	 * Normalized position information for the instance.
+	 * Determines whether the instance is part of a multi-action.
 	 */
-	position: ActionPosition;
+	isInMultiAction: boolean;
+
+	/**
+	 * Resources associated with the instance.
+	 */
+	resources: Resources;
 
 	/**
 	 * Persisted action settings.
@@ -434,52 +427,24 @@ type PluginState = {
 };
 
 /**
- * Normalized position associated with an action instance.
+ * Runtime payload shape used by the bridge for visible action positions.
  */
-type ActionPosition =
-	| {
-		/**
-		 * Dial column reported by Stream Deck.
-		 */
-		column: number;
+type PayloadWithCoordinates = {
+	/**
+	 * Coordinates reported by Stream Deck.
+	 */
+	coordinates: Coordinates;
 
-		/**
-		 * Position kind for encoder instances.
-		 */
-		kind: "dial";
+	/**
+	 * Determines whether the instance is part of a multi-action.
+	 */
+	isInMultiAction?: boolean;
 
-		/**
-		 * Dial index used for extension-side display.
-		 */
-		index: number;
-
-		/**
-		 * Dial row reported by Stream Deck.
-		 */
-		row: number;
-	}
-	| {
-		/**
-		 * Key column reported by Stream Deck.
-		 */
-		column: number;
-
-		/**
-		 * Position kind for keypad instances.
-		 */
-		kind: "key";
-
-		/**
-		 * Key row reported by Stream Deck.
-		 */
-		row: number;
-	}
-	| {
-		/**
-		 * Position kind for keypad multi-action instances.
-		 */
-		kind: "multi-action";
-	};
+	/**
+	 * Resources associated with the instance.
+	 */
+	resources?: Resources;
+};
 
 /**
  * Internal snapshot of a visible action instance.
@@ -496,9 +461,19 @@ type InternalInstanceState = {
 	controller: "Encoder" | "Keypad";
 
 	/**
+	 * Coordinates associated with the instance.
+	 */
+	coordinates: Coordinates;
+
+	/**
 	 * Device identifier associated with the instance.
 	 */
 	deviceId: string;
+
+	/**
+	 * Determines whether the instance is part of a multi-action.
+	 */
+	isInMultiAction: boolean;
 
 	/**
 	 * Manifest action UUID associated with the instance.
@@ -506,9 +481,9 @@ type InternalInstanceState = {
 	manifestId: string;
 
 	/**
-	 * Normalized position for the instance.
+	 * Last known resources associated with the instance.
 	 */
-	position: ActionPosition;
+	resources: Resources;
 
 	/**
 	 * Last known settings associated with the instance.
