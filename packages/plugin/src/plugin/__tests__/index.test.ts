@@ -3,6 +3,7 @@ import { describe, expect, it, vi } from "vitest";
 import { BarSubType, DeviceType, Target } from "../../api/index.js";
 import { SingletonAction } from "../actions/singleton-action.js";
 import { connection } from "../connection.js";
+import { bridge } from "../bridge/adapter.js";
 import streamDeckAsDefaultExport, { streamDeck } from "../index.js";
 import { logger } from "../logging/index.js";
 
@@ -10,6 +11,7 @@ vi.mock("../../common/i18n.js");
 vi.mock("../logging/index.js");
 vi.mock("../manifest.js");
 vi.mock("../connection.js");
+vi.mock("../bridge/adapter.js");
 
 describe("index", () => {
 	/**
@@ -47,10 +49,12 @@ describe("index", () => {
 	it("connects", async () => {
 		// Arrange.
 		const spyOnConnect = vi.spyOn(connection, "connect");
+		const spyOnStart = vi.spyOn(bridge, "start");
 
 		// Act, assert.
 		await streamDeck.connect();
 		expect(spyOnConnect).toHaveBeenCalledTimes(1);
+		expect(spyOnStart).toHaveBeenCalledTimes(1);
 	});
 
 	/**

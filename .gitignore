@@ -11,3 +11,6 @@ dist/
 # Shared package files
 packages/plugin/README.md
 packages/plugin/LICENSE
+
+# OS
+.DS_Store

@@ -4,6 +4,7 @@ import type { Logger } from "@elgato/utils/logging";
 import type { Language, RegistrationInfo } from "../api/index.js";
 import { actionService, type ActionService } from "./actions/service.js";
 import { connection } from "./connection.js";
+import { bridge } from "./bridge/adapter.js";
 import { deviceService, type DeviceService } from "./devices/service.js";
 import { fileSystemLocaleProvider } from "./i18n.js";
 import { logger } from "./logging/index.js";
@@ -114,8 +115,9 @@ export const streamDeck = {
 	 * Connects the plugin to the Stream Deck.
 	 * @returns A promise resolved when a connection has been established.
 	 */
-	connect(): Promise<void> {
-		return connection.connect();
+	async connect(): Promise<void> {
+		await connection.connect();
+		await bridge.start();
 	},
 };
 
