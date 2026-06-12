@@ -18,7 +18,7 @@ import { getManifest } from "../manifest.js";
 import { socket } from "./socket.js";
 
 /**
- * Internal JSON-RPC adapter that projects connection events into a serialized plugin snapshot.
+ * Internal JSON-RPC adapter that projects connection events into serialized plugin state.
  */
 class BridgeAdapter {
 	/**
@@ -47,9 +47,9 @@ class BridgeAdapter {
 	#rpc: ReturnType<typeof createRpcServerClient> | undefined;
 
 	/**
-	 * Last serialized snapshot emitted by the adapter.
+	 * Last serialized plugin state emitted by the adapter.
 	 */
-	#lastSnapshot = "";
+	#lastPluginState = "";
 
 	/**
 	 * Tail of the serialized publication promise chain.
@@ -127,7 +127,7 @@ class BridgeAdapter {
 	 */
 	public attachRpc(send: RpcSender): void {
 		this.#rpc = createRpcServerClient(send);
-		this.#rpc.addMethod("streamDeck.bridge.getSnapshot", () => this.getSnapshot());
+		this.#rpc.addMethod("streamDeck.bridge.getPluginState", () => this.getPluginState());
 		this.#rpc.addMethod<SetSettingsParams>("streamDeck.bridge.setSettings", (params) => this.#setSettings(params));
 	}
 
@@ -139,10 +139,10 @@ class BridgeAdapter {
 	}
 
 	/**
-	 * Builds the current plugin snapshot.
-	 * @returns Current plugin snapshot.
+	 * Builds the current plugin state.
+	 * @returns Current plugin state.
 	 */
-	public getSnapshot(): PluginSnapshot {
+	public getPluginState(): PluginState {
 		this.#seedDevices();
 
 		const manifestActions = this.#getManifest()?.Actions ?? [];
@@ -213,7 +213,7 @@ class BridgeAdapter {
 	}
 
 	/**
-	 * Persists settings for a tracked action instance and re-publishes the snapshot.
+	 * Persists settings for a tracked action instance and re-publishes plugin state.
 	 * @param params Context and settings to persist.
 	 * @returns `true` when the instance was known and the update was sent.
 	 */
@@ -235,7 +235,7 @@ class BridgeAdapter {
 		});
 
 		// Stream Deck does not echo a didReceiveSettings for setSettings, so update the
-		// tracked instance optimistically to keep the published snapshot in sync.
+		// tracked instance optimistically to keep the published plugin state in sync.
 		instance.settings = settings;
 		this.#publishChanges();
 		return true;
@@ -260,27 +260,27 @@ class BridgeAdapter {
 	}
 
 	/**
-	 * Enqueues a snapshot publication, ensuring notifications are emitted in call order.
+	 * Enqueues a plugin state publication, ensuring notifications are emitted in call order.
 	 */
 	#publishChanges(): void {
 		this.#publishQueue = this.#publishQueue.then(() => this.#doPublish());
 	}
 
 	/**
-	 * Publishes the current snapshot when it differs from the last emitted state.
+	 * Publishes the current plugin state when it differs from the last emitted state.
 	 */
 	async #doPublish(): Promise<void> {
 		try {
-			const snapshot = this.getSnapshot();
-			const serialized = JSON.stringify(snapshot);
+			const pluginState = this.getPluginState();
+			const serialized = JSON.stringify(pluginState);
 
-			if (serialized === this.#lastSnapshot) {
+			if (serialized === this.#lastPluginState) {
 				return;
 			}
 
-			this.#lastSnapshot = serialized;
+			this.#lastPluginState = serialized;
 			if (this.#rpc) {
-				await this.#rpc.notify("streamDeck.bridge.snapshotChanged", snapshot);
+				await this.#rpc.notify("streamDeck.bridge.pluginStateChanged", pluginState);
 			}
 		} catch {
 			// Swallow transport errors to avoid disrupting the plugin;
@@ -332,22 +332,22 @@ type SetSettingsParams = {
 };
 
 /**
- * Serializable snapshot of the plugin's visible action state.
+ * Serializable state of the plugin's visible actions.
  */
-type PluginSnapshot = {
+type PluginState = {
 	/**
 	 * Actions known to the plugin, including currently visible instances.
 	 */
 	actions: ActionState[];
 
 	/**
-	 * Plugin metadata associated with the snapshot.
+	 * Plugin metadata associated with the state.
 	 */
-	plugin: PluginState;
+	plugin: PluginMetadata;
 };
 
 /**
- * Snapshot of a manifest action and its currently visible instances.
+ * State of a manifest action and its currently visible instances.
  */
 type ActionState = {
 	/**
@@ -367,7 +367,7 @@ type ActionState = {
 };
 
 /**
- * Snapshot of a visible action instance.
+ * State of a visible action instance.
  */
 type ActionInstanceState = {
 	/**
@@ -407,9 +407,9 @@ type ActionInstanceState = {
 };
 
 /**
- * Serializable plugin information exposed by the snapshot.
+ * Serializable plugin metadata exposed by the state.
  */
-type PluginState = {
+type PluginMetadata = {
 	/**
 	 * Human-readable plugin name.
 	 */
@@ -447,7 +447,7 @@ type PayloadWithCoordinates = {
 };
 
 /**
- * Internal snapshot of a visible action instance.
+ * Internal state of a visible action instance.
  */
 type InternalInstanceState = {
 	/**

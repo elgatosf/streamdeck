@@ -26,10 +26,10 @@ describe("debug adapter", () => {
 		vi.clearAllMocks();
 	});
 
-	it("builds a snapshot from manifest actions and visible instances", () => {
+	it("builds plugin state from manifest actions and visible instances", () => {
 		connection.emit("willAppear", createKeyWillAppear());
 
-		expect(adapter.getSnapshot()).toEqual({
+		expect(adapter.getPluginState()).toEqual({
 			actions: [
 				{
 					instances: [
@@ -67,15 +67,15 @@ describe("debug adapter", () => {
 		});
 	});
 
-	it("publishes snapshot changes for visible instances", async () => {
+	it("publishes plugin state changes for visible instances", async () => {
 		connection.emit("willAppear", createKeyWillAppear());
 		await waitForMessages(sent, 1);
 
 		expect(sent).toEqual([
 			{
 				jsonrpc: "2.0",
-				method: "streamDeck.bridge.snapshotChanged",
-				params: adapter.getSnapshot(),
+				method: "streamDeck.bridge.pluginStateChanged",
+				params: adapter.getPluginState(),
 			},
 		]);
 	});
@@ -83,14 +83,14 @@ describe("debug adapter", () => {
 	it("preserves coordinates and multi-action state", () => {
 		connection.emit("willAppear", createDialWillAppear());
 
-		expect(adapter.getSnapshot().actions[1].instances[0]?.coordinates).toEqual({
+		expect(adapter.getPluginState().actions[1].instances[0]?.coordinates).toEqual({
 			column: 1,
 			row: 0,
 		});
 
 		connection.emit("willAppear", createMultiActionWillAppear());
 
-		const instance = adapter.getSnapshot().actions[0].instances[0];
+		const instance = adapter.getPluginState().actions[0].instances[0];
 		expect(instance?.isInMultiAction).toBe(true);
 		expect(instance?.coordinates).toEqual({
 			column: 4,
@@ -105,10 +105,10 @@ describe("debug adapter", () => {
 
 		connection.emit("didReceiveSettings", createDidReceiveSettings());
 		await waitForMessages(sent, 1);
-		expect(adapter.getSnapshot().actions[0].instances[0]?.settings).toEqual({
+		expect(adapter.getPluginState().actions[0].instances[0]?.settings).toEqual({
 			count: 7,
 		});
-		expect(adapter.getSnapshot().actions[0].instances[0]?.resources).toEqual({
+		expect(adapter.getPluginState().actions[0].instances[0]?.resources).toEqual({
 			thumbnail: "imgs/updated.png",
 		});
 		expect(sent).toHaveLength(1);
@@ -116,17 +116,17 @@ describe("debug adapter", () => {
 		clearMessages(sent);
 		connection.emit("deviceDidChange", createDeviceDidChange());
 		await waitForMessages(sent, 1);
-		expect(adapter.getSnapshot().actions[0].instances[0]?.device).toBe("Renamed Device");
+		expect(adapter.getPluginState().actions[0].instances[0]?.device).toBe("Renamed Device");
 		expect(sent).toHaveLength(1);
 
 		clearMessages(sent);
 		connection.emit("willDisappear", createWillDisappear());
 		await waitForMessages(sent, 1);
-		expect(adapter.getSnapshot().actions[0].instances).toEqual([]);
+		expect(adapter.getPluginState().actions[0].instances).toEqual([]);
 		expect(sent).toHaveLength(1);
 	});
 
-	it("responds to getSnapshot RPC requests", async () => {
+	it("responds to getPluginState RPC requests", async () => {
 		connection.emit("willAppear", createKeyWillAppear());
 		await waitForMessages(sent, 1);
 		clearMessages(sent);
@@ -134,7 +134,7 @@ describe("debug adapter", () => {
 		const handled = await adapter.receive({
 			id: "request-1",
 			jsonrpc: "2.0",
-			method: "streamDeck.bridge.getSnapshot",
+			method: "streamDeck.bridge.getPluginState",
 		});
 
 		expect(handled).toBe(true);
@@ -142,7 +142,7 @@ describe("debug adapter", () => {
 			{
 				id: "request-1",
 				jsonrpc: "2.0",
-				result: adapter.getSnapshot(),
+				result: adapter.getPluginState(),
 			},
 		]);
 	});

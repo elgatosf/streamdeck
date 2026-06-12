@@ -40,32 +40,32 @@ describe("bridge socket", () => {
 		vi.clearAllMocks();
 	});
 
-	it("serves snapshot requests over the debug socket", async () => {
+	it("serves plugin state requests over the debug socket", async () => {
 		await bridge.start();
 		const client = await connect();
 
-		const response = await getSnapshot(client);
+		const response = await getPluginState(client);
 		expect(JSON.parse(response)).toEqual({
 			id: "request-1",
 			jsonrpc: "2.0",
-			result: bridge.getSnapshot(),
+			result: bridge.getPluginState(),
 		});
 
 		client.destroy();
 	});
 
-	it("forwards snapshot change notifications to the connected client", async () => {
+	it("forwards plugin state change notifications to the connected client", async () => {
 		await bridge.start();
 		const client = await connect();
-		await getSnapshot(client); // Wait for the initial snapshot response to ensure the RPC connection is ready.
+		await getPluginState(client); // Wait for the initial plugin state response to ensure the RPC connection is ready.
 
 		const notification = receive(client);
 		connection.emit("willAppear", createKeyWillAppear());
 
 		expect(JSON.parse(await notification)).toEqual({
 			jsonrpc: "2.0",
-			method: "streamDeck.bridge.snapshotChanged",
-			params: bridge.getSnapshot(),
+			method: "streamDeck.bridge.pluginStateChanged",
+			params: bridge.getPluginState(),
 		});
 
 		client.destroy();
@@ -218,17 +218,17 @@ async function connect(): Promise<Socket> {
 }
 
 /**
- * Requests a snapshot over the socket client.
+ * Requests plugin state over the socket client.
  * @param client Socket client.
  * @returns JSON-RPC response message.
  */
-function getSnapshot(client: Socket): Promise<string> {
+function getPluginState(client: Socket): Promise<string> {
 	const response = receive(client);
 	client.write(
 		`${JSON.stringify({
 			id: "request-1",
 			jsonrpc: "2.0",
-			method: "streamDeck.bridge.getSnapshot",
+			method: "streamDeck.bridge.getPluginState",
 		})}\n`,
 	);
 
