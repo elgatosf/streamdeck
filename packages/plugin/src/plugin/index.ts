@@ -39,9 +39,15 @@ export { type UIController };
 // Assistant
 // --------------------------------------------------
 
-export type { AssistantActionConfig } from "./assistant/action-config.js";
-export { defineAssistantMethod, type AssistantMethodDefinition } from "./assistant/method-definition.js";
-export type { AssistantMethodOptions } from "./assistant/method-options.js";
+export type { AssistantActionConfig } from "./assistant/config/action-config.js";
+
+export { defineAssistantMethod } from "./assistant/methods/define.js";
+export type { AssistantMethodInfo } from "./assistant/methods/method-info.js";
+export type { AssistantMethodOptions } from "./assistant/methods/options.js";
+
+// --------------------------------------------------
+// Main
+// --------------------------------------------------
 
 let i18n: I18nProvider<Language> | undefined;
 

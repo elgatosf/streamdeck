@@ -5,12 +5,12 @@ import type { DidInvokeMethodMessage } from "../../../api/assistant/did-invoke-m
 import type { InvokeMethodMessage } from "../../../api/assistant/invoke-method-message.js";
 import { connection } from "../../connection.js";
 import { logger } from "../../logging/index.js";
-import type { AssistantMethodOptions } from "../method-options.js";
+import type { AssistantMethodOptions } from "./options.js";
 
 /**
  * Configuration methods that have been registered by the plugin.
  */
-export const methods = new Map<string, AssistantMethodOptions<z.ZodObject | undefined, z.ZodObject>>();
+export const methodRegistry = new Map<string, AssistantMethodOptions<z.ZodObject | undefined, z.ZodObject>>();
 
 /**
  * Dispatches the request to invoke a method exposed by the plugin.
@@ -49,7 +49,7 @@ connection.on("invokeMethod", async (ev) => {
  */
 async function invoke(payload: InvokeMethodMessage["payload"]): Promise<DidInvokeMethodMessage["payload"]> {
 	const { name, arguments: args } = payload;
-	const method = methods.get(payload.name);
+	const method = methodRegistry.get(payload.name);
 
 	// Check if the method has been registered.
 	if (!method) {

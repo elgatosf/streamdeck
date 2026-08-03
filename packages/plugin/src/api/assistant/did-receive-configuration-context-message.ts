@@ -1,4 +1,5 @@
 import type { ConfigurationContext } from "./configuration-context.js";
+import type { InitializationContext } from "./initialization-context.js";
 import type { ResponsePayload } from "./response-payload.js";
 
 /**
@@ -18,5 +19,5 @@ export interface DidReceiveConfigurationContextMessage {
 	/**
 	 * The context of the action.
 	 */
-	readonly payload: ResponsePayload<ConfigurationContext>;
+	readonly payload: ResponsePayload<ConfigurationContext | InitializationContext>;
 }

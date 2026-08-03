@@ -15,4 +15,9 @@ export interface ConfigurationContext {
 	 * Methods that can be used when configuring an action.
 	 */
 	readonly methods: MethodMetadata[];
+
+	/**
+	 * Indicates the action is ready to be configured.
+	 */
+	readonly status: "configure";
 }
