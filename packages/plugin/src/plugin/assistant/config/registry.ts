@@ -5,7 +5,7 @@ import type { InitializationContext } from "../../../api/assistant/initializatio
 import { connection } from "../../connection.js";
 import { logger } from "../../logging/index.js";
 import type { AssistantActionConfig } from "./action-config.js";
-import type { InitializationType } from "./initialization-type.js";
+import type { AssistantActionInitializationType } from "./initialization-type.js";
 
 /**
  * Configuration contexts registered by the plugin.
@@ -88,7 +88,7 @@ async function getConfig(action: string): Promise<DidReceiveConfigurationContext
  * @param result The result from the plugin.
  * @returns The transformed context.
  */
-function toInitializationContext(result: Exclude<InitializationType, undefined>): InitializationContext {
+function toInitializationContext(result: Exclude<AssistantActionInitializationType, undefined>): InitializationContext {
 	if (result.type === "method") {
 		return {
 			status: "initialize",

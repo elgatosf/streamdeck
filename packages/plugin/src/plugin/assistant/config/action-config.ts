@@ -1,7 +1,7 @@
 import * as z from "zod";
 
 import type { AssistantMethodInfo } from "../methods/method-info.js";
-import type { InitializationType } from "./initialization-type.js";
+import type { AssistantActionInitializationType } from "./initialization-type.js";
 
 /**
  * Provides context associated with an action, allowing for it to be configured automatically.
@@ -19,7 +19,7 @@ export interface AssistantActionConfig {
 	 * initialization. If an action does not require initialization, or it is already in a state
 	 * where an instance can be configured, `undefined` should be returned.
 	 */
-	getInitialization?(): InitializationType | Promise<InitializationType>;
+	getInitialization?(): AssistantActionInitializationType | Promise<AssistantActionInitializationType>;
 
 	/**
 	 * Schema that defines the structure of the settings associated with an action.

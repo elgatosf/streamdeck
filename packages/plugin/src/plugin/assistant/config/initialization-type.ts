@@ -8,7 +8,7 @@ import type { MethodInfoInitializationContext } from "./method-info-initializati
  * When an initialization-type is undefined, it indicates the action is either already initialized, or
  * does not require initialization.
  */
-export type InitializationType =
+export type AssistantActionInitializationType =
 	| Exclude<InitializationContext["initialization"], MethodInitializationContext>
 	| MethodInfoInitializationContext
 	| undefined;

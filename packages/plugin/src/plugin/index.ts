@@ -40,6 +40,7 @@ export { type UIController };
 // --------------------------------------------------
 
 export type { AssistantActionConfig } from "./assistant/config/action-config.js";
+export type { AssistantActionInitializationType } from "./assistant/config/initialization-type.js";
 
 export { defineAssistantMethod } from "./assistant/methods/define.js";
 export type { AssistantMethodInfo } from "./assistant/methods/method-info.js";
