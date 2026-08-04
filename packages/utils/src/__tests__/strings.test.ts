@@ -37,7 +37,7 @@ describe("format", () => {
 		});
 
 		test("object with toString", () => {
-			const obj = { toString: () => "Hello world" };
+			const obj = { toString: (): string => "Hello world" };
 			expect(format("{0}", obj)).toBe("Hello world");
 		});
 	});
