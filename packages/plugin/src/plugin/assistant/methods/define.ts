@@ -1,7 +1,8 @@
+import type { JsonObject, JsonPrimitive } from "@elgato/utils";
 import * as z from "zod";
 
 import { type AssistantMethodInfo, createMethodInfo } from "./method-info.js";
-import type { AssistantMethodOptions } from "./options.js";
+import type { AssistantMethodInput, AssistantMethodOptions, AssistantMethodOutput } from "./options.js";
 import { methodRegistry } from "./registry.js";
 
 /**
@@ -21,7 +22,7 @@ import { methodRegistry } from "./registry.js";
  * 	}
  * })
  */
-export function defineAssistantMethod<I extends z.ZodObject | undefined, O extends z.ZodType>(
+export function defineAssistantMethod<I extends AssistantMethodInput, O extends AssistantMethodOutput>(
 	methodConfig: AssistantMethodOptions<I, O>,
 ): AssistantMethodInfo {
 	const { name, description, inputSchema, outputSchema } = methodConfig;
@@ -41,7 +42,10 @@ export function defineAssistantMethod<I extends z.ZodObject | undefined, O exten
 	// Register the method.
 	methodRegistry.set(
 		methodConfig.name,
-		methodConfig as unknown as AssistantMethodOptions<z.ZodObject | undefined, z.ZodObject>,
+		methodConfig as unknown as AssistantMethodOptions<
+			z.ZodType<JsonObject>,
+			z.ZodType<Exclude<JsonPrimitive, undefined> | JsonObject | JsonPrimitive[]>
+		>,
 	);
 
 	return method;

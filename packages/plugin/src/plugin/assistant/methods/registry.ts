@@ -1,16 +1,15 @@
-import type { JsonObject, JsonPrimitive } from "@elgato/utils";
 import z from "zod";
 
 import type { DidInvokeMethodMessage } from "../../../api/assistant/did-invoke-method-message.js";
 import type { InvokeMethodMessage } from "../../../api/assistant/invoke-method-message.js";
 import { connection } from "../../connection.js";
 import { logger } from "../../logging/index.js";
-import type { AssistantMethodOptions } from "./options.js";
+import type { AssistantMethodInput, AssistantMethodOptions, AssistantMethodOutput } from "./options.js";
 
 /**
  * Configuration methods that have been registered by the plugin.
  */
-export const methodRegistry = new Map<string, AssistantMethodOptions<z.ZodObject | undefined, z.ZodObject>>();
+export const methodRegistry = new Map<string, AssistantMethodOptions<AssistantMethodInput, AssistantMethodOutput>>();
 
 /**
  * Dispatches the request to invoke a method exposed by the plugin.
@@ -77,8 +76,7 @@ async function invoke(payload: InvokeMethodMessage["payload"]): Promise<DidInvok
 	}
 
 	// Invoke the method and return its result.
-	const result = await method.handler(args);
 	return {
-		result: result as unknown as Exclude<JsonPrimitive, undefined> | JsonObject | JsonPrimitive[],
+		result: await method.handler(args),
 	};
 }
