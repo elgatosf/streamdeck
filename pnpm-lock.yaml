@@ -21,8 +21,8 @@ importers:
         specifier: ^0.4.14
         version: 0.4.14
       '@elgato/utils':
-        specifier: ^0.4.4
-        version: 0.4.4
+        specifier: workspace:*
+        version: link:../utils
       ws:
         specifier: ^8.19.0
         version: 8.19.0
@@ -233,9 +233,6 @@ packages:
 
   '@elgato/schemas@0.4.14':
     resolution: {integrity: sha512-kwfYJ30qAxJW9AMkSSjTEY/VARW+xzuc3tW7CinB7ja+liGHaNUx20CRwLCD9xrbZ/7V1cDolPvNhNWmWvihZg==}
-
-  '@elgato/utils@0.4.4':
-    resolution: {integrity: sha512-KJbBp9JopLKR+0fO7QEK2HCurnKysVTMAD1GB8RklNHGcCzMqw0ep6mY8XRy3FX6OpDz+sIXZqz5DMws8Ec8AQ==}
 
   '@es-joy/jsdoccomment@0.56.0':
     resolution: {integrity: sha512-c6EW+aA1w2rjqOMjbL93nZlwxp6c1Ln06vTYs5FjRRhmJXK8V/OrSXdT+pUr4aRYgjCgu8/OkiZr0tzeVrRSbw==}
@@ -2055,10 +2052,6 @@ snapshots:
       - svelte
 
   '@elgato/schemas@0.4.14': {}
-
-  '@elgato/utils@0.4.4':
-    dependencies:
-      zod: 3.25.76
 
   '@es-joy/jsdoccomment@0.56.0':
     dependencies:
