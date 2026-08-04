@@ -88,6 +88,12 @@ importers:
       '@vitest/coverage-v8':
         specifier: ^3.1.4
         version: 3.2.4(vitest@3.2.4(@types/node@22.20.1))
+      eslint:
+        specifier: ^9.39.4
+        version: 9.39.4
+      prettier:
+        specifier: ^3.8.1
+        version: 3.8.1
       typescript:
         specifier: ^5.8.3
         version: 5.9.3
