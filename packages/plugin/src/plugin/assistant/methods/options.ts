@@ -16,7 +16,7 @@ export interface AssistantMethodOptions<I extends AssistantMethodInput, O extend
 	readonly description: string;
 
 	/**
-     Schema that represents the input arguments.
+	 * Schema that represents the input arguments.
 	 */
 	readonly inputSchema?: I;
 

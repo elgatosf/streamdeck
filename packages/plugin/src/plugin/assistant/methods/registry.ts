@@ -61,22 +61,27 @@ async function invoke(payload: InvokeMethodMessage["payload"]): Promise<DidInvok
 		};
 	}
 
-	// Validate the method parameters.
-	if (method.inputSchema) {
-		const { success } = z.safeParse(method.inputSchema, args);
-		if (!success) {
-			logger.error(`Failed to invoke method: "${name}" does not accept the provided arguments.`, args);
-			return {
-				error: {
-					code: -32602,
-					message: "Invalid method parameter(s).",
-				},
-			};
-		}
+	// When there is no input schema, invoke with the args.
+	if (!method.inputSchema) {
+		return {
+			result: await method.handler(args),
+		};
 	}
 
-	// Invoke the method and return its result.
+	// Validate the input args.
+	const argsParse = z.safeParse(method.inputSchema, args);
+	if (!argsParse.success) {
+		logger.error(`Failed to invoke method: "${name}" does not accept the provided arguments.`, args);
+		return {
+			error: {
+				code: -32602,
+				message: "Invalid method parameter(s).",
+			},
+		};
+	}
+
+	// Invoke and return the result.
 	return {
-		result: await method.handler(args),
+		result: await method.handler(argsParse.data),
 	};
 }
