@@ -13,7 +13,7 @@ import type {
 	WillAppear,
 	WillDisappear,
 } from "../../api/index.js";
-import { actionConfigs } from "../assistant/dispatchers/action-config-dispatcher.js";
+import { actionConfigRegistry } from "../assistant/config/registry.js";
 import { connection } from "../connection.js";
 import { ActionEvent } from "../events/action-event.js";
 import type {
@@ -295,7 +295,7 @@ class ActionService extends ReadOnlyActionStore {
 		// Register the action's configuration context if it has one.
 		const { assistantConfig } = action.constructor as typeof SingletonAction;
 		if (assistantConfig) {
-			actionConfigs.set(action.manifestId, assistantConfig);
+			actionConfigRegistry.set(action.manifestId, assistantConfig);
 		}
 	}
 }

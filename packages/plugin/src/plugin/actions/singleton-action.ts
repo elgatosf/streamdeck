@@ -2,7 +2,7 @@ import type { Enumerable, JsonObject, JsonValue } from "@elgato/utils";
 
 import type { DialAction } from "../actions/dial.js";
 import type { KeyAction } from "../actions/key.js";
-import type { AssistantActionConfig } from "../assistant/action-config.js";
+import type { AssistantActionConfig } from "../assistant/config/action-config.js";
 import type {
 	DialDownEvent,
 	DialRotateEvent,
