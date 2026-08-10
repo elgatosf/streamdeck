@@ -8,7 +8,7 @@ import { Action } from "./action.js";
  * Provides a contextualized instance of a key action.
  * @template T The type of settings associated with the action.
  */
-export class KeyAction<T extends JsonObject = JsonObject> extends Action<T> {
+export class KeyAction<T extends JsonObject> extends Action<T> {
 	/**
 	 * Private backing field for {@link KeyAction.coordinates}.
 	 */

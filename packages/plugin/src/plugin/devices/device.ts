@@ -1,3 +1,5 @@
+import type { JsonObject } from "@elgato/utils";
+
 import type { DeviceInfo, DeviceType, Size } from "../../api/index.js";
 import type { DialAction } from "../actions/dial.js";
 import type { KeyAction } from "../actions/key.js";
@@ -61,7 +63,7 @@ export class Device {
 	 * Actions currently visible on the device.
 	 * @returns Collection of visible actions.
 	 */
-	public get actions(): IterableIterator<DialAction | KeyAction> {
+	public get actions(): IterableIterator<DialAction<JsonObject> | KeyAction<JsonObject>> {
 		return actionStore.filter((a) => a.device.id === this.id);
 	}
 

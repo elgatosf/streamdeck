@@ -24,7 +24,7 @@ const REQUEST_TIMEOUT = 15 * 1000; // 15s
  * Provides a contextualized instance of an {@link Action}, allowing for direct communication with the Stream Deck.
  * @template T The type of settings associated with the action.
  */
-export class Action<T extends JsonObject = JsonObject> extends ActionContext {
+export class Action<T extends JsonObject> extends ActionContext {
 	/**
 	 * Gets the resources (files) associated with this action; these resources are embedded into the
 	 * action when it is exported, either individually, or as part of a profile.
@@ -108,7 +108,7 @@ export class Action<T extends JsonObject = JsonObject> extends ActionContext {
 	 * @param value Settings to persist.
 	 * @returns `Promise` resolved when the settings are sent to Stream Deck.
 	 */
-	public setSettings<U extends JsonObject = T>(value: U): Promise<void> {
+	public setSettings(value: T): Promise<void> {
 		settingsCache.delete(this.id);
 		return connection.send({
 			event: "setSettings",

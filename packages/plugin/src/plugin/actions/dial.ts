@@ -8,7 +8,7 @@ import { Action } from "./action.js";
  * Provides a contextualized instance of a dial action.
  * @template T The type of settings associated with the action.
  */
-export class DialAction<T extends JsonObject = JsonObject> extends Action<T> {
+export class DialAction<T extends JsonObject> extends Action<T> {
 	/**
 	 * Private backing field for {@link DialAction.coordinates}.
 	 */
