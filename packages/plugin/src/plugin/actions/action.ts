@@ -75,7 +75,7 @@ export class Action<T extends JsonObject = JsonObject> extends ActionContext {
 
 	/**
 	 * Determines whether this instance is an infobar.
-	 * @returns `true` when this instance is a infobar; otherwise `false`.
+	 * @returns `true` when this instance is an infobar; otherwise `false`.
 	 */
 	public isInfobar(): this is InfobarAction<T> {
 		return this.controllerType === "Infobar";

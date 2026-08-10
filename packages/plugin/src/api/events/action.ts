@@ -13,8 +13,8 @@ import type { EventIdentifier } from "./index.js";
 export type Controller = "Encoder" | "Infobar" | "Keypad";
 
 /**
- * Occurs when the settings associated with an action instance are requested, or when the the settings
- * were updated in the property inspector.
+ * Occurs when the settings associated with an action instance are requested, or when the settings were updated in the
+ * property inspector.
  */
 export type DidReceiveSettings<TSettings extends JsonObject> = ActionEventMessage<
 	"didReceiveSettings",

@@ -22,7 +22,7 @@ export class InfobarAction<T extends JsonObject = JsonObject> extends Action<T> 
 		super(source);
 
 		if (source.payload.controller !== "Infobar") {
-			throw new Error("Unable to create InfobarAction; source event is not a Infobar");
+			throw new Error("Unable to create InfobarAction; source event controller is not 'Infobar'");
 		}
 
 		this.#coordinates = Object.freeze(source.payload.coordinates);
@@ -42,7 +42,7 @@ export class InfobarAction<T extends JsonObject = JsonObject> extends Action<T> 
 	 * or dynamically via `setFeedbackLayout`.
 	 *
 	 * The `feedback` payload defines which items within the layout will be updated, and are identified by their property
-	 * name (defined as the `key` in the layout's definition). The values can either by a complete new definition, a `string`
+	 * name (defined as the `key` in the layout's definition). The values can either be a complete new definition, a `string`
 	 * for layout item types of `text` and `pixmap`, or a `number` for layout item types of `bar` and `gbar`.
 	 * @param feedback Object containing information about the layout items to be updated.
 	 * @returns `Promise` resolved when the request to set the `feedback` has been sent to Stream Deck.
