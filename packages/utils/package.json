@@ -8,13 +8,13 @@
     ],
     "scripts": {
         "build": "rm -rf dist/ && tsc --project tsconfig.build.json",
+        "dev": "tsc --project tsconfig.build.json --watch",
         "lint": "eslint --max-warnings 0",
         "preversion": "npm run build && npm test && npm run lint",
         "test": "vitest run --typecheck",
         "test:coverage": "vitest run --coverage",
         "test:watch": "vitest --typecheck",
-        "type:check": "tsc",
-        "watch": "tsc --project tsconfig.build.json --watch"
+        "type:check": "tsc"
     },
     "exports": {
         ".": {
