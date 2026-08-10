@@ -101,7 +101,10 @@ export class FileTarget implements LogTarget {
 	private reIndex(): void {
 		// When the destination directory is new, create it, and return.
 		if (!fs.existsSync(this.#options.dest)) {
-			fs.mkdirSync(this.#options.dest);
+			fs.mkdirSync(this.#options.dest, {
+				recursive: true,
+			});
+
 			return;
 		}
 
