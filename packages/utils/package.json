@@ -14,7 +14,8 @@
         "test": "vitest run --typecheck",
         "test:coverage": "vitest run --coverage",
         "test:watch": "vitest --typecheck",
-        "type:check": "tsc"
+        "type:check": "tsc",
+        "prepack": "cp ../../LICENSE ."
     },
     "exports": {
         ".": {
