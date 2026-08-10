@@ -28,7 +28,7 @@ export type JsonRpcError = {
 export const JsonRpcError: z.ZodMiniType<JsonRpcError> = z.object({
 	code: z.number(),
 	message: z.string(),
-	data: z.any(),
+	data: z.optional(z.any()),
 });
 
 /**
