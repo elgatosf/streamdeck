@@ -12,12 +12,12 @@ import { settings } from "./settings.js";
 import * as system from "./system.js";
 import { ui, type UIController } from "./ui.js";
 
-export type { Controller } from "../api/events/action.js";
 export {
 	BarSubType,
 	DeviceType,
 	Target,
 	type Bar,
+	type Controller, // Temp: until schemas are updated
 	type Coordinates,
 	type DeviceInfo,
 	type FeedbackPayload,
@@ -30,6 +30,7 @@ export {
 	type State,
 	type Text,
 } from "../api/index.js";
+
 export * from "./actions/index.js";
 export * from "./devices/index.js";
 export type * from "./events/index.js";
