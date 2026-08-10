@@ -478,7 +478,7 @@ describe("actions", () => {
 			const created = vi.mocked(actionStore.set).mock.calls[0][0];
 			expect(created).toBeInstanceOf(NeoInfobarAction);
 			expect(created.id).toBe(ev.context);
-			expect(created.controllerType).toBe("Infobar");
+			expect(created.controllerType).toBe("Neo");
 		});
 
 		/**
