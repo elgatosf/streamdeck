@@ -3,7 +3,7 @@
  * @param value Value to parse.
  * @returns `true` when the value is truthy; otherwise `false`.
  */
-export function parseBoolean(value: unknown): boolean | undefined {
+export function parseBoolean(value: unknown): boolean {
 	if (typeof value === "string" && (value === "0" || value === "false")) {
 		return false;
 	}
