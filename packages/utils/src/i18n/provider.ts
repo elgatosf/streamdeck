@@ -5,7 +5,7 @@ import { freeze, get } from "../objects.js";
 import { defaultLanguage, type Language } from "./language.js";
 
 /**
- * Internalization provider, responsible for managing localizations and translating resources.
+ * “Internationalization (i18n) provider, responsible for managing localizations and translating resources.
  */
 export class I18nProvider<T extends string> {
 	/**

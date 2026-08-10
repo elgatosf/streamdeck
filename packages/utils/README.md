@@ -54,7 +54,7 @@ import { DisposableStack } from "@elgato/utils";
 
 ### `EventEmitter`
 
-An strongly-typed event emitter that enables the listening for, and emitting of, events; supported in browser and Node.js environments.
+A strongly-typed event emitter that enables the listening for, and emitting of, events; supported in browser and Node.js environments.
 
 ```ts
 import { EventEmitter } from "@elgato/utils";
@@ -127,7 +127,7 @@ Polyfilled iterator helpers:
 - `filter(predicate)`
 - `find(predicate)`
 - `findLast(predicate)`
-- `flapMap(mapper)`
+- `flatMap(mapper)`
 - `forEach(fn)`
 - `includes(search)`
 - `map(mapper)`
@@ -220,7 +220,7 @@ console.log(processes);
 Function that returns an object that contains the promise, and two functions to resolve or reject it. Polyfill of [Promise.withResolvers()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/withResolvers).
 
 ```js
-import { withResolvers } "@elgato/utils";
+import { withResolvers } from "@elgato/utils";
 
 const { promise, resolve, reject } = withResolvers<string>();
 ```
