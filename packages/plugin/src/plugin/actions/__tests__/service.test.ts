@@ -41,8 +41,8 @@ import { settingsCache } from "../cache.js";
 import { actionConfig } from "../config.js";
 import { ActionContext } from "../context.js";
 import { DialAction } from "../dial.js";
-import { InfobarAction } from "../infobar.js";
 import { KeyAction } from "../key.js";
+import { NeoInfobarAction } from "../neo-infobar.js";
 import { actionService, type ActionService } from "../service.js";
 import { SingletonAction } from "../singleton-action.js";
 import { actionStore } from "../store.js";
@@ -447,7 +447,7 @@ describe("actions", () => {
 		});
 
 		/**
-		 * Asserts an {@link InfobarAction} is created when `willAppear` is emitted for an infobar controller.
+		 * Asserts an {@link NeoInfobarAction} is created when `willAppear` is emitted for an infobar controller.
 		 */
 		it("creates InfobarAction on willAppear", () => {
 			// Arrange.
@@ -457,7 +457,7 @@ describe("actions", () => {
 				device: "device123",
 				event: "willAppear",
 				payload: {
-					controller: "Infobar",
+					controller: "Neo",
 					coordinates: {
 						column: 0,
 						row: 0,
@@ -476,13 +476,13 @@ describe("actions", () => {
 			// Assert.
 			expect(actionStore.set).toHaveBeenCalledTimes(1);
 			const created = vi.mocked(actionStore.set).mock.calls[0][0];
-			expect(created).toBeInstanceOf(InfobarAction);
+			expect(created).toBeInstanceOf(NeoInfobarAction);
 			expect(created.id).toBe(ev.context);
 			expect(created.controllerType).toBe("Infobar");
 		});
 
 		/**
-		 * Asserts {@link ActionService.onWillAppear} emits events backed by {@link InfobarAction}.
+		 * Asserts {@link ActionService.onWillAppear} emits events backed by {@link NeoInfobarAction}.
 		 */
 		it("receives onWillAppear for infobar action", () => {
 			// Arrange.
@@ -493,7 +493,7 @@ describe("actions", () => {
 				device: "device123",
 				event: "willAppear",
 				payload: {
-					controller: "Infobar",
+					controller: "Neo",
 					coordinates: {
 						column: 2,
 						row: 0,
@@ -506,7 +506,7 @@ describe("actions", () => {
 				},
 			} satisfies WillAppear<Settings>;
 
-			vi.mocked(actionStore.getActionById).mockReturnValueOnce(new InfobarAction(ev));
+			vi.mocked(actionStore.getActionById).mockReturnValueOnce(new NeoInfobarAction(ev));
 
 			// Act (emit).
 			const disposable = actionService.onWillAppear(listener);
@@ -520,7 +520,7 @@ describe("actions", () => {
 					type: "willAppear",
 				}),
 			);
-			expect(vi.mocked(listener).mock.calls[0][0].action).toBeInstanceOf(InfobarAction);
+			expect(vi.mocked(listener).mock.calls[0][0].action).toBeInstanceOf(NeoInfobarAction);
 
 			// Act (dispose).
 			disposable.dispose();

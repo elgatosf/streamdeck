@@ -5,10 +5,10 @@ import { connection } from "../connection.js";
 import { Action } from "./action.js";
 
 /**
- * Provides a contextualized instance of an infobar action.
+ * Provides a contextualized instance of an infobar action found on Stream Deck Neo.
  * @template T The type of settings associated with the action.
  */
-export class InfobarAction<T extends JsonObject = JsonObject> extends Action<T> {
+export class NeoInfobarAction<T extends JsonObject = JsonObject> extends Action<T> {
 	/**
 	 * Private backing field for the coordinates.
 	 */
@@ -21,7 +21,7 @@ export class InfobarAction<T extends JsonObject = JsonObject> extends Action<T> 
 	constructor(source: WillAppear<JsonObject>) {
 		super(source);
 
-		if (source.payload.controller !== "Infobar") {
+		if (source.payload.controller !== "Neo") {
 			throw new Error("Unable to create InfobarAction; source event controller is not 'Infobar'");
 		}
 

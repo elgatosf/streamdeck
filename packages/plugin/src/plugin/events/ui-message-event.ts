@@ -2,8 +2,8 @@ import type { JsonObject, JsonValue } from "@elgato/utils";
 
 import type { DidReceivePropertyInspectorMessage } from "../../api/index.js";
 import type { DialAction } from "../actions/dial.js";
-import type { InfobarAction } from "../actions/infobar.js";
 import type { KeyAction } from "../actions/key.js";
+import type { NeoInfobarAction } from "../actions/neo-infobar.js";
 import { Event } from "./event.js";
 
 /**
@@ -23,7 +23,7 @@ export class SendToPluginEvent<TPayload extends JsonValue, TSettings extends Jso
 	 * @param source Source of the event, i.e. the original message from Stream Deck.
 	 */
 	constructor(
-		public readonly action: DialAction<TSettings> | InfobarAction<TSettings> | KeyAction<TSettings>,
+		public readonly action: DialAction<TSettings> | KeyAction<TSettings> | NeoInfobarAction<TSettings>,
 		source: DidReceivePropertyInspectorMessage<TPayload>,
 	) {
 		super(source);

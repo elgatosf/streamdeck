@@ -20,7 +20,7 @@ import type {
 } from "../events/index.js";
 import type streamDeck from "../index.js";
 import type { Action } from "./action.js";
-import type { InfobarAction } from "./infobar.js";
+import type { NeoInfobarAction } from "./neo-infobar.js";
 import { actionStore } from "./store.js";
 
 /**
@@ -37,7 +37,7 @@ export class SingletonAction<T extends JsonObject = JsonObject> {
 	 * Gets the visible actions with the `manifestId` that match this instance's.
 	 * @returns The visible actions.
 	 */
-	public get actions(): Enumerable<DialAction<T> | InfobarAction<T> | KeyAction<T>> {
+	public get actions(): Enumerable<DialAction<T> | KeyAction<T> | NeoInfobarAction<T>> {
 		return actionStore.filter((a) => a.manifestId === this.manifestId);
 	}
 

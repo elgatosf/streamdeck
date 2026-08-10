@@ -35,8 +35,8 @@ import { settingsCache } from "./cache.js";
 import { actionConfig } from "./config.js";
 import { ActionContext } from "./context.js";
 import { DialAction } from "./dial.js";
-import { InfobarAction } from "./infobar.js";
 import { KeyAction } from "./key.js";
+import { NeoInfobarAction } from "./neo-infobar.js";
 import type { SingletonAction } from "./singleton-action.js";
 import { actionStore, ReadOnlyActionStore } from "./store.js";
 
@@ -299,12 +299,12 @@ class ActionService extends ReadOnlyActionStore {
 	 * @param ev Event that contains the controller.
 	 * @returns The action instance.
 	 */
-	#createAction(ev: WillAppear<JsonObject>): DialAction | InfobarAction | KeyAction {
+	#createAction(ev: WillAppear<JsonObject>): DialAction | KeyAction | NeoInfobarAction {
 		switch (ev.payload.controller) {
 			case "Encoder":
 				return new DialAction(ev);
-			case "Infobar":
-				return new InfobarAction(ev);
+			case "Neo":
+				return new NeoInfobarAction(ev);
 			default:
 				return new KeyAction(ev);
 		}
