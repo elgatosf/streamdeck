@@ -12,12 +12,12 @@ import { settings } from "./settings.js";
 import * as system from "./system.js";
 import { ui, type UIController } from "./ui.js";
 
+export type { Controller } from "../api/events/action.js";
 export {
 	BarSubType,
 	DeviceType,
 	Target,
 	type Bar,
-	type Controller,
 	type Coordinates,
 	type DeviceInfo,
 	type FeedbackPayload,

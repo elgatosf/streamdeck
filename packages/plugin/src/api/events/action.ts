@@ -1,9 +1,16 @@
-import type { Controller } from "@elgato/schemas/streamdeck/plugins";
 import type { JsonObject } from "@elgato/utils";
 
 import type { Resources } from "../resources.js";
 import type { DeviceIdentifier } from "./device.js";
 import type { EventIdentifier } from "./index.js";
+
+/**
+ * Defines the controller type the action is applicable to.
+ * - **Keypad** refers to a standard action on a Stream Deck device, e.g. 1 of the 15 buttons on the Stream Deck MK.2
+ * - **Encoder** refers to a dial / touchscreen on the Stream Deck +.
+ * - **Infobar** refers to the infobar found on Stream Deck Neo.
+ */
+export type Controller = "Encoder" | "Infobar" | "Keypad";
 
 /**
  * Occurs when the settings associated with an action instance are requested, or when the the settings

@@ -16,6 +16,7 @@ import { settingsCache } from "./cache.js";
 import { actionConfig } from "./config.js";
 import { ActionContext } from "./context.js";
 import type { DialAction } from "./dial.js";
+import type { InfobarAction } from "./infobar.js";
 import type { KeyAction } from "./key.js";
 
 const REQUEST_TIMEOUT = 15 * 1000; // 15s
@@ -73,6 +74,14 @@ export class Action<T extends JsonObject = JsonObject> extends ActionContext {
 	}
 
 	/**
+	 * Determines whether this instance is an infobar.
+	 * @returns `true` when this instance is a infobar; otherwise `false`.
+	 */
+	public isInfobar(): this is InfobarAction<T> {
+		return this.controllerType === "Infobar";
+	}
+
+	/**
 	 * Determines whether this instance is a key.
 	 * @returns `true` when this instance is a key; otherwise `false`.
 	 */
@@ -104,7 +113,7 @@ export class Action<T extends JsonObject = JsonObject> extends ActionContext {
 	}
 
 	/**
-	 * Sets the settings associated with this action instance. Use in conjunction with {@link Action.getSettings}.
+	 * Sets the settings associated with this action instance. Use in conjunction with `getSettings`.
 	 * @param value Settings to persist.
 	 * @returns `Promise` resolved when the settings are sent to Stream Deck.
 	 */

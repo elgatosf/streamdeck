@@ -1,14 +1,15 @@
 import { Enumerable } from "@elgato/utils";
 
 import type { DialAction } from "./dial.js";
+import type { InfobarAction } from "./infobar.js";
 import type { KeyAction } from "./key.js";
 
-const __items = new Map<string, DialAction | KeyAction>();
+const __items = new Map<string, DialAction | InfobarAction | KeyAction>();
 
 /**
  * Provides a read-only store of Stream Deck devices.
  */
-export class ReadOnlyActionStore extends Enumerable<DialAction | KeyAction> {
+export class ReadOnlyActionStore extends Enumerable<DialAction | InfobarAction | KeyAction> {
 	/**
 	 * Initializes a new instance of the {@link ReadOnlyActionStore}.
 	 */
@@ -21,7 +22,7 @@ export class ReadOnlyActionStore extends Enumerable<DialAction | KeyAction> {
 	 * @param id Identifier of action to search for.
 	 * @returns The action, when present; otherwise `undefined`.
 	 */
-	public getActionById(id: string): DialAction | KeyAction | undefined {
+	public getActionById(id: string): DialAction | InfobarAction | KeyAction | undefined {
 		return __items.get(id);
 	}
 }
@@ -42,7 +43,7 @@ class ActionStore extends ReadOnlyActionStore {
 	 * Adds the action to the store.
 	 * @param action The action.
 	 */
-	public set(action: DialAction | KeyAction): void {
+	public set(action: DialAction | InfobarAction | KeyAction): void {
 		__items.set(action.id, action);
 	}
 }
