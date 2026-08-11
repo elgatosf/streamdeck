@@ -1,5 +1,17 @@
 # Change Log
 
+## 0.5.0
+
+### Minor Changes
+
+- cf56a87: Fixed return type of `parseBoolean`.
+- cf56a87: Fixed JSON-RPC error response to mark `data` as optional.
+- cf56a87: Migrated repository to new Stream Deck SDK monorepo.
+
+### Patch Changes
+
+- cf56a87: Added support for file-logging to nested directories.
+
 ## 0.4.5
 
 ### Minor Changes
@@ -50,7 +62,6 @@
 - Fix default timeout of RPC requests.
 
 ## 0.3.0
-
 
 ### Major Changes
 
