@@ -9,5 +9,5 @@ coverage/
 dist/
 
 # Shared package files
+packages/*/LICENSE
 packages/plugin/README.md
-packages/plugin/LICENSE
