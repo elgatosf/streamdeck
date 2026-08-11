@@ -6,7 +6,7 @@ import type { KeyAction } from "./key.js";
 const __items = new Map<string, DialAction<JsonObject> | KeyAction<JsonObject>>();
 
 /**
- * Provides a read-only store of Stream Deck devices.
+ * Provides a read-only store of Stream Deck actions.
  */
 export class ReadOnlyActionStore extends Enumerable<DialAction<JsonObject> | KeyAction<JsonObject>> {
 	/**
