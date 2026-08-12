@@ -74,6 +74,7 @@ class Connection extends EventEmitter<ExtendedEventMap> {
 				this.connection.resolve(webSocket);
 				this.emit("connected", this.registrationParameters.info);
 			};
+			webSocket.onclose = (): void => process.exit();
 		}
 
 		await this.connection.promise;
