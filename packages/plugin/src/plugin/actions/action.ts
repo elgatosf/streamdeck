@@ -127,17 +127,6 @@ export class Action<T extends JsonObject = JsonObject> extends ActionContext {
 	}
 
 	/**
-	 * Temporarily shows an alert (i.e. warning), in the form of an exclamation mark in a yellow triangle, on this action instance. Used to provide visual feedback when an action failed.
-	 * @returns `Promise` resolved when the request to show an alert has been sent to Stream Deck.
-	 */
-	public showAlert(): Promise<void> {
-		return connection.send({
-			event: "showAlert",
-			context: this.id,
-		});
-	}
-
-	/**
 	 * Fetches information from Stream Deck by sending the command, and awaiting the event.
 	 * @param command Name of the event (command) to send.
 	 * @param event Name of the event to await.
