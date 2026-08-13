@@ -105,7 +105,19 @@ export class KeyAction<T extends JsonObject = JsonObject> extends Action<T> {
 	}
 
 	/**
-	 * Temporarily shows an "OK" (i.e. success), in the form of a check-mark in a green circle, on this action instance. Used to provide visual feedback when an action successfully
+	 * Shows a temporary alert (i.e. warning), in the form of an exclamation mark in a yellow triangle, on the key.
+	 * @returns `Promise` resolved when the request to show an alert has been sent to Stream Deck.
+	 */
+	public showAlert(): Promise<void> {
+		return connection.send({
+			event: "showAlert",
+			context: this.id,
+		});
+	}
+
+	/**
+	 * Temporarily shows an "OK" (i.e. success), in the form of a check-mark in a green circle, on this action instance.
+	 * Used to provide visual feedback when an action successfully
 	 * executed.
 	 * @returns `Promise` resolved when the request to show an "OK" has been sent to Stream Deck.
 	 */
