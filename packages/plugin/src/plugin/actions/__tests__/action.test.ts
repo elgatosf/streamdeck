@@ -11,6 +11,7 @@ import { Action } from "../action.js";
 import { settingsCache } from "../cache.js";
 import { actionConfig } from "../config.js";
 import { DialAction } from "../dial.js";
+import { KeyAction } from "../key.js";
 
 vi.mock("../../devices/store.js");
 vi.mock("../../logging/index.js");
@@ -101,7 +102,7 @@ describe("Action", () => {
 			expect(connection.send).not.toHaveBeenCalled();
 			expect(spyOnTrace).toHaveBeenCalledTimes(1);
 			expect(spyOnTrace).toHaveBeenCalledWith(
-				JSON.stringify({    
+				JSON.stringify({
 					event: "getSettings",
 					context: action.id,
 					source: "cache",
@@ -290,8 +291,8 @@ describe("Action", () => {
 	});
 
 	describe("sending", () => {
-		let action!: Action;
-		beforeAll(() => (action = new Action(source)));
+		let action!: KeyAction;
+		beforeAll(() => (action = new KeyAction(source)));
 
 		/**
 		 * Asserts {@link Action.setSettings} invalidates the settings cache.
