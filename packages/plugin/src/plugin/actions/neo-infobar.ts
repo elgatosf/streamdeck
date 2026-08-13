@@ -15,7 +15,7 @@ export class NeoInfobarAction<T extends JsonObject = JsonObject> extends Action<
 	readonly #coordinates: Readonly<Coordinates>;
 
 	/**
-	 * Initializes a new instance of the {@see InfobarAction} class.
+	 * Initializes a new instance of the {@see NeoInfobarAction} class.
 	 * @param source Source of the action.
 	 */
 	constructor(source: WillAppear<JsonObject>) {
