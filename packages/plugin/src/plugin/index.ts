@@ -17,7 +17,7 @@ export {
 	DeviceType,
 	Target,
 	type Bar,
-	type Controller,
+	type Controller, // Temp: until schemas are updated
 	type Coordinates,
 	type DeviceInfo,
 	type FeedbackPayload,
@@ -30,6 +30,7 @@ export {
 	type State,
 	type Text,
 } from "../api/index.js";
+
 export * from "./actions/index.js";
 export * from "./devices/index.js";
 export type * from "./events/index.js";

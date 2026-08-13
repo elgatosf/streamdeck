@@ -37,6 +37,7 @@ import { actionConfig } from "./config.js";
 import { ActionContext } from "./context.js";
 import { DialAction } from "./dial.js";
 import { KeyAction } from "./key.js";
+import { NeoInfobarAction } from "./neo-infobar.js";
 import type { SingletonAction } from "./singleton-action.js";
 import { actionStore, ReadOnlyActionStore } from "./store.js";
 
@@ -54,7 +55,8 @@ class ActionService extends ReadOnlyActionStore {
 
 		// Adds the action to the store.
 		connection.prependListener("willAppear", (ev) => {
-			const action = ev.payload.controller === "Encoder" ? new DialAction(ev) : new KeyAction(ev);
+			const action = this.#createAction(ev);
+
 			actionStore.set(action);
 			if (actionConfig.useExperimentalMessageIdentifiers) {
 				settingsCache.set(ev.context, ev.payload.settings);
@@ -296,6 +298,22 @@ class ActionService extends ReadOnlyActionStore {
 		const { assistantConfig } = action.constructor as typeof SingletonAction;
 		if (assistantConfig) {
 			actionConfigRegistry.set(action.manifestId, assistantConfig);
+		}
+	}
+
+	/**
+	 * Creates an instance of an action from its associated controller.
+	 * @param ev Event that contains the controller.
+	 * @returns The action instance.
+	 */
+	#createAction(ev: WillAppear<JsonObject>): DialAction | KeyAction | NeoInfobarAction {
+		switch (ev.payload.controller) {
+			case "Encoder":
+				return new DialAction(ev);
+			case "Neo":
+				return new NeoInfobarAction(ev);
+			default:
+				return new KeyAction(ev);
 		}
 	}
 }

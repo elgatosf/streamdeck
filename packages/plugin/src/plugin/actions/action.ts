@@ -17,6 +17,7 @@ import { actionConfig } from "./config.js";
 import { ActionContext } from "./context.js";
 import type { DialAction } from "./dial.js";
 import type { KeyAction } from "./key.js";
+import type { NeoInfobarAction } from "./neo-infobar.js";
 
 const REQUEST_TIMEOUT = 15 * 1000; // 15s
 
@@ -81,6 +82,14 @@ export class Action<T extends JsonObject = JsonObject> extends ActionContext {
 	}
 
 	/**
+	 * Determines whether this instance is an infobar.
+	 * @returns `true` when this instance is an infobar; otherwise `false`.
+	 */
+	public isNeoInfobar(): this is NeoInfobarAction<T> {
+		return this.controllerType === "Neo";
+	}
+
+	/**
 	 * Sets the resources (files) associated with this action; these resources are embedded into the
 	 * action when it is exported, either individually, or as part of a profile.
 	 *
@@ -104,7 +113,7 @@ export class Action<T extends JsonObject = JsonObject> extends ActionContext {
 	}
 
 	/**
-	 * Sets the settings associated with this action instance. Use in conjunction with {@link Action.getSettings}.
+	 * Sets the settings associated with this action instance. Use in conjunction with `getSettings`.
 	 * @param value Settings to persist.
 	 * @returns `Promise` resolved when the settings are sent to Stream Deck.
 	 */
