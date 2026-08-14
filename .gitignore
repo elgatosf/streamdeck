@@ -7,7 +7,14 @@ coverage/
 
 # Build output
 dist/
+bin/
+.wireit/
 
 # Shared package files
-packages/*/LICENSE
-packages/plugin/README.md
+/packages/*/LICENSE
+/packages/plugin/README.md
+
+# @elgato/cli
+/packages/cli/.cli.cache
+/packages/cli/template/com.*.sdPlugin/bin
+/packages/cli/template/com.*.sdPlugin/logs

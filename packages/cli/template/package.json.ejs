@@ -1,0 +1,22 @@
+{
+    "scripts": {
+        "build": "rollup -c",
+        "watch": "rollup -c -w --watch.onEnd=\"streamdeck restart <%- uuid %>\""
+    },
+    "type": "module",
+    "devDependencies": {
+        "@elgato/cli": <%- JSON.stringify(npm.cli) %>,
+        "@rollup/plugin-commonjs": "^29.0.2",
+        "@rollup/plugin-node-resolve": "^15.2.2",
+        "@rollup/plugin-terser": "^1.0.0",
+        "@rollup/plugin-typescript": "^12.1.0",
+        "@tsconfig/node20": "^20.1.2",
+        "@types/node": "~24.1.0",
+        "rollup": "^4.0.2",
+        "tslib": "^2.6.2",
+        "typescript": "^5.2.2"
+    },
+    "dependencies": {
+        "@elgato/streamdeck": <%- JSON.stringify(npm.streamDeck) %>
+    }
+}
