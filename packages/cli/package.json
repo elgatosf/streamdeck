@@ -94,7 +94,7 @@
     "prettier": "@elgato/prettier-config",
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/elgatosf/cli.git"
+        "url": "git+https://github.com/elgatosf/streamdeck.git"
     },
     "keywords": [
         "elgato",
@@ -110,9 +110,9 @@
     },
     "license": "MIT",
     "bugs": {
-        "url": "https://github.com/elgatosf/cli/issues"
+        "url": "https://github.com/elgatosf/streamdeck/issues"
     },
-    "homepage": "https://github.com/elgatosf/cli#readme",
+    "homepage": "https://github.com/elgatosf/streamdeck/tree/main/packages/cli#readme",
     "dependencies": {
         "@elgato/schemas": "^0.4.14",
         "@humanwhocodes/momoa": "^3.0.0",
