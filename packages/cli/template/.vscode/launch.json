@@ -10,7 +10,7 @@
 			"request": "attach",
 			"processId": "${command:PickProcess}",
 			"outFiles": [
-				"${workspaceFolder}/bin/**/*.js"
+				"${workspaceFolder}/*.sdPlugin/bin/**/*.js"
 			],
 			"resolveSourceMapLocations": [
 				"${workspaceFolder}/**"
