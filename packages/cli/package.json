@@ -26,7 +26,8 @@
         "dev:exports": "wireit",
         "lint": "eslint --max-warnings 0",
         "lint:fix": "prettier \"./src/**/*.ts\" --write",
-        "typecheck": "wireit"
+        "typecheck": "wireit",
+        "prepack": "cp ../../LICENSE ."
     },
     "wireit": {
         "build": {
