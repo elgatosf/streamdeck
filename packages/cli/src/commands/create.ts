@@ -226,7 +226,7 @@ function createTemplateRenderer(
  */
 async function renderTemplate(destination: string, pluginInfo: PluginInfo): Promise<void> {
 	const template = createTemplateRenderer(destination, pluginInfo);
-	await Promise.allSettled([
+	await Promise.all([
 		template.copy(".vscode"),
 		template.copy(`${TEMPLATE_PLUGIN_UUID}.sdPlugin/imgs`, `${pluginInfo.uuid}.sdPlugin/imgs`),
 		template.copy(`${TEMPLATE_PLUGIN_UUID}.sdPlugin/ui`, `${pluginInfo.uuid}.sdPlugin/ui`),

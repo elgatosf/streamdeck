@@ -191,6 +191,12 @@ class ConsoleStdOut {
 	): Promise<void> {
 		// Confirm we can spin.
 		if (this.options.level < MessageLevel.LOG) {
+			await task?.(this, {
+				setText: () => {
+					/** no-op */
+				},
+			});
+
 			return;
 		}
 
