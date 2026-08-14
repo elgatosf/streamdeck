@@ -8,7 +8,7 @@
 [![Elgato homepage](https://img.shields.io/badge/Elgato-3431cf?labelColor=grey&logo=elgato)](https://elgato.com)
 [![Join the Marketplace Makers Discord](https://img.shields.io/badge/Marketplace%20Makers-5662f6?labelColor=grey&logo=discord&logoColor=white)](https://discord.gg/GehBUcu627)
 [![Stream Deck CLI npm package](https://img.shields.io/npm/v/%40elgato/cli?logo=npm&logoColor=white)](https://www.npmjs.com/package/@elgato/cli)
-[![Build status](https://img.shields.io/github/actions/workflow/status/elgatosf/cli/build.yml?branch=main&label=Build&logo=GitHub)](https://github.com/elgatosf/cli/actions)
+[![Build status](https://img.shields.io/github/actions/workflow/status/elgatosf/streamdeck/build.yml?branch=main&label=Build&logo=GitHub)](https://github.com/elgatosf/streamdeck/actions)
 
 </div>
 
@@ -55,5 +55,5 @@ The `streamdeck create` command enables you to scaffold a new Stream Deck plugin
 
 ## Further Reading
 
--   Learn more about [Stream Deck CLI commands](https://docs.elgato.com/streamdeck/cli).
--   Read about [getting started with the Stream Deck SDK](https://docs.elgato.com/sdk).
+- Learn more about [Stream Deck CLI commands](https://docs.elgato.com/streamdeck/cli).
+- Read about [getting started with the Stream Deck SDK](https://docs.elgato.com/sdk).
