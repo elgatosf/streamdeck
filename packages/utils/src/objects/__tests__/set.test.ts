@@ -46,7 +46,7 @@ describe("set", () => {
 		// Arrange.
 		const obj = {};
 
-		// Act, assert..
+		// Act, assert.
 		expect(() => set(obj, "__proto__.polluted", true)).toThrow(
 			'Unsafe path segment "__proto__" in "__proto__.polluted"',
 		);
@@ -62,5 +62,29 @@ describe("set", () => {
 			'Unsafe path segment "constructor" in "constructor.prototype.polluted"',
 		);
 		expect(({} as Record<string, unknown>).polluted).toBeUndefined();
+	});
+
+	it("should not call setter", () => {
+		// Arrange
+		let setterCalled = false;
+		class TestClass {
+			/**
+			 * Mock setter.
+			 */
+			public set value(val: unknown) {
+				setterCalled = true;
+			}
+		}
+
+		const obj = {
+			nested: new TestClass(),
+		};
+
+		// Act.
+		set(obj, "nested.value", "Hello world");
+
+		// Assert.
+		expect(obj.nested.value).toBe("Hello world");
+		expect(setterCalled).toBe(false);
 	});
 });

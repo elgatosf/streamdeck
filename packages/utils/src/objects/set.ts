@@ -6,7 +6,7 @@ const FORBIDDEN_PROP_NAMES = new Set(["", "__proto__", "prototype", "constructor
  * @param path The path to the property to set.
  * @param value The value to write.
  */
-export function set(target: Record<string, unknown>, path: string, value: unknown): void {
+export function set(target: object, path: string, value: unknown): void {
 	const props = path.split(".");
 
 	// Validate the path does not contain forbidden segments.
@@ -22,7 +22,7 @@ export function set(target: Record<string, unknown>, path: string, value: unknow
 		const prop = props[i];
 		let value = Object.hasOwn(curr, prop) ? curr[prop] : undefined;
 
-		if (value === null || typeof value !== "object") {
+		if (value === null || (typeof value !== "object" && typeof value !== "function")) {
 			defineProperty(curr, prop, (value = {}));
 		}
 
@@ -35,7 +35,7 @@ export function set(target: Record<string, unknown>, path: string, value: unknow
 
 /**
  * Defines a property on the specified object.
- * @param obj Object where the property will be define.
+ * @param obj Object where the property will be defined.
  * @param prop Property name.
  * @param value Initial value.
  */
