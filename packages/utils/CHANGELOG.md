@@ -1,5 +1,16 @@
 # Change Log
 
+## 0.6.0
+
+### Minor Changes
+
+- 483f918: Updated `set` to not trigger property setters.
+- 483f918: Fixed type signature of `target` parameter for `set`.
+
+### Patch Changes
+
+- 483f918: Updated `set` to error when an unsafe path is detected to prevent prototype pollution.
+
 ## 0.5.0
 
 ### Minor Changes

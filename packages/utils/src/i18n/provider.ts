@@ -1,7 +1,8 @@
 import { EventEmitter } from "../event-emitter.js";
 import type { IDisposable } from "../explicit-resource-management/disposable.js";
 import type { JsonObject } from "../json.js";
-import { freeze, get } from "../objects.js";
+import { freeze } from "../objects/freeze.js";
+import { get } from "../objects/get.js";
 import { defaultLanguage, type Language } from "./language.js";
 
 /**
