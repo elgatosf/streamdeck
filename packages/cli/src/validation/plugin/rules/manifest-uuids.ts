@@ -31,7 +31,7 @@ export const manifestUuids = rule<PluginContext>(async function (plugin: PluginC
 		}
 
 		// Check if the action identifier is prefixed with the plugin identifier.
-		if (plugin.hasValidId && !uuid.value.startsWith(plugin.id)) {
+		if (plugin.hasValidId && !uuid.value.startsWith(`${plugin.id}.`)) {
 			this.addWarning(plugin.manifest.path, `should be prefixed with ${colorize(plugin.id)}`, uuid);
 		}
 	});
