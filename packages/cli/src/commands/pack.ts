@@ -1,7 +1,7 @@
 import { Manifest } from "@elgato/schemas/streamdeck/plugins";
 import { ZipWriter } from "@zip.js/zip.js";
 import chalk from "chalk";
-import { createReadStream, createWriteStream, existsSync, writeFileSync } from "node:fs";
+import { createReadStream, createWriteStream, existsSync, readFileSync, writeFileSync } from "node:fs";
 import { rm } from "node:fs/promises";
 import { basename, dirname, join, resolve } from "node:path";
 import { Readable, Writable } from "node:stream";
@@ -196,6 +196,7 @@ async function version(path: string, version: string | null): Promise<VersionRev
 
 	if (existsSync(manifestPath)) {
 		const manifest = await readJsonFile<Manifest>(manifestPath);
+		original = readFileSync(manifestPath, { encoding: "utf-8" });
 
 		// Ensure the version in the manifest has the correct number of segments, [{major}.{minor}.{patch}.{build}]
 		version ??= manifest.value.Version?.toString() || "";
