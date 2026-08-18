@@ -2,4 +2,4 @@
 "@elgato/cli": patch
 ---
 
-Fixed spinner-tasks running in quiet mode to correctly be awaited.
+Fixed a race condition when creating new projects that could result in invalid files.
