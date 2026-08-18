@@ -96,7 +96,7 @@ configCommand
 	.description("Resets all configuration.")
 	.action(() => config.reset());
 
-program
+await program
 	.version(packageManager.getVersion({ checkEnvironment: true }), "-v", "display CLI version")
 	.option("-l, --list", "display list of installed plugins")
 	.action((opts) => {
@@ -106,4 +106,4 @@ program
 			program.help();
 		}
 	})
-	.parse();
+	.parseAsync();

@@ -21,7 +21,11 @@ export const setDeveloperMode = command<DeveloperModeOptions>(
 				options.disable ? "NO" : "YES",
 			]);
 		} else {
-			Registry.set("HKEY_CURRENT_USER\\Software\\Elgato Systems GmbH\\StreamDeck", flagName, options.disable ? 0 : 1);
+			await Registry.set(
+				"HKEY_CURRENT_USER\\Software\\Elgato Systems GmbH\\StreamDeck",
+				flagName,
+				options.disable ? 0 : 1,
+			);
 		}
 
 		output.success(`Developer mode ${options.disable ? "disabled" : "enabled"}`);

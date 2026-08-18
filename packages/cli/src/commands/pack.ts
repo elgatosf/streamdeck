@@ -60,7 +60,7 @@ export const pack = command<PackOptions>(
 		await mkdirIfNotExists(dirname(outputPath));
 		const pkgBuilder = getPackageBuilder(sourcePath, outputPath, options.dryRun);
 		const contents = await getPackageContents(sourcePath, pkgBuilder.add);
-		pkgBuilder.close();
+		await pkgBuilder.close();
 
 		// Print the summary.
 		stdout.log(`📦 ${contents.manifest.Name} (v${contents.manifest.Version})`);
@@ -119,7 +119,7 @@ function getPackageBuilder(sourcePath: string, outputPath: string, dryRun = fals
 	if (dryRun) {
 		return {
 			add: () => Promise.resolve(),
-			close: (): void => {},
+			close: () => Promise.resolve(),
 		};
 	}
 
@@ -287,7 +287,7 @@ type PackageBuilder = {
 	/**
 	 * Closes the package builder.
 	 */
-	close(): void;
+	close(): Promise<unknown>;
 };
 
 /**

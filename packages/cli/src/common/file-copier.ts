@@ -37,9 +37,9 @@ class FileCopier {
 		};
 
 		if (fs.lstatSync(opts.source).isDirectory()) {
-			this.copyDir(opts);
+			await this.copyDir(opts);
 		} else {
-			this.copyFile(opts);
+			await this.copyFile(opts);
 		}
 	}
 
@@ -49,7 +49,7 @@ class FileCopier {
 	 * @param param0.source Source to copy from.
 	 * @param param0.dest Destination to copy to.
 	 */
-	private copyDir({ source, dest }: FileOrDirectoryPath): void {
+	private async copyDir({ source, dest }: FileOrDirectoryPath): Promise<void> {
 		const templates: Options[] = [];
 		const filter = (source: string, dest: string): boolean => {
 			if (fs.lstatSync(source).isFile() && extname(source) === ".ejs") {
@@ -65,7 +65,9 @@ class FileCopier {
 			recursive: true,
 		});
 
-		templates.forEach((opts) => this.copyFile(opts));
+		for (const entry of templates) {
+			await this.copyFile(entry);
+		}
 	}
 
 	/**
@@ -74,14 +76,14 @@ class FileCopier {
 	 * @param param0.source Source to copy from.
 	 * @param param0.dest Destination to copy to.
 	 */
-	private copyFile({ source, dest }: FileOrDirectoryPath): void {
+	private async copyFile({ source, dest }: FileOrDirectoryPath): Promise<void> {
 		fs.mkdirSync(dirname(dest), { recursive: true });
 
 		if (extname(source) === ".ejs") {
-			ejs.renderFile(source, this.options.data, (_, contents: string) => {
-				const target = extname(dest) === ".ejs" ? dest.substring(0, dest.length - 4) : dest;
-				fs.writeFileSync(target, contents);
-			});
+			const contents = await ejs.renderFile(source, this.options.data);
+			const target = extname(dest) === ".ejs" ? dest.substring(0, dest.length - 4) : dest;
+
+			fs.writeFileSync(target, contents, { encoding: "utf8" });
 		} else {
 			fs.copyFileSync(source, dest);
 		}
