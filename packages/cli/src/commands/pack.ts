@@ -38,6 +38,7 @@ export const pack = command<PackOptions>(
 					stdout.exit(1);
 				}
 			} else {
+				versioner.undo();
 				throw err;
 			}
 		}
