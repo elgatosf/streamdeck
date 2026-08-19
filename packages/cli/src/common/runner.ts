@@ -24,11 +24,11 @@ export function run(command: string, options?: RunOptions): Promise<number> {
 
 		// Begin gathering the stderr, and wait for the child process to finish.
 		const stderr = stderrReader(child);
-		child.on("exit", (code: number) => {
-			if (code > 0) {
+		child.on("exit", (code: number | null) => {
+			if (code !== 0) {
 				stderr.then((value) => {
 					console.log(value);
-					reject(code);
+					reject(code ?? 1);
 				});
 			} else {
 				resolve(0);
