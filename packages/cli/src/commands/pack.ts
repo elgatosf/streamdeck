@@ -44,7 +44,7 @@ export const pack = command<PackOptions>(
 		}
 
 		// Check if there is already a file at the desired save location.
-		if (existsSync(outputPath)) {
+		if (!options.dryRun && existsSync(outputPath)) {
 			if (options.force) {
 				await rm(outputPath);
 			} else {
