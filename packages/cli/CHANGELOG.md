@@ -1,5 +1,20 @@
 # Change Log
 
+## 1.9.0
+
+### Minor Changes
+
+- c6ee022: Migrated repository to new Stream Deck SDK monorepo.
+
+### Patch Changes
+
+- c6ee022: Fixed dry-run from removing existing .sdPlugin files if used with force flag.
+- c6ee022: Fixed MemberNode identifiers as a result of updating @humanwhocodes/momoa.
+- c6ee022: Fixed an issue whereby tasks running in quiet mode could output text.
+- c6ee022: Improved the validation of action identifiers defined within the manifest.
+- c6ee022: Fixed a race condition when creating new projects that could result in invalid files.
+- c6ee022: Fixed the `outFiles` within the template project.
+
 ## 1.8.1
 
 ### Patch Changes
