@@ -1,6 +1,6 @@
 {
     "name": "@elgato/streamdeck",
-    "version": "2.1.0",
+    "version": "2.1.2",
     "description": "The official Node.js SDK for creating Stream Deck plugins.",
     "main": "./dist/plugin/index.js",
     "type": "module",
@@ -63,7 +63,7 @@
     },
     "dependencies": {
         "@elgato/schemas": "^0.4.14",
-        "@elgato/utils": "^0.4.4",
+        "@elgato/utils": "workspace:*",
         "ws": "^8.19.0"
     }
 }
