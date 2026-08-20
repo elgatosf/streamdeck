@@ -1,3 +1,4 @@
+import type { JsonObject } from "@elgato/utils";
 import { beforeAll, describe, expect, it, vi } from "vitest";
 
 import {
@@ -9,7 +10,6 @@ import {
 	Target,
 	type WillAppear,
 } from "../../../api/index.js";
-import type { JsonObject } from "../../../common/json.js";
 import { connection } from "../../connection.js";
 import { Device } from "../../devices/device.js";
 import { deviceStore } from "../../devices/store.js";
@@ -147,7 +147,7 @@ describe("KeyAction", () => {
 
 		// Act.
 		const jsonStr = JSON.stringify(action);
-		const jsonObj: KeyAction = JSON.parse(jsonStr);
+		const jsonObj: KeyAction<JsonObject> = JSON.parse(jsonStr);
 
 		// Assert.
 		expect(jsonObj.controllerType).toBe(action.controllerType);
@@ -159,7 +159,7 @@ describe("KeyAction", () => {
 	});
 
 	describe("sending", () => {
-		let action!: KeyAction;
+		let action!: KeyAction<JsonObject>;
 		beforeAll(() => (action = new KeyAction(source)));
 
 		/**
