@@ -2,4 +2,4 @@
 "@elgato/streamdeck": major
 ---
 
-Removed secrets API.
+Removed `getSecrets` API.
