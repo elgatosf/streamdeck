@@ -7,7 +7,7 @@ import { connection } from "../../connection.js";
 import { Device } from "../../devices/device.js";
 import { deviceStore } from "../../devices/store.js";
 import { logger } from "../../logging/index.js";
-import { Action } from "../action.js";
+import { ActionBase } from "../action-base.js";
 import { settingsCache } from "../cache.js";
 import { actionConfig } from "../config.js";
 import { DialAction } from "../dial.js";
@@ -59,14 +59,14 @@ describe("Action", () => {
 	});
 
 	/**
-	 * Asserts the constructor of {@link Action} sets the properties from the source.
+	 * Asserts the constructor of {@link ActionBase} sets the properties from the source.
 	 */
 	it("constructor sets properties from source", () => {
 		// Arrange, act.
-		const action = new Action(source);
+		const action = new ActionBase(source);
 
 		// Assert.
-		expect(action).toBeInstanceOf(Action);
+		expect(action).toBeInstanceOf(ActionBase);
 		expect(action.controllerType).toBe("Keypad");
 		expect(action.device).toBe(device);
 		expect(action.id).toBe(source.context);
@@ -85,11 +85,11 @@ describe("Action", () => {
 		});
 
 		/**
-		 * Asserts {@link Action.getSettings} returns cached settings when the cache is valid.
+		 * Asserts {@link ActionBase.getSettings} returns cached settings when the cache is valid.
 		 */
 		it("getSettings returns cached settings", async () => {
 			// Arrange.
-			const action = new Action(source);
+			const action = new ActionBase(source);
 			const cachedSettings = { name: "Cached" };
 			const spyOnTrace = vi.spyOn(logger, "trace");
 			settingsCache.set(action.id, cachedSettings);
@@ -118,11 +118,11 @@ describe("Action", () => {
 		});
 
 		/**
-		 * Asserts {@link Action.getSettings} ignores cached settings when experimental message identifiers are disabled.
+		 * Asserts {@link ActionBase.getSettings} ignores cached settings when experimental message identifiers are disabled.
 		 */
 		it("getSettings ignores cached settings", async () => {
 			// Arrange.
-			const action = new Action(source);
+			const action = new ActionBase(source);
 			const spyOnTrace = vi.spyOn(logger, "trace");
 			settingsCache.set(action.id, { name: "Cached" });
 
@@ -164,11 +164,11 @@ describe("Action", () => {
 		});
 
 		/**
-		 * Asserts {@link Action.getSettings} requests settings from the connection and does not populate cache.
+		 * Asserts {@link ActionBase.getSettings} requests settings from the connection and does not populate cache.
 		 */
 		it("getSettings fetches without populating cache", async () => {
 			// Arrange.
-			const action = new Action(source);
+			const action = new ActionBase(source);
 
 			// Array, act (Command).
 			const settings = action.getSettings();
@@ -262,7 +262,7 @@ describe("Action", () => {
 	 * Asserts type-checking when the controller is "Keypad".
 	 */
 	test("keypad type assertion", () => {
-		const action = new Action({
+		const action = new ActionBase({
 			...source,
 			payload: {
 				...source.payload,
@@ -295,11 +295,11 @@ describe("Action", () => {
 		beforeAll(() => (action = new KeyAction(source)));
 
 		/**
-		 * Asserts {@link Action.setSettings} invalidates the settings cache.
+		 * Asserts {@link ActionBase.setSettings} invalidates the settings cache.
 		 */
 		it("setSettings invalidates cache", async () => {
 			// Arrange.
-			const action = new Action(source);
+			const action = new ActionBase(source);
 			settingsCache.set(action.id, { name: "Cached" });
 
 			// Act.
@@ -313,7 +313,7 @@ describe("Action", () => {
 		});
 
 		/**
-		 * Asserts {@link Action.setSettings} forwards the command to the {@link connection}.
+		 * Asserts {@link ActionBase.setSettings} forwards the command to the {@link connection}.
 		 */
 		it("setSettings", async () => {
 			// Arrange, act.
@@ -333,7 +333,7 @@ describe("Action", () => {
 		});
 
 		/**
-		 * Asserts {@link Action.showAlert} forwards the command to the {@link connection}.
+		 * Asserts {@link ActionBase.showAlert} forwards the command to the {@link connection}.
 		 */
 		it("showAlert", async () => {
 			// Arrange, act.

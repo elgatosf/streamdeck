@@ -86,7 +86,7 @@ export const settings = {
 				return;
 			}
 
-			const action = actionStore.getActionById(ev.context);
+			const action = actionStore.getActionById<T>(ev.context);
 			if (action) {
 				listener(new ActionEvent(action, ev));
 			}

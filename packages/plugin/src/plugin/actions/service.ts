@@ -30,7 +30,8 @@ import type {
 import { getManifest } from "../manifest.js";
 import { settings } from "../settings.js";
 import { ui } from "../ui.js";
-import { Action } from "./action.js";
+import { ActionBase } from "./action-base.js";
+import type { Action } from "./action.js";
 import { settingsCache } from "./cache.js";
 import { actionConfig } from "./config.js";
 import { ActionContext } from "./context.js";
@@ -84,7 +85,7 @@ class ActionService extends ReadOnlyActionStore {
 	 */
 	public onDialDown<T extends JsonObject = JsonObject>(listener: (ev: DialDownEvent<T>) => void): IDisposable {
 		return connection.disposableOn("dialDown", (ev: DialDown<T>) => {
-			const action = actionStore.getActionById(ev.context);
+			const action = actionStore.getActionById<T>(ev.context);
 			if (action?.isDial()) {
 				listener(new ActionEvent(action, ev));
 			}
@@ -99,7 +100,7 @@ class ActionService extends ReadOnlyActionStore {
 	 */
 	public onDialRotate<T extends JsonObject = JsonObject>(listener: (ev: DialRotateEvent<T>) => void): IDisposable {
 		return connection.disposableOn("dialRotate", (ev: DialRotate<T>) => {
-			const action = actionStore.getActionById(ev.context);
+			const action = actionStore.getActionById<T>(ev.context);
 			if (action?.isDial()) {
 				listener(new ActionEvent(action, ev));
 			}
@@ -114,7 +115,7 @@ class ActionService extends ReadOnlyActionStore {
 	 */
 	public onDialUp<T extends JsonObject = JsonObject>(listener: (ev: DialUpEvent<T>) => void): IDisposable {
 		return connection.disposableOn("dialUp", (ev: DialUp<T>) => {
-			const action = actionStore.getActionById(ev.context);
+			const action = actionStore.getActionById<T>(ev.context);
 			if (action?.isDial()) {
 				listener(new ActionEvent(action, ev));
 			}
@@ -135,7 +136,7 @@ class ActionService extends ReadOnlyActionStore {
 				return;
 			}
 
-			const action = actionStore.getActionById(ev.context);
+			const action = actionStore.getActionById<T>(ev.context);
 			if (action) {
 				listener(new ActionEvent(action, ev));
 			}
@@ -150,7 +151,7 @@ class ActionService extends ReadOnlyActionStore {
 	 */
 	public onKeyDown<T extends JsonObject = JsonObject>(listener: (ev: KeyDownEvent<T>) => void): IDisposable {
 		return connection.disposableOn("keyDown", (ev: KeyDown<T>) => {
-			const action = actionStore.getActionById(ev.context);
+			const action = actionStore.getActionById<T>(ev.context);
 			if (action?.isKey()) {
 				listener(new ActionEvent(action, ev));
 			}
@@ -165,7 +166,7 @@ class ActionService extends ReadOnlyActionStore {
 	 */
 	public onKeyUp<T extends JsonObject = JsonObject>(listener: (ev: KeyUpEvent<T>) => void): IDisposable {
 		return connection.disposableOn("keyUp", (ev: KeyUp<T>) => {
-			const action = actionStore.getActionById(ev.context);
+			const action = actionStore.getActionById<T>(ev.context);
 			if (action?.isKey()) {
 				listener(new ActionEvent(action, ev));
 			}
@@ -173,7 +174,7 @@ class ActionService extends ReadOnlyActionStore {
 	}
 
 	/**
-	 * Occurs when the user updates an action's title settings in the Stream Deck application. See also {@link Action.setTitle}.
+	 * Occurs when the user updates an action's title settings in the Stream Deck application. See also {@link ActionBase.setTitle}.
 	 * @template T The type of settings associated with the action.
 	 * @param listener Function to be invoked when the event occurs.
 	 * @returns A disposable that, when disposed, removes the listener.
@@ -182,7 +183,7 @@ class ActionService extends ReadOnlyActionStore {
 		listener: (ev: TitleParametersDidChangeEvent<T>) => void,
 	): IDisposable {
 		return connection.disposableOn("titleParametersDidChange", (ev: TitleParametersDidChange<T>) => {
-			const action = actionStore.getActionById(ev.context);
+			const action = actionStore.getActionById<T>(ev.context);
 			if (action) {
 				listener(new ActionEvent(action, ev));
 			}
@@ -197,7 +198,7 @@ class ActionService extends ReadOnlyActionStore {
 	 */
 	public onTouchTap<T extends JsonObject = JsonObject>(listener: (ev: TouchTapEvent<T>) => void): IDisposable {
 		return connection.disposableOn("touchTap", (ev: TouchTap<T>) => {
-			const action = actionStore.getActionById(ev.context);
+			const action = actionStore.getActionById<T>(ev.context);
 			if (action?.isDial()) {
 				listener(new ActionEvent(action, ev));
 			}
@@ -213,7 +214,7 @@ class ActionService extends ReadOnlyActionStore {
 	 */
 	public onWillAppear<T extends JsonObject = JsonObject>(listener: (ev: WillAppearEvent<T>) => void): IDisposable {
 		return connection.disposableOn("willAppear", (ev: WillAppear<T>) => {
-			const action = actionStore.getActionById(ev.context);
+			const action = actionStore.getActionById<T>(ev.context);
 			if (action) {
 				listener(new ActionEvent(action, ev));
 			}
@@ -299,9 +300,7 @@ class ActionService extends ReadOnlyActionStore {
 	 * @param ev Event that contains the controller.
 	 * @returns The action instance.
 	 */
-	#createAction(
-		ev: WillAppear<JsonObject>,
-	): DialAction<JsonObject> | KeyAction<JsonObject> | NeoInfobarAction<JsonObject> {
+	#createAction(ev: WillAppear<JsonObject>): Action<JsonObject> {
 		switch (ev.payload.controller) {
 			case "Encoder":
 				return new DialAction(ev);
@@ -321,11 +320,11 @@ export const actionService = new ActionService();
 export { type ActionService };
 
 /**
- * Event associated with an {@link Action}.
+ * Event associated with an {@link ActionBase}.
  */
 type RoutingEvent<T extends JsonObject> = {
 	/**
-	 * The {@link Action} the event is associated with.
+	 * The action the event is associated with.
 	 */
 	action: Action<T> | ActionContext;
 };

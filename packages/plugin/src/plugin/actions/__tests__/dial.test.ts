@@ -12,7 +12,7 @@ import {
 import { connection } from "../../connection.js";
 import { Device } from "../../devices/device.js";
 import { deviceStore } from "../../devices/store.js";
-import { Action } from "../action.js";
+import { ActionBase } from "../action-base.js";
 import { DialAction } from "../dial.js";
 
 vi.mock("../../devices/store.js");
@@ -63,7 +63,7 @@ describe("DialAction", () => {
 		const action = new DialAction(source);
 
 		// Assert.
-		expect(action).toBeInstanceOf(Action);
+		expect(action).toBeInstanceOf(ActionBase);
 		expect(action.coordinates).not.toBeUndefined();
 		expect(action.coordinates?.column).toBe(1);
 		expect(action.coordinates?.row).toBe(2);

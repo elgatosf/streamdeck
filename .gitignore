@@ -10,6 +10,9 @@ dist/
 bin/
 .wireit/
 
+# Currently reserved for local testing
+apps/
+
 # Shared package files
 /packages/*/LICENSE
 /packages/plugin/README.md
