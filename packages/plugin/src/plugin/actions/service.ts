@@ -299,7 +299,9 @@ class ActionService extends ReadOnlyActionStore {
 	 * @param ev Event that contains the controller.
 	 * @returns The action instance.
 	 */
-	#createAction(ev: WillAppear<JsonObject>): DialAction | KeyAction | NeoInfobarAction {
+	#createAction(
+		ev: WillAppear<JsonObject>,
+	): DialAction<JsonObject> | KeyAction<JsonObject> | NeoInfobarAction<JsonObject> {
 		switch (ev.payload.controller) {
 			case "Encoder":
 				return new DialAction(ev);

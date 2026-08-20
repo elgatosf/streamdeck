@@ -8,7 +8,7 @@ import { Action } from "./action.js";
  * Provides a contextualized instance of an infobar action found on Stream Deck Neo.
  * @template T The type of settings associated with the action.
  */
-export class NeoInfobarAction<T extends JsonObject = JsonObject> extends Action<T> {
+export class NeoInfobarAction<T extends JsonObject> extends Action<T> {
 	/**
 	 * Private backing field for the coordinates.
 	 */

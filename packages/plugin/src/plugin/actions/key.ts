@@ -6,11 +6,11 @@ import { Action } from "./action.js";
 
 /**
  * Provides a contextualized instance of a key action.
- * @template T The type of settings associated with the action.
+ * @template TSettings The type of settings associated with the action.
  */
-export class KeyAction<T extends JsonObject> extends Action<T> {
+export class KeyAction<TSettings extends JsonObject> extends Action<TSettings> {
 	/**
-	 * Private backing field for {@link KeyAction.coordinates}.
+	 * Private backing field for the coordinates.
 	 */
 	readonly #coordinates: Readonly<Coordinates> | undefined;
 
