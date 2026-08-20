@@ -42,6 +42,7 @@ import { actionConfig } from "../config.js";
 import { ActionContext } from "../context.js";
 import { DialAction } from "../dial.js";
 import { KeyAction } from "../key.js";
+import { NeoInfobarAction } from "../neo-infobar.js";
 import { actionService, type ActionService } from "../service.js";
 import { SingletonAction } from "../singleton-action.js";
 import { actionStore } from "../store.js";
@@ -446,6 +447,90 @@ describe("actions", () => {
 		});
 
 		/**
+		 * Asserts an {@link NeoInfobarAction} is created when `willAppear` is emitted for an infobar controller.
+		 */
+		it("creates InfobarAction on willAppear", () => {
+			// Arrange.
+			const ev = {
+				action: "com.elgato.test.infobar",
+				context: "infobar123",
+				device: "device123",
+				event: "willAppear",
+				payload: {
+					controller: "Neo",
+					coordinates: {
+						column: 0,
+						row: 0,
+					},
+					isInMultiAction: false,
+					resources: {},
+					settings: {
+						name: "Hello world",
+					},
+				},
+			} satisfies WillAppear<Settings>;
+
+			// Act.
+			connection.emit("willAppear", ev);
+
+			// Assert.
+			expect(actionStore.set).toHaveBeenCalledTimes(1);
+			const created = vi.mocked(actionStore.set).mock.calls[0][0];
+			expect(created).toBeInstanceOf(NeoInfobarAction);
+			expect(created.id).toBe(ev.context);
+			expect(created.controllerType).toBe("Neo");
+		});
+
+		/**
+		 * Asserts {@link ActionService.onWillAppear} emits events backed by {@link NeoInfobarAction}.
+		 */
+		it("receives onWillAppear for infobar action", () => {
+			// Arrange.
+			const listener = vi.fn();
+			const ev = {
+				action: "com.elgato.test.infobar",
+				context: "infobar123",
+				device: "device123",
+				event: "willAppear",
+				payload: {
+					controller: "Neo",
+					coordinates: {
+						column: 2,
+						row: 0,
+					},
+					isInMultiAction: false,
+					resources: {},
+					settings: {
+						name: "Hello world",
+					},
+				},
+			} satisfies WillAppear<Settings>;
+
+			vi.mocked(actionStore.getActionById).mockReturnValueOnce(new NeoInfobarAction(ev));
+
+			// Act (emit).
+			const disposable = actionService.onWillAppear(listener);
+			connection.emit("willAppear", ev);
+
+			// Assert (emit).
+			expect(listener).toHaveBeenCalledTimes(1);
+			expect(listener).toHaveBeenCalledWith<[WillAppearEvent<Settings>]>(
+				expect.objectContaining({
+					payload: ev.payload,
+					type: "willAppear",
+				}),
+			);
+			expect(vi.mocked(listener).mock.calls[0][0].action).toBeInstanceOf(NeoInfobarAction);
+
+			// Act (dispose).
+			disposable.dispose();
+			connection.emit(ev.event, ev as any);
+
+			// Assert(dispose).
+			expect(listener).toHaveBeenCalledTimes(1);
+		});
+
+		/**
 		 * Asserts {@link ActionService.onWillDisappear} is invoked when `willDisappear` is emitted.
 		 */
 		it("receives onWillDisappear", () => {
@@ -489,7 +574,6 @@ describe("actions", () => {
 			// Assert(dispose).
 			expect(listener).toHaveBeenCalledTimes(1);
 		});
-
 
 		/**
 		 * Asserts settings cache lifecycle updates for appear, settings updates, and disappear events.

@@ -23,8 +23,11 @@ import type {
 	PropertyInspectorDidDisappear,
 } from "./ui.js";
 
-export { type Controller } from "@elgato/schemas/streamdeck/plugins";
-export { type ActionIdentifier, type State } from "./action.js";
+export {
+	type ActionIdentifier,
+	type Controller, // Temp: until schemas are updated
+	type State,
+} from "./action.js";
 export { type DeviceIdentifier } from "./device.js";
 
 export {
