@@ -21,13 +21,13 @@ import type { KeyAction } from "./key.js";
 const REQUEST_TIMEOUT = 15 * 1000; // 15s
 
 /**
- * Provides a contextualized instance of an {@link Action}, allowing for direct communication with the Stream Deck.
- * @template T The type of settings associated with the action.
+ * Provides a contextualized instance of an action, allowing for direct communication with the Stream Deck.
+ * @template TSettings The type of settings associated with the action.
  */
-export class Action<T extends JsonObject> extends ActionContext {
+export class Action<TSettings extends JsonObject> extends ActionContext {
 	/**
-	 * Gets the resources (files) associated with this action; these resources are embedded into the
-	 * action when it is exported, either individually, or as part of a profile.
+	 * Gets the resources (files) associated with this action; these resources are embedded into the action when it is
+	 * exported, either individually, or as part of a profile.
 	 *
 	 * Available from Stream Deck 7.1.
 	 * @returns The resources.
@@ -44,7 +44,7 @@ export class Action<T extends JsonObject> extends ActionContext {
 	 * @template U The type of settings associated with the action.D
 	 * @returns Promise containing the action instance's settings.
 	 */
-	public async getSettings<U extends JsonObject = T>(): Promise<U> {
+	public async getSettings(): Promise<TSettings> {
 		if (actionConfig.useExperimentalMessageIdentifiers) {
 			const cached = settingsCache.get(this.id);
 			if (cached !== undefined) {
@@ -56,19 +56,19 @@ export class Action<T extends JsonObject> extends ActionContext {
 						settings: cached,
 					}),
 				);
-				return cached as U;
+				return cached as TSettings;
 			}
 		}
 
 		const res = await this.#fetch("getSettings", "didReceiveSettings");
-		return res.payload.settings as U;
+		return res.payload.settings as TSettings;
 	}
 
 	/**
 	 * Determines whether this instance is a dial.
 	 * @returns `true` when this instance is a dial; otherwise `false`.
 	 */
-	public isDial(): this is DialAction<T> {
+	public isDial(): this is DialAction<TSettings> {
 		return this.controllerType === "Encoder";
 	}
 
@@ -76,13 +76,13 @@ export class Action<T extends JsonObject> extends ActionContext {
 	 * Determines whether this instance is a key.
 	 * @returns `true` when this instance is a key; otherwise `false`.
 	 */
-	public isKey(): this is KeyAction<T> {
+	public isKey(): this is KeyAction<TSettings> {
 		return this.controllerType === "Keypad";
 	}
 
 	/**
-	 * Sets the resources (files) associated with this action; these resources are embedded into the
-	 * action when it is exported, either individually, or as part of a profile.
+	 * Sets the resources (files) associated with this action; these resources are embedded into the action when it is
+	 * exported, either individually, or as part of a profile.
 	 *
 	 * Available from Stream Deck 7.1.
 	 * @example
@@ -104,11 +104,11 @@ export class Action<T extends JsonObject> extends ActionContext {
 	}
 
 	/**
-	 * Sets the settings associated with this action instance. Use in conjunction with {@link Action.getSettings}.
+	 * Sets the settings associated with this action instance.
 	 * @param value Settings to persist.
 	 * @returns `Promise` resolved when the settings are sent to Stream Deck.
 	 */
-	public setSettings(value: T): Promise<void> {
+	public setSettings(value: TSettings): Promise<void> {
 		settingsCache.delete(this.id);
 		return connection.send({
 			event: "setSettings",
@@ -118,11 +118,11 @@ export class Action<T extends JsonObject> extends ActionContext {
 	}
 
 	/**
-	 * Temporarily shows an alert (i.e. warning), in the form of an exclamation mark in a yellow triangle, on this action instance. Used to provide visual feedback when an action failed.
-	 * @returns `Promise` resolved when the request to show an alert has been sent to Stream Deck.
+	 * Temporarily shows an alert (i.e. warning), in the form of an exclamation mark in a yellow triangle, on this
+	 * action instance. Used to provide visual feedback when an action failed.
 	 */
-	public showAlert(): Promise<void> {
-		return connection.send({
+	public async showAlert(): Promise<void> {
+		await connection.send({
 			event: "showAlert",
 			context: this.id,
 		});
