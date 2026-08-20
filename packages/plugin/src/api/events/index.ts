@@ -15,7 +15,6 @@ import type {
 	ApplicationDidTerminate,
 	DidReceiveDeepLink,
 	DidReceiveGlobalSettings,
-	DidReceiveSecrets,
 	SystemDidWakeUp,
 } from "./system.js";
 import type {
@@ -78,7 +77,6 @@ export type PluginEvent =
 	| DidReceiveGlobalSettings<JsonObject>
 	| DidReceivePropertyInspectorMessage<JsonValue>
 	| DidReceiveResources<JsonObject>
-	| DidReceiveSecrets<JsonObject>
 	| DidReceiveSettings<JsonObject>
 	| KeyDown<JsonObject>
 	| KeyUp<JsonObject>
