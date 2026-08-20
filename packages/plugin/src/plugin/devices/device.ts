@@ -3,6 +3,7 @@ import type { JsonObject } from "@elgato/utils";
 import type { DeviceInfo, DeviceType, Size } from "../../api/index.js";
 import type { DialAction } from "../actions/dial.js";
 import type { KeyAction } from "../actions/key.js";
+import type { NeoInfobarAction } from "../actions/neo-infobar.js";
 import { actionStore } from "../actions/store.js";
 import { connection } from "../connection.js";
 
@@ -63,7 +64,9 @@ export class Device {
 	 * Actions currently visible on the device.
 	 * @returns Collection of visible actions.
 	 */
-	public get actions(): IterableIterator<DialAction<JsonObject> | KeyAction<JsonObject>> {
+	public get actions(): IterableIterator<
+		DialAction<JsonObject> | KeyAction<JsonObject> | NeoInfobarAction<JsonObject>
+	> {
 		return actionStore.filter((a) => a.device.id === this.id);
 	}
 

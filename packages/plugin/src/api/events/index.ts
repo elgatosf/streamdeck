@@ -15,7 +15,6 @@ import type {
 	ApplicationDidTerminate,
 	DidReceiveDeepLink,
 	DidReceiveGlobalSettings,
-	DidReceiveSecrets,
 	SystemDidWakeUp,
 } from "./system.js";
 import type {
@@ -24,8 +23,11 @@ import type {
 	PropertyInspectorDidDisappear,
 } from "./ui.js";
 
-export { type Controller } from "@elgato/schemas/streamdeck/plugins";
-export { type ActionIdentifier, type State } from "./action.js";
+export {
+	type ActionIdentifier,
+	type Controller, // Temp: until schemas are updated
+	type State,
+} from "./action.js";
 export { type DeviceIdentifier } from "./device.js";
 
 export {
@@ -78,7 +80,6 @@ export type PluginEvent =
 	| DidReceiveGlobalSettings<JsonObject>
 	| DidReceivePropertyInspectorMessage<JsonValue>
 	| DidReceiveResources<JsonObject>
-	| DidReceiveSecrets<JsonObject>
 	| DidReceiveSettings<JsonObject>
 	| KeyDown<JsonObject>
 	| KeyUp<JsonObject>

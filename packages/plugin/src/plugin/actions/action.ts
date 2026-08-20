@@ -17,6 +17,7 @@ import { actionConfig } from "./config.js";
 import { ActionContext } from "./context.js";
 import type { DialAction } from "./dial.js";
 import type { KeyAction } from "./key.js";
+import type { NeoInfobarAction } from "./neo-infobar.js";
 
 const REQUEST_TIMEOUT = 15 * 1000; // 15s
 
@@ -81,6 +82,14 @@ export class Action<TSettings extends JsonObject> extends ActionContext {
 	}
 
 	/**
+	 * Determines whether this instance is an infobar.
+	 * @returns `true` when this instance is an infobar; otherwise `false`.
+	 */
+	public isNeoInfobar(): this is NeoInfobarAction<TSettings> {
+		return this.controllerType === "Neo";
+	}
+
+	/**
 	 * Sets the resources (files) associated with this action; these resources are embedded into the action when it is
 	 * exported, either individually, or as part of a profile.
 	 *
@@ -114,17 +123,6 @@ export class Action<TSettings extends JsonObject> extends ActionContext {
 			event: "setSettings",
 			context: this.id,
 			payload: value,
-		});
-	}
-
-	/**
-	 * Temporarily shows an alert (i.e. warning), in the form of an exclamation mark in a yellow triangle, on this
-	 * action instance. Used to provide visual feedback when an action failed.
-	 */
-	public async showAlert(): Promise<void> {
-		await connection.send({
-			event: "showAlert",
-			context: this.id,
 		});
 	}
 

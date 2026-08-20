@@ -24,6 +24,7 @@ import type {
 import type { ActionContext } from "../actions/context.js";
 import type { DialAction } from "../actions/dial.js";
 import type { KeyAction } from "../actions/key.js";
+import type { NeoInfobarAction } from "../actions/neo-infobar.js";
 import type { Device } from "../devices/index.js";
 import { ActionEvent, ActionWithoutPayloadEvent } from "./action-event.js";
 import { ApplicationEvent } from "./application-event.js";
@@ -88,7 +89,7 @@ export type DialUpEvent<TSettings extends JsonObject = JsonObject> = ActionEvent
  */
 export type DidReceiveSettingsEvent<TSettings extends JsonObject = JsonObject> = ActionEvent<
 	DidReceiveSettings<TSettings>,
-	DialAction<TSettings> | KeyAction<TSettings>
+	DialAction<TSettings> | KeyAction<TSettings> | NeoInfobarAction<TSettings>
 >;
 
 /**
@@ -96,7 +97,7 @@ export type DidReceiveSettingsEvent<TSettings extends JsonObject = JsonObject> =
  */
 export type DidReceiveResourcesEvent<TSettings extends JsonObject = JsonObject> = ActionEvent<
 	DidReceiveResources<TSettings>,
-	DialAction<TSettings> | KeyAction<TSettings>
+	DialAction<TSettings> | KeyAction<TSettings> | NeoInfobarAction<TSettings>
 >;
 
 /**
@@ -117,7 +118,7 @@ export type KeyUpEvent<TSettings extends JsonObject = JsonObject> = ActionEvent<
  */
 export type PropertyInspectorDidAppearEvent<TSettings extends JsonObject = JsonObject> = ActionWithoutPayloadEvent<
 	PropertyInspectorDidAppear,
-	DialAction<TSettings> | KeyAction<TSettings>
+	DialAction<TSettings> | KeyAction<TSettings> | NeoInfobarAction<TSettings>
 >;
 
 /**
@@ -125,7 +126,7 @@ export type PropertyInspectorDidAppearEvent<TSettings extends JsonObject = JsonO
  */
 export type PropertyInspectorDidDisappearEvent<TSettings extends JsonObject = JsonObject> = ActionWithoutPayloadEvent<
 	PropertyInspectorDidDisappear,
-	DialAction<TSettings> | KeyAction<TSettings>
+	DialAction<TSettings> | KeyAction<TSettings> | NeoInfobarAction<TSettings>
 >;
 
 /**
@@ -133,7 +134,7 @@ export type PropertyInspectorDidDisappearEvent<TSettings extends JsonObject = Js
  */
 export type TitleParametersDidChangeEvent<TSettings extends JsonObject = JsonObject> = ActionEvent<
 	TitleParametersDidChange<TSettings>,
-	DialAction<TSettings> | KeyAction<TSettings>
+	DialAction<TSettings> | KeyAction<TSettings> | NeoInfobarAction<TSettings>
 >;
 
 /**
@@ -154,7 +155,7 @@ export type TouchTapEvent<TSettings extends JsonObject = JsonObject> = ActionEve
  */
 export type WillAppearEvent<TSettings extends JsonObject = JsonObject> = ActionEvent<
 	WillAppear<TSettings>,
-	DialAction<TSettings> | KeyAction<TSettings>
+	DialAction<TSettings> | KeyAction<TSettings> | NeoInfobarAction<TSettings>
 >;
 
 /**

@@ -116,6 +116,17 @@ export class DialAction<T extends JsonObject> extends Action<T> {
 	}
 
 	/**
+	 * Shows a temporary alert (i.e. warning) indicator on the touch strip associated with the action.
+	 * @returns `Promise` resolved when the request to show an alert has been sent to Stream Deck.
+	 */
+	public showAlert(): Promise<void> {
+		return connection.send({
+			event: "showAlert",
+			context: this.id,
+		});
+	}
+
+	/**
 	 * @inheritdoc
 	 */
 	public override toJSON(): object {

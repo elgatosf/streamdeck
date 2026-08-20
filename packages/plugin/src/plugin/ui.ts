@@ -2,6 +2,7 @@ import type { IDisposable, JsonObject, JsonValue } from "@elgato/utils";
 
 import type { DidReceivePropertyInspectorMessage } from "../api/index.js";
 import type { DialAction, KeyAction } from "./actions/index.js";
+import type { NeoInfobarAction } from "./actions/neo-infobar.js";
 import { actionStore } from "./actions/store.js";
 import { connection } from "./connection.js";
 import { ActionWithoutPayloadEvent } from "./events/action-event.js";
@@ -18,7 +19,7 @@ class UIController {
 	/**
 	 * Action associated with the current property inspector.
 	 */
-	#action: DialAction<JsonObject> | KeyAction<JsonObject> | undefined;
+	#action: DialAction<JsonObject> | KeyAction<JsonObject> | NeoInfobarAction<JsonObject> | undefined;
 
 	/**
 	 * To overcome event races, the debounce counter keeps track of appear vs disappear events, ensuring
@@ -54,7 +55,7 @@ class UIController {
 	 * Gets the action associated with the current property.
 	 * @returns The action; otherwise `undefined` when a property inspector is not visible.
 	 */
-	public get action(): DialAction<JsonObject> | KeyAction<JsonObject> | undefined {
+	public get action(): DialAction<JsonObject> | KeyAction<JsonObject> | NeoInfobarAction<JsonObject> | undefined {
 		return this.#action;
 	}
 
@@ -134,7 +135,7 @@ class UIController {
 	 * @param action Action to check against.
 	 * @returns `true` when the actions are the same.
 	 */
-	#isCurrent(action: DialAction<JsonObject> | KeyAction<JsonObject>): boolean {
+	#isCurrent(action: DialAction<JsonObject> | KeyAction<JsonObject> | NeoInfobarAction<JsonObject>): boolean {
 		return (
 			this.#action?.id === action.id &&
 			this.#action?.manifestId === action.manifestId &&
