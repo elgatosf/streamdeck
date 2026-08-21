@@ -1,3 +1,4 @@
+import type { JsonObject } from "@elgato/utils";
 import { beforeAll, describe, expect, it, vi } from "vitest";
 
 import {
@@ -8,11 +9,10 @@ import {
 	type SetTriggerDescription,
 	type WillAppear,
 } from "../../../api/index.js";
-import type { JsonObject } from "../../../common/json.js";
 import { connection } from "../../connection.js";
 import { Device } from "../../devices/device.js";
 import { deviceStore } from "../../devices/store.js";
-import { Action } from "../action.js";
+import { ActionBase } from "../action-base.js";
 import { DialAction } from "../dial.js";
 
 vi.mock("../../devices/store.js");
@@ -63,7 +63,7 @@ describe("DialAction", () => {
 		const action = new DialAction(source);
 
 		// Assert.
-		expect(action).toBeInstanceOf(Action);
+		expect(action).toBeInstanceOf(ActionBase);
 		expect(action.coordinates).not.toBeUndefined();
 		expect(action.coordinates?.column).toBe(1);
 		expect(action.coordinates?.row).toBe(2);
@@ -115,7 +115,7 @@ describe("DialAction", () => {
 
 		// Act.
 		const jsonStr = JSON.stringify(action);
-		const jsonObj: DialAction = JSON.parse(jsonStr);
+		const jsonObj: DialAction<JsonObject> = JSON.parse(jsonStr);
 
 		// Assert.
 		expect(jsonObj.controllerType).toBe(action.controllerType);
@@ -126,7 +126,7 @@ describe("DialAction", () => {
 	});
 
 	describe("sending", () => {
-		let action!: DialAction;
+		let action!: DialAction<JsonObject>;
 		beforeAll(() => (action = new DialAction(source)));
 
 		/**

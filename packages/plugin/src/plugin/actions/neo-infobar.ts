@@ -2,13 +2,13 @@ import type { JsonObject } from "@elgato/utils";
 
 import type { Coordinates, FeedbackPayload, WillAppear } from "../../api/index.js";
 import { connection } from "../connection.js";
-import { Action } from "./action.js";
+import { ActionBase } from "./action-base.js";
 
 /**
  * Provides a contextualized instance of an infobar action found on Stream Deck Neo.
  * @template T The type of settings associated with the action.
  */
-export class NeoInfobarAction<T extends JsonObject = JsonObject> extends Action<T> {
+export class NeoInfobarAction<T extends JsonObject> extends ActionBase<T> {
 	/**
 	 * Private backing field for the coordinates.
 	 */

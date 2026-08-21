@@ -1,15 +1,13 @@
-import { Enumerable } from "@elgato/utils";
+import { Enumerable, type JsonObject } from "@elgato/utils";
 
-import type { DialAction } from "./dial.js";
-import type { KeyAction } from "./key.js";
-import type { NeoInfobarAction } from "./neo-infobar.js";
+import type { Action } from "./action.js";
 
-const __items = new Map<string, DialAction | KeyAction | NeoInfobarAction>();
+const __items = new Map<string, Action<JsonObject>>();
 
 /**
- * Provides a read-only store of Stream Deck devices.
+ * Provides a read-only store of Stream Deck actions.
  */
-export class ReadOnlyActionStore extends Enumerable<DialAction | KeyAction | NeoInfobarAction> {
+export class ReadOnlyActionStore extends Enumerable<Action<JsonObject>> {
 	/**
 	 * Initializes a new instance of the {@link ReadOnlyActionStore}.
 	 */
@@ -22,7 +20,7 @@ export class ReadOnlyActionStore extends Enumerable<DialAction | KeyAction | Neo
 	 * @param id Identifier of action to search for.
 	 * @returns The action, when present; otherwise `undefined`.
 	 */
-	public getActionById(id: string): DialAction | KeyAction | NeoInfobarAction | undefined {
+	public getActionById(id: string): Action<JsonObject> | undefined {
 		return __items.get(id);
 	}
 }
@@ -43,7 +41,7 @@ class ActionStore extends ReadOnlyActionStore {
 	 * Adds the action to the store.
 	 * @param action The action.
 	 */
-	public set(action: DialAction | KeyAction | NeoInfobarAction): void {
+	public set(action: Action<JsonObject>): void {
 		__items.set(action.id, action);
 	}
 }
