@@ -291,7 +291,7 @@ describe("Action", () => {
 	});
 
 	describe("sending", () => {
-		let action!: KeyAction;
+		let action!: KeyAction<Settings>;
 		beforeAll(() => (action = new KeyAction(source)));
 
 		/**
