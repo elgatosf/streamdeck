@@ -20,8 +20,8 @@ export class ReadOnlyActionStore extends Enumerable<Action<JsonObject>> {
 	 * @param id Identifier of action to search for.
 	 * @returns The action, when present; otherwise `undefined`.
 	 */
-	public getActionById<T extends JsonObject = JsonObject>(id: string): Action<T> | undefined {
-		return __items.get(id) as Action<T>;
+	public getActionById(id: string): Action<JsonObject> | undefined {
+		return __items.get(id);
 	}
 }
 

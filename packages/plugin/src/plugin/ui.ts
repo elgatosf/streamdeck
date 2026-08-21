@@ -69,7 +69,7 @@ class UIController {
 		listener: (ev: PropertyInspectorDidAppearEvent<T>) => void,
 	): IDisposable {
 		return connection.disposableOn("propertyInspectorDidAppear", (ev) => {
-			const action = actionStore.getActionById<T>(ev.context);
+			const action = actionStore.getActionById(ev.context) as Action<T> | undefined;
 			if (action) {
 				listener(new ActionWithoutPayloadEvent(action, ev));
 			}
@@ -87,7 +87,7 @@ class UIController {
 		listener: (ev: PropertyInspectorDidDisappearEvent<T>) => void,
 	): IDisposable {
 		return connection.disposableOn("propertyInspectorDidDisappear", (ev) => {
-			const action = actionStore.getActionById<T>(ev.context);
+			const action = actionStore.getActionById(ev.context) as Action<T> | undefined;
 			if (action) {
 				listener(new ActionWithoutPayloadEvent(action, ev));
 			}
@@ -105,7 +105,7 @@ class UIController {
 		listener: (ev: SendToPluginEvent<TPayload, TSettings>) => void,
 	): IDisposable {
 		return connection.disposableOn("sendToPlugin", (ev) => {
-			const action = actionStore.getActionById<TSettings>(ev.context);
+			const action = actionStore.getActionById(ev.context) as Action<TSettings> | undefined;
 			if (action) {
 				listener(
 					new SendToPluginEvent<TPayload, TSettings>(action, ev as DidReceivePropertyInspectorMessage<TPayload>),
