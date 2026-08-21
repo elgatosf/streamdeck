@@ -2,4 +2,4 @@
 "@elgato/streamdeck": major
 ---
 
-Updated the settings type used by `getSettings` and `setSettings` to use the type defined on the action.
+Updated `getSettings` and `setSettings` so that the settings type is correctly bound to the type defined on the action.
