@@ -30,7 +30,6 @@ import type {
 import { getManifest } from "../manifest.js";
 import { settings } from "../settings.js";
 import { ui } from "../ui.js";
-import { ActionBase } from "./action-base.js";
 import type { Action } from "./action.js";
 import { settingsCache } from "./cache.js";
 import { actionConfig } from "./config.js";
@@ -174,7 +173,7 @@ class ActionService extends ReadOnlyActionStore {
 	}
 
 	/**
-	 * Occurs when the user updates an action's title settings in the Stream Deck application. See also {@link ActionBase.setTitle}.
+	 * Occurs when the user updates an action's title settings in the Stream Deck application.
 	 * @template T The type of settings associated with the action.
 	 * @param listener Function to be invoked when the event occurs.
 	 * @returns A disposable that, when disposed, removes the listener.
@@ -320,7 +319,7 @@ export const actionService = new ActionService();
 export { type ActionService };
 
 /**
- * Event associated with an {@link ActionBase}.
+ * Event associated with an action.
  */
 type RoutingEvent<T extends JsonObject> = {
 	/**

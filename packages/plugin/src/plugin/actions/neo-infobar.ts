@@ -6,9 +6,9 @@ import { ActionBase } from "./action-base.js";
 
 /**
  * Provides a contextualized instance of an infobar action found on Stream Deck Neo.
- * @template T The type of settings associated with the action.
+ * @template TSettings The type of settings associated with the action.
  */
-export class NeoInfobarAction<T extends JsonObject> extends ActionBase<T> {
+export class NeoInfobarAction<TSettings extends JsonObject> extends ActionBase<TSettings> {
 	/**
 	 * Private backing field for the coordinates.
 	 */

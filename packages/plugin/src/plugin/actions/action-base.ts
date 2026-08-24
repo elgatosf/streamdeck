@@ -42,7 +42,6 @@ export class ActionBase<TSettings extends JsonObject> extends ActionContext {
 
 	/**
 	 * Gets the settings associated this action instance.
-	 * @template U The type of settings associated with the action.D
 	 * @returns Promise containing the action instance's settings.
 	 */
 	public async getSettings(): Promise<TSettings> {
