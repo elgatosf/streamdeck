@@ -18,7 +18,7 @@ export class DialAction<TSettings extends JsonObject> extends ActionBase<TSettin
 	 * Initializes a new instance of the {@see DialAction} class.
 	 * @param source Source of the action.
 	 */
-	constructor(source: WillAppear<JsonObject>) {
+	constructor(source: WillAppear<TSettings>) {
 		super(source);
 
 		if (source.payload.controller !== "Encoder") {

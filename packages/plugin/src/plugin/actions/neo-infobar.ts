@@ -18,7 +18,7 @@ export class NeoInfobarAction<TSettings extends JsonObject> extends ActionBase<T
 	 * Initializes a new instance of the {@see NeoInfobarAction} class.
 	 * @param source Source of the action.
 	 */
-	constructor(source: WillAppear<JsonObject>) {
+	constructor(source: WillAppear<TSettings>) {
 		super(source);
 
 		if (source.payload.controller !== "Neo") {

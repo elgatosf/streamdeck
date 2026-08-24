@@ -2,4 +2,4 @@
 "@elgato/streamdeck": major
 ---
 
-`Action`, `KeyAction`, and `DialAction` types now require their setting type be defined.
+`Action`, `KeyAction`, `DialAction`, and `NeoInfobarAction` types now require their setting type be defined.
