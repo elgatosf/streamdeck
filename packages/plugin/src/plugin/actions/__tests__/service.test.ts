@@ -73,7 +73,6 @@ describe("actions", () => {
 	});
 
 	afterEach(() => {
-		actionConfig.useExperimentalMessageIdentifiers = false;
 		vi.clearAllMocks();
 	});
 
@@ -581,7 +580,7 @@ describe("actions", () => {
 		 */
 		it("updates settings cache on willAppear/didReceiveSettings and clears on willDisappear", () => {
 			// Arrange.
-			actionConfig.useExperimentalMessageIdentifiers = true;
+			actionConfig.useLegacySettingsBehavior = false;
 			const context = "cache-lifecycle-context";
 			settingsCache.delete(context);
 
