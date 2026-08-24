@@ -36,8 +36,15 @@ export const settings = {
 	 * This option replaces `useExperimentalMessageIdentifiers`, with inverted behavior.
 	 */
 	set useLegacySettingsBehavior(value: boolean) {
-		actionConfig.useLegacySettingsBehavior = value;
-		validateSettingsBehavior();
+		const prev = actionConfig.useLegacySettingsBehavior;
+
+		try {
+			actionConfig.useLegacySettingsBehavior = value;
+			validateSettingsBehavior();
+		} catch (err) {
+			actionConfig.useLegacySettingsBehavior = prev;
+			throw err;
+		}
 	},
 
 	/**
@@ -117,8 +124,8 @@ export const settings = {
 };
 
 /**
- * Validates the settings behavior is compatible with the Stream Deck version, and the minimum
- * version defined within the manifest.
+ * Validates the current settings behavior is compatible with the Stream Deck version, and the
+ * minimum version defined within the manifest.
  */
 export function validateSettingsBehavior(): never | void {
 	if (!settings.useLegacySettingsBehavior) {
