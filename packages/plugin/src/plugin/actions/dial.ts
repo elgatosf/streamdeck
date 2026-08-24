@@ -2,15 +2,15 @@ import type { JsonObject } from "@elgato/utils";
 
 import type { Coordinates, FeedbackPayload, SetTriggerDescription, WillAppear } from "../../api/index.js";
 import { connection } from "../connection.js";
-import { Action } from "./action.js";
+import { ActionBase } from "./action-base.js";
 
 /**
  * Provides a contextualized instance of a dial action.
- * @template T The type of settings associated with the action.
+ * @template TSettings The type of settings associated with the action.
  */
-export class DialAction<T extends JsonObject = JsonObject> extends Action<T> {
+export class DialAction<TSettings extends JsonObject> extends ActionBase<TSettings> {
 	/**
-	 * Private backing field for {@link DialAction.coordinates}.
+	 * Private backing field for the coordinates.
 	 */
 	readonly #coordinates: Readonly<Coordinates>;
 
@@ -18,7 +18,7 @@ export class DialAction<T extends JsonObject = JsonObject> extends Action<T> {
 	 * Initializes a new instance of the {@see DialAction} class.
 	 * @param source Source of the action.
 	 */
-	constructor(source: WillAppear<JsonObject>) {
+	constructor(source: WillAppear<TSettings>) {
 		super(source);
 
 		if (source.payload.controller !== "Encoder") {
@@ -38,7 +38,7 @@ export class DialAction<T extends JsonObject = JsonObject> extends Action<T> {
 
 	/**
 	 * Sets the feedback for the current layout associated with this action instance, allowing for the visual items to be updated. Layouts are a powerful way to provide dynamic information
-	 * to users, and can be assigned in the manifest, or dynamically via {@link Action.setFeedbackLayout}.
+	 * to users, and can be assigned in the manifest, or dynamically via {@link ActionBase.setFeedbackLayout}.
 	 *
 	 * The {@link feedback} payload defines which items within the layout will be updated, and are identified by their property name (defined as the `key` in the layout's definition).
 	 * The values can either by a complete new definition, a `string` for layout item types of `text` and `pixmap`, or a `number` for layout item types of `bar` and `gbar`.
@@ -55,7 +55,7 @@ export class DialAction<T extends JsonObject = JsonObject> extends Action<T> {
 
 	/**
 	 * Sets the layout associated with this action instance. The layout must be either a built-in layout identifier, or path to a local layout JSON file within the plugin's folder.
-	 * Use in conjunction with {@link Action.setFeedback} to update the layout's current items' settings.
+	 * Use in conjunction with {@link ActionBase.setFeedback} to update the layout's current items' settings.
 	 * @param layout Name of a pre-defined layout, or relative path to a custom one.
 	 * @returns `Promise` resolved when the new layout has been sent to Stream Deck.
 	 */

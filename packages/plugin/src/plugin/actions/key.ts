@@ -2,28 +2,28 @@ import type { JsonObject } from "@elgato/utils";
 
 import type { Coordinates, SetImage, SetTitle, State, WillAppear } from "../../api/index.js";
 import { connection } from "../connection.js";
-import { Action } from "./action.js";
+import { ActionBase } from "./action-base.js";
 
 /**
  * Provides a contextualized instance of a key action.
- * @template T The type of settings associated with the action.
+ * @template TSettings The type of settings associated with the action.
  */
-export class KeyAction<T extends JsonObject = JsonObject> extends Action<T> {
+export class KeyAction<TSettings extends JsonObject> extends ActionBase<TSettings> {
 	/**
-	 * Private backing field for {@link KeyAction.coordinates}.
+	 * Private backing field for the coordinates.
 	 */
 	readonly #coordinates: Readonly<Coordinates> | undefined;
 
 	/**
 	 * Source of the action.
 	 */
-	readonly #source: WillAppear<JsonObject>;
+	readonly #source: WillAppear<TSettings>;
 
 	/**
 	 * Initializes a new instance of the {@see KeyAction} class.
 	 * @param source Source of the action.
 	 */
-	constructor(source: WillAppear<JsonObject>) {
+	constructor(source: WillAppear<TSettings>) {
 		super(source);
 
 		if (source.payload.controller !== "Keypad") {

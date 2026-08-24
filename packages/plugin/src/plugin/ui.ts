@@ -1,8 +1,7 @@
 import type { IDisposable, JsonObject, JsonValue } from "@elgato/utils";
 
 import type { DidReceivePropertyInspectorMessage } from "../api/index.js";
-import type { DialAction, KeyAction } from "./actions/index.js";
-import type { NeoInfobarAction } from "./actions/neo-infobar.js";
+import type { Action } from "./actions/index.js";
 import { actionStore } from "./actions/store.js";
 import { connection } from "./connection.js";
 import { ActionWithoutPayloadEvent } from "./events/action-event.js";
@@ -19,7 +18,7 @@ class UIController {
 	/**
 	 * Action associated with the current property inspector.
 	 */
-	#action: DialAction | KeyAction | NeoInfobarAction | undefined;
+	#action: Action<JsonObject> | undefined;
 
 	/**
 	 * To overcome event races, the debounce counter keeps track of appear vs disappear events, ensuring
@@ -55,7 +54,7 @@ class UIController {
 	 * Gets the action associated with the current property.
 	 * @returns The action; otherwise `undefined` when a property inspector is not visible.
 	 */
-	public get action(): DialAction | KeyAction | NeoInfobarAction | undefined {
+	public get action(): Action<JsonObject> | undefined {
 		return this.#action;
 	}
 
@@ -70,7 +69,7 @@ class UIController {
 		listener: (ev: PropertyInspectorDidAppearEvent<T>) => void,
 	): IDisposable {
 		return connection.disposableOn("propertyInspectorDidAppear", (ev) => {
-			const action = actionStore.getActionById(ev.context);
+			const action = actionStore.getActionById(ev.context) as Action<T> | undefined;
 			if (action) {
 				listener(new ActionWithoutPayloadEvent(action, ev));
 			}
@@ -88,7 +87,7 @@ class UIController {
 		listener: (ev: PropertyInspectorDidDisappearEvent<T>) => void,
 	): IDisposable {
 		return connection.disposableOn("propertyInspectorDidDisappear", (ev) => {
-			const action = actionStore.getActionById(ev.context);
+			const action = actionStore.getActionById(ev.context) as Action<T> | undefined;
 			if (action) {
 				listener(new ActionWithoutPayloadEvent(action, ev));
 			}
@@ -106,7 +105,7 @@ class UIController {
 		listener: (ev: SendToPluginEvent<TPayload, TSettings>) => void,
 	): IDisposable {
 		return connection.disposableOn("sendToPlugin", (ev) => {
-			const action = actionStore.getActionById(ev.context);
+			const action = actionStore.getActionById(ev.context) as Action<TSettings> | undefined;
 			if (action) {
 				listener(
 					new SendToPluginEvent<TPayload, TSettings>(action, ev as DidReceivePropertyInspectorMessage<TPayload>),
@@ -135,7 +134,7 @@ class UIController {
 	 * @param action Action to check against.
 	 * @returns `true` when the actions are the same.
 	 */
-	#isCurrent(action: DialAction | KeyAction | NeoInfobarAction): boolean {
+	#isCurrent(action: Action<JsonObject>): boolean {
 		return (
 			this.#action?.id === action.id &&
 			this.#action?.manifestId === action.manifestId &&

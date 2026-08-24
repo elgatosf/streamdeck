@@ -37,6 +37,7 @@ import {
 	type WillDisappearEvent,
 } from "../../events/index.js";
 import type { UIController } from "../../ui.js";
+import type { Action } from "../action.js";
 import { settingsCache } from "../cache.js";
 import { actionConfig } from "../config.js";
 import { ActionContext } from "../context.js";
@@ -108,7 +109,7 @@ describe("actions", () => {
 			// Assert (emit).
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[DialDownEvent<Settings>]>({
-				action: actionStore.getActionById(ev.context) as DialAction,
+				action: actionStore.getActionById(ev.context) as DialAction<Settings>,
 				payload: ev.payload,
 				type: "dialDown",
 			});
@@ -154,7 +155,7 @@ describe("actions", () => {
 			// Assert (emit).
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[DialRotateEvent<Settings>]>({
-				action: actionStore.getActionById(ev.context) as DialAction,
+				action: actionStore.getActionById(ev.context) as DialAction<Settings>,
 				payload: ev.payload,
 				type: "dialRotate",
 			});
@@ -198,7 +199,7 @@ describe("actions", () => {
 			// Assert (emit).
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[DialUpEvent<Settings>]>({
-				action: actionStore.getActionById(ev.context) as DialAction,
+				action: actionStore.getActionById(ev.context) as DialAction<Settings>,
 				payload: ev.payload,
 				type: "dialUp",
 			});
@@ -243,7 +244,7 @@ describe("actions", () => {
 			// Assert (emit).
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[KeyDownEvent<Settings>]>({
-				action: actionStore.getActionById(ev.context) as KeyAction,
+				action: actionStore.getActionById(ev.context) as KeyAction<Settings>,
 				payload: ev.payload,
 				type: "keyDown",
 			});
@@ -288,7 +289,7 @@ describe("actions", () => {
 			// Assert (emit).
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[KeyUpEvent<Settings>]>({
-				action: actionStore.getActionById(ev.context) as KeyAction,
+				action: actionStore.getActionById(ev.context) as KeyAction<Settings>,
 				payload: ev.payload,
 				type: "keyUp",
 			});
@@ -342,7 +343,7 @@ describe("actions", () => {
 			// Assert (emit).
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[TitleParametersDidChangeEvent<Settings>]>({
-				action: actionStore.getActionById(ev.context) as KeyAction,
+				action: actionStore.getActionById(ev.context) as KeyAction<Settings>,
 				payload: ev.payload,
 				type: "titleParametersDidChange",
 			});
@@ -388,7 +389,7 @@ describe("actions", () => {
 			// Assert (emit).
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[TouchTapEvent<Settings>]>({
-				action: actionStore.getActionById(ev.context) as DialAction,
+				action: actionStore.getActionById(ev.context) as DialAction<Settings>,
 				payload: ev.payload,
 				type: "touchTap",
 			});
@@ -433,7 +434,7 @@ describe("actions", () => {
 			// Assert (emit).
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[WillAppearEvent<Settings>]>({
-				action: actionStore.getActionById(ev.context) as KeyAction,
+				action: actionStore.getActionById(ev.context) as KeyAction<Settings>,
 				payload: ev.payload,
 				type: "willAppear",
 			});
@@ -658,7 +659,7 @@ describe("actions", () => {
 	describe("registering an action", () => {
 		const keyManifestId = "com.elgato.test.key";
 		const dialManifestId = "com.elgato.test.dial";
-		const actions = vi.fn() as unknown as Enumerable<DialAction<JsonObject> | KeyAction<JsonObject>>;
+		const actions = vi.fn() as unknown as Enumerable<Action<JsonObject>>;
 
 		/**
 		 * Asserts {@link ActionService.registerAction} validates the manifest identifier is not undefined.
@@ -752,7 +753,7 @@ describe("actions", () => {
 			// Assert.
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[DialDownEvent<Settings>]>({
-				action: actionStore.getActionById(ev.context) as DialAction,
+				action: actionStore.getActionById(ev.context) as DialAction<Settings>,
 				payload: ev.payload,
 				type: "dialDown",
 			});
@@ -796,7 +797,7 @@ describe("actions", () => {
 			// Assert.
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[DialRotateEvent<Settings>]>({
-				action: actionStore.getActionById(ev.context) as DialAction,
+				action: actionStore.getActionById(ev.context) as DialAction<Settings>,
 				payload: ev.payload,
 				type: "dialRotate",
 			});
@@ -838,7 +839,7 @@ describe("actions", () => {
 			// Assert.
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[DialUpEvent<Settings>]>({
-				action: actionStore.getActionById(ev.context) as DialAction,
+				action: actionStore.getActionById(ev.context) as DialAction<Settings>,
 				payload: ev.payload,
 				type: "dialUp",
 			});
@@ -871,7 +872,7 @@ describe("actions", () => {
 			// Assert.
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[SendToPluginEvent<Settings, Settings>]>({
-				action: actionStore.getActionById(ev.context) as KeyAction,
+				action: actionStore.getActionById(ev.context) as KeyAction<Settings>,
 				payload: {
 					name: "Hello world",
 				},
@@ -916,7 +917,7 @@ describe("actions", () => {
 			// Assert.
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[DidReceiveSettingsEvent<Settings>]>({
-				action: actionStore.getActionById(ev.context) as KeyAction,
+				action: actionStore.getActionById(ev.context) as KeyAction<Settings>,
 				payload: ev.payload,
 				type: "didReceiveSettings",
 			});
@@ -959,7 +960,7 @@ describe("actions", () => {
 			// Assert.
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[KeyDownEvent<Settings>]>({
-				action: actionStore.getActionById(ev.context) as KeyAction,
+				action: actionStore.getActionById(ev.context) as KeyAction<Settings>,
 				payload: ev.payload,
 				type: "keyDown",
 			});
@@ -1002,7 +1003,7 @@ describe("actions", () => {
 			// Assert.
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[KeyUpEvent<Settings>]>({
-				action: actionStore.getActionById(ev.context) as KeyAction,
+				action: actionStore.getActionById(ev.context) as KeyAction<Settings>,
 				payload: ev.payload,
 				type: "keyUp",
 			});
@@ -1033,7 +1034,7 @@ describe("actions", () => {
 			// Assert.
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[PropertyInspectorDidAppearEvent<Settings>]>({
-				action: actionStore.getActionById(ev.context) as KeyAction,
+				action: actionStore.getActionById(ev.context) as KeyAction<Settings>,
 				type: "propertyInspectorDidAppear",
 			});
 		});
@@ -1063,7 +1064,7 @@ describe("actions", () => {
 			// Assert.
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[PropertyInspectorDidDisappearEvent<Settings>]>({
-				action: actionStore.getActionById(ev.context) as KeyAction,
+				action: actionStore.getActionById(ev.context) as KeyAction<Settings>,
 				type: "propertyInspectorDidDisappear",
 			});
 		});
@@ -1114,7 +1115,7 @@ describe("actions", () => {
 			// Assert.
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[TitleParametersDidChangeEvent<Settings>]>({
-				action: actionStore.getActionById(ev.context) as KeyAction,
+				action: actionStore.getActionById(ev.context) as KeyAction<Settings>,
 				payload: ev.payload,
 				type: "titleParametersDidChange",
 			});
@@ -1158,7 +1159,7 @@ describe("actions", () => {
 			// Assert.
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[TouchTapEvent<Settings>]>({
-				action: actionStore.getActionById(ev.context) as DialAction,
+				action: actionStore.getActionById(ev.context) as DialAction<Settings>,
 				payload: ev.payload,
 				type: "touchTap",
 			});
@@ -1201,7 +1202,7 @@ describe("actions", () => {
 			// Assert.
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[WillAppearEvent<Settings>]>({
-				action: actionStore.getActionById(ev.context) as KeyAction,
+				action: actionStore.getActionById(ev.context) as KeyAction<Settings>,
 				payload: ev.payload,
 				type: "willAppear",
 			});

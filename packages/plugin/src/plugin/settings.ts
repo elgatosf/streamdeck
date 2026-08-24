@@ -2,6 +2,7 @@ import type { IDisposable, JsonObject } from "@elgato/utils";
 import { randomUUID } from "node:crypto";
 
 import type { DidReceiveGlobalSettings, DidReceiveSettings } from "../api/index.js";
+import type { Action } from "./actions/action.js";
 import { actionConfig } from "./actions/config.js";
 import { actionStore } from "./actions/store.js";
 import { connection } from "./connection.js";
@@ -86,7 +87,7 @@ export const settings = {
 				return;
 			}
 
-			const action = actionStore.getActionById(ev.context);
+			const action = actionStore.getActionById(ev.context) as Action<T> | undefined;
 			if (action) {
 				listener(new ActionEvent(action, ev));
 			}
