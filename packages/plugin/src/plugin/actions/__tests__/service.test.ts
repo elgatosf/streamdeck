@@ -797,7 +797,7 @@ describe("actions", () => {
 			// Assert.
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[DialRotateEvent<Settings>]>({
-				action: actionStore.getActionById<JsonObject>(ev.context) as DialAction<Settings>,
+				action: actionStore.getActionById(ev.context) as DialAction<Settings>,
 				payload: ev.payload,
 				type: "dialRotate",
 			});
