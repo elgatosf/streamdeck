@@ -115,9 +115,9 @@ export const streamDeck = {
 	 * Connects the plugin to the Stream Deck.
 	 * @returns A promise resolved when a connection has been established.
 	 */
-	connect(): Promise<void> {
+	async connect(): Promise<void> {
 		validateSettingsBehavior();
-		return connection.connect();
+		await connection.connect();
 	},
 };
 
