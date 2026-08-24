@@ -12,12 +12,12 @@ import { requiresVersion } from "./validation.js";
 
 export const settings = {
 	/**
-	 * Determines the behavior of when `onDidReceiveSettings` is fired.
+	 * Determines the behavior of when `onDidReceiveSettings` and `onDidReceiveGlobalSettings` is fired.
 	 *
-	 * - `false` (default) — `onDidReceiveSettings` is only fired after the settings were updated
-	 * within the property inspector.
-	 * - `true` — `onDidReceiveSettings` is fired after the settings were updated within the property
-	 * inspector, and after calling `action.getSettings()`.
+	 * - `false` (default) — `onDidReceiveSettings` and `onDidReceiveGlobalSettings` are only fired
+	 * after the settings were updated within the property inspector.
+	 * - `true` — `onDidReceiveSettings` and `onDidReceiveGlobalSettings` are fired after the settings
+	 * were updated within the property inspector, and after calling `action.getSettings()`.
 	 *
 	 * This option replaces `useExperimentalMessageIdentifiers`, with inverted behavior.
 	 */
@@ -122,6 +122,6 @@ export const settings = {
  */
 export function validateSettingsBehavior(): never | void {
 	if (!settings.useLegacySettingsBehavior) {
-		requiresVersion(7.1, connection.version, "Recommended onDidReceiveSettings behavior");
+		requiresVersion(7.1, connection.version, "Recommended onDidReceiveSettings/onDidReceiveGlobalSettings behavior");
 	}
 }
