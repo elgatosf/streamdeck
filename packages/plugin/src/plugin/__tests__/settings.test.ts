@@ -8,6 +8,7 @@ import {
 	type GetGlobalSettings,
 	type SetGlobalSettings,
 } from "../../api/index.js";
+import type { Action } from "../actions/action.js";
 import { actionStore } from "../actions/store.js";
 import { connection } from "../connection.js";
 import { Device } from "../devices/device.js";
@@ -97,8 +98,9 @@ describe("settings", () => {
 		});
 	});
 
-	describe("receiving emits with useExperimentalMessageIdentifiers set to false", () => {
-		beforeAll(() => (settings.useExperimentalMessageIdentifiers = false));
+	describe("receiving emits with useLegacySettingsBehavior set to true", () => {
+		beforeAll(() => (settings.useLegacySettingsBehavior = true));
+		afterAll(() => (settings.useLegacySettingsBehavior = false));
 
 		/**
 		 * Asserts {@link onDidReceiveGlobalSettings} is invoked when `didReceiveGlobalSettings` is emitted.
@@ -170,7 +172,7 @@ describe("settings", () => {
 			// Assert (emit).
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[DidReceiveSettingsEvent<Settings>]>({
-				action: actionStore.getActionById(ev.context)!,
+				action: actionStore.getActionById(ev.context)! as Action<Settings>,
 				payload: ev.payload,
 				type: "didReceiveSettings",
 			});
@@ -184,9 +186,8 @@ describe("settings", () => {
 		});
 	});
 
-	describe("receiving does not emit with useExperimentalMessageIdentifiers set to true", () => {
-		beforeAll(() => (settings.useExperimentalMessageIdentifiers = true));
-		afterAll(() => (settings.useExperimentalMessageIdentifiers = false));
+	describe("receiving does not emit with useLegacySettingsBehavior set to false", () => {
+		beforeAll(() => (settings.useLegacySettingsBehavior = false));
 
 		test("didReceiveGlobalSettings", () => {
 			// Arrange.

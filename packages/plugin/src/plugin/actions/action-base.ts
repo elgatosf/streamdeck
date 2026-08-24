@@ -45,7 +45,7 @@ export class ActionBase<TSettings extends JsonObject> extends ActionContext {
 	 * @returns Promise containing the action instance's settings.
 	 */
 	public async getSettings(): Promise<TSettings> {
-		if (actionConfig.useExperimentalMessageIdentifiers) {
+		if (!actionConfig.useLegacySettingsBehavior) {
 			const cached = settingsCache.get(this.id);
 			if (cached !== undefined) {
 				logger.trace(
@@ -56,6 +56,7 @@ export class ActionBase<TSettings extends JsonObject> extends ActionContext {
 						settings: cached,
 					}),
 				);
+
 				return cached as TSettings;
 			}
 		}

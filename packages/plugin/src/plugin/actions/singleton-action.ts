@@ -68,7 +68,7 @@ export class SingletonAction<T extends JsonObject = JsonObject> {
 	public onDidReceiveResources?(ev: DidReceiveResourcesEvent<T>): Promise<void> | void;
 
 	/**
-	 * Occurs when the settings associated with an action instance are requested using {@link ActionBase.getSettings}, or when the settings were updated by the property inspector.
+	 * Occurs when the settings were updated within the property inspector.
 	 * @param ev Information about the event, including the source action and contextual payload information.
 	 */
 	public onDidReceiveSettings?(ev: DidReceiveSettingsEvent<T>): Promise<void> | void;

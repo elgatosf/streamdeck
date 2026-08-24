@@ -53,7 +53,6 @@ describe("Action", () => {
 
 	beforeAll(() => vi.spyOn(deviceStore, "getDeviceById").mockReturnValue(device));
 	afterEach(() => {
-		actionConfig.useExperimentalMessageIdentifiers = false;
 		settingsCache.delete(source.context);
 		vi.clearAllMocks();
 	});
@@ -75,14 +74,8 @@ describe("Action", () => {
 		expect(deviceStore.getDeviceById).toHaveBeenLastCalledWith(source.device);
 	});
 
-	describe("with useExperimentalMessageIdentifiers set to true", () => {
-		beforeEach(() => {
-			actionConfig.useExperimentalMessageIdentifiers = true;
-		});
-
-		afterAll(() => {
-			actionConfig.useExperimentalMessageIdentifiers = false;
-		});
+	describe("with useLegacySettingsBehavior set to false", () => {
+		beforeEach(() => (actionConfig.useLegacySettingsBehavior = false));
 
 		/**
 		 * Asserts {@link ActionBase.getSettings} returns cached settings when the cache is valid.
@@ -112,10 +105,9 @@ describe("Action", () => {
 		});
 	});
 
-	describe("with useExperimentalMessageIdentifiers set to false", () => {
-		beforeAll(() => {
-			actionConfig.useExperimentalMessageIdentifiers = false;
-		});
+	describe("with useLegacySettingsBehavior set to true", () => {
+		beforeAll(() => (actionConfig.useLegacySettingsBehavior = true));
+		afterAll(() => (actionConfig.useLegacySettingsBehavior = false));
 
 		/**
 		 * Asserts {@link ActionBase.getSettings} ignores cached settings when experimental message identifiers are disabled.
@@ -292,7 +284,7 @@ describe("Action", () => {
 
 	describe("sending", () => {
 		let action!: KeyAction<Settings>;
-		beforeAll(() => (action = new KeyAction(source)));
+		beforeAll(() => (action = new KeyAction(source as WillAppear<Settings>)));
 
 		/**
 		 * Asserts {@link ActionBase.setSettings} invalidates the settings cache.

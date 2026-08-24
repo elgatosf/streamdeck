@@ -3,7 +3,14 @@
  */
 export const actionConfig = {
 	/**
-	 * Determines whether settings requests should use message identifiers and action settings cache behavior.
+	 * Determines the behavior of when `onDidReceiveSettings` is fired.
+	 *
+	 * - `false` (default) — `onDidReceiveSettings` is only fired after the settings were updated
+	 * within the property inspector.
+	 * - `true` — `onDidReceiveSettings` is fired after the settings were updated within the property
+	 * inspector, and after calling `action.getSettings()`.
+	 *
+	 * This option replaces `useExperimentalMessageIdentifiers`, with inverted behavior.
 	 */
-	useExperimentalMessageIdentifiers: false,
+	useLegacySettingsBehavior: false,
 };

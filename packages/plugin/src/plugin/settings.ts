@@ -12,27 +12,32 @@ import { requiresVersion } from "./validation.js";
 
 export const settings = {
 	/**
-	 * Available from Stream Deck 7.1; determines whether message identifiers should be sent when getting
-	 * action-instance or global settings.
+	 * Determines the behavior of when `onDidReceiveSettings` is fired.
 	 *
-	 * When `true`, the did-receive events associated with settings are only emitted when the action-instance
-	 * or global settings are changed in the property inspector.
-	 * @returns The value.
+	 * - `false` (default) — `onDidReceiveSettings` is only fired after the settings were updated
+	 * within the property inspector.
+	 * - `true` — `onDidReceiveSettings` is fired after the settings were updated within the property
+	 * inspector, and after calling `action.getSettings()`.
+	 *
+	 * This option replaces `useExperimentalMessageIdentifiers`, with inverted behavior.
 	 */
-	get useExperimentalMessageIdentifiers(): boolean {
-		return actionConfig.useExperimentalMessageIdentifiers;
+	get useLegacySettingsBehavior(): boolean {
+		return actionConfig.useLegacySettingsBehavior;
 	},
 
 	/**
-	 * Available from Stream Deck 7.1; determines whether message identifiers should be sent when getting
-	 * action-instance or global settings.
+	 * Determines the behavior of when `onDidReceiveSettings` is fired.
 	 *
-	 * When `true`, the did-receive events associated with settings are only emitted when the action-instance
-	 * or global settings are changed in the property inspector.
+	 * - `false` (default) — `onDidReceiveSettings` is only fired after the settings were updated
+	 * within the property inspector.
+	 * - `true` — `onDidReceiveSettings` is fired after the settings were updated within the property
+	 * inspector, and after calling `action.getSettings()`.
+	 *
+	 * This option replaces `useExperimentalMessageIdentifiers`, with inverted behavior.
 	 */
-	set useExperimentalMessageIdentifiers(value: boolean) {
-		requiresVersion(7.1, connection.version, "Message identifiers");
-		actionConfig.useExperimentalMessageIdentifiers = value;
+	set useLegacySettingsBehavior(value: boolean) {
+		actionConfig.useLegacySettingsBehavior = value;
+		validateSettingsBehavior();
 	},
 
 	/**
@@ -52,8 +57,7 @@ export const settings = {
 	},
 
 	/**
-	 * Occurs when the global settings are requested, or when the the global settings were updated in
-	 * the property inspector.
+	 * Occurs when the global settings were updated within the property inspector.
 	 * @template T The type of settings associated with the action.
 	 * @param listener Function to be invoked when the event occurs.
 	 * @returns A disposable that removes the listener.
@@ -63,7 +67,7 @@ export const settings = {
 	): IDisposable => {
 		return connection.disposableOn("didReceiveGlobalSettings", (ev: DidReceiveGlobalSettings<T>) => {
 			// Do nothing when the global settings were requested.
-			if (settings.useExperimentalMessageIdentifiers && ev.id) {
+			if (!settings.useLegacySettingsBehavior && ev.id) {
 				return;
 			}
 
@@ -72,8 +76,7 @@ export const settings = {
 	},
 
 	/**
-	 * Occurs when the settings associated with an action instance are requested, or when the the settings
-	 * were updated in the property inspector.
+	 * Occurs when the settings, associated with an action, were updated within the property inspector.
 	 * @template T The type of settings associated with the action.
 	 * @param listener Function to be invoked when the event occurs.
 	 * @returns A disposable that removes the listener.
@@ -83,7 +86,7 @@ export const settings = {
 	): IDisposable => {
 		return connection.disposableOn("didReceiveSettings", (ev: DidReceiveSettings<T>) => {
 			// Do nothing when the action's settings were requested.
-			if (settings.useExperimentalMessageIdentifiers && ev.id) {
+			if (!settings.useLegacySettingsBehavior && ev.id) {
 				return;
 			}
 
@@ -112,3 +115,13 @@ export const settings = {
 		});
 	},
 };
+
+/**
+ * Validates the settings behavior is compatible with the Stream Deck version, and the minimum
+ * version defined within the manifest.
+ */
+export function validateSettingsBehavior(): never | void {
+	if (!settings.useLegacySettingsBehavior) {
+		requiresVersion(7.1, connection.version, "Recommended onDidReceiveSettings behavior");
+	}
+}
