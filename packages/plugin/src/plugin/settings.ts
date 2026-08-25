@@ -18,7 +18,8 @@ export const settings = {
 	 * - `false` (default) — `onDidReceiveSettings` and `onDidReceiveGlobalSettings` are only fired
 	 * after the settings were updated within the property inspector.
 	 * - `true` — `onDidReceiveSettings` and `onDidReceiveGlobalSettings` are fired after the settings
-	 * were updated within the property inspector, and after calling `action.getSettings()`.
+	 * were updated within the property inspector, and after calling `action.getSettings()` and
+	 * `streamDeck.settings.getGlobalSettings()` respectively.
 	 *
 	 * This option replaces `useExperimentalMessageIdentifiers`, with inverted behavior.
 	 */
@@ -31,8 +32,9 @@ export const settings = {
 	 *
 	 * - `false` (default) — `onDidReceiveSettings` is only fired after the settings were updated
 	 * within the property inspector.
-	 * - `true` — `onDidReceiveSettings` is fired after the settings were updated within the property
-	 * inspector, and after calling `action.getSettings()`.
+	 * - `true` — `onDidReceiveSettings` and `onDidReceiveGlobalSettings` are fired after the settings
+	 * were updated within the property inspector, and after calling `action.getSettings()` and
+	 * `streamDeck.settings.getGlobalSettings()` respectively.
 	 *
 	 * This option replaces `useExperimentalMessageIdentifiers`, with inverted behavior.
 	 */
