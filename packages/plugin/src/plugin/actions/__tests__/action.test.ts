@@ -110,7 +110,7 @@ describe("Action", () => {
 		afterAll(() => (actionConfig.useLegacySettingsBehavior = false));
 
 		/**
-		 * Asserts {@link ActionBase.getSettings} ignores cached settings when experimental message identifiers are disabled.
+		 * Asserts {@link ActionBase.getSettings} ignores cached settings when legacy settings behavior is enabled.
 		 */
 		it("getSettings ignores cached settings", async () => {
 			// Arrange.

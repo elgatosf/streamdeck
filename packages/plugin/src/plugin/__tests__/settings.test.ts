@@ -9,6 +9,7 @@ import {
 	type SetGlobalSettings,
 } from "../../api/index.js";
 import type { Action } from "../actions/action.js";
+import { settingsCache } from "../actions/cache.js";
 import { actionStore } from "../actions/store.js";
 import { connection } from "../connection.js";
 import { Device } from "../devices/device.js";
@@ -95,6 +96,45 @@ describe("settings", () => {
 					name: "Elgato",
 				},
 			});
+		});
+	});
+
+	describe("useLegacySettingsBehavior", () => {
+		/**
+		 * Asserts that switching useLegacySettingsBehavior clears the settings cache.
+		 */
+		it("clears settings cache when switching modes", () => {
+			// Arrange.
+			const testContext = "cache-clear-test-context";
+			settings.useLegacySettingsBehavior = false;
+			settingsCache.set(testContext, { name: "Cached" });
+			expect(settingsCache.get(testContext)).toBeDefined();
+
+			// Act.
+			settings.useLegacySettingsBehavior = true;
+
+			// Assert.
+			expect(settingsCache.get(testContext)).toBeUndefined();
+
+			// Cleanup.
+			settings.useLegacySettingsBehavior = false;
+		});
+
+		/**
+		 * Asserts that switching useLegacySettingsBehavior back to false also clears the cache.
+		 */
+		it("clears settings cache when switching from true to false", () => {
+			// Arrange.
+			const testContext = "cache-clear-test-context-2";
+			settings.useLegacySettingsBehavior = true;
+			settingsCache.set(testContext, { name: "Cached" });
+			expect(settingsCache.get(testContext)).toBeDefined();
+
+			// Act.
+			settings.useLegacySettingsBehavior = false;
+
+			// Assert.
+			expect(settingsCache.get(testContext)).toBeUndefined();
 		});
 	});
 

@@ -69,6 +69,8 @@ export class SingletonAction<T extends JsonObject = JsonObject> {
 
 	/**
 	 * Occurs when the settings were updated within the property inspector.
+	 *
+	 * When `streamDeck.settings.useLegacySettingsBehavior` is `true`, also fires after calling `action.getSettings()`.
 	 * @param ev Information about the event, including the source action and contextual payload information.
 	 */
 	public onDidReceiveSettings?(ev: DidReceiveSettingsEvent<T>): Promise<void> | void;

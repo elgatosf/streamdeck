@@ -653,6 +653,65 @@ describe("actions", () => {
 			connection.emit("willDisappear", willDisappear);
 			expect(settingsCache.get(context)).toBeUndefined();
 		});
+
+		/**
+		 * Asserts settings cache is not updated when legacy settings behavior is enabled.
+		 */
+		it("does not update settings cache when useLegacySettingsBehavior is true", () => {
+			// Arrange.
+			actionConfig.useLegacySettingsBehavior = true;
+			const context = "cache-skip-context";
+			settingsCache.delete(context);
+
+			const willAppear = {
+				action: "com.elgato.test.key",
+				context,
+				device: "device123",
+				event: "willAppear",
+				payload: {
+					controller: "Keypad",
+					coordinates: {
+						column: 1,
+						row: 1,
+					},
+					isInMultiAction: false,
+					resources: {},
+					settings: {
+						name: "FromAppear",
+					},
+				},
+			} satisfies WillAppear<Settings>;
+
+			const didReceiveSettings = {
+				action: "com.elgato.test.key",
+				context,
+				device: "device123",
+				event: "didReceiveSettings",
+				payload: {
+					controller: "Keypad",
+					coordinates: {
+						column: 1,
+						row: 1,
+					},
+					isInMultiAction: false,
+					resources: {},
+					settings: {
+						name: "Updated",
+					},
+				},
+			} satisfies DidReceiveSettings<Settings>;
+
+			// Act, assert (cache should NOT be set on appear).
+			connection.emit("willAppear", willAppear);
+			expect(settingsCache.get(context)).toBeUndefined();
+
+			// Act, assert (cache should NOT be updated on settings event).
+			connection.emit("didReceiveSettings", didReceiveSettings);
+			expect(settingsCache.get(context)).toBeUndefined();
+
+			// Cleanup.
+			actionConfig.useLegacySettingsBehavior = false;
+		});
 	});
 
 	describe("registering an action", () => {
