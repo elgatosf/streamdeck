@@ -3,6 +3,7 @@ import { randomUUID } from "node:crypto";
 
 import type { DidReceiveGlobalSettings, DidReceiveSettings } from "../api/index.js";
 import type { Action } from "./actions/action.js";
+import { settingsCache } from "./actions/cache.js";
 import { actionConfig } from "./actions/config.js";
 import { actionStore } from "./actions/store.js";
 import { connection } from "./connection.js";
@@ -37,10 +38,15 @@ export const settings = {
 	 */
 	set useLegacySettingsBehavior(value: boolean) {
 		const prev = actionConfig.useLegacySettingsBehavior;
+		if (prev === value) {
+			return;
+		}
 
 		try {
 			actionConfig.useLegacySettingsBehavior = value;
 			validateSettingsBehavior();
+
+			settingsCache.clear();
 		} catch (err) {
 			actionConfig.useLegacySettingsBehavior = prev;
 			throw err;
