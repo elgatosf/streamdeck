@@ -57,14 +57,14 @@ class ActionService extends ReadOnlyActionStore {
 			const action = this.#createAction(ev);
 
 			actionStore.set(action);
-			if (actionConfig.useExperimentalMessageIdentifiers) {
+			if (!actionConfig.useLegacySettingsBehavior) {
 				settingsCache.set(ev.context, ev.payload.settings);
 			}
 		});
 
 		// Update the settings cache when settings are received.
 		connection.prependListener("didReceiveSettings", (ev) => {
-			if (actionConfig.useExperimentalMessageIdentifiers) {
+			if (!actionConfig.useLegacySettingsBehavior) {
 				settingsCache.set(ev.context, ev.payload.settings);
 			}
 		});

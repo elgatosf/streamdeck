@@ -3,7 +3,15 @@
  */
 export const actionConfig = {
 	/**
-	 * Determines whether settings requests should use message identifiers and action settings cache behavior.
+	 * Determines the behavior of when `onDidReceiveSettings` and `onDidReceiveGlobalSettings` are fired.
+	 *
+	 * - `false` (default) — `onDidReceiveSettings` and `onDidReceiveGlobalSettings` are only fired
+	 * after the settings were updated within the property inspector.
+	 * - `true` — `onDidReceiveSettings` and `onDidReceiveGlobalSettings` are fired after the settings
+	 * were updated within the property inspector, and after calling `action.getSettings()` and
+	 * `streamDeck.settings.getGlobalSettings()` respectively.
+	 *
+	 * This option replaces `useExperimentalMessageIdentifiers`, with inverted behavior.
 	 */
-	useExperimentalMessageIdentifiers: false,
+	useLegacySettingsBehavior: false,
 };

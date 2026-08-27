@@ -8,7 +8,7 @@ import { deviceService, type DeviceService } from "./devices/service.js";
 import { fileSystemLocaleProvider } from "./i18n.js";
 import { logger } from "./logging/index.js";
 import * as profiles from "./profiles.js";
-import { settings } from "./settings.js";
+import { settings, validateSettingsBehavior } from "./settings.js";
 import * as system from "./system.js";
 import { ui, type UIController } from "./ui.js";
 
@@ -113,10 +113,10 @@ export const streamDeck = {
 
 	/**
 	 * Connects the plugin to the Stream Deck.
-	 * @returns A promise resolved when a connection has been established.
 	 */
-	connect(): Promise<void> {
-		return connection.connect();
+	async connect(): Promise<void> {
+		validateSettingsBehavior();
+		await connection.connect();
 	},
 };
 
