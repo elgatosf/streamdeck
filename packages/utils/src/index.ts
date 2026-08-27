@@ -3,6 +3,7 @@ export * from "./event-emitter.js";
 export * from "./explicit-resource-management/index.js";
 export * from "./json.js";
 export * from "./lazy.js";
+export { Mutex } from "./mutex.js";
 export { freeze } from "./objects/freeze.js";
 export { get } from "./objects/get.js";
 export { set } from "./objects/set.js";
