@@ -114,15 +114,29 @@ export class ActionBase<TSettings extends JsonObject> extends ActionContext {
 
 	/**
 	 * Sets the settings associated with this action instance.
-	 * @param value Settings to persist.
-	 * @returns `Promise` resolved when the settings are sent to Stream Deck.
+	 * @param settings The new settings.
 	 */
-	public setSettings(value: TSettings): Promise<void> {
+	public setSettings(settings: TSettings): Promise<void>;
+	/**
+	 * Sets the settings associated with this action instance.
+	 * @param update Function used to update the current settings.
+	 */
+	public setSettings(update: (current: TSettings) => Promise<TSettings> | TSettings): Promise<void>;
+	/**
+	 * Sets the settings associated with this action instance.
+	 * @param settingsOrUpdate The new settings or function used to update the current settings.
+	 */
+	public async setSettings(
+		settingsOrUpdate: TSettings | ((current: TSettings) => Promise<TSettings> | TSettings),
+	): Promise<void> {
+		const payload =
+			typeof settingsOrUpdate === "function" ? await settingsOrUpdate(await this.getSettings()) : settingsOrUpdate;
+
 		settingsCache.delete(this.id);
-		return connection.send({
+		await connection.send({
 			event: "setSettings",
 			context: this.id,
-			payload: value,
+			payload,
 		});
 	}
 

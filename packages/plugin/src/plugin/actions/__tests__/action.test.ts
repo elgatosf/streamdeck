@@ -264,6 +264,7 @@ describe("Action", () => {
 
 		expect(action.isKey()).toBe(true);
 		expect(action.isDial()).toBe(false);
+		expect(action.isNeoInfobar()).toBe(false);
 	});
 
 	/**
@@ -322,6 +323,73 @@ describe("Action", () => {
 					name: "Elgato",
 				},
 			});
+		});
+
+		/**
+		 * Asserts {@link ActionBase.setSettings} with a synchronous update function uses cached settings and sends updated settings.
+		 */
+		it("setSettings with sync update function", async () => {
+			// Arrange.
+			const action = new ActionBase(source);
+			settingsCache.set(action.id, { name: "Original" });
+
+			// Act.
+			await action.setSettings((current) => ({
+				...current,
+				name: `${current.name} Updated`,
+			}));
+
+			// Assert (only setSettings command sent, getSettings used cache).
+			expect(connection.send).toHaveBeenCalledTimes(1);
+			expect(connection.send).toHaveBeenLastCalledWith<[SetSettings]>({
+				context: action.id,
+				event: "setSettings",
+				payload: { name: "Original Updated" },
+			});
+		});
+
+		/**
+		 * Asserts {@link ActionBase.setSettings} with an async update function uses cached settings and sends updated settings.
+		 */
+		it("setSettings with async update function", async () => {
+			// Arrange.
+			const action = new ActionBase(source);
+			settingsCache.set(action.id, { name: "Current" });
+
+			// Act.
+			await action.setSettings(async (current) => {
+				await Promise.resolve(); // Simulate async work.
+				return {
+					...current,
+					name: `${current.name} Async`,
+				};
+			});
+
+			// Assert (only setSettings command sent, getSettings used cache).
+			expect(connection.send).toHaveBeenCalledTimes(1);
+			expect(connection.send).toHaveBeenLastCalledWith<[SetSettings]>({
+				context: action.id,
+				event: "setSettings",
+				payload: { name: "Current Async" },
+			});
+		});
+
+		/**
+		 * Asserts {@link ActionBase.setSettings} with an update function invalidates the settings cache.
+		 */
+		it("setSettings with update function invalidates cache", async () => {
+			// Arrange.
+			const action = new ActionBase(source);
+			settingsCache.set(action.id, { name: "Cached" });
+
+			// Act.
+			await action.setSettings((current) => ({
+				...current,
+				name: "Updated via function",
+			}));
+
+			// Assert.
+			expect(settingsCache.get(action.id)).toBeUndefined();
 		});
 
 		/**
