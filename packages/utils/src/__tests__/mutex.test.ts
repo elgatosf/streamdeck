@@ -118,7 +118,7 @@ describe("Mutex", () => {
 			await expect(
 				mutex.run(() => {
 					throw new Error("Test error");
-				})
+				}),
 			).rejects.toThrow("Test error");
 
 			// Assert - lock should be released.
@@ -136,7 +136,7 @@ describe("Mutex", () => {
 				mutex.run(async () => {
 					await Promise.resolve();
 					throw new Error("Async error");
-				})
+				}),
 			).rejects.toThrow("Async error");
 
 			// Assert - lock should be released.
