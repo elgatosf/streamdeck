@@ -393,6 +393,45 @@ describe("Action", () => {
 		});
 
 		/**
+		 * Asserts {@link ActionBase.setSettings} with concurrent update functions serializes updates correctly.
+		 */
+		it("setSettings with concurrent update functions serializes updates", async () => {
+			// Arrange.
+			const action = new ActionBase(source);
+			const callOrder: number[] = [];
+			let callCount = 0;
+
+			// Mock send to track call order and repopulate cache to simulate Stream Deck response.
+			vi.mocked(connection.send).mockImplementation(async (msg) => {
+				if (msg.event === "setSettings") {
+					callOrder.push(++callCount);
+					// Simulate Stream Deck updating the cache with the new settings.
+					settingsCache.set(action.id, msg.payload as JsonObject);
+				}
+			});
+
+			settingsCache.set(action.id, { count: 0 });
+
+			// Act - two concurrent increments should both succeed sequentially.
+			await Promise.all([
+				action.setSettings((current) => ({ count: (current as { count: number }).count + 1 })),
+				action.setSettings((current) => ({ count: (current as { count: number }).count + 1 })),
+			]);
+
+			// Assert - both updates should have been serialized (mutex ensures sequential execution).
+			expect(connection.send).toHaveBeenCalledTimes(2);
+			expect(callOrder).toEqual([1, 2]); // Sequential, not interleaved.
+
+			// Verify the payloads show incremental values (0→1 then 1→2), not both 0→1.
+			const calls = vi.mocked(connection.send).mock.calls;
+			const payloads = calls
+				.filter((call) => call[0].event === "setSettings")
+				.map((call) => (call[0] as SetSettings).payload);
+
+			expect(payloads).toEqual([{ count: 1 }, { count: 2 }]);
+		});
+
+		/**
 		 * Asserts {@link ActionBase.showAlert} forwards the command to the {@link connection}.
 		 */
 		it("showAlert", async () => {

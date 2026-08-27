@@ -1,4 +1,4 @@
-import { type EventArgs, type JsonObject, withResolvers } from "@elgato/utils";
+import { type EventArgs, type JsonObject, Mutex, withResolvers } from "@elgato/utils";
 import { randomUUID } from "node:crypto";
 
 import type {
@@ -20,6 +20,8 @@ import type { KeyAction } from "./key.js";
 import type { NeoInfobarAction } from "./neo-infobar.js";
 
 const REQUEST_TIMEOUT = 15 * 1000; // 15s
+
+const setSettingsMutex = new Mutex();
 
 /**
  * Provides a contextualized instance of an action, allowing for direct communication with the Stream Deck.
@@ -115,28 +117,39 @@ export class ActionBase<TSettings extends JsonObject> extends ActionContext {
 	/**
 	 * Sets the settings associated with this action instance.
 	 * @param settings The new settings.
+	 * @returns Promise that resolves when the settings are updated.
 	 */
 	public setSettings(settings: TSettings): Promise<void>;
 	/**
 	 * Sets the settings associated with this action instance.
 	 * @param update Function used to update the current settings.
+	 * @returns Promise that resolves when the settings are updated.
 	 */
 	public setSettings(update: (current: TSettings) => Promise<TSettings> | TSettings): Promise<void>;
 	/**
 	 * Sets the settings associated with this action instance.
 	 * @param settingsOrUpdate The new settings or function used to update the current settings.
+	 * @returns Promise that resolves when the settings are updated.
 	 */
 	public async setSettings(
 		settingsOrUpdate: TSettings | ((current: TSettings) => Promise<TSettings> | TSettings),
 	): Promise<void> {
-		const payload =
-			typeof settingsOrUpdate === "function" ? await settingsOrUpdate(await this.getSettings()) : settingsOrUpdate;
+		if (typeof settingsOrUpdate === "function") {
+			await setSettingsMutex.run(async () => {
+				const currSettings = await this.getSettings();
+				const newSettings = await settingsOrUpdate(currSettings);
+
+				await this.setSettings(newSettings);
+			});
+
+			return;
+		}
 
 		settingsCache.delete(this.id);
 		await connection.send({
 			event: "setSettings",
 			context: this.id,
-			payload,
+			payload: settingsOrUpdate,
 		});
 	}
 
