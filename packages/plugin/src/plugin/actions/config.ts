@@ -3,7 +3,7 @@
  */
 export const actionConfig = {
 	/**
-	 * Determines the behavior of when `onDidReceiveSettings` and `onDidReceiveGlobalSettings` is fired.
+	 * Determines the behavior of when `onDidReceiveSettings` and `onDidReceiveGlobalSettings` are fired.
 	 *
 	 * - `false` (default) — `onDidReceiveSettings` and `onDidReceiveGlobalSettings` are only fired
 	 * after the settings were updated within the property inspector.

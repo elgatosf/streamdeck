@@ -13,7 +13,7 @@ import { requiresVersion } from "./validation.js";
 
 export const settings = {
 	/**
-	 * Determines the behavior of when `onDidReceiveSettings` and `onDidReceiveGlobalSettings` is fired.
+	 * Determines the behavior of when `onDidReceiveSettings` and `onDidReceiveGlobalSettings` are fired.
 	 *
 	 * - `false` (default) — `onDidReceiveSettings` and `onDidReceiveGlobalSettings` are only fired
 	 * after the settings were updated within the property inspector.
@@ -28,7 +28,7 @@ export const settings = {
 	},
 
 	/**
-	 * Determines the behavior of when `onDidReceiveSettings` and `onDidReceiveGlobalSettings` is fired.
+	 * Determines the behavior of when `onDidReceiveSettings` and `onDidReceiveGlobalSettings` are fired.
 	 *
 	 * - `false` (default) — `onDidReceiveSettings` and `onDidReceiveGlobalSettings` are only fired
 	 * after the settings were updated within the property inspector.
@@ -73,6 +73,9 @@ export const settings = {
 
 	/**
 	 * Occurs when the global settings were updated within the property inspector.
+	 *
+	 * When `streamDeck.settings.useLegacySettingsBehavior` is set to `true`, this event will also
+	 * occur when calling `getGlobalSettings()`.
 	 * @template T The type of settings associated with the action.
 	 * @param listener Function to be invoked when the event occurs.
 	 * @returns A disposable that removes the listener.
@@ -92,6 +95,9 @@ export const settings = {
 
 	/**
 	 * Occurs when the settings, associated with an action, were updated within the property inspector.
+	 *
+	 * When `streamDeck.settings.useLegacySettingsBehavior` is set to `true`, this event will also
+	 * occur when calling `getSettings()` on an action.
 	 * @template T The type of settings associated with the action.
 	 * @param listener Function to be invoked when the event occurs.
 	 * @returns A disposable that removes the listener.
@@ -137,6 +143,6 @@ export const settings = {
  */
 export function validateSettingsBehavior(): never | void {
 	if (!settings.useLegacySettingsBehavior) {
-		requiresVersion(7.1, connection.version, "Recommended onDidReceiveSettings/onDidReceiveGlobalSettings behavior");
+		requiresVersion(7.1, connection.version, "Default onDidReceiveSettings/onDidReceiveGlobalSettings behavior");
 	}
 }
