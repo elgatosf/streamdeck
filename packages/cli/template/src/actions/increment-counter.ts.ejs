@@ -11,7 +11,9 @@ export class IncrementCounter extends SingletonAction<CounterSettings> {
 	 * we're setting the title to the "count" that is incremented in {@link IncrementCounter.onKeyDown}.
 	 */
 	override onWillAppear(ev: WillAppearEvent<CounterSettings>): void | Promise<void> {
-		return ev.action.setTitle(`${ev.payload.settings.count ?? 0}`);
+		if (ev.action.isKey() || ev.action.isDial()) {
+			return ev.action.setTitle(`${ev.payload.settings.count ?? 0}`);
+		}
 	}
 
 	/**
