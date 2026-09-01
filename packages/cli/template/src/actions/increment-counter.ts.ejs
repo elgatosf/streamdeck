@@ -10,8 +10,10 @@ export class IncrementCounter extends SingletonAction<CounterSettings> {
 	 * starting up, or the user navigating between pages / folders etc.. There is also an inverse of this event in the form of {@link streamDeck.client.onWillDisappear}. In this example,
 	 * we're setting the title to the "count" that is incremented in {@link IncrementCounter.onKeyDown}.
 	 */
-	override onWillAppear(ev: WillAppearEvent<CounterSettings>): void | Promise<void> {
-		return ev.action.setTitle(`${ev.payload.settings.count ?? 0}`);
+	override async onWillAppear(ev: WillAppearEvent<CounterSettings>): Promise<void> {
+		if (ev.action.isKey() || ev.action.isDial()) {
+			await ev.action.setTitle(`${ev.payload.settings.count ?? 0}`);
+		}
 	}
 
 	/**
