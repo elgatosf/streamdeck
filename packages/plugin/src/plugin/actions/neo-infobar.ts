@@ -22,7 +22,7 @@ export class NeoInfobarAction<TSettings extends JsonObject> extends ActionBase<T
 		super(source);
 
 		if (source.payload.controller !== "Neo") {
-			throw new Error("Unable to create InfobarAction; source event controller is not 'Infobar'");
+			throw new Error("Unable to create NeoInfobarAction; source event controller is not 'Neo'");
 		}
 
 		this.#coordinates = Object.freeze(source.payload.coordinates);
