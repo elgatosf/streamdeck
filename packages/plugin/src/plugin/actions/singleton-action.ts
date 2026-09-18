@@ -18,7 +18,6 @@ import type {
 } from "../events/index.js";
 import type streamDeck from "../index.js";
 import type { Action } from "../index.js";
-import type { ActionBase } from "./action-base.js";
 import { actionStore } from "./store.js";
 
 /**
@@ -105,13 +104,13 @@ export class SingletonAction<T extends JsonObject = JsonObject> {
 	public onPropertyInspectorDidDisappear?(ev: PropertyInspectorDidDisappearEvent<T>): Promise<void> | void;
 
 	/**
-	 * Occurs when a message was sent to the plugin _from_ the property inspector. The plugin can also send messages _to_ the property inspector using {@link ActionBase.sendToPropertyInspector}.
+	 * Occurs when a message was sent to the plugin _from_ the property inspector. The plugin can also send messages _to_ the property inspector using {@link streamDeck.ui.sendToPropertyInspector}.
 	 * @param ev Information about the event, including the source action and contextual payload information.
 	 */
 	public onSendToPlugin?(ev: SendToPluginEvent<JsonValue, T>): Promise<void> | void;
 
 	/**
-	 * Occurs when the user updates an action's title settings in the Stream Deck application. See also {@link ActionBase.setTitle}.
+	 * Occurs when the user updates an action's title settings in the Stream Deck application.
 	 * @param ev Information about the event, including the source action and contextual payload information.
 	 */
 	public onTitleParametersDidChange?(ev: TitleParametersDidChangeEvent<T>): Promise<void> | void;

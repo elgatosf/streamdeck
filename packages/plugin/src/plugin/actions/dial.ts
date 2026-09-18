@@ -38,7 +38,7 @@ export class DialAction<TSettings extends JsonObject> extends ActionBase<TSettin
 
 	/**
 	 * Sets the feedback for the current layout associated with this action instance, allowing for the visual items to be updated. Layouts are a powerful way to provide dynamic information
-	 * to users, and can be assigned in the manifest, or dynamically via {@link ActionBase.setFeedbackLayout}.
+	 * to users, and can be assigned in the manifest, or dynamically via {@link DialAction.setFeedbackLayout}.
 	 *
 	 * The {@link feedback} payload defines which items within the layout will be updated, and are identified by their property name (defined as the `key` in the layout's definition).
 	 * The values can either by a complete new definition, a `string` for layout item types of `text` and `pixmap`, or a `number` for layout item types of `bar` and `gbar`.

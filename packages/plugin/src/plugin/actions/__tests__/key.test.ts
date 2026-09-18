@@ -6,6 +6,7 @@ import {
 	type SetImage,
 	type SetState,
 	type SetTitle,
+	type ShowAlert,
 	type ShowOk,
 	Target,
 	type WillAppear,
@@ -240,6 +241,21 @@ describe("KeyAction", () => {
 					target: Target.Software,
 					title: "This is a test",
 				},
+			});
+		});
+
+		/**
+		 * Asserts `showAlert` forwards the command to the {@link connection}.
+		 */
+		it("showAlert", async () => {
+			// Arrange, act.
+			await action.showAlert();
+
+			// Assert.
+			expect(connection.send).toHaveBeenCalledTimes(1);
+			expect(connection.send).toHaveBeenCalledWith<[ShowAlert]>({
+				context: action.id,
+				event: "showAlert",
 			});
 		});
 

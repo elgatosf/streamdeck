@@ -2,7 +2,7 @@ import type { JsonObject } from "@elgato/utils";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, test, vi } from "vitest";
 
 import type { Settings } from "../../../api/__mocks__/events.js";
-import { DeviceType, type GetSettings, type SetSettings, type ShowAlert, type WillAppear } from "../../../api/index.js";
+import { DeviceType, type GetSettings, type SetSettings, type WillAppear } from "../../../api/index.js";
 import { connection } from "../../connection.js";
 import { Device } from "../../devices/device.js";
 import { deviceStore } from "../../devices/store.js";
@@ -341,21 +341,6 @@ describe("Action", () => {
 				payload: {
 					name: "Elgato",
 				},
-			});
-		});
-
-		/**
-		 * Asserts {@link ActionBase.showAlert} forwards the command to the {@link connection}.
-		 */
-		it("showAlert", async () => {
-			// Arrange, act.
-			await action.showAlert();
-
-			// Assert.
-			expect(connection.send).toHaveBeenCalledTimes(1);
-			expect(connection.send).toHaveBeenCalledWith<[ShowAlert]>({
-				context: action.id,
-				event: "showAlert",
 			});
 		});
 	});

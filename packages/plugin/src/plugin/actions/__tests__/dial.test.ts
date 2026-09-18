@@ -7,6 +7,7 @@ import {
 	type SetFeedbackLayout,
 	type SetImage,
 	type SetTriggerDescription,
+	type ShowAlert,
 	type WillAppear,
 } from "../../../api/index.js";
 import { connection } from "../../connection.js";
@@ -154,7 +155,7 @@ describe("DialAction", () => {
 		/**
 		 * Asserts {@link DialAction.setFeedbackLayout} forwards the command to the {@link connection}.
 		 */
-		it("Sends setFeedbackLayout", async () => {
+		it("setFeedbackLayout", async () => {
 			// Arrange, act.
 			await action.setFeedbackLayout("CustomLayout.json");
 
@@ -246,6 +247,21 @@ describe("DialAction", () => {
 					rotate: "Rotate",
 					touch: "Touch",
 				},
+			});
+		});
+
+		/**
+		 * Asserts `showAlert` forwards the command to the {@link connection}.
+		 */
+		it("showAlert", async () => {
+			// Arrange, act.
+			await action.showAlert();
+
+			// Assert.
+			expect(connection.send).toHaveBeenCalledTimes(1);
+			expect(connection.send).toHaveBeenCalledWith<[ShowAlert]>({
+				context: action.id,
+				event: "showAlert",
 			});
 		});
 	});
