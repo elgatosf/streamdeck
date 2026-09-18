@@ -12,6 +12,7 @@ import { settingsCache } from "../cache.js";
 import { actionConfig } from "../config.js";
 import { DialAction } from "../dial.js";
 import { KeyAction } from "../key.js";
+import { NeoInfobarAction } from "../neo-infobar.js";
 
 vi.mock("../../devices/store.js");
 vi.mock("../../logging/index.js");
@@ -264,6 +265,7 @@ describe("Action", () => {
 
 		expect(action.isKey()).toBe(true);
 		expect(action.isDial()).toBe(false);
+		expect(action.isNeoInfobar()).toBe(false);
 	});
 
 	/**
@@ -280,6 +282,24 @@ describe("Action", () => {
 
 		expect(action.isDial()).toBe(true);
 		expect(action.isKey()).toBe(false);
+		expect(action.isNeoInfobar()).toBe(false);
+	});
+
+	/**
+	 * Asserts type-checking when the controller is "Neo".
+	 */
+	test("neo type assertion", () => {
+		const action = new NeoInfobarAction({
+			...source,
+			payload: {
+				...source.payload,
+				controller: "Neo",
+			},
+		} as WillAppear<JsonObject>);
+
+		expect(action.isDial()).toBe(false);
+		expect(action.isKey()).toBe(false);
+		expect(action.isNeoInfobar()).toBe(true);
 	});
 
 	describe("sending", () => {
