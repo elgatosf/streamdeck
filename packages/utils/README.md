@@ -147,6 +147,29 @@ const lazy = new Lazy(() => "Hello world");
 lazy.value; // "Hello world";
 ```
 
+### `Mutex`
+
+A mutual exclusion lock that ensures only one asynchronous operation can access a protected resource at a time.
+
+```ts
+import { Mutex } from "@elgato/utils";
+
+const mutex = new Mutex();
+
+// Using run (recommended)
+await mutex.run(async () => {
+    await updateSharedResource();
+});
+
+// Using wait and release
+await mutex.wait();
+try {
+    await updateSharedResource();
+} finally {
+    mutex.release();
+}
+```
+
 ## Objects
 
 ### `get(source, path)`
