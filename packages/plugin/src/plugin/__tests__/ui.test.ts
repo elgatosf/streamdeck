@@ -8,6 +8,7 @@ import {
 	type PropertyInspectorDidDisappear,
 	type SendToPropertyInspector,
 } from "../../api/index.js";
+import type { Action } from "../actions/action.js";
 import { KeyAction } from "../actions/key.js";
 import { actionStore } from "../actions/store.js";
 import { connection } from "../connection.js";
@@ -64,7 +65,7 @@ describe("UIController", () => {
 		// Assert (emit).
 		expect(listener).toHaveBeenCalledTimes(1);
 		expect(listener).toHaveBeenCalledWith<[PropertyInspectorDidAppearEvent<Settings>]>({
-			action: actionStore.getActionById(ev.context)!,
+			action: actionStore.getActionById(ev.context) as Action<Settings>,
 			type: "propertyInspectorDidAppear",
 		});
 
@@ -96,7 +97,7 @@ describe("UIController", () => {
 		// Assert (emit).
 		expect(listener).toHaveBeenCalledTimes(1);
 		expect(listener).toHaveBeenCalledWith<[PropertyInspectorDidDisappearEvent<Settings>]>({
-			action: actionStore.getActionById(ev.context)!,
+			action: actionStore.getActionById(ev.context) as Action<Settings>,
 			type: "propertyInspectorDidDisappear",
 		});
 
@@ -130,7 +131,7 @@ describe("UIController", () => {
 		// Assert (emit).
 		expect(listener).toHaveBeenCalledTimes(1);
 		expect(listener).toHaveBeenCalledWith<[SendToPluginEvent<Settings, Settings>]>({
-			action: actionStore.getActionById(ev.context)!,
+			action: actionStore.getActionById(ev.context) as Action<Settings>,
 			payload: {
 				name: "Hello world",
 			},

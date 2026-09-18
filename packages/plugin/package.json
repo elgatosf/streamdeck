@@ -62,7 +62,7 @@
         "vitest-websocket-mock": "^0.5.0"
     },
     "dependencies": {
-        "@elgato/schemas": "^0.4.14",
+        "@elgato/schemas": "^0.5.0",
         "@elgato/utils": "workspace:*",
         "ws": "^8.19.0"
     }

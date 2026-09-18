@@ -1,6 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
 
-import type { Secrets } from "../../api/__mocks__/events.js";
 import type {
 	ApplicationDidLaunch,
 	ApplicationDidTerminate,
@@ -16,9 +15,7 @@ import {
 	DidReceiveDeepLinkEvent,
 	type SystemDidWakeUpEvent,
 } from "../events/index.js";
-import * as manifest from "../manifest.js";
 import {
-	getSecrets,
 	onApplicationDidLaunch,
 	onApplicationDidTerminate,
 	onDidReceiveDeepLink,
@@ -190,63 +187,6 @@ describe("system", () => {
 			payload: {
 				url: "https://www.elgato.com",
 			},
-		});
-	});
-
-	describe("getSecrets", () => {
-		it("requires SDKVersion 3 or higher", () => {
-			// Arrange.
-			vi.spyOn(manifest, "getSDKVersion").mockReturnValue(2); // Not okay
-			vi.spyOn(manifest, "getSoftwareMinimumVersion").mockReturnValue(new Version("6.9")); // Okay
-
-			// Act, assert.
-			expect(() => getSecrets()).toThrow(
-				`[ERR_NOT_SUPPORTED]: Secrets requires manifest SDK version 3 or higher, but found version 2; please update the "SDKVersion" in the plugin's manifest to 3 or higher.`,
-			);
-		});
-
-		it("requires Software.MinimumVersion 6.9 or higher", () => {
-			// Arrange.
-			vi.spyOn(manifest, "getSDKVersion").mockReturnValue(3); // Okay
-			vi.spyOn(manifest, "getSoftwareMinimumVersion").mockReturnValue(new Version("6.8")); // Not okay
-
-			// Act, assert.
-			expect(() => getSecrets()).toThrow(
-				`[ERR_NOT_SUPPORTED]: Secrets requires Stream Deck version 6.9 or higher; please update the "Software.MinimumVersion" in the plugin's manifest to "6.9" or higher.`,
-			);
-		});
-
-		it("getSecrets", async () => {
-			// Arrange, act (Command).
-			vi.spyOn(manifest, "getSDKVersion").mockReturnValue(3);
-			vi.spyOn(manifest, "getSoftwareMinimumVersion").mockReturnValue(new Version("6.9"));
-
-			const secrets = getSecrets<Secrets>();
-
-			// Assert (Command).
-			expect(connection.send).toHaveBeenCalledTimes(1);
-			expect(connection.send).toHaveBeenLastCalledWith({
-				event: "getSecrets",
-				context: connection.registrationParameters.pluginUUID,
-			});
-
-			await expect(Promise.race([secrets, false])).resolves.toBe(false);
-
-			// Act (Event).
-			connection.emit("didReceiveSecrets", {
-				event: "didReceiveSecrets",
-				payload: {
-					secrets: {
-						secret: "Elgato",
-					},
-				},
-			});
-			await secrets;
-
-			// Assert (Event).
-			await expect(secrets).resolves.toEqual({
-				secret: "Elgato",
-			} satisfies Secrets);
 		});
 	});
 });

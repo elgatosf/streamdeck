@@ -76,11 +76,6 @@ export type GetGlobalSettings = ContextualizedCommand<"getGlobalSettings"> & {
 };
 
 /**
- * Gets secrets associated with the plugin.
- */
-export type GetSecrets = ContextualizedCommand<"getSecrets">;
-
-/**
  * Sets the resources (files) associated with the action; these resources are embedded into the action
  * when it is exported, either individually, or as part of a profile.
  *
@@ -283,7 +278,6 @@ export type SendToPropertyInspector<TPayload extends JsonValue = JsonValue> = Co
 export type PluginCommand =
 	| GetGlobalSettings
 	| GetResources
-	| GetSecrets
 	| GetSettings
 	| LogMessage
 	| OpenUrl
