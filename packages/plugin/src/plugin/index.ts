@@ -17,7 +17,7 @@ export {
 	DeviceType,
 	Target,
 	type Bar,
-	type Controller, // Temp: until schemas are updated
+	type Controller,
 	type Coordinates,
 	type DeviceInfo,
 	type FeedbackPayload,
