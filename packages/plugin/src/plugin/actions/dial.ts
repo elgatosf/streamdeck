@@ -55,7 +55,7 @@ export class DialAction<TSettings extends JsonObject> extends ActionBase<TSettin
 
 	/**
 	 * Sets the layout associated with this action instance. The layout must be either a built-in layout identifier, or path to a local layout JSON file within the plugin's folder.
-	 * Use in conjunction with {@link ActionBase.setFeedback} to update the layout's current items' settings.
+	 * Use in conjunction with {@link DialAction.setFeedback} to update the layout's current items' settings.
 	 * @param layout Name of a pre-defined layout, or relative path to a custom one.
 	 * @returns `Promise` resolved when the new layout has been sent to Stream Deck.
 	 */
