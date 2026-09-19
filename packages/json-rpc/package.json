@@ -1,7 +1,7 @@
 {
-    "name": "@elgato/utils",
-    "version": "0.6.0",
-    "description": "Utilities used throughout the Elgato ecosystem.",
+    "name": "@elgato/json-rpc",
+    "version": "0.0.0",
+    "description": "",
     "type": "module",
     "files": [
         "./dist/"
@@ -22,21 +22,9 @@
             "types": "./dist/index.d.ts",
             "default": "./dist/index.js"
         },
-        "./i18n": {
-            "types": "./dist/i18n/index.d.ts",
-            "default": "./dist/i18n/index.js"
-        },
-        "./logging": {
-            "types": "./dist/logging/index.d.ts",
-            "default": "./dist/logging/index.js"
-        },
-        "./logging/*": {
-            "types": "./dist/logging/node/*.d.ts",
-            "default": "./dist/logging/node/*"
-        },
-        "./rpc": {
-            "types": "./dist/rpc/index.d.ts",
-            "default": "./dist/rpc/index.js"
+        "./spec": {
+            "types": "./dist/spec/index.d.ts",
+            "default": "./dist/spec/index.js"
         }
     },
     "prettier": "@elgato/prettier-config",
@@ -45,7 +33,8 @@
         "url": "git+https://github.com/elgatosf/streamdeck.git"
     },
     "keywords": [
-        "elgato"
+        "elgato",
+        "json-rpc"
     ],
     "author": {
         "name": "Elgato",
@@ -55,7 +44,7 @@
     "bugs": {
         "url": "https://github.com/elgatosf/streamdeck/issues"
     },
-    "homepage": "https://github.com/elgatosf/streamdeck/tree/main/packages/utils#readme",
+    "homepage": "https://github.com/elgatosf/streamdeck/tree/main/packages/json-rpc#readme",
     "devDependencies": {
         "@elgato/eslint-config": "^0.3.2",
         "@elgato/prettier-config": "^0.3.3",
@@ -68,6 +57,7 @@
         "vitest": "^3.1.3"
     },
     "dependencies": {
+        "@elgato/utils": "workspace:*",
         "zod": "^4.6.2"
     }
 }
