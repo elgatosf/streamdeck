@@ -26,7 +26,7 @@ export interface Error {
 /**
  * Contains information about an error that occurred on the server.
  */
-export const Error: z.ZodMiniType<Error> = z.compile(
+export const Error: z.ZodMiniType<Error, Error> = z.compile(
 	z.object({
 		code: z.number(),
 		data: z.any(),

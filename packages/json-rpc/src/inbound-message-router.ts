@@ -1,3 +1,5 @@
+import { z } from "zod/mini";
+
 import type { RequestPool } from "./client/request-pool.js";
 import type { JsonRpcConnectionOptions } from "./connection-options.js";
 import * as JsonRpc from "./json-rpc/index.js";
@@ -99,15 +101,13 @@ export class InboundMessageRouter {
 		}
 
 		// Check if the message is a request.
-		const { success: isRequest, data: req } = JsonRpc.Request.safeParse(data);
-		if (isRequest) {
-			return this.#dispatch(req);
+		if (z.validate(JsonRpc.Request, data)) {
+			return this.#dispatch(data);
 		}
 
 		// Check if the message is a response.
-		const { success: isResponse, data: res } = JsonRpc.Response.safeParse(data);
-		if (isResponse) {
-			return this.#requestPool.resolve(res);
+		if (z.validate(JsonRpc.Response, data)) {
+			return this.#requestPool.resolve(data);
 		}
 
 		return this.#sendParseError(value);

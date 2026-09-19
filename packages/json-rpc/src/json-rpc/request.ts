@@ -30,7 +30,7 @@ export interface Request {
 /**
  * Request object sent to a server.
  */
-export const Request: z.ZodMiniType<Request> = z.compile(
+export const Request: z.ZodMiniType<Request, Request> = z.compile(
 	z.object({
 		id: z.optional(z.string()),
 		jsonrpc: z.literal("2.0"),

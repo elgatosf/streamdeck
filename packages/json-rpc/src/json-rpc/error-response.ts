@@ -25,7 +25,7 @@ export interface ErrorResponse {
 /**
  * Error response object sent to a client.
  */
-export const ErrorResponse: z.ZodMiniType<ErrorResponse> = z.compile(
+export const ErrorResponse: z.ZodMiniType<ErrorResponse, ErrorResponse> = z.compile(
 	z.strictObject({
 		jsonrpc: z.literal("2.0"),
 		error: Error,

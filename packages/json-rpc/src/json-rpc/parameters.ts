@@ -9,7 +9,7 @@ export type Parameters = JsonObject | JsonValue[] | undefined;
 /**
  * Parameters sent with a request.
  */
-export const Parameters: z.ZodMiniType<Parameters> = z.compile(
+export const Parameters: z.ZodMiniType<Parameters, Parameters> = z.compile(
 	z.optional(
 		z.union([
 			z.record(z.string(), z.json()),

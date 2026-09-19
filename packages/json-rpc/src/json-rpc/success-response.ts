@@ -25,7 +25,7 @@ export interface SuccessResponse {
 /**
  * Successful response object sent to a client.
  */
-export const SuccessResponse: z.ZodMiniType<SuccessResponse> = z.compile(
+export const SuccessResponse: z.ZodMiniType<SuccessResponse, SuccessResponse> = z.compile(
 	z.strictObject({
 		jsonrpc: z.literal("2.0"),
 		result: z.any(),
