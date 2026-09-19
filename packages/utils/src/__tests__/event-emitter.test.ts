@@ -551,7 +551,7 @@ describe("EventEmitter", () => {
 
 			// Assert.
 			expectTypeOf(emitter.eventNames()).toEqualTypeOf<
-				("another" | "array" | "empty" | "message" | "newListener" | "other" | "removeListener" | (string & {}))[]
+				("another" | "array" | "empty" | "message" | "newListener" | "other" | "removeListener")[]
 			>();
 
 			// @ts-expect-error: arguments of type `string` are not valid
