@@ -1,4 +1,6 @@
 import { describe, expect, test, vi } from "vitest";
+import { z as zod } from "zod";
+import { z as zodMini } from "zod/mini";
 
 import * as JsonRpc from "../../json-rpc/index.js";
 import { MethodDispatcher } from "../method-dispatcher.js";
@@ -177,6 +179,98 @@ describe("MethodDispatcher", () => {
 	 * Provides assertions for `add(method, handler)`.
 	 */
 	describe("add", () => {
+		/**
+		 * Asserts a handler is invoked when parameters satisfy a classic Zod schema.
+		 */
+		test("validates parameters with a classic Zod schema", async () => {
+			// Arrange.
+			const dispatcher = new MethodDispatcher();
+			const responder = createResponder();
+			const handler = vi.fn<MethodHandler<{ value: number }>>().mockReturnValue("result");
+			const params = { value: 42 };
+			const paramsSchema = zod.object({ value: zod.number() });
+			dispatcher.add("method", handler, paramsSchema);
+
+			// Act.
+			await dispatcher.dispatch("method", params, responder);
+
+			// Assert.
+			expect(handler).toHaveBeenCalledExactlyOnceWith(params, responder, expect.any(Function));
+			expect(responder.success).toHaveBeenCalledExactlyOnceWith("result");
+			expect(responder.error).not.toHaveBeenCalled();
+		});
+
+		/**
+		 * Asserts invalid parameters are rejected by a classic Zod schema.
+		 */
+		test("rejects invalid parameters with a classic Zod schema", async () => {
+			// Arrange.
+			const dispatcher = new MethodDispatcher();
+			const responder = createResponder();
+			const handler = vi.fn<MethodHandler<{ value: number }>>().mockReturnValue("result");
+			const params = { value: "invalid" };
+			const paramsSchema = zod.object({ value: zod.number() });
+			dispatcher.add("method", handler, paramsSchema);
+
+			// Act.
+			await dispatcher.dispatch("method", params, responder);
+
+			// Assert.
+			expect(handler).not.toHaveBeenCalled();
+			expect(responder.success).not.toHaveBeenCalled();
+			expect(responder.error).toHaveBeenCalledExactlyOnceWith({
+				code: JsonRpc.ErrorCode.InvalidParams,
+				data: params,
+				message: "Invalid method parameter(s).",
+			});
+		});
+
+		/**
+		 * Asserts a handler is invoked when parameters satisfy a Zod Mini schema.
+		 */
+		test("validates parameters with a Zod Mini schema", async () => {
+			// Arrange.
+			const dispatcher = new MethodDispatcher();
+			const responder = createResponder();
+			const handler = vi.fn<MethodHandler<{ value: number }>>().mockReturnValue("result");
+			const params = { value: 42 };
+			const paramsSchema = zodMini.object({ value: zodMini.number() });
+			dispatcher.add("method", handler, paramsSchema);
+
+			// Act.
+			await dispatcher.dispatch("method", params, responder);
+
+			// Assert.
+			expect(handler).toHaveBeenCalledExactlyOnceWith(params, responder, expect.any(Function));
+			expect(responder.success).toHaveBeenCalledExactlyOnceWith("result");
+			expect(responder.error).not.toHaveBeenCalled();
+		});
+
+		/**
+		 * Asserts invalid parameters are rejected by a Zod Mini schema.
+		 */
+		test("rejects invalid parameters with a Zod Mini schema", async () => {
+			// Arrange.
+			const dispatcher = new MethodDispatcher();
+			const responder = createResponder();
+			const handler = vi.fn<MethodHandler<{ value: number }>>().mockReturnValue("result");
+			const params = { value: "invalid" };
+			const paramsSchema = zodMini.object({ value: zodMini.number() });
+			dispatcher.add("method", handler, paramsSchema);
+
+			// Act.
+			await dispatcher.dispatch("method", params, responder);
+
+			// Assert.
+			expect(handler).not.toHaveBeenCalled();
+			expect(responder.success).not.toHaveBeenCalled();
+			expect(responder.error).toHaveBeenCalledExactlyOnceWith({
+				code: JsonRpc.ErrorCode.InvalidParams,
+				data: params,
+				message: "Invalid method parameter(s).",
+			});
+		});
+
 		/**
 		 * Asserts disposing a registration removes its handler.
 		 */

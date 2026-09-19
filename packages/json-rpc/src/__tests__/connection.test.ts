@@ -1,8 +1,9 @@
-import { afterEach, describe, expect, test, vi } from "vitest";
+import { afterEach, describe, expect, expectTypeOf, test, vi } from "vitest";
 
 import type { JsonRpcConnectionOptions } from "../connection-options.js";
 import { JsonRpcConnection } from "../connection.js";
 import * as JsonRpc from "../json-rpc/index.js";
+import type { MethodDispatcher } from "../server/method-dispatcher.js";
 
 const requestId = "00000000-0000-4000-8000-000000000000";
 
@@ -140,6 +141,21 @@ describe("JsonRpcConnection", () => {
 	 * Provides assertions for `addLocalMethod(method, handler)`.
 	 */
 	describe("addLocalMethod", () => {
+		/**
+		 * Asserts the method signature matches {@link MethodDispatcher.add}.
+		 */
+		test("matches the method dispatcher signature", () => {
+			// Arrange.
+			const connectionOptions: JsonRpcConnectionOptions = {
+				inboundStream: createInboundStream(),
+				outboundStream: new WritableStream(),
+			};
+			const connection = new JsonRpcConnection(connectionOptions);
+
+			// Act, assert.
+			expectTypeOf(connection.addLocalMethod).toEqualTypeOf<MethodDispatcher["add"]>();
+		});
+
 		/**
 		 * Asserts inbound requests are routed to a local method handler.
 		 */

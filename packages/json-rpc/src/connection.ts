@@ -1,4 +1,6 @@
 import { type IDisposable, withResolvers } from "@elgato/utils";
+import type { ZodType } from "zod";
+import type { ZodMiniType } from "zod/mini";
 
 import { RequestPool } from "./client/request-pool.js";
 import type { Request } from "./client/request.js";
@@ -61,8 +63,36 @@ export class JsonRpcConnection {
 	 * @param handler The handler to add.
 	 * @returns Disposable used to remove the handler.
 	 */
-	public addLocalMethod(method: string, handler: MethodHandler<JsonRpc.Parameters>): IDisposable {
-		return this.#requestDispatcher.add(method, handler);
+	public addLocalMethod(method: string, handler: MethodHandler<JsonRpc.Parameters>): IDisposable;
+	/**
+	 * Adds a local method handler that will be called when the method is dispatched.
+	 * @param method Method name.
+	 * @param handler The handler to add.
+	 * @param paramsSchema Schema responsible for parsing the parameters.
+	 * @returns Disposable used to remove the handler.
+	 */
+	public addLocalMethod<TParametersSchema extends JsonRpc.Parameters>(
+		method: string,
+		handler: MethodHandler<TParametersSchema>,
+		paramsSchema: ZodMiniType<TParametersSchema, TParametersSchema> | ZodType<TParametersSchema, TParametersSchema>,
+	): IDisposable;
+	/**
+	 * Adds a local method handler that will be called when the method is dispatched.
+	 * @param method Method name.
+	 * @param handler The handler to add.
+	 * @param paramsSchema Schema responsible for parsing the parameters.
+	 * @returns Disposable used to remove the handler.
+	 */
+	public addLocalMethod<TParametersSchema extends JsonRpc.Parameters>(
+		method: string,
+		handler: MethodHandler<TParametersSchema>,
+		paramsSchema?: ZodMiniType<TParametersSchema, TParametersSchema> | ZodType<TParametersSchema, TParametersSchema>,
+	): IDisposable {
+		if (paramsSchema) {
+			return this.#requestDispatcher.add(method, handler, paramsSchema);
+		}
+
+		return this.#requestDispatcher.add(method, handler as MethodHandler<JsonRpc.Parameters>);
 	}
 
 	/**

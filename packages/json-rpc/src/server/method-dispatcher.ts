@@ -1,6 +1,9 @@
 import { EventEmitter, type IDisposable } from "@elgato/utils";
+import type { ZodType } from "zod";
+import { z } from "zod/mini";
 
 import * as JsonRpc from "../json-rpc/index.js";
+import { InvalidParametersError } from "./invalid-parameters-error.js";
 import type { MethodHandler } from "./method-handler.js";
 import type { Responder } from "./responder.js";
 
@@ -19,8 +22,42 @@ export class MethodDispatcher {
 	 * @param handler The handler to add.
 	 * @returns Disposable used to remove the handler.
 	 */
-	public add(method: string, handler: MethodHandler<JsonRpc.Parameters>): IDisposable {
-		return this.#methods.disposableOn(method, handler);
+	public add(method: string, handler: MethodHandler<JsonRpc.Parameters>): IDisposable;
+	/**
+	 * Adds a local method handler that will be called when the method is dispatched.
+	 * @param method Method name.
+	 * @param handler The handler to add.
+	 * @param paramsSchema Schema responsible for parsing the parameters.
+	 * @returns Disposable used to remove the handler.
+	 */
+	public add<TParametersSchema extends JsonRpc.Parameters>(
+		method: string,
+		handler: MethodHandler<TParametersSchema>,
+		paramsSchema: z.ZodMiniType<TParametersSchema, TParametersSchema> | ZodType<TParametersSchema, TParametersSchema>,
+	): IDisposable;
+	/**
+	 * Adds a local method handler that will be called when the method is dispatched.
+	 * @param method Method name.
+	 * @param handler The handler to add.
+	 * @param paramsSchema Schema responsible for parsing the parameters.
+	 * @returns Disposable used to remove the handler.
+	 */
+	public add<TParams extends JsonRpc.Parameters>(
+		method: string,
+		handler: MethodHandler<TParams>,
+		paramsSchema?: z.ZodMiniType<TParams, TParams> | ZodType<TParams, TParams>,
+	): IDisposable {
+		if (!paramsSchema) {
+			return this.#methods.disposableOn(method, handler);
+		}
+
+		return this.#methods.disposableOn(method, (params, res, next) => {
+			if (z.validate(paramsSchema, params)) {
+				return handler(params, res, next);
+			} else {
+				throw new InvalidParametersError(params);
+			}
+		});
 	}
 
 	/**
@@ -74,11 +111,19 @@ export class MethodDispatcher {
 			}
 		} catch (err) {
 			// Respond with the error.
-			responseHandler.error({
-				code: JsonRpc.ErrorCode.InternalError,
-				data: JSON.parse(JSON.stringify(err)),
-				message: err instanceof Error ? err.message : err instanceof Object ? err.toString() : "Unknown error",
-			});
+			if (err instanceof InvalidParametersError) {
+				responseHandler.error({
+					code: err.code,
+					data: err.params,
+					message: err.message,
+				});
+			} else {
+				responseHandler.error({
+					code: JsonRpc.ErrorCode.InternalError,
+					data: JSON.parse(JSON.stringify(err)),
+					message: err instanceof Error ? err.message : err instanceof Object ? err.toString() : "Unknown error",
+				});
+			}
 		}
 	}
 }
