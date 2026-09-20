@@ -99,6 +99,22 @@ describe("MethodDispatcher", () => {
 		});
 
 		/**
+		 * Asserts response write failures are propagated to the caller.
+		 */
+		test("awaits the success response", async () => {
+			// Arrange.
+			const dispatcher = new MethodDispatcher();
+			const responder = createResponder();
+			const error = new Error("Unable to write response");
+			vi.mocked(responder.success).mockRejectedValue(error);
+			dispatcher.add("method", () => "result");
+
+			// Act and assert.
+			await expect(dispatcher.dispatch("method", {}, responder)).rejects.toBe(error);
+			expect(responder.error).not.toHaveBeenCalled();
+		});
+
+		/**
 		 * Asserts an empty handler result is sent as JSON-RPC null.
 		 */
 		test("converts an empty result to null", async () => {
@@ -171,6 +187,29 @@ describe("MethodDispatcher", () => {
 				code: JsonRpc.ErrorCode.InternalError,
 				data: "failure",
 				message: "Unknown error",
+			} satisfies JsonRpc.Error);
+		});
+
+		/**
+		 * Asserts unserializable thrown values still produce an internal-error response.
+		 */
+		test("handles a circular object thrown by a handler", async () => {
+			// Arrange.
+			const dispatcher = new MethodDispatcher();
+			const responder = createResponder();
+			const error: Record<string, unknown> = {};
+			error.error = error;
+			dispatcher.add("method", () => {
+				throw error;
+			});
+
+			// Act.
+			await dispatcher.dispatch("method", {}, responder);
+
+			// Assert.
+			expect(responder.error).toHaveBeenCalledExactlyOnceWith({
+				code: JsonRpc.ErrorCode.InternalError,
+				message: "[object Object]",
 			} satisfies JsonRpc.Error);
 		});
 	});

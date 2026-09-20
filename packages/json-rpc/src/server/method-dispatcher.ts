@@ -73,7 +73,7 @@ export class MethodDispatcher {
 		if (methods.length > 0) {
 			await this.#invoke(methods, params, responseHandler);
 		} else {
-			responseHandler.error({
+			await responseHandler.error({
 				code: JsonRpc.ErrorCode.MethodNotFound,
 				message: `No method handlers found for: ${method}`,
 			});
@@ -103,27 +103,47 @@ export class MethodDispatcher {
 			};
 		};
 
+		let result: JsonRpc.Result | void;
 		try {
-			// Execute the method handler-chain, and return the result.
-			const result = await next(methods)();
-			if (responseHandler.canRespond) {
-				responseHandler.success(result ?? null);
-			}
+			// Execute the method handler-chain, and set the result.
+			result = await next(methods)();
 		} catch (err) {
 			// Respond with the error.
 			if (err instanceof InvalidParametersError) {
-				responseHandler.error({
+				await responseHandler.error({
 					code: err.code,
 					data: err.params,
 					message: err.message,
 				});
 			} else {
-				responseHandler.error({
+				const data = this.#serializeError(err);
+				await responseHandler.error({
 					code: JsonRpc.ErrorCode.InternalError,
-					data: JSON.parse(JSON.stringify(err)),
+					...(data === undefined ? {} : { data }),
 					message: err instanceof Error ? err.message : err instanceof Object ? err.toString() : "Unknown error",
 				});
 			}
+
+			return;
+		}
+
+		// Finally, when we can, respond with the result.
+		if (responseHandler.canRespond) {
+			await responseHandler.success(result ?? null);
+		}
+	}
+
+	/**
+	 * Converts a thrown value to JSON-compatible error data when possible.
+	 * @param error Thrown value.
+	 * @returns JSON-compatible error data, or undefined when the value cannot be serialized.
+	 */
+	#serializeError(error: unknown): JsonRpc.Error["data"] {
+		try {
+			const value = JSON.stringify(error);
+			return value === undefined ? undefined : JSON.parse(value);
+		} catch {
+			return undefined;
 		}
 	}
 }
