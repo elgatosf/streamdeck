@@ -2,6 +2,7 @@ export { ErrorCode } from "./error-code.js";
 export { ErrorResponse } from "./error-response.js";
 export { Error } from "./error.js";
 export { Id } from "./id.js";
+export { Identifiable } from "./identifiable.js";
 export { Parameters } from "./parameters.js";
 export { Request } from "./request.js";
 export { Response } from "./response.js";

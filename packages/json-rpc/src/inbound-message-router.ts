@@ -129,25 +129,25 @@ export class InboundMessageRouter {
 			return this.#clientPool.resolve(data);
 		}
 
-		return this.#sendError({
-			code: JsonRpc.ErrorCode.InvalidRequest,
-			message: "Invalid JSON-RPC request.",
-			data: message,
-		});
+		return this.#sendError(
+			{
+				code: JsonRpc.ErrorCode.InvalidRequest,
+				message: "Invalid JSON-RPC request.",
+				data: message,
+			},
+			z.validate(JsonRpc.Identifiable, data) ? data.id : null,
+		);
 	}
 
 	/**
 	 * Sends an error response to the outbound stream.
 	 * @param error Error to send.
+	 * @param id Identifier associated with the error.
 	 */
-	async #sendError(error: JsonRpc.Error): Promise<void> {
+	async #sendError(error: JsonRpc.Error, id: JsonRpc.Id = null): Promise<void> {
 		const writer = this.#connectionOptions.outboundStream.getWriter();
 		try {
-			await writer.write({
-				jsonrpc: "2.0",
-				id: null,
-				error,
-			});
+			await writer.write({ jsonrpc: "2.0", id, error });
 		} finally {
 			writer.releaseLock();
 		}
