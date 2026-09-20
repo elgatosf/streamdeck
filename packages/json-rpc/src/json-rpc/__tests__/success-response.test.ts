@@ -18,4 +18,15 @@ describe("SuccessResponse", () => {
 	test.each(["request-id", 42, null])("accepts the identifier %j", (id) => {
 		expect(z.safeParse(SuccessResponse, { id, jsonrpc: "2.0", result: null }).success).toBe(true);
 	});
+
+	/**
+	 * Asserts response results must be JSON-compatible.
+	 */
+	test.each([
+		{ name: "undefined", value: undefined },
+		{ name: "a bigint", value: 1n },
+		{ name: "a function", value: (): undefined => undefined },
+	])("rejects $name as a result", ({ value }) => {
+		expect(z.safeParse(SuccessResponse, { id: 42, jsonrpc: "2.0", result: value }).success).toBe(false);
+	});
 });

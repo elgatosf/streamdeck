@@ -28,8 +28,8 @@ export type Error = {
  */
 export const Error: z.ZodMiniType<Error, Error> = z.compile(
 	z.object({
-		code: z.number(),
-		data: z.any(),
+		code: z.int(),
+		data: z.optional(z.json()),
 		message: z.string(),
 	}),
 );
