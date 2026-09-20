@@ -4,10 +4,8 @@
 
 export { type JsonRpcConnectionOptions } from "./connection-options.js";
 export { JsonRpcConnection } from "./connection.js";
-export {
-	createDelegateJsonRpcConnectionOptions,
-	type DelegateJsonRpcConnectionOptions,
-} from "./delegate-connection-options.js";
+export { createDelegatedJsonRpcConnection } from "./connections/delegated-connection.js";
+export { createWebSocketJsonRpcConnection } from "./connections/web-socket-connection.js";
 
 /**
  * Client
