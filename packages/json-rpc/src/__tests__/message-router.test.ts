@@ -1,3 +1,4 @@
+import { withResolvers } from "@elgato/utils";
 import { describe, expect, test, vi } from "vitest";
 
 import type { RequestPool } from "../client/request-pool.js";
@@ -134,6 +135,120 @@ describe("MessageRouter", () => {
 		// Assert.
 		expect(clientPool.resolve).toHaveBeenCalledExactlyOnceWith(response);
 		expect(serverDispatcher.dispatch).not.toHaveBeenCalled();
+	});
+
+	/**
+	 * Asserts a pending request does not block a subsequent response.
+	 */
+	test("routes responses while a request is pending", async () => {
+		// Arrange.
+		const pendingRequest = withResolvers<void>();
+		let inboundController: ReadableStreamDefaultController<string> | undefined;
+		const inboundStream = new ReadableStream<string>({
+			start: (controller): void => {
+				inboundController = controller;
+			},
+		});
+		const response: JsonRpc.Response = {
+			id: "outbound-request-id",
+			jsonrpc: "2.0",
+			result: "result",
+		};
+		const clientPool = { resolve: vi.fn() } as unknown as RequestPool;
+		const serverDispatcher = {
+			dispatch: vi.fn(() => pendingRequest.promise),
+		} as unknown as MethodDispatcher;
+		const router = new MessageRouter(
+			inboundStream,
+			new MessageSender(new WritableStream()),
+			clientPool,
+			serverDispatcher,
+		);
+		const routing = router.start();
+
+		// Act.
+		inboundController?.enqueue(JSON.stringify({ id: "inbound-request-id", jsonrpc: "2.0", method: "method" }));
+		await vi.waitFor(() => expect(serverDispatcher.dispatch).toHaveBeenCalledOnce());
+		inboundController?.enqueue(JSON.stringify(response));
+
+		// Assert.
+		await vi.waitFor(() => expect(clientPool.resolve).toHaveBeenCalledExactlyOnceWith(response));
+
+		// Clean-up.
+		pendingRequest.resolve();
+		inboundController?.close();
+		await routing;
+	});
+
+	/**
+	 * Asserts a pending request does not block a subsequent request.
+	 */
+	test("routes requests while another request is pending", async () => {
+		// Arrange.
+		const pendingRequest = withResolvers<void>();
+		let inboundController: ReadableStreamDefaultController<string> | undefined;
+		const inboundStream = new ReadableStream<string>({
+			start: (controller): void => {
+				inboundController = controller;
+			},
+		});
+		const clientPool = { resolve: vi.fn() } as unknown as RequestPool;
+		const serverDispatcher = {
+			dispatch: vi.fn().mockReturnValueOnce(pendingRequest.promise).mockResolvedValueOnce(undefined),
+		} as unknown as MethodDispatcher;
+		const router = new MessageRouter(
+			inboundStream,
+			new MessageSender(new WritableStream()),
+			clientPool,
+			serverDispatcher,
+		);
+		const routing = router.start();
+
+		// Act.
+		inboundController?.enqueue(JSON.stringify({ jsonrpc: "2.0", method: "first" }));
+		await vi.waitFor(() => expect(serverDispatcher.dispatch).toHaveBeenCalledOnce());
+		inboundController?.enqueue(JSON.stringify({ jsonrpc: "2.0", method: "second" }));
+
+		// Assert.
+		await vi.waitFor(() => expect(serverDispatcher.dispatch).toHaveBeenCalledTimes(2));
+		expect(serverDispatcher.dispatch).toHaveBeenNthCalledWith(
+			2,
+			"second",
+			undefined,
+			expect.objectContaining({ canRespond: false }),
+		);
+
+		// Clean-up.
+		pendingRequest.resolve();
+		inboundController?.close();
+		await routing;
+	});
+
+	/**
+	 * Asserts rejected routing is handled without stopping subsequent messages.
+	 */
+	test("continues routing when a request handler rejects", async () => {
+		// Arrange.
+		const inboundStream = createInboundStream(
+			JSON.stringify({ jsonrpc: "2.0", method: "first" }),
+			JSON.stringify({ jsonrpc: "2.0", method: "second" }),
+		);
+		const clientPool = { resolve: vi.fn() } as unknown as RequestPool;
+		const serverDispatcher = {
+			dispatch: vi.fn().mockRejectedValueOnce(new Error("Failed to dispatch.")).mockResolvedValueOnce(undefined),
+		} as unknown as MethodDispatcher;
+		const router = new MessageRouter(
+			inboundStream,
+			new MessageSender(new WritableStream()),
+			clientPool,
+			serverDispatcher,
+		);
+
+		// Act.
+		await router.start();
+
+		// Assert.
+		expect(serverDispatcher.dispatch).toHaveBeenCalledTimes(2);
 	});
 
 	/**

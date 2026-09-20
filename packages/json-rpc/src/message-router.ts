@@ -15,24 +15,24 @@ import { RequestResponder } from "./server/responders/request-responder.js";
  */
 export class MessageRouter {
 	/**
-	 * Server request dispatcher responsible for routing method calls.
-	 */
-	#serverDispatcher: MethodDispatcher;
-
-	/**
 	 * Client request pool that contains pending requests.
 	 */
-	#clientPool: RequestPool;
+	readonly #clientPool: RequestPool;
 
 	/**
 	 * Stream responsible for receiving messages.
 	 */
-	#inboundStream: ReadableStream<JsonRpc.Request | JsonRpc.Response | string>;
+	readonly #inboundStream: ReadableStream<JsonRpc.Request | JsonRpc.Response | string>;
 
 	/**
 	 * Sender responsible for sending messages.
 	 */
-	#messageSender: MessageSender;
+	readonly #messageSender: MessageSender;
+
+	/**
+	 * Server request dispatcher responsible for routing method calls.
+	 */
+	readonly #serverDispatcher: MethodDispatcher;
 
 	/**
 	 * Initializes a new instances of the {@link MessageRouter} class.
@@ -59,8 +59,9 @@ export class MessageRouter {
 	 */
 	public async start(signal?: AbortSignal): Promise<void> {
 		const reader = this.#inboundStream.getReader();
-		const cancel = (): Promise<void> => reader.cancel(signal?.reason);
+		const pending = new Set<Promise<void>>();
 
+		const cancel = (): Promise<void> => reader.cancel(signal?.reason);
 		signal?.addEventListener("abort", cancel, { once: true });
 
 		try {
@@ -76,10 +77,16 @@ export class MessageRouter {
 					break;
 				}
 
-				// Parse the received value.
-				await this.#parse(value);
+				// Route the received value, without blocking.
+				const routing = this.#parse(value);
+				pending.add(routing);
+				routing.then(
+					() => pending.delete(routing),
+					() => pending.delete(routing),
+				);
 			}
 
+			await Promise.allSettled(pending);
 			signal?.throwIfAborted();
 		} finally {
 			signal?.removeEventListener("abort", cancel);
