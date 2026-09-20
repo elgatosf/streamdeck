@@ -7,7 +7,7 @@ export interface JsonRpcConnectionOptions {
 	/**
 	 * Stream responsible for receiving data.
 	 */
-	inboundStream: ReadableStream<string>;
+	inboundStream: ReadableStream<JsonRpc.Request | JsonRpc.Response | string>;
 
 	/**
 	 * Stream responsible for sending data.
