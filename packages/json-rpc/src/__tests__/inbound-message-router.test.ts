@@ -152,7 +152,40 @@ describe("InboundMessageRouter", () => {
 	 */
 	test("responds with an invalid request error when the JSON-RPC value is invalid", async () => {
 		// Arrange.
-		const message = JSON.stringify({ jsonrpc: "2.0", method: 42 });
+		const message = JSON.stringify({ id: 42, jsonrpc: "2.0", method: false });
+		const write = vi.fn();
+		const connectionOptions: JsonRpcConnectionOptions = {
+			inboundStream: createInboundStream(message),
+			outboundStream: new WritableStream({
+				write: (value): void => write(value),
+			}),
+		};
+
+		const clientPool = { resolve: vi.fn() } as unknown as RequestPool;
+		const serverDispatcher = { dispatch: vi.fn() } as unknown as MethodDispatcher;
+		const router = new InboundMessageRouter(connectionOptions, clientPool, serverDispatcher);
+
+		// Act.
+		await router.start(new AbortController().signal);
+
+		// Assert.
+		expect(write).toHaveBeenCalledExactlyOnceWith({
+			error: {
+				code: JsonRpc.ErrorCode.InvalidRequest,
+				data: message,
+				message: "Invalid JSON-RPC request.",
+			},
+			id: 42,
+			jsonrpc: "2.0",
+		});
+	});
+
+	/**
+	 * Asserts a response without an identifier produces an invalid request error.
+	 */
+	test("responds with an invalid request error when a response has no identifier", async () => {
+		// Arrange.
+		const message = JSON.stringify({ jsonrpc: "2.0", result: "result" });
 		const write = vi.fn();
 		const connectionOptions: JsonRpcConnectionOptions = {
 			inboundStream: createInboundStream(message),
@@ -178,6 +211,8 @@ describe("InboundMessageRouter", () => {
 			id: null,
 			jsonrpc: "2.0",
 		});
+		expect(clientPool.resolve).not.toHaveBeenCalled();
+		expect(serverDispatcher.dispatch).not.toHaveBeenCalled();
 	});
 
 	/**

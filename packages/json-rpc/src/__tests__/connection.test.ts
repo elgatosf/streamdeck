@@ -40,6 +40,28 @@ describe("JsonRpcConnection", () => {
 		});
 
 		/**
+		 * Asserts omitted parameters are not included in the notification.
+		 */
+		test("omits undefined notification parameters", async () => {
+			// Arrange.
+			const write = vi.fn();
+			const connectionOptions: JsonRpcConnectionOptions = {
+				inboundStream: createInboundStream(),
+				outboundStream: new WritableStream({ write: (value): void => write(value) }),
+			};
+			const connection = new JsonRpcConnection(connectionOptions);
+
+			// Act.
+			await connection.notify("method");
+
+			// Assert.
+			expect(write).toHaveBeenCalledExactlyOnceWith({
+				jsonrpc: "2.0",
+				method: "method",
+			});
+		});
+
+		/**
 		 * Asserts a request object is sent as a notification without request-only options.
 		 */
 		test("sends a notification from a request", async () => {
