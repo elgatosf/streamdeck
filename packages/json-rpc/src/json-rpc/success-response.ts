@@ -5,7 +5,7 @@ import type { Result } from "./result.js";
 /**
  * Successful response object sent to a client.
  */
-export interface SuccessResponse {
+export type SuccessResponse = {
 	/**
 	 * Identifier of the request.
 	 */
@@ -20,7 +20,7 @@ export interface SuccessResponse {
 	 * Result of the request.
 	 */
 	readonly result: Result;
-}
+};
 
 /**
  * Successful response object sent to a client.

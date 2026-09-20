@@ -5,7 +5,7 @@ import { Error } from "./error.js";
 /**
  * Error response object sent to a client.
  */
-export interface ErrorResponse {
+export type ErrorResponse = {
 	/**
 	 * Identifier of the request, or null if there was an error detecting the id of the request.
 	 */
@@ -20,7 +20,7 @@ export interface ErrorResponse {
 	 * The JSON-RPC version.
 	 */
 	readonly jsonrpc: "2.0";
-}
+};
 
 /**
  * Error response object sent to a client.

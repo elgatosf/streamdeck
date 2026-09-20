@@ -5,7 +5,7 @@ import { Parameters } from "./parameters.js";
 /**
  * Request object sent to a server.
  */
-export interface Request {
+export type Request = {
 	/**
 	 * Identifies the request; when undefined, the request is treated as a notification.
 	 */
@@ -25,7 +25,7 @@ export interface Request {
 	 * Optional parameters supplied to the method.
 	 */
 	readonly params?: Parameters;
-}
+};
 
 /**
  * Request object sent to a server.

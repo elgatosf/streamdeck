@@ -6,7 +6,7 @@ import type { ErrorCode } from "./error-code.js";
 /**
  * Contains information about an error that occurred on the server.
  */
-export interface Error {
+export type Error = {
 	/**
 	 * Indicates the error type that occurred.
 	 */
@@ -21,7 +21,7 @@ export interface Error {
 	 * Short description of the error.
 	 */
 	readonly message: string;
-}
+};
 
 /**
  * Contains information about an error that occurred on the server.
