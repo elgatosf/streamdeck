@@ -15,7 +15,7 @@ export interface Request {
 	params?: JsonRpc.Parameters;
 
 	/**
-	 * Timeout duration in milliseconds; defaults to `5000` (5s).
+	 * Timeout duration in milliseconds; defaults to `30000` (30s).
 	 */
 	timeout?: number;
 }
