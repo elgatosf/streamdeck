@@ -1,11 +1,21 @@
 import type { JsonObject } from "@elgato/utils";
-import { expectTypeOf, test } from "vitest";
+import { describe, expect, expectTypeOf, test } from "vitest";
+import { z } from "zod/mini";
 
-import type { Request } from "../request.js";
+import { Request } from "../request.js";
 
-/**
- * Asserts JSON-RPC requests are compatible with JSON objects.
- */
-test("Request is compatible with JsonObject", () => {
-	expectTypeOf<Request>().toExtend<JsonObject>();
+describe("Request", () => {
+	/**
+	 * Asserts JSON-RPC requests are compatible with JSON objects.
+	 */
+	test("is compatible with JsonObject", () => {
+		expectTypeOf<Request>().toExtend<JsonObject>();
+	});
+
+	/**
+	 * Asserts requests accept all identifier types defined by JSON-RPC.
+	 */
+	test.each(["request-id", 42, null])("accepts the identifier %j", (id) => {
+		expect(z.safeParse(Request, { id, jsonrpc: "2.0", method: "method" }).success).toBe(true);
+	});
 });

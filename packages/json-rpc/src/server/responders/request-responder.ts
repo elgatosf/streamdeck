@@ -8,7 +8,7 @@ export class RequestResponder implements Responder {
 	/**
 	 * Request identifier.
 	 */
-	#id: string;
+	#id: JsonRpc.Id;
 
 	/**
 	 * Determines whether a response has been sent.
@@ -25,7 +25,7 @@ export class RequestResponder implements Responder {
 	 * @param id Request identifier.
 	 * @param sendingStream Stream responsible for sending the response.
 	 */
-	constructor(id: string, sendingStream: WritableStream<JsonRpc.Response>) {
+	constructor(id: JsonRpc.Id, sendingStream: WritableStream<JsonRpc.Response>) {
 		this.#id = id;
 		this.#sendingStream = sendingStream;
 	}

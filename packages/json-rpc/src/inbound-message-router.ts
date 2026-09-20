@@ -75,8 +75,8 @@ export class InboundMessageRouter {
 	 */
 	async #dispatch(req: JsonRpc.Request): Promise<void> {
 		const { method, params } = req;
-		const responseHandler = req.id
-			? new RequestResponder(req.id, this.#connectionOptions.outboundStream)
+		const responseHandler = Object.hasOwn(req, "id")
+			? new RequestResponder(req.id!, this.#connectionOptions.outboundStream)
 			: new NotificationResponder();
 
 		await this.#requestDispatcher.dispatch(method, params, responseHandler);
@@ -99,7 +99,11 @@ export class InboundMessageRouter {
 			try {
 				data = JSON.parse(message);
 			} catch {
-				return this.#sendParseError(message);
+				return this.#sendError({
+					code: JsonRpc.ErrorCode.ParseError,
+					message: "Unable to parse JSON-RPC value.",
+					data: message,
+				});
 			}
 		else {
 			data = message;
@@ -115,24 +119,24 @@ export class InboundMessageRouter {
 			return this.#requestPool.resolve(data);
 		}
 
-		return this.#sendParseError(message);
+		return this.#sendError({
+			code: JsonRpc.ErrorCode.InvalidRequest,
+			message: "Invalid JSON-RPC request.",
+			data: message,
+		});
 	}
 
 	/**
-	 * Sends a parsing error to the outbound stream.
-	 * @param message Message that could not be parsed.
+	 * Sends an error response to the outbound stream.
+	 * @param error Error to send.
 	 */
-	async #sendParseError(message: JsonRpc.Request | JsonRpc.Response | string): Promise<void> {
+	async #sendError(error: JsonRpc.Error): Promise<void> {
 		const writer = this.#connectionOptions.outboundStream.getWriter();
 		try {
 			await writer.write({
 				jsonrpc: "2.0",
 				id: null,
-				error: {
-					code: JsonRpc.ErrorCode.ParseError,
-					message: "Unable to parse JSON-RPC value.",
-					data: message,
-				},
+				error,
 			});
 		} finally {
 			writer.releaseLock();

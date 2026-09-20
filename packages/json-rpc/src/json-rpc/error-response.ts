@@ -1,6 +1,7 @@
 import { z } from "zod/mini";
 
 import { Error } from "./error.js";
+import { Id } from "./id.js";
 
 /**
  * Error response object sent to a client.
@@ -9,7 +10,7 @@ export type ErrorResponse = {
 	/**
 	 * Identifier of the request, or null if there was an error detecting the id of the request.
 	 */
-	readonly id: string | null;
+	readonly id: Id;
 
 	/**
 	 * The error that occurred.
@@ -29,6 +30,6 @@ export const ErrorResponse: z.ZodMiniType<ErrorResponse, ErrorResponse> = z.comp
 	z.strictObject({
 		jsonrpc: z.literal("2.0"),
 		error: Error,
-		id: z.union([z.string(), z.null()]),
+		id: Id,
 	}),
 );

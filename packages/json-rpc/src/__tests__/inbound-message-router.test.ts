@@ -36,6 +36,32 @@ describe("InboundMessageRouter", () => {
 	});
 
 	/**
+	 * Asserts requests with falsy identifiers are not treated as notifications.
+	 */
+	test.each(["", 0, null])("routes requests with the identifier %j as requests", async (id) => {
+		// Arrange.
+		const connectionOptions: JsonRpcConnectionOptions = {
+			inboundStream: createInboundStream(JSON.stringify({ id, jsonrpc: "2.0", method: "method" })),
+			outboundStream: new WritableStream(),
+		};
+
+		const requestPool = { resolve: vi.fn() } as unknown as RequestPool;
+		const requestDispatcher = { dispatch: vi.fn() } as unknown as MethodDispatcher;
+		const router = new InboundMessageRouter(connectionOptions, requestPool, requestDispatcher);
+
+		// Act.
+		await router.start(new AbortController().signal);
+
+		// Assert.
+		expect(requestDispatcher.dispatch).toHaveBeenCalledExactlyOnceWith(
+			"method",
+			undefined,
+			expect.objectContaining({ canRespond: true }),
+		);
+		expect(requestPool.resolve).not.toHaveBeenCalled();
+	});
+
+	/**
 	 * Asserts notifications are dispatched with a responder that cannot respond.
 	 */
 	test("routes notifications to the request dispatcher", async () => {
@@ -115,6 +141,39 @@ describe("InboundMessageRouter", () => {
 				code: JsonRpc.ErrorCode.ParseError,
 				data: "invalid",
 				message: "Unable to parse JSON-RPC value.",
+			},
+			id: null,
+			jsonrpc: "2.0",
+		});
+	});
+
+	/**
+	 * Asserts valid JSON that is not a request produces an invalid request error.
+	 */
+	test("responds with an invalid request error when the JSON-RPC value is invalid", async () => {
+		// Arrange.
+		const message = JSON.stringify({ jsonrpc: "2.0", method: 42 });
+		const write = vi.fn();
+		const connectionOptions: JsonRpcConnectionOptions = {
+			inboundStream: createInboundStream(message),
+			outboundStream: new WritableStream({
+				write: (value): void => write(value),
+			}),
+		};
+
+		const requestPool = { resolve: vi.fn() } as unknown as RequestPool;
+		const requestDispatcher = { dispatch: vi.fn() } as unknown as MethodDispatcher;
+		const router = new InboundMessageRouter(connectionOptions, requestPool, requestDispatcher);
+
+		// Act.
+		await router.start(new AbortController().signal);
+
+		// Assert.
+		expect(write).toHaveBeenCalledExactlyOnceWith({
+			error: {
+				code: JsonRpc.ErrorCode.InvalidRequest,
+				data: message,
+				message: "Invalid JSON-RPC request.",
 			},
 			id: null,
 			jsonrpc: "2.0",

@@ -1,11 +1,21 @@
 import type { JsonObject } from "@elgato/utils";
-import { expectTypeOf, test } from "vitest";
+import { describe, expect, expectTypeOf, test } from "vitest";
+import { z } from "zod/mini";
 
-import type { SuccessResponse } from "../success-response.js";
+import { SuccessResponse } from "../success-response.js";
 
-/**
- * Asserts JSON-RPC success responses are compatible with JSON objects.
- */
-test("SuccessResponse is compatible with JsonObject", () => {
-	expectTypeOf<SuccessResponse>().toExtend<JsonObject>();
+describe("SuccessResponse", () => {
+	/**
+	 * Asserts JSON-RPC success responses are compatible with JSON objects.
+	 */
+	test("is compatible with JsonObject", () => {
+		expectTypeOf<SuccessResponse>().toExtend<JsonObject>();
+	});
+
+	/**
+	 * Asserts success responses accept all identifier types defined by JSON-RPC.
+	 */
+	test.each(["request-id", 42, null])("accepts the identifier %j", (id) => {
+		expect(z.safeParse(SuccessResponse, { id, jsonrpc: "2.0", result: null }).success).toBe(true);
+	});
 });

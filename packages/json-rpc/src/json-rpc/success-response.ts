@@ -1,5 +1,6 @@
 import { z } from "zod/mini";
 
+import { Id } from "./id.js";
 import type { Result } from "./result.js";
 
 /**
@@ -9,7 +10,7 @@ export type SuccessResponse = {
 	/**
 	 * Identifier of the request.
 	 */
-	readonly id: string;
+	readonly id: Id;
 
 	/**
 	 * The JSON-RPC version.
@@ -29,6 +30,6 @@ export const SuccessResponse: z.ZodMiniType<SuccessResponse, SuccessResponse> = 
 	z.strictObject({
 		jsonrpc: z.literal("2.0"),
 		result: z.any(),
-		id: z.string(),
+		id: Id,
 	}),
 );

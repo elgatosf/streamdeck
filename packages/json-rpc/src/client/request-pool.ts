@@ -19,7 +19,7 @@ export class RequestPool {
 	/**
 	 * Requests with pending responses.
 	 */
-	readonly #requests = new Map<string, (res: Response) => void>();
+	readonly #requests = new Map<JsonRpc.Id, (res: Response) => void>();
 
 	/**
 	 * Initializes a new instance of the {@link RequestPool} class.
