@@ -6,8 +6,9 @@ import { RequestPool } from "./client/request-pool.js";
 import type { Request } from "./client/request.js";
 import type { Response } from "./client/response.js";
 import type { JsonRpcConnectionOptions } from "./connection-options.js";
-import { InboundMessageRouter } from "./inbound-message-router.js";
 import * as JsonRpc from "./json-rpc/index.js";
+import { MessageRouter } from "./message-router.js";
+import { MessageSender } from "./message-sender.js";
 import { MethodDispatcher } from "./server/method-dispatcher.js";
 import type { MethodHandler } from "./server/method-handler.js";
 
@@ -28,12 +29,12 @@ export class JsonRpcConnection {
 	/**
 	 * Router responsible for observing the inbound stream.
 	 */
-	readonly #inboundMessageRouter: InboundMessageRouter;
+	readonly #messageRouter: MessageRouter;
 
 	/**
-	 * Stream responsible for sending data.
+	 * Sender responsible for sending messages.
 	 */
-	readonly #outboundStream: WritableStream<JsonRpc.Request | JsonRpc.Response>;
+	readonly #messageSender: MessageSender;
 
 	/**
 	 * Server request dispatcher responsible for routing method calls.
@@ -47,11 +48,12 @@ export class JsonRpcConnection {
 	constructor(options: JsonRpcConnectionOptions) {
 		const { inboundStream, outboundStream } = options;
 
-		this.#outboundStream = outboundStream;
-		this.#clientPool = new RequestPool(outboundStream);
+		this.#messageSender = new MessageSender(outboundStream);
+		this.#clientPool = new RequestPool(this.#messageSender);
 
-		this.#inboundMessageRouter = new InboundMessageRouter(
-			{ inboundStream, outboundStream },
+		this.#messageRouter = new MessageRouter(
+			inboundStream,
+			this.#messageSender,
 			this.#clientPool,
 			this.#serverDispatcher,
 		);
@@ -109,7 +111,7 @@ export class JsonRpcConnection {
 
 		try {
 			this.#isConnected = true;
-			await this.#inboundMessageRouter.start(signal);
+			await this.#messageRouter.start(signal);
 		} finally {
 			this.#isConnected = false;
 		}
@@ -133,10 +135,10 @@ export class JsonRpcConnection {
 	 */
 	public async notify(methodOrRequest: Request | string, params?: JsonRpc.Parameters): Promise<void> {
 		if (typeof methodOrRequest === "string") {
-			await this.#send({ jsonrpc: "2.0", method: methodOrRequest, params });
+			await this.#messageSender.send({ jsonrpc: "2.0", method: methodOrRequest, params });
 		} else {
 			const { method, params } = methodOrRequest;
-			await this.#send({ jsonrpc: "2.0", method, params });
+			await this.#messageSender.send({ jsonrpc: "2.0", method, params });
 		}
 	}
 
@@ -164,19 +166,6 @@ export class JsonRpcConnection {
 			return this.#clientPool.send({ method: methodOrRequest, params });
 		} else {
 			return this.#clientPool.send(methodOrRequest);
-		}
-	}
-
-	/**
-	 * Sends the JSON-RPC value to the outbound stream.
-	 * @param value Value to send.
-	 */
-	async #send(value: JsonRpc.Request | JsonRpc.Response): Promise<void> {
-		const writer = this.#outboundStream.getWriter();
-		try {
-			await writer.write(value);
-		} finally {
-			writer.releaseLock();
 		}
 	}
 }

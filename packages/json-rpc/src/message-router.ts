@@ -1,8 +1,8 @@
 import { z } from "zod/mini";
 
 import type { RequestPool } from "./client/request-pool.js";
-import type { JsonRpcConnectionOptions } from "./connection-options.js";
 import * as JsonRpc from "./json-rpc/index.js";
+import { MessageSender } from "./message-sender.js";
 import type { MethodDispatcher } from "./server/method-dispatcher.js";
 import { NotificationResponder } from "./server/responders/notification-responder.js";
 import { RequestResponder } from "./server/responders/request-responder.js";
@@ -13,7 +13,7 @@ import { RequestResponder } from "./server/responders/request-responder.js";
  * Messages are either dispatched to their request handlers on the server, and used to resolve
  * pending requests on the client's request pool.
  */
-export class InboundMessageRouter {
+export class MessageRouter {
 	/**
 	 * Server request dispatcher responsible for routing method calls.
 	 */
@@ -25,22 +25,30 @@ export class InboundMessageRouter {
 	#clientPool: RequestPool;
 
 	/**
-	 * Connection options that include the inbound and outbound streams.
+	 * Stream responsible for receiving messages.
 	 */
-	#connectionOptions: JsonRpcConnectionOptions;
+	#inboundStream: ReadableStream<JsonRpc.Request | JsonRpc.Response | string>;
 
 	/**
-	 * Initializes a new instances of the {@link InboundMessageRouter} class.
-	 * @param connectionOptions Connection options.
+	 * Sender responsible for sending messages.
+	 */
+	#messageSender: MessageSender;
+
+	/**
+	 * Initializes a new instances of the {@link MessageRouter} class.
+	 * @param inboundStream Stream responsible for receiving messages.
+	 * @param messageSender Sender responsible for sending outbound messages.
 	 * @param clientPool Client request pool.
 	 * @param serverDispatcher Server request dispatcher.
 	 */
 	constructor(
-		connectionOptions: JsonRpcConnectionOptions,
+		inboundStream: ReadableStream<JsonRpc.Request | JsonRpc.Response | string>,
+		messageSender: MessageSender,
 		clientPool: RequestPool,
 		serverDispatcher: MethodDispatcher,
 	) {
-		this.#connectionOptions = connectionOptions;
+		this.#inboundStream = inboundStream;
+		this.#messageSender = messageSender;
 		this.#clientPool = clientPool;
 		this.#serverDispatcher = serverDispatcher;
 	}
@@ -50,7 +58,7 @@ export class InboundMessageRouter {
 	 * @param signal Optional signal used to abort routing.
 	 */
 	public async start(signal?: AbortSignal): Promise<void> {
-		const reader = this.#connectionOptions.inboundStream.getReader();
+		const reader = this.#inboundStream.getReader();
 		const cancel = (): Promise<void> => reader.cancel(signal?.reason);
 
 		signal?.addEventListener("abort", cancel, { once: true });
@@ -86,7 +94,7 @@ export class InboundMessageRouter {
 	async #dispatch(req: JsonRpc.Request): Promise<void> {
 		const { method, params } = req;
 		const responseHandler = Object.hasOwn(req, "id")
-			? new RequestResponder(req.id!, this.#connectionOptions.outboundStream)
+			? new RequestResponder(req.id!, this.#messageSender)
 			: new NotificationResponder();
 
 		await this.#serverDispatcher.dispatch(method, params, responseHandler);
@@ -145,11 +153,6 @@ export class InboundMessageRouter {
 	 * @param id Identifier associated with the error.
 	 */
 	async #sendError(error: JsonRpc.Error, id: JsonRpc.Id = null): Promise<void> {
-		const writer = this.#connectionOptions.outboundStream.getWriter();
-		try {
-			await writer.write({ jsonrpc: "2.0", id, error });
-		} finally {
-			writer.releaseLock();
-		}
+		await this.#messageSender.send({ jsonrpc: "2.0", id, error });
 	}
 }

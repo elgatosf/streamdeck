@@ -1,4 +1,5 @@
 import * as JsonRpc from "../json-rpc/index.js";
+import type { MessageSender } from "../message-sender.js";
 import type { Request } from "./request.js";
 import type { Response } from "./response.js";
 
@@ -12,9 +13,9 @@ export class RequestPool {
 	static readonly #DEFAULT_TIMEOUT = 30000;
 
 	/**
-	 * Stream responsible for sending data.
+	 * Sender responsible for sending messages.
 	 */
-	readonly #outboundStream: WritableStream<JsonRpc.Request>;
+	readonly #messageSender: MessageSender;
 
 	/**
 	 * Requests with pending responses.
@@ -23,10 +24,10 @@ export class RequestPool {
 
 	/**
 	 * Initializes a new instance of the {@link RequestPool} class.
-	 * @param outboundStream Stream responsible for sending data.
+	 * @param messageSender Sender responsible for sending messages.
 	 */
-	constructor(outboundStream: WritableStream<JsonRpc.Request>) {
-		this.#outboundStream = outboundStream;
+	constructor(messageSender: MessageSender) {
+		this.#messageSender = messageSender;
 	}
 
 	/**
@@ -92,7 +93,7 @@ export class RequestPool {
 		}, timeout);
 
 		try {
-			await this.#send({ jsonrpc: "2.0", method, params, id });
+			await this.#messageSender.send({ jsonrpc: "2.0", method, params, id });
 		} catch (err) {
 			clearTimeout(timeoutMonitor);
 			this.#requests.delete(id);
@@ -101,18 +102,5 @@ export class RequestPool {
 		}
 
 		return response;
-	}
-
-	/**
-	 * Sends the JSON-RPC value to the outbound stream.
-	 * @param value Value to send.
-	 */
-	async #send(value: JsonRpc.Request): Promise<void> {
-		const writer = this.#outboundStream.getWriter();
-		try {
-			await writer.write(value);
-		} finally {
-			writer.releaseLock();
-		}
 	}
 }

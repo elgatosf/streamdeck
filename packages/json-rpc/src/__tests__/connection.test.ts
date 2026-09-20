@@ -17,6 +17,35 @@ describe("JsonRpcConnection", () => {
 	 */
 	describe("notify", () => {
 		/**
+		 * Asserts concurrent notifications are written sequentially.
+		 */
+		test("serializes concurrent notifications", async () => {
+			// Arrange.
+			let completeFirstWrite: (() => void) | undefined;
+			const firstWrite = new Promise<void>((resolve) => {
+				completeFirstWrite = resolve;
+			});
+			const write = vi.fn().mockReturnValueOnce(firstWrite).mockResolvedValueOnce(undefined);
+			const connectionOptions: JsonRpcConnectionOptions = {
+				inboundStream: createInboundStream(),
+				outboundStream: new WritableStream({ write }),
+			};
+			const connection = new JsonRpcConnection(connectionOptions);
+
+			// Act.
+			const firstNotification = connection.notify("first");
+			const secondNotification = connection.notify("second");
+			await Promise.resolve();
+
+			// Assert.
+			expect(write).toHaveBeenCalledOnce();
+			completeFirstWrite?.();
+			await Promise.all([firstNotification, secondNotification]);
+			expect(write).toHaveBeenNthCalledWith(1, expect.objectContaining({ method: "first" }), expect.anything());
+			expect(write).toHaveBeenNthCalledWith(2, expect.objectContaining({ method: "second" }), expect.anything());
+		});
+
+		/**
 		 * Asserts a method name and parameters are sent as a notification.
 		 */
 		test("sends a notification from a method name", async () => {

@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, type Mock, test, vi } from "vitest";
 
 import * as JsonRpc from "../../json-rpc/index.js";
+import { MessageSender } from "../../message-sender.js";
 import { RequestPool } from "../request-pool.js";
 
 const requestId = "00000000-0000-4000-8000-000000000000";
@@ -22,7 +23,7 @@ describe("RequestPool", () => {
 			// Arrange.
 			vi.spyOn(crypto, "randomUUID").mockReturnValue(requestId);
 
-			const requestPool = new RequestPool(new WritableStream());
+			const requestPool = new RequestPool(new MessageSender(new WritableStream()));
 			const response = requestPool.send({ method: "method" });
 
 			// Act.
@@ -46,7 +47,7 @@ describe("RequestPool", () => {
 			// Arrange.
 			vi.spyOn(crypto, "randomUUID").mockReturnValue(requestId);
 
-			const requestPool = new RequestPool(new WritableStream());
+			const requestPool = new RequestPool(new MessageSender(new WritableStream()));
 			const response = requestPool.send({ method: "method" });
 
 			const error: JsonRpc.Error = {
@@ -74,7 +75,7 @@ describe("RequestPool", () => {
 		test("ignores a response without an identifier", async () => {
 			// Arrange.
 			vi.spyOn(crypto, "randomUUID").mockReturnValue(requestId);
-			const requestPool = new RequestPool(new WritableStream());
+			const requestPool = new RequestPool(new MessageSender(new WritableStream()));
 			const response = requestPool.send({ method: "method" });
 
 			// Act.
@@ -107,7 +108,7 @@ describe("RequestPool", () => {
 			// Arrange.
 			vi.spyOn(crypto, "randomUUID").mockReturnValue(requestId);
 
-			const requestPool = new RequestPool(new WritableStream());
+			const requestPool = new RequestPool(new MessageSender(new WritableStream()));
 			const response = requestPool.send({ method: "method" });
 
 			// Act.
@@ -137,7 +138,7 @@ describe("RequestPool", () => {
 			// Arrange.
 			vi.spyOn(crypto, "randomUUID").mockReturnValue(requestId);
 
-			const requestPool = new RequestPool(new WritableStream());
+			const requestPool = new RequestPool(new MessageSender(new WritableStream()));
 			const response = requestPool.send({ method: "method" });
 
 			// Act.
@@ -164,7 +165,7 @@ describe("RequestPool", () => {
 			vi.spyOn(crypto, "randomUUID").mockReturnValue(requestId);
 
 			const { releaseLock, sendingStream, write } = createSendingStream();
-			const requestPool = new RequestPool(sendingStream);
+			const requestPool = new RequestPool(new MessageSender(sendingStream));
 
 			// Act.
 			const response = requestPool.send({
@@ -197,7 +198,7 @@ describe("RequestPool", () => {
 			// Arrange.
 			vi.spyOn(crypto, "randomUUID").mockReturnValue(requestId);
 			const { sendingStream, write } = createSendingStream();
-			const requestPool = new RequestPool(sendingStream);
+			const requestPool = new RequestPool(new MessageSender(sendingStream));
 
 			// Act.
 			const response = requestPool.send({ method: "method" });
@@ -221,7 +222,7 @@ describe("RequestPool", () => {
 			vi.spyOn(crypto, "randomUUID").mockReturnValueOnce(requestId).mockReturnValueOnce(nextRequestId);
 
 			const { sendingStream, write } = createSendingStream();
-			const requestPool = new RequestPool(sendingStream);
+			const requestPool = new RequestPool(new MessageSender(sendingStream));
 
 			// Act.
 			const firstResponse = requestPool.send({ method: "first" });
@@ -257,7 +258,7 @@ describe("RequestPool", () => {
 			const error = new Error("Unable to send request");
 			const { releaseLock, sendingStream, write } = createSendingStream();
 			write.mockRejectedValue(error);
-			const requestPool = new RequestPool(sendingStream);
+			const requestPool = new RequestPool(new MessageSender(sendingStream));
 
 			// Act, assert.
 			await expect(requestPool.send({ method: "method" })).rejects.toBe(error);
@@ -278,7 +279,7 @@ describe("RequestPool", () => {
 			vi.useFakeTimers();
 			vi.spyOn(crypto, "randomUUID").mockReturnValue(requestId);
 
-			const requestPool = new RequestPool(new WritableStream());
+			const requestPool = new RequestPool(new MessageSender(new WritableStream()));
 			const response = requestPool.send({ method: "method", timeout: 100 });
 
 			// Act.
@@ -304,7 +305,7 @@ describe("RequestPool", () => {
 
 			vi.spyOn(crypto, "randomUUID").mockReturnValue(requestId);
 
-			const requestPool = new RequestPool(new WritableStream());
+			const requestPool = new RequestPool(new MessageSender(new WritableStream()));
 			const response = requestPool.send({ method: "method", timeout: 100 });
 
 			// Act.
@@ -321,12 +322,16 @@ describe("RequestPool", () => {
  * Creates a mocked sending stream.
  * @returns The sending stream and its mock functions.
  */
-function createSendingStream(): { releaseLock: Mock; sendingStream: WritableStream<JsonRpc.Request>; write: Mock } {
+function createSendingStream(): {
+	releaseLock: Mock;
+	sendingStream: WritableStream<JsonRpc.Request | JsonRpc.Response>;
+	write: Mock;
+} {
 	const releaseLock = vi.fn();
 	const write = vi.fn();
 	const sendingStream = {
 		getWriter: () => ({ releaseLock, write }),
-	} as unknown as WritableStream<JsonRpc.Request>;
+	} as unknown as WritableStream<JsonRpc.Request | JsonRpc.Response>;
 
 	return {
 		releaseLock,

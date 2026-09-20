@@ -1,6 +1,8 @@
+import { withResolvers } from "@elgato/utils";
 import { describe, expect, test, vi } from "vitest";
 
 import * as JsonRpc from "../../../json-rpc/index.js";
+import { MessageSender } from "../../../message-sender.js";
 import { RequestResponder } from "../request-responder.js";
 
 const requestId = "00000000-0000-4000-8000-000000000000";
@@ -117,6 +119,31 @@ describe("RequestResponder", () => {
 	 */
 	describe("success", () => {
 		/**
+		 * Asserts a response is reserved before its write completes.
+		 */
+		test("throws error for a concurrent response", async () => {
+			// Arrange.
+			const pendingWrite = withResolvers<void>();
+			const { responder, write } = createResponder();
+			write.mockReturnValue(pendingWrite.promise);
+
+			// Act.
+			const response = responder.success("first");
+
+			// Assert.
+			await expect(responder.success("second")).rejects.toThrowError(
+				"Cannot send response as one has already been sent.",
+			);
+			pendingWrite.resolve();
+			await response;
+			expect(write).toHaveBeenCalledExactlyOnceWith({
+				id: requestId,
+				jsonrpc: "2.0",
+				result: "first",
+			});
+		});
+
+		/**
 		 * Asserts a success response is propagated to the sending stream.
 		 */
 		test("propagates to sending stream", async () => {
@@ -179,10 +206,10 @@ function createResponder(): { responder: RequestResponder; write: ReturnType<typ
 			releaseLock: vi.fn(),
 			write,
 		}),
-	} as unknown as WritableStream<JsonRpc.Response>;
+	} as unknown as WritableStream<JsonRpc.Request | JsonRpc.Response>;
 
 	return {
-		responder: new RequestResponder(requestId, sendingStream),
+		responder: new RequestResponder(requestId, new MessageSender(sendingStream)),
 		write,
 	};
 }

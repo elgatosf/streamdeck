@@ -1,4 +1,5 @@
 import type * as JsonRpc from "../../json-rpc/index.js";
+import type { MessageSender } from "../../message-sender.js";
 import type { Responder } from "../responder.js";
 
 /**
@@ -16,18 +17,18 @@ export class RequestResponder implements Responder {
 	#responded = false;
 
 	/**
-	 * Stream responsible for sending the response.
+	 * Sender responsible for sending the response.
 	 */
-	#sendingStream: WritableStream<JsonRpc.Response>;
+	#messageSender: MessageSender;
 
 	/**
 	 * Initializes a new instance of the {@link RequestResponder}.
 	 * @param id Request identifier.
-	 * @param sendingStream Stream responsible for sending the response.
+	 * @param messageSender Sender responsible for sending the response.
 	 */
-	constructor(id: JsonRpc.Id, sendingStream: WritableStream<JsonRpc.Response>) {
+	constructor(id: JsonRpc.Id, messageSender: MessageSender) {
 		this.#id = id;
-		this.#sendingStream = sendingStream;
+		this.#messageSender = messageSender;
 	}
 
 	/**
@@ -68,12 +69,7 @@ export class RequestResponder implements Responder {
 			throw new Error("Cannot send response as one has already been sent.");
 		}
 
-		const writer = this.#sendingStream.getWriter();
-		try {
-			await writer.write(res);
-			this.#responded = true;
-		} finally {
-			writer.releaseLock();
-		}
+		this.#responded = true;
+		await this.#messageSender.send(res);
 	}
 }

@@ -2,11 +2,12 @@ import { describe, expect, test, vi } from "vitest";
 
 import type { RequestPool } from "../client/request-pool.js";
 import type { JsonRpcConnectionOptions } from "../connection-options.js";
-import { InboundMessageRouter } from "../inbound-message-router.js";
 import * as JsonRpc from "../json-rpc/index.js";
+import { MessageRouter } from "../message-router.js";
+import { MessageSender } from "../message-sender.js";
 import type { MethodDispatcher } from "../server/method-dispatcher.js";
 
-describe("InboundMessageRouter", () => {
+describe("MessageRouter", () => {
 	/**
 	 * Asserts requests are dispatched with a responder capable of responding.
 	 */
@@ -21,7 +22,12 @@ describe("InboundMessageRouter", () => {
 
 		const clientPool = { resolve: vi.fn() } as unknown as RequestPool;
 		const serverDispatcher = { dispatch: vi.fn() } as unknown as MethodDispatcher;
-		const router = new InboundMessageRouter(connectionOptions, clientPool, serverDispatcher);
+		const router = new MessageRouter(
+			connectionOptions.inboundStream,
+			new MessageSender(connectionOptions.outboundStream),
+			clientPool,
+			serverDispatcher,
+		);
 
 		// Act.
 		await router.start(new AbortController().signal);
@@ -47,7 +53,12 @@ describe("InboundMessageRouter", () => {
 
 		const clientPool = { resolve: vi.fn() } as unknown as RequestPool;
 		const serverDispatcher = { dispatch: vi.fn() } as unknown as MethodDispatcher;
-		const router = new InboundMessageRouter(connectionOptions, clientPool, serverDispatcher);
+		const router = new MessageRouter(
+			connectionOptions.inboundStream,
+			new MessageSender(connectionOptions.outboundStream),
+			clientPool,
+			serverDispatcher,
+		);
 
 		// Act.
 		await router.start(new AbortController().signal);
@@ -73,7 +84,12 @@ describe("InboundMessageRouter", () => {
 
 		const clientPool = { resolve: vi.fn() } as unknown as RequestPool;
 		const serverDispatcher = { dispatch: vi.fn() } as unknown as MethodDispatcher;
-		const router = new InboundMessageRouter(connectionOptions, clientPool, serverDispatcher);
+		const router = new MessageRouter(
+			connectionOptions.inboundStream,
+			new MessageSender(connectionOptions.outboundStream),
+			clientPool,
+			serverDispatcher,
+		);
 
 		// Act.
 		await router.start(new AbortController().signal);
@@ -105,7 +121,12 @@ describe("InboundMessageRouter", () => {
 
 		const clientPool = { resolve: vi.fn() } as unknown as RequestPool;
 		const serverDispatcher = { dispatch: vi.fn() } as unknown as MethodDispatcher;
-		const router = new InboundMessageRouter(connectionOptions, clientPool, serverDispatcher);
+		const router = new MessageRouter(
+			connectionOptions.inboundStream,
+			new MessageSender(connectionOptions.outboundStream),
+			clientPool,
+			serverDispatcher,
+		);
 
 		// Act.
 		await router.start(new AbortController().signal);
@@ -130,7 +151,12 @@ describe("InboundMessageRouter", () => {
 
 		const clientPool = { resolve: vi.fn() } as unknown as RequestPool;
 		const serverDispatcher = { dispatch: vi.fn() } as unknown as MethodDispatcher;
-		const router = new InboundMessageRouter(connectionOptions, clientPool, serverDispatcher);
+		const router = new MessageRouter(
+			connectionOptions.inboundStream,
+			new MessageSender(connectionOptions.outboundStream),
+			clientPool,
+			serverDispatcher,
+		);
 
 		// Act.
 		await router.start(new AbortController().signal);
@@ -163,7 +189,12 @@ describe("InboundMessageRouter", () => {
 
 		const clientPool = { resolve: vi.fn() } as unknown as RequestPool;
 		const serverDispatcher = { dispatch: vi.fn() } as unknown as MethodDispatcher;
-		const router = new InboundMessageRouter(connectionOptions, clientPool, serverDispatcher);
+		const router = new MessageRouter(
+			connectionOptions.inboundStream,
+			new MessageSender(connectionOptions.outboundStream),
+			clientPool,
+			serverDispatcher,
+		);
 
 		// Act.
 		await router.start(new AbortController().signal);
@@ -196,7 +227,12 @@ describe("InboundMessageRouter", () => {
 
 		const clientPool = { resolve: vi.fn() } as unknown as RequestPool;
 		const serverDispatcher = { dispatch: vi.fn() } as unknown as MethodDispatcher;
-		const router = new InboundMessageRouter(connectionOptions, clientPool, serverDispatcher);
+		const router = new MessageRouter(
+			connectionOptions.inboundStream,
+			new MessageSender(connectionOptions.outboundStream),
+			clientPool,
+			serverDispatcher,
+		);
 
 		// Act.
 		await router.start(new AbortController().signal);
@@ -232,7 +268,12 @@ describe("InboundMessageRouter", () => {
 
 		const clientPool = { resolve: vi.fn() } as unknown as RequestPool;
 		const serverDispatcher = { dispatch: vi.fn() } as unknown as MethodDispatcher;
-		const router = new InboundMessageRouter(connectionOptions, clientPool, serverDispatcher);
+		const router = new MessageRouter(
+			connectionOptions.inboundStream,
+			new MessageSender(connectionOptions.outboundStream),
+			clientPool,
+			serverDispatcher,
+		);
 		const routing = router.start();
 
 		// Act.
@@ -270,7 +311,12 @@ describe("InboundMessageRouter", () => {
 		};
 		const clientPool = { resolve: vi.fn() } as unknown as RequestPool;
 		const serverDispatcher = { dispatch: vi.fn() } as unknown as MethodDispatcher;
-		const router = new InboundMessageRouter(connectionOptions, clientPool, serverDispatcher);
+		const router = new MessageRouter(
+			connectionOptions.inboundStream,
+			new MessageSender(connectionOptions.outboundStream),
+			clientPool,
+			serverDispatcher,
+		);
 
 		// Act.
 		await router.start(new AbortController().signal);
