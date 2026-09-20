@@ -4,8 +4,10 @@ import { JsonRpcConnection } from "../connection.js";
 import type * as JsonRpc from "../json-rpc/index.js";
 
 /**
- * Creates a JSON-RPC connection whose sending and receiving is fulfilled with a delegate and
- * callback functions.
+ * Creates a JSON-RPC connection from callback functions.
+ *
+ * The `send` callback receives outbound messages, while the returned `receive` callback accepts
+ * inbound messages.
  * @param send Delegate responsible for sending outbound message.
  * @returns The connection, and `receive` delegate responsible for handling inbound messages.
  */

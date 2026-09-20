@@ -2,7 +2,7 @@ import { JsonRpcConnection } from "../connection.js";
 import type * as JsonRpc from "../json-rpc/index.js";
 
 /**
- * Creates a JSON-RPC connection whose sending and receiving is fulfilled by a WebSocket.
+ * Creates a JSON-RPC connection backed by a WebSocket.
  * @param webSocket The WebSocket responsible for sending and receiving messages.
  * @returns The JSON-RPC connection.
  */
