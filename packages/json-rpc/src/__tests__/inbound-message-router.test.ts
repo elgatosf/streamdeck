@@ -10,7 +10,7 @@ describe("InboundMessageRouter", () => {
 	/**
 	 * Asserts requests are dispatched with a responder capable of responding.
 	 */
-	test("routes requests to the request dispatcher", async () => {
+	test("routes requests to the server dispatcher", async () => {
 		// Arrange.
 		const connectionOptions: JsonRpcConnectionOptions = {
 			inboundStream: createInboundStream(
@@ -19,20 +19,20 @@ describe("InboundMessageRouter", () => {
 			outboundStream: new WritableStream(),
 		};
 
-		const requestPool = { resolve: vi.fn() } as unknown as RequestPool;
-		const requestDispatcher = { dispatch: vi.fn() } as unknown as MethodDispatcher;
-		const router = new InboundMessageRouter(connectionOptions, requestPool, requestDispatcher);
+		const clientPool = { resolve: vi.fn() } as unknown as RequestPool;
+		const serverDispatcher = { dispatch: vi.fn() } as unknown as MethodDispatcher;
+		const router = new InboundMessageRouter(connectionOptions, clientPool, serverDispatcher);
 
 		// Act.
 		await router.start(new AbortController().signal);
 
 		// Assert.
-		expect(requestDispatcher.dispatch).toHaveBeenCalledExactlyOnceWith(
+		expect(serverDispatcher.dispatch).toHaveBeenCalledExactlyOnceWith(
 			"method",
 			{ value: 42 },
 			expect.objectContaining({ canRespond: true }),
 		);
-		expect(requestPool.resolve).not.toHaveBeenCalled();
+		expect(clientPool.resolve).not.toHaveBeenCalled();
 	});
 
 	/**
@@ -45,52 +45,52 @@ describe("InboundMessageRouter", () => {
 			outboundStream: new WritableStream(),
 		};
 
-		const requestPool = { resolve: vi.fn() } as unknown as RequestPool;
-		const requestDispatcher = { dispatch: vi.fn() } as unknown as MethodDispatcher;
-		const router = new InboundMessageRouter(connectionOptions, requestPool, requestDispatcher);
+		const clientPool = { resolve: vi.fn() } as unknown as RequestPool;
+		const serverDispatcher = { dispatch: vi.fn() } as unknown as MethodDispatcher;
+		const router = new InboundMessageRouter(connectionOptions, clientPool, serverDispatcher);
 
 		// Act.
 		await router.start(new AbortController().signal);
 
 		// Assert.
-		expect(requestDispatcher.dispatch).toHaveBeenCalledExactlyOnceWith(
+		expect(serverDispatcher.dispatch).toHaveBeenCalledExactlyOnceWith(
 			"method",
 			undefined,
 			expect.objectContaining({ canRespond: true }),
 		);
-		expect(requestPool.resolve).not.toHaveBeenCalled();
+		expect(clientPool.resolve).not.toHaveBeenCalled();
 	});
 
 	/**
 	 * Asserts notifications are dispatched with a responder that cannot respond.
 	 */
-	test("routes notifications to the request dispatcher", async () => {
+	test("routes notifications to the server dispatcher", async () => {
 		// Arrange.
 		const connectionOptions: JsonRpcConnectionOptions = {
 			inboundStream: createInboundStream(JSON.stringify({ jsonrpc: "2.0", method: "method" })),
 			outboundStream: new WritableStream(),
 		};
 
-		const requestPool = { resolve: vi.fn() } as unknown as RequestPool;
-		const requestDispatcher = { dispatch: vi.fn() } as unknown as MethodDispatcher;
-		const router = new InboundMessageRouter(connectionOptions, requestPool, requestDispatcher);
+		const clientPool = { resolve: vi.fn() } as unknown as RequestPool;
+		const serverDispatcher = { dispatch: vi.fn() } as unknown as MethodDispatcher;
+		const router = new InboundMessageRouter(connectionOptions, clientPool, serverDispatcher);
 
 		// Act.
 		await router.start(new AbortController().signal);
 
 		// Assert.
-		expect(requestDispatcher.dispatch).toHaveBeenCalledExactlyOnceWith(
+		expect(serverDispatcher.dispatch).toHaveBeenCalledExactlyOnceWith(
 			"method",
 			undefined,
 			expect.objectContaining({ canRespond: false }),
 		);
-		expect(requestPool.resolve).not.toHaveBeenCalled();
+		expect(clientPool.resolve).not.toHaveBeenCalled();
 	});
 
 	/**
 	 * Asserts responses resolve their pending request.
 	 */
-	test("routes responses to the request pool", async () => {
+	test("routes responses to the client pool", async () => {
 		// Arrange.
 		const response: JsonRpc.Response = {
 			id: "request-id",
@@ -103,16 +103,16 @@ describe("InboundMessageRouter", () => {
 			outboundStream: new WritableStream(),
 		};
 
-		const requestPool = { resolve: vi.fn() } as unknown as RequestPool;
-		const requestDispatcher = { dispatch: vi.fn() } as unknown as MethodDispatcher;
-		const router = new InboundMessageRouter(connectionOptions, requestPool, requestDispatcher);
+		const clientPool = { resolve: vi.fn() } as unknown as RequestPool;
+		const serverDispatcher = { dispatch: vi.fn() } as unknown as MethodDispatcher;
+		const router = new InboundMessageRouter(connectionOptions, clientPool, serverDispatcher);
 
 		// Act.
 		await router.start(new AbortController().signal);
 
 		// Assert.
-		expect(requestPool.resolve).toHaveBeenCalledExactlyOnceWith(response);
-		expect(requestDispatcher.dispatch).not.toHaveBeenCalled();
+		expect(clientPool.resolve).toHaveBeenCalledExactlyOnceWith(response);
+		expect(serverDispatcher.dispatch).not.toHaveBeenCalled();
 	});
 
 	/**
@@ -128,9 +128,9 @@ describe("InboundMessageRouter", () => {
 			}),
 		};
 
-		const requestPool = { resolve: vi.fn() } as unknown as RequestPool;
-		const requestDispatcher = { dispatch: vi.fn() } as unknown as MethodDispatcher;
-		const router = new InboundMessageRouter(connectionOptions, requestPool, requestDispatcher);
+		const clientPool = { resolve: vi.fn() } as unknown as RequestPool;
+		const serverDispatcher = { dispatch: vi.fn() } as unknown as MethodDispatcher;
+		const router = new InboundMessageRouter(connectionOptions, clientPool, serverDispatcher);
 
 		// Act.
 		await router.start(new AbortController().signal);
@@ -161,9 +161,9 @@ describe("InboundMessageRouter", () => {
 			}),
 		};
 
-		const requestPool = { resolve: vi.fn() } as unknown as RequestPool;
-		const requestDispatcher = { dispatch: vi.fn() } as unknown as MethodDispatcher;
-		const router = new InboundMessageRouter(connectionOptions, requestPool, requestDispatcher);
+		const clientPool = { resolve: vi.fn() } as unknown as RequestPool;
+		const serverDispatcher = { dispatch: vi.fn() } as unknown as MethodDispatcher;
+		const router = new InboundMessageRouter(connectionOptions, clientPool, serverDispatcher);
 
 		// Act.
 		await router.start(new AbortController().signal);
@@ -181,6 +181,50 @@ describe("InboundMessageRouter", () => {
 	});
 
 	/**
+	 * Asserts routing continues as values arrive until the inbound stream closes.
+	 */
+	test("continues routing until the inbound stream closes", async () => {
+		// Arrange.
+		let inboundController: ReadableStreamDefaultController<string> | undefined;
+		const connectionOptions: JsonRpcConnectionOptions = {
+			inboundStream: new ReadableStream({
+				start: (controller): void => {
+					inboundController = controller;
+				},
+			}),
+			outboundStream: new WritableStream(),
+		};
+
+		const clientPool = { resolve: vi.fn() } as unknown as RequestPool;
+		const serverDispatcher = { dispatch: vi.fn() } as unknown as MethodDispatcher;
+		const router = new InboundMessageRouter(connectionOptions, clientPool, serverDispatcher);
+		const routing = router.start();
+
+		// Act.
+		inboundController?.enqueue(JSON.stringify({ jsonrpc: "2.0", method: "first" }));
+		await vi.waitFor(() => expect(serverDispatcher.dispatch).toHaveBeenCalledTimes(1));
+
+		inboundController?.enqueue(JSON.stringify({ jsonrpc: "2.0", method: "second" }));
+		inboundController?.close();
+		await routing;
+
+		// Assert.
+		expect(serverDispatcher.dispatch).toHaveBeenNthCalledWith(
+			1,
+			"first",
+			undefined,
+			expect.objectContaining({ canRespond: false }),
+		);
+		expect(serverDispatcher.dispatch).toHaveBeenNthCalledWith(
+			2,
+			"second",
+			undefined,
+			expect.objectContaining({ canRespond: false }),
+		);
+		expect(connectionOptions.inboundStream.locked).toBe(false);
+	});
+
+	/**
 	 * Asserts the inbound stream lock is released after observation completes.
 	 */
 	test("releases the inbound stream reader", async () => {
@@ -189,9 +233,9 @@ describe("InboundMessageRouter", () => {
 			inboundStream: createInboundStream(),
 			outboundStream: new WritableStream(),
 		};
-		const requestPool = { resolve: vi.fn() } as unknown as RequestPool;
-		const requestDispatcher = { dispatch: vi.fn() } as unknown as MethodDispatcher;
-		const router = new InboundMessageRouter(connectionOptions, requestPool, requestDispatcher);
+		const clientPool = { resolve: vi.fn() } as unknown as RequestPool;
+		const serverDispatcher = { dispatch: vi.fn() } as unknown as MethodDispatcher;
+		const router = new InboundMessageRouter(connectionOptions, clientPool, serverDispatcher);
 
 		// Act.
 		await router.start(new AbortController().signal);

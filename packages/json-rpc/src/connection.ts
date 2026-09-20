@@ -1,4 +1,4 @@
-import { type IDisposable, withResolvers } from "@elgato/utils";
+import { type IDisposable } from "@elgato/utils";
 import type { ZodType } from "zod";
 import type { ZodMiniType } from "zod/mini";
 
@@ -21,6 +21,11 @@ export class JsonRpcConnection {
 	#isConnected = false;
 
 	/**
+	 * Client request pool that contains pending requests.
+	 */
+	readonly #clientPool: RequestPool;
+
+	/**
 	 * Router responsible for observing the inbound stream.
 	 */
 	readonly #inboundMessageRouter: InboundMessageRouter;
@@ -33,12 +38,7 @@ export class JsonRpcConnection {
 	/**
 	 * Server request dispatcher responsible for routing method calls.
 	 */
-	readonly #requestDispatcher: MethodDispatcher = new MethodDispatcher();
-
-	/**
-	 * Client request pool that contains pending requests.
-	 */
-	readonly #requestPool: RequestPool;
+	readonly #serverDispatcher: MethodDispatcher = new MethodDispatcher();
 
 	/**
 	 * Initializes a new instance of the {@link JsonRpcConnection} class.
@@ -48,12 +48,12 @@ export class JsonRpcConnection {
 		const { inboundStream, outboundStream } = options;
 
 		this.#outboundStream = outboundStream;
-		this.#requestPool = new RequestPool(outboundStream);
+		this.#clientPool = new RequestPool(outboundStream);
 
 		this.#inboundMessageRouter = new InboundMessageRouter(
 			{ inboundStream, outboundStream },
-			this.#requestPool,
-			this.#requestDispatcher,
+			this.#clientPool,
+			this.#serverDispatcher,
 		);
 	}
 
@@ -89,17 +89,17 @@ export class JsonRpcConnection {
 		paramsSchema?: ZodMiniType<TParametersSchema, TParametersSchema> | ZodType<TParametersSchema, TParametersSchema>,
 	): IDisposable {
 		if (paramsSchema) {
-			return this.#requestDispatcher.add(method, handler, paramsSchema);
+			return this.#serverDispatcher.add(method, handler, paramsSchema);
 		}
 
-		return this.#requestDispatcher.add(method, handler as MethodHandler<JsonRpc.Parameters>);
+		return this.#serverDispatcher.add(method, handler as MethodHandler<JsonRpc.Parameters>);
 	}
 
 	/**
 	 * Begins listening on the inbound stream, allowing for bi-directional communication with the remote target.
 	 *
 	 * The connection will remain active whilst the inbound stream is open, or until the signal is aborted.
-	 * @param signal Optional abort signal used to determine the connection.
+	 * @param signal Optional signal used to abort the connection.
 	 */
 	public async connect(signal?: AbortSignal): Promise<void> {
 		// Check if the connection is already established.
@@ -107,25 +107,11 @@ export class JsonRpcConnection {
 			throw new Error("JSON-RPC connection is already connected.");
 		}
 
-		const { promise, resolve, reject } = withResolvers();
-
-		// Configure the abort signal to throw an error for callers awaiting the connection.
-		if (signal) {
-			signal.onabort = (): void => reject("JSON-RPC connection was aborted.");
-		}
-
 		try {
 			this.#isConnected = true;
-
-			// Start reading from the inbound stream.
-			await Promise.race([
-				this.#inboundMessageRouter.start(signal ?? new AbortController().signal),
-				promise,
-			]);
+			await this.#inboundMessageRouter.start(signal);
 		} finally {
-			// Clean-up the resolvers.
 			this.#isConnected = false;
-			resolve();
 		}
 	}
 
@@ -175,9 +161,9 @@ export class JsonRpcConnection {
 	 */
 	public async request(methodOrRequest: Request | string, params?: JsonRpc.Parameters): Promise<Response> {
 		if (typeof methodOrRequest === "string") {
-			return this.#requestPool.send({ method: methodOrRequest, params });
+			return this.#clientPool.send({ method: methodOrRequest, params });
 		} else {
-			return this.#requestPool.send(methodOrRequest);
+			return this.#clientPool.send(methodOrRequest);
 		}
 	}
 

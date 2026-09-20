@@ -33,7 +33,8 @@ describe("createWebSocketJsonRpcConnection", () => {
 		const webSocket = createWebSocket(vi.fn());
 		const connection = createWebSocketJsonRpcConnection(webSocket);
 		const abortController = new AbortController();
-		const handler = vi.fn(() => abortController.abort());
+		const abortReason = new Error("Routing complete");
+		const handler = vi.fn(() => abortController.abort(abortReason));
 		connection.addLocalMethod("method", handler);
 		const connected = connection.connect(abortController.signal);
 
@@ -45,7 +46,7 @@ describe("createWebSocketJsonRpcConnection", () => {
 		);
 
 		// Assert.
-		await expect(connected).rejects.toBe("JSON-RPC connection was aborted.");
+		await expect(connected).rejects.toBe(abortReason);
 		expect(handler).toHaveBeenCalledExactlyOnceWith(
 			{ value: 42 },
 			expect.objectContaining({ canRespond: false }),

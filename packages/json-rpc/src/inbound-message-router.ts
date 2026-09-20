@@ -17,12 +17,12 @@ export class InboundMessageRouter {
 	/**
 	 * Server request dispatcher responsible for routing method calls.
 	 */
-	#requestDispatcher: MethodDispatcher;
+	#serverDispatcher: MethodDispatcher;
 
 	/**
 	 * Client request pool that contains pending requests.
 	 */
-	#requestPool: RequestPool;
+	#clientPool: RequestPool;
 
 	/**
 	 * Connection options that include the inbound and outbound streams.
@@ -32,39 +32,49 @@ export class InboundMessageRouter {
 	/**
 	 * Initializes a new instances of the {@link InboundMessageRouter} class.
 	 * @param connectionOptions Connection options.
-	 * @param requestPool Client request pool.
-	 * @param requestDispatcher Server request dispatcher.
+	 * @param clientPool Client request pool.
+	 * @param serverDispatcher Server request dispatcher.
 	 */
 	constructor(
 		connectionOptions: JsonRpcConnectionOptions,
-		requestPool: RequestPool,
-		requestDispatcher: MethodDispatcher,
+		clientPool: RequestPool,
+		serverDispatcher: MethodDispatcher,
 	) {
 		this.#connectionOptions = connectionOptions;
-		this.#requestPool = requestPool;
-		this.#requestDispatcher = requestDispatcher;
+		this.#clientPool = clientPool;
+		this.#serverDispatcher = serverDispatcher;
 	}
 
 	/**
-	 * Continually reads the inbound stream and attempts to parse read data as  JSON-RPC messages.
-	 * Reading continues until the inbound stream is closed, or the signal is aborted.
-	 * @param signal Abort signal used to stream reading.
+	 * Continually reads the inbound stream and attempts to parse read data as JSON-RPC messages.
+	 * @param signal Optional signal used to abort routing.
 	 */
-	public async start(signal: AbortSignal): Promise<void> {
+	public async start(signal?: AbortSignal): Promise<void> {
 		const reader = this.#connectionOptions.inboundStream.getReader();
+		const cancel = (): Promise<void> => reader.cancel(signal?.reason);
+
+		signal?.addEventListener("abort", cancel, { once: true });
 
 		try {
+			if (signal?.aborted) {
+				await reader.cancel(signal.reason);
+				signal.throwIfAborted();
+			}
+
 			// Continually read from the inbound stream until aborted or done.
 			while (!signal?.aborted) {
 				const { done, value } = await reader.read();
 				if (done) {
-					return;
+					break;
 				}
 
 				// Parse the received value.
 				await this.#parse(value);
 			}
+
+			signal?.throwIfAborted();
 		} finally {
+			signal?.removeEventListener("abort", cancel);
 			reader.releaseLock();
 		}
 	}
@@ -79,7 +89,7 @@ export class InboundMessageRouter {
 			? new RequestResponder(req.id!, this.#connectionOptions.outboundStream)
 			: new NotificationResponder();
 
-		await this.#requestDispatcher.dispatch(method, params, responseHandler);
+		await this.#serverDispatcher.dispatch(method, params, responseHandler);
 	}
 
 	/**
@@ -116,7 +126,7 @@ export class InboundMessageRouter {
 
 		// Check if the message is a response.
 		if (z.validate(JsonRpc.Response, data)) {
-			return this.#requestPool.resolve(data);
+			return this.#clientPool.resolve(data);
 		}
 
 		return this.#sendError({

@@ -242,6 +242,26 @@ describe("JsonRpcConnection", () => {
 		});
 
 		/**
+		 * Asserts a routing failure does not leave the connection active.
+		 */
+		test("can reconnect after the inbound stream errors", async () => {
+			// Arrange.
+			const error = new Error("Inbound stream failed");
+			const connectionOptions: JsonRpcConnectionOptions = {
+				inboundStream: new ReadableStream({
+					start: (controller): void => controller.error(error),
+				}),
+				outboundStream: new WritableStream(),
+			};
+
+			const connection = new JsonRpcConnection(connectionOptions);
+
+			// Act, assert.
+			await expect(connection.connect()).rejects.toBe(error);
+			await expect(connection.connect()).rejects.toBe(error);
+		});
+
+		/**
 		 * Asserts an active connection cannot be connected again.
 		 */
 		test("rejects a concurrent connection", async () => {
@@ -268,17 +288,13 @@ describe("JsonRpcConnection", () => {
 		});
 
 		/**
-		 * Asserts aborting a connection rejects callers awaiting it.
+		 * Asserts aborting a connection rejects with the abort reason and releases the inbound stream.
 		 */
 		test("rejects when aborted", async () => {
 			// Arrange.
-			let inboundController: ReadableStreamDefaultController<string> | undefined;
+			const inboundStream = new ReadableStream<string>();
 			const connectionOptions: JsonRpcConnectionOptions = {
-				inboundStream: new ReadableStream({
-					start: (controller): void => {
-						inboundController = controller;
-					},
-				}),
+				inboundStream,
 				outboundStream: new WritableStream(),
 			};
 
@@ -290,10 +306,28 @@ describe("JsonRpcConnection", () => {
 			abortController.abort();
 
 			// Assert.
-			await expect(connected).rejects.toBe("JSON-RPC connection was aborted.");
+			await expect(connected).rejects.toBe(abortController.signal.reason);
+			expect(inboundStream.locked).toBe(false);
+		});
 
-			// Clean-up.
-			inboundController?.close();
+		/**
+		 * Asserts an already-aborted signal rejects without locking the inbound stream.
+		 */
+		test("rejects with an already-aborted signal", async () => {
+			// Arrange.
+			const inboundStream = new ReadableStream<string>();
+			const connectionOptions: JsonRpcConnectionOptions = {
+				inboundStream,
+				outboundStream: new WritableStream(),
+			};
+
+			const connection = new JsonRpcConnection(connectionOptions);
+			const abortController = new AbortController();
+			abortController.abort();
+
+			// Act, assert.
+			await expect(connection.connect(abortController.signal)).rejects.toBe(abortController.signal.reason);
+			expect(inboundStream.locked).toBe(false);
 		});
 	});
 });
