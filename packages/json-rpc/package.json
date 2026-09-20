@@ -23,8 +23,8 @@
             "default": "./dist/index.js"
         },
         "./spec": {
-            "types": "./dist/spec/index.d.ts",
-            "default": "./dist/spec/index.js"
+            "types": "./dist/json-rpc/index.d.ts",
+            "default": "./dist/json-rpc/index.js"
         }
     },
     "prettier": "@elgato/prettier-config",
