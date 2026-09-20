@@ -55,6 +55,31 @@ describe("createWebSocketJsonRpcConnection", () => {
 	});
 
 	/**
+	 * Asserts aborting the connection removes the WebSocket message listener.
+	 */
+	test("stops receiving messages when the connection is aborted", async () => {
+		// Arrange.
+		const webSocket = createWebSocket(vi.fn());
+		const connection = createWebSocketJsonRpcConnection(webSocket);
+		const abortController = new AbortController();
+		const handler = vi.fn();
+		connection.addLocalMethod("method", handler);
+		const connected = connection.connect(abortController.signal);
+
+		// Act.
+		abortController.abort();
+		await expect(connected).rejects.toBe(abortController.signal.reason);
+		webSocket.dispatchEvent(
+			new MessageEvent("message", {
+				data: JSON.stringify({ jsonrpc: "2.0", method: "method" }),
+			}),
+		);
+
+		// Assert.
+		expect(handler).not.toHaveBeenCalled();
+	});
+
+	/**
 	 * Asserts closing the WebSocket closes the outbound stream.
 	 */
 	test("closes outbound messaging with the WebSocket", async () => {

@@ -8,28 +8,29 @@ import type * as JsonRpc from "../json-rpc/index.js";
  */
 export function createWebSocketJsonRpcConnection(webSocket: WebSocket): JsonRpcConnection {
 	// Receiving stream that wraps the WebSocket message event.
+	const inboundAbortController = new AbortController();
 	const inboundStream = new ReadableStream<string>({
 		start: (controller): void => {
-			const abortController = new AbortController();
 			webSocket.addEventListener(
 				"message",
 				(ev: MessageEvent) => {
 					controller.enqueue(ev.data);
 				},
 				{
-					signal: abortController.signal,
+					signal: inboundAbortController.signal,
 				},
 			);
 
 			webSocket.addEventListener(
 				"close",
 				() => {
-					abortController.abort();
+					inboundAbortController.abort();
 					controller.close();
 				},
-				{ once: true },
+				{ once: true, signal: inboundAbortController.signal },
 			);
 		},
+		cancel: (): void => inboundAbortController.abort(),
 	});
 
 	// Sending stream that wraps the WebSocket send.
