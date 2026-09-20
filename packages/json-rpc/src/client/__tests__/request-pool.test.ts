@@ -191,6 +191,28 @@ describe("RequestPool", () => {
 		});
 
 		/**
+		 * Asserts omitted parameters are not included in the request.
+		 */
+		test("omits undefined request parameters", async () => {
+			// Arrange.
+			vi.spyOn(crypto, "randomUUID").mockReturnValue(requestId);
+			const { sendingStream, write } = createSendingStream();
+			const requestPool = new RequestPool(sendingStream);
+
+			// Act.
+			const response = requestPool.send({ method: "method" });
+			requestPool.resolve({ id: requestId, jsonrpc: "2.0", result: null });
+			await response;
+
+			// Assert.
+			expect(write).toHaveBeenCalledExactlyOnceWith({
+				id: requestId,
+				jsonrpc: "2.0",
+				method: "method",
+			});
+		});
+
+		/**
 		 * Asserts each request receives a generated identifier.
 		 */
 		test("generates an identifier for each request", async () => {
@@ -222,6 +244,25 @@ describe("RequestPool", () => {
 			// Assert.
 			expect(write).toHaveBeenNthCalledWith(1, expect.objectContaining({ id: requestId }));
 			expect(write).toHaveBeenNthCalledWith(2, expect.objectContaining({ id: nextRequestId }));
+		});
+
+		/**
+		 * Asserts a failed write clears its pending request state.
+		 */
+		test("cleans up when sending fails", async () => {
+			// Arrange.
+			vi.useFakeTimers();
+			vi.spyOn(crypto, "randomUUID").mockReturnValue(requestId);
+			const clearTimeout = vi.spyOn(globalThis, "clearTimeout");
+			const error = new Error("Unable to send request");
+			const { releaseLock, sendingStream, write } = createSendingStream();
+			write.mockRejectedValue(error);
+			const requestPool = new RequestPool(sendingStream);
+
+			// Act, assert.
+			await expect(requestPool.send({ method: "method" })).rejects.toBe(error);
+			expect(clearTimeout).toHaveBeenCalledExactlyOnceWith(expect.anything());
+			expect(releaseLock).toHaveBeenCalledExactlyOnceWith();
 		});
 	});
 

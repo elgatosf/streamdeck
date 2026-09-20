@@ -91,7 +91,15 @@ export class RequestPool {
 			});
 		}, timeout);
 
-		await this.#send({ jsonrpc: "2.0", method, params, id });
+		try {
+			await this.#send({ jsonrpc: "2.0", method, params, id });
+		} catch (err) {
+			clearTimeout(timeoutMonitor);
+			this.#requests.delete(id);
+
+			throw err;
+		}
+
 		return response;
 	}
 
