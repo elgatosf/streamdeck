@@ -122,7 +122,7 @@ class ActionService extends ReadOnlyActionStore {
 	}
 
 	/**
-	 * Occurs when the resources were updated within the property inspector.
+	 * Occurs when the resources are updated within the property inspector.
 	 * @param listener Function to be invoked when the event occurs.
 	 * @returns A disposable that, when disposed, removes the listener.
 	 */

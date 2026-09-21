@@ -6,9 +6,9 @@ export const actionConfig = {
 	 * Determines the behavior of when `onDidReceiveSettings` and `onDidReceiveGlobalSettings` are fired.
 	 *
 	 * - `false` (default) — `onDidReceiveSettings` and `onDidReceiveGlobalSettings` are only fired
-	 * after the settings were updated within the property inspector.
+	 * after the settings are updated within the property inspector.
 	 * - `true` — `onDidReceiveSettings` and `onDidReceiveGlobalSettings` are fired after the settings
-	 * were updated within the property inspector, and after calling `action.getSettings()` and
+	 * are updated within the property inspector, and after calling `action.getSettings()` and
 	 * `streamDeck.settings.getGlobalSettings()` respectively.
 	 *
 	 * This option replaces `useExperimentalMessageIdentifiers`, with inverted behavior.

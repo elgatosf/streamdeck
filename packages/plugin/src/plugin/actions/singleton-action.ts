@@ -61,13 +61,13 @@ export class SingletonAction<T extends JsonObject = JsonObject> {
 	public onDialUp?(ev: DialUpEvent<T>): Promise<void> | void;
 
 	/**
-	 * Occurs when the resources were updated within the property inspector.
+	 * Occurs when the resources are updated within the property inspector.
 	 * @param listener Function to be invoked when the event occurs.
 	 */
 	public onDidReceiveResources?(ev: DidReceiveResourcesEvent<T>): Promise<void> | void;
 
 	/**
-	 * Occurs when the settings were updated within the property inspector.
+	 * Occurs when the settings are updated within the property inspector.
 	 *
 	 * When `streamDeck.settings.useLegacySettingsBehavior` is set to `true`, this also fires after
 	 * calling `getSettings()`.

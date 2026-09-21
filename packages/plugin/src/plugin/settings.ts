@@ -16,9 +16,9 @@ export const settings = {
 	 * Determines the behavior of when `onDidReceiveSettings` and `onDidReceiveGlobalSettings` are fired.
 	 *
 	 * - `false` (default) — `onDidReceiveSettings` and `onDidReceiveGlobalSettings` are only fired
-	 * after the settings were updated within the property inspector.
+	 * after the settings are updated within the property inspector.
 	 * - `true` — `onDidReceiveSettings` and `onDidReceiveGlobalSettings` are fired after the settings
-	 * were updated within the property inspector, and after calling `action.getSettings()` and
+	 * are updated within the property inspector, and after calling `action.getSettings()` and
 	 * `streamDeck.settings.getGlobalSettings()` respectively.
 	 *
 	 * This option replaces `useExperimentalMessageIdentifiers`, with inverted behavior.
@@ -31,9 +31,9 @@ export const settings = {
 	 * Determines the behavior of when `onDidReceiveSettings` and `onDidReceiveGlobalSettings` are fired.
 	 *
 	 * - `false` (default) — `onDidReceiveSettings` and `onDidReceiveGlobalSettings` are only fired
-	 * after the settings were updated within the property inspector.
+	 * after the settings are updated within the property inspector.
 	 * - `true` — `onDidReceiveSettings` and `onDidReceiveGlobalSettings` are fired after the settings
-	 * were updated within the property inspector, and after calling `action.getSettings()` and
+	 * are updated within the property inspector, and after calling `action.getSettings()` and
 	 * `streamDeck.settings.getGlobalSettings()` respectively.
 	 *
 	 * This option replaces `useExperimentalMessageIdentifiers`, with inverted behavior.
@@ -72,7 +72,7 @@ export const settings = {
 	},
 
 	/**
-	 * Occurs when the global settings were updated within the property inspector.
+	 * Occurs when the global settings are updated within the property inspector.
 	 *
 	 * When `streamDeck.settings.useLegacySettingsBehavior` is set to `true`, this event will also
 	 * occur when calling `getGlobalSettings()`.
@@ -94,7 +94,7 @@ export const settings = {
 	},
 
 	/**
-	 * Occurs when the settings, associated with an action, were updated within the property inspector.
+	 * Occurs when the settings, associated with an action, are updated within the property inspector.
 	 *
 	 * When `streamDeck.settings.useLegacySettingsBehavior` is set to `true`, this event will also
 	 * occur when calling `getSettings()` on an action.

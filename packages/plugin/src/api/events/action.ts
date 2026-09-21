@@ -6,8 +6,8 @@ import type { DeviceIdentifier } from "./device.js";
 import type { EventIdentifier } from "./index.js";
 
 /**
- * Occurs when the settings associated with an action instance are requested, or when the settings were updated in the
- * property inspector.
+ * Occurs when the settings associated with an action instance are requested, or when the settings
+ * are updated in the property inspector.
  */
 export type DidReceiveSettings<TSettings extends JsonObject> = ActionEventMessage<
 	"didReceiveSettings",
@@ -24,7 +24,7 @@ export type DidReceiveSettings<TSettings extends JsonObject> = ActionEventMessag
 
 /**
  * Occurs when the resources associated with an action instance are requested, or when the the resources
- * were updated in the property inspector.
+ * are updated in the property inspector.
  */
 export type DidReceiveResources<TSettings extends JsonObject> = ActionEventMessage<
 	"didReceiveResources",
