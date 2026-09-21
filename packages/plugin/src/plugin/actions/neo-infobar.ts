@@ -5,7 +5,7 @@ import { connection } from "../connection.js";
 import { ActionBase } from "./action-base.js";
 
 /**
- * Provides a contextualized instance of an infobar action found on Stream Deck Neo.
+ * Provides a contextualized instance of a Neo Infobar action found on Stream Deck Neo.
  * @template TSettings The type of settings associated with the action.
  */
 export class NeoInfobarAction<TSettings extends JsonObject> extends ActionBase<TSettings> {
@@ -29,7 +29,7 @@ export class NeoInfobarAction<TSettings extends JsonObject> extends ActionBase<T
 	}
 
 	/**
-	 * Coordinates of the infobar.
+	 * Coordinates of the Infobar.
 	 * @returns The coordinates.
 	 */
 	public get coordinates(): Readonly<Coordinates> {

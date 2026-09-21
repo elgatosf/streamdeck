@@ -67,7 +67,7 @@ describe("NeoInfobarAction", () => {
 	});
 
 	/**
-	 * Asserts the constructor of {@link NeoInfobarAction} throws when the event is not for a Neo infobar.
+	 * Asserts the constructor of {@link NeoInfobarAction} throws when the event is not for a Neo Infobar.
 	 */
 	it("throws for non Neo controller", () => {
 		// Arrange.

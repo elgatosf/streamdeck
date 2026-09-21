@@ -82,8 +82,8 @@ export class ActionBase<TSettings extends JsonObject> extends ActionContext {
 	}
 
 	/**
-	 * Determines whether this instance is an infobar.
-	 * @returns `true` when this instance is an infobar; otherwise `false`.
+	 * Determines whether this instance is an Infobar.
+	 * @returns `true` when this instance is an Infobar; otherwise `false`.
 	 */
 	public isNeoInfobar(): this is NeoInfobarAction<TSettings> {
 		return this.controllerType === "Neo";
