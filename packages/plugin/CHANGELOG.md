@@ -1,5 +1,17 @@
 # Change Log
 
+## 3.0.0
+
+### Major Changes
+
+- add8bb3: Added support for Stream Deck Neo Infobar.
+- add8bb3: Updated `getSettings` and `setSettings` so that the settings type is correctly bound to the type defined on the action.
+- add8bb3: Updated `onDidReceiveSettings` and `onDidReceiveGlobalSettings` to only fire when settings are changed in the property inspector (requires Stream Deck 7.1 or higher). This behavior can be temporarily reverted by configuring `streamDeck.settings.useLegacySettingsBehavior` to be `true`.
+- add8bb3: Removed `useExperimentalMessageIdentifiers`, now enabled by default.
+- add8bb3: Updated `Action` type to represent a union of possible action types, such as key, dial, or Neo Infobar.
+- add8bb3: `Action`, `KeyAction`, `DialAction`, and `NeoInfobarAction` types now require their setting type be defined.
+- add8bb3: Removed `getSecrets` API.
+
 ## 2.1.2
 
 ### Patch Changes

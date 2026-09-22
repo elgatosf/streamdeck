@@ -1,5 +1,11 @@
 # Change Log
 
+## 1.10.0
+
+### Minor Changes
+
+- add8bb3: Updated plugin template to support Neo Infobar actions.
+
 ## 1.9.0
 
 ### Minor Changes
