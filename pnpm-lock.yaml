@@ -18,8 +18,8 @@ importers:
   packages/cli:
     dependencies:
       '@elgato/schemas':
-        specifier: ^0.4.14
-        version: 0.4.14
+        specifier: ^0.5.0
+        version: 0.5.0
       '@humanwhocodes/momoa':
         specifier: ^3.0.0
         version: 3.3.10
@@ -112,8 +112,8 @@ importers:
   packages/plugin:
     dependencies:
       '@elgato/schemas':
-        specifier: ^0.4.14
-        version: 0.4.14
+        specifier: ^0.5.0
+        version: 0.5.0
       '@elgato/utils':
         specifier: workspace:*
         version: link:../utils
@@ -331,8 +331,8 @@ packages:
     peerDependencies:
       prettier: ^3.7.4
 
-  '@elgato/schemas@0.4.14':
-    resolution: {integrity: sha512-kwfYJ30qAxJW9AMkSSjTEY/VARW+xzuc3tW7CinB7ja+liGHaNUx20CRwLCD9xrbZ/7V1cDolPvNhNWmWvihZg==}
+  '@elgato/schemas@0.5.0':
+    resolution: {integrity: sha512-Mltoh5L8M7cQuLIlDAsBq4IfdPrt0KMcwKCpl75OcgqILti7XBb/DlgxtULSnze/RXrH4iiwMbKdmMYeKn4RaQ==}
 
   '@emnapi/core@1.11.3':
     resolution: {integrity: sha512-zLpS5asjEb7lq8jYLq37N6XKaE41DIexlY1rF/z4/tIl3wo13Sqm28fRyfIsKZD+NZ8mM5RoKkpW/rBcuoSZSg==}
@@ -1421,6 +1421,7 @@ packages:
   eslint@9.39.4:
     resolution: {integrity: sha512-XoMjdBOwe/esVgEvLmNsD3IRHkm7fbKIUGvrleloJXUZgDHig2IPWNniv+GwjyJXzuNqVjlr5+4yVUZjycJwfQ==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+    deprecated: This version is no longer supported. Please see https://eslint.org/version-support for other options.
     hasBin: true
     peerDependencies:
       jiti: '*'
@@ -2700,7 +2701,7 @@ snapshots:
       - supports-color
       - svelte
 
-  '@elgato/schemas@0.4.14': {}
+  '@elgato/schemas@0.5.0': {}
 
   '@emnapi/core@1.11.3':
     dependencies:

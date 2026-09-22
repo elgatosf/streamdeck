@@ -10,6 +10,13 @@ class SettingsCache {
 	readonly #entries = new Map<string, JsonObject>();
 
 	/**
+	 * Clears the cached settings.
+	 */
+	public clear(): void {
+		this.#entries.clear();
+	}
+
+	/**
 	 * Removes the cached settings for the specified action.
 	 * @param id Action instance identifier.
 	 */

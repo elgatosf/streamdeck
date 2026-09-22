@@ -1,7 +1,5 @@
 import type { Enumerable, JsonObject, JsonValue } from "@elgato/utils";
 
-import type { DialAction } from "../actions/dial.js";
-import type { KeyAction } from "../actions/key.js";
 import type {
 	DialDownEvent,
 	DialRotateEvent,
@@ -19,7 +17,7 @@ import type {
 	WillDisappearEvent,
 } from "../events/index.js";
 import type streamDeck from "../index.js";
-import type { Action } from "./action.js";
+import type { Action } from "../index.js";
 import { actionStore } from "./store.js";
 
 /**
@@ -36,8 +34,8 @@ export class SingletonAction<T extends JsonObject = JsonObject> {
 	 * Gets the visible actions with the `manifestId` that match this instance's.
 	 * @returns The visible actions.
 	 */
-	public get actions(): Enumerable<DialAction<T> | KeyAction<T>> {
-		return actionStore.filter((a) => a.manifestId === this.manifestId);
+	public get actions(): Enumerable<Action<T>> {
+		return actionStore.filter((a) => a.manifestId === this.manifestId) as Enumerable<Action<T>>;
 	}
 
 	/**
@@ -63,13 +61,16 @@ export class SingletonAction<T extends JsonObject = JsonObject> {
 	public onDialUp?(ev: DialUpEvent<T>): Promise<void> | void;
 
 	/**
-	 * Occurs when the resources were updated within the property inspector.
+	 * Occurs when the resources are updated within the property inspector.
 	 * @param listener Function to be invoked when the event occurs.
 	 */
 	public onDidReceiveResources?(ev: DidReceiveResourcesEvent<T>): Promise<void> | void;
 
 	/**
-	 * Occurs when the settings associated with an action instance are requested using {@link Action.getSettings}, or when the the settings were updated by the property inspector.
+	 * Occurs when the settings are updated within the property inspector.
+	 *
+	 * When `streamDeck.settings.useLegacySettingsBehavior` is set to `true`, this also fires after
+	 * calling `getSettings()`.
 	 * @param ev Information about the event, including the source action and contextual payload information.
 	 */
 	public onDidReceiveSettings?(ev: DidReceiveSettingsEvent<T>): Promise<void> | void;
@@ -103,13 +104,13 @@ export class SingletonAction<T extends JsonObject = JsonObject> {
 	public onPropertyInspectorDidDisappear?(ev: PropertyInspectorDidDisappearEvent<T>): Promise<void> | void;
 
 	/**
-	 * Occurs when a message was sent to the plugin _from_ the property inspector. The plugin can also send messages _to_ the property inspector using {@link Action.sendToPropertyInspector}.
+	 * Occurs when a message was sent to the plugin _from_ the property inspector. The plugin can also send messages _to_ the property inspector using {@link streamDeck.ui.sendToPropertyInspector}.
 	 * @param ev Information about the event, including the source action and contextual payload information.
 	 */
 	public onSendToPlugin?(ev: SendToPluginEvent<JsonValue, T>): Promise<void> | void;
 
 	/**
-	 * Occurs when the user updates an action's title settings in the Stream Deck application. See also {@link Action.setTitle}.
+	 * Occurs when the user updates an action's title settings in the Stream Deck application.
 	 * @param ev Information about the event, including the source action and contextual payload information.
 	 */
 	public onTitleParametersDidChange?(ev: TitleParametersDidChangeEvent<T>): Promise<void> | void;

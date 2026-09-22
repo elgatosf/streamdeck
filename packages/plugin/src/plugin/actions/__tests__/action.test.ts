@@ -2,15 +2,17 @@ import type { JsonObject } from "@elgato/utils";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, test, vi } from "vitest";
 
 import type { Settings } from "../../../api/__mocks__/events.js";
-import { DeviceType, type GetSettings, type SetSettings, type ShowAlert, type WillAppear } from "../../../api/index.js";
+import { DeviceType, type GetSettings, type SetSettings, type WillAppear } from "../../../api/index.js";
 import { connection } from "../../connection.js";
 import { Device } from "../../devices/device.js";
 import { deviceStore } from "../../devices/store.js";
 import { logger } from "../../logging/index.js";
-import { Action } from "../action.js";
+import { ActionBase } from "../action-base.js";
 import { settingsCache } from "../cache.js";
 import { actionConfig } from "../config.js";
 import { DialAction } from "../dial.js";
+import { KeyAction } from "../key.js";
+import { NeoInfobarAction } from "../neo-infobar.js";
 
 vi.mock("../../devices/store.js");
 vi.mock("../../logging/index.js");
@@ -52,20 +54,19 @@ describe("Action", () => {
 
 	beforeAll(() => vi.spyOn(deviceStore, "getDeviceById").mockReturnValue(device));
 	afterEach(() => {
-		actionConfig.useExperimentalMessageIdentifiers = false;
 		settingsCache.delete(source.context);
 		vi.clearAllMocks();
 	});
 
 	/**
-	 * Asserts the constructor of {@link Action} sets the properties from the source.
+	 * Asserts the constructor of {@link ActionBase} sets the properties from the source.
 	 */
 	it("constructor sets properties from source", () => {
 		// Arrange, act.
-		const action = new Action(source);
+		const action = new ActionBase(source);
 
 		// Assert.
-		expect(action).toBeInstanceOf(Action);
+		expect(action).toBeInstanceOf(ActionBase);
 		expect(action.controllerType).toBe("Keypad");
 		expect(action.device).toBe(device);
 		expect(action.id).toBe(source.context);
@@ -74,21 +75,15 @@ describe("Action", () => {
 		expect(deviceStore.getDeviceById).toHaveBeenLastCalledWith(source.device);
 	});
 
-	describe("with useExperimentalMessageIdentifiers set to true", () => {
-		beforeEach(() => {
-			actionConfig.useExperimentalMessageIdentifiers = true;
-		});
-
-		afterAll(() => {
-			actionConfig.useExperimentalMessageIdentifiers = false;
-		});
+	describe("with useLegacySettingsBehavior set to false", () => {
+		beforeEach(() => (actionConfig.useLegacySettingsBehavior = false));
 
 		/**
-		 * Asserts {@link Action.getSettings} returns cached settings when the cache is valid.
+		 * Asserts {@link ActionBase.getSettings} returns cached settings when the cache is valid.
 		 */
 		it("getSettings returns cached settings", async () => {
 			// Arrange.
-			const action = new Action(source);
+			const action = new ActionBase(source);
 			const cachedSettings = { name: "Cached" };
 			const spyOnTrace = vi.spyOn(logger, "trace");
 			settingsCache.set(action.id, cachedSettings);
@@ -101,7 +96,7 @@ describe("Action", () => {
 			expect(connection.send).not.toHaveBeenCalled();
 			expect(spyOnTrace).toHaveBeenCalledTimes(1);
 			expect(spyOnTrace).toHaveBeenCalledWith(
-				JSON.stringify({    
+				JSON.stringify({
 					event: "getSettings",
 					context: action.id,
 					source: "cache",
@@ -111,17 +106,16 @@ describe("Action", () => {
 		});
 	});
 
-	describe("with useExperimentalMessageIdentifiers set to false", () => {
-		beforeAll(() => {
-			actionConfig.useExperimentalMessageIdentifiers = false;
-		});
+	describe("with useLegacySettingsBehavior set to true", () => {
+		beforeAll(() => (actionConfig.useLegacySettingsBehavior = true));
+		afterAll(() => (actionConfig.useLegacySettingsBehavior = false));
 
 		/**
-		 * Asserts {@link Action.getSettings} ignores cached settings when experimental message identifiers are disabled.
+		 * Asserts {@link ActionBase.getSettings} ignores cached settings when legacy settings behavior is enabled.
 		 */
 		it("getSettings ignores cached settings", async () => {
 			// Arrange.
-			const action = new Action(source);
+			const action = new ActionBase(source);
 			const spyOnTrace = vi.spyOn(logger, "trace");
 			settingsCache.set(action.id, { name: "Cached" });
 
@@ -163,11 +157,11 @@ describe("Action", () => {
 		});
 
 		/**
-		 * Asserts {@link Action.getSettings} requests settings from the connection and does not populate cache.
+		 * Asserts {@link ActionBase.getSettings} requests settings from the connection and does not populate cache.
 		 */
 		it("getSettings fetches without populating cache", async () => {
 			// Arrange.
-			const action = new Action(source);
+			const action = new ActionBase(source);
 
 			// Array, act (Command).
 			const settings = action.getSettings();
@@ -261,7 +255,7 @@ describe("Action", () => {
 	 * Asserts type-checking when the controller is "Keypad".
 	 */
 	test("keypad type assertion", () => {
-		const action = new Action({
+		const action = new ActionBase({
 			...source,
 			payload: {
 				...source.payload,
@@ -271,6 +265,7 @@ describe("Action", () => {
 
 		expect(action.isKey()).toBe(true);
 		expect(action.isDial()).toBe(false);
+		expect(action.isNeoInfobar()).toBe(false);
 	});
 
 	/**
@@ -287,18 +282,36 @@ describe("Action", () => {
 
 		expect(action.isDial()).toBe(true);
 		expect(action.isKey()).toBe(false);
+		expect(action.isNeoInfobar()).toBe(false);
+	});
+
+	/**
+	 * Asserts type-checking when the controller is "Neo".
+	 */
+	test("neo type assertion", () => {
+		const action = new NeoInfobarAction({
+			...source,
+			payload: {
+				...source.payload,
+				controller: "Neo",
+			},
+		} as WillAppear<JsonObject>);
+
+		expect(action.isDial()).toBe(false);
+		expect(action.isKey()).toBe(false);
+		expect(action.isNeoInfobar()).toBe(true);
 	});
 
 	describe("sending", () => {
-		let action!: Action;
-		beforeAll(() => (action = new Action(source)));
+		let action!: KeyAction<Settings>;
+		beforeAll(() => (action = new KeyAction(source as WillAppear<Settings>)));
 
 		/**
-		 * Asserts {@link Action.setSettings} invalidates the settings cache.
+		 * Asserts {@link ActionBase.setSettings} invalidates the settings cache.
 		 */
 		it("setSettings invalidates cache", async () => {
 			// Arrange.
-			const action = new Action(source);
+			const action = new ActionBase(source);
 			settingsCache.set(action.id, { name: "Cached" });
 
 			// Act.
@@ -312,7 +325,7 @@ describe("Action", () => {
 		});
 
 		/**
-		 * Asserts {@link Action.setSettings} forwards the command to the {@link connection}.
+		 * Asserts {@link ActionBase.setSettings} forwards the command to the {@link connection}.
 		 */
 		it("setSettings", async () => {
 			// Arrange, act.
@@ -328,21 +341,6 @@ describe("Action", () => {
 				payload: {
 					name: "Elgato",
 				},
-			});
-		});
-
-		/**
-		 * Asserts {@link Action.showAlert} forwards the command to the {@link connection}.
-		 */
-		it("showAlert", async () => {
-			// Arrange, act.
-			await action.showAlert();
-
-			// Assert.
-			expect(connection.send).toHaveBeenCalledTimes(1);
-			expect(connection.send).toHaveBeenCalledWith<[ShowAlert]>({
-				context: action.id,
-				event: "showAlert",
 			});
 		});
 	});

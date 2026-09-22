@@ -1,3 +1,4 @@
+import type { JsonObject } from "@elgato/utils";
 import { beforeAll, describe, expect, it, vi } from "vitest";
 
 import {
@@ -6,13 +7,13 @@ import {
 	type SetFeedbackLayout,
 	type SetImage,
 	type SetTriggerDescription,
+	type ShowAlert,
 	type WillAppear,
 } from "../../../api/index.js";
-import type { JsonObject } from "../../../common/json.js";
 import { connection } from "../../connection.js";
 import { Device } from "../../devices/device.js";
 import { deviceStore } from "../../devices/store.js";
-import { Action } from "../action.js";
+import { ActionBase } from "../action-base.js";
 import { DialAction } from "../dial.js";
 
 vi.mock("../../devices/store.js");
@@ -63,7 +64,7 @@ describe("DialAction", () => {
 		const action = new DialAction(source);
 
 		// Assert.
-		expect(action).toBeInstanceOf(Action);
+		expect(action).toBeInstanceOf(ActionBase);
 		expect(action.coordinates).not.toBeUndefined();
 		expect(action.coordinates?.column).toBe(1);
 		expect(action.coordinates?.row).toBe(2);
@@ -115,7 +116,7 @@ describe("DialAction", () => {
 
 		// Act.
 		const jsonStr = JSON.stringify(action);
-		const jsonObj: DialAction = JSON.parse(jsonStr);
+		const jsonObj: DialAction<JsonObject> = JSON.parse(jsonStr);
 
 		// Assert.
 		expect(jsonObj.controllerType).toBe(action.controllerType);
@@ -126,7 +127,7 @@ describe("DialAction", () => {
 	});
 
 	describe("sending", () => {
-		let action!: DialAction;
+		let action!: DialAction<JsonObject>;
 		beforeAll(() => (action = new DialAction(source)));
 
 		/**
@@ -154,7 +155,7 @@ describe("DialAction", () => {
 		/**
 		 * Asserts {@link DialAction.setFeedbackLayout} forwards the command to the {@link connection}.
 		 */
-		it("Sends setFeedbackLayout", async () => {
+		it("setFeedbackLayout", async () => {
 			// Arrange, act.
 			await action.setFeedbackLayout("CustomLayout.json");
 
@@ -246,6 +247,21 @@ describe("DialAction", () => {
 					rotate: "Rotate",
 					touch: "Touch",
 				},
+			});
+		});
+
+		/**
+		 * Asserts `showAlert` forwards the command to the {@link connection}.
+		 */
+		it("showAlert", async () => {
+			// Arrange, act.
+			await action.showAlert();
+
+			// Assert.
+			expect(connection.send).toHaveBeenCalledTimes(1);
+			expect(connection.send).toHaveBeenCalledWith<[ShowAlert]>({
+				context: action.id,
+				event: "showAlert",
 			});
 		});
 	});

@@ -1,6 +1,5 @@
-import type { IDisposable, JsonObject } from "@elgato/utils";
+import type { IDisposable } from "@elgato/utils";
 
-import type { DidReceiveSecrets } from "../api/events/system.js";
 import type { Manifest, SystemDidWakeUp } from "../api/index.js";
 import { connection } from "./connection.js";
 import { ApplicationEvent } from "./events/application-event.js";
@@ -11,7 +10,7 @@ import {
 	DidReceiveDeepLinkEvent,
 	type SystemDidWakeUpEvent,
 } from "./events/index.js";
-import { requiresSDKVersion, requiresVersion } from "./validation.js";
+import { requiresVersion } from "./validation.js";
 
 /**
  * Occurs when a monitored application is launched. Monitored applications can be defined in the manifest via the {@link Manifest.ApplicationsToMonitor} property.
@@ -64,22 +63,5 @@ export function openUrl(url: string): Promise<void> {
 		payload: {
 			url,
 		},
-	});
-}
-
-/**
- * Gets the secrets associated with the plugin.
- * @returns `Promise` resolved with the secrets associated with the plugin.
- */
-export function getSecrets<T extends JsonObject = JsonObject>(): Promise<T> {
-	requiresVersion(6.9, connection.version, "Secrets");
-	requiresSDKVersion(3, "Secrets");
-
-	return new Promise((resolve) => {
-		connection.once("didReceiveSecrets", (ev: DidReceiveSecrets<T>) => resolve(ev.payload.secrets));
-		connection.send({
-			event: "getSecrets",
-			context: connection.registrationParameters.pluginUUID,
-		});
 	});
 }

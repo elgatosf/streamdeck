@@ -37,11 +37,13 @@ import {
 	type WillDisappearEvent,
 } from "../../events/index.js";
 import type { UIController } from "../../ui.js";
+import type { Action } from "../action.js";
 import { settingsCache } from "../cache.js";
 import { actionConfig } from "../config.js";
 import { ActionContext } from "../context.js";
 import { DialAction } from "../dial.js";
 import { KeyAction } from "../key.js";
+import { NeoInfobarAction } from "../neo-infobar.js";
 import { actionService, type ActionService } from "../service.js";
 import { SingletonAction } from "../singleton-action.js";
 import { actionStore } from "../store.js";
@@ -71,7 +73,6 @@ describe("actions", () => {
 	});
 
 	afterEach(() => {
-		actionConfig.useExperimentalMessageIdentifiers = false;
 		vi.clearAllMocks();
 	});
 
@@ -107,7 +108,7 @@ describe("actions", () => {
 			// Assert (emit).
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[DialDownEvent<Settings>]>({
-				action: actionStore.getActionById(ev.context) as DialAction,
+				action: actionStore.getActionById(ev.context) as DialAction<Settings>,
 				payload: ev.payload,
 				type: "dialDown",
 			});
@@ -153,7 +154,7 @@ describe("actions", () => {
 			// Assert (emit).
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[DialRotateEvent<Settings>]>({
-				action: actionStore.getActionById(ev.context) as DialAction,
+				action: actionStore.getActionById(ev.context) as DialAction<Settings>,
 				payload: ev.payload,
 				type: "dialRotate",
 			});
@@ -197,7 +198,7 @@ describe("actions", () => {
 			// Assert (emit).
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[DialUpEvent<Settings>]>({
-				action: actionStore.getActionById(ev.context) as DialAction,
+				action: actionStore.getActionById(ev.context) as DialAction<Settings>,
 				payload: ev.payload,
 				type: "dialUp",
 			});
@@ -242,7 +243,7 @@ describe("actions", () => {
 			// Assert (emit).
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[KeyDownEvent<Settings>]>({
-				action: actionStore.getActionById(ev.context) as KeyAction,
+				action: actionStore.getActionById(ev.context) as KeyAction<Settings>,
 				payload: ev.payload,
 				type: "keyDown",
 			});
@@ -287,7 +288,7 @@ describe("actions", () => {
 			// Assert (emit).
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[KeyUpEvent<Settings>]>({
-				action: actionStore.getActionById(ev.context) as KeyAction,
+				action: actionStore.getActionById(ev.context) as KeyAction<Settings>,
 				payload: ev.payload,
 				type: "keyUp",
 			});
@@ -341,7 +342,7 @@ describe("actions", () => {
 			// Assert (emit).
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[TitleParametersDidChangeEvent<Settings>]>({
-				action: actionStore.getActionById(ev.context) as KeyAction,
+				action: actionStore.getActionById(ev.context) as KeyAction<Settings>,
 				payload: ev.payload,
 				type: "titleParametersDidChange",
 			});
@@ -387,7 +388,7 @@ describe("actions", () => {
 			// Assert (emit).
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[TouchTapEvent<Settings>]>({
-				action: actionStore.getActionById(ev.context) as DialAction,
+				action: actionStore.getActionById(ev.context) as DialAction<Settings>,
 				payload: ev.payload,
 				type: "touchTap",
 			});
@@ -432,10 +433,94 @@ describe("actions", () => {
 			// Assert (emit).
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[WillAppearEvent<Settings>]>({
-				action: actionStore.getActionById(ev.context) as KeyAction,
+				action: actionStore.getActionById(ev.context) as KeyAction<Settings>,
 				payload: ev.payload,
 				type: "willAppear",
 			});
+
+			// Act (dispose).
+			disposable.dispose();
+			connection.emit(ev.event, ev as any);
+
+			// Assert(dispose).
+			expect(listener).toHaveBeenCalledTimes(1);
+		});
+
+		/**
+		 * Asserts an {@link NeoInfobarAction} is created when `willAppear` is emitted for an infobar controller.
+		 */
+		it("creates InfobarAction on willAppear", () => {
+			// Arrange.
+			const ev = {
+				action: "com.elgato.test.infobar",
+				context: "infobar123",
+				device: "device123",
+				event: "willAppear",
+				payload: {
+					controller: "Neo",
+					coordinates: {
+						column: 0,
+						row: 0,
+					},
+					isInMultiAction: false,
+					resources: {},
+					settings: {
+						name: "Hello world",
+					},
+				},
+			} satisfies WillAppear<Settings>;
+
+			// Act.
+			connection.emit("willAppear", ev);
+
+			// Assert.
+			expect(actionStore.set).toHaveBeenCalledTimes(1);
+			const created = vi.mocked(actionStore.set).mock.calls[0][0];
+			expect(created).toBeInstanceOf(NeoInfobarAction);
+			expect(created.id).toBe(ev.context);
+			expect(created.controllerType).toBe("Neo");
+		});
+
+		/**
+		 * Asserts {@link ActionService.onWillAppear} emits events backed by {@link NeoInfobarAction}.
+		 */
+		it("receives onWillAppear for infobar action", () => {
+			// Arrange.
+			const listener = vi.fn();
+			const ev = {
+				action: "com.elgato.test.infobar",
+				context: "infobar123",
+				device: "device123",
+				event: "willAppear",
+				payload: {
+					controller: "Neo",
+					coordinates: {
+						column: 2,
+						row: 0,
+					},
+					isInMultiAction: false,
+					resources: {},
+					settings: {
+						name: "Hello world",
+					},
+				},
+			} satisfies WillAppear<Settings>;
+
+			vi.mocked(actionStore.getActionById).mockReturnValueOnce(new NeoInfobarAction(ev));
+
+			// Act (emit).
+			const disposable = actionService.onWillAppear(listener);
+			connection.emit("willAppear", ev);
+
+			// Assert (emit).
+			expect(listener).toHaveBeenCalledTimes(1);
+			expect(listener).toHaveBeenCalledWith<[WillAppearEvent<Settings>]>(
+				expect.objectContaining({
+					payload: ev.payload,
+					type: "willAppear",
+				}),
+			);
+			expect(vi.mocked(listener).mock.calls[0][0].action).toBeInstanceOf(NeoInfobarAction);
 
 			// Act (dispose).
 			disposable.dispose();
@@ -490,13 +575,12 @@ describe("actions", () => {
 			expect(listener).toHaveBeenCalledTimes(1);
 		});
 
-
 		/**
 		 * Asserts settings cache lifecycle updates for appear, settings updates, and disappear events.
 		 */
 		it("updates settings cache on willAppear/didReceiveSettings and clears on willDisappear", () => {
 			// Arrange.
-			actionConfig.useExperimentalMessageIdentifiers = true;
+			actionConfig.useLegacySettingsBehavior = false;
 			const context = "cache-lifecycle-context";
 			settingsCache.delete(context);
 
@@ -569,12 +653,71 @@ describe("actions", () => {
 			connection.emit("willDisappear", willDisappear);
 			expect(settingsCache.get(context)).toBeUndefined();
 		});
+
+		/**
+		 * Asserts settings cache is not updated when legacy settings behavior is enabled.
+		 */
+		it("does not update settings cache when useLegacySettingsBehavior is true", () => {
+			// Arrange.
+			actionConfig.useLegacySettingsBehavior = true;
+			const context = "cache-skip-context";
+			settingsCache.delete(context);
+
+			const willAppear = {
+				action: "com.elgato.test.key",
+				context,
+				device: "device123",
+				event: "willAppear",
+				payload: {
+					controller: "Keypad",
+					coordinates: {
+						column: 1,
+						row: 1,
+					},
+					isInMultiAction: false,
+					resources: {},
+					settings: {
+						name: "FromAppear",
+					},
+				},
+			} satisfies WillAppear<Settings>;
+
+			const didReceiveSettings = {
+				action: "com.elgato.test.key",
+				context,
+				device: "device123",
+				event: "didReceiveSettings",
+				payload: {
+					controller: "Keypad",
+					coordinates: {
+						column: 1,
+						row: 1,
+					},
+					isInMultiAction: false,
+					resources: {},
+					settings: {
+						name: "Updated",
+					},
+				},
+			} satisfies DidReceiveSettings<Settings>;
+
+			// Act, assert (cache should NOT be set on appear).
+			connection.emit("willAppear", willAppear);
+			expect(settingsCache.get(context)).toBeUndefined();
+
+			// Act, assert (cache should NOT be updated on settings event).
+			connection.emit("didReceiveSettings", didReceiveSettings);
+			expect(settingsCache.get(context)).toBeUndefined();
+
+			// Cleanup.
+			actionConfig.useLegacySettingsBehavior = false;
+		});
 	});
 
 	describe("registering an action", () => {
 		const keyManifestId = "com.elgato.test.key";
 		const dialManifestId = "com.elgato.test.dial";
-		const actions = vi.fn() as unknown as Enumerable<DialAction<JsonObject> | KeyAction<JsonObject>>;
+		const actions = vi.fn() as unknown as Enumerable<Action<JsonObject>>;
 
 		/**
 		 * Asserts {@link ActionService.registerAction} validates the manifest identifier is not undefined.
@@ -668,7 +811,7 @@ describe("actions", () => {
 			// Assert.
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[DialDownEvent<Settings>]>({
-				action: actionStore.getActionById(ev.context) as DialAction,
+				action: actionStore.getActionById(ev.context) as DialAction<Settings>,
 				payload: ev.payload,
 				type: "dialDown",
 			});
@@ -712,7 +855,7 @@ describe("actions", () => {
 			// Assert.
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[DialRotateEvent<Settings>]>({
-				action: actionStore.getActionById(ev.context) as DialAction,
+				action: actionStore.getActionById(ev.context) as DialAction<Settings>,
 				payload: ev.payload,
 				type: "dialRotate",
 			});
@@ -754,7 +897,7 @@ describe("actions", () => {
 			// Assert.
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[DialUpEvent<Settings>]>({
-				action: actionStore.getActionById(ev.context) as DialAction,
+				action: actionStore.getActionById(ev.context) as DialAction<Settings>,
 				payload: ev.payload,
 				type: "dialUp",
 			});
@@ -787,7 +930,7 @@ describe("actions", () => {
 			// Assert.
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[SendToPluginEvent<Settings, Settings>]>({
-				action: actionStore.getActionById(ev.context) as KeyAction,
+				action: actionStore.getActionById(ev.context) as KeyAction<Settings>,
 				payload: {
 					name: "Hello world",
 				},
@@ -832,7 +975,7 @@ describe("actions", () => {
 			// Assert.
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[DidReceiveSettingsEvent<Settings>]>({
-				action: actionStore.getActionById(ev.context) as KeyAction,
+				action: actionStore.getActionById(ev.context) as KeyAction<Settings>,
 				payload: ev.payload,
 				type: "didReceiveSettings",
 			});
@@ -875,7 +1018,7 @@ describe("actions", () => {
 			// Assert.
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[KeyDownEvent<Settings>]>({
-				action: actionStore.getActionById(ev.context) as KeyAction,
+				action: actionStore.getActionById(ev.context) as KeyAction<Settings>,
 				payload: ev.payload,
 				type: "keyDown",
 			});
@@ -918,7 +1061,7 @@ describe("actions", () => {
 			// Assert.
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[KeyUpEvent<Settings>]>({
-				action: actionStore.getActionById(ev.context) as KeyAction,
+				action: actionStore.getActionById(ev.context) as KeyAction<Settings>,
 				payload: ev.payload,
 				type: "keyUp",
 			});
@@ -949,7 +1092,7 @@ describe("actions", () => {
 			// Assert.
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[PropertyInspectorDidAppearEvent<Settings>]>({
-				action: actionStore.getActionById(ev.context) as KeyAction,
+				action: actionStore.getActionById(ev.context) as KeyAction<Settings>,
 				type: "propertyInspectorDidAppear",
 			});
 		});
@@ -979,7 +1122,7 @@ describe("actions", () => {
 			// Assert.
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[PropertyInspectorDidDisappearEvent<Settings>]>({
-				action: actionStore.getActionById(ev.context) as KeyAction,
+				action: actionStore.getActionById(ev.context) as KeyAction<Settings>,
 				type: "propertyInspectorDidDisappear",
 			});
 		});
@@ -1030,7 +1173,7 @@ describe("actions", () => {
 			// Assert.
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[TitleParametersDidChangeEvent<Settings>]>({
-				action: actionStore.getActionById(ev.context) as KeyAction,
+				action: actionStore.getActionById(ev.context) as KeyAction<Settings>,
 				payload: ev.payload,
 				type: "titleParametersDidChange",
 			});
@@ -1074,7 +1217,7 @@ describe("actions", () => {
 			// Assert.
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[TouchTapEvent<Settings>]>({
-				action: actionStore.getActionById(ev.context) as DialAction,
+				action: actionStore.getActionById(ev.context) as DialAction<Settings>,
 				payload: ev.payload,
 				type: "touchTap",
 			});
@@ -1117,7 +1260,7 @@ describe("actions", () => {
 			// Assert.
 			expect(listener).toHaveBeenCalledTimes(1);
 			expect(listener).toHaveBeenCalledWith<[WillAppearEvent<Settings>]>({
-				action: actionStore.getActionById(ev.context) as KeyAction,
+				action: actionStore.getActionById(ev.context) as KeyAction<Settings>,
 				payload: ev.payload,
 				type: "willAppear",
 			});
