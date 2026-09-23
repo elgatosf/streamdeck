@@ -33,6 +33,7 @@
         "build": "wireit",
         "build:schemas": "wireit",
         "build:exports": "wireit",
+        "dev": "wireit",
         "lint": "eslint . --ext .ts --max-warnings 0",
         "test": "wireit",
         "test:ci": "vitest run --typecheck",
@@ -42,8 +43,7 @@
         "build": {
             "dependencies": [
                 "build:exports",
-                "build:schemas",
-                "test"
+                "build:schemas"
             ]
         },
         "build:exports": {
@@ -65,6 +65,12 @@
             "output": [
                 "streamdeck/"
             ]
+        },
+        "dev": {
+            "command": "pnpm run build",
+            "env": {
+                "WIREIT_WATCH": "true"
+            }
         },
         "test": {
             "command": "vitest run --typecheck",
