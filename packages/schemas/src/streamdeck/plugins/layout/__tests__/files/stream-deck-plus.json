@@ -1,0 +1,12 @@
+{
+	"$schema": "../../../../../../streamdeck/plugins/layout.json",
+	"controller": "Encoder",
+	"id": "encoder",
+	"items": [
+		{
+			"type": "text",
+			"key": "title",
+			"rect": [0, 0, 200, 100]
+		}
+	]
+}
