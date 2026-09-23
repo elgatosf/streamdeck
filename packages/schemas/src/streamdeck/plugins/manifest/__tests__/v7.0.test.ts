@@ -1,4 +1,5 @@
 import { validateStreamDeckPluginManifest } from "@tests";
+import { describe, expect, it, test } from "vitest";
 
 describe.each(["7.0" as const])("v%s", (version) => {
 	/**
@@ -40,8 +41,8 @@ describe.each(["7.0" as const])("v%s", (version) => {
 				keyword: "enum",
 				instancePath: "/SDKVersion",
 				params: {
-					allowedValues: [2, 3]
-				}
+					allowedValues: [2, 3],
+				},
 			});
 		});
 	});
@@ -69,8 +70,8 @@ describe.each(["7.0" as const])("v%s", (version) => {
 				keyword: "const",
 				instancePath: "/Nodejs/Version",
 				params: {
-					allowedValue: "20"
-				}
+					allowedValue: "20",
+				},
 			});
 		});
 	});
@@ -81,7 +82,10 @@ describe("SupportedInKeyLogicActions", () => {
 	 * Asserts Actions[].SupportedInKeyLogicActions is available in Stream Deck 7.0.
 	 */
 	it("is supported in 7.0", () => {
-		const errors = validateStreamDeckPluginManifest(`v7.0.json`, (m) => (m.Actions[0].SupportedInKeyLogicActions = true));
+		const errors = validateStreamDeckPluginManifest(
+			`v7.0.json`,
+			(m) => (m.Actions[0].SupportedInKeyLogicActions = true),
+		);
 		expect(errors).toHaveLength(0);
 	});
 
@@ -89,13 +93,16 @@ describe("SupportedInKeyLogicActions", () => {
 	 * Asserts Actions[].SupportedInKeyLogicActions is not available in Stream Deck 6.9.
 	 */
 	it("is not supported in 6.9", () => {
-		const errors = validateStreamDeckPluginManifest(`v6.9.json`, (m) => (m.Actions[0].SupportedInKeyLogicActions = true));
+		const errors = validateStreamDeckPluginManifest(
+			`v6.9.json`,
+			(m) => (m.Actions[0].SupportedInKeyLogicActions = true),
+		);
 		expect(errors).toHaveError({
 			keyword: "additionalProperties",
 			instancePath: "/Actions/0",
 			params: {
-				additionalProperty: "SupportedInKeyLogicActions"
-			}
+				additionalProperty: "SupportedInKeyLogicActions",
+			},
 		});
 	});
 });

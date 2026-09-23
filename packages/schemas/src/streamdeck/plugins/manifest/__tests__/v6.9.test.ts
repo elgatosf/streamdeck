@@ -1,4 +1,5 @@
 import { validateStreamDeckPluginManifest } from "@tests";
+import { describe, expect, test } from "vitest";
 
 describe.each(["6.9" as const])("v%s", (version) => {
 	/**
@@ -40,8 +41,8 @@ describe.each(["6.9" as const])("v%s", (version) => {
 				keyword: "enum",
 				instancePath: "/SDKVersion",
 				params: {
-					allowedValues: [2, 3]
-				}
+					allowedValues: [2, 3],
+				},
 			});
 		});
 	});

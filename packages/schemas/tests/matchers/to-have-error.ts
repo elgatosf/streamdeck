@@ -1,41 +1,46 @@
-import type { MatcherFunction } from "expect";
+import { expect } from "vitest";
 
 /**
  * Matcher function that asserts the specified error exists in the collection of errors.
- * @param actual Collection of JSON validation errors.
- * @param error Expected error.
- * @returns The matcher result.
  */
-export const toHaveError: MatcherFunction<[error: AdditionalPropertyError]> = function (actual: unknown, error: JsonSchemaError) {
-	if (!Array.isArray(actual)) {
+expect.extend({
+	toHaveError(received: unknown, error: JsonSchemaError) {
+		if (!Array.isArray(received)) {
+			return {
+				message: () => `expected ${this.utils.printReceived(received)} to be an array`,
+				pass: false,
+			};
+		}
+
+		for (const item of received) {
+			if (item === undefined || typeof item !== "object" || !("instancePath" in item) || !("keyword" in item)) {
+				return {
+					message: () =>
+						`expected ${this.utils.printReceived(received)} to be a collection of JSON schema error object`,
+					pass: false,
+				};
+			}
+
+			// When the error was found, we are successful
+			if (
+				item.keyword === error.keyword &&
+				item.instancePath === error.instancePath &&
+				this.equals(item.params, error.params)
+			) {
+				return {
+					message: () => `success`,
+					pass: true,
+				};
+			}
+		}
+
 		return {
-			message: () => `expected ${this.utils.printReceived(actual)} to be an array`,
-			pass: false
+			message: () =>
+				`expected ${this.utils.printReceived(received)} to contain a JSON schema error of ${this.utils.printExpected(error)}`,
+			pass: false,
 		};
-	}
-
-	for (const item of actual) {
-		if (item === undefined || typeof item !== "object" || !("instancePath" in item) || !("keyword" in item)) {
-			return {
-				message: () => `expected ${this.utils.printReceived(actual)} to be a collection of JSON schema error object`,
-				pass: false
-			};
-		}
-
-		// When the error was found, we are successful
-		if (item.keyword === error.keyword && item.instancePath === error.instancePath && this.equals(item.params, error.params)) {
-			return {
-				message: () => `success`,
-				pass: true
-			};
-		}
-	}
-
-	return {
-		message: () => `expected ${this.utils.printReceived(actual)} to contain a JSON schema error of ${this.utils.printExpected(error)}`,
-		pass: false
-	};
-};
+	},
+});
 
 /**
  * Represents a JSON error.
@@ -132,14 +137,12 @@ type JsonSchemaBaseError<TKeyword, TParams> = {
 	params: TParams;
 };
 
-declare global {
-	// eslint-disable-next-line @typescript-eslint/no-namespace
-	namespace jest {
-		interface AsymmetricMatchers {
-			toHaveError(error: JsonSchemaError): void;
-		}
-		interface Matchers<R> {
-			toHaveError(error: JsonSchemaError): R;
-		}
+declare module "vitest" {
+	interface Matchers {
+		/**
+		 * Asserts the collection of errors includes a specify error.
+		 * @param expected Expected error.
+		 */
+		toHaveError(expected: JsonSchemaError): void;
 	}
 }

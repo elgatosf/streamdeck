@@ -1,4 +1,5 @@
 import { validateStreamDeckPluginLayout } from "@tests";
+import { describe, expect, test } from "vitest";
 
 describe("Stream Deck + layouts", () => {
 	/**
@@ -25,8 +26,8 @@ describe("Stream Deck + layouts", () => {
 			keyword: "maximum",
 			params: {
 				comparison: "<=",
-				limit: 200
-			}
+				limit: 200,
+			},
 		});
 	});
 

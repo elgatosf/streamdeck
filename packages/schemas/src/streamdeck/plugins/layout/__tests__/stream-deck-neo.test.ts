@@ -1,4 +1,5 @@
 import { validateStreamDeckPluginLayout } from "@tests";
+import { describe, expect, test } from "vitest";
 
 describe("Stream Deck Neo layouts", () => {
 	/**
@@ -25,8 +26,8 @@ describe("Stream Deck Neo layouts", () => {
 			keyword: "maximum",
 			params: {
 				comparison: "<=",
-				limit: 50
-			}
+				limit: 50,
+			},
 		});
 	});
 
@@ -46,8 +47,8 @@ describe("Stream Deck Neo layouts", () => {
 			keyword: "maximum",
 			params: {
 				comparison: "<=",
-				limit: 200
-			}
+				limit: 200,
+			},
 		});
 	});
 });

@@ -1,4 +1,5 @@
 import { validateStreamDeckPluginManifest } from "@tests";
+import { describe, expect, it, test } from "vitest";
 
 describe.each(["7.1" as const, "7.2" as const, "7.3" as const, "7.4" as const, "7.5" as const])("v%s", (version) => {
 	/**
@@ -40,8 +41,8 @@ describe.each(["7.1" as const, "7.2" as const, "7.3" as const, "7.4" as const, "
 				keyword: "enum",
 				instancePath: "/SDKVersion",
 				params: {
-					allowedValues: [2, 3]
-				}
+					allowedValues: [2, 3],
+				},
 			});
 		});
 	});
@@ -59,8 +60,8 @@ describe.each(["7.1" as const, "7.2" as const, "7.3" as const, "7.4" as const, "
 				keyword: "enum",
 				instancePath: "/Actions/0/Controllers/0",
 				params: {
-					allowedValues: ["Encoder", "Keypad"]
-				}
+					allowedValues: ["Encoder", "Keypad"],
+				},
 			});
 		});
 	});
@@ -95,8 +96,8 @@ describe.each(["7.1" as const, "7.2" as const, "7.3" as const, "7.4" as const, "
 				keyword: "enum",
 				instancePath: "/Nodejs/Version",
 				params: {
-					allowedValues: ["20", "24"]
-				}
+					allowedValues: ["20", "24"],
+				},
 			});
 		});
 	});

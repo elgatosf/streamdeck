@@ -1,4 +1,5 @@
 import { validateStreamDeckPluginManifest } from "@tests";
+import { describe, expect, it, test } from "vitest";
 
 describe.each(["6.6" as const, "6.7" as const, "6.8" as const])("v%s", (version) => {
 	/**
@@ -29,7 +30,10 @@ describe.each(["6.6" as const, "6.7" as const, "6.8" as const])("v%s", (version)
 		 */
 		test("Actions[].OS is valid", () => {
 			// Arrange, act, assert.
-			const errors = validateStreamDeckPluginManifest("Actions[].OS.json", (m) => (m.Software.MinimumVersion = version));
+			const errors = validateStreamDeckPluginManifest(
+				"Actions[].OS.json",
+				(m) => (m.Software.MinimumVersion = version),
+			);
 			expect(errors).toHaveLength(0);
 		});
 
@@ -38,7 +42,10 @@ describe.each(["6.6" as const, "6.7" as const, "6.8" as const])("v%s", (version)
 		 */
 		test("Profiles[].AutoInstall is valid", () => {
 			// Arrange, act, assert.
-			const errors = validateStreamDeckPluginManifest("Profiles[].AutoInstall.json", (m) => (m.Software.MinimumVersion = version));
+			const errors = validateStreamDeckPluginManifest(
+				"Profiles[].AutoInstall.json",
+				(m) => (m.Software.MinimumVersion = version),
+			);
 			expect(errors).toHaveLength(0);
 		});
 	});
@@ -68,8 +75,8 @@ describe.each(["6.6" as const, "6.7" as const, "6.8" as const])("v%s", (version)
 				keyword: "const",
 				instancePath: "/SDKVersion",
 				params: {
-					allowedValue: 2
-				}
+					allowedValue: 2,
+				},
 			});
 		});
 	});
@@ -86,16 +93,16 @@ describe.each(["6.6" as const, "6.7" as const, "6.8" as const])("v%s", (version)
 			keyword: "additionalProperties",
 			instancePath: "/Actions/0",
 			params: {
-				additionalProperty: "SupportURL"
-			}
+				additionalProperty: "SupportURL",
+			},
 		});
 
 		expect(errors).toHaveError({
 			keyword: "additionalProperties",
 			instancePath: "",
 			params: {
-				additionalProperty: "SupportURL"
-			}
+				additionalProperty: "SupportURL",
+			},
 		});
 	});
 });

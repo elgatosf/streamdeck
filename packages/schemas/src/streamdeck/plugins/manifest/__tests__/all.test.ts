@@ -1,4 +1,5 @@
 import { validateStreamDeckPluginManifest } from "@tests";
+import { describe, expect, test } from "vitest";
 
 describe.each(["v6.4", "v6.5", "v6.6", "v6.7", "v6.8"])("%s", (version) => {
 	const filePath = `${version}.json`;
@@ -17,8 +18,8 @@ describe.each(["v6.4", "v6.5", "v6.6", "v6.7", "v6.8"])("%s", (version) => {
 				instancePath: "/Actions/0/Icon",
 				keyword: "pattern",
 				params: {
-					pattern: patterns.IMAGE_PATH
-				}
+					pattern: patterns.IMAGE_PATH,
+				},
 			});
 		});
 
@@ -37,8 +38,8 @@ describe.each(["v6.4", "v6.5", "v6.6", "v6.7", "v6.8"])("%s", (version) => {
 				instancePath: "/Actions/0/PropertyInspectorPath",
 				keyword: "pattern",
 				params: {
-					pattern: patterns.HTML_PATH
-				}
+					pattern: patterns.HTML_PATH,
+				},
 			});
 		});
 
@@ -52,8 +53,8 @@ describe.each(["v6.4", "v6.5", "v6.6", "v6.7", "v6.8"])("%s", (version) => {
 				instancePath: "/Actions/0/UUID",
 				keyword: "pattern",
 				params: {
-					pattern: patterns.UUID
-				}
+					pattern: patterns.UUID,
+				},
 			});
 		});
 
@@ -71,8 +72,8 @@ describe.each(["v6.4", "v6.5", "v6.6", "v6.7", "v6.8"])("%s", (version) => {
 					instancePath: "/Actions/0/Encoder/Icon",
 					keyword: "pattern",
 					params: {
-						pattern: patterns.IMAGE_PATH
-					}
+						pattern: patterns.IMAGE_PATH,
+					},
 				});
 			});
 
@@ -81,13 +82,16 @@ describe.each(["v6.4", "v6.5", "v6.6", "v6.7", "v6.8"])("%s", (version) => {
 			 */
 			test("background", () => {
 				// Arrange, act, assert.
-				const errors = validateStreamDeckPluginManifest(filePath, (m) => (m.Actions[0].Encoder!.background = "test.png"));
+				const errors = validateStreamDeckPluginManifest(
+					filePath,
+					(m) => (m.Actions[0].Encoder!.background = "test.png"),
+				);
 				expect(errors).toHaveError({
 					instancePath: "/Actions/0/Encoder/background",
 					keyword: "pattern",
 					params: {
-						pattern: patterns.ENCODER_BACKGROUND_PATH
-					}
+						pattern: patterns.ENCODER_BACKGROUND_PATH,
+					},
 				});
 			});
 
@@ -96,13 +100,16 @@ describe.each(["v6.4", "v6.5", "v6.6", "v6.7", "v6.8"])("%s", (version) => {
 			 */
 			test("layout", () => {
 				// Arrange, act, assert.
-				const errors = validateStreamDeckPluginManifest(filePath, (m) => (m.Actions[0].Encoder!.layout = "./test.json"));
+				const errors = validateStreamDeckPluginManifest(
+					filePath,
+					(m) => (m.Actions[0].Encoder!.layout = "./test.json"),
+				);
 				expect(errors).toHaveError({
 					instancePath: "/Actions/0/Encoder/layout",
 					keyword: "pattern",
 					params: {
-						pattern: patterns.LAYOUT
-					}
+						pattern: patterns.LAYOUT,
+					},
 				});
 			});
 		});
@@ -121,8 +128,8 @@ describe.each(["v6.4", "v6.5", "v6.6", "v6.7", "v6.8"])("%s", (version) => {
 					instancePath: "/Actions/0/States/0/Image",
 					keyword: "pattern",
 					params: {
-						pattern: patterns.IMAGE_PATH_WITH_GIF_SUPPORT
-					}
+						pattern: patterns.IMAGE_PATH_WITH_GIF_SUPPORT,
+					},
 				});
 			});
 
@@ -131,13 +138,16 @@ describe.each(["v6.4", "v6.5", "v6.6", "v6.7", "v6.8"])("%s", (version) => {
 			 */
 			test("MultiActionImage", () => {
 				// Arrange, act, assert.
-				const errors = validateStreamDeckPluginManifest(filePath, (m) => (m.Actions[0].States[0].MultiActionImage = "test.png"));
+				const errors = validateStreamDeckPluginManifest(
+					filePath,
+					(m) => (m.Actions[0].States[0].MultiActionImage = "test.png"),
+				);
 				expect(errors).toHaveError({
 					instancePath: "/Actions/0/States/0/MultiActionImage",
 					keyword: "pattern",
 					params: {
-						pattern: patterns.IMAGE_PATH
-					}
+						pattern: patterns.IMAGE_PATH,
+					},
 				});
 			});
 		});
@@ -153,8 +163,8 @@ describe.each(["v6.4", "v6.5", "v6.6", "v6.7", "v6.8"])("%s", (version) => {
 			instancePath: "/CategoryIcon",
 			keyword: "pattern",
 			params: {
-				pattern: patterns.IMAGE_PATH
-			}
+				pattern: patterns.IMAGE_PATH,
+			},
 		});
 	});
 
@@ -168,8 +178,8 @@ describe.each(["v6.4", "v6.5", "v6.6", "v6.7", "v6.8"])("%s", (version) => {
 			instancePath: "/CodePath",
 			keyword: "pattern",
 			params: {
-				pattern: patterns.FILE_PATH
-			}
+				pattern: patterns.FILE_PATH,
+			},
 		});
 	});
 
@@ -183,8 +193,8 @@ describe.each(["v6.4", "v6.5", "v6.6", "v6.7", "v6.8"])("%s", (version) => {
 			instancePath: "/CodePathMac",
 			keyword: "pattern",
 			params: {
-				pattern: patterns.FILE_PATH
-			}
+				pattern: patterns.FILE_PATH,
+			},
 		});
 	});
 
@@ -198,8 +208,8 @@ describe.each(["v6.4", "v6.5", "v6.6", "v6.7", "v6.8"])("%s", (version) => {
 			instancePath: "/CodePathWin",
 			keyword: "pattern",
 			params: {
-				pattern: patterns.FILE_PATH
-			}
+				pattern: patterns.FILE_PATH,
+			},
 		});
 	});
 
@@ -213,8 +223,8 @@ describe.each(["v6.4", "v6.5", "v6.6", "v6.7", "v6.8"])("%s", (version) => {
 			instancePath: "/Icon",
 			keyword: "pattern",
 			params: {
-				pattern: patterns.ICON_PATH
-			}
+				pattern: patterns.ICON_PATH,
+			},
 		});
 	});
 
@@ -233,8 +243,8 @@ describe.each(["v6.4", "v6.5", "v6.6", "v6.7", "v6.8"])("%s", (version) => {
 				instancePath: "/Profiles/0/Name",
 				keyword: "pattern",
 				params: {
-					pattern: patterns.PROFILE_PATH
-				}
+					pattern: patterns.PROFILE_PATH,
+				},
 			});
 		});
 	});
@@ -254,8 +264,8 @@ describe.each(["v6.4", "v6.5", "v6.6", "v6.7", "v6.8"])("%s", (version) => {
 			instancePath: "/PropertyInspectorPath",
 			keyword: "pattern",
 			params: {
-				pattern: patterns.HTML_PATH
-			}
+				pattern: patterns.HTML_PATH,
+			},
 		});
 	});
 
@@ -269,8 +279,8 @@ describe.each(["v6.4", "v6.5", "v6.6", "v6.7", "v6.8"])("%s", (version) => {
 			instancePath: "/UUID",
 			keyword: "pattern",
 			params: {
-				pattern: patterns.UUID
-			}
+				pattern: patterns.UUID,
+			},
 		});
 	});
 });
@@ -284,6 +294,7 @@ const patterns = {
 	IMAGE_PATH_WITH_GIF_SUPPORT: "^(?![~\\.]*[\\\\\\/]+)(?!.*\\.(([Gg][Ii][Ff])|([Ss][Vv][Gg])|([Pp][Nn][Gg]))$).*$",
 	IMAGE_PATH: "^(?![~\\.]*[\\\\\\/]+)(?!.*\\.(([Ss][Vv][Gg])|([Pp][Nn][Gg]))$).*$",
 	ICON_PATH: "^(?![~\\.]*[\\\\\\/]+)(?!.*\\.(([Pp][Nn][Gg]))$).*$",
-	PROFILE_PATH: "^(?![~\\.]*[\\\\\\/]+)(?!.*\\.(([Ss][Tt][Rr][Ee][Aa][Mm][Dd][Ee][Cc][Kk][Pp][Rr][Oo][Ff][Ii][Ll][Ee]))$).*$",
-	UUID: "^([a-z0-9-]+)(\\.[a-z0-9-]+)+$"
+	PROFILE_PATH:
+		"^(?![~\\.]*[\\\\\\/]+)(?!.*\\.(([Ss][Tt][Rr][Ee][Aa][Mm][Dd][Ee][Cc][Kk][Pp][Rr][Oo][Ff][Ii][Ll][Ee]))$).*$",
+	UUID: "^([a-z0-9-]+)(\\.[a-z0-9-]+)+$",
 };

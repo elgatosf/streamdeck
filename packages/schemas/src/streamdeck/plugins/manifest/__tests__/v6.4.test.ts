@@ -1,4 +1,5 @@
 import { validateStreamDeckPluginManifest } from "@tests";
+import { describe, expect, test } from "vitest";
 
 const VERSION = "6.4";
 
@@ -18,13 +19,16 @@ describe("v6.4", () => {
 		 */
 		test("Actions[].OS is not valid in v6.4", () => {
 			// Arrange, act, assert.
-			const errors = validateStreamDeckPluginManifest("Actions[].OS.json", (m) => (m.Software.MinimumVersion = VERSION));
+			const errors = validateStreamDeckPluginManifest(
+				"Actions[].OS.json",
+				(m) => (m.Software.MinimumVersion = VERSION),
+			);
 			expect(errors).toHaveError({
 				instancePath: "/Actions/0",
 				keyword: "additionalProperties",
 				params: {
-					additionalProperty: "OS"
-				}
+					additionalProperty: "OS",
+				},
 			});
 		});
 
@@ -33,13 +37,16 @@ describe("v6.4", () => {
 		 */
 		test("Profiles[].AutoInstall is not valid in v6.4", () => {
 			// Arrange, act, assert.
-			const errors = validateStreamDeckPluginManifest("Profiles[].AutoInstall.json", (m) => (m.Software.MinimumVersion = VERSION));
+			const errors = validateStreamDeckPluginManifest(
+				"Profiles[].AutoInstall.json",
+				(m) => (m.Software.MinimumVersion = VERSION),
+			);
 			expect(errors).toHaveError({
 				instancePath: "/Profiles/0",
 				keyword: "additionalProperties",
 				params: {
-					additionalProperty: "AutoInstall"
-				}
+					additionalProperty: "AutoInstall",
+				},
 			});
 		});
 	});
