@@ -14,7 +14,7 @@ export const keywordDefinitions = {
 		/**
 		 * Schema type of the keyword.
 		 */
-		schemaType: "string" as const
+		schemaType: "string" as const,
 	},
 
 	/**
@@ -29,7 +29,7 @@ export const keywordDefinitions = {
 		/**
 		 * Schema type of the keyword.
 		 */
-		schemaType: "string" as const
+		schemaType: "string" as const,
 	},
 
 	/**
@@ -44,7 +44,7 @@ export const keywordDefinitions = {
 		/**
 		 * Schema type of the keyword.
 		 */
-		schemaType: "array" as const
+		schemaType: "array" as const,
 	},
 
 	/**
@@ -59,12 +59,12 @@ export const keywordDefinitions = {
 		/**
 		 * Schema type of the keyword.
 		 */
-		schemaType: ["boolean" as const, "object" as const]
-	}
+		schemaType: ["boolean" as const, "object" as const],
+	},
 };
 
 /**
- * Options associated with the {@link keywordDefinitions.filePath} keyword.
+ * Options associated with the `keywordDefinitions.filePath` keyword.
  */
 export type FilePathOptions =
 	| true
@@ -81,6 +81,6 @@ export type FilePathOptions =
 	  };
 
 /**
- * Options associated with the {@link keywordDefinitions.imageDimensions} keyword.
+ * Options associated with the `keywordDefinitions.imageDimensions` keyword.
  */
 export type ImageDimensions = [width: number, height: number];

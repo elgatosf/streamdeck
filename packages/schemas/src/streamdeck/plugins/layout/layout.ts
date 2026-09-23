@@ -145,7 +145,7 @@ export type Bar<T extends "bar" | "gbar" = "bar", TRect = Rect> = LayoutItemBase
 	range?: Range;
 
 	/**
-	 * Sub-type used to determine the type of bar to render. Default is {@link BarSubType.Groove} (4).
+	 * Sub-type used to determine the type of bar to render. Default is `BarSubType.Groove` (4).
 	 *
 	 * **Options**
 	 * - Rectangle (0)
@@ -263,16 +263,16 @@ export type Text<TRect = Rect> = LayoutItemBase<"text", TRect> & {
 };
 
 /**
- * List of available types that can be applied to {@link Bar} and {@link GBar} to determine their style.
+ * List of available types that can be applied to `Bar` and `GBar` to determine their style.
  */
 export enum BarSubType {
 	/**
-	 * Rectangle bar; the bar fills from left to right, determined by the {@link Bar.value}, similar to a standard progress bar.
+	 * Rectangle bar; the bar fills from left to right, determined by the `Bar.value`, similar to a standard progress bar.
 	 */
 	Rectangle = 0,
 
 	/**
-	 * Rectangle bar; the bar fills outwards from the centre of the bar, determined by the {@link Bar.value}.
+	 * Rectangle bar; the bar fills outwards from the centre of the bar, determined by the `Bar.value`.
 	 * @example
 	 * // Value is 2, range is 1-10.
 	 * // [  ███     ]
@@ -283,19 +283,19 @@ export enum BarSubType {
 	DoubleRectangle = 1,
 
 	/**
-	 * Trapezoid bar, represented as a right-angle triangle; the bar fills from left to right, determined by the {@link Bar.value}, similar to a volume meter.
+	 * Trapezoid bar, represented as a right-angle triangle; the bar fills from left to right, determined by the `Bar.value`, similar to a volume meter.
 	 */
 	Trapezoid = 2,
 
 	/**
-	 * Trapezoid bar, represented by two right-angle triangles; the bar fills outwards from the centre of the bar, determined by the {@link Bar.value}. See {@link BarSubType.DoubleRectangle}.
+	 * Trapezoid bar, represented by two right-angle triangles; the bar fills outwards from the centre of the bar, determined by the `Bar.value`. See `BarSubType.DoubleRectangle`.
 	 */
 	DoubleTrapezoid = 3,
 
 	/**
-	 * Rounded rectangle bar; the bar fills from left to right, determined by the {@link Bar.value}, similar to a standard progress bar.
+	 * Rounded rectangle bar; the bar fills from left to right, determined by the `Bar.value`, similar to a standard progress bar.
 	 */
-	Groove = 4
+	Groove = 4,
 }
 
 /**
