@@ -68,6 +68,7 @@
         },
         "dev": {
             "command": "pnpm run build",
+            "service": true,
             "env": {
                 "WIREIT_WATCH": "true"
             }
