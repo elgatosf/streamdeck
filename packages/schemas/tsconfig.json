@@ -12,7 +12,8 @@
     "include": [
         "scripts/**/*",
         "src/**/*",
-        "tests/**/*"
+        "tests/**/*",
+        "rollup.config.ts"
     ],
     "exclude": ["node_modules"]
 }

@@ -30,17 +30,54 @@
         "streamdeck/"
     ],
     "scripts": {
-        "build": "npm run clean && npm run build:schemas && npm run build:exports",
-        "build:schemas": "node -r @swc-node/register ./scripts/build.ts",
-        "build:exports": "rollup --config rollup.config.ts --configPlugin typescript",
-        "clean": "rm -rf ./dist/ && rm -rf ./streamdeck/",
+        "build": "wireit",
+        "build:schemas": "wireit",
+        "build:exports": "wireit",
         "lint": "eslint . --ext .ts --max-warnings 0",
-        "preversion": "npm run lint",
-        "__test": "pnpm run build:schemas && vitest run --typecheck",
-        "test": "vitest run",
-        "test:ci": "vitest",
-        "test:watch": "nodemon --watch src --ext ts --exec \"pnpm run test\"",
-        "version": "npm run build && pnpm run test:ci"
+        "test": "wireit",
+        "test:ci": "vitest run --typecheck",
+        "test:watch": "nodemon --watch src --ext ts --exec \"pnpm test\""
+    },
+    "wireit": {
+        "build": {
+            "dependencies": [
+                "build:exports",
+                "build:schemas",
+                "test"
+            ]
+        },
+        "build:exports": {
+            "command": "rollup --config rollup.config.ts --configPlugin typescript",
+            "files": [
+                "src/**/*",
+                "rollup.config.ts"
+            ],
+            "output": [
+                "dist/"
+            ]
+        },
+        "build:schemas": {
+            "command": "node -r @swc-node/register ./scripts/build.ts",
+            "files": [
+                "scripts/**/*",
+                "src/**/*"
+            ],
+            "output": [
+                "streamdeck/"
+            ]
+        },
+        "test": {
+            "command": "vitest run --typecheck",
+            "files": [
+                "src/**/*",
+                "tests/**/*",
+                "vitest.config.ts"
+            ],
+            "dependencies": [
+                "build:exports",
+                "build:schemas"
+            ]
+        }
     },
     "prettier": "@elgato/prettier-config",
     "repository": {
@@ -84,6 +121,7 @@
         "rollup-plugin-dts": "^6.1.1",
         "ts-json-schema-generator": "^2.3.0",
         "typescript": "^5.7.3",
-        "vitest": "^3.1.3"
+        "vitest": "^3.1.3",
+        "wireit": "^0.14.13"
     }
 }
