@@ -7,7 +7,7 @@ expect.extend({
 	toHaveError(received: unknown, error: JsonSchemaError) {
 		if (!Array.isArray(received)) {
 			return {
-				message: () => `expected ${this.utils.printReceived(received)} to be an array`,
+				message: (): string => `expected ${this.utils.printReceived(received)} to be an array`,
 				pass: false,
 			};
 		}
@@ -15,7 +15,7 @@ expect.extend({
 		for (const item of received) {
 			if (item === undefined || typeof item !== "object" || !("instancePath" in item) || !("keyword" in item)) {
 				return {
-					message: () =>
+					message: (): string =>
 						`expected ${this.utils.printReceived(received)} to be a collection of JSON schema error object`,
 					pass: false,
 				};
@@ -28,14 +28,14 @@ expect.extend({
 				this.equals(item.params, error.params)
 			) {
 				return {
-					message: () => `success`,
+					message: (): string => `success`,
 					pass: true,
 				};
 			}
 		}
 
 		return {
-			message: () =>
+			message: (): string =>
 				`expected ${this.utils.printReceived(received)} to contain a JSON schema error of ${this.utils.printExpected(error)}`,
 			pass: false,
 		};

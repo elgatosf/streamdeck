@@ -3,6 +3,11 @@ import { defineConfig } from "eslint/config";
 
 export default defineConfig([
 	{
+		ignores: [
+			".wireit/",
+		],
+	},
+	{
 		extends: [config.strict],
 		rules: {
 			"jsdoc/check-tag-names": [
