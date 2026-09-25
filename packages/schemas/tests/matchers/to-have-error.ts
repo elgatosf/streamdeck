@@ -138,11 +138,11 @@ type JsonSchemaBaseError<TKeyword, TParams> = {
 };
 
 declare module "vitest" {
-	interface Matchers {
+	interface Matchers<T> {
 		/**
 		 * Asserts the collection of errors includes a specify error.
 		 * @param expected Expected error.
 		 */
-		toHaveError(expected: JsonSchemaError): void;
+		toHaveError(expected: JsonSchemaError): T;
 	}
 }
