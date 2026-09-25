@@ -93,7 +93,7 @@
     "prettier": "@elgato/prettier-config",
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/elgatosf/schemas.git"
+        "url": "git+https://github.com/elgatosf/streamdeck.git"
     },
     "keywords": [
         "elgato",
@@ -108,9 +108,9 @@
     },
     "license": "MIT",
     "bugs": {
-        "url": "https://github.com/elgatosf/schemas/issues"
+        "url": "https://github.com/elgatosf/streamdeck/issues"
     },
-    "homepage": "https://github.com/elgatosf/schemas#readme",
+    "homepage": "https://github.com/elgatosf/streamdeck/tree/main/packages/schemas#readme",
     "devDependencies": {
         "@elgato/eslint-config": "^0.3.2",
         "@elgato/prettier-config": "^0.3.3",
