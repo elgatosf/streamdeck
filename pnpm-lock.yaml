@@ -18,8 +18,8 @@ importers:
   packages/cli:
     dependencies:
       '@elgato/schemas':
-        specifier: ^0.5.0
-        version: 0.5.0
+        specifier: workspace:*
+        version: link:../schemas
       '@humanwhocodes/momoa':
         specifier: ^3.0.0
         version: 3.3.10
@@ -112,8 +112,8 @@ importers:
   packages/plugin:
     dependencies:
       '@elgato/schemas':
-        specifier: ^0.5.0
-        version: 0.5.0
+        specifier: workspace:*
+        version: link:../schemas
       '@elgato/utils':
         specifier: workspace:*
         version: link:../utils
@@ -434,9 +434,6 @@ packages:
     resolution: {integrity: sha512-SjRNvSCAPPfbUMlFryAW28vLm+vqpadvtoncUr4SqvI2gVCp3T3cnOwWgFswX8NdUMMtTdEvh42p9wxGzLzzKg==}
     peerDependencies:
       prettier: ^3.7.4
-
-  '@elgato/schemas@0.5.0':
-    resolution: {integrity: sha512-Mltoh5L8M7cQuLIlDAsBq4IfdPrt0KMcwKCpl75OcgqILti7XBb/DlgxtULSnze/RXrH4iiwMbKdmMYeKn4RaQ==}
 
   '@emnapi/core@1.11.2':
     resolution: {integrity: sha512-TC8MkTuZUtcTSiFeuC0ksCh9QIJ5+F21MvZ4Wn4ORfYaFJ/0dsiudv5tVkejgwZlwQ39jL9WWDe2lz8x0WglOA==}
@@ -3202,8 +3199,6 @@ snapshots:
       - supports-color
       - svelte
 
-  '@elgato/schemas@0.5.0': {}
-
   '@emnapi/core@1.11.2':
     dependencies:
       '@emnapi/wasi-threads': 1.2.2
@@ -4046,7 +4041,7 @@ snapshots:
   '@typescript-eslint/project-service@8.54.0(typescript@5.9.3)':
     dependencies:
       '@typescript-eslint/tsconfig-utils': 8.54.0(typescript@5.9.3)
-      '@typescript-eslint/types': 8.54.0
+      '@typescript-eslint/types': 8.70.0
       debug: 4.4.3(supports-color@5.5.0)
       typescript: 5.9.3
     transitivePeerDependencies:
