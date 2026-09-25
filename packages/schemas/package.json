@@ -37,7 +37,8 @@
         "lint": "eslint . --ext .ts --max-warnings 0",
         "test": "wireit",
         "test:ci": "vitest run --typecheck",
-        "test:watch": "nodemon --watch src --ext ts --exec \"pnpm test\""
+        "test:watch": "nodemon --watch src --ext ts --exec \"pnpm test\"",
+        "prepack": "cp ../../LICENSE ."
     },
     "wireit": {
         "build": {
