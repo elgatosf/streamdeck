@@ -10,6 +10,9 @@ dist/
 bin/
 .wireit/
 
+# changesets
+publish-plan.json
+
 # Shared package files
 /packages/*/LICENSE
 /packages/plugin/README.md
