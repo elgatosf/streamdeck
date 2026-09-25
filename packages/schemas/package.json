@@ -49,6 +49,9 @@
         },
         "build:exports": {
             "command": "rollup --config rollup.config.ts --configPlugin typescript",
+            "dependencies": [
+                "build:schemas"
+            ],
             "files": [
                 "src/**/*",
                 "rollup.config.ts"
