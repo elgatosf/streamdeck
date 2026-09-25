@@ -32,7 +32,7 @@ import { type Manifest } from "@elgato/schemas/streamdeck/plugins";
 
 ```js
 // Schema as an object.
-import manifest from "@elgato/schemas/streamdeck/plugins/json";
+import { manifest } from "@elgato/schemas/streamdeck/plugins/json";
 ```
 
 ```js
@@ -55,7 +55,7 @@ import { type Layout } from "@elgato/schemas/streamdeck/plugins";
 
 ```js
 // Schema as an object.
-import layout from "@elgato/schemas/streamdeck/plugins/json";
+import { layout } from "@elgato/schemas/streamdeck/plugins/json";
 ```
 
 ```js
