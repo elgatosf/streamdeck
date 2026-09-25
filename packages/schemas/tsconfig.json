@@ -1,0 +1,19 @@
+{
+    "extends": "@tsconfig/node20/tsconfig.json",
+    "compilerOptions": {
+        "customConditions": ["node"],
+        "module": "ES2022",
+        "moduleResolution": "Bundler",
+        "paths": {
+            "@tests": ["./tests/validate"]
+        },
+        "types": []
+    },
+    "include": [
+        "scripts/**/*",
+        "src/**/*",
+        "tests/**/*",
+        "rollup.config.ts"
+    ],
+    "exclude": ["node_modules"]
+}

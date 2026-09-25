@@ -1,0 +1,12 @@
+{
+	"$schema": "../../../../../../streamdeck/plugins/layout.json",
+	"controller": "Neo",
+	"id": "neo",
+	"items": [
+		{
+			"type": "text",
+			"key": "title",
+			"rect": [0, 0, 232, 50]
+		}
+	]
+}

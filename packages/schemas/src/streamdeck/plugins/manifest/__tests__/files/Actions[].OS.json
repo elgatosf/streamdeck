@@ -1,0 +1,44 @@
+{
+	"$schema": "../../../../../../streamdeck/plugins/manifest.json",
+	"Actions": [
+		{
+			"Icon": "action-icon",
+			"Name": "Action One",
+			"OS": ["mac", "windows"],
+			"States": [
+				{
+					"Image": "action-state-image"
+				}
+			],
+			"UUID": "com.elgato.test.one"
+		}
+	],
+	"Author": "Elgato",
+	"Category": "Testing",
+	"CategoryIcon": "category-icon",
+	"CodePath": "main.js",
+	"Description": "Manifest version 6.4",
+	"Icon": "icon",
+	"Name": "Test Manifest",
+	"Nodejs": {
+		"Debug": "break",
+		"GenerateProfilerOutput": false,
+		"Version": "20"
+	},
+	"OS": [
+		{
+			"MinimumVersion": "13",
+			"Platform": "mac"
+		},
+		{
+			"MinimumVersion": "10",
+			"Platform": "windows"
+		}
+	],
+	"SDKVersion": 2,
+	"Software": {
+		"MinimumVersion": "6.6"
+	},
+	"UUID": "com.elgato.test",
+	"Version": "1.0.0.0"
+}

@@ -1,0 +1,138 @@
+{
+    "name": "@elgato/schemas",
+    "version": "0.5.0",
+    "description": "Collection of schemas, and TypeScript declarations, to support the creation and validation of Stream Deck SDK files",
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "import": "./dist/index.mjs",
+            "require": "./dist/index.cjs"
+        },
+        "./streamdeck/plugins": {
+            "types": "./dist/streamdeck/plugins/index.d.ts",
+            "import": "./dist/streamdeck/plugins/index.mjs",
+            "require": "./dist/streamdeck/plugins/index.cjs"
+        },
+        "./streamdeck/plugins/json": {
+            "types": "./dist/streamdeck/plugins/json.d.ts",
+            "import": "./dist/streamdeck/plugins/json.mjs",
+            "require": "./dist/streamdeck/plugins/json.cjs"
+        },
+        "./streamdeck/plugins/layout.json": {
+            "default": "./streamdeck/plugins/layout.json"
+        },
+        "./streamdeck/plugins/manifest.json": {
+            "default": "./streamdeck/plugins/manifest.json"
+        }
+    },
+    "files": [
+        "dist/",
+        "streamdeck/"
+    ],
+    "scripts": {
+        "build": "wireit",
+        "build:schemas": "wireit",
+        "build:exports": "wireit",
+        "dev": "wireit",
+        "lint": "eslint . --ext .ts --max-warnings 0",
+        "test": "wireit",
+        "test:ci": "vitest run --typecheck",
+        "test:watch": "nodemon --watch src --ext ts --exec \"pnpm test\"",
+        "prepack": "cp ../../LICENSE ."
+    },
+    "wireit": {
+        "build": {
+            "dependencies": [
+                "build:exports",
+                "build:schemas"
+            ]
+        },
+        "build:exports": {
+            "command": "rollup --config rollup.config.ts --configPlugin typescript",
+            "dependencies": [
+                "build:schemas"
+            ],
+            "files": [
+                "src/**/*",
+                "rollup.config.ts"
+            ],
+            "output": [
+                "dist/"
+            ]
+        },
+        "build:schemas": {
+            "command": "node -r @swc-node/register ./scripts/build.ts",
+            "files": [
+                "scripts/**/*",
+                "src/**/*"
+            ],
+            "output": [
+                "streamdeck/"
+            ]
+        },
+        "dev": {
+            "command": "pnpm run build",
+            "service": true,
+            "env": {
+                "WIREIT_WATCH": "true"
+            }
+        },
+        "test": {
+            "command": "vitest run --typecheck",
+            "files": [
+                "src/**/*",
+                "tests/**/*",
+                "vitest.config.ts"
+            ],
+            "dependencies": [
+                "build:exports",
+                "build:schemas"
+            ]
+        }
+    },
+    "prettier": "@elgato/prettier-config",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/elgatosf/streamdeck.git"
+    },
+    "keywords": [
+        "elgato",
+        "stream deck",
+        "sdk",
+        "json",
+        "schemas"
+    ],
+    "author": {
+        "name": "Elgato",
+        "url": "https://www.elgato.com"
+    },
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/elgatosf/streamdeck/issues"
+    },
+    "homepage": "https://github.com/elgatosf/streamdeck/tree/main/packages/schemas#readme",
+    "devDependencies": {
+        "@elgato/eslint-config": "^0.3.2",
+        "@elgato/prettier-config": "^0.3.3",
+        "@rollup/plugin-json": "^6.1.0",
+        "@rollup/plugin-node-resolve": "^16.0.0",
+        "@rollup/plugin-typescript": "^12.1.2",
+        "@swc-node/register": "^1.10.9",
+        "@swc/core": "^1.10.7",
+        "@tsconfig/node20": "^20.1.4",
+        "@types/lodash": "^4.17.14",
+        "@types/node": "^22.10.7",
+        "@vitest/coverage-v8": "^3.1.4",
+        "ajv": "^8.17.1",
+        "eslint": "^9.39.4",
+        "lodash": "^4.17.21",
+        "nodemon": "^3.1.9",
+        "prettier": "^3.8.1",
+        "rollup": "^4.30.1",
+        "rollup-plugin-dts": "^6.1.1",
+        "ts-json-schema-generator": "^2.3.0",
+        "typescript": "^5.7.3",
+        "vitest": "^3.1.3",
+        "wireit": "^0.14.13"
+    }
+}

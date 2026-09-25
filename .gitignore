@@ -10,6 +10,9 @@ dist/
 bin/
 .wireit/
 
+# changesets
+publish-plan.json
+
 # Shared package files
 /packages/*/LICENSE
 /packages/plugin/README.md
@@ -18,3 +21,6 @@ bin/
 /packages/cli/.cli.cache
 /packages/cli/template/com.*.sdPlugin/bin
 /packages/cli/template/com.*.sdPlugin/logs
+
+# @elgato/schemas
+/packages/schemas/streamdeck/
