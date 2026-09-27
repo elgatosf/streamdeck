@@ -1,6 +1,6 @@
 {
     "name": "@elgato/cli",
-    "version": "1.10.0",
+    "version": "1.10.1",
     "description": "Stream Deck CLI tool for building with Stream Deck.",
     "bin": {
         "streamdeck": "bin/streamdeck.mjs",
