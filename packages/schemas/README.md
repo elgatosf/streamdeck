@@ -46,7 +46,7 @@ https://schemas.elgato.com/streamdeck/plugins/manifest.json
 
 #### Layout
 
-Layout JSON file that defines the layout of an action on Stream Deck +.
+Layout JSON file that defines the layout of an action on Stream Deck +, Stream Deck + XL, and Stream Deck Neo.
 
 ```ts
 // TypeScript type.
