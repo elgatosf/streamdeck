@@ -3,4 +3,4 @@
 "@elgato/streamdeck": patch
 ---
 
-Improved versions of inter-dependencies to be ranged (previously pinned).
+Changed internal dependency versions from pinned versions to caret ranges.
