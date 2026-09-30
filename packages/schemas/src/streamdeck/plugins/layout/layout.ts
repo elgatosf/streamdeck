@@ -205,9 +205,7 @@ export type Pixmap<TRect = Rect> = LayoutItemBase<"pixmap", TRect> & {
 };
 
 /**
- * Text layout item used to render text within a layout. **Note**, when adding a text item to the layout's JSON definition, setting the `key` to the `"title"` keyword will enable the
- * user to specify the font's
- * settings via the property inspector, and will cause `setTitle` to update this item.
+ * Layout item used to render text.
  */
 export type Text<TRect = Rect> = LayoutItemBase<"text", TRect> & {
 	/**
