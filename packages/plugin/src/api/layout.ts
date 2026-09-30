@@ -19,6 +19,9 @@ export type Pixmap = FeedbackPayloadItem<schemas.Pixmap>;
 
 /**
  * Layout item used to render text.
+ *
+ * For Stream Deck + and Stream Deck + XL, when a text item has the key `title`, users can change
+ * the appearance (e.g. font color) and value within Stream Deck.
  */
 export type Text = FeedbackPayloadItem<schemas.Text>;
 
