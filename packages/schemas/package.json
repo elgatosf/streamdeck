@@ -36,7 +36,7 @@
         "dev": "wireit",
         "lint": "eslint . --ext .ts --max-warnings 0",
         "test": "wireit",
-        "test:watch": "nodemon --watch src --ext ts --exec \"pnpm test\"",
+        "test:watch": "wireit",
         "prepack": "cp ../../LICENSE ."
     },
     "wireit": {
@@ -52,7 +52,8 @@
                 "build:schemas"
             ],
             "files": [
-                "src/**/*",
+                "src/**",
+                "!src/**/__tests__/**",
                 "rollup.config.ts",
                 "tsconfig.json"
             ],
@@ -63,8 +64,9 @@
         "build:schemas": {
             "command": "node -r @swc-node/register ./scripts/build.ts",
             "files": [
-                "scripts/**/*",
-                "src/**/*"
+                "scripts/**",
+                "src/**",
+                "!src/**/__tests__/**"
             ],
             "output": [
                 "streamdeck/"
@@ -80,15 +82,21 @@
         "test": {
             "command": "vitest run --typecheck",
             "files": [
-                "src/**/*",
-                "tests/**/*",
+                "src/**/__tests__/**",
+                "tests/**",
                 "tsconfig.json",
                 "vitest.config.ts"
             ],
             "dependencies": [
-                "build:exports",
                 "build:schemas"
             ]
+        },
+        "test:watch": {
+            "command": "pnpm run test",
+            "service": true,
+            "env": {
+                "WIREIT_WATCH": "true"
+            }
         }
     },
     "prettier": "@elgato/prettier-config",
