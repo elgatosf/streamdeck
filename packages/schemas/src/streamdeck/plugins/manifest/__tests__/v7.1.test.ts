@@ -76,10 +76,10 @@ describe.each(["7.1" as const, "7.2" as const, "7.3" as const, "7.4" as const, "
 		});
 
 		/**
-		 * Asserts Nodejs.Version can be 24.
+		 * Asserts Nodejs.Version can be X.
 		 */
-		it("can be 24", () => {
-			const errors = validateStreamDeckPluginManifest(`v${version}.json`, (m) => (m.Nodejs!.Version = "24"));
+		test.each(["24", "26"])("can be $0", (nodejsVersion: any) => {
+			const errors = validateStreamDeckPluginManifest(`v${version}.json`, (m) => (m.Nodejs!.Version = nodejsVersion));
 			expect(errors).toHaveLength(0);
 		});
 
@@ -96,7 +96,7 @@ describe.each(["7.1" as const, "7.2" as const, "7.3" as const, "7.4" as const, "
 				keyword: "enum",
 				instancePath: "/Nodejs/Version",
 				params: {
-					allowedValues: ["20", "24"],
+					allowedValues: ["20", "24", "26"],
 				},
 			});
 		});
