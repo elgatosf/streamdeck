@@ -84,9 +84,6 @@ importers:
       '@elgato/eslint-config':
         specifier: ^0.3.2
         version: 0.3.2(@eslint/js@9.39.4)(eslint-plugin-jsdoc@54.7.0(eslint@9.39.4))(eslint@9.39.4)(typescript-eslint@8.54.0(eslint@9.39.4)(typescript@5.9.3))(typescript@5.9.3)
-      '@elgato/prettier-config':
-        specifier: ^0.3.3
-        version: 0.3.3(prettier@3.8.1)
       '@tsconfig/node20':
         specifier: ^20.1.4
         version: 20.1.9
@@ -108,9 +105,6 @@ importers:
       eslint:
         specifier: ^9.39.4
         version: 9.39.4
-      prettier:
-        specifier: ^3.8.1
-        version: 3.8.1
       rolldown:
         specifier: 1.0.0-rc.8
         version: 1.0.0-rc.8(@emnapi/core@1.11.3)(@emnapi/runtime@1.11.3)
