@@ -277,7 +277,7 @@ type EventMap<T> = {
 /**
  * Parsed {@link EventMap} whereby each property is a `string` that denotes an event name, and the associated value type defines the listener arguments.
  */
-export type EventsOf<TMap extends EventMap<TMap>> = EventEmitterListenerEvent | keyof TMap | (string & {});
+export type EventsOf<TMap extends EventMap<TMap>> = EventEmitterListenerEvent | keyof TMap;
 
 /**
  * Parses the event arguments for the specified event from the event map.
@@ -288,7 +288,7 @@ export type EventArgs<TMap extends EventMap<TMap>, TEvent extends EventsOf<TMap>
 		: never
 	: TEvent extends EventEmitterListenerEvent
 		? EventArgUnion<TMap>
-		: unknown[];
+		: never;
 
 /**
  * Converts an event map to a union of event arguments, allowing the `newListener` and `removeListener`
