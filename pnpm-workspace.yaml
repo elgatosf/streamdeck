@@ -2,9 +2,15 @@ packages:
   - "packages/*"
 
 blockExoticSubdeps: true
+
 trustPolicy: no-downgrade
+trustPolicyIgnoreAfter: 525960 # 1 year
 
 minimumReleaseAge: 10080 # 1 week
 minimumReleaseAgeExclude:
   - "@elgato/*"
   - "@streamdeck/*"
+
+allowBuilds:
+  "@swc/core": false
+  "esbuild": false
