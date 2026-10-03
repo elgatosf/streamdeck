@@ -2,6 +2,30 @@
     "name": "@elgato/schemas",
     "version": "0.5.1",
     "description": "Collection of schemas, and TypeScript declarations, to support the creation and validation of Stream Deck SDK files",
+    "keywords": [
+        "elgato",
+        "json",
+        "schemas",
+        "sdk",
+        "stream deck"
+    ],
+    "homepage": "https://github.com/elgatosf/streamdeck/tree/main/packages/schemas#readme",
+    "bugs": {
+        "url": "https://github.com/elgatosf/streamdeck/issues"
+    },
+    "license": "MIT",
+    "author": {
+        "name": "Elgato",
+        "url": "https://www.elgato.com"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/elgatosf/streamdeck.git"
+    },
+    "files": [
+        "dist/",
+        "streamdeck/"
+    ],
     "exports": {
         ".": {
             "types": "./dist/index.d.ts",
@@ -25,10 +49,6 @@
             "default": "./streamdeck/plugins/manifest.json"
         }
     },
-    "files": [
-        "dist/",
-        "streamdeck/"
-    ],
     "scripts": {
         "build": "wireit",
         "build:schemas": "wireit",
@@ -91,30 +111,8 @@
             ]
         }
     },
-    "prettier": "@elgato/prettier-config",
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/elgatosf/streamdeck.git"
-    },
-    "keywords": [
-        "elgato",
-        "stream deck",
-        "sdk",
-        "json",
-        "schemas"
-    ],
-    "author": {
-        "name": "Elgato",
-        "url": "https://www.elgato.com"
-    },
-    "license": "MIT",
-    "bugs": {
-        "url": "https://github.com/elgatosf/streamdeck/issues"
-    },
-    "homepage": "https://github.com/elgatosf/streamdeck/tree/main/packages/schemas#readme",
     "devDependencies": {
         "@elgato/eslint-config": "^0.3.2",
-        "@elgato/prettier-config": "^0.3.3",
         "@rollup/plugin-json": "^6.1.0",
         "@rollup/plugin-node-resolve": "^16.0.0",
         "@rollup/plugin-typescript": "^12.1.2",
@@ -128,12 +126,12 @@
         "eslint": "^9.39.4",
         "lodash": "^4.17.21",
         "nodemon": "^3.1.9",
-        "prettier": "^3.8.1",
         "rollup": "^4.30.1",
         "rollup-plugin-dts": "^6.1.1",
         "ts-json-schema-generator": "^2.3.0",
         "typescript": "^5.7.3",
         "vitest": "^3.1.3",
         "wireit": "^0.14.13"
-    }
+    },
+    "prettier": "@elgato/prettier-config"
 }

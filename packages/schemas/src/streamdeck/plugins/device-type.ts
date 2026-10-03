@@ -70,5 +70,5 @@ export enum DeviceType {
 	/**
 	 * Stream Deck + XL, comprised of 36 customizable LCD keys in a 9 x 4 layout, a touch strip, and 6 dials.
 	 */
-	StreamDeckPlusXL = 13
+	StreamDeckPlusXL = 13,
 }

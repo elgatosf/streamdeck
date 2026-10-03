@@ -11,8 +11,15 @@ import type { Layout } from "../src/streamdeck/plugins/schemas";
  * @param modify Optional modifier to be applied before validation.
  * @returns Collection of errors as the result of validation.
  */
-export function validateStreamDeckPluginManifest(filename: string, modify?: (manifest: Manifest) => void): ErrorObject<string, Record<string, unknown>, unknown>[] {
-	return validate(`../src/streamdeck/plugins/manifest/__tests__/files/${filename}`, "../streamdeck/plugins/manifest.json", modify);
+export function validateStreamDeckPluginManifest(
+	filename: string,
+	modify?: (manifest: Manifest) => void,
+): ErrorObject<string, Record<string, unknown>, unknown>[] {
+	return validate(
+		`../src/streamdeck/plugins/manifest/__tests__/files/${filename}`,
+		"../streamdeck/plugins/manifest.json",
+		modify,
+	);
 }
 
 /**
@@ -21,8 +28,15 @@ export function validateStreamDeckPluginManifest(filename: string, modify?: (man
  * @param modify Optional modifier to be applied before validation.
  * @returns Collection of errors as the result of validation.
  */
-export function validateStreamDeckPluginLayout(filename: string, modify?: (layout: Layout) => void): ErrorObject<string, Record<string, unknown>, unknown>[] {
-	return validate(`../src/streamdeck/plugins/layout/__tests__/files/${filename}`, "../streamdeck/plugins/layout.json", modify);
+export function validateStreamDeckPluginLayout(
+	filename: string,
+	modify?: (layout: Layout) => void,
+): ErrorObject<string, Record<string, unknown>, unknown>[] {
+	return validate(
+		`../src/streamdeck/plugins/layout/__tests__/files/${filename}`,
+		"../streamdeck/plugins/layout.json",
+		modify,
+	);
 }
 
 /**
@@ -32,7 +46,11 @@ export function validateStreamDeckPluginLayout(filename: string, modify?: (layou
  * @param modify Optional modifier to be applied before validation.
  * @returns Collection of errors as the result of validation.
  */
-function validate<T>(path: string, schemaPath: string, modify?: (value: T) => void): ErrorObject<string, Record<string, unknown>, unknown>[] {
+function validate<T>(
+	path: string,
+	schemaPath: string,
+	modify?: (value: T) => void,
+): ErrorObject<string, Record<string, unknown>, unknown>[] {
 	const schema = JSON.parse(getFileContents(schemaPath));
 	const validate = new Ajv({ allErrors: true, strictTypes: false })
 		.addKeyword(keywordDefinitions.errorMessage)

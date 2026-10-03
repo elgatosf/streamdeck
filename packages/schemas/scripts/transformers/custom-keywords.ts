@@ -41,7 +41,9 @@ function validateFilePathOptions(options: unknown): asserts options is FilePathO
 	}
 
 	if (typeof options !== "object" || !("extensions" in options) || !("includeExtension" in options)) {
-		throw new TypeError(`${JSON.stringify(options)} is not a complete set of "filePath" options, expected: { "extensions": string[], "includeExtension": boolean }`);
+		throw new TypeError(
+			`${JSON.stringify(options)} is not a complete set of "filePath" options, expected: { "extensions": string[], "includeExtension": boolean }`,
+		);
 	}
 }
 
@@ -95,7 +97,11 @@ function generatePathErrorMessage(options: FilePathOptions): string {
 	}
 
 	const exts = options.extensions.reduce((prev, current, index) => {
-		return index === 0 ? current : index === options.extensions.length - 1 ? prev + `, or ${current}` : prev + `, ${current}`;
+		return index === 0
+			? current
+			: index === options.extensions.length - 1
+				? prev + `, or ${current}`
+				: prev + `, ${current}`;
 	}, "");
 
 	const errorMessage = `String must reference ${exts} file in the plugin directory`;
@@ -107,7 +113,10 @@ function generatePathErrorMessage(options: FilePathOptions): string {
  * @param schema Schema to traverse
  * @param visitor Visitor to each of the schema's properties.
  */
-function visitNode(schema: ExtendedSchema, visitor: (schema: ExtendedSchema, keyword: keyof ExtendedSchema, value: unknown) => void): void {
+function visitNode(
+	schema: ExtendedSchema,
+	visitor: (schema: ExtendedSchema, keyword: keyof ExtendedSchema, value: unknown) => void,
+): void {
 	if (typeof schema === "object") {
 		for (const [keyword, value] of Object.entries(schema)) {
 			if (typeof value === "object") {

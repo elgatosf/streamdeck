@@ -28,7 +28,7 @@ function generateAndWriteSchema(type: string, transformers?: ((schema: JSONSchem
 		path,
 		skipTypeCheck: true,
 		schemaId: `${pkg.name}/streamdeck/plugins/${type.toLowerCase()}@${pkg.version}`,
-		tsconfig: join(__dirname, "../tsconfig.json")
+		tsconfig: join(__dirname, "../tsconfig.json"),
 	});
 
 	// Generate the schema, and apply the transformers.
