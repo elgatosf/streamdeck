@@ -13,6 +13,13 @@ export default defineConfig({
 	ignorePatterns: ["**/CHANGELOG.md"],
 
 	/**
+	 * Import sorting
+	 */
+	sortImports: {
+		newlinesBetween: true,
+	},
+
+	/**
 	 * Overrides
 	 */
 	overrides: [
