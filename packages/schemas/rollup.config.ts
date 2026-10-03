@@ -1,7 +1,8 @@
+import { dirname, join, parse } from "node:path";
+
 import json from "@rollup/plugin-json";
 import nodeResolve from "@rollup/plugin-node-resolve";
 import typescript from "@rollup/plugin-typescript";
-import { dirname, join, parse } from "node:path";
 import { RollupOptions } from "rollup";
 import dts from "rollup-plugin-dts";
 

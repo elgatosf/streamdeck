@@ -1,7 +1,9 @@
-import type { JSONSchema7 } from "json-schema";
 import { existsSync, mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
+
+import type { JSONSchema7 } from "json-schema";
 import { createGenerator } from "ts-json-schema-generator";
+
 import pkg from "../package.json";
 import { customKeywordTransformer } from "./transformers/custom-keywords";
 import { versionManifests } from "./transformers/version-manifests";

@@ -1,5 +1,6 @@
 import type { JSONSchema7 } from "json-schema";
 import { Schema } from "ts-json-schema-generator";
+
 import type { FilePathOptions } from "../../src";
 
 /**
