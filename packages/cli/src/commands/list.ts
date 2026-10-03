@@ -1,5 +1,6 @@
-import chalk from "chalk";
 import { existsSync } from "node:fs";
+
+import chalk from "chalk";
 
 import { command } from "../common/command";
 import { getPlugins } from "../stream-deck";

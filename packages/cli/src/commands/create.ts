@@ -1,7 +1,8 @@
-import chalk from "chalk";
-import inquirer from "inquirer";
 import fs from "node:fs";
 import path from "node:path";
+
+import chalk from "chalk";
+import inquirer from "inquirer";
 
 import { command } from "../common/command";
 import { createCopier } from "../common/file-copier";

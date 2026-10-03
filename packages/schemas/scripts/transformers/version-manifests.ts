@@ -28,9 +28,9 @@ export function versionManifests(schema: any): void {
 		const {
 			properties: {
 				Software: {
-					properties: { MinimumVersion }
-				}
-			}
+					properties: { MinimumVersion },
+				},
+			},
 		} = manifestVersionDefinition;
 
 		// Add each of the conditional statements for the versions.
@@ -42,7 +42,7 @@ export function versionManifests(schema: any): void {
 			versions.add(version);
 			schema.definitions.Manifest.allOf.push({
 				if: getMinimumVersionSchema(version),
-				then: manifestVersionDefinition
+				then: manifestVersionDefinition,
 			});
 		}
 	}
@@ -51,7 +51,7 @@ export function versionManifests(schema: any): void {
 	delete schema.definitions.Manifest.anyOf;
 	schema.definitions.Manifest = {
 		...manifest,
-		...getMinimumVersionSchema(versions)
+		...getMinimumVersionSchema(versions),
 	};
 }
 
@@ -72,12 +72,12 @@ function getMinimumVersionSchema(version: Set<string> | string): JSONSchema7 {
 						type: "string",
 						description: "Minimum version of the Stream Deck application required for this plugin to run.",
 						const: version instanceof Set ? undefined : version,
-						enum: version instanceof Set ? Array.from(version) : undefined
-					}
+						enum: version instanceof Set ? Array.from(version) : undefined,
+					},
 				},
-				required: ["MinimumVersion"]
-			}
+				required: ["MinimumVersion"],
+			},
 		},
-		required: ["Software"]
+		required: ["Software"],
 	};
 }

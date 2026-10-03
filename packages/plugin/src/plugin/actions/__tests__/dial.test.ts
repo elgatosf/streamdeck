@@ -121,7 +121,9 @@ describe("DialAction", () => {
 		// Assert.
 		expect(jsonObj.controllerType).toBe(action.controllerType);
 		expect(jsonObj.coordinates).toStrictEqual(action.coordinates);
-		expect(jsonObj.device).toStrictEqual({ id: action.device.id });
+		expect(jsonObj.device).toStrictEqual({
+			id: action.device.id,
+		});
 		expect(jsonObj.id).toBe(action.id);
 		expect(jsonObj.manifestId).toBe(action.manifestId);
 	});

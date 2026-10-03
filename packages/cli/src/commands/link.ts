@@ -1,6 +1,7 @@
-import chalk from "chalk";
 import { lstatSync, symlinkSync, unlinkSync } from "node:fs";
 import { basename, resolve } from "node:path";
+
+import chalk from "chalk";
 
 import { command } from "../common/command";
 import { getPluginId, getPlugins, getPluginsPath } from "../stream-deck";

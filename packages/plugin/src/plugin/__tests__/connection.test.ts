@@ -48,7 +48,9 @@ describe("connection", () => {
 		// Setup the mock server.
 		beforeEach(async () => {
 			const { WS } = await import("vitest-websocket-mock");
-			server = new WS(`ws://127.0.0.1:${port[1]}`, { jsonProtocol: true });
+			server = new WS(`ws://127.0.0.1:${port[1]}`, {
+				jsonProtocol: true,
+			});
 		});
 
 		// Clean-up the mock server.

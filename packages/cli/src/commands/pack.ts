@@ -1,11 +1,12 @@
-import { Manifest } from "@elgato/schemas/streamdeck/plugins";
-import { ZipWriter } from "@zip.js/zip.js";
-import chalk from "chalk";
 import { createReadStream, createWriteStream, existsSync, readFileSync, writeFileSync } from "node:fs";
 import { rm } from "node:fs/promises";
 import { basename, dirname, join, resolve } from "node:path";
 import { Readable, Writable } from "node:stream";
 import type { ReadableStream } from "node:stream/web";
+
+import { Manifest } from "@elgato/schemas/streamdeck/plugins";
+import { ZipWriter } from "@zip.js/zip.js";
+import chalk from "chalk";
 
 import { command } from "../common/command";
 import { StdoutError } from "../common/stdout";

@@ -152,8 +152,12 @@ describe("Action", () => {
 			});
 
 			// Assert.
-			await expect(settings).resolves.toEqual({ name: "Fresh" });
-			expect(settingsCache.get(action.id)).toEqual({ name: "Cached" });
+			await expect(settings).resolves.toEqual({
+				name: "Fresh",
+			});
+			expect(settingsCache.get(action.id)).toEqual({
+				name: "Cached",
+			});
 		});
 
 		/**
@@ -246,7 +250,9 @@ describe("Action", () => {
 				},
 			});
 
-			await expect(nextSettings).resolves.toEqual({ name: "Elgato Again" });
+			await expect(nextSettings).resolves.toEqual({
+				name: "Elgato Again",
+			});
 			expect(settingsCache.get(action.id)).toBeUndefined();
 		});
 	});

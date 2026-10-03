@@ -6,7 +6,9 @@ export type Expect<T extends true> = T;
 /**
  * Utility type for prettifying a intersection / union type to a flat structure.
  */
-export type Prettify<T> = { [k in keyof T]: T[k] extends object ? Prettify<T[k]> : T[k] } & {};
+export type Prettify<T> = {
+	[k in keyof T]: T[k] extends object ? Prettify<T[k]> : T[k];
+} & {};
 
 /**
  * Utility type that returns `true` when {@template T} and {@template U} are equal.

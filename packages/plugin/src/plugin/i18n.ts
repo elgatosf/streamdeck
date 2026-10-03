@@ -1,7 +1,8 @@
-import type { JsonObject } from "@elgato/utils";
-import type { Language } from "@elgato/utils/i18n";
 import fs from "node:fs";
 import path from "node:path";
+
+import type { JsonObject } from "@elgato/utils";
+import type { Language } from "@elgato/utils/i18n";
 
 import type { Language as SupportedLanguage } from "../api/i18n.js";
 import { logger } from "./logging/index.js";

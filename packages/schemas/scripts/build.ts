@@ -1,7 +1,9 @@
-import type { JSONSchema7 } from "json-schema";
 import { existsSync, mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
+
+import type { JSONSchema7 } from "json-schema";
 import { createGenerator } from "ts-json-schema-generator";
+
 import pkg from "../package.json";
 import { customKeywordTransformer } from "./transformers/custom-keywords";
 import { versionManifests } from "./transformers/version-manifests";
@@ -28,7 +30,7 @@ function generateAndWriteSchema(type: string, transformers?: ((schema: JSONSchem
 		path,
 		skipTypeCheck: true,
 		schemaId: `${pkg.name}/streamdeck/plugins/${type.toLowerCase()}@${pkg.version}`,
-		tsconfig: join(__dirname, "../tsconfig.json")
+		tsconfig: join(__dirname, "../tsconfig.json"),
 	});
 
 	// Generate the schema, and apply the transformers.

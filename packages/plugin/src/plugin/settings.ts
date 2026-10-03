@@ -1,5 +1,6 @@
-import type { IDisposable, JsonObject } from "@elgato/utils";
 import { randomUUID } from "node:crypto";
+
+import type { IDisposable, JsonObject } from "@elgato/utils";
 
 import type { DidReceiveGlobalSettings, DidReceiveSettings } from "../api/index.js";
 import type { Action } from "./actions/action.js";

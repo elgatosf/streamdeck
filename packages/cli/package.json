@@ -2,21 +2,39 @@
     "name": "@elgato/cli",
     "version": "1.10.1",
     "description": "Stream Deck CLI tool for building with Stream Deck.",
-    "bin": {
-        "streamdeck": "bin/streamdeck.mjs",
-        "sd": "bin/streamdeck.mjs"
+    "keywords": [
+        "cli",
+        "elgato",
+        "maker",
+        "marketplace",
+        "plugin",
+        "stream deck"
+    ],
+    "homepage": "https://github.com/elgatosf/streamdeck/tree/main/packages/cli#readme",
+    "bugs": {
+        "url": "https://github.com/elgatosf/streamdeck/issues"
     },
-    "type": "module",
-    "main": "./dist/index.js",
-    "types": "./dist/index.d.ts",
+    "license": "MIT",
+    "author": {
+        "name": "Elgato",
+        "url": "https://www.elgato.com"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/elgatosf/streamdeck.git"
+    },
+    "bin": {
+        "sd": "bin/streamdeck.mjs",
+        "streamdeck": "bin/streamdeck.mjs"
+    },
     "files": [
         "./{bin,dist}/*.{js,cjs,mjs}",
         "./{bin,dist}/*.d.{cts,ts}",
         "./template"
     ],
-    "engines": {
-        "node": ">=20.1.0"
-    },
+    "type": "module",
+    "main": "./dist/index.js",
+    "types": "./dist/index.d.ts",
     "scripts": {
         "build": "wireit",
         "build:bin": "wireit",
@@ -25,7 +43,6 @@
         "dev:bin": "wireit",
         "dev:exports": "wireit",
         "lint": "eslint --max-warnings 0",
-        "lint:fix": "prettier \"./src/**/*.ts\" --write",
         "typecheck": "wireit",
         "prepack": "cp ../../LICENSE ."
     },
@@ -91,28 +108,6 @@
             ]
         }
     },
-    "prettier": "@elgato/prettier-config",
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/elgatosf/streamdeck.git"
-    },
-    "keywords": [
-        "elgato",
-        "stream deck",
-        "plugin",
-        "cli",
-        "marketplace",
-        "maker"
-    ],
-    "author": {
-        "name": "Elgato",
-        "url": "https://www.elgato.com"
-    },
-    "license": "MIT",
-    "bugs": {
-        "url": "https://github.com/elgatosf/streamdeck/issues"
-    },
-    "homepage": "https://github.com/elgatosf/streamdeck/tree/main/packages/cli#readme",
     "dependencies": {
         "@elgato/schemas": "workspace:*",
         "@humanwhocodes/momoa": "^3.0.0",
@@ -132,7 +127,6 @@
     },
     "devDependencies": {
         "@elgato/eslint-config": "^0.3.2",
-        "@elgato/prettier-config": "^0.3.3",
         "@tsconfig/node20": "^20.1.4",
         "@types/ejs": "^3.1.5",
         "@types/inquirer": "^9.0.7",
@@ -140,11 +134,13 @@
         "@types/node": "^22.10.7",
         "@types/semver": "^7.5.8",
         "eslint": "^9.39.4",
-        "prettier": "^3.8.1",
         "rolldown": "1.0.0-rc.8",
         "tslib": "^2.8.1",
         "tsup": "^8.5.1",
         "typescript": "^5.7.3",
         "wireit": "^0.14.13"
+    },
+    "engines": {
+        "node": ">=20.1.0"
     }
 }

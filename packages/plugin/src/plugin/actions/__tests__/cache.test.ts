@@ -27,7 +27,9 @@ describe("settingsCache", () => {
 	 */
 	it("get returns a cloned copy of cached settings", () => {
 		// Arrange.
-		settingsCache.set("action-get-clone", { nested: { name: "Original" } });
+		settingsCache.set("action-get-clone", {
+			nested: { name: "Original" },
+		});
 
 		// Act.
 		const cached = settingsCache.get("action-get-clone") as { nested: { name: string } } | undefined;
@@ -38,7 +40,9 @@ describe("settingsCache", () => {
 		cached.nested.name = "Mutated";
 
 		// Assert.
-		expect(settingsCache.get("action-get-clone")).toEqual({ nested: { name: "Original" } });
+		expect(settingsCache.get("action-get-clone")).toEqual({
+			nested: { name: "Original" },
+		});
 	});
 
 	/**
@@ -53,7 +57,9 @@ describe("settingsCache", () => {
 		settings.nested.name = "Mutated";
 
 		// Assert.
-		expect(settingsCache.get("action-set-clone")).toEqual({ nested: { name: "Original" } });
+		expect(settingsCache.get("action-set-clone")).toEqual({
+			nested: { name: "Original" },
+		});
 	});
 
 	/**
@@ -81,7 +87,9 @@ describe("settingsCache", () => {
 		settingsCache.set("action3", { name: "Second" });
 
 		// Assert.
-		expect(settingsCache.get("action3")).toEqual({ name: "Second" });
+		expect(settingsCache.get("action3")).toEqual({
+			name: "Second",
+		});
 	});
 
 	/**

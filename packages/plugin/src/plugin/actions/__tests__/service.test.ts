@@ -643,11 +643,15 @@ describe("actions", () => {
 
 			// Act, assert (set on appear).
 			connection.emit("willAppear", willAppear);
-			expect(settingsCache.get(context)).toEqual({ name: "FromAppear" });
+			expect(settingsCache.get(context)).toEqual({
+				name: "FromAppear",
+			});
 
 			// Act, assert (update on settings event).
 			connection.emit("didReceiveSettings", didReceiveSettings);
-			expect(settingsCache.get(context)).toEqual({ name: "Updated" });
+			expect(settingsCache.get(context)).toEqual({
+				name: "Updated",
+			});
 
 			// Act, assert (delete on disappear).
 			connection.emit("willDisappear", willDisappear);

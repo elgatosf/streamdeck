@@ -9,11 +9,6 @@
         },
         "types": []
     },
-    "include": [
-        "scripts/**/*",
-        "src/**/*",
-        "tests/**/*",
-        "rollup.config.ts"
-    ],
+    "include": ["scripts/**/*", "src/**/*", "tests/**/*", "rollup.config.ts"],
     "exclude": ["node_modules"]
 }

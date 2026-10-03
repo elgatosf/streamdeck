@@ -90,19 +90,15 @@ Plugins can be debugged using any Node.js debugger, for example Visual Studio Co
 
 You can configure debugging within the [manifest's Node.js configuration](https://docs.elgato.com/streamdeck/sdk/references/manifest#nodejs).
 
-<!-- prettier-ignore-start -->
-
 ```jsonc
 {
     // ...
     "Nodejs": {
         "Version": "24",
-        "Debug": "enabled"
+        "Debug": "enabled",
     },
 }
 ```
-
-<!-- prettier-ignore-end -->
 
 There are four available options when configuring the `Debug` property within the manifest:
 

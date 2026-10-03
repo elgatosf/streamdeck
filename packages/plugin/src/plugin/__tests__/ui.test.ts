@@ -178,8 +178,14 @@ describe("UIController", () => {
 				device: "__reset__",
 			};
 
-			connection.emit("propertyInspectorDidAppear", { event: "propertyInspectorDidAppear", ...context });
-			connection.emit("propertyInspectorDidDisappear", { event: "propertyInspectorDidDisappear", ...context });
+			connection.emit("propertyInspectorDidAppear", {
+				event: "propertyInspectorDidAppear",
+				...context,
+			});
+			connection.emit("propertyInspectorDidDisappear", {
+				event: "propertyInspectorDidDisappear",
+				...context,
+			});
 		});
 
 		/**

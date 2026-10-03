@@ -1,5 +1,6 @@
-import chalk from "chalk";
 import { unlinkSync } from "node:fs";
+
+import chalk from "chalk";
 
 import { command } from "../common/command";
 import type { StdOut } from "../common/stdout";

@@ -14,6 +14,7 @@ bin/
 publish-plan.json
 
 # Shared package files
+/config/*/LICENSE
 /packages/*/LICENSE
 /packages/plugin/README.md
 

@@ -153,7 +153,9 @@ describe("KeyAction", () => {
 		// Assert.
 		expect(jsonObj.controllerType).toBe(action.controllerType);
 		expect(jsonObj.coordinates).toStrictEqual(action.coordinates);
-		expect(jsonObj.device).toStrictEqual({ id: action.device.id });
+		expect(jsonObj.device).toStrictEqual({
+			id: action.device.id,
+		});
 		expect(jsonObj.id).toBe(action.id);
 		expect(jsonObj.isInMultiAction).toBe(action.isInMultiAction());
 		expect(jsonObj.manifestId).toBe(action.manifestId);
@@ -221,7 +223,10 @@ describe("KeyAction", () => {
 		it("setTitle", async () => {
 			// Arrange, act.
 			await action.setTitle("Hello world");
-			await action.setTitle("This is a test", { state: 1, target: Target.Software });
+			await action.setTitle("This is a test", {
+				state: 1,
+				target: Target.Software,
+			});
 
 			// Assert.
 			expect(connection.send).toHaveBeenCalledTimes(2);
