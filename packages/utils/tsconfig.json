@@ -2,17 +2,11 @@
     "extends": "@tsconfig/node20/tsconfig.json",
     "compilerOptions": {
         "erasableSyntaxOnly": true,
-        "lib": [
-            "es2022",
-            "esnext.disposable"
-        ],
+        "lib": ["es2022", "esnext.disposable"],
         "module": "NodeNext",
         "noEmit": true,
         "noImplicitOverride": true,
         "verbatimModuleSyntax": true
     },
-    "exclude": [
-        "./dist/",
-        "./node_modules/"
-    ]
+    "exclude": ["./dist/", "./node_modules/"]
 }

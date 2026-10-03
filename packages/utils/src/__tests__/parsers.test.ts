@@ -9,27 +9,14 @@ describe("parseBoolean", () => {
 	/**
 	 * Asserts {@link parseBoolean} parses truthy values that represent `true`.
 	 */
-	test.each([
-		{},
-		true,
-		1,
-		"true",
-		"any",
-	])("%s is true", (value) => {
+	test.each([{}, true, 1, "true", "any"])("%s is true", (value) => {
 		expect(parseBoolean(value)).toBe(true);
 	});
 
 	/**
 	 * Asserts {@link parseBoolean} parses truthy values that represent `false`.
 	 */
-	test.each([
-		undefined,
-		null,
-		false,
-		0,
-		"0",
-		"false",
-	])("%s is false", (value) => {
+	test.each([undefined, null, false, 0, "0", "false"])("%s is false", (value) => {
 		expect(parseBoolean(value)).toBe(false);
 	});
 });
@@ -77,13 +64,7 @@ describe("parseNumber", () => {
 	/**
 	 * Asserts {@link parseNumber} with values that cannot be parsed.
 	 */
-	test.each([
-		undefined,
-		null,
-		"false",
-		"a123b",
-		{},
-	])("$value = undefined", (value) => {
+	test.each([undefined, null, "false", "a123b", {}])("$value = undefined", (value) => {
 		expect(parseNumber(value)).toBeUndefined();
 	});
 });
