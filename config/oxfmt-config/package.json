@@ -1,5 +1,6 @@
 {
     "name": "@elgato/oxfmt-config",
+    "version": "0.0.0",
     "description": "oxfmt configuration used by Elgato projects.",
     "keywords": [
         "elgato",
@@ -27,7 +28,8 @@
     },
     "scripts": {
         "build": "tsc ",
-        "dev": "tsc --watch"
+        "dev": "tsc --watch",
+        "prepack": "cp ../../LICENSE ."
     },
     "devDependencies": {
         "@tsconfig/node20": "^20.1.10",
