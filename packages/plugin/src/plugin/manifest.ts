@@ -1,6 +1,7 @@
-import { Lazy } from "@elgato/utils";
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
+
+import { Lazy } from "@elgato/utils";
 
 import { type Manifest } from "../api/index.js";
 import { Version } from "./common/version.js";
