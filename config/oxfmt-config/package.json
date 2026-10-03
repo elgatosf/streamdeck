@@ -1,0 +1,37 @@
+{
+    "name": "@elgato/oxfmt-config",
+    "description": "oxfmt configuration used by Elgato projects.",
+    "type": "module",
+    "scripts": {
+        "build": "tsc ",
+        "dev": "tsc --watch"
+    },
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "import": "./dist/index.js"
+        }
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/elgatosf/streamdeck.git"
+    },
+    "keywords": [
+        "elgato",
+        "oxfmt"
+    ],
+    "author": {
+        "name": "Elgato",
+        "url": "https://www.elgato.com"
+    },
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/elgatosf/streamdeck/issues"
+    },
+    "homepage": "https://github.com/elgatosf/streamdeck/tree/main/config/oxfmt-config#readme",
+    "devDependencies": {
+        "@tsconfig/node20": "^20.1.10",
+        "oxfmt": "^0.70.0",
+        "typescript": "^5.8.3"
+    }
+}

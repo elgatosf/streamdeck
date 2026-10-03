@@ -1,4 +1,5 @@
 packages:
+  - "config/*"
   - "packages/*"
 
 blockExoticSubdeps: true

@@ -1,0 +1,14 @@
+{
+    "extends": "@tsconfig/node20/tsconfig.json",
+    "compilerOptions": {
+        "declaration": true,
+        "erasableSyntaxOnly": true,
+        "module": "NodeNext",
+        "noEmit": false,
+        "noImplicitOverride": true,
+        "outDir": "./dist",
+        "rootDir": "./src",
+        "types": [],
+        "verbatimModuleSyntax": true
+    }
+}
