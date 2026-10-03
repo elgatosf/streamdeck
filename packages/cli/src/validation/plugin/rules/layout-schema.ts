@@ -1,5 +1,6 @@
-import { DefinedError } from "ajv";
 import { existsSync } from "node:fs";
+
+import { DefinedError } from "ajv";
 
 import { rule } from "../../rule";
 import { type PluginContext } from "../plugin";

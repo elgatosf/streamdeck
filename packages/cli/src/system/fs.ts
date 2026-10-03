@@ -1,5 +1,3 @@
-import ignore from "ignore";
-import { get } from "lodash";
 import {
 	cpSync,
 	createReadStream,
@@ -16,6 +14,9 @@ import { lstat, mkdir, readdir, readFile } from "node:fs/promises";
 import { platform } from "node:os";
 import { basename, join, resolve } from "node:path";
 import { createInterface } from "node:readline";
+
+import ignore from "ignore";
+import { get } from "lodash";
 
 export const streamDeckIgnoreFilename = ".sdignore";
 export const defaultIgnorePatterns = [streamDeckIgnoreFilename, ".git", "/.env*", "*.log", "*.js.map"];

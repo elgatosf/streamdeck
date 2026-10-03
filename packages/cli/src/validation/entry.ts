@@ -1,5 +1,6 @@
-import chalk from "chalk";
 import { EOL } from "node:os";
+
+import chalk from "chalk";
 
 import { LocationRef } from "../common/location";
 

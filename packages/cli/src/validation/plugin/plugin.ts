@@ -1,6 +1,7 @@
+import { basename, dirname, join, resolve } from "node:path";
+
 import type { Layout, Manifest } from "@elgato/schemas/streamdeck/plugins";
 import type { AnySchema } from "ajv";
-import { basename, dirname, join, resolve } from "node:path";
 
 import { JsonLocation, LocationRef } from "../../common/location";
 import { JsonFileContext, JsonSchema } from "../../json";

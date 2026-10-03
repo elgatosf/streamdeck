@@ -1,10 +1,11 @@
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { homedir, platform } from "node:os";
+import { dirname, join } from "node:path";
+
 import Ajv, { JTDSchemaType } from "ajv/dist/jtd";
 import chalk from "chalk";
 import _ from "lodash";
 import logSymbols from "log-symbols";
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
-import { homedir, platform } from "node:os";
-import { dirname, join } from "node:path";
 
 import { packageManager } from "./package-manager";
 

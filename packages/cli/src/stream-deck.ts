@@ -1,7 +1,8 @@
-import find from "find-process";
 import { Dirent, readdirSync, readlinkSync } from "node:fs";
 import os from "node:os";
 import { basename, join, resolve } from "node:path";
+
+import find from "find-process";
 
 const PLUGIN_SUFFIX = ".sdPlugin";
 

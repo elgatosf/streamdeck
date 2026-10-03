@@ -1,6 +1,7 @@
-import ejs from "ejs";
 import fs from "node:fs";
 import { dirname, extname, resolve } from "path";
+
+import ejs from "ejs";
 
 /**
  * Creates a new {@link FileCopier}.
