@@ -111,7 +111,7 @@ We use [Vitest](https://vitest.dev/) for testing. Please ensure all tests pass b
 
 ## Code Style
 
-This project uses ESLint and Prettier to maintain consistent code style.
+This project uses ESLint and Oxfmt to maintain consistent code style.
 
 ### Linting
 
@@ -121,9 +121,9 @@ This project uses ESLint and Prettier to maintain consistent code style.
     pnpm lint
     ```
 
-- Auto-fix linting and formatting issues:
+- Auto-fix formatting issues:
     ```bash
-    pnpm lint:fix
+    pnpm fmt
     ```
 
 ### Style Guidelines

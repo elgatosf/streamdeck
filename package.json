@@ -6,7 +6,6 @@
         "fmt": "oxfmt",
         "fmt:check": "oxfmt --check",
         "lint": "turbo run lint",
-        "lint:fix": "turbo run lint:fix",
         "test": "turbo run test",
         "test:coverage": "turbo run test:coverage",
         "test:watch": "turbo run test:watch"
