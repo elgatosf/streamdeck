@@ -1,0 +1,8 @@
+{
+    "extends": "../tsconfig.node.json",
+    "compilerOptions": {
+        /* Language and environment */
+        "lib": ["es2023", "esnext.disposable"],
+        "target": "es2022"
+    }
+}

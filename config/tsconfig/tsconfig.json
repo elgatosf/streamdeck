@@ -1,0 +1,24 @@
+{
+    "$schema": "https://www.schemastore.org/tsconfig",
+    "compilerOptions": {
+        /* Type checking */
+        "strict": true,
+        // TODO: "noUncheckedIndexedAccess": true,
+        "noImplicitOverride": true,
+
+        /* Modules */
+        "module": "nodenext",
+        "resolveJsonModule": true,
+
+        /* JavaScript support */
+        "allowJs": true,
+
+        /* Interop constraints */
+        "esModuleInterop": true,
+        "isolatedModules": true,
+        "verbatimModuleSyntax": true,
+
+        /* Completeness */
+        "skipLibCheck": true
+    }
+}
