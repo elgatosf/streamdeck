@@ -33,7 +33,9 @@
     },
     "devDependencies": {
         "@tsconfig/node20": "^20.1.10",
-        "oxfmt": "^0.70.0",
         "typescript": "^5.8.3"
+    },
+    "peerDependencies": {
+        "oxfmt": "^0.70.0"
     }
 }

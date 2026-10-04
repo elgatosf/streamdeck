@@ -22,13 +22,14 @@ importers:
         version: 2.8.14
 
   config/oxfmt-config:
+    dependencies:
+      oxfmt:
+        specifier: ^0.70.0
+        version: 0.70.0
     devDependencies:
       '@tsconfig/node20':
         specifier: ^20.1.10
         version: 20.1.10
-      oxfmt:
-        specifier: ^0.70.0
-        version: 0.70.0
       typescript:
         specifier: ^5.8.3
         version: 5.9.3
