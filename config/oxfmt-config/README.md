@@ -15,7 +15,7 @@
 1. Install `@elgato/oxfmt-config`.
 
 ```
-npm i @elgato/oxfmt-config --save-dev
+pnpm add- D oxfmt @elgato/oxfmt-config
 ```
 
 2. Create an `oxfmt.config.mts` file at the root of your project.
