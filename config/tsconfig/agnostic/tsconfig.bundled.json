@@ -1,0 +1,10 @@
+{
+    "extends": "./tsconfig.agnostic.json",
+    "compilerOptions": {
+        /* Modules */
+        "module": "preserve",
+
+        /* Emit */
+        "noEmit": true
+    }
+}
