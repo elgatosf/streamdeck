@@ -67,11 +67,11 @@ For example, to prefer spaces over tabs:
 import config from "@elgato/oxfmt-config";
 
 config.overrides.push({
-  files: ["*"],
-  options: {
-    tabWidth: 2,
-    useTabs: false,
-  },
+    files: ["*"],
+    options: {
+        tabWidth: 2,
+        useTabs: false,
+    },
 });
 
 export default config;
