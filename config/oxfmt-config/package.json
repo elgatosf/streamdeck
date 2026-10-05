@@ -27,8 +27,6 @@
         }
     },
     "scripts": {
-        "build": "tsc ",
-        "dev": "tsc --watch",
         "prepack": "cp ../../LICENSE ."
     },
     "peerDependencies": {
