@@ -20,9 +20,9 @@
         "url": "git+https://github.com/elgatosf/streamdeck.git"
     },
     "exports": {
-        "./app": "./agnostic/tsconfig.app.json",
-        "./bundled": "./agnostic/tsconfig.bundled.json",
-        "./lib": "./agnostic/tsconfig.lib.json",
+        "./app": "./isomorphic/tsconfig.app.json",
+        "./bundled": "./isomorphic/tsconfig.bundled.json",
+        "./lib": "./isomorphic/tsconfig.lib.json",
         "./dom/app": "./dom/tsconfig.app.json",
         "./dom/lib": "./dom/tsconfig.lib.json",
         "./node20/lib": "./node/20/tsconfig.lib.json",
