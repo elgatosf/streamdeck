@@ -24,7 +24,7 @@ importers:
   config/oxfmt-config:
     dependencies:
       oxfmt:
-        specifier: ^0.70.0
+        specifier: '>=0.70 <0.73'
         version: 0.70.0
 
   packages/cli:

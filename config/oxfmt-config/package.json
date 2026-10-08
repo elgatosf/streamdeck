@@ -30,6 +30,6 @@
         "prepack": "cp ../../LICENSE ."
     },
     "peerDependencies": {
-        "oxfmt": "^0.70.0"
+        "oxfmt": ">=0.70 <0.73"
     }
 }
