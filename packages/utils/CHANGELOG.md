@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.6.1
+
+### Patch Changes
+
+- 2bfaf9a: Removed dependency on prettier, in favor of monorepo formatting.
+
 ## 0.6.0
 
 ### Minor Changes

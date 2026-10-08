@@ -1,6 +1,6 @@
 {
     "name": "@elgato/oxfmt-config",
-    "version": "0.0.0",
+    "version": "0.1.0",
     "description": "oxfmt configuration used by Elgato projects.",
     "keywords": [
         "elgato",
