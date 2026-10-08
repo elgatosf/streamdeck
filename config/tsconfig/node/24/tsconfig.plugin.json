@@ -1,5 +1,5 @@
 {
-    "extends": "./tsconfig.node26.json",
+    "extends": "./tsconfig.node24.json",
     "compilerOptions": {
         /* Modules */
         "module": "preserve",
