@@ -17,12 +17,6 @@ importers:
       oxfmt:
         specifier: ^0.70.0
         version: 0.70.0
-      '@elgato/oxfmt-config':
-        specifier: workspace:^
-        version: link:config/oxfmt-config
-      oxfmt:
-        specifier: ^0.70.0
-        version: 0.70.0
       turbo:
         specifier: ^2.8.14
         version: 2.8.14
@@ -32,6 +26,8 @@ importers:
       oxfmt:
         specifier: '>=0.70 <0.73'
         version: 0.70.0
+
+  config/tsconfig: {}
 
   packages/cli:
     dependencies:
