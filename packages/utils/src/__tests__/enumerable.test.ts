@@ -3,11 +3,7 @@ import { describe, expect, it, test, vi } from "vitest";
 import { Enumerable } from "../index.js";
 
 describe("Enumerable", () => {
-	const source = [
-		{ name: "Facecam" },
-		{ name: "Stream Deck" },
-		{ name: "Wave DX" },
-	];
+	const source = [{ name: "Facecam" }, { name: "Stream Deck" }, { name: "Wave DX" }];
 
 	const enumerable = new Enumerable(source);
 

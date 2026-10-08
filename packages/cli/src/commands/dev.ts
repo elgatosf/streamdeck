@@ -1,5 +1,6 @@
 import childProcess from "node:child_process";
 import os from "node:os";
+
 import { Registry } from "rage-edit";
 
 import { command } from "../common/command";

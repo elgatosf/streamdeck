@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
+
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { FileTarget, type FileTargetOptions } from "../file-target.js";

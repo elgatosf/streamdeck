@@ -1,5 +1,6 @@
-import { type EventArgs, type JsonObject, withResolvers } from "@elgato/utils";
 import { randomUUID } from "node:crypto";
+
+import { type EventArgs, type JsonObject, withResolvers } from "@elgato/utils";
 
 import type {
 	DidReceiveResources,

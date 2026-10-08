@@ -1,7 +1,8 @@
+import { dirname, join, parse } from "node:path";
+
 import json from "@rollup/plugin-json";
 import nodeResolve from "@rollup/plugin-node-resolve";
 import typescript from "@rollup/plugin-typescript";
-import { dirname, join, parse } from "node:path";
 import { RollupOptions } from "rollup";
 import dts from "rollup-plugin-dts";
 
@@ -29,33 +30,37 @@ function getConfig(input: string): RollupOptions[] {
 				{
 					file: `${pathWithoutExtension}.cjs`,
 					format: "cjs",
-					banner
+					banner,
 				},
 				{
 					file: `${pathWithoutExtension}.mjs`,
 					format: "es",
-					banner
-				}
+					banner,
+				},
 			],
 			plugins: [
 				typescript({
-					exclude: ["scripts/**/*.ts"]
+					exclude: ["scripts/**/*.ts"],
 				}),
 				nodeResolve(),
-				json()
-			]
+				json(),
+			],
 		},
 		{
 			input,
 			output: [
 				{
 					file: `${pathWithoutExtension}.d.ts`,
-					banner
-				}
+					banner,
+				},
 			],
-			plugins: [json(), dts()]
-		}
+			plugins: [json(), dts()],
+		},
 	];
 }
 
-export default [...getConfig("index.ts"), ...getConfig("streamdeck/plugins/index.ts"), ...getConfig("streamdeck/plugins/json.ts")] satisfies RollupOptions[];
+export default [
+	...getConfig("index.ts"),
+	...getConfig("streamdeck/plugins/index.ts"),
+	...getConfig("streamdeck/plugins/json.ts"),
+] satisfies RollupOptions[];

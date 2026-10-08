@@ -24,9 +24,9 @@ classDiagram
 
 ### Glossary
 
--   vLatest — The current version, with a flat `Software.MinimumVersion`.
--   vCurrent — The current version, for example `v6.7.ts`.
--   vNext — The new version being introduced, for example `v6.8.ts`.
+- vLatest — The current version, with a flat `Software.MinimumVersion`.
+- vCurrent — The current version, for example `v6.7.ts`.
+- vNext — The new version being introduced, for example `v6.8.ts`.
 
 ### File Structure Example
 

@@ -1,5 +1,6 @@
-import chalk from "chalk";
 import { existsSync, rmSync } from "fs";
+
+import chalk from "chalk";
 import _ from "lodash";
 
 import { command, GlobalOptions } from "../common/command";

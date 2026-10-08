@@ -1,7 +1,8 @@
-import { ConsoleTarget, Logger, type LogTarget, stringFormatter } from "@elgato/utils/logging";
-import { FileTarget } from "@elgato/utils/logging/file-target.js";
 import path from "node:path";
 import { cwd } from "node:process";
+
+import { ConsoleTarget, Logger, type LogTarget, stringFormatter } from "@elgato/utils/logging";
+import { FileTarget } from "@elgato/utils/logging/file-target.js";
 
 import { getPluginUUID, isDebugMode } from "../common/utils.js";
 

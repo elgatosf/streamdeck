@@ -64,10 +64,7 @@ describe("RpcRequestResponder", () => {
 		expect(sender).toHaveBeenCalledTimes(0);
 	});
 
-	describe.each([
-		{ id: "123" },
-		{ id: undefined },
-	])("with id: $id", ({ id }) => {
+	describe.each([{ id: "123" }, { id: undefined }])("with id: $id", ({ id }) => {
 		/**
 		 * Asserts errors can be sent.
 		 */

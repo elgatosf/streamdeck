@@ -1,6 +1,7 @@
+import path from "node:path";
+
 import { ConsoleTarget, type LoggerOptions } from "@elgato/utils/logging";
 import { type FileTargetOptions } from "@elgato/utils/logging/file-target";
-import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 vi.mock("../../common/utils.js");

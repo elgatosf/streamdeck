@@ -2,68 +2,64 @@
     "name": "@elgato/streamdeck",
     "version": "3.0.1",
     "description": "The official Node.js SDK for creating Stream Deck plugins.",
-    "main": "./dist/plugin/index.js",
-    "type": "module",
-    "engines": {
-        "node": ">=20.5.1"
+    "keywords": [
+        "elgato",
+        "framework",
+        "maker",
+        "marketplace",
+        "plugin",
+        "sdk",
+        "stream deck"
+    ],
+    "homepage": "https://github.com/elgatosf/streamdeck#readme",
+    "bugs": {
+        "url": "https://github.com/elgatosf/streamdeck/issues"
+    },
+    "license": "MIT",
+    "author": {
+        "name": "Elgato",
+        "url": "https://www.elgato.com"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/elgatosf/streamdeck.git"
     },
     "files": [
         "./dist/**/*.js",
         "./dist/**/*.d.ts"
     ],
-    "exports": "./dist/plugin/index.js",
+    "type": "module",
+    "main": "./dist/plugin/index.js",
     "types": "./dist/plugin/index.d.ts",
+    "exports": "./dist/plugin/index.js",
     "scripts": {
         "build": "rm -rf ./dist && tsc -p tsconfig.build.json",
         "dev": "rm -rf ./dist && tsc -p tsconfig.build.json -w",
         "lint": "eslint --max-warnings 0",
-        "lint:fix": "prettier . --write",
         "test": "vitest --run --reporter verbose",
         "test:coverage": "vitest run --coverage",
         "test:watch": "vitest",
         "prepack": "cp ../../README.md . && cp ../../LICENSE ."
     },
-    "prettier": "@elgato/prettier-config",
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/elgatosf/streamdeck.git"
+    "dependencies": {
+        "@elgato/schemas": "workspace:*",
+        "@elgato/utils": "workspace:*",
+        "ws": "^8.19.0"
     },
-    "keywords": [
-        "elgato",
-        "stream deck",
-        "plugin",
-        "sdk",
-        "framework",
-        "marketplace",
-        "maker"
-    ],
-    "author": {
-        "name": "Elgato",
-        "url": "https://www.elgato.com"
-    },
-    "license": "MIT",
-    "bugs": {
-        "url": "https://github.com/elgatosf/streamdeck/issues"
-    },
-    "homepage": "https://github.com/elgatosf/streamdeck#readme",
     "devDependencies": {
         "@elgato/eslint-config": "^0.3.2",
-        "@elgato/prettier-config": "^0.3.3",
         "@tsconfig/node20": "^20.1.9",
         "@types/node": "^24.12.0",
         "@types/ws": "^8.18.1",
         "@vitest/coverage-v8": "^3.2.4",
         "eslint": "^9.39.4",
         "mock-socket": "^9.3.1",
-        "prettier": "^3.8.1",
         "tslib": "^2.8.1",
         "typescript": "^5.9.3",
         "vitest": "^3.2.4",
         "vitest-websocket-mock": "^0.5.0"
     },
-    "dependencies": {
-        "@elgato/schemas": "workspace:*",
-        "@elgato/utils": "workspace:*",
-        "ws": "^8.19.0"
+    "engines": {
+        "node": ">=20.5.1"
     }
 }

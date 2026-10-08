@@ -52,7 +52,7 @@ export class EventEmitter<TMap extends EventMap<TMap>> {
 			return false;
 		}
 
-		for (let i = 0; i < listeners.length; ) {
+		for (let i = 0; i < listeners.length;) {
 			const { listener, once } = listeners[i];
 			if (once) {
 				this.remove(eventName, listeners, i);

@@ -1,23 +1,13 @@
 {
     "extends": "@tsconfig/node20/tsconfig.json",
     "compilerOptions": {
-        "customConditions": [
-            "node"
-        ],
-        "lib": [
-            "es2022",
-            "esnext.disposable"
-        ],
+        "customConditions": ["node"],
+        "lib": ["es2022", "esnext.disposable"],
         "module": "NodeNext",
         "moduleResolution": "NodeNext",
         "noEmit": true,
         "verbatimModuleSyntax": true
     },
-    "include": [
-        "src/",
-        "tests/"
-    ],
-    "exclude": [
-        "node_modules/"
-    ]
+    "include": ["src/", "tests/"],
+    "exclude": ["node_modules/"]
 }
