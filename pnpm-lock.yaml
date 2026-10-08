@@ -17,6 +17,12 @@ importers:
       oxfmt:
         specifier: ^0.70.0
         version: 0.70.0
+      '@elgato/oxfmt-config':
+        specifier: workspace:^
+        version: link:config/oxfmt-config
+      oxfmt:
+        specifier: ^0.70.0
+        version: 0.70.0
       turbo:
         specifier: ^2.8.14
         version: 2.8.14
@@ -24,15 +30,8 @@ importers:
   config/oxfmt-config:
     dependencies:
       oxfmt:
-        specifier: ^0.70.0
+        specifier: '>=0.70 <0.73'
         version: 0.70.0
-    devDependencies:
-      '@tsconfig/node20':
-        specifier: ^20.1.10
-        version: 20.1.10
-      typescript:
-        specifier: ^5.8.3
-        version: 5.9.3
 
   packages/cli:
     dependencies:
@@ -1509,9 +1508,6 @@ packages:
 
   '@swc/types@0.1.28':
     resolution: {integrity: sha512-V6Mnml8v09QALx6K0elJ7o9K/MkVDtW3t6L+7Ou/JcWtb3xwId2AH4FeOceySd2JaO87IMw4+6vSZxLm34LPbw==}
-
-  '@tsconfig/node20@20.1.10':
-    resolution: {integrity: sha512-5OZgdnxbFuvwm05iVwPXMU5/7iPuVDDZzAnxPDLj+kjN7fwQZSSVgHQhKTNkBPOO6Qef2D5MxPAoPLCGqE2VuQ==}
 
   '@tsconfig/node20@20.1.9':
     resolution: {integrity: sha512-IjlTv1RsvnPtUcjTqtVsZExKVq+KQx4g5pCP5tI7rAs6Xesl2qFwSz/tPDBC4JajkL/MlezBu3gPUwqRHl+RIg==}
@@ -3918,8 +3914,6 @@ snapshots:
   '@swc/types@0.1.28':
     dependencies:
       '@swc/counter': 0.1.3
-
-  '@tsconfig/node20@20.1.10': {}
 
   '@tsconfig/node20@20.1.9': {}
 

@@ -18,8 +18,10 @@ export type GBar = FeedbackPayloadItem<schemas.GBar>;
 export type Pixmap = FeedbackPayloadItem<schemas.Pixmap>;
 
 /**
- * Text layout item used to render text within a layout. **Note**, when adding a text item to the layout's JSON definition, setting the `key` to the `"title"` keyword will enable the
- * user to specify the font's settings via the property inspector, and will cause `setTitle` to update this item
+ * Layout item used to render text.
+ *
+ * For Stream Deck + and Stream Deck + XL, when a text item has the key `title`, users can change
+ * the appearance (e.g. font color) and value within Stream Deck.
  */
 export type Text = FeedbackPayloadItem<schemas.Text>;
 

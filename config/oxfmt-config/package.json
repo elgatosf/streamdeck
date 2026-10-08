@@ -1,6 +1,6 @@
 {
     "name": "@elgato/oxfmt-config",
-    "version": "0.0.0",
+    "version": "0.1.0",
     "description": "oxfmt configuration used by Elgato projects.",
     "keywords": [
         "elgato",
@@ -22,20 +22,14 @@
     "type": "module",
     "exports": {
         ".": {
-            "types": "./dist/index.d.ts",
-            "import": "./dist/index.js"
+            "types": "./oxfmt.config.d.mts",
+            "import": "./oxfmt.config.mjs"
         }
     },
     "scripts": {
-        "build": "tsc ",
-        "dev": "tsc --watch",
         "prepack": "cp ../../LICENSE ."
     },
-    "devDependencies": {
-        "@tsconfig/node20": "^20.1.10",
-        "typescript": "^5.8.3"
-    },
     "peerDependencies": {
-        "oxfmt": "^0.70.0"
+        "oxfmt": ">=0.70 <0.73"
     }
 }

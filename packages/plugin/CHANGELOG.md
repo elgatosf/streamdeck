@@ -1,11 +1,21 @@
 # Change Log
 
+## 3.0.2
+
+### Patch Changes
+
+- 2bfaf9a: Removed dependency on prettier, in favor of monorepo formatting.
+- Updated dependencies [2bfaf9a]
+- Updated dependencies [3a801e8]
+    - @elgato/schemas@0.5.2
+    - @elgato/utils@0.6.1
+
 ## 3.0.1
 
 ### Patch Changes
 
 - Updated dependencies [9c73dea]
-  - @elgato/schemas@0.5.1
+    - @elgato/schemas@0.5.1
 
 ## 3.0.0
 

@@ -1,5 +1,12 @@
 # Change Log
 
+## 0.5.2
+
+### Patch Changes
+
+- 2bfaf9a: Removed dependency on prettier, in favor of monorepo formatting.
+- 3a801e8: Improved documentation of `Text` layout items, to clarify that `title` items are only configurable by the user for Stream Deck + and Stream Deck + XL layouts.
+
 ## 0.5.1
 
 ### Patch Changes

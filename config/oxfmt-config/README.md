@@ -15,7 +15,7 @@
 1. Install `@elgato/oxfmt-config`.
 
 ```
-npm i @elgato/oxfmt-config --save-dev
+pnpm add -D oxfmt @elgato/oxfmt-config
 ```
 
 2. Create an `oxfmt.config.mts` file at the root of your project.
@@ -67,11 +67,11 @@ For example, to prefer spaces over tabs:
 import config from "@elgato/oxfmt-config";
 
 config.overrides.push({
-  files: ["*"],
-  options: {
-    tabWidth: 2,
-    useTabs: false,
-  },
+    files: ["*"],
+    options: {
+        tabWidth: 2,
+        useTabs: false,
+    },
 });
 
 export default config;
