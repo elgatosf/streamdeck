@@ -62,10 +62,10 @@ describe.each(["7.0" as const])("v%s", (version) => {
 		});
 
 		/**
-		 * Asserts Nodejs.Version can be 24.
+		 * Asserts Nodejs.Version cannot be X.
 		 */
-		it("cannot be 24", () => {
-			const errors = validateStreamDeckPluginManifest(`v${version}.json`, (m) => (m.Nodejs!.Version = "24"));
+		test.each(["24", "26"])("cannot be $0", (nodejsVersion: any) => {
+			const errors = validateStreamDeckPluginManifest(`v${version}.json`, (m) => (m.Nodejs!.Version = nodejsVersion));
 			expect(errors).toHaveError({
 				keyword: "const",
 				instancePath: "/Nodejs/Version",
