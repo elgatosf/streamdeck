@@ -1,0 +1,7 @@
+{
+    "extends": "./tsconfig.agnostic.json",
+    "compilerOptions": {
+        /* Emit */
+        "declaration": true
+    }
+}

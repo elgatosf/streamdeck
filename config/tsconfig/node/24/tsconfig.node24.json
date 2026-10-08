@@ -1,0 +1,8 @@
+{
+    "extends": "../tsconfig.node.json",
+    "compilerOptions": {
+        /* Language and environment */
+        "lib": ["es2024", "ESNext.Array", "ESNext.Collection", "ESNext.Error", "ESNext.Iterator", "ESNext.Promise"],
+        "target": "es2024"
+    }
+}

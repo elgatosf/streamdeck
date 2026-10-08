@@ -27,6 +27,8 @@ importers:
         specifier: '>=0.70 <0.73'
         version: 0.70.0
 
+  config/tsconfig: {}
+
   packages/cli:
     dependencies:
       '@elgato/schemas':

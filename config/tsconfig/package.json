@@ -1,0 +1,38 @@
+{
+    "name": "@elgato/tsconfig",
+    "version": "0.0.0",
+    "description": "TypeScript configuration used by Elgato projects.",
+    "keywords": [
+        "elgato",
+        "tsconfig"
+    ],
+    "homepage": "https://github.com/elgatosf/streamdeck/tree/main/config/tsconfig#readme",
+    "bugs": {
+        "url": "https://github.com/elgatosf/streamdeck/issues"
+    },
+    "license": "MIT",
+    "author": {
+        "name": "Elgato",
+        "url": "https://www.elgato.com"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/elgatosf/streamdeck.git"
+    },
+    "exports": {
+        "./app": "./isomorphic/tsconfig.app.json",
+        "./bundled": "./isomorphic/tsconfig.bundled.json",
+        "./lib": "./isomorphic/tsconfig.lib.json",
+        "./dom/app": "./dom/tsconfig.app.json",
+        "./dom/lib": "./dom/tsconfig.lib.json",
+        "./node20/lib": "./node/20/tsconfig.lib.json",
+        "./node20/streamdeck/plugin": "./node/20/tsconfig.plugin.json",
+        "./node24/lib": "./node/24/tsconfig.lib.json",
+        "./node24/streamdeck/plugin": "./node/24/tsconfig.plugin.json",
+        "./node26/lib": "./node/26/tsconfig.lib.json",
+        "./node26/streamdeck/plugin": "./node/26/tsconfig.plugin.json"
+    },
+    "scripts": {
+        "prepack": "cp ../../LICENSE ."
+    }
+}

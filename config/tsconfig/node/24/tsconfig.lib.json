@@ -1,0 +1,7 @@
+{
+    "extends": "./tsconfig.node24.json",
+    "compilerOptions": {
+        /* Emit */
+        "declaration": true
+    }
+}

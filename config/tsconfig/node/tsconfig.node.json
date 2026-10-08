@@ -1,0 +1,10 @@
+{
+    "extends": "../tsconfig.json",
+    "compilerOptions": {
+        /* Modules */
+        "types": ["node"],
+
+        /* Emit */
+        "sourceMap": true
+    }
+}

@@ -1,0 +1,11 @@
+{
+    "extends": "../tsconfig.json",
+    "compilerOptions": {
+        /* Emit */
+        "sourceMap": true,
+
+        /* Language and environment */
+        "target": "es2022",
+        "lib": ["es2022", "esnext.disposable"]
+    }
+}
