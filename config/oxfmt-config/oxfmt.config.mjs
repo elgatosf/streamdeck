@@ -10,7 +10,6 @@ export default defineConfig({
 	singleQuote: false,
 	trailingComma: "all",
 	useTabs: true,
-	ignorePatterns: ["**/CHANGELOG.md"],
 
 	/**
 	 * Import sorting
