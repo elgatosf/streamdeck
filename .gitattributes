@@ -1,0 +1,2 @@
+# Normalize line endings; the documentation tooling, and oxfmt, expect LF.
+* text=auto eol=lf

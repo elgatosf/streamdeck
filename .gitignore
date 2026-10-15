@@ -25,3 +25,6 @@ publish-plan.json
 
 # @elgato/schemas
 /packages/schemas/streamdeck/
+
+# OS
+.DS_Store

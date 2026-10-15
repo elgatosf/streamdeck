@@ -1,0 +1,37 @@
+{
+    // Markdown linting for the documentation shipped with the package; the conventions are documented in CONTRIBUTING.md.
+    "globs": ["docs/**/*.md", "AGENTS.md"],
+    "ignores": ["docs/_snippets/**"],
+    "config": {
+        "default": true,
+
+        // MD013 (line-length): Line length is not enforced; prose is written one sentence per line, and generated content is wrapped by its source.
+        "MD013": false,
+
+        // MD024 (no-duplicate-heading): Duplicate headings are allowed when they are not siblings, for example "Installation" under both ESLint and Prettier.
+        "MD024": { "siblings_only": true },
+
+        // MD033 (no-inline-html): Standard HTML that has no Markdown equivalent, used sparingly.
+        "MD033": {
+            "allowed_elements": ["Tabs", "TabItem", "details", "summary", "kbd", "sup", "ul", "li", "code", "br"]
+        },
+
+        // MD010 (no-hard-tabs): Code blocks use tabs, matching the repository's formatting.
+        "MD010": { "code_blocks": false },
+
+        // MD036 (no-emphasis-as-heading): Bold labels such as "**Parameters**" and "**Properties**" introduce generated member lists; they are intentionally not headings.
+        "MD036": false,
+
+        // MD051 (link-fragments): Custom anchors are defined with a `{#id}` heading suffix, which markdownlint does not understand; links are validated by `docs:check` instead.
+        "MD051": false,
+
+        // MD034 (no-bare-urls): Bare URLs are automatically linked by GFM, and are used within generated descriptions.
+        "MD034": false,
+
+        // MD028 (no-blanks-blockquote): GitHub alerts are written back-to-back, separated by a blank line.
+        "MD028": false,
+
+        // MD060 (table-column-style): Handwritten tables are aligned, generated tables are compact; cells containing HTML confuse the style detection.
+        "MD060": false
+    }
+}

@@ -8,6 +8,6 @@
         "noEmit": true,
         "verbatimModuleSyntax": true
     },
-    "include": ["src/", "tests/"],
+    "include": ["scripts/", "src/", "tests/"],
     "exclude": ["node_modules/"]
 }
