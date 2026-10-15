@@ -1,0 +1,20 @@
+{
+    "Actions": [
+        {
+            "Icon": "action-icon",
+            "Name": "Trigger Description Example",
+            "Controllers": ["Encoder"],
+            "Encoder": {
+                "layout": "$A1",
+                // [!code highlight:7]
+                "TriggerDescription": {
+                    "Push": "Play / Pause",
+                    "Rotate": "Adjust Volume",
+                    "Touch": "Play / Pause",
+                    "LongTouch": "Skip Track"
+                }
+            }
+        }
+    ]
+    // ...
+}

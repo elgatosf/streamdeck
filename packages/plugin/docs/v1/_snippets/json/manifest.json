@@ -1,0 +1,58 @@
+{
+    "$schema": "https://schemas.elgato.com/streamdeck/plugins/manifest.json",
+    "UUID": "com.elgato.hello-world",
+    "Name": "Hello World",
+    "Version": "0.1.0.0",
+    "Author": "Elgato",
+    "Actions": [
+        {
+            "Name": "Counter",
+            "UUID": "com.elgato.hello-world.increment",
+            "Icon": "static/imgs/actions/counter/icon",
+            "Tooltip": "Displays a count, which increments by one on press.",
+            "Controllers": ["Keypad"],
+            "States": [
+                {
+                    "Image": "static/imgs/actions/counter/key",
+                    "TitleAlignment": "middle"
+                }
+            ]
+        }
+    ],
+    "Category": "Hello World",
+    "CategoryIcon": "static/imgs/plugin/category-icon",
+    "CodePath": "bin/plugin.js",
+    "Description": ".",
+    "Icon": "static/imgs/plugin/marketplace",
+    "SDKVersion": 2,
+    "Software": {
+        "MinimumVersion": "6.6"
+    },
+    "OS": [
+        {
+            "Platform": "mac",
+            "MinimumVersion": "10.15"
+        },
+        {
+            "Platform": "windows",
+            "MinimumVersion": "10"
+        }
+    ],
+    "Nodejs": {
+        "Version": "20",
+        "Debug": "enabled"
+    },
+    "ApplicationsToMonitor": {
+        "mac": ["com.elgato.WaveLink"],
+        "windows": ["Elgato Wave Link.exe"]
+    },
+    "Profiles": [
+        {
+            "Name": "My Cool Profile",
+            "DeviceType": 0,
+            "Readonly": false,
+            "DontAutoSwitchWhenInstalled": false,
+            "AutoInstall": true
+        }
+    ]
+}
