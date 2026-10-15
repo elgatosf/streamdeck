@@ -23,8 +23,9 @@ streamDeck.connect();
 
 The above example will open `https://elgato.com` in the user's default browser.
 
-> [!NOTE]
-> All URLs are opened in the user's default browser. Custom URL schemes, for example `my-app://` are not yet supported by the SDK.
+<Note>
+  All URLs are opened in the user's default browser. Custom URL schemes, for example `my-app://` are not yet supported by the SDK.
+</Note>
 
 ## System Wake
 
@@ -46,5 +47,6 @@ streamDeck.system.onSystemDidWakeUp((ev) => {
 streamDeck.connect();
 ```
 
-> [!WARNING]
-> `onSystemDidWakeUp` is only available in the context of the plugin, and is not available in the property inspector.
+<Warning>
+  `onSystemDidWakeUp` is only available in the context of the plugin, and is not available in the property inspector.
+</Warning>

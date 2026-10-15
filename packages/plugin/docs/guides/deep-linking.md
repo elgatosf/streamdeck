@@ -118,10 +118,11 @@ Fragment = Testing
 
 Information on the event is parsed from the deep-link URL using the native [URL](https://developer.mozilla.org/en-US/docs/Web/API/URL) API, with the unique prefix ignored, i.e. `streamdeck://plugins/message/<PLUGIN_UUID>`.
 
-> [!TIP]
-> **Testing deep-links**
->
-> To test deep-linking, enter the URL in your browsers URL bar and press return. Alternatively, on Windows you can submit the URL directly in the Run panel, opened with <kbd>Win</kbd> + <kbd>R</kbd>.
+<Tip>
+  **Testing deep-links**
+
+  To test deep-linking, enter the URL in your browsers URL bar and press return. Alternatively, on Windows you can submit the URL directly in the Run panel, opened with <kbd>Win</kbd> + <kbd>R</kbd>.
+</Tip>
 
 ## Known Limitations
 
@@ -131,10 +132,11 @@ Information on the event is parsed from the deep-link URL using the native [URL]
 
 ## OAuth2 Redirect Proxy
 
-> [!WARNING]
-> The OAuth2 redirect proxy is designed to assist with OAuth2 code grant flow for authorization providers that do not accept custom schemes as part of their callback URLs, for example `streamdeck://`.
->
-> It is recommended you use your plugin's deep-link URL as the callback URL unless absolutely necessary.
+<Warning>
+  The OAuth2 redirect proxy is designed to assist with OAuth2 code grant flow for authorization providers that do not accept custom schemes as part of their callback URLs, for example `streamdeck://`.
+
+  It is recommended you use your plugin's deep-link URL as the callback URL unless absolutely necessary.
+</Warning>
 
 The OAuth2 redirect proxy is a remotely accessibly `https://` URL that has the single responsibility of forwarding messages to Stream Deck plugins via deep-linking. Due to the sensitive nature of the redirect proxy, no information sent to the proxy is stored on Elgato servers.
 

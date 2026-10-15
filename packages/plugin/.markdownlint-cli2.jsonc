@@ -13,8 +13,30 @@
 
         // MD033 (no-inline-html): Standard HTML that has no Markdown equivalent, used sparingly.
         "MD033": {
-            "allowed_elements": ["a", "Tabs", "TabItem", "details", "summary", "kbd", "sup", "ul", "li", "code", "br"]
+            "allowed_elements": [
+                "a",
+                "Note",
+                "Tip",
+                "Warning",
+                "Error",
+                "Tabs",
+                "TabItem",
+                "details",
+                "summary",
+                "kbd",
+                "sup",
+                "ul",
+                "li",
+                "code",
+                "br"
+            ]
         },
+
+        // MD007 (ul-indent): Lists within callouts are indented with the callout's content.
+        "MD007": false,
+
+        // MD031 (blanks-around-fences): A code block may be the last content of a callout, directly before its closing tag.
+        "MD031": false,
 
         // MD010 (no-hard-tabs): Code blocks use tabs, matching the repository's formatting.
         "MD010": { "code_blocks": false },
@@ -24,9 +46,6 @@
 
         // MD034 (no-bare-urls): Bare URLs are automatically linked by GFM, and are used within generated descriptions.
         "MD034": false,
-
-        // MD028 (no-blanks-blockquote): GitHub alerts are written back-to-back, separated by a blank line.
-        "MD028": false,
 
         // MD060 (table-column-style): Handwritten tables are aligned, generated tables are compact; cells containing HTML confuse the style detection.
         "MD060": false

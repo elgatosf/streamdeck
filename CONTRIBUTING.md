@@ -142,14 +142,14 @@ The references are generated from the build output, and code snippets in `docs/_
 
 - Write [GitHub Flavored Markdown](https://github.github.com/gfm/) that renders on GitHub and npm.
 - Start every page with a level one heading; frontmatter is limited to `sidebar_label`, `sidebar_position`, and `unlisted`.
-- Use [GitHub alerts](https://github.com/orgs/community/discussions/16925) (e.g., `> [!TIP]`) instead of admonitions.
+- Write callouts as `<Note>`, `<Tip>`, `<Warning>`, or `<Error>` elements, with the content indented by two spaces; an optional bold title goes on the first line, followed by a blank line.
 - Add custom anchors with an `<a id="..."></a>` tag on the line before the heading.
 - Write tabs with `<Tabs>` and `<TabItem value="Label">`, with a blank line between the tags and their content.
 - Link pages with relative `.md` links, and other sites with absolute URLs.
 - Reference snippets with an `<!-- snippet: node/path/to/file.ts -->` comment before the code block; highlight lines in the snippet with `// [!code highlight]`.
 - Do not edit content between `<!-- generated: id -->` and `<!-- /generated -->` comments.
 - Define each directory's `label`, `position`, and `collapsible` in its `_category_.json`.
-- Limit HTML to `<Tabs>`, `<TabItem>`, `<details>`, `<summary>`, `<kbd>`, `<sup>`, `<br>`, `<code>`, and `<ul>`/`<li>` in table cells.
+- Limit HTML to the callout elements, `<Tabs>`, `<TabItem>`, `<details>`, `<summary>`, `<kbd>`, `<sup>`, `<br>`, `<code>`, and `<ul>`/`<li>` in table cells.
 
 Linting rules, and their exceptions, are in `packages/plugin/.markdownlint-cli2.jsonc`.
 

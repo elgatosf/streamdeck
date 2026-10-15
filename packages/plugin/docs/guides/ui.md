@@ -6,10 +6,11 @@ sidebar_position: 6
 
 Property inspectors are HTML web views that provide users with an interface to adjust plugin settings.
 
-> [!WARNING]
-> **Work in progress**
->
-> The property inspector and its documentation are still in development. The information provided here is subject to change.
+<Warning>
+  **Work in progress**
+
+  The property inspector and its documentation are still in development. The information provided here is subject to change.
+</Warning>
 
 ## Getting Started
 
@@ -229,10 +230,11 @@ streamdeck dev
 
 Once enabled, the remote debugger will be available at [`http://localhost:23654/`](http://localhost:23654/) with a list of available pages. Select the property inspector's page to debug using the browser's built-in web development tools. In most browsers these tools can be accessed by pressing `F12` or the `inspect` option in the context menu.
 
-> [!NOTE]
-> **Open the property inspector**
->
-> The property inspector must be visible within Stream Deck for the page to appear in the list of pages availabe for debug.
+<Note>
+  **Open the property inspector**
+
+  The property inspector must be visible within Stream Deck for the page to appear in the list of pages availabe for debug.
+</Note>
 
 Utilizing the `didReceiveSettings` event within the plugin's action may also be useful for debugging settings and the property inspector.
 

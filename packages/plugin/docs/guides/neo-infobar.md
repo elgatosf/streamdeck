@@ -6,8 +6,9 @@ sidebar_position: 4
 
 Neo Infobar actions are display-only actions that use the layout system to render information on the Infobar found on Stream Deck Neo. Unlike key and dial actions, they do not receive user interaction events. They can, however, display dynamic information and respond to updates from your plugin.
 
-> [!TIP]
-> Neo Infobar actions require Stream Deck 7.6 or later—be sure to update your manifest's [`Software.MinimumVersion`](../references/manifest.md#software-minimumversion) when adding support for them.
+<Tip>
+  Neo Infobar actions require Stream Deck 7.6 or later—be sure to update your manifest's [`Software.MinimumVersion`](../references/manifest.md#software-minimumversion) when adding support for them.
+</Tip>
 
 ## Registering Actions
 
@@ -72,13 +73,14 @@ In summary, layout items within a layout:
 - Must not overlap with other items in the layout, see [`zOrder`](../references/layouts.md#bar-zorder).
 - Must be within the bounds of the layout.
 
-> [!WARNING]
-> Layouts will not render when:
->
-> - A layout item is outside the allotted bounds of the layout.
-> - Layout items overlap on the same `zOrder`.
->
-> For assistance with debugging layouts, try using the CLI tool's [`validate`](https://docs.elgato.com/streamdeck/cli/commands/validate) command, or referring to the [Stream Deck app logs](./logging.md#stream-deck-logs).
+<Warning>
+  Layouts will not render when:
+
+  - A layout item is outside the allotted bounds of the layout.
+  - Layout items overlap on the same `zOrder`.
+
+  For assistance with debugging layouts, try using the CLI tool's [`validate`](https://docs.elgato.com/streamdeck/cli/commands/validate) command, or referring to the [Stream Deck app logs](./logging.md#stream-deck-logs).
+</Warning>
 
 ### Setting the Layout
 
@@ -292,8 +294,9 @@ function onWillDisappear(ev: WillDisappearEvent): void | Promise<void>
 
 The following commands are available to Neo Infobar actions.
 
-> [!WARNING]
-> Some events, such as [`onWillAppear`](./actions.md#onwillappear), are applicable to all action types. To invoke commands only available to Neo Infobar actions within these events, you must first assert the action is a Neo Infobar by calling [`ev.action.isNeoInfobar()`](./actions.md#isneoinfobar).
+<Warning>
+  Some events, such as [`onWillAppear`](./actions.md#onwillappear), are applicable to all action types. To invoke commands only available to Neo Infobar actions within these events, you must first assert the action is a Neo Infobar by calling [`ev.action.isNeoInfobar()`](./actions.md#isneoinfobar).
+</Warning>
 
 <!-- generated: neo-infobar-commands -->
 

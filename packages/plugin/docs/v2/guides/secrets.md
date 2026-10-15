@@ -10,10 +10,11 @@ Plugins distributed on Marketplace with DRM enabled have access to the secrets A
 
 In this article you'll learn about the benefits of secrets, and how to use them within your plugin.
 
-> [!CAUTION]
-> **Deprecation notice**
->
-> The Secrets API has been deprecated and will no longer receive updates. Support for accessing secrets using the API will be removed in a future release, and it is recommended that you migrate the use of all secrets to a secure remote source.
+<Error>
+  **Deprecation notice**
+
+  The Secrets API has been deprecated and will no longer receive updates. Support for accessing secrets using the API will be removed in a future release, and it is recommended that you migrate the use of all secrets to a secure remote source.
+</Error>
 
 <details>
 <summary>Disclaimer</summary>
@@ -45,8 +46,9 @@ During development, secrets are defined within a secrets JSON file, `secrets.jso
 └── ...
 ```
 
-> [!WARNING]
-> You should never commit your `secrets.json` file into Git.
+<Warning>
+  You should never commit your `secrets.json` file into Git.
+</Warning>
 
 Within your secrets JSON file, you should define secrets as a JSON object, for example:
 
@@ -77,11 +79,12 @@ Depending on your plugin's environment, secrets are read from one of two places:
 - Development — your local secrets JSON file, `secrets.json`.
 - Production — provided by Stream Deck.
 
-> [!NOTE]
-> Production is defined as a plugin that has been processed by Maker Console, this includes:
->
-> - Plugins installed from Marketplace.
-> - Plugins downloaded from Maker Console.
+<Note>
+  Production is defined as a plugin that has been processed by Maker Console, this includes:
+
+  - Plugins installed from Marketplace.
+  - Plugins downloaded from Maker Console.
+</Note>
 
 ## Distribution
 
@@ -93,5 +96,6 @@ When preparing your plugin for Marketplace, you should:
 - ✅ **Do:** Include the `secrets.json` file within the `.streamDeckPlugin` when uploading it to Maker Console — the `secrets.json` file is removed as part processing plugins within Maker Console, and the file will not be available to users when downloading from Marketplace or Maker Console.
 - ❌ **Don't:** Distribute your plugin without DRM protecting it in Maker Console first. [Learn more about testing with DRM](../introduction/distribution.md#testing-with-drm).
 
-> [!WARNING]
-> The contents of your `secrets.json` file are only secure after your plugin has been DRM protected in Maker Console. Once protected, the `secrets.json` file is removed from your plugin; this happens before your plugin becomes available on Marketplace and Maker Console.
+<Warning>
+  The contents of your `secrets.json` file are only secure after your plugin has been DRM protected in Maker Console. Once protected, the `secrets.json` file is removed from your plugin; this happens before your plugin becomes available on Marketplace and Maker Console.
+</Warning>

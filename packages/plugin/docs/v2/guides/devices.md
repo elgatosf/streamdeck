@@ -68,10 +68,11 @@ streamDeck.devices.onDeviceDidChange((ev: DeviceDidChangeEvent) => {
 });
 ```
 
-> [!NOTE]
-> **Availability**
->
-> Monitoring device changes is available from Stream Deck 7.0
+<Note>
+  **Availability**
+
+  Monitoring device changes is available from Stream Deck 7.0
+</Note>
 
 ## Disconnecting
 
@@ -88,10 +89,11 @@ streamDeck.devices.onDeviceDidDisconnect((ev: DeviceDidDisconnectEvent) => {
 });
 ```
 
-> [!WARNING]
-> **Disconnected Device Visibility**
->
-> While you can use these events to optimize resource utilization, the keys/encoders can still be visible in the Stream Deck app while the hardware is disconnected.
+<Warning>
+  **Disconnected Device Visibility**
+
+  While you can use these events to optimize resource utilization, the keys/encoders can still be visible in the Stream Deck app while the hardware is disconnected.
+</Warning>
 
 ## Hardware
 

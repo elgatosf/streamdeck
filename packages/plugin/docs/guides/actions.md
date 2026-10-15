@@ -22,10 +22,11 @@ There are three Stream Deck action types, also referred to as "controllers", the
 
 ![A screenshot of Stream Deck software displaying the canvas of a Stream Deck +, highlighting the top-right key, and a dial that is comprised of a dial and one quarter of the touchscreen](../assets/controllers.webp)
 
-> [!TIP]
-> **Supporting action controllers**
->
-> Your plugin can specify which controllers are supported by each action as part of the [action's metadata](#metadata), allowing the user to assign the action to either a key and/or a dial (aka an encoder).
+<Tip>
+  **Supporting action controllers**
+
+  Your plugin can specify which controllers are supported by each action as part of the [action's metadata](#metadata), allowing the user to assign the action to either a key and/or a dial (aka an encoder).
+</Tip>
 
 ## Action Identifiers
 
@@ -35,10 +36,11 @@ Actions are uniquely identified by their UUID, which is a reverse DNS formatted 
 
 Similar to your plugin's UUID, action UUIDs must only contain lowercase alphanumeric characters (`a-z`, `0-9`), hyphens (`-`), and periods (`.`).
 
-> [!WARNING]
-> **Do not change UUIDs**
->
-> Once defined and published, UUIDs must never change. Actions on a Stream Deck canvas are identified by the plugin and action UUIDs at the time of the user adding the action to the canvas. Changing either of these UUIDs will result in the action(s) being removed from the user's configuration which can cause confusion and frustration.
+<Warning>
+  **Do not change UUIDs**
+
+  Once defined and published, UUIDs must never change. Actions on a Stream Deck canvas are identified by the plugin and action UUIDs at the time of the user adding the action to the canvas. Changing either of these UUIDs will result in the action(s) being removed from the user's configuration which can cause confusion and frustration.
+</Warning>
 
 ## Registering Actions
 
@@ -120,15 +122,17 @@ Metadata associated with your plugin's actions are stored within your plugin's m
 }
 ```
 
-> [!TIP]
-> **Hiding actions**
->
-> Actions defined within the manifest will be visible to the user in the actions list in the Stream Deck app. You can hide specific actions from the user by setting `VisibleInActionsList` to `false` in the manifest. Your plugin can utilize its own hidden (or visible) actions as part of pre-configured [profiles](./profiles.md) bundled with your plugin. Hiding actions is also useful for deprecating older actions, without completely removing them.
+<Tip>
+  **Hiding actions**
 
-> [!NOTE]
-> **Action icons**
->
-> Learn more about creating icons for your plugin as part of our [UX guidelines for the actions list](https://docs.elgato.com/guidelines/stream-deck/plugins).
+  Actions defined within the manifest will be visible to the user in the actions list in the Stream Deck app. You can hide specific actions from the user by setting `VisibleInActionsList` to `false` in the manifest. Your plugin can utilize its own hidden (or visible) actions as part of pre-configured [profiles](./profiles.md) bundled with your plugin. Hiding actions is also useful for deprecating older actions, without completely removing them.
+</Tip>
+
+<Note>
+  **Action icons**
+
+  Learn more about creating icons for your plugin as part of our [UX guidelines for the actions list](https://docs.elgato.com/guidelines/stream-deck/plugins).
+</Note>
 
 ### Implementation
 
@@ -169,15 +173,17 @@ streamDeck.actions.registerAction(new LogKeyPressAction());
 streamDeck.connect();
 ```
 
-> [!TIP]
-> **Order of execution**
->
-> It is important to register all of your plugin's actions before connecting to Stream Deck. As a general rule of thumb, it is recommended to call `streamDeck.connect()` last in the entry file of your plugin.
+<Tip>
+  **Order of execution**
 
-> [!NOTE]
-> **User interfaces**
->
-> In addition to an action's Node.js implementation, actions can also have a user interface. More commonly referred to as property inspectors, these user interfaces can allow users to configure the settings associated with your action directly within Stream Deck. Learn more about the [architecture of plugins](../introduction/plugin-environment.md#javascript-runtimes), [settings](./settings.md), and [property inspectors](./ui.md).
+  It is important to register all of your plugin's actions before connecting to Stream Deck. As a general rule of thumb, it is recommended to call `streamDeck.connect()` last in the entry file of your plugin.
+</Tip>
+
+<Note>
+  **User interfaces**
+
+  In addition to an action's Node.js implementation, actions can also have a user interface. More commonly referred to as property inspectors, these user interfaces can allow users to configure the settings associated with your action directly within Stream Deck. Learn more about the [architecture of plugins](../introduction/plugin-environment.md#javascript-runtimes), [settings](./settings.md), and [property inspectors](./ui.md).
+</Note>
 
 ## Handling Events
 
@@ -223,10 +229,11 @@ export class LogKeyPressAction extends SingletonAction {
 }
 ```
 
-> [!TIP]
-> **Settings**
->
-> You can [persist settings on actions](./settings.md); these settings are provided as part of event arguments and can be accessed via `ev.payload.settings`.
+<Tip>
+  **Settings**
+
+  You can [persist settings on actions](./settings.md); these settings are provided as part of event arguments and can be accessed via `ev.payload.settings`.
+</Tip>
 
 ## Accessing Visible Actions
 
@@ -271,8 +278,9 @@ export class IncrementCounter extends SingletonAction {
 }
 ```
 
-> [!NOTE]
-> Please note, it is not possible to access or control actions that are not owned by your plugin.
+<Note>
+  Please note, it is not possible to access or control actions that are not owned by your plugin.
+</Note>
 
 ## Events
 

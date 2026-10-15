@@ -6,8 +6,9 @@ sidebar_position: 1
 
 Stream Deck provides an API for distributing plugins as native console apps, for example those written in C++, C#, etc, with communication being handled by a dedicated WebSocket connection.
 
-> [!WARNING]
-> Creating native plugins is an advanced technique, and is not recommended. Instead, consider using the Stream Deck SDK with [Node.js native addons](https://nodejs.org/api/n-api.html#node-api).
+<Warning>
+  Creating native plugins is an advanced technique, and is not recommended. Instead, consider using the Stream Deck SDK with [Node.js native addons](https://nodejs.org/api/n-api.html#node-api).
+</Warning>
 
 ## Registration
 
@@ -140,8 +141,9 @@ type RegistrationInfo = {
 
 Plugins can receive the following events from Stream Deck via their WebSocket connection.
 
-> [!WARNING]
-> The `context` of an action is not guaranteed to persist across app cycles and therefore should not be used as a long-term identifier externally.
+<Warning>
+  The `context` of an action is not guaranteed to persist across app cycles and therefore should not be used as a long-term identifier externally.
+</Warning>
 
 ### ApplicationDidLaunch
 

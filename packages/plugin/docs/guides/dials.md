@@ -312,13 +312,14 @@ Layout items can also be assigned a pre-defined `key` that will enable users to 
 - `"title"` — as with [key actions](./keys.md#display-precedence), users can set a custom title for dial/touch strip actions, which will take precedence over the plugin provided title.
 - `"icon"` — as with [key actions](./keys.md#display-precedence), users can set a custom icon for dial/touch strip actions, which will take precedence over the plugin provided icon.
 
-> [!WARNING]
-> Layouts will not render when:
->
-> - A layout item is outside the allotted bounds of the layout.
-> - Layout items overlap on the same `zOrder`.
->
-> For assistance with debugging layouts, try using the CLI tool's [`validate`](https://docs.elgato.com/streamdeck/cli/commands/validate) command, or referring to the [Stream Deck app logs](./logging.md#stream-deck-logs).
+<Warning>
+  Layouts will not render when:
+
+  - A layout item is outside the allotted bounds of the layout.
+  - Layout items overlap on the same `zOrder`.
+
+  For assistance with debugging layouts, try using the CLI tool's [`validate`](https://docs.elgato.com/streamdeck/cli/commands/validate) command, or referring to the [Stream Deck app logs](./logging.md#stream-deck-logs).
+</Warning>
 
 ### Setting Default Layouts
 
@@ -725,8 +726,9 @@ function onWillDisappear(ev: WillDisappearEvent): void | Promise<void>
 
 The following commands are available to dial actions.
 
-> [!WARNING]
-> Some events, such as [`onWillAppear`](./actions.md#onwillappear), are applicable to all action types. To invoke commands only available to dial actions within these events, you must first assert the action is a dial by calling [`ev.action.isDial()`](./actions.md#isdial).
+<Warning>
+  Some events, such as [`onWillAppear`](./actions.md#onwillappear), are applicable to all action types. To invoke commands only available to dial actions within these events, you must first assert the action is a dial by calling [`ev.action.isDial()`](./actions.md#isdial).
+</Warning>
 
 <!-- generated: dials-commands -->
 

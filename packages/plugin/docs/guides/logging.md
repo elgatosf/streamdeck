@@ -26,8 +26,9 @@ streamDeck.logger.info("Hello world");
 streamDeck.connect();
 ```
 
-> [!TIP]
-> It is recommended to use `streamDeck.logger` instead of `console`. Using `streamDeck.logger` ensures your plugin's logs are written to all available targets, for example the LOG file.
+<Tip>
+  It is recommended to use `streamDeck.logger` instead of `console`. Using `streamDeck.logger` ensures your plugin's logs are written to all available targets, for example the LOG file.
+</Tip>
 
 ## Reading Logs
 
@@ -50,8 +51,9 @@ com.elgato.hello-world.sdPlugin/logs/com.elgato.hello-world.0.log
      Plugin UUID                          Plugin UUID        Index
 ```
 
-> [!WARNING]
-> Uninstalling a plugin will also remove its associated log files. When diagnosing issues, we recommend requesting the logs prior to suggesting a re-install.
+<Warning>
+  Uninstalling a plugin will also remove its associated log files. When diagnosing issues, we recommend requesting the logs prior to suggesting a re-install.
+</Warning>
 
 #### Format
 
@@ -157,11 +159,12 @@ streamDeck.logger.trace("Detailed messages"); // No output.
 streamDeck.connect();
 ```
 
-> [!WARNING]
-> The default log level is dependent on the mode of the plugin:
->
-> - Development, the default log level is `DEBUG`.
-> - Production, the default log level is `INFO`, with `DEBUG` being the lowest possible level.
+<Warning>
+  The default log level is dependent on the mode of the plugin:
+
+  - Development, the default log level is `DEBUG`.
+  - Production, the default log level is `INFO`, with `DEBUG` being the lowest possible level.
+</Warning>
 
 ## Creating Loggers
 

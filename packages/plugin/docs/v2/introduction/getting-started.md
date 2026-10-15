@@ -46,15 +46,17 @@ With one of the aforementioned nvm(-windows) installed, run the following comman
    node -v
    ```
 
-> [!NOTE]
-> For more information on installing Node.js on Windows, we recommend Microsoft's how-to [Install Node.js on Windows](https://learn.microsoft.com/en-us/windows/dev-environment/javascript/nodejs-on-windows#install-nvm-windows-nodejs-and-npm), or Node.js' [download page](https://nodejs.org/en/download/package-manager).
+<Note>
+  For more information on installing Node.js on Windows, we recommend Microsoft's how-to [Install Node.js on Windows](https://learn.microsoft.com/en-us/windows/dev-environment/javascript/nodejs-on-windows#install-nvm-windows-nodejs-and-npm), or Node.js' [download page](https://nodejs.org/en/download/package-manager).
+</Note>
 
 </details>
 
-> [!TIP]
-> **Stream Deck**
->
-> If you do not own a Stream Deck device, you can try [Stream Deck Mobile](https://www.elgato.com/stream-deck-mobile) for free.
+<Tip>
+  **Stream Deck**
+
+  If you do not own a Stream Deck device, you can try [Stream Deck Mobile](https://www.elgato.com/stream-deck-mobile) for free.
+</Tip>
 
 ### Setup Wizard
 
@@ -105,16 +107,17 @@ streamdeck create
 
 ![Recording of a terminal window demonstrating a Stream Deck plugin being created using the Stream Deck CLI tool](../../assets/streamdeck-create.webp)
 
-> [!WARNING]
-> **Plugin UUID**
->
-> Your plugin's UUID is a [reverse-DNS](https://en.wikipedia.org/wiki/Reverse_domain_name_notation) format string, unique to your plugin, that reflects your organization and the product your plugin is intended for, for example:
->
-> - com.obsproject.obs-studio
-> - com.youtube.live
-> - tv.twitch.studio
->
-> Plugin UUIDs must only contain lowercase alphanumeric characters (`a-z`, `0-9`), hyphens (`-`), and periods (`.`). Once published on Marketplace, your plugin's UUID cannot be changed.
+<Warning>
+  **Plugin UUID**
+
+  Your plugin's UUID is a [reverse-DNS](https://en.wikipedia.org/wiki/Reverse_domain_name_notation) format string, unique to your plugin, that reflects your organization and the product your plugin is intended for, for example:
+
+  - com.obsproject.obs-studio
+  - com.youtube.live
+  - tv.twitch.studio
+
+  Plugin UUIDs must only contain lowercase alphanumeric characters (`a-z`, `0-9`), hyphens (`-`), and periods (`.`). Once published on Marketplace, your plugin's UUID cannot be changed.
+</Warning>
 
 ## File Structure
 
@@ -183,10 +186,11 @@ Whilst running the `npm run watch` command, any changes you make to `./*.sdPlugi
 
 Congratulations, you've just created your first Stream Deck plugin! 🎉
 
-> [!TIP]
-> **Plugin not showing in Stream Deck**
->
-> If your plugin is not showing within Stream Deck, this may be due to the app running with elevated privileges. This occurs after a fresh install, or update, of the Stream Deck app; restarting the app should resolve the issue. For further help, our community [Marketplace Makers Discord](https://discord.gg/GehBUcu627) is also available.
+<Tip>
+  **Plugin not showing in Stream Deck**
+
+  If your plugin is not showing within Stream Deck, this may be due to the app running with elevated privileges. This occurs after a fresh install, or update, of the Stream Deck app; restarting the app should resolve the issue. For further help, our community [Marketplace Makers Discord](https://discord.gg/GehBUcu627) is also available.
+</Tip>
 
 ## What's Next?
 

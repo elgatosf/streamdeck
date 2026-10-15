@@ -80,15 +80,17 @@ Once you have your `.streamDeckProfile` file, you can utilize it in your plugin 
 }
 ```
 
-> [!WARNING]
-> **Exclude file extension**
->
-> The `Name` in the manifest should be the path to the `.streamDeckProfile` file, relative to the manifest, **without** the extension.
+<Warning>
+  **Exclude file extension**
 
-> [!TIP]
-> **Automatic installation**
->
-> By default, users are prompted to install bundled Stream Deck profiles when the plugin is first installed. To disable this, you can setting `AutoInstall` to `false` in the manifest. The user will instead then be prompted to install the bundled profile the next time your plugin attempts to switch to it.
+  The `Name` in the manifest should be the path to the `.streamDeckProfile` file, relative to the manifest, **without** the extension.
+</Warning>
+
+<Tip>
+  **Automatic installation**
+
+  By default, users are prompted to install bundled Stream Deck profiles when the plugin is first installed. To disable this, you can setting `AutoInstall` to `false` in the manifest. The user will instead then be prompted to install the bundled profile the next time your plugin attempts to switch to it.
+</Tip>
 
 ## Switching to a Profile
 
@@ -113,7 +115,8 @@ type CounterSettings = {
 };
 ```
 
-> [!WARNING]
-> **User profiles**
->
-> Plugins do not have access to user-defined profiles, and therefore cannot switch to them. Plugins can only switch to profiles distributed with the plugin.
+<Warning>
+  **User profiles**
+
+  Plugins do not have access to user-defined profiles, and therefore cannot switch to them. Plugins can only switch to profiles distributed with the plugin.
+</Warning>

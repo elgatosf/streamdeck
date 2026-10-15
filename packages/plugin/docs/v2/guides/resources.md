@@ -16,8 +16,9 @@ Examples of types of actions where this can be useful include:
 - App scripts, such as with Photoshop Play action
 - External configuration files
 
-> [!NOTE]
-> Available from Stream Deck 7.1 or higher.
+<Note>
+  Available from Stream Deck 7.1 or higher.
+</Note>
 
 ## Embedding Resources
 
@@ -27,8 +28,9 @@ Much like [settings](./settings.md), resources are associated with an instance o
 - [`action.getResources`](./actions.md#getresources) - Gets resources associated with an instance of an action.
 - [`SingletonAction.onDidReceiveResources`](./actions.md#ondidreceiveresources) - Occurs when resources are updated within the property inspector.
 
-> [!TIP]
-> Resources use Stream Deck's new message identifiers, meaning `onDidReceiveResources` is **only** called when the resources were updated within the property inspector. This makes it easier to distinguish between when resources were updated versus requested.
+<Tip>
+  Resources use Stream Deck's new message identifiers, meaning `onDidReceiveResources` is **only** called when the resources were updated within the property inspector. This makes it easier to distinguish between when resources were updated versus requested.
+</Tip>
 
 Unlike settings, the payload is not arbitrary and must be a map of key/file-path to allow Stream Deck to update file paths when importing an action.
 
@@ -119,5 +121,6 @@ Using this map structure ensures Stream Deck can mutate the file paths when an a
 }
 ```
 
-> [!TIP]
-> The file name of an embedded resource is unchanged when exporting / importing an action.
+<Tip>
+  The file name of an embedded resource is unchanged when exporting / importing an action.
+</Tip>

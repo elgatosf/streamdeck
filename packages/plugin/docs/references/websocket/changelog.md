@@ -78,8 +78,9 @@ Learn more about changes related to building Stream Deck plugins using the Web S
 
 ### v6.5.0
 
-> [!WARNING]
-> Please note, from Stream Deck 6.5 onwards, `dialPress` will not be emitted by the API. Plugins should use `dialDown` and `dialUp` to receive events relating to dial presses.
+<Warning>
+  Please note, from Stream Deck 6.5 onwards, `dialPress` will not be emitted by the API. Plugins should use `dialDown` and `dialUp` to receive events relating to dial presses.
+</Warning>
 
 - Added support for receiving deep-link messages.
 - Added support for switching to a specific profile page when calling `switchToProfile`.

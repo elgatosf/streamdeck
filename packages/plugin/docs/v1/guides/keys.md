@@ -22,19 +22,21 @@ In cases where your key action represents toggle functionality, for example on/o
 
 When supporting two states, the state is toggled when the user presses the key, with the new state index available via the payload information.
 
-> [!TIP]
-> **Automatic toggling**
->
-> If you would prefer to control states yourself, you can also [opt out of automatic toggling](../references/manifest.md#action-disableautomaticstates) within the manifest.
+<Tip>
+  **Automatic toggling**
+
+  If you would prefer to control states yourself, you can also [opt out of automatic toggling](../references/manifest.md#action-disableautomaticstates) within the manifest.
+</Tip>
 
 Additionally, for action keys that support two states, users have the option of configuring will have the option to configure the icon for each state within Stream Deck:
 
 ![Screenshot of Stream Deck software highlighting an actions's states](../../assets/states.webp)
 
-> [!WARNING]
-> **Maximum number of states**
->
-> Stream Deck supports up to two states; although adding more states is possible within the manifest, its functionality is not fully supported.
+<Warning>
+  **Maximum number of states**
+
+  Stream Deck supports up to two states; although adding more states is possible within the manifest, its functionality is not fully supported.
+</Warning>
 
 ### States In Multi-Actions
 
@@ -129,10 +131,11 @@ Your plugin can update an action key's image[†](#display-precedence) using the
 - PNG - `image/png`
 - WEBP - `image/webp`
 
-> [!WARNING]
-> **Animated image formats**
->
-> The `setImage` function does not support animated image formats, such as GIF.
+<Warning>
+  **Animated image formats**
+
+  The `setImage` function does not support animated image formats, such as GIF.
+</Warning>
 
 ### From SVG
 
@@ -255,8 +258,9 @@ There may be times when you want to show user temporary feedback on a key, for e
 
 ![Screenshot of Stream Deck software showing action feedback](../../assets/feedback.webp)
 
-> [!TIP]
-> It is best practice to accompany `showAlert` with a [log entry](./logging.md) to help diagnose what caused the warning.
+<Tip>
+  It is best practice to accompany `showAlert` with a [log entry](./logging.md) to help diagnose what caused the warning.
+</Tip>
 
 ## Events
 
@@ -298,8 +302,9 @@ function onKeyUp(ev: KeyUpEvent): void | Promise<void>
 
 The following commands are available to key actions.
 
-> [!TIP]
-> Some events are applicable to both dials and keys, such as [`onWillAppear`](./actions.md#onwillappear). To invoke a key-only command within these event handlers, you need to first assert the action is a key using [`Action.isKey()`](./actions.md#iskey).
+<Tip>
+  Some events are applicable to both dials and keys, such as [`onWillAppear`](./actions.md#onwillappear). To invoke a key-only command within these event handlers, you need to first assert the action is a key using [`Action.isKey()`](./actions.md#iskey).
+</Tip>
 
 ### getSettings
 

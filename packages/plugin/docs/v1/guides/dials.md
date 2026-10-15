@@ -311,8 +311,9 @@ export class IncrementCounter extends SingletonAction {
 
 Custom layouts are composed of [layout items](../references/touch-strip-layout.md) provided in a JSON file located in the `*.sdPlugin` folder.
 
-> [!WARNING]
-> Layouts have a canvas size of 200 × 100 px. If items fall outside of these bounds, Stream Deck will not render the layout.
+<Warning>
+  Layouts have a canvas size of 200 × 100 px. If items fall outside of these bounds, Stream Deck will not render the layout.
+</Warning>
 
 #### Manifest
 
@@ -401,8 +402,9 @@ The CLI tool would provide the following output:
 8:13  error    └ Width and height, relative to the x and y, must be within the 200x100 px canvas
 ```
 
-> [!WARNING]
-> If a layout item is anticipated to render outside of the given bounds, Stream Deck will not render the layout and instead provide details in [Stream Deck app logs](./logging.md#stream-deck-logs).
+<Warning>
+  If a layout item is anticipated to render outside of the given bounds, Stream Deck will not render the layout and instead provide details in [Stream Deck app logs](./logging.md#stream-deck-logs).
+</Warning>
 
 ## Updating Layouts
 
@@ -598,8 +600,9 @@ function onTouchTap(ev: TouchTapEvent): void | Promise<void>
 
 The following commands are available to dial actions.
 
-> [!TIP]
-> Some events are applicable to both dials and keys, such as [`onWillAppear`](./actions.md#onwillappear). To invoke a dial-only command within these event handlers, you need to first assert the action is a dial using [`Action.isDial()`](./actions.md#isdial).
+<Tip>
+  Some events are applicable to both dials and keys, such as [`onWillAppear`](./actions.md#onwillappear). To invoke a dial-only command within these event handlers, you need to first assert the action is a dial using [`Action.isDial()`](./actions.md#isdial).
+</Tip>
 
 ### getSettings
 

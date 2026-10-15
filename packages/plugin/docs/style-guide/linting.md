@@ -242,10 +242,11 @@ prettier . --write
 </TabItem>
 </Tabs>
 
-> [!TIP]
-> **Format on save**
->
-> Prettier provides a [VS Code extension](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) to further streamline formatting your files. Once installed and configured, you can configure VS Code to format files when they're saved by setting `editor.formatOnSave` to `true` in your VS Code preferences.
+<Tip>
+  **Format on save**
+
+  Prettier provides a [VS Code extension](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) to further streamline formatting your files. Once installed and configured, you can configure VS Code to format files when they're saved by setting `editor.formatOnSave` to `true` in your VS Code preferences.
+</Tip>
 
 <a id="prettier-configuration"></a>
 

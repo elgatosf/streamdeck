@@ -24,12 +24,13 @@ Benefits on DRM protection also include:
 - **Integrity Checking** — Protect users from tampered files, with built-in file integrity verification.
 - **New SDK Features** — Unlock new Stream Deck SDK features.
 
-> [!NOTE]
-> Plugins created with Stream Deck CLI 1.6 or higher have DRM enabled as default; to check your CLI version run `streamdeck -v`, and update by running:
->
-> ```bash title="Update Stream Deck CLI"
-> npm install -g @elgato/cli@latest
-> ```
+<Note>
+  Plugins created with Stream Deck CLI 1.6 or higher have DRM enabled as default; to check your CLI version run `streamdeck -v`, and update by running:
+
+  ```bash title="Update Stream Deck CLI"
+  npm install -g @elgato/cli@latest
+  ```
+</Note>
 
 ### Compatibility & Readiness
 
@@ -47,17 +48,19 @@ The following set of criteria are pre-requisites for DRM protection, and it is i
 - ✅ **Do:** Include a separate JSON file, or embed directly into your codebase, additionally required non-sensitive information.
 - ❌ **Don't:** Access the manifest JSON file at runtime.
 
-> [!WARNING]
-> **tl;dr**
->
-> - Node.js plugins must be using `@elgato/streamdeck` v2 or higher.
-> - Files distributed with your plugin are immutable.
-> - Your plugin's manifest cannot be accessed at runtime.
+<Warning>
+  **tl;dr**
 
-> [!TIP]
-> **SDK compatibility**
->
-> DRM protection is available to all Stream Deck SDK libraries, such as C#, C++, and Go, and is not limited to Node.js.
+  - Node.js plugins must be using `@elgato/streamdeck` v2 or higher.
+  - Files distributed with your plugin are immutable.
+  - Your plugin's manifest cannot be accessed at runtime.
+</Warning>
+
+<Tip>
+  **SDK compatibility**
+
+  DRM protection is available to all Stream Deck SDK libraries, such as C#, C++, and Go, and is not limited to Node.js.
+</Tip>
 
 ### Enabling DRM
 
@@ -69,10 +72,11 @@ After reviewing compatibility, to enable DRM:
    2. Update [`SDKVersion`](../references/manifest.md#manifest-sdkversion) to be `3`.
    3. Update [`Software.MinimumVersion`](../references/manifest.md#software-minimumversion) to be `"6.9"` or higher.
 
-> [!CAUTION]
-> **Caution**
->
-> Plugins with DRM enabled are only protected **after** they have been uploaded and processed in Maker Console. [Learn more about accessing a DRM protected version of your plugin](#testing-with-drm).
+<Error>
+  **Caution**
+
+  Plugins with DRM enabled are only protected **after** they have been uploaded and processed in Maker Console. [Learn more about accessing a DRM protected version of your plugin](#testing-with-drm).
+</Error>
 
 ### Testing with DRM
 
@@ -108,10 +112,11 @@ Running the `pack` command does the following
 2. Bundles the contents of the `*.sdPlugin` directory.
 3. Outputs the `.streamDeckPlugin` installer file.
 
-> [!TIP]
-> **Ignoring files**
->
-> When packaging your plugin, you can ignore files by specifying paths, using `.gitignore` specification, within a `.sdignore` file. [Learn more about ignoring files when packaging](https://docs.elgato.com/streamdeck/cli/commands/pack#description).
+<Tip>
+  **Ignoring files**
+
+  When packaging your plugin, you can ignore files by specifying paths, using `.gitignore` specification, within a `.sdignore` file. [Learn more about ignoring files when packaging](https://docs.elgato.com/streamdeck/cli/commands/pack#description).
+</Tip>
 
 ## Publishing
 
@@ -128,7 +133,8 @@ To publish on Marketplace, you should follow these steps:
 
 You can also learn more about submitting products to Marketplace in [Become a Maker](https://docs.elgato.com/marketplace/become-a-maker).
 
-> [!NOTE]
-> **Returning Makers**
->
-> Returning Maker? After creating an account within Maker Console, if you are unable to see your plugins, please contact our Maker Relations team on maker@elgato.com.
+<Note>
+  **Returning Makers**
+
+  Returning Maker? After creating an account within Maker Console, if you are unable to see your plugins, please contact our Maker Relations team on maker@elgato.com.
+</Note>

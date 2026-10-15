@@ -14,8 +14,9 @@ The canvas size of a layout varies depending on the device it will be rendered o
 - Stream Deck + XL — 200 × 100 px
 - Stream Deck Neo Infobar — 232 × 50 px
 
-> [!NOTE]
-> In the context of Stream Deck + (Classic | XL) , the layout's canvas is a portion of the touch strip associated with a corresponding dial. Plugins cannot render across the entire touch strip.
+<Note>
+  In the context of Stream Deck + (Classic | XL) , the layout's canvas is a portion of the touch strip associated with a corresponding dial. Plugins cannot render across the entire touch strip.
+</Note>
 
 ## JSON Schema
 

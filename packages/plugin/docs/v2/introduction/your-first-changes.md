@@ -51,17 +51,19 @@ The `IncrementCounter` class implements two virtual methods, these are:
   - Occurs when the user presses the key down on Stream Deck
   - In this example, increments the count and shows the new count.
 
-> [!TIP]
-> Actions extend the `SingletonAction` class which provides virtual methods for intercepting events, for example:
->
-> - `onWillDisappear`
-> - `onKeyDown`
-> - `onDialRotate`
+<Tip>
+  Actions extend the `SingletonAction` class which provides virtual methods for intercepting events, for example:
 
-> [!NOTE]
-> **Scenario: Change request**
->
-> "The counter action currently increments the count by 1 and then displays the new count. Instead, we want the counter to be a binary counter, which doubles the count each time the key is pressed."
+  - `onWillDisappear`
+  - `onKeyDown`
+  - `onDialRotate`
+</Tip>
+
+<Note>
+  **Scenario: Change request**
+
+  "The counter action currently increments the count by 1 and then displays the new count. Instead, we want the counter to be a binary counter, which doubles the count each time the key is pressed."
+</Note>
 
 Within the `IncrementCounter` class, the `onKeyDown` method can be updated so that the count is doubled on each press; the method could be updated to look something like this:
 
@@ -139,10 +141,11 @@ For example:
 streamdeck restart com.elgato.hello-world
 ```
 
-> [!TIP]
-> **Plugin UUID**
->
-> Your plugin's unique identifier is a reverse-DNS string generated during the `streamdeck create` command that represents your organization and product, for example `com.elgato.wavelink`.
+<Tip>
+  **Plugin UUID**
+
+  Your plugin's unique identifier is a reverse-DNS string generated during the `streamdeck create` command that represents your organization and product, for example `com.elgato.wavelink`.
+</Tip>
 
 Pressing the Stream Deck key now should double the count, like so:
 
@@ -181,10 +184,11 @@ pnpm watch
 </TabItem>
 </Tabs>
 
-> [!NOTE]
-> **Scenario: Change request**
->
-> "The new a binary counter changes look great, but we've had a new request to reset the count to zero after it reaches 256."
+<Note>
+  **Scenario: Change request**
+
+  "The new a binary counter changes look great, but we've had a new request to reset the count to zero after it reaches 256."
+</Note>
 
 With hot-reload running, let's apply changes for the new change request.
 
@@ -242,5 +246,6 @@ Attaching to your Stream Deck plugin in VS Code can be achieved with the followi
 
 ![VS Code attach to node process window, listing the node20 process](../../assets/attach-to-node-process.webp)
 
-> [!TIP]
-> By default, Stream Deck will automatically assign an available port to the [Node.js inspect flag](https://nodejs.org/docs/latest-v20.x/api/cli.html#--inspecthostport) to avoid conflicts. This behavior can be overridden in the manifest's `Nodejs.Debug` property.
+<Tip>
+  By default, Stream Deck will automatically assign an available port to the [Node.js inspect flag](https://nodejs.org/docs/latest-v20.x/api/cli.html#--inspecthostport) to avoid conflicts. This behavior can be overridden in the manifest's `Nodejs.Debug` property.
+</Tip>

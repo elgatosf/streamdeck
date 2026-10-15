@@ -360,10 +360,11 @@ type Manifest = {
 
 <!-- /generated -->
 
-> [!WARNING]
-> **File path extensions**
->
-> Some file path properties within the manifest must have their file extension omitted. For example [Icon](#manifest-icon) and a profile's [Name](#profile-name) are extension-less file paths, whereas properties such as [CodePath](#manifest-codepath) and [PropertyInspectorPath](#manifest-propertyinspectorpath) require an extension. For more information, please refer to the documentation of the property.
+<Warning>
+  **File path extensions**
+
+  Some file path properties within the manifest must have their file extension omitted. For example [Icon](#manifest-icon) and a profile's [Name](#profile-name) are extension-less file paths, whereas properties such as [CodePath](#manifest-codepath) and [PropertyInspectorPath](#manifest-propertyinspectorpath) require an extension. For more information, please refer to the documentation of the property.
+</Warning>
 
 ## Definitions
 

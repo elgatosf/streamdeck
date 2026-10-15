@@ -14,10 +14,11 @@ The host environment is summarized in the following diagram:
 
 ![Architecture overview of how Stream Deck plugins are run. Plugins connect to the Stream Deck SDK, which connects to the Stream Deck, which in turn communicates with Stream Deck devices.](../assets/plugin-architecture.svg)
 
-> [!WARNING]
-> **Secrets**
->
-> Stream Deck plugins run locally on the user's machine and it is not recommended to include secrets, for example private API keys, when packaging and distributing your plugin.
+<Warning>
+  **Secrets**
+
+  Stream Deck plugins run locally on the user's machine and it is not recommended to include secrets, for example private API keys, when packaging and distributing your plugin.
+</Warning>
 
 ## JavaScript Runtimes
 
@@ -56,8 +57,9 @@ The latest JavaScript runtime versions are:
 
 </details>
 
-> [!TIP]
-> From Stream Deck 7.1, Node.js versions are automatically updated to the latest versions supported by Stream Deck.
+<Tip>
+  From Stream Deck 7.1, Node.js versions are automatically updated to the latest versions supported by Stream Deck.
+</Tip>
 
 ## Manifest
 

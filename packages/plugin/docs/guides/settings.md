@@ -36,8 +36,9 @@ The following table provides an overview of the common functions and events:
 
 <sup>1</sup> available whilst the action is visible.
 
-> [!NOTE]
-> In this context, `ev` are event arguments associated with an event emitted within the `SingletonAction` or from `streamDeck.*` for events that are associated with an action.
+<Note>
+  In this context, `ev` are event arguments associated with an event emitted within the `SingletonAction` or from `streamDeck.*` for events that are associated with an action.
+</Note>
 
 </TabItem>
 <TabItem value="Global settings">
@@ -52,8 +53,9 @@ The following table provides an overview of the common functions and events:
 </TabItem>
 </Tabs>
 
-> [!NOTE]
-> Settings are persisted as JSON objects, meaning values can be `boolean`, `number`, `string`, `null`, arrays, or objects.
+<Note>
+  Settings are persisted as JSON objects, meaning values can be `boolean`, `number`, `string`, `null`, arrays, or objects.
+</Note>
 
 ## Action Settings
 
@@ -87,10 +89,11 @@ streamDeck.actions.registerAction(new Counter());
 streamDeck.connect();
 ```
 
-> [!CAUTION]
-> **Security**
->
-> Security-sensitive settings, such as API keys, should always be persisted using [global settings](#global-settings), never action settings. Action settings are stored as plain-text and are included when exporting Stream Deck profiles, and in their nature action settings are not secure.
+<Error>
+  **Security**
+
+  Security-sensitive settings, such as API keys, should always be persisted using [global settings](#global-settings), never action settings. Action settings are stored as plain-text and are included when exporting Stream Deck profiles, and in their nature action settings are not secure.
+</Error>
 
 <a id="reading-action-settings"></a>
 
@@ -129,21 +132,23 @@ streamDeck.actions.registerAction(new Counter());
 streamDeck.connect();
 ```
 
-> [!WARNING]
-> **Type safety**
->
-> Defining the type of your settings provides insight into what their type might be, but does not guarantee their underlying type. [Learn more about type-safety to prevent runtime errors](#type-safety).
+<Warning>
+  **Type safety**
 
-> [!NOTE]
-> **Event argument types**
->
-> In the above the `KeyDownEvent` includes the settings type `Settings` to provide typing. This is also possible of other event arguments for events within the `SingletonAction` action, including:
->
-> - `onDialDown`, `onDialRotate`, `onDialUp`, `onTouchTap`.
-> - `onDidReceiveSettings`.
-> - `onKeyDown`, `onKeyUp`.
-> - `onTitleParametersDidChange`.
-> - `onWillAppear`, `onWillDisappear`.
+  Defining the type of your settings provides insight into what their type might be, but does not guarantee their underlying type. [Learn more about type-safety to prevent runtime errors](#type-safety).
+</Warning>
+
+<Note>
+  **Event argument types**
+
+  In the above the `KeyDownEvent` includes the settings type `Settings` to provide typing. This is also possible of other event arguments for events within the `SingletonAction` action, including:
+
+  - `onDialDown`, `onDialRotate`, `onDialUp`, `onTouchTap`.
+  - `onDidReceiveSettings`.
+  - `onKeyDown`, `onKeyUp`.
+  - `onTitleParametersDidChange`.
+  - `onWillAppear`, `onWillDisappear`.
+</Note>
 
 The following example demonstrates reading the settings as part of the `onKeyDown` event, and incrementing the count by one, and then updating the action's settings.
 
@@ -176,8 +181,9 @@ streamDeck.actions.registerAction(new Counter());
 streamDeck.connect();
 ```
 
-> [!NOTE]
-> You can also request a **visible** action's settings using `ev.action.getSettings()`; as there is no guarantee the action will be visible, we recommend using the settings supplied as part of the event arguments where possible.
+<Note>
+  You can also request a **visible** action's settings using `ev.action.getSettings()`; as there is no guarantee the action will be visible, we recommend using the settings supplied as part of the event arguments where possible.
+</Note>
 
 <a id="action-settings-changed"></a>
 
@@ -234,14 +240,15 @@ streamDeck.system.onDidReceiveDeepLink((ev) => {
 streamDeck.connect();
 ```
 
-> [!WARNING]
-> **Security**
->
-> Security-sensitive settings, such as access tokens, should always be persisted using global settings as these are stored securely on the user's local machine. However, as these are stored locally, users can access them. We therefore recommend you:
->
-> - ✅ **Do:** use global settings for user-specific settings, for example OAuth2 access tokens or API keys provided by the user.
-> - ✅ **Do:** use global settings for non-sensitive plugin-level settings.
-> - ❌ **Don't:** use global settings for your plugin's secrets, for example API keys.
+<Warning>
+  **Security**
+
+  Security-sensitive settings, such as access tokens, should always be persisted using global settings as these are stored securely on the user's local machine. However, as these are stored locally, users can access them. We therefore recommend you:
+
+  - ✅ **Do:** use global settings for user-specific settings, for example OAuth2 access tokens or API keys provided by the user.
+  - ✅ **Do:** use global settings for non-sensitive plugin-level settings.
+  - ❌ **Don't:** use global settings for your plugin's secrets, for example API keys.
+</Warning>
 
 <a id="reading-global-settings"></a>
 
@@ -285,10 +292,11 @@ streamDeck.system.onDidReceiveDeepLink(async (ev) => {
 streamDeck.connect();
 ```
 
-> [!WARNING]
-> **Type safety**
->
-> Defining the type of your settings provides insight into what their type might be, but does not guarantee their underlying type. [Learn more about type-safety to prevent runtime errors](#type-safety).
+<Warning>
+  **Type safety**
+
+  Defining the type of your settings provides insight into what their type might be, but does not guarantee their underlying type. [Learn more about type-safety to prevent runtime errors](#type-safety).
+</Warning>
 
 <a id="global-settings-changed"></a>
 
@@ -306,8 +314,9 @@ streamDeck.settings.onDidReceiveGlobalSettings((ev) => {
 });
 ```
 
-> [!TIP]
-> The application-layer can also listen for the global settings changing in the property inspector using `onDidReceiveGlobalSettings` in the `settings` namespace.
+<Tip>
+  The application-layer can also listen for the global settings changing in the property inspector using `onDidReceiveGlobalSettings` in the `settings` namespace.
+</Tip>
 
 ## Changed vs Requested
 

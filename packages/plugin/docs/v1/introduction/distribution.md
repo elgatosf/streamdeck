@@ -14,12 +14,13 @@ Plugins must be validated to ensure they meets requirements to work within Strea
 streamdeck validate com.elgato.hello-world.sdPlugin
 ```
 
-> [!NOTE]
-> **Marketplace Guidelines**
->
-> When publishing on Marketplace, your plugin must follow a set of guidelines, for example for vocabulary and image styles. In doing so, it ensures users have a consistent and familiar experience within Stream Deck.
->
-> Please review the [submission guidelines](https://docs.elgato.com/guidelines/stream-deck/plugins) before submitting your plugin to ensure that all necessary requirements are fulfilled.
+<Note>
+  **Marketplace Guidelines**
+
+  When publishing on Marketplace, your plugin must follow a set of guidelines, for example for vocabulary and image styles. In doing so, it ensures users have a consistent and familiar experience within Stream Deck.
+
+  Please review the [submission guidelines](https://docs.elgato.com/guidelines/stream-deck/plugins) before submitting your plugin to ensure that all necessary requirements are fulfilled.
+</Note>
 
 ## Package
 
@@ -31,10 +32,11 @@ streamdeck pack com.elgato.hello-world.sdPlugin
 
 The `.streamDeckPlugin` file acts as an installer, allowing users to double-click the file and install your plugin into Stream Deck.
 
-> [!TIP]
-> **Validation**
->
-> The [`pack`](https://docs.elgato.com/streamdeck/cli/commands/pack) command will also validate the plugin before packaging it.
+<Tip>
+  **Validation**
+
+  The [`pack`](https://docs.elgato.com/streamdeck/cli/commands/pack) command will also validate the plugin before packaging it.
+</Tip>
 
 ## Publish
 
@@ -47,7 +49,8 @@ Plugins on Marketplace are submitted, and managed, within [Maker Console](https:
 
 When everything is ready, [learn more](https://docs.elgato.com/marketplace/become-a-maker) about submitting to Marketplace.
 
-> [!NOTE]
-> **Returning Makers**
->
-> Returning Makers, with plugins published before Maker Console, may not see their plugins in Maker Console upon first login. For assistance with accessing your plugins, please email our Maker Relations team on maker@elgato.com.
+<Note>
+  **Returning Makers**
+
+  Returning Makers, with plugins published before Maker Console, may not see their plugins in Maker Console upon first login. For assistance with accessing your plugins, please email our Maker Relations team on maker@elgato.com.
+</Note>
