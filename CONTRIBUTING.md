@@ -15,6 +15,9 @@ Thank you for your interest in contributing to the Stream Deck SDK! We welcome c
 - [Testing](#testing)
     - [Running Tests](#running-tests)
     - [Writing Tests](#writing-tests)
+- [Documentation](#documentation)
+    - [Generating](#generating)
+    - [Writing Guidelines](#writing-guidelines)
 - [Code Style](#code-style)
     - [Linting](#linting)
     - [Style Guidelines](#style-guidelines)
@@ -108,6 +111,47 @@ We use [Vitest](https://vitest.dev/) for testing. Please ensure all tests pass b
 - Name test files with the `.test.ts` pattern (e.g., `action.test.ts`)
 - Write clear, descriptive test names that explain what is being tested
 - Aim for high test coverage, especially for public APIs and critical functionality
+
+## Documentation
+
+Documentation ships with `@elgato/streamdeck`, and is located in `packages/plugin/docs/`.
+
+### Generating
+
+The references are generated from the build output, and code snippets in `docs/_snippets/` are inlined into the pages.
+
+1. Build the project:
+
+    ```
+    pnpm build
+    ```
+
+2. Generate the documentation (from `packages/plugin`):
+
+    ```
+    pnpm docs:generate
+    ```
+
+3. Check the documentation is up to date, lint it, and type check the snippets:
+
+    ```
+    pnpm docs:check
+    ```
+
+### Writing Guidelines
+
+- Write [GitHub Flavored Markdown](https://github.github.com/gfm/) that renders on GitHub and npm.
+- Start every page with a level one heading; frontmatter is limited to `sidebar_label`, `sidebar_position`, and `unlisted`.
+- Use [GitHub alerts](https://github.com/orgs/community/discussions/16925) (e.g., `> [!TIP]`) instead of admonitions.
+- Add custom anchors with a `{#id}` heading suffix (e.g., `### Installation {#eslint-installation}`).
+- Write tabs with `<Tabs>` and `<TabItem value="Label">`, with a blank line between the tags and their content.
+- Link pages with relative `.md` links, and other sites with absolute URLs.
+- Reference snippets with an `<!-- snippet: node/path/to/file.ts -->` comment before the code block; highlight lines in the snippet with `// [!code highlight]`.
+- Do not edit content between `<!-- generated: id -->` and `<!-- /generated -->` comments.
+- Define each directory's `label`, `position`, and `collapsible` in its `_category_.json`.
+- Limit HTML to `<Tabs>`, `<TabItem>`, `<details>`, `<summary>`, `<kbd>`, `<sup>`, `<br>`, `<code>`, and `<ul>`/`<li>` in table cells.
+
+Linting rules, and their exceptions, are in `packages/plugin/.markdownlint-cli2.jsonc`.
 
 ## Code Style
 
