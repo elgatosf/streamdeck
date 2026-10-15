@@ -1,0 +1,14 @@
+{
+    "$schema": "https://schemas.elgato.com/streamdeck/plugins/manifest.json",
+    "Name": "Counter",
+    "Version": "1.0.0.0",
+    "Actions": [
+        {
+            "Name": "Counter",
+            "UUID": "com.elgato.hello-world.increment",
+            "PropertyInspectorPath": "ui/increment-counter.html" // [!code highlight]
+            // ...
+        }
+    ]
+    // ...
+}

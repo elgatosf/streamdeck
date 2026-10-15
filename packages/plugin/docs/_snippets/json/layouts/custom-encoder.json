@@ -1,0 +1,25 @@
+{
+    "$schema": "https://schemas.elgato.com/streamdeck/plugins/layout.json",
+    "id": "custom-layout",
+    "controller": "Encoder",
+    "items": [
+        {
+            "type": "pixmap",
+            "key": "leading",
+            "rect": [10, 40, 20, 20]
+        },
+        {
+            "key": "title",
+            "type": "text",
+            "rect": [40, 40, 120, 20],
+            "font": {
+                "size": 20
+            }
+        },
+        {
+            "key": "trailing",
+            "type": "pixmap",
+            "rect": [170, 40, 20, 20]
+        }
+    ]
+}

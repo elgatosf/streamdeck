@@ -1,0 +1,21 @@
+<!doctype html>
+<html>
+	<head lang="en">
+		<meta charset="utf-8" />
+		<!-- [!code highlight:2] -->
+		<script src="https://sdpi-components.dev/releases/v4/sdpi-components.js"></script>
+	</head>
+
+	<body>
+		<!-- [!code highlight:10] -->
+		<script>
+			const { streamDeckClient } = SDPIComponents;
+
+			streamDeckClient.setSettings({
+				name: "John Doe",
+				showName: true,
+				favColor: "green",
+			});
+		</script>
+	</body>
+</html>

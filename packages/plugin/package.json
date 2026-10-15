@@ -26,7 +26,10 @@
     },
     "files": [
         "./dist/**/*.js",
-        "./dist/**/*.d.ts"
+        "./dist/**/*.d.ts",
+        "./docs",
+        "!./docs/**/_snippets",
+        "./AGENTS.md"
     ],
     "type": "module",
     "main": "./dist/plugin/index.js",
