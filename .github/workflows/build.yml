@@ -47,3 +47,6 @@ jobs:
 
       - name: "🧪 Test"
         run: pnpm run test
+
+      - name: "📚 Check documentation"
+        run: pnpm --filter @elgato/streamdeck run docs:check

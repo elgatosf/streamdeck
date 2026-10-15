@@ -1,0 +1,45 @@
+{
+    "$schema": "https://schemas.elgato.com/streamdeck/plugins/manifest.json",
+    "Actions": [
+        {
+            // [!code highlight:2]
+            "Icon": "action-icon",
+            "Name": "Action One",
+            "States": [
+                {
+                    // [!code highlight:2]
+                    "Image": "state-image"
+                }
+            ],
+            "UUID": "come.elgato.test.one"
+        }
+    ],
+    "Author": "Elgato",
+    "CodePath": "bin/plugin.js",
+    "Description": "Demo plugin with a minimal manifest.",
+    // [!code highlight:2]
+    "Icon": "plugin-icon",
+    "Name": "Test Plugin",
+    "Nodejs": {
+        "Version": "20"
+    },
+    "OS": [
+        {
+            "Platform": "mac",
+            "MinimumVersion": "13"
+        },
+        {
+            "Platform": "windows",
+            "MinimumVersion": "10"
+        }
+    ],
+    "UUID": "com.elgato.test",
+    "Version": "1.0.0.0",
+    "SDKVersion": 2,
+    "Software": {
+        "MinimumVersion": "6.6"
+    },
+    "Category": "Test Plugin",
+    // [!code highlight:2]
+    "CategoryIcon": "category-icon"
+}

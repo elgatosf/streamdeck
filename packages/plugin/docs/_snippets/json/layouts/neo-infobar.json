@@ -1,0 +1,25 @@
+{
+    "$schema": "https://schemas.elgato.com/streamdeck/plugins/layout.json",
+    "id": "neo",
+    "controller": "Neo",
+    "items": [
+        {
+            "type": "pixmap",
+            "key": "leading",
+            "rect": [10, 15, 20, 20]
+        },
+        {
+            "key": "title",
+            "type": "text",
+            "rect": [40, 15, 152, 20],
+            "font": {
+                "size": 15
+            }
+        },
+        {
+            "key": "trailing",
+            "type": "pixmap",
+            "rect": [202, 15, 20, 20]
+        }
+    ]
+}

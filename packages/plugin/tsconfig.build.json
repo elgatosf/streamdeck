@@ -5,5 +5,5 @@
         "noEmit": false,
         "outDir": "dist"
     },
-    "exclude": ["tests/*", "**/__mocks__/", "**/__tests__/"]
+    "exclude": ["scripts/", "tests/*", "**/__mocks__/", "**/__tests__/"]
 }

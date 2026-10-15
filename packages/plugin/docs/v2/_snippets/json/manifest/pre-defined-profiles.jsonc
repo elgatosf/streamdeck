@@ -1,0 +1,52 @@
+{
+    "$schema": "https://schemas.elgato.com/streamdeck/plugins/manifest.json",
+    "Actions": [
+        {
+            "Icon": "action-icon",
+            "Name": "Action One",
+            "States": [
+                {
+                    "Image": "state-image"
+                }
+            ],
+            "UUID": "come.elgato.test.one"
+        }
+    ],
+    "Author": "Elgato",
+    "CodePath": "bin/plugin.js",
+    "Description": "Demo plugin with pre-defined profiles.",
+    "Icon": "plugin-icon",
+    "Name": "Test Plugin",
+    "Nodejs": {
+        "Version": "20"
+    },
+    "OS": [
+        {
+            "Platform": "mac",
+            "MinimumVersion": "13"
+        },
+        {
+            "Platform": "windows",
+            "MinimumVersion": "10"
+        }
+    ],
+    // [!code highlight:13]
+    "Profiles": [
+        {
+            "DeviceType": 2,
+            "DontAutoSwitchWhenInstalled": true,
+            "Name": "Custom Profile (SD XL)"
+        },
+        {
+            "DeviceType": 7,
+            "DontAutoSwitchWhenInstalled": true,
+            "Name": "Custom Profile (SD +)"
+        }
+    ],
+    "UUID": "com.elgato.test",
+    "Version": "1.0.0.0",
+    "SDKVersion": 2,
+    "Software": {
+        "MinimumVersion": "6.6"
+    }
+}

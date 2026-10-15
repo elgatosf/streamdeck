@@ -26,7 +26,10 @@
     },
     "files": [
         "./dist/**/*.js",
-        "./dist/**/*.d.ts"
+        "./dist/**/*.d.ts",
+        "./docs",
+        "!./docs/**/_snippets",
+        "./AGENTS.md"
     ],
     "type": "module",
     "main": "./dist/plugin/index.js",
@@ -35,6 +38,8 @@
     "scripts": {
         "build": "rm -rf ./dist && tsc -p tsconfig.build.json",
         "dev": "rm -rf ./dist && tsc -p tsconfig.build.json -w",
+        "docs:generate": "tsx scripts/docs/generate.ts",
+        "docs:check": "tsx scripts/docs/generate.ts --check && tsx scripts/docs/validate.ts && markdownlint-cli2 && tsc && tsc -p docs/_snippets/node/tsconfig.json && tsc -p docs/_snippets/browser/tsconfig.json",
         "lint": "eslint --max-warnings 0",
         "test": "vitest --run --reporter verbose",
         "test:coverage": "vitest run --coverage",
@@ -53,11 +58,16 @@
         "@types/ws": "^8.18.1",
         "@vitest/coverage-v8": "^3.2.4",
         "eslint": "^9.39.4",
+        "markdownlint-cli2": "^0.23.3",
         "mock-socket": "^9.3.1",
+        "oxfmt": "^0.70.0",
+        "ts-morph": "^28.0.0",
         "tslib": "^2.8.1",
+        "tsx": "^4.23.15",
         "typescript": "^5.9.3",
         "vitest": "^3.2.4",
-        "vitest-websocket-mock": "^0.5.0"
+        "vitest-websocket-mock": "^0.5.0",
+        "zod": "^3.25.76"
     },
     "engines": {
         "node": ">=20.5.1"

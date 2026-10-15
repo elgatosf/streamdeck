@@ -1,0 +1,25 @@
+{
+    "$schema": "https://schemas.elgato.com/streamdeck/plugins/manifest.json",
+    "Actions": [
+        {
+            "Icon": "action-icon",
+            "Name": "Action One",
+            "Controllers": ["Encoder"],
+            // [!code highlight:4]
+            "Encoder": {
+                "layout": "custom-layout.json"
+            },
+            "States": [
+                {
+                    "Image": "state-image"
+                }
+            ],
+            "UUID": "come.elgato.test.one"
+        }
+    ],
+    "Author": "Elgato",
+    "Software": {
+        "MinimumVersion": "6.6"
+    }
+    // ...
+}

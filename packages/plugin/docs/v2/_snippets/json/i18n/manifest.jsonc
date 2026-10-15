@@ -1,0 +1,28 @@
+{
+    // Some properties omitted for brevity...
+    "Name": "Volume Controller",
+    "Description": "Take control of your audio volume",
+    "Actions": [
+        {
+            "UUID": "com.example.volume.adjust",
+            "Name": "Volume control",
+            "Tooltip": "Control your volume",
+            "States": [
+                {
+                    "Name": "Unmute"
+                },
+                {
+                    "Name": "Mute"
+                }
+            ],
+            "Encoder": {
+                "TriggerDescription": {
+                    "LongTouch": "Mute",
+                    "Push": "Toggle mute",
+                    "Rotate": "Adjust",
+                    "Touch": "Stummschaltung umschalten"
+                }
+            }
+        }
+    ]
+}
