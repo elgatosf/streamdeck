@@ -6,7 +6,7 @@
     "Actions": [
         {
             "Name": "Counter",
-            "UUID": "ui/com.elgato.hello-world.increment"
+            "UUID": "com.elgato.hello-world.increment"
             // ...
         }
     ]

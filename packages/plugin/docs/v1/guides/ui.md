@@ -66,7 +66,7 @@ There can also be a property inspector declared at the plugin level that will ap
     "Actions": [
         {
             "Name": "Counter",
-            "UUID": "ui/com.elgato.hello-world.increment"
+            "UUID": "com.elgato.hello-world.increment"
             // ...
         }
     ]
