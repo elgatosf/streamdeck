@@ -541,7 +541,7 @@ Occurs when the user presses a dial (Stream Deck +). See also `SingletonAction.o
 NB: For other action types see `SingletonAction.onKeyDown`.
 
 ```ts
-function onDialDown?(ev: DialDownEvent): void | Promise<void>
+function onDialDown(ev: DialDownEvent): void | Promise<void>
 ```
 
 **Parameters**
@@ -555,7 +555,7 @@ function onDialDown?(ev: DialDownEvent): void | Promise<void>
 Occurs when the user rotates a dial (Stream Deck +).
 
 ```ts
-function onDialRotate?(ev: DialRotateEvent): void | Promise<void>
+function onDialRotate(ev: DialRotateEvent): void | Promise<void>
 ```
 
 **Parameters**
@@ -571,7 +571,7 @@ Occurs when the user releases a pressed dial (Stream Deck +). See also `Singleto
 NB: For other action types see `SingletonAction.onKeyUp`.
 
 ```ts
-function onDialUp?(ev: DialUpEvent): void | Promise<void>
+function onDialUp(ev: DialUpEvent): void | Promise<void>
 ```
 
 **Parameters**
@@ -585,7 +585,7 @@ function onDialUp?(ev: DialUpEvent): void | Promise<void>
 Occurs when the user taps the touchscreen (Stream Deck +).
 
 ```ts
-function onTouchTap?(ev: TouchTapEvent): void | Promise<void>
+function onTouchTap(ev: TouchTapEvent): void | Promise<void>
 ```
 
 **Parameters**

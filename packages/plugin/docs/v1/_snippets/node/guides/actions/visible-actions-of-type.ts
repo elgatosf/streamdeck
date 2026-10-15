@@ -12,7 +12,7 @@ export class IncrementCounter extends SingletonAction {
 		// Iterate over visible actions with the UUID "com.elgato.hello-world.increment".
 		// [!code highlight:4]
 		this.actions.forEach((action) => {
-			ev.action.setTitle("Hello world!");
+			action.setTitle("Hello world!");
 		});
 	}
 }

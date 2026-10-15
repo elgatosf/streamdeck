@@ -269,7 +269,7 @@ Occurs when the user presses a action down. See also `SingletonAction.onKeyUp`.
 NB: For dials / touchscreens see `SingletonAction.onDialDown`.
 
 ```ts
-function onKeyDown?(ev: KeyDownEvent): void | Promise<void>
+function onKeyDown(ev: KeyDownEvent): void | Promise<void>
 ```
 
 **Parameters**
@@ -285,7 +285,7 @@ Occurs when the user releases a pressed action. See also `SingletonAction.onKeyD
 NB: For dials / touchscreens see `SingletonAction.onDialUp`.
 
 ```ts
-function onKeyUp?(ev: KeyUpEvent): void | Promise<void>
+function onKeyUp(ev: KeyUpEvent): void | Promise<void>
 ```
 
 **Parameters**

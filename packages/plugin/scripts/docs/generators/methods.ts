@@ -22,8 +22,8 @@ export async function renderMethods(
 			throw new Error(`Unsupported method structure for ${method.name}: signature not found, or multiple defined`);
 		}
 
-		const name = method.optional ? `${method.name}?` : method.name;
-		const declaration = codeBlock(`function ${name}${await signature.stringify({ rawOutput: true })}`, "ts");
+		// Optional methods are rendered without `?`, as it is not valid on standalone function declarations.
+		const declaration = codeBlock(`function ${method.name}${await signature.stringify({ rawOutput: true })}`, "ts");
 
 		let parameters: string | undefined;
 		if (signature.parameters.length > 0) {

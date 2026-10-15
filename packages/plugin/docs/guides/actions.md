@@ -249,7 +249,7 @@ streamDeck.actions.forEach((action) => {
 
 <!-- snippet: node/guides/actions/visible-actions-of-type.ts -->
 
-```ts title="Visible Actions of Type" {13-16}
+```ts title="Visible Actions of Type" {13-17}
 import { action, KeyDownEvent, SingletonAction } from "@elgato/streamdeck";
 
 /**
@@ -263,7 +263,9 @@ export class IncrementCounter extends SingletonAction {
 	override onKeyDown(ev: KeyDownEvent) {
 		// Iterate over visible actions with the UUID "com.elgato.hello-world.increment".
 		this.actions.forEach((action) => {
-			ev.action.setTitle("Hello world!");
+			if (action.isKey() || action.isDial()) {
+				action.setTitle("Hello world!");
+			}
 		});
 	}
 }
@@ -283,7 +285,7 @@ The following events are found on the `SingletonAction` class, and apply to keys
 Occurs when the resources are updated within the property inspector.
 
 ```ts
-function onDidReceiveResources?(ev: DidReceiveResourcesEvent): void | Promise<void>
+function onDidReceiveResources(ev: DidReceiveResourcesEvent): void | Promise<void>
 ```
 
 **Parameters**
@@ -300,7 +302,7 @@ When `streamDeck.settings.useLegacySettingsBehavior` is set to `true`, this also
 calling `getSettings()`.
 
 ```ts
-function onDidReceiveSettings?(ev: DidReceiveSettingsEvent): void | Promise<void>
+function onDidReceiveSettings(ev: DidReceiveSettingsEvent): void | Promise<void>
 ```
 
 **Parameters**
@@ -314,7 +316,7 @@ function onDidReceiveSettings?(ev: DidReceiveSettingsEvent): void | Promise<void
 Occurs when the property inspector associated with the action becomes visible, i.e. the user selected an action in the Stream Deck application. See also `streamDeck.ui.onDidAppear`.
 
 ```ts
-function onPropertyInspectorDidAppear?(ev: PropertyInspectorDidAppearEvent): void | Promise<void>
+function onPropertyInspectorDidAppear(ev: PropertyInspectorDidAppearEvent): void | Promise<void>
 ```
 
 **Parameters**
@@ -328,7 +330,7 @@ function onPropertyInspectorDidAppear?(ev: PropertyInspectorDidAppearEvent): voi
 Occurs when the property inspector associated with the action becomes invisible, i.e. the user unselected the action in the Stream Deck application. See also `streamDeck.ui.onDidDisappear`.
 
 ```ts
-function onPropertyInspectorDidDisappear?(ev: PropertyInspectorDidDisappearEvent): void | Promise<void>
+function onPropertyInspectorDidDisappear(ev: PropertyInspectorDidDisappearEvent): void | Promise<void>
 ```
 
 **Parameters**
@@ -342,7 +344,7 @@ function onPropertyInspectorDidDisappear?(ev: PropertyInspectorDidDisappearEvent
 Occurs when a message was sent to the plugin _from_ the property inspector. The plugin can also send messages _to_ the property inspector using `streamDeck.ui.sendToPropertyInspector`.
 
 ```ts
-function onSendToPlugin?(ev: SendToPluginEvent): void | Promise<void>
+function onSendToPlugin(ev: SendToPluginEvent): void | Promise<void>
 ```
 
 **Parameters**
@@ -356,7 +358,7 @@ function onSendToPlugin?(ev: SendToPluginEvent): void | Promise<void>
 Occurs when the user updates an action's title settings in the Stream Deck application.
 
 ```ts
-function onTitleParametersDidChange?(ev: TitleParametersDidChangeEvent): void | Promise<void>
+function onTitleParametersDidChange(ev: TitleParametersDidChangeEvent): void | Promise<void>
 ```
 
 **Parameters**
@@ -371,7 +373,7 @@ Occurs when an action appears on the Stream Deck due to the user navigating to a
 page". An action refers to _all_ types of actions, e.g. keys, dials,
 
 ```ts
-function onWillAppear?(ev: WillAppearEvent): void | Promise<void>
+function onWillAppear(ev: WillAppearEvent): void | Promise<void>
 ```
 
 **Parameters**
@@ -386,7 +388,7 @@ Occurs when an action disappears from the Stream Deck due to the user navigating
 dials, touchscreens, pedals, etc.
 
 ```ts
-function onWillDisappear?(ev: WillDisappearEvent): void | Promise<void>
+function onWillDisappear(ev: WillDisappearEvent): void | Promise<void>
 ```
 
 **Parameters**

@@ -10,9 +10,11 @@ export class IncrementCounter extends SingletonAction {
 	 */
 	override onKeyDown(ev: KeyDownEvent) {
 		// Iterate over visible actions with the UUID "com.elgato.hello-world.increment".
-		// [!code highlight:4]
+		// [!code highlight:5]
 		this.actions.forEach((action) => {
-			ev.action.setTitle("Hello world!");
+			if (action.isKey() || action.isDial()) {
+				action.setTitle("Hello world!");
+			}
 		});
 	}
 }
