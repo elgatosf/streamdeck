@@ -43,12 +43,12 @@ export function formatDescription(text: string | undefined): string {
  * Creates a markdown heading.
  * @param depth Depth of the heading, for example `2` for `##`.
  * @param text Text of the heading.
- * @param id Optional explicit identifier; written as a `{#id}` suffix on the heading.
+ * @param id Optional explicit identifier; written as an `<a id="..."></a>` anchor before the heading.
  * @returns The heading.
  */
 export function heading(depth: number, text: string, id?: string): string {
 	const prefix = "#".repeat(Math.min(depth, 6));
-	return id ? `${prefix} ${text} {#${id}}` : `${prefix} ${text}`;
+	return id ? `<a id="${id}"></a>\n\n${prefix} ${text}` : `${prefix} ${text}`;
 }
 
 /**

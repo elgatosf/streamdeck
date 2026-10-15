@@ -3,7 +3,7 @@
  * - Every page starts with a level one heading (the title), optionally preceded by frontmatter.
  * - Every directory of pages has a `_category_.json` with valid metadata.
  * - Frontmatter only defines `sidebar_label`, `sidebar_position`, and `unlisted`.
- * - Relative links resolve to a page, and anchors resolve to a heading, or its explicit `{#id}` identifier.
+ * - Relative links resolve to a page, and anchors resolve to a heading, or an explicit `<a id="..."></a>` anchor.
  * - Links to other sites are absolute URLs, never site-root paths.
  * - Images resolve to a file.
  * - Every page is linked from the index of its version.
@@ -54,7 +54,7 @@ function slugify(text: string): string {
 }
 
 /**
- * Gets the anchors defined within the markdown; headings are slugified unless they define an explicit `{#id}`.
+ * Gets the anchors defined within the markdown, i.e. slugified headings and explicit `<a id="..."></a>` anchors.
  * @param markdown Markdown contents.
  * @returns Set of anchors.
  */
@@ -75,15 +75,13 @@ function getAnchors(markdown: string): Set<string> {
 			continue;
 		}
 
+		// Explicit anchors, for example `<a id="eslint-installation"></a>`.
+		for (const anchor of line.matchAll(/<a\s[^>]*\bid="([\w-]+)"/g)) {
+			anchors.add(anchor[1]);
+		}
+
 		const heading = line.match(/^#{1,6} (.+?)\s*$/);
 		if (heading) {
-			// Explicit identifiers, for example `### Installation {#eslint-installation}`.
-			const explicit = heading[1].match(/\{#([\w-]+)\}$/);
-			if (explicit) {
-				anchors.add(explicit[1]);
-				continue;
-			}
-
 			const slug = slugify(heading[1]);
 			const count = slugCounts.get(slug) ?? 0;
 			slugCounts.set(slug, count + 1);

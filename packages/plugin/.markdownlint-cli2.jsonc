@@ -13,7 +13,7 @@
 
         // MD033 (no-inline-html): Standard HTML that has no Markdown equivalent, used sparingly.
         "MD033": {
-            "allowed_elements": ["Tabs", "TabItem", "details", "summary", "kbd", "sup", "ul", "li", "code", "br"]
+            "allowed_elements": ["a", "Tabs", "TabItem", "details", "summary", "kbd", "sup", "ul", "li", "code", "br"]
         },
 
         // MD010 (no-hard-tabs): Code blocks use tabs, matching the repository's formatting.
@@ -21,9 +21,6 @@
 
         // MD036 (no-emphasis-as-heading): Bold labels such as "**Parameters**" and "**Properties**" introduce generated member lists; they are intentionally not headings.
         "MD036": false,
-
-        // MD051 (link-fragments): Custom anchors are defined with a `{#id}` heading suffix, which markdownlint does not understand; links are validated by `docs:check` instead.
-        "MD051": false,
 
         // MD034 (no-bare-urls): Bare URLs are automatically linked by GFM, and are used within generated descriptions.
         "MD034": false,

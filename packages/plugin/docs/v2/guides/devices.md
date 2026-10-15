@@ -128,7 +128,9 @@ Same Stream Deck power, now with a sharper snap. Smooth, fast, and precise, each
 
 ![Stream Deck Scissor Keys](../../assets/devices/stream-deck-scissor-keys.webp)
 
-### Stream Deck + {#stream-deck-plus}
+<a id="stream-deck-plus"></a>
+
+### Stream Deck +
 
 Iconic Stream Deck tech with customizable LCD keys, dials, and touch strip. Stream Deck + is your audio mixer, studio controller, production console – anything you want it to be.
 
@@ -139,7 +141,9 @@ Iconic Stream Deck tech with customizable LCD keys, dials, and touch strip. Stre
 
 ![Stream Deck +](../../assets/devices/stream-deck-plus.webp)
 
-### Stream Deck + XL {#stream-deck-plus-xl}
+<a id="stream-deck-plus-xl"></a>
+
+### Stream Deck + XL
 
 With dozens of customizable controls and endless integrations, Stream Deck + XL puts entire productions and systems under your command—all from one intuitive interface.
 
@@ -201,7 +205,9 @@ Stream Deck Mobile brings professional stream control, powerful integrations, an
 
 ![Stream Deck Mobile](../../assets/devices/stream-deck-mobile.webp)
 
-### Corsair Galleon 100 SD {#galleon-100-sd}
+<a id="galleon-100-sd"></a>
+
+### Corsair Galleon 100 SD
 
 The first high-performance gaming keyboard with a built-in Stream Deck is here. Galleon 100 SD combines Corsair and Elgato engineering for deep control and insight at your fingertips.
 

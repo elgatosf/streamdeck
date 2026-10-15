@@ -375,14 +375,18 @@ Defines the plugin and available actions, and all information associated with th
 
 **Properties**
 
-#### Actions {#manifest-actions}
+<a id="manifest-actions"></a>
+
+#### Actions
 
 Type: [Action](#action)[] (required)
 
 Collection of actions provided by the plugin, and all of their information; this can include actions that are available to users via the actions list, and actions that are
 hidden to the user but available to pre-defined profiles distributed with the plugin (`Manifest.Actions.VisibleInActionsList`).
 
-#### ApplicationsToMonitor {#manifest-applicationstomonitor}
+<a id="manifest-applicationstomonitor"></a>
+
+#### ApplicationsToMonitor
 
 Type: [ApplicationMonitoring](#applicationmonitoring) (optional)
 
@@ -393,13 +397,17 @@ Applications to monitor on Mac and Windows; upon a monitored application being l
 - `streamDeck.system.onApplicationDidLaunch(...)`
 - `streamDeck.system.onApplicationDidTerminate(...)`
 
-#### Author {#manifest-author}
+<a id="manifest-author"></a>
+
+#### Author
 
 Type: `string` (required)
 
 Author's name that will be displayed on the plugin's product page on the Marketplace, e.g. "Elgato".
 
-#### Category {#manifest-category}
+<a id="manifest-category"></a>
+
+#### Category
 
 Type: `string` (optional)
 
@@ -408,7 +416,9 @@ Defines the actions list group, providing a natural grouping of the plugin's act
 Note: `Category` should be distinctive and synonymous with your plugin, and it is therefore recommended that this be the same value as the plugin's `Name` field. When `undefined`, the
 actions will be available under the "Custom" group.
 
-#### CategoryIcon {#manifest-categoryicon}
+<a id="manifest-categoryicon"></a>
+
+#### CategoryIcon
 
 Type: `string` (optional)
 
@@ -426,7 +436,9 @@ Image must be:
 - assets/category-icon
 - imgs/category
 
-#### CodePath {#manifest-codepath}
+<a id="manifest-codepath"></a>
+
+#### CodePath
 
 Type: `string` (required)
 
@@ -438,7 +450,9 @@ Path to the plugin's main entry point; this is executed when the Stream Deck app
 - Counter
 - Counter.exe
 
-#### CodePathMac {#manifest-codepathmac}
+<a id="manifest-codepathmac"></a>
+
+#### CodePathMac
 
 Type: `string` (optional)
 
@@ -449,7 +463,9 @@ Path to the plugin's entry point specific to macOS; this is executed when the St
 - index.js
 - Counter
 
-#### CodePathWin {#manifest-codepathwin}
+<a id="manifest-codepathwin"></a>
+
+#### CodePathWin
 
 Type: `string` (optional)
 
@@ -460,19 +476,25 @@ Path to the plugin's entry point specific to Windows; this is executed when the 
 - index.js
 - Counter.exe
 
-#### DefaultWindowSize {#manifest-defaultwindowsize}
+<a id="manifest-defaultwindowsize"></a>
+
+#### DefaultWindowSize
 
 Type: [`number`, `number`] (optional)
 
 Size of a window (`[width, height]`) opened when calling `window.open()` from the property inspector. Default value is `[500, 650]`.
 
-#### Description {#manifest-description}
+<a id="manifest-description"></a>
+
+#### Description
 
 Type: `string` (required)
 
 Description of the plugin, and the functionality it provides, that will be displayed on the plugin's product page on the Marketplace.
 
-#### Icon {#manifest-icon}
+<a id="manifest-icon"></a>
+
+#### Icon
 
 Type: `string` (required)
 
@@ -488,13 +510,17 @@ Image must be:
 - assets/plugin-icon
 - imgs/plugin
 
-#### Name {#manifest-name}
+<a id="manifest-name"></a>
+
+#### Name
 
 Type: `string` (required)
 
 Name of the plugin, e.g. "Wave Link", "Camera Hub", "Control Center", etc.
 
-#### Nodejs {#manifest-nodejs}
+<a id="manifest-nodejs"></a>
+
+#### Nodejs
 
 Type: [Nodejs](#nodejs) (optional)
 
@@ -506,13 +532,17 @@ Note: All Node.js plugins are executed with the following command-line arguments
 - [`--enable-source-maps`](https://nodejs.org/api/cli.html#--enable-source-maps)
 - [`--no-global-search-paths`](https://nodejs.org/api/cli.html#--no-global-search-paths)
 
-#### OS {#manifest-os}
+<a id="manifest-os"></a>
+
+#### OS
 
 Type: [[OS](#os), [OS](#os)?] (required)
 
 Collection of operating systems, and their minimum required versions, that the plugin supports.
 
-#### Profiles {#manifest-profiles}
+<a id="manifest-profiles"></a>
+
+#### Profiles
 
 Type: [Profile](#profile)[] (optional)
 
@@ -523,7 +553,9 @@ Note: Plugins may only switch to profiles distributed with the plugin, as define
 **Also see:**
 `streamDeck.profiles.switchToProfile(...)`
 
-#### PropertyInspectorPath {#manifest-propertyinspectorpath}
+<a id="manifest-propertyinspectorpath"></a>
+
+#### PropertyInspectorPath
 
 Type: ``${string}.htm``, ``${string}.html`` (optional)
 
@@ -541,19 +573,25 @@ Note: Path should be relative to the root of the plugin's folder, with no leadin
 
 - `streamDeck.ui.onSendToPlugin(...)`
 
-#### SDKVersion {#manifest-sdkversion}
+<a id="manifest-sdkversion"></a>
+
+#### SDKVersion
 
 Type: `2`, `3` (required)
 
 Preferred SDK version (version 3 is recommended).
 
-#### Software {#manifest-software}
+<a id="manifest-software"></a>
+
+#### Software
 
 Type: [Software](#software) (required)
 
 Determines the Stream Deck software requirements for this plugin.
 
-#### SupportURL {#manifest-supporturl}
+<a id="manifest-supporturl"></a>
+
+#### SupportURL
 
 Type: `string` (optional)
 
@@ -566,7 +604,9 @@ Link to the plugin's support website.
 
 Available from Stream Deck 6.9.
 
-#### URL {#manifest-url}
+<a id="manifest-url"></a>
+
+#### URL
 
 Type: `string` (optional)
 
@@ -577,7 +617,9 @@ Link to the plugin's website.
 - https://elgato.com
 - https://corsair.com
 
-#### UUID {#manifest-uuid}
+<a id="manifest-uuid"></a>
+
+#### UUID
 
 Type: `string` (required)
 
@@ -595,7 +637,9 @@ Unique identifier of the plugin, represented in reverse-DNS format.
 - com.elgato.discord
 - tv.twitch
 
-#### Version {#manifest-version}
+<a id="manifest-version"></a>
+
+#### Version
 
 Type: `string` (required)
 
@@ -607,7 +651,9 @@ Provides information about an action provided by the plugin.
 
 **Properties**
 
-#### Controllers {#action-controllers}
+<a id="action-controllers"></a>
+
+#### Controllers
 
 Type: [(`"Encoder"`, `"Keypad"`, `"Neo"`), (`"Encoder"`, `"Keypad"`, `"Neo"`)?, (`"Encoder"`, `"Keypad"`, `"Neo"`)?] (optional)
 
@@ -617,26 +663,34 @@ Defines the controller type the action is applicable to.
 - **Encoder** refers to a dial / touchscreen on the Stream Deck +.
 - **Neo** refers to the infobar found on Stream Deck Neo (available from Stream Deck 7.6).
 
-#### DisableAutomaticStates {#action-disableautomaticstates}
+<a id="action-disableautomaticstates"></a>
+
+#### DisableAutomaticStates
 
 Type: `boolean` (optional)
 
 Determines whether the state of the action should automatically toggle when the user presses the action; only applies to actions that have more than one state defined. Default is
 `false`.
 
-#### DisableCaching {#action-disablecaching}
+<a id="action-disablecaching"></a>
+
+#### DisableCaching
 
 Type: `boolean` (optional)
 
 Determines whether Stream Deck should cache images associated with the plugin, and its actions. Default is `false`.
 
-#### Encoder {#action-encoder}
+<a id="action-encoder"></a>
+
+#### Encoder
 
 Type: [Encoder](#encoder) (optional)
 
 Provides information about how the action functions as part of an `Encoder` (dial / touchscreen).
 
-#### Icon {#action-icon}
+<a id="action-icon"></a>
+
+#### Icon
 
 Type: `string` (required)
 
@@ -653,19 +707,25 @@ Image must be:
 - assets/counter
 - imgs/actions/mute
 
-#### Name {#action-name}
+<a id="action-name"></a>
+
+#### Name
 
 Type: `string` (required)
 
 Name of the action; this is displayed to the user in the actions list, and is used throughout the Stream Deck application to visually identify the action.
 
-#### OS {#action-os}
+<a id="action-os"></a>
+
+#### OS
 
 Type: (`"mac"`, `"windows"`)[] (optional)
 
 Operating system that the action supports.
 
-#### PropertyInspectorPath {#action-propertyinspectorpath}
+<a id="action-propertyinspectorpath"></a>
+
+#### PropertyInspectorPath
 
 Type: ``${string}.htm``, ``${string}.html`` (optional)
 
@@ -679,7 +739,9 @@ Note: Path should be relative to the root of the plugin's folder, with no leadin
 - mute.html
 - actions/join-voice-chat/settings.html
 
-#### States {#action-states}
+<a id="action-states"></a>
+
+#### States
 
 Type: [State](#state)[] (required)
 
@@ -687,7 +749,9 @@ States the action can be in. When two states are defined the action will act as 
 
 Note: Automatic toggling of the state on action activation can be disabled by setting `DisableAutomaticStates` to `true`.
 
-#### SupportedInKeyLogicActions {#action-supportedinkeylogicactions}
+<a id="action-supportedinkeylogicactions"></a>
+
+#### SupportedInKeyLogicActions
 
 Type: `boolean` (optional)
 
@@ -695,13 +759,17 @@ Determines whether the action is available to users when they are creating key l
 
 Available from Stream Deck 7.0.
 
-#### SupportedInMultiActions {#action-supportedinmultiactions}
+<a id="action-supportedinmultiactions"></a>
+
+#### SupportedInMultiActions
 
 Type: `boolean` (optional)
 
 Determines whether the action is available to users when they are creating multi-actions. Default is `true`.
 
-#### SupportURL {#action-supporturl}
+<a id="action-supporturl"></a>
+
+#### SupportURL
 
 Type: `string` (optional)
 
@@ -714,13 +782,17 @@ Link to the actions's support website.
 
 Available from Stream Deck 6.9.
 
-#### Tooltip {#action-tooltip}
+<a id="action-tooltip"></a>
+
+#### Tooltip
 
 Type: `string` (optional)
 
 Tooltip shown to the user when they hover over the action within the actions list in the Stream Deck application.
 
-#### UUID {#action-uuid}
+<a id="action-uuid"></a>
+
+#### UUID
 
 Type: `string` (required)
 
@@ -741,14 +813,18 @@ Note: `UUID` must be unique, and should be prefixed with the plugin's UUID.
 - com.elgato.discord.join-voice
 - tv.twitch.go-live
 
-#### UserTitleEnabled {#action-usertitleenabled}
+<a id="action-usertitleenabled"></a>
+
+#### UserTitleEnabled
 
 Type: `boolean` (optional)
 
 Determines whether the title field is available to the user when viewing the action's property inspector. Setting this to `false` will disable the user from specifying a
 title, thus allowing the plugin to have exclusive access to the title. Default is `true`, i.e. the title field is enabled.
 
-#### VisibleInActionsList {#action-visibleinactionslist}
+<a id="action-visibleinactionslist"></a>
+
+#### VisibleInActionsList
 
 Type: `boolean` (optional)
 
@@ -761,7 +837,9 @@ Applications to monitor on Mac and Windows; upon a monitored application being l
 
 **Properties**
 
-#### mac {#applicationmonitoring-mac}
+<a id="applicationmonitoring-mac"></a>
+
+#### mac
 
 Type: `string`[] (optional)
 
@@ -771,7 +849,9 @@ Collection of applications to monitor on macOS.
 
 - com.apple.mail
 
-#### windows {#applicationmonitoring-windows}
+<a id="applicationmonitoring-windows"></a>
+
+#### windows
 
 Type: `string`[] (optional)
 
@@ -787,7 +867,9 @@ Provides information about how the action functions as part of an `Encoder` (dia
 
 **Properties**
 
-#### Icon {#encoder-icon}
+<a id="encoder-icon"></a>
+
+#### Icon
 
 Type: `string` (optional)
 
@@ -806,7 +888,9 @@ Note: Can be overridden by the user in the Stream Deck application.
 - assets/actions/mute/encoder-icon
 - imgs/join-voice-chat-encoder
 
-#### StackColor {#encoder-stackcolor}
+<a id="encoder-stackcolor"></a>
+
+#### StackColor
 
 Type: `string` (optional)
 
@@ -818,7 +902,9 @@ Background color to display in the Stream Deck application when the action is pa
 - #F1F1F1
 - #0038A8
 
-#### TriggerDescription {#encoder-triggerdescription}
+<a id="encoder-triggerdescription"></a>
+
+#### TriggerDescription
 
 Type: [TriggerDescriptions](#triggerdescriptions) (optional)
 
@@ -829,7 +915,9 @@ Descriptions that define the interaction of the action when it is associated wit
 - "Adjust volume"
 - "Play / Pause"
 
-#### background {#encoder-background}
+<a id="encoder-background"></a>
+
+#### background
 
 Type: `string` (optional)
 
@@ -847,7 +935,9 @@ Note: Can be overridden by the user in the Stream Deck application.
 - assets/backgrounds/main
 - imgs/bright-blue-bg
 
-#### layout {#encoder-layout}
+<a id="encoder-layout"></a>
+
+#### layout
 
 Type: ``${string}.json``, `"$A0"`, `"$A1"`, `"$B1"`, `"$B2"`, `"$C1"`, `"$X1"` (optional)
 
@@ -873,7 +963,9 @@ Configuration options for Node.js based plugins.
 
 **Properties**
 
-#### Debug {#nodejs-debug}
+<a id="nodejs-debug"></a>
+
+#### Debug
 
 Type: `string` (optional)
 
@@ -889,13 +981,17 @@ a set of [command-line arguments](https://nodejs.org/api/cli.html).
 - `"break"` results in `--inspect-brk=127.0.0.1:{PORT}`
 - `"--inspect=127.0.0.1:12345"` runs a local debugger on port `12345`.
 
-#### GenerateProfilerOutput {#nodejs-generateprofileroutput}
+<a id="nodejs-generateprofileroutput"></a>
+
+#### GenerateProfilerOutput
 
 Type: `boolean` (optional)
 
 Determines whether to generate a profiler output for the plugin; [read more](https://nodejs.org/en/docs/guides/simple-profiling).
 
-#### Version {#nodejs-version}
+<a id="nodejs-version"></a>
+
+#### Version
 
 Type: `"20"`, `"24"` (required)
 
@@ -907,13 +1003,17 @@ Operating system that the plugin supports, and the minimum required version need
 
 **Properties**
 
-#### MinimumVersion {#os-minimumversion}
+<a id="os-minimumversion"></a>
+
+#### MinimumVersion
 
 Type: `string` (required)
 
 Minimum version required of the operating system to run the plugin.
 
-#### Platform {#os-platform}
+<a id="os-platform"></a>
+
+#### Platform
 
 Type: `"mac"`, `"windows"` (required)
 
@@ -925,7 +1025,9 @@ Provides information for pre-defined profile distributed with this plugin.
 
 **Properties**
 
-#### AutoInstall {#profile-autoinstall}
+<a id="profile-autoinstall"></a>
+
+#### AutoInstall
 
 Type: `boolean` (optional)
 
@@ -934,7 +1036,9 @@ the plugin attempts to switch to it. Default is `true`.
 
 Available from Stream Deck 6.6.
 
-#### DeviceType {#profile-devicetype}
+<a id="profile-devicetype"></a>
+
+#### DeviceType
 
 Type: `0`, `1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`, `9`, `10`, `11`, `12`, `13` (required)
 
@@ -957,13 +1061,17 @@ Type of device the profile is intended for, for example Stream Deck +, Stream De
 - Galleon 100 SD (12)
 - Stream Deck + XL (13)
 
-#### DontAutoSwitchWhenInstalled {#profile-dontautoswitchwheninstalled}
+<a id="profile-dontautoswitchwheninstalled"></a>
+
+#### DontAutoSwitchWhenInstalled
 
 Type: `boolean` (optional)
 
 Determines whether the Stream Deck application should automatically switch to the profile when it is first installed. Default value is `false`.
 
-#### Name {#profile-name}
+<a id="profile-name"></a>
+
+#### Name
 
 Type: `string` (required)
 
@@ -974,7 +1082,9 @@ Path to the `.streamDeckProfile`, with the **file extension omitted**, that cont
 - assets/main-profile
 - profiles/super-cool-profile
 
-#### Readonly {#profile-readonly}
+<a id="profile-readonly"></a>
+
+#### Readonly
 
 Type: `boolean` (optional)
 
@@ -986,7 +1096,9 @@ Determines the Stream Deck software requirements for this plugin.
 
 **Properties**
 
-#### MinimumVersion {#software-minimumversion}
+<a id="software-minimumversion"></a>
+
+#### MinimumVersion
 
 Type: `"6.4"`, `"6.5"`, `"6.6"`, `"6.7"`, `"6.8"`, `"6.9"`, `"7.0"`, `"7.1"`, `"7.2"`, `"7.3"`, `"7.4"`, `"7.5"`, `"7.6"` (required)
 
@@ -1000,7 +1112,9 @@ Note: Automatic toggling of the state on action activation can be disabled by se
 
 **Properties**
 
-#### FontFamily {#state-fontfamily}
+<a id="state-fontfamily"></a>
+
+#### FontFamily
 
 Type: `string` (optional)
 
@@ -1008,7 +1122,9 @@ Default font-family to be used when rendering the title of this state.
 
 Note: Can be overridden by the user in the Stream Deck application.
 
-#### FontSize {#state-fontsize}
+<a id="state-fontsize"></a>
+
+#### FontSize
 
 Type: `number` (optional)
 
@@ -1016,7 +1132,9 @@ Default font-size to be used when rendering the title of this state.
 
 Note: Can be overridden by the user in the Stream Deck application.
 
-#### FontStyle {#state-fontstyle}
+<a id="state-fontstyle"></a>
+
+#### FontStyle
 
 Type: `""`, `"Bold Italic"`, `"Bold"`, `"Italic"`, `"Regular"` (optional)
 
@@ -1024,7 +1142,9 @@ Default font-style to be used when rendering the title of this state.
 
 Note: Can be overridden by the user in the Stream Deck application.
 
-#### FontUnderline {#state-fontunderline}
+<a id="state-fontunderline"></a>
+
+#### FontUnderline
 
 Type: `boolean` (optional)
 
@@ -1032,7 +1152,9 @@ Determines whether the title associated with this state is underlined by default
 
 Note: Can be overridden by the user in the Stream Deck application.
 
-#### Image {#state-image}
+<a id="state-image"></a>
+
+#### Image
 
 Type: `string` (required)
 
@@ -1050,7 +1172,9 @@ Note: Can be overridden by the user in the Stream Deck application.
 - assets/counter-key
 - assets/icons/mute
 
-#### MultiActionImage {#state-multiactionimage}
+<a id="state-multiactionimage"></a>
+
+#### MultiActionImage
 
 Type: `string` (optional)
 
@@ -1068,14 +1192,18 @@ Note: Can be overridden by the user in the Stream Deck application.
 - assets/counter-key
 - assets/icons/mute
 
-#### Name {#state-name}
+<a id="state-name"></a>
+
+#### Name
 
 Type: `string` (optional)
 
 Name of the state; when multiple states are defined this value is shown to the user when the action is being added to a multi-action. The user is then able to specify which
 state they would like to activate as part of the multi-action.
 
-#### ShowTitle {#state-showtitle}
+<a id="state-showtitle"></a>
+
+#### ShowTitle
 
 Type: `boolean` (optional)
 
@@ -1083,13 +1211,17 @@ Determines whether the title should be shown.
 
 Note: Can be overridden by the user in the Stream Deck application.
 
-#### Title {#state-title}
+<a id="state-title"></a>
+
+#### Title
 
 Type: `string` (optional)
 
 Default title to be shown when the action is added to the Stream Deck.
 
-#### TitleAlignment {#state-titlealignment}
+<a id="state-titlealignment"></a>
+
+#### TitleAlignment
 
 Type: `"bottom"`, `"middle"`, `"top"` (optional)
 
@@ -1097,7 +1229,9 @@ Default title alignment to be used when rendering the title of this state.
 
 Note: Can be overridden by the user in the Stream Deck application.
 
-#### TitleColor {#state-titlecolor}
+<a id="state-titlecolor"></a>
+
+#### TitleColor
 
 Type: `string` (optional)
 
@@ -1122,25 +1256,33 @@ Descriptions that define the interaction of the action when it is associated wit
 
 **Properties**
 
-#### LongTouch {#triggerdescriptions-longtouch}
+<a id="triggerdescriptions-longtouch"></a>
+
+#### LongTouch
 
 Type: `string` (optional)
 
 Touchscreen "long-touch" interaction behavior description.
 
-#### Push {#triggerdescriptions-push}
+<a id="triggerdescriptions-push"></a>
+
+#### Push
 
 Type: `string` (optional)
 
 Dial "push" (press) interaction behavior description.
 
-#### Rotate {#triggerdescriptions-rotate}
+<a id="triggerdescriptions-rotate"></a>
+
+#### Rotate
 
 Type: `string` (optional)
 
 Dial rotation interaction behavior description.
 
-#### Touch {#triggerdescriptions-touch}
+<a id="triggerdescriptions-touch"></a>
+
+#### Touch
 
 Type: `string` (optional)
 

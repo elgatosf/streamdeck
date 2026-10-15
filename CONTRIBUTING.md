@@ -143,7 +143,7 @@ The references are generated from the build output, and code snippets in `docs/_
 - Write [GitHub Flavored Markdown](https://github.github.com/gfm/) that renders on GitHub and npm.
 - Start every page with a level one heading; frontmatter is limited to `sidebar_label`, `sidebar_position`, and `unlisted`.
 - Use [GitHub alerts](https://github.com/orgs/community/discussions/16925) (e.g., `> [!TIP]`) instead of admonitions.
-- Add custom anchors with a `{#id}` heading suffix (e.g., `### Installation {#eslint-installation}`).
+- Add custom anchors with an `<a id="..."></a>` tag on the line before the heading.
 - Write tabs with `<Tabs>` and `<TabItem value="Label">`, with a blank line between the tags and their content.
 - Link pages with relative `.md` links, and other sites with absolute URLs.
 - Reference snippets with an `<!-- snippet: node/path/to/file.ts -->` comment before the code block; highlight lines in the snippet with `// [!code highlight]`.

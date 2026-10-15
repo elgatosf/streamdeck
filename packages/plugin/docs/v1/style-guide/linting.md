@@ -36,7 +36,9 @@ export default config.recommended;
 
 [ESLint](https://eslint.org/) is a popular static code analysis tool for JavaScript and Typescript projects, allowing you to quickly identify and resolve problems. The ESLing configuration used within Elgato's project is available publicly, and can optionally be added to your projects.
 
-### Installation {#eslint-installation}
+<a id="eslint-installation"></a>
+
+### Installation
 
 Install `@elgato/eslint-config` as a `devDependency`.
 
@@ -56,7 +58,9 @@ There are two configurations available:
 - Recommended — `config.recommended`
 - Strict — `config.strict` (stricter type enforcing)
 
-### Usage {#eslint-usage}
+<a id="eslint-usage"></a>
+
+### Usage
 
 The [ESLint CLI](https://eslint.org/docs/latest/use/command-line-interface) provides an array of useful commands. These can optionally be added to your `package.json` `scripts` object to further streamline checking and formatting, for example.
 
@@ -81,15 +85,21 @@ eslint --max-warnings 0
 </TabItem>
 </Tabs>
 
-### Configuration {#eslint-configuration}
+<a id="eslint-configuration"></a>
 
-#### Extends {#eslint-configuration-extends}
+### Configuration
+
+<a id="eslint-configuration-extends"></a>
+
+#### Extends
 
 - JSDoc recommended
 - ESLint recommended
 - TypeScript ESLint recommended
 
-#### Rules {#eslint-rules}
+<a id="eslint-rules"></a>
+
+#### Rules
 
 | Rule                                       | Recommended  | Strict       | Notes                                                                 |
 | ------------------------------------------ | ------------ | ------------ | --------------------------------------------------------------------- |
@@ -136,7 +146,9 @@ By default, the following files are ignored:
 
 </details>
 
-### Overrides {#prettier-overrides}
+<a id="prettier-overrides"></a>
+
+### Overrides
 
 Configuration settings can be overridden using the `defineConfig` helper function from ESLint, extending `@elgato/eslint-config`, and then defining your preferred settings.
 
@@ -160,7 +172,9 @@ export default defineConfig([
 
 [Prettier](https://prettier.io) is a configurable "opinionated code formatter" that makes formatting code effortless. The Prettier configuration used within Elgato's projects is available publicly, and can optionally be added to your projects to improve readability and code consistency.
 
-### Installation {#prettier-installation}
+<a id="prettier-installation"></a>
+
+### Installation
 
 Install `@elgato/prettier-config` as a `devDependency`.
 
@@ -176,7 +190,9 @@ Configure Prettier within your `package.json` to use the configuration.
 
 Add the accompanying `.editorconfig` file to the root of your project. [Download the `.editorconfig` file](https://raw.githubusercontent.com/elgatosf/prettier-config/main/.editorconfig).
 
-### Usage {#prettier-usage}
+<a id="prettier-usage"></a>
+
+### Usage
 
 The [Prettier CLI](https://prettier.io/docs/en/cli) provides an array of useful commands. These can optionally be added to your `package.json` `scripts` object to further streamline checking and formatting, for example.
 
@@ -231,7 +247,9 @@ prettier . --write
 >
 > Prettier provides a [VS Code extension](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) to further streamline formatting your files. Once installed and configured, you can configure VS Code to format files when they're saved by setting `editor.formatOnSave` to `true` in your VS Code preferences.
 
-### Configuration {#prettier-configuration}
+<a id="prettier-configuration"></a>
+
+### Configuration
 
 | Option                                                                                                                                               | Value                                               |
 | ---------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------- |
@@ -249,7 +267,9 @@ prettier . --write
 | [`importOrderCaseInsensitive`](https://github.com/trivago/prettier-plugin-sort-imports?tab=readme-ov-file#importordercaseinsensitive) (sort-imports) | ✅                                                  |
 | [`importOrderParserPlugins`](https://github.com/trivago/prettier-plugin-sort-imports?tab=readme-ov-file#importorderparserplugins) (sort-imports)     | TypeScript                                          |
 
-### Overrides {#prettier-overrides}
+<a id="prettier-overrides"></a>
+
+### Overrides
 
 Overriding configuration can be achieved by removing the `prettier` entry from your `package.json`, and instead using a [.prettierrc.js](https://prettier.io/docs/en/configuration) file. For example, to prefer spaces over tabs:
 

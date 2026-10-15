@@ -122,19 +122,25 @@ Defines the structure of a custom layout file.
 
 **Properties**
 
-#### controller {#layout-controller}
+<a id="layout-controller"></a>
+
+#### controller
 
 Type: `"Encoder"`, `"Neo"` (optional)
 
 Controller the layout is intended for.
 
-#### id {#layout-id}
+<a id="layout-id"></a>
+
+#### id
 
 Type: `string` (required)
 
 Unique identifier associated with the layout.
 
-#### items {#layout-items}
+<a id="layout-items"></a>
+
+#### items
 
 Type: ([Bar](#bar), [GBar](#gbar), [Pixmap](#pixmap), [Text](#text))[] (required)
 
@@ -146,7 +152,9 @@ Bar layout item used to render a horizontal bar with a filler, e.g. a progress b
 
 **Properties**
 
-#### background {#bar-background}
+<a id="bar-background"></a>
+
+#### background
 
 Type: `string` (optional)
 
@@ -159,13 +167,17 @@ format `[{offset}:{color}[,]]`.
 - "#204cfe" (Elgato blue)
 - "0:#ff0000,0.5:yellow,1:#00ff00" (Gradient)
 
-#### enabled {#bar-enabled}
+<a id="bar-enabled"></a>
+
+#### enabled
 
 Type: `boolean` (optional)
 
 Determines whether the item is enabled (i.e. visible); default is `true`.
 
-#### key {#bar-key}
+<a id="bar-key"></a>
+
+#### key
 
 Type: `string` (required)
 
@@ -173,14 +185,18 @@ Unique name used to identify the layout item. When calling `setFeedback` this va
 
 Note: The `key` of the layout item cannot be changed at runtime.
 
-#### opacity {#bar-opacity}
+<a id="bar-opacity"></a>
+
+#### opacity
 
 Type: `0`, `0.1`, `0.2`, `0.3`, `0.4`, `0.5`, `0.6`, `0.7`, `0.8`, `0.9`, `1` (optional)
 
 Defines the opacity of the item being shown based on a single-decimal value ranging from `0..1`, e.g. `0.1`, `0.2`, etc. with `0` being invisible and `1` being fully visible.
 Default is `1`.
 
-#### rect {#bar-rect}
+<a id="bar-rect"></a>
+
+#### rect
 
 Type: [x: `number`, y: `number`, width: `number`, height: `number`] (required)
 
@@ -196,7 +212,9 @@ Stream Deck device layout sizes:
 
 Note: The `rect` of the layout item cannot be changed at runtime.
 
-#### type {#bar-type}
+<a id="bar-type"></a>
+
+#### type
 
 Type: `"bar"` (required)
 
@@ -204,13 +222,17 @@ Type of layout item this instance represents, e.g. "pixmap", "bar", etc.
 
 Note: The `type` of the layout item cannot be changed at runtime.
 
-#### zOrder {#bar-zorder}
+<a id="bar-zorder"></a>
+
+#### zOrder
 
 Type: `number` (optional)
 
 Z-order of the item, used to layer items within a layout; must be between 0-700. Items with the same `zOrder` must **not** have an overlapping `rect`. Default is `0`.
 
-#### bar_bg_c {#bar-bar_bg_c}
+<a id="bar-bar_bg_c"></a>
+
+#### bar_bg_c
 
 Type: `string` (optional)
 
@@ -223,7 +245,9 @@ by commas, in the following format `[{offset}:{color}[,]]`.
 - "#204cfe" (Elgato blue)
 - "0:#ff0000,0.5:yellow,1:#00ff00" (Gradient)
 
-#### bar_border_c {#bar-bar_border_c}
+<a id="bar-bar_border_c"></a>
+
+#### bar_border_c
 
 Type: `string` (optional)
 
@@ -234,7 +258,9 @@ Border color represented as a named color, or hexadecimal value. Default is `whi
 - "pink"
 - "#204cfe" (Elgato blue)
 
-#### bar_fill_c {#bar-bar_fill_c}
+<a id="bar-bar_fill_c"></a>
+
+#### bar_fill_c
 
 Type: `string` (optional)
 
@@ -247,19 +273,25 @@ by commas, in the following format `[{offset}:{color}[,]]`.
 - "#204cfe" (Elgato blue)
 - "0:#ff0000,0.5:yellow,1:#00ff00" (Gradient)
 
-#### border_w {#bar-border_w}
+<a id="bar-border_w"></a>
+
+#### border_w
 
 Type: `number` (optional)
 
 Width of the border around the bar, as a whole number. Default is `2`.
 
-#### range {#bar-range}
+<a id="bar-range"></a>
+
+#### range
 
 Type: [Range](#range) (optional)
 
 Defines the range of the value the bar represents, e.g. 0-20, 0-100, etc.
 
-#### subtype {#bar-subtype}
+<a id="bar-subtype"></a>
+
+#### subtype
 
 Type: `0`, `1`, `2`, `3`, `4` (optional)
 
@@ -273,7 +305,9 @@ Sub-type used to determine the type of bar to render. Default is `BarSubType.Gro
 - DoubleTrapezoid (3)
 - Groove (4)
 
-#### value {#bar-value}
+<a id="bar-value"></a>
+
+#### value
 
 Type: `number` (required)
 
@@ -285,7 +319,9 @@ Bar layout item used to render a horizontal bar with an indicator represented as
 
 **Properties**
 
-#### background {#gbar-background}
+<a id="gbar-background"></a>
+
+#### background
 
 Type: `string` (optional)
 
@@ -298,13 +334,17 @@ format `[{offset}:{color}[,]]`.
 - "#204cfe" (Elgato blue)
 - "0:#ff0000,0.5:yellow,1:#00ff00" (Gradient)
 
-#### enabled {#gbar-enabled}
+<a id="gbar-enabled"></a>
+
+#### enabled
 
 Type: `boolean` (optional)
 
 Determines whether the item is enabled (i.e. visible); default is `true`.
 
-#### key {#gbar-key}
+<a id="gbar-key"></a>
+
+#### key
 
 Type: `string` (required)
 
@@ -312,14 +352,18 @@ Unique name used to identify the layout item. When calling `setFeedback` this va
 
 Note: The `key` of the layout item cannot be changed at runtime.
 
-#### opacity {#gbar-opacity}
+<a id="gbar-opacity"></a>
+
+#### opacity
 
 Type: `0`, `0.1`, `0.2`, `0.3`, `0.4`, `0.5`, `0.6`, `0.7`, `0.8`, `0.9`, `1` (optional)
 
 Defines the opacity of the item being shown based on a single-decimal value ranging from `0..1`, e.g. `0.1`, `0.2`, etc. with `0` being invisible and `1` being fully visible.
 Default is `1`.
 
-#### rect {#gbar-rect}
+<a id="gbar-rect"></a>
+
+#### rect
 
 Type: [x: `number`, y: `number`, width: `number`, height: `number`] (required)
 
@@ -335,7 +379,9 @@ Stream Deck device layout sizes:
 
 Note: The `rect` of the layout item cannot be changed at runtime.
 
-#### type {#gbar-type}
+<a id="gbar-type"></a>
+
+#### type
 
 Type: `"gbar"` (required)
 
@@ -343,13 +389,17 @@ Type of layout item this instance represents, e.g. "pixmap", "bar", etc.
 
 Note: The `type` of the layout item cannot be changed at runtime.
 
-#### zOrder {#gbar-zorder}
+<a id="gbar-zorder"></a>
+
+#### zOrder
 
 Type: `number` (optional)
 
 Z-order of the item, used to layer items within a layout; must be between 0-700. Items with the same `zOrder` must **not** have an overlapping `rect`. Default is `0`.
 
-#### bar_bg_c {#gbar-bar_bg_c}
+<a id="gbar-bar_bg_c"></a>
+
+#### bar_bg_c
 
 Type: `string` (optional)
 
@@ -362,7 +412,9 @@ by commas, in the following format `[{offset}:{color}[,]]`.
 - "#204cfe" (Elgato blue)
 - "0:#ff0000,0.5:yellow,1:#00ff00" (Gradient)
 
-#### bar_border_c {#gbar-bar_border_c}
+<a id="gbar-bar_border_c"></a>
+
+#### bar_border_c
 
 Type: `string` (optional)
 
@@ -373,7 +425,9 @@ Border color represented as a named color, or hexadecimal value. Default is `whi
 - "pink"
 - "#204cfe" (Elgato blue)
 
-#### bar_fill_c {#gbar-bar_fill_c}
+<a id="gbar-bar_fill_c"></a>
+
+#### bar_fill_c
 
 Type: `string` (optional)
 
@@ -386,19 +440,25 @@ by commas, in the following format `[{offset}:{color}[,]]`.
 - "#204cfe" (Elgato blue)
 - "0:#ff0000,0.5:yellow,1:#00ff00" (Gradient)
 
-#### border_w {#gbar-border_w}
+<a id="gbar-border_w"></a>
+
+#### border_w
 
 Type: `number` (optional)
 
 Width of the border around the bar, as a whole number. Default is `2`.
 
-#### range {#gbar-range}
+<a id="gbar-range"></a>
+
+#### range
 
 Type: [Range](#range) (optional)
 
 Defines the range of the value the bar represents, e.g. 0-20, 0-100, etc.
 
-#### subtype {#gbar-subtype}
+<a id="gbar-subtype"></a>
+
+#### subtype
 
 Type: `0`, `1`, `2`, `3`, `4` (optional)
 
@@ -412,13 +472,17 @@ Sub-type used to determine the type of bar to render. Default is `BarSubType.Gro
 - DoubleTrapezoid (3)
 - Groove (4)
 
-#### value {#gbar-value}
+<a id="gbar-value"></a>
+
+#### value
 
 Type: `number` (required)
 
 Value used to determine how much of the bar is filled. Correlates with the item's `range` if specified in the layout's JSON definition; default range is `0..100`.
 
-#### bar_h {#gbar-bar_h}
+<a id="gbar-bar_h"></a>
+
+#### bar_h
 
 Type: `number` (optional)
 
@@ -430,7 +494,9 @@ Image layout item used to render an image sourced from either a local file locat
 
 **Properties**
 
-#### background {#pixmap-background}
+<a id="pixmap-background"></a>
+
+#### background
 
 Type: `string` (optional)
 
@@ -443,13 +509,17 @@ format `[{offset}:{color}[,]]`.
 - "#204cfe" (Elgato blue)
 - "0:#ff0000,0.5:yellow,1:#00ff00" (Gradient)
 
-#### enabled {#pixmap-enabled}
+<a id="pixmap-enabled"></a>
+
+#### enabled
 
 Type: `boolean` (optional)
 
 Determines whether the item is enabled (i.e. visible); default is `true`.
 
-#### key {#pixmap-key}
+<a id="pixmap-key"></a>
+
+#### key
 
 Type: `string` (required)
 
@@ -457,14 +527,18 @@ Unique name used to identify the layout item. When calling `setFeedback` this va
 
 Note: The `key` of the layout item cannot be changed at runtime.
 
-#### opacity {#pixmap-opacity}
+<a id="pixmap-opacity"></a>
+
+#### opacity
 
 Type: `0`, `0.1`, `0.2`, `0.3`, `0.4`, `0.5`, `0.6`, `0.7`, `0.8`, `0.9`, `1` (optional)
 
 Defines the opacity of the item being shown based on a single-decimal value ranging from `0..1`, e.g. `0.1`, `0.2`, etc. with `0` being invisible and `1` being fully visible.
 Default is `1`.
 
-#### rect {#pixmap-rect}
+<a id="pixmap-rect"></a>
+
+#### rect
 
 Type: [x: `number`, y: `number`, width: `number`, height: `number`] (required)
 
@@ -480,7 +554,9 @@ Stream Deck device layout sizes:
 
 Note: The `rect` of the layout item cannot be changed at runtime.
 
-#### type {#pixmap-type}
+<a id="pixmap-type"></a>
+
+#### type
 
 Type: `"pixmap"` (required)
 
@@ -488,13 +564,17 @@ Type of layout item this instance represents, e.g. "pixmap", "bar", etc.
 
 Note: The `type` of the layout item cannot be changed at runtime.
 
-#### zOrder {#pixmap-zorder}
+<a id="pixmap-zorder"></a>
+
+#### zOrder
 
 Type: `number` (optional)
 
 Z-order of the item, used to layer items within a layout; must be between 0-700. Items with the same `zOrder` must **not** have an overlapping `rect`. Default is `0`.
 
-#### value {#pixmap-value}
+<a id="pixmap-value"></a>
+
+#### value
 
 Type: `string` (optional)
 
@@ -512,13 +592,17 @@ Defines the range of the value the bar represents, e.g. 0-20, 0-100, etc.
 
 **Properties**
 
-#### min {#range-min}
+<a id="range-min"></a>
+
+#### min
 
 Type: `number` (required)
 
 Minimum value of the bar.
 
-#### max {#range-max}
+<a id="range-max"></a>
+
+#### max
 
 Type: `number` (required)
 
@@ -533,7 +617,9 @@ the appearance (e.g. font color) and value within Stream Deck.
 
 **Properties**
 
-#### background {#text-background}
+<a id="text-background"></a>
+
+#### background
 
 Type: `string` (optional)
 
@@ -546,13 +632,17 @@ format `[{offset}:{color}[,]]`.
 - "#204cfe" (Elgato blue)
 - "0:#ff0000,0.5:yellow,1:#00ff00" (Gradient)
 
-#### enabled {#text-enabled}
+<a id="text-enabled"></a>
+
+#### enabled
 
 Type: `boolean` (optional)
 
 Determines whether the item is enabled (i.e. visible); default is `true`.
 
-#### key {#text-key}
+<a id="text-key"></a>
+
+#### key
 
 Type: `string` (required)
 
@@ -560,14 +650,18 @@ Unique name used to identify the layout item. When calling `setFeedback` this va
 
 Note: The `key` of the layout item cannot be changed at runtime.
 
-#### opacity {#text-opacity}
+<a id="text-opacity"></a>
+
+#### opacity
 
 Type: `0`, `0.1`, `0.2`, `0.3`, `0.4`, `0.5`, `0.6`, `0.7`, `0.8`, `0.9`, `1` (optional)
 
 Defines the opacity of the item being shown based on a single-decimal value ranging from `0..1`, e.g. `0.1`, `0.2`, etc. with `0` being invisible and `1` being fully visible.
 Default is `1`.
 
-#### rect {#text-rect}
+<a id="text-rect"></a>
+
+#### rect
 
 Type: [x: `number`, y: `number`, width: `number`, height: `number`] (required)
 
@@ -583,7 +677,9 @@ Stream Deck device layout sizes:
 
 Note: The `rect` of the layout item cannot be changed at runtime.
 
-#### type {#text-type}
+<a id="text-type"></a>
+
+#### type
 
 Type: `"text"` (required)
 
@@ -591,20 +687,26 @@ Type of layout item this instance represents, e.g. "pixmap", "bar", etc.
 
 Note: The `type` of the layout item cannot be changed at runtime.
 
-#### zOrder {#text-zorder}
+<a id="text-zorder"></a>
+
+#### zOrder
 
 Type: `number` (optional)
 
 Z-order of the item, used to layer items within a layout; must be between 0-700. Items with the same `zOrder` must **not** have an overlapping `rect`. Default is `0`.
 
-#### alignment {#text-alignment}
+<a id="text-alignment"></a>
+
+#### alignment
 
 Type: `"center"`, `"left"`, `"right"` (optional)
 
 Alignment of the text. Default is `"center"`. **Note**, when the `key` of this layout item is set to `"title"` within the layout's JSON definition, these values will be ignored
 in favour of the user's preferred title settings, as set in property inspector.
 
-#### color {#text-color}
+<a id="text-color"></a>
+
+#### color
 
 Type: `string` (optional)
 
@@ -616,7 +718,9 @@ JSON definition, these values will be ignored in favour of the user's preferred 
 - "pink"
 - "#204cfe" (Elgato blue)
 
-#### font {#text-font}
+<a id="text-font"></a>
+
+#### font
 
 Type: `object` (optional)
 
@@ -625,7 +729,9 @@ favour of the user's preferred title settings, as set in property inspector.
 
 **Properties**
 
-##### size {#text-font-size}
+<a id="text-font-size"></a>
+
+##### size
 
 Type: `number` (optional)
 
@@ -633,14 +739,18 @@ Size of the font, in pixels, represented as a whole number.
 
 **Note**, when the `key` of this layout item is set to `"title"` within the layout's JSON definition, this value will be ignored in favour of the user's preferred title settings, as set in property inspector.
 
-##### weight {#text-font-weight}
+<a id="text-font-weight"></a>
+
+##### weight
 
 Type: `number` (optional)
 
 Weight of the font; value must be a whole `number` in the range of `100..1000`. **Note**, when the `key` of this layout item is set to `"title"` within the layout's JSON
 definition, this value will be ignored in favour of the user's preferred title settings, as set in property inspector.
 
-#### text-overflow {#text-text-overflow}
+<a id="text-text-overflow"></a>
+
+#### text-overflow
 
 Type: `"clip"`, `"ellipsis"`, `"fade"` (optional)
 
@@ -650,7 +760,9 @@ Defines how overflowing text should be rendered on the layout.
 - ellipsis, truncates the text prior to the boundary of the element, and adds an ellipsis (…) to the end.
 - fade, applies a fade-gradient over the end of the text.
 
-#### value {#text-value}
+<a id="text-value"></a>
+
+#### value
 
 Type: `string` (optional)
 

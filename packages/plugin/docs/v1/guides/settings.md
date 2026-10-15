@@ -57,7 +57,9 @@ The following table provides an overview of the common functions and events:
 
 ## Action Settings
 
-### Writing Settings {#writing-action-settings}
+<a id="writing-action-settings"></a>
+
+### Writing Settings
 
 Settings can be associated with an instance of an action to provide it context. This is useful when you want to allow a user to customize a specific action provided by your plugin, or the action has a state that it manages, for example a counter.
 
@@ -89,7 +91,9 @@ streamDeck.connect();
 >
 > Security-sensitive settings, such as API keys, should always be persisted using [global settings](#global-settings), never action settings. Action settings are stored as plain-text and are included when exporting Stream Deck profiles, and in their nature action settings are not secure.
 
-### Reading Settings {#reading-action-settings}
+<a id="reading-action-settings"></a>
+
+### Reading Settings
 
 An action's settings are provided as part of the event arguments, for example when `onWillAppear` or `onKeyDown` occurs. By default, the settings' type is `JsonObject` and whilst this is fine when setting them, it isn't particularly useful when reading them. To fix this, a type that represents the settings should be defined separately, and provided when declaring the class.
 
@@ -172,7 +176,9 @@ streamDeck.connect();
 > [!NOTE]
 > You can also request a **visible** action's settings using `ev.action.getSettings()`; as there is no guarantee the action will be visible, we recommend using the settings supplied as part of the event arguments where possible.
 
-### Settings Changed {#action-settings-changed}
+<a id="action-settings-changed"></a>
+
+### Settings Changed
 
 Upon the settings of an action being set in the property inspector, your application-layer will receive an event allowing you to react accordingly, for example your plugin could set the image of the action based on the user's selection of a drop down:
 
@@ -261,7 +267,9 @@ streamDeck.onConnected((_, action: ActionInfo<Settings>) => {
 
 ## Global Settings
 
-### Writing Settings {#writing-global-settings}
+<a id="writing-global-settings"></a>
+
+### Writing Settings
 
 Global settings are persisted at the plugin-level, and are accessible only to the plugin that persisted them.
 
@@ -290,7 +298,9 @@ streamDeck.connect();
 > - ✅ **Do:** use global settings for non-sensitive plugin-level settings.
 > - ❌ **Don't:** use global settings for your plugin's secrets, for example API keys.
 
-### Reading Settings {#reading-global-settings}
+<a id="reading-global-settings"></a>
+
+### Reading Settings
 
 Retrieving global settings is achieved using `getGlobalSettings` found in the `settings` namespace, for example:
 
@@ -333,7 +343,9 @@ streamDeck.connect();
 >
 > Defining the type of your settings provides insight into what their type might be, but does not guarantee their underlying type. [Learn more about type-safety to prevent runtime errors](#type-safety).
 
-### Settings Changed {#global-settings-changed}
+<a id="global-settings-changed"></a>
+
+### Settings Changed
 
 In addition to explicitly requesting the global settings, the application-layer and property inspector can subscribe to an event to be notified when the other updates the global settings. For example, the property inspector can listen to changes to global settings made by the application-layer in the following way:
 
