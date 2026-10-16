@@ -5,8 +5,8 @@
         "module": "preserve",
 
         /* Emit */
-        "noEmit": true,
         "declaration": false,
-        "sourceMap": false
+        "noEmit": true,
+        "sourceMap": true
     }
 }
