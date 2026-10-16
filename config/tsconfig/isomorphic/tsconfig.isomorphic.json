@@ -3,6 +3,9 @@
     "compilerOptions": {
         /* Language and environment */
         "target": "es2022",
-        "lib": ["es2022", "esnext.disposable"]
+        "lib": ["es2022", "esnext.disposable"],
+
+        /* Modules */
+        "types": ["node"]
     }
 }

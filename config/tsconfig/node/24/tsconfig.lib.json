@@ -2,6 +2,7 @@
     "extends": "./tsconfig.node24.json",
     "compilerOptions": {
         /* Emit */
-        "declaration": true
+        "declaration": true,
+        "sourceMap": true
     }
 }
