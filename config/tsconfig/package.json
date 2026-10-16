@@ -25,8 +25,6 @@
         "./lib": "./isomorphic/tsconfig.lib.json",
         "./dom/app": "./dom/tsconfig.app.json",
         "./dom/lib": "./dom/tsconfig.lib.json",
-        "./node20/lib": "./node/20/tsconfig.lib.json",
-        "./node20/streamdeck/plugin": "./node/20/tsconfig.plugin.json",
         "./node24/lib": "./node/24/tsconfig.lib.json",
         "./node24/streamdeck/plugin": "./node/24/tsconfig.plugin.json",
         "./node26/lib": "./node/26/tsconfig.lib.json",

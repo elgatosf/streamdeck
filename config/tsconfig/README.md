@@ -65,8 +65,6 @@ All configurations extend the following base:
     - [App](#dom-app)
     - [Library](#dom-lib)
 - [Node.js](#node)
-    - [v20](#node20)
-        - [Library](#node20-lib)
     - [v24](#node24)
         - [Library](#node24-lib)
     - [v26](#node26)
@@ -97,20 +95,6 @@ All configurations extend the following base:
 <h2 id="node">Node.js</h2>
 
 Node.js configurations require `@types/node`.
-
-<h3 id="node20">v20.x</h3>
-
-```bash
-pnpm add -D @types/node@^20
-```
-
-<h4 id="node20-lib">Library</h4>
-
-```jsonc
-"extends": "@elgato/tsconfig/node20/lib"
-```
-
-[`tsconfig.json`](./node/20/tsconfig.lib.json)
 
 <h3 id="node24">v24.x</h3>
 
