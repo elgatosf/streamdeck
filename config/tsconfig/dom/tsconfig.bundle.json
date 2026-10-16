@@ -1,0 +1,12 @@
+{
+    "extends": "./tsconfig.dom.json",
+    "compilerOptions": {
+        /* Modules */
+        "module": "preserve",
+
+        /* Emit */
+        "declaration": true,
+        "noEmit": true,
+        "sourceMap": true
+    }
+}

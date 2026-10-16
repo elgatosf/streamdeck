@@ -1,7 +1,0 @@
-{
-    "extends": "./tsconfig.dom.json",
-    "compilerOptions": {
-        /* Emit */
-        "declaration": false
-    }
-}
