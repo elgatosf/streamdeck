@@ -1,5 +1,5 @@
 {
-    "extends": "../../tsconfig.json",
+    "extends": "../tsconfig.lib.json",
     "compilerOptions": {
         /* Language and environment */
         "lib": ["es2025", "ESNext.Collection", "ESNext.Temporal"],

@@ -1,5 +1,5 @@
 {
-    "extends": "../tsconfig.json",
+    "extends": "../tsconfig.app.json",
     "compilerOptions": {
         /* Language and environment */
         "target": "es2022",

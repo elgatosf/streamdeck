@@ -14,11 +14,11 @@
 
 1. Install `@elgato/tsconfig`.
 
-```
+```sh
 pnpm add -D @elgato/tsconfig
 ```
 
-2. Extend your `tsconfig.json` from one of the [available configurations](#available-configurations).
+2. Extend your `tsconfig.json` from one of the [supported configurations](#supported-configurations).
 
 ```jsonc
 {
@@ -29,315 +29,157 @@ pnpm add -D @elgato/tsconfig
 }
 ```
 
-## Configurations
+## Supported Configurations
 
-All configurations extend the following base:
+Available TypeScript configurations are determined by two factors:
+
+- Environment — where the code will run, e.g. a browser or Node.js.
+- Build output — what the output of the code is.
+
+These factors are available in the following combinations:
+
+|              | `app` | `lib` | `lib/monorepo` |
+| ------------ | ----- | ----- | -------------- |
+| `dom`        | ✅    | ✅    | ✅             |
+| `isomorphic` | ❌    | ✅    | ✅             |
+| `node24`     | ✅    | ✅    | ✅             |
+| `node26`     | ✅    | ✅    | ✅             |
+
+<h3 id="dom">DOM</h3>
+
+Your code runs in a DOM-based environment, such as a browser or QtWebEngine.
 
 ```jsonc
 {
+    "extends": "@elgato/tsconfig/dom/app", // For a bundled app
+    "extends": "@elgato/tsconfig/dom/lib", // For a library
+    "extends": "@elgato/tsconfig/dom/lib/monorepo", // For a library in a monorepo
+}
+```
+
+<h3 id="isomorphic">Isomorphic</h3>
+
+Your code runs in a DOM and Node.js environment:
+
+```jsonc
+{
+    "extends": "@elgato/tsconfig/isomorphic/lib", // For a library
+    "extends": "@elgato/tsconfig/isomorphic/lib/monorepo", // For a library in a monorepo
+}
+```
+
+<h3 id="node24">Node.js 24</h3>
+
+Your code runs in a Node.js 24 or higher environment:
+
+```jsonc
+{
+    "extends": "@elgato/tsconfig/node24/app", // For a bundled app
+    "extends": "@elgato/tsconfig/node24/lib", // For a library
+    "extends": "@elgato/tsconfig/node24/lib/monorepo", // For a library in a monorepo
+}
+```
+
+<h3 id="node26">Node.js 26</h3>
+
+Your code runs in a Node.js 26 or higher environment:
+
+```jsonc
+{
+    "extends": "@elgato/tsconfig/node26/app", // For a bundled app
+    "extends": "@elgato/tsconfig/node26/lib", // For a library
+    "extends": "@elgato/tsconfig/node26/lib/monorepo", // For a library in a monorepo
+}
+```
+
+## Configuration Differences
+
+Each configuration provides access to different libraries based on the environment, and different outputs based on the build output. The following is a summary of those differences.
+
+### Environments
+
+- `dom` — code with access to a DOM, such as browsers.
+- `node24`, `node26` — code with access to Node.js.
+- `isomorphic` — code intended for DOM and Node.js environments.
+
+|              | `lib`                            | `target` | `types` |
+| ------------ | -------------------------------- | -------- | ------- |
+| `dom`        | `es2022`, `dom`, `dom.iterable`  | `es2022` | -       |
+| `isomorphic` | `es2022`                         | `es2022` | `node`  |
+| `node24`     | See [`@tsconfig/node24`][node24] | `es2024` | `node`  |
+| `node26`     | See [`@tsconfig/node26`][node26] | `es2025` | `node`  |
+
+### Build Output
+
+- `app` — a self-contained output built using a bundler, such as [`rolldown`](https://rolldown.rs/).
+- `lib` — an unbundled output built using TypeScript, intended to be referenced by another package.
+- `lib/monorepo` — an extension of `lib`, when the code is in a monorepo project.
+
+|                  |   `app`    |   `lib`    | `lib/monorepo` |
+| ---------------- | :--------: | :--------: | :------------: |
+| `module`         | `preserve` | `nodenext` |   `nodenext`   |
+| `composite`      |     ❌     |     ❌     |       ✅       |
+| `declaration`    |     ❌     |     ✅     |       ✅       |
+| `declarationMap` |     ❌     |     ❌     |       ✅       |
+| `outDir`         |     -      |   `dist`   |     `dist`     |
+| `noEmit`         |     ✅     |     ❌     |       ❌       |
+| `rootDir`        |   `src`    |   `src`    |     `src`      |
+| `sourceMap`      |     ❌     |     ✅     |       ✅       |
+| `include`        | `["src"]`  | `["src"]`  |   `["src"]`    |
+
+[node24]: https://www.npmjs.com/package/@tsconfig/node24
+[node26]: https://www.npmjs.com/package/@tsconfig/node26
+
+## Assumptions
+
+### `outDir`
+
+When building with TypeScript, the output directory is `dist`.
+
+```jsonc
+{
+    "extends": "@elgato/tsconfig/dom/lib",
     "compilerOptions": {
-        /* Type checking */
-        "strict": true,
-        "noImplicitOverride": true,
-
-        /* Modules */
-        "module": "nodenext",
-        "resolveJsonModule": true,
-
-        /* JavaScript support */
-        "allowJs": true,
-
-        /* Interop constraints */
-        "esModuleInterop": true,
-        "isolatedModules": true,
-        "verbatimModuleSyntax": true,
-
-        /* Completeness */
-        "skipLibCheck": true,
+        "outDir": "dist", // Change to override
     },
 }
 ```
 
-[`tsconfig.json`](./tsconfig.json)
+Applies to:
 
-### Available Configurations
+- `@elgato/tsconfig/dom/lib{/monorepo}`
+- `@elgato/tsconfig/isomorphic/lib{/monorepo}`
+- `@elgato/tsconfig/node24/lib{/monorepo}`
+- `@elgato/tsconfig/node26/lib{/monorepo}`
 
-- [DOM](#dom)
-    - [Bundle](#dom-bundle)
-    - [Library](#dom-lib)
-- [Isomorphic](#isomorphic)
-    - [Library](#isomorphic-lib)
-- [Node.js ≥24](#node24)
-    - [Library](#node24-lib)
-    - [Stream Deck Plugin](#node24-plugin)
-- [Node.js ≥26](#node26)
-    - [Library](#node26-lib)
-    - [Stream Deck Plugin](#node26-plugin)
+### `rootDir`
 
-<h2 id="dom">DOM</h2>
-
-All DOM configurations include:
+The root directory is `src`.
 
 ```jsonc
 {
-    "extends": "<base>",
+    "extends": "@elgato/tsconfig/dom/lib",
     "compilerOptions": {
-        /* Language and environment */
-        "target": "es2022",
-        "lib": ["es2022", "dom", "dom.iterable"],
+        "rootDir": "src", // Change to override
     },
 }
 ```
 
-[`tsconfig.json`](./dom/tsconfig.dom.json)
+Applies to:
 
-<h3 id="dom-bundle">Bundle</h3>
+- All configurations
 
-Usage:
+### `include`
 
-```jsonc
-"extends": "@elgato/tsconfig/dom/bundle"
-```
-
-Configuration:
+The included files are `["src"]`.
 
 ```jsonc
 {
-    "extends": "<DOM base>",
-    "compilerOptions": {
-        /* Modules */
-        "module": "preserve",
-
-        /* Emit */
-        "declaration": true,
-        "noEmit": true,
-        "sourceMap": true,
-    },
+    "extends": "@elgato/tsconfig/dom/lib/monorepo",
+    "include": ["src"], // Change to override
 }
 ```
 
-[`tsconfig.json`](./dom/tsconfig.bundle.json)
+Applies to:
 
-<h3 id="dom-lib">Library</h3>
-
-Usage:
-
-```jsonc
-"extends": "@elgato/tsconfig/dom/lib"
-```
-
-Configuration:
-
-```jsonc
-{
-    "extends": "<DOM base>",
-    "compilerOptions": {
-        /* Emit */
-        "declaration": true,
-        "sourceMap": true,
-    },
-}
-```
-
-[`tsconfig.json`](./dom/tsconfig.lib.json)
-
-<h2 id="isomorphic">Isomorphic</h2>
-
-Isomorphic configurations are compatible with both DOM and Node.js environments, and require `@types/node`.
-
-```bash
-pnpm add -D @types/node@^24
-```
-
-All isomorphic configurations include:
-
-```jsonc
-{
-    "extends": "<base>",
-    "compilerOptions": {
-        /* Language and environment */
-        "target": "es2022",
-        "lib": ["es2022", "esnext.disposable"],
-
-        /* Modules */
-        "types": ["node"],
-    },
-}
-```
-
-[`tsconfig.json`](./isomorphic/tsconfig.isomorphic.json)
-
-<h3 id="isomorphic-lib">Library</h3>
-
-Usage:
-
-```jsonc
-"extends": "@elgato/tsconfig/isomorphic/lib"
-```
-
-Configuration:
-
-```jsonc
-{
-    "extends": "<isomorphic base>",
-    "compilerOptions": {
-        /* Emit */
-        "declaration": true,
-        "sourceMap": true,
-    },
-}
-```
-
-[`tsconfig.json`](./isomorphic/tsconfig.lib.json)
-
-<h2 id="node24">Node.js ≥24</h2>
-
-Requires `@types/node`.
-
-```bash
-pnpm add -D @types/node@^24
-```
-
-All Node.js ≥24 configurations include:
-
-```jsonc
-{
-    "extends": "<base>",
-    "compilerOptions": {
-        /* Language and environment */
-        "lib": ["es2024", "ESNext.Array", "ESNext.Collection", "ESNext.Error", "ESNext.Iterator", "ESNext.Promise"],
-        "target": "es2024",
-
-        /* Modules */
-        "types": ["node"],
-    },
-}
-```
-
-[`tsconfig.json`](./node/24/tsconfig.node24.json)
-
-<h3 id="node24-lib">Library</h3>
-
-Usage:
-
-```jsonc
-"extends": "@elgato/tsconfig/node24/lib"
-```
-
-Configuration:
-
-```jsonc
-{
-    "extends": "<Node.js ≥24 base>",
-    "compilerOptions": {
-        /* Emit */
-        "declaration": true,
-        "sourceMap": true,
-    },
-}
-```
-
-[`tsconfig.json`](./node/24/tsconfig.lib.json)
-
-<h3 id="node24-plugin">Stream Deck Plugin</h3>
-
-Usage:
-
-```jsonc
-"extends": "@elgato/tsconfig/node24/streamdeck/plugin"
-```
-
-Configuration:
-
-```jsonc
-{
-    "extends": "<Node.js ≥24 base>",
-    "compilerOptions": {
-        /* Modules */
-        "module": "preserve",
-
-        /* Emit */
-        "declaration": false,
-        "noEmit": true,
-        "sourceMap": true,
-    },
-}
-```
-
-[`tsconfig.json`](./node/24/tsconfig.plugin.json)
-
-<h2 id="node26">Node.js ≥26</h2>
-
-Requires `@types/node`.
-
-```bash
-pnpm add -D @types/node@^26
-```
-
-All Node.js ≥26 configurations include:
-
-```jsonc
-{
-    "extends": "<base>",
-    "compilerOptions": {
-        /* Language and environment */
-        "lib": ["es2025", "ESNext.Collection", "ESNext.Temporal"],
-        "target": "es2025",
-
-        /* Modules */
-        "types": ["node"],
-    },
-}
-```
-
-[`tsconfig.json`](./node/26/tsconfig.node26.json)
-
-<h3 id="node26-lib">Library</h3>
-
-Usage:
-
-```jsonc
-"extends": "@elgato/tsconfig/node26/lib"
-```
-
-Configuration:
-
-```jsonc
-{
-    "extends": "<Node.js ≥26 base>",
-    "compilerOptions": {
-        /* Emit */
-        "declaration": true,
-        "sourceMap": true,
-    },
-}
-```
-
-[`tsconfig.json`](./node/26/tsconfig.lib.json)
-
-<h3 id="node26-plugin">Stream Deck Plugin</h3>
-
-Usage:
-
-```jsonc
-"extends": "@elgato/tsconfig/node26/streamdeck/plugin"
-```
-
-Configuration:
-
-```jsonc
-{
-    "extends": "<Node.js ≥26 base>",
-    "compilerOptions": {
-        /* Modules */
-        "module": "preserve",
-
-        /* Emit */
-        "declaration": false,
-        "noEmit": true,
-        "sourceMap": true,
-    },
-}
-```
-
-[`tsconfig.json`](./node/26/tsconfig.plugin.json)
+- All configurations

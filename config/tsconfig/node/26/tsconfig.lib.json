@@ -1,8 +1,0 @@
-{
-    "extends": "./tsconfig.node26.json",
-    "compilerOptions": {
-        /* Emit */
-        "declaration": true,
-        "sourceMap": true
-    }
-}

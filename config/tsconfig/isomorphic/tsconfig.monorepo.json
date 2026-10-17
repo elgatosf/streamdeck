@@ -1,9 +1,9 @@
 {
-    "extends": "../tsconfig.json",
+    "extends": "../tsconfig.monorepo.json",
     "compilerOptions": {
         /* Language and environment */
         "target": "es2022",
-        "lib": ["es2022", "esnext.disposable"],
+        "lib": ["es2022"],
 
         /* Modules */
         "types": ["node"]

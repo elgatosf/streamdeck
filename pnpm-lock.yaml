@@ -27,7 +27,11 @@ importers:
         specifier: '>=0.70 <0.73'
         version: 0.70.0
 
-  config/tsconfig: {}
+  config/tsconfig:
+    dependencies:
+      typescript:
+        specifier: '>=5.5.0'
+        version: 5.9.3
 
   packages/cli:
     dependencies:

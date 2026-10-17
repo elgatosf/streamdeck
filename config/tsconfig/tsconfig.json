@@ -6,7 +6,7 @@
         "noImplicitOverride": true,
 
         /* Modules */
-        "module": "nodenext",
+        "rootDir": "${configDir}/src",
         "resolveJsonModule": true,
 
         /* JavaScript support */
@@ -19,5 +19,6 @@
 
         /* Completeness */
         "skipLibCheck": true
-    }
+    },
+    "include": ["${configDir}/src"]
 }

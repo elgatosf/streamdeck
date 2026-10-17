@@ -1,0 +1,11 @@
+{
+    "extends": "../tsconfig.app.json",
+    "compilerOptions": {
+        /* Language and environment */
+        "lib": ["es2025", "ESNext.Collection", "ESNext.Temporal"],
+        "target": "es2025",
+
+        /* Modules */
+        "types": ["node"]
+    }
+}

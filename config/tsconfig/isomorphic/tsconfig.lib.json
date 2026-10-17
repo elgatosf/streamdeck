@@ -1,8 +1,11 @@
 {
-    "extends": "./tsconfig.isomorphic.json",
+    "extends": "../tsconfig.lib.json",
     "compilerOptions": {
-        /* Emit */
-        "declaration": true,
-        "sourceMap": true
+        /* Language and environment */
+        "target": "es2022",
+        "lib": ["es2022"],
+
+        /* Modules */
+        "types": ["node"]
     }
 }

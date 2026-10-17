@@ -1,7 +1,7 @@
 {
     "name": "@elgato/tsconfig",
     "version": "0.0.0",
-    "description": "TypeScript configuration used by Elgato projects.",
+    "description": "TypeScript configurations used by Elgato projects.",
     "keywords": [
         "elgato",
         "tsconfig"
@@ -20,15 +20,22 @@
         "url": "git+https://github.com/elgatosf/streamdeck.git"
     },
     "exports": {
-        "./dom/bundle": "./dom/tsconfig.bundle.json",
+        "./dom/app": "./dom/tsconfig.app.json",
         "./dom/lib": "./dom/tsconfig.lib.json",
+        "./dom/lib/monorepo": "./dom/tsconfig.monorepo.json",
         "./isomorphic/lib": "./isomorphic/tsconfig.lib.json",
-        "./node24/lib": "./node/24/tsconfig.lib.json",
-        "./node24/streamdeck/plugin": "./node/24/tsconfig.plugin.json",
-        "./node26/lib": "./node/26/tsconfig.lib.json",
-        "./node26/streamdeck/plugin": "./node/26/tsconfig.plugin.json"
+        "./isomorphic/lib/monorepo": "./isomorphic/tsconfig.monorepo.json",
+        "./node24/app": "./node24/tsconfig.app.json",
+        "./node24/lib": "./node24/tsconfig.lib.json",
+        "./node24/lib/monorepo": "./node24/tsconfig.monorepo.json",
+        "./node26/app": "./node26/tsconfig.app.json",
+        "./node26/lib": "./node26/tsconfig.lib.json",
+        "./node26/lib/monorepo": "./node26/tsconfig.monorepo.json"
     },
     "scripts": {
         "prepack": "cp ../../LICENSE ."
+    },
+    "peerDependencies": {
+        "typescript": ">=5.5.0"
     }
 }
