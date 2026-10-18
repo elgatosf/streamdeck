@@ -54,7 +54,8 @@ export class EventEmitter<TMap extends EventMap<TMap>> {
 
 		for (let i = 0; i < listeners.length;) {
 			const { listener, once } = listeners[i] ?? {};
-			if (listener === undefined) {
+			if (!listener) {
+				i++;
 				continue;
 			}
 
