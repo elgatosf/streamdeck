@@ -17,9 +17,13 @@ export function set(target: object, path: string, value: unknown): void {
 	}
 
 	// Ensure there is a path to the value.
+	const last = props.pop();
+	if (last === undefined) {
+		return;
+	}
+
 	let curr = target as Record<string, unknown>;
-	for (let i = 0; i < props.length - 1; i++) {
-		const prop = props[i];
+	for (const prop of props) {
 		let value = Object.hasOwn(curr, prop) ? curr[prop] : undefined;
 
 		if (value === null || (typeof value !== "object" && typeof value !== "function")) {
@@ -30,7 +34,7 @@ export function set(target: object, path: string, value: unknown): void {
 	}
 
 	// Set the value.
-	defineProperty(curr, props[props.length - 1], value);
+	defineProperty(curr, last, value);
 }
 
 /**

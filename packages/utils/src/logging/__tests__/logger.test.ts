@@ -22,8 +22,8 @@ describe("Logger", () => {
 		// Assert
 		expect(logger.level).toBe("info");
 		expect(options.level).toBe("error");
-		expect(options.targets[0].write).toHaveBeenCalledTimes(1);
-		expect(options.targets[0].write).toHaveBeenCalledWith<[LogEntry]>({
+		expect(options.targets[0]!.write).toHaveBeenCalledTimes(1);
+		expect(options.targets[0]!.write).toHaveBeenCalledWith<[LogEntry]>({
 			data: ["Hello world"],
 			level: "info",
 			scope: "",
@@ -52,12 +52,12 @@ describe("Logger", () => {
 			scope: "",
 		};
 
-		expect(options.targets[0].write).toBeCalledTimes(1);
-		expect(options.targets[0].write).toHaveBeenCalledWith(entry);
-		expect(options.targets[1].write).toBeCalledTimes(1);
-		expect(options.targets[1].write).toHaveBeenCalledWith(entry);
-		expect(options.targets[2].write).toBeCalledTimes(1);
-		expect(options.targets[2].write).toHaveBeenCalledWith(entry);
+		expect(options.targets[0]!.write).toBeCalledTimes(1);
+		expect(options.targets[0]!.write).toHaveBeenCalledWith(entry);
+		expect(options.targets[1]!.write).toBeCalledTimes(1);
+		expect(options.targets[1]!.write).toHaveBeenCalledWith(entry);
+		expect(options.targets[2]!.write).toBeCalledTimes(1);
+		expect(options.targets[2]!.write).toHaveBeenCalledWith(entry);
 	});
 
 	/**

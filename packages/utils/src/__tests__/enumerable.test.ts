@@ -616,7 +616,7 @@ describe("Enumerable", () => {
 	describe("includes", () => {
 		it("matches reference", () => {
 			// Arrange, act, assert
-			expect(enumerable.includes(source[1])).toBeTruthy();
+			expect(enumerable.includes(source[1]!)).toBeTruthy();
 			expect(enumerable.includes({ name: "Stream Deck" })).toBeFalsy();
 			expect(enumerable.includes(undefined!)).toBeFalsy();
 		});
