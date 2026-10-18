@@ -42,6 +42,7 @@ These factors are available in the following combinations:
 | ------------ | ----- | ----- | -------------- |
 | `dom`        | ✅    | ✅    | ✅             |
 | `isomorphic` | ❌    | ✅    | ✅             |
+| `node20`     | ✅    | ✅    | ✅             |
 | `node24`     | ✅    | ✅    | ✅             |
 | `node26`     | ✅    | ✅    | ✅             |
 
@@ -68,9 +69,29 @@ Your code runs in a DOM and Node.js environment:
 }
 ```
 
+<h3 id="node20">Node.js 20</h3>
+
+Your code runs in a Node.js 20 or higher environment:
+
+```sh
+pnpm add -D @types/node@^20
+```
+
+```jsonc
+{
+    "extends": "@elgato/tsconfig/node20/app", // For a bundled app
+    "extends": "@elgato/tsconfig/node20/lib", // For a library
+    "extends": "@elgato/tsconfig/node20/lib/monorepo", // For a library in a monorepo
+}
+```
+
 <h3 id="node24">Node.js 24</h3>
 
 Your code runs in a Node.js 24 or higher environment:
+
+```sh
+pnpm add -D @types/node@^24
+```
 
 ```jsonc
 {
@@ -83,6 +104,10 @@ Your code runs in a Node.js 24 or higher environment:
 <h3 id="node26">Node.js 26</h3>
 
 Your code runs in a Node.js 26 or higher environment:
+
+```sh
+pnpm add -D @types/node@^26
+```
 
 ```jsonc
 {
@@ -106,8 +131,13 @@ Each configuration provides access to different libraries based on the environme
 | ------------ | -------------------------------- | -------- | ------- |
 | `dom`        | `es2022`, `dom`, `dom.iterable`  | `es2022` | -       |
 | `isomorphic` | `es2022`                         | `es2022` | `node`  |
+| `node20`     | See [`@tsconfig/node20`][node20] | `es2022` | `node`  |
 | `node24`     | See [`@tsconfig/node24`][node24] | `es2024` | `node`  |
 | `node26`     | See [`@tsconfig/node26`][node26] | `es2025` | `node`  |
+
+[node20]: https://www.npmjs.com/package/@tsconfig/node20
+[node24]: https://www.npmjs.com/package/@tsconfig/node24
+[node26]: https://www.npmjs.com/package/@tsconfig/node26
 
 ### Build Output
 
@@ -115,20 +145,18 @@ Each configuration provides access to different libraries based on the environme
 - `lib` — an unbundled output built using TypeScript, intended to be referenced by another package.
 - `lib/monorepo` — an extension of `lib`, when the code is in a monorepo project.
 
-|                  |   `app`    |   `lib`    | `lib/monorepo` |
-| ---------------- | :--------: | :--------: | :------------: |
-| `module`         | `preserve` | `nodenext` |   `nodenext`   |
-| `composite`      |     ❌     |     ❌     |       ✅       |
-| `declaration`    |     ❌     |     ✅     |       ✅       |
-| `declarationMap` |     ❌     |     ❌     |       ✅       |
-| `outDir`         |     -      |   `dist`   |     `dist`     |
-| `noEmit`         |     ✅     |     ❌     |       ❌       |
-| `rootDir`        |   `src`    |   `src`    |     `src`      |
-| `sourceMap`      |     ❌     |     ✅     |       ✅       |
-| `include`        | `["src"]`  | `["src"]`  |   `["src"]`    |
-
-[node24]: https://www.npmjs.com/package/@tsconfig/node24
-[node26]: https://www.npmjs.com/package/@tsconfig/node26
+|                   |   `app`    |   `lib`    |       `lib/monorepo`        |
+| ----------------- | :--------: | :--------: | :-------------------------: |
+| `module`          | `preserve` | `nodenext` |         `nodenext`          |
+| `composite`       |     ❌     |     ❌     |             ✅              |
+| `tsBuildInfoFile` |     -      |     -      | `dist/tsconfig.tsbuildinfo` |
+| `declaration`     |     ❌     |     ✅     |             ✅              |
+| `declarationMap`  |     ❌     |     ❌     |             ✅              |
+| `outDir`          |     -      |   `dist`   |           `dist`            |
+| `noEmit`          |     ✅     |     ❌     |             ❌              |
+| `rootDir`         |   `src`    |   `src`    |            `src`            |
+| `sourceMap`       |     ❌     |     ✅     |             ✅              |
+| `include`         | `["src"]`  | `["src"]`  |          `["src"]`          |
 
 ## Assumptions
 
@@ -168,6 +196,24 @@ The root directory is `src`.
 Applies to:
 
 - All configurations
+
+### `tsBuildInfoFile`
+
+When developing in a monorepo, the `.tsbuildinfo` file is saved to `dist/tsconfig.tsbuildinfo`.
+
+```jsonc
+{
+    "extends": "@elgato/tsconfig/node24/lib/monorepo",
+    "compilerOptions": {
+        "tsBuildInfoFile": "dist/tsconfig.tsbuildinfo", // Change to override
+    },
+}
+```
+
+- `@elgato/tsconfig/dom/lib/monorepo`
+- `@elgato/tsconfig/isomorphic/lib/monorepo`
+- `@elgato/tsconfig/node24/lib/monorepo`
+- `@elgato/tsconfig/node26/lib/monorepo`
 
 ### `include`
 

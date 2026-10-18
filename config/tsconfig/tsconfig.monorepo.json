@@ -5,6 +5,7 @@
         "declarationMap": true,
 
         /* Projects */
-        "composite": true
+        "composite": true,
+        "tsBuildInfoFile": "${configDir}/dist/tsconfig.tsbuildinfo"
     }
 }
