@@ -38,7 +38,7 @@ Available TypeScript configurations are determined by two factors:
 
 These factors are available in the following combinations:
 
-|              | `app` | `lib` | `lib/monorepo` |
+|              | `app` | `lib` | `monorepo/lib` |
 | ------------ | ----- | ----- | -------------- |
 | `dom`        | ✅    | ✅    | ✅             |
 | `isomorphic` | ❌    | ✅    | ✅             |
@@ -54,7 +54,7 @@ Your code runs in a DOM-based environment, such as a browser or QtWebEngine.
 {
     "extends": "@elgato/tsconfig/dom/app", // For a bundled app
     "extends": "@elgato/tsconfig/dom/lib", // For a library
-    "extends": "@elgato/tsconfig/dom/lib/monorepo", // For a library in a monorepo
+    "extends": "@elgato/tsconfig/dom/monorepo/lib", // For a library in a monorepo
 }
 ```
 
@@ -65,7 +65,7 @@ Your code runs in a DOM and Node.js environment:
 ```jsonc
 {
     "extends": "@elgato/tsconfig/isomorphic/lib", // For a library
-    "extends": "@elgato/tsconfig/isomorphic/lib/monorepo", // For a library in a monorepo
+    "extends": "@elgato/tsconfig/isomorphic/monorepo/lib", // For a library in a monorepo
 }
 ```
 
@@ -81,7 +81,7 @@ pnpm add -D @types/node@^20
 {
     "extends": "@elgato/tsconfig/node20/app", // For a bundled app
     "extends": "@elgato/tsconfig/node20/lib", // For a library
-    "extends": "@elgato/tsconfig/node20/lib/monorepo", // For a library in a monorepo
+    "extends": "@elgato/tsconfig/node20/monorepo/lib", // For a library in a monorepo
 }
 ```
 
@@ -97,7 +97,7 @@ pnpm add -D @types/node@^24
 {
     "extends": "@elgato/tsconfig/node24/app", // For a bundled app
     "extends": "@elgato/tsconfig/node24/lib", // For a library
-    "extends": "@elgato/tsconfig/node24/lib/monorepo", // For a library in a monorepo
+    "extends": "@elgato/tsconfig/node24/monorepo/lib", // For a library in a monorepo
 }
 ```
 
@@ -113,7 +113,7 @@ pnpm add -D @types/node@^26
 {
     "extends": "@elgato/tsconfig/node26/app", // For a bundled app
     "extends": "@elgato/tsconfig/node26/lib", // For a library
-    "extends": "@elgato/tsconfig/node26/lib/monorepo", // For a library in a monorepo
+    "extends": "@elgato/tsconfig/node26/monorepo/lib", // For a library in a monorepo
 }
 ```
 
@@ -143,9 +143,9 @@ Each configuration provides access to different libraries based on the environme
 
 - `app` — a self-contained output built using a bundler, such as [`rolldown`](https://rolldown.rs/).
 - `lib` — an unbundled output built using TypeScript, intended to be referenced by another package.
-- `lib/monorepo` — an extension of `lib`, when the code is in a monorepo project.
+- `monorepo/lib` — an extension of `lib`, when the code is in a monorepo project.
 
-|                   |   `app`    |   `lib`    |       `lib/monorepo`        |
+|                   |   `app`    |   `lib`    |       `monorepo/lib`        |
 | ----------------- | :--------: | :--------: | :-------------------------: |
 | `module`          | `preserve` | `nodenext` |         `nodenext`          |
 | `composite`       |     ❌     |     ❌     |             ✅              |
@@ -175,10 +175,14 @@ When building with TypeScript, the output directory is `dist`.
 
 Applies to:
 
-- `@elgato/tsconfig/dom/lib{/monorepo}`
-- `@elgato/tsconfig/isomorphic/lib{/monorepo}`
-- `@elgato/tsconfig/node24/lib{/monorepo}`
-- `@elgato/tsconfig/node26/lib{/monorepo}`
+- `@elgato/tsconfig/dom/lib`
+- `@elgato/tsconfig/dom/monorepo/lib`
+- `@elgato/tsconfig/isomorphic/lib`
+- `@elgato/tsconfig/isomorphic/monorepo/lib`
+- `@elgato/tsconfig/node24/lib`
+- `@elgato/tsconfig/node24/monorepo/lib`
+- `@elgato/tsconfig/node26/lib`
+- `@elgato/tsconfig/node26/monorepo/lib`
 
 ### `rootDir`
 
@@ -203,17 +207,17 @@ When developing in a monorepo, the `.tsbuildinfo` file is saved to `dist/tsconfi
 
 ```jsonc
 {
-    "extends": "@elgato/tsconfig/node24/lib/monorepo",
+    "extends": "@elgato/tsconfig/node24/monorepo/lib",
     "compilerOptions": {
         "tsBuildInfoFile": "dist/tsconfig.tsbuildinfo", // Change to override
     },
 }
 ```
 
-- `@elgato/tsconfig/dom/lib/monorepo`
-- `@elgato/tsconfig/isomorphic/lib/monorepo`
-- `@elgato/tsconfig/node24/lib/monorepo`
-- `@elgato/tsconfig/node26/lib/monorepo`
+- `@elgato/tsconfig/dom/monorepo/lib`
+- `@elgato/tsconfig/isomorphic/monorepo/lib`
+- `@elgato/tsconfig/node24/monorepo/lib`
+- `@elgato/tsconfig/node26/monorepo/lib`
 
 ### `include`
 
@@ -221,7 +225,7 @@ The included files are `["src"]`.
 
 ```jsonc
 {
-    "extends": "@elgato/tsconfig/dom/lib/monorepo",
+    "extends": "@elgato/tsconfig/dom/monorepo/lib",
     "include": ["src"], // Change to override
 }
 ```
