@@ -19,7 +19,7 @@
         "url": "git+https://github.com/elgatosf/streamdeck.git"
     },
     "files": [
-        "./dist/"
+        "./dist/**/*.{d.ts,js}"
     ],
     "type": "module",
     "exports": {
@@ -45,7 +45,7 @@
         }
     },
     "scripts": {
-        "build": "rm -rf dist/ && tsc --project tsconfig.build.json",
+        "build": "tsc --project tsconfig.build.json",
         "dev": "tsc --project tsconfig.build.json --watch",
         "lint": "eslint --max-warnings 0",
         "preversion": "npm run build && npm test && npm run lint",
@@ -60,7 +60,7 @@
     },
     "devDependencies": {
         "@elgato/eslint-config": "^0.3.2",
-        "@tsconfig/node20": "^20.1.5",
+        "@elgato/tsconfig": "workspace:^",
         "@types/node": "^22.15.19",
         "@vitest/coverage-v8": "^3.1.4",
         "eslint": "^9.39.4",
