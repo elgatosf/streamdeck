@@ -2,7 +2,7 @@
     "compilerOptions": {
         /* Type checking */
         "strict": true,
-        // TODO: "noUncheckedIndexedAccess": true,
+        "noUncheckedIndexedAccess": true,
         "noImplicitOverride": true,
 
         /* Modules */
