@@ -677,7 +677,7 @@ export type Nodejs = {
 	/**
 	 * Version of Node.js to use.
 	 */
-	Version: "20" | "24";
+	Version: "20" | "24" | "26";
 };
 
 /**
