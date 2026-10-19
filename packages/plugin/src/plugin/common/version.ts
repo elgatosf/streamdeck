@@ -36,7 +36,9 @@ export class Version {
 			throw new Error(`Invalid format; expected "{major}[.{minor}[.{patch}[.{build}]]]" but was "${value}"`);
 		}
 
-		[, this.major, this.minor, this.patch, this.build] = [...result.map<number>((value) => parseInt(value) || 0)];
+		[, this.major = 0, this.minor = 0, this.patch = 0, this.build = 0] = result.map<number>(
+			(value) => parseInt(value) || 0,
+		);
 	}
 
 	/**
@@ -45,15 +47,10 @@ export class Version {
 	 * @returns `-1` when this instance is less than the {@link other}, `1` when this instance is greater than {@link other}, otherwise `0`.
 	 */
 	public compareTo(other: VersionInfo): number {
-		const segments = ({ major, minor, build, patch }: VersionInfo): number[] => [major, minor, build, patch];
-
-		const thisSegments = segments(this);
-		const otherSegments = segments(other);
-
-		for (let i = 0; i < 4; i++) {
-			if (thisSegments[i] < otherSegments[i]) {
+		for (const segment of ["major", "minor", "build", "patch"] as const) {
+			if (this[segment] < other[segment]) {
 				return -1;
-			} else if (thisSegments[i] > otherSegments[i]) {
+			} else if (this[segment] > other[segment]) {
 				return 1;
 			}
 		}

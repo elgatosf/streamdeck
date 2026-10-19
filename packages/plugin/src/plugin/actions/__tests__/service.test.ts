@@ -475,10 +475,10 @@ describe("actions", () => {
 
 			// Assert.
 			expect(actionStore.set).toHaveBeenCalledTimes(1);
-			const created = vi.mocked(actionStore.set).mock.calls[0][0];
+			const created = vi.mocked(actionStore.set).mock.calls[0]?.[0];
 			expect(created).toBeInstanceOf(NeoInfobarAction);
-			expect(created.id).toBe(ev.context);
-			expect(created.controllerType).toBe("Neo");
+			expect(created?.id).toBe(ev.context);
+			expect(created?.controllerType).toBe("Neo");
 		});
 
 		/**
@@ -520,7 +520,7 @@ describe("actions", () => {
 					type: "willAppear",
 				}),
 			);
-			expect(vi.mocked(listener).mock.calls[0][0].action).toBeInstanceOf(NeoInfobarAction);
+			expect(vi.mocked(listener).mock.calls[0]?.[0].action).toBeInstanceOf(NeoInfobarAction);
 
 			// Act (dispose).
 			disposable.dispose();
