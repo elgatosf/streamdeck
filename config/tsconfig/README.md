@@ -62,6 +62,10 @@ Your code runs in a DOM-based environment, such as a browser or QtWebEngine.
 
 Your code runs in a DOM and Node.js environment:
 
+```sh
+pnpm add -D @types/node@^24
+```
+
 ```jsonc
 {
     "extends": "@elgato/tsconfig/isomorphic/lib", // For a library
@@ -126,7 +130,7 @@ Each configuration provides access to different libraries based on the environme
 ### Environments
 
 - `dom` — code with access to a DOM, such as browsers.
-- `node24`, `node26` — code with access to Node.js.
+- `node20`, `node24`, `node26` — code with access to Node.js.
 - `isomorphic` — code intended for DOM and Node.js environments.
 
 |              | `lib`                                        | `target` | `types` |
@@ -183,6 +187,8 @@ Applies to:
 - `@elgato/tsconfig/dom/monorepo/lib`
 - `@elgato/tsconfig/isomorphic/lib`
 - `@elgato/tsconfig/isomorphic/monorepo/lib`
+- `@elgato/tsconfig/node20/lib`
+- `@elgato/tsconfig/node20/monorepo/lib`
 - `@elgato/tsconfig/node24/lib`
 - `@elgato/tsconfig/node24/monorepo/lib`
 - `@elgato/tsconfig/node26/lib`
@@ -220,6 +226,7 @@ When developing in a monorepo, the `.tsbuildinfo` file is saved to `dist/tsconfi
 
 - `@elgato/tsconfig/dom/monorepo/lib`
 - `@elgato/tsconfig/isomorphic/monorepo/lib`
+- `@elgato/tsconfig/node20/monorepo/lib`
 - `@elgato/tsconfig/node24/monorepo/lib`
 - `@elgato/tsconfig/node26/monorepo/lib`
 
