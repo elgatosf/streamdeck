@@ -2,8 +2,9 @@
     "extends": "@tsconfig/node20/tsconfig.json",
     "compilerOptions": {
         "customConditions": ["node"],
-        "module": "ES2022",
+        "module": "ESNext",
         "moduleResolution": "Bundler",
+        "resolveJsonModule": true,
         "types": ["node"]
     },
     "include": ["src", "rolldown.config.ts"],

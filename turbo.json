@@ -6,6 +6,10 @@
             "dependsOn": ["^build"],
             "outputs": ["bin/**", "dist/**"]
         },
+        "@elgato/schemas#build": {
+            "dependsOn": ["^build"],
+            "outputs": ["dist/**", "streamdeck/**"]
+        },
         "dev": {
             "cache": false,
             "persistent": true

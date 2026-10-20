@@ -53,7 +53,7 @@ describe.each(["7.1" as const, "7.2" as const, "7.3" as const, "7.4" as const, "
 		 */
 		it("cannot be Neo", () => {
 			const errors = validateStreamDeckPluginManifest(`v${version}.json`, (m) => {
-				m.Actions[0].Controllers = ["Neo"];
+				m.Actions[0]!.Controllers = ["Neo"];
 			});
 
 			expect(errors).toHaveError({

@@ -1,5 +1,5 @@
-import { DeviceType } from "../device-type";
-import type { Manifest as ManifestSchema } from "../schemas";
+import type { DeviceType } from "../device-type.js";
+import type { Manifest as ManifestSchema } from "../schemas.js";
 
 /**
  * Determines the Stream Deck software requirements for this plugin.

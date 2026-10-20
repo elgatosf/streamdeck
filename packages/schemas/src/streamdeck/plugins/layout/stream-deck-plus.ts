@@ -1,5 +1,5 @@
-import type { Controller } from "../manifest/latest";
-import type { Layout } from "./layout";
+import type { Controller } from "../manifest/latest.js";
+import type { Layout } from "./layout.js";
 
 /**
  * A Stream Deck + layout.

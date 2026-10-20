@@ -1,4 +1,4 @@
-import type { Manifest } from "./latest";
+import type { Manifest } from "./latest.js";
 
 /**
  * Defines the plugin and available actions, and all information associated with them, including the plugin's entry point, all iconography, action default behavior, etc.

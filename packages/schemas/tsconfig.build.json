@@ -1,0 +1,4 @@
+{
+    "extends": "@elgato/tsconfig/node20/monorepo/lib",
+    "exclude": ["src/**/__tests__/**", "src/**/__mocks__/**"]
+}
