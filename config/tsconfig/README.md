@@ -117,6 +117,8 @@ pnpm add -D @types/node@^26
 }
 ```
 
+Requires TypeScript 6.0 or higher for `ESNext.Temporal`.
+
 ## Configuration Differences
 
 Each configuration provides access to different libraries based on the environment, and different outputs based on the build output. The following is a summary of those differences.
@@ -127,13 +129,15 @@ Each configuration provides access to different libraries based on the environme
 - `node24`, `node26` — code with access to Node.js.
 - `isomorphic` — code intended for DOM and Node.js environments.
 
-|              | `lib`                            | `target` | `types` |
-| ------------ | -------------------------------- | -------- | ------- |
-| `dom`        | `es2022`, `dom`, `dom.iterable`  | `es2022` | -       |
-| `isomorphic` | `es2022`                         | `es2022` | `node`  |
-| `node20`     | See [`@tsconfig/node20`][node20] | `es2022` | `node`  |
-| `node24`     | See [`@tsconfig/node24`][node24] | `es2024` | `node`  |
-| `node26`     | See [`@tsconfig/node26`][node26] | `es2025` | `node`  |
+|              | `lib`                                        | `target` | `types` |
+| ------------ | -------------------------------------------- | -------- | ------- |
+| `dom`        | `es2022`, `dom`, `dom.iterable`              | `es2022` | -       |
+| `isomorphic` | `es2022`                                     | `es2022` | `node`  |
+| `node20`     | See [`@tsconfig/node20`][node20]             | `es2022` | `node`  |
+| `node24`     | See [`@tsconfig/node24`][node24]             | `es2024` | `node`  |
+| `node26`     | See [`@tsconfig/node26`][node26]<sup>1</sup> | `es2025` | `node`  |
+
+<sup>1</sup> Requires TypeScript 6.0 or higher for `ESNext.Temporal`.
 
 [node20]: https://www.npmjs.com/package/@tsconfig/node20
 [node24]: https://www.npmjs.com/package/@tsconfig/node24
