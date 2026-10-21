@@ -7,6 +7,7 @@
             "outputs": ["bin/**", "dist/**", "*.sdPlugin/bin/**"]
         },
         "dev": {
+            "dependsOn": ["^build"],
             "cache": false,
             "persistent": true
         },
