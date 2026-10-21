@@ -1,8 +1,8 @@
 import child_process, {
-	ChildProcessByStdio,
-	SpawnOptionsWithStdioTuple,
-	StdioNull,
-	StdioPipe,
+	type ChildProcessByStdio,
+	type SpawnOptionsWithStdioTuple,
+	type StdioNull,
+	type StdioPipe,
 } from "node:child_process";
 import { platform } from "node:os";
 import { Readable } from "node:stream";

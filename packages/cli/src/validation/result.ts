@@ -1,4 +1,4 @@
-import { StdOut } from "../common/stdout";
+import type { StdOut } from "../common/stdout";
 import { type ValidationEntry, ValidationLevel } from "./entry";
 import { FileValidationResult } from "./file-result";
 

@@ -7,7 +7,7 @@ import inquirer from "inquirer";
 import { command } from "../common/command";
 import { createCopier } from "../common/file-copier";
 import { run } from "../common/runner";
-import { StdOut } from "../common/stdout";
+import type { StdOut } from "../common/stdout";
 import { getConfig } from "../config";
 import { generatePluginId, getPlugins, isValidPluginId } from "../stream-deck";
 import { invalidCharacters, isExecutable, isSafeBaseName, relative } from "../system/path";
