@@ -54,7 +54,7 @@ override onSendToPlugin(ev: SendToPluginEvent<JsonValue, Settings>): Promise<voi
     // Check if the payload is requesting a data source, i.e. the structure is { event: string }
     if (ev.payload instanceof Object && "event" in ev.payload && ev.payload.event === "getProducts") {
         // Send the product ranges to the property inspector.
-        streamDeck.ui.current?.sendToPropertyInspector({
+        streamDeck.ui.sendToPropertyInspector({
             event: "getProducts",
             items: this.#getStreamDeckProducts(),
         } satisfies DataSourcePayload);
