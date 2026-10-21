@@ -12,10 +12,10 @@
 
 In this repository, you can find a number of complete plugins for the Stream Deck app, each of which use the official [Stream Deck SDK](https://github.com/elgatosf/streamdeck). Within each sample, you can expect to find:
 
--   A readme, explaining which parts of the SDK the plugin is focused on.
--   An image/gif of the plugin in-app, possibly with a demonstration of its use.
--   A prepared .streamDeckPlugin file which can be installed without building the sample.
--   TypeScript project files that can be used to modify and build the sample as you see fit.
+- A readme, explaining which parts of the SDK the plugin is focused on.
+- An image/gif of the plugin in-app, possibly with a demonstration of its use.
+- A prepared .streamDeckPlugin file which can be installed without building the sample.
+- TypeScript project files that can be used to modify and build the sample as you see fit.
 
 ## Prerequisites
 
@@ -51,12 +51,12 @@ For more information on building plugins, please consult our [documentation](htt
 
 All samples are provided under the permissive [MIT license](LICENSE)
 
-| Sample                       | Focus                                                                 |
-| ---------------------------- | --------------------------------------------------------------------- |
-| [Cat Keys](cat-keys)         | `setImage`, `onDidReceiveSettings`, payload settings, visible actions |
-| [Counter](counter)           | `setTitle`, key events                                                |
-| [Data Sources](data-sources) | Populating property inspectors, `openUrl`                             |
-| [Hello World](hello-world)   | `i18n` / internationalization, `onDidReceiveSettings`                 |
-| [Image Resizer](image-resizer) | Image processing with `sharp`                                       |
-| [Layouts](layouts)           | `setFeedback`, `setFeedbackLayout`, encoders, layouts                 |
-| [Lights Out](lights-out)     | `coordinates`, profiles, visible actions                              |
+| Sample                         | Focus                                                                 |
+| ------------------------------ | --------------------------------------------------------------------- |
+| [Cat Keys](cat-keys)           | `setImage`, `onDidReceiveSettings`, payload settings, visible actions |
+| [Counter](counter)             | `setTitle`, key events                                                |
+| [Data Sources](data-sources)   | Populating property inspectors, `openUrl`                             |
+| [Hello World](hello-world)     | `i18n` / internationalization, `onDidReceiveSettings`                 |
+| [Image Resizer](image-resizer) | Image processing with `sharp`                                         |
+| [Layouts](layouts)             | `setFeedback`, `setFeedbackLayout`, encoders, layouts                 |
+| [Lights Out](lights-out)       | `coordinates`, profiles, visible actions                              |

@@ -1,6 +1,7 @@
+import path from "node:path";
+
 import type { KeyDownEvent } from "@elgato/streamdeck";
 import streamDeck, { action, SingletonAction } from "@elgato/streamdeck";
-import path from "node:path";
 import sharp from "sharp";
 
 /**

@@ -8,9 +8,9 @@ This sample plugin allows users to select a Stream Deck product from a drop-down
 
 The following SDK functionality is demonstrated as part of this plugin:
 
--   Using [sdpi-components](https://sdpi-components.dev/) to persist settings.
--   Populating components in property inspector using [data sources](https://sdpi-components.dev/docs/helpers/data-source).
--   Opening URLs in the user's default browser.
+- Using [sdpi-components](https://sdpi-components.dev/) to persist settings.
+- Populating components in property inspector using [data sources](https://sdpi-components.dev/docs/helpers/data-source).
+- Opening URLs in the user's default browser.
 
 ## Data Sources
 

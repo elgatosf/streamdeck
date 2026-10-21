@@ -1,21 +1,23 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
+	<head lang="en">
+		<title>Open Product Page</title>
+		<meta charset="utf-8" />
+		<script src="sdpi-components.js"></script>
+	</head>
 
-<head lang="en">
-    <title>Open Product Page</title>
-    <meta charset="utf-8" />
-    <script src="sdpi-components.js"></script>
-</head>
-
-<body>
-    <!--
+	<body>
+		<!--
         Learn more about property inspector components at https://sdpi-components.dev/docs/components
     -->
-    <sdpi-item label="Product">
-        <sdpi-select setting="product" datasource="getProducts" loading="Fetching products..."
-            placeholder="Please select">
-        </sdpi-select>
-    </sdpi-item>
-</body>
-
+		<sdpi-item label="Product">
+			<sdpi-select
+				setting="product"
+				datasource="getProducts"
+				loading="Fetching products..."
+				placeholder="Please select"
+			>
+			</sdpi-select>
+		</sdpi-item>
+	</body>
 </html>

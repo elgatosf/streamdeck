@@ -1,5 +1,6 @@
-import { action, KeyDownEvent, SingletonAction } from "@elgato/streamdeck";
 import { setTimeout } from "timers/promises";
+
+import { action, KeyDownEvent, SingletonAction } from "@elgato/streamdeck";
 
 import { GamePiece, LIGHT_OFF, LIGHT_ON } from "./gamePiece";
 

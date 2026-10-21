@@ -8,12 +8,8 @@
             "name": "Attach to Plugin",
             "type": "node",
             "request": "attach",
-            "outFiles": [
-                "${workspaceFolder}/bin/**/*.js"
-            ],
-            "resolveSourceMapLocations": [
-                "${workspaceFolder}/**"
-            ],
+            "outFiles": ["${workspaceFolder}/bin/**/*.js"],
+            "resolveSourceMapLocations": ["${workspaceFolder}/**"],
             "streamDeckPlugin": true,
             "timeout": 30000,
             "restart": true,

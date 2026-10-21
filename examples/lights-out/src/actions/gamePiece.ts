@@ -1,5 +1,6 @@
-import { action, Coordinates, KeyAction, KeyDownEvent, SingletonAction, WillAppearEvent } from "@elgato/streamdeck";
 import { setTimeout } from "timers/promises";
+
+import { action, Coordinates, KeyAction, KeyDownEvent, SingletonAction, WillAppearEvent } from "@elgato/streamdeck";
 
 /**
  * A play piece for the lights-out game

@@ -5,14 +5,14 @@ import streamDeck, {
 	SingletonAction,
 	WillAppearEvent,
 	WillDisappearEvent,
-} from '@elgato/streamdeck';
+} from "@elgato/streamdeck";
 
 const FIFTEEN_MINUTES = 15 * 60 * 1000;
 
 /**
  * An example action class that displays a random cat.
  */
-@action({ UUID: 'com.elgato.cat-keys.random-cat' })
+@action({ UUID: "com.elgato.cat-keys.random-cat" })
 export class RandomCat extends SingletonAction<RandomCatSettings> {
 	private timer: NodeJS.Timeout | undefined;
 
@@ -65,14 +65,14 @@ export class RandomCat extends SingletonAction<RandomCatSettings> {
 	 */
 	private async setRandomCat(action: KeyAction<RandomCatSettings>) {
 		try {
-			const response = await fetch('https://cataas.com/cat?width=144&height=144');
+			const response = await fetch("https://cataas.com/cat?width=144&height=144");
 			const buffer = await response.arrayBuffer();
-			const data = Buffer.from(buffer).toString('base64');
+			const data = Buffer.from(buffer).toString("base64");
 			const image = `data:image/png;base64,${data}`;
 
 			action.setImage(image);
 		} catch (e) {
-			streamDeck.logger.error('Failed to fetch random cat image:', e);
+			streamDeck.logger.error("Failed to fetch random cat image:", e);
 		}
 	}
 }

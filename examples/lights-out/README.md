@@ -15,4 +15,3 @@ Lights Out demonstrates how to access the position of an action on the device bu
 ## Profiles
 
 Lights Out imports profiles with pre-made playing fields for various Stream Deck devices.
-

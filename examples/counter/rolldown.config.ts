@@ -1,6 +1,7 @@
 import { exec } from "node:child_process";
 import path from "node:path";
 import url from "node:url";
+
 import { defineConfig } from "rolldown";
 
 const isWatching = !!process.env.ROLLUP_WATCH;
@@ -40,7 +41,7 @@ const config = defineConfig({
 						if (error) console.error("Failed to restart Stream Deck:", error.message);
 					});
 				}
-			}
+			},
 		},
 		{
 			name: "emit-module-package-file",

@@ -74,16 +74,7 @@ export class NewString extends SingletonAction<NewStringSettings> {
 	 * Picks a random key value to use for translation lookups
 	 */
 	pickRandomKey() {
-		const options = [
-			"flash",
-			"selectprop",
-			"on",
-			"off",
-			"toggle",
-			"action",
-			"dynamic",
-			"clickme",
-		];
+		const options = ["flash", "selectprop", "on", "off", "toggle", "action", "dynamic", "clickme"];
 		const index = Math.floor(Math.random() * options.length);
 		return options[index];
 	}

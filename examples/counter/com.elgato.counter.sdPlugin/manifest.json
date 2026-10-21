@@ -17,7 +17,7 @@
                     "TitleAlignment": "middle"
                 }
             ],
-			"SupportedInMultiActions": false
+            "SupportedInMultiActions": false
         }
     ],
     "Category": "Counter",
