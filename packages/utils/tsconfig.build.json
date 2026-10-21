@@ -1,9 +1,4 @@
 {
-    "extends": "./tsconfig.json",
-    "compilerOptions": {
-        "declaration": true,
-        "noEmit": false,
-        "outDir": "dist"
-    },
-    "exclude": ["./dist/", "./node_modules/", "./src/**/__tests__/"]
+    "extends": "@elgato/tsconfig/node20/monorepo/lib",
+    "exclude": ["src/**/__tests__"]
 }
