@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.5.3
+
+### Patch Changes
+
+- 6a57d80: Added support for Node.js 26.
+
 ## 0.5.2
 
 ### Patch Changes
