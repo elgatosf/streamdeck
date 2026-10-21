@@ -2,15 +2,15 @@
 
 ![Product Viewer](product-viewer.png)
 
-This sample plugin allows users to select a Stream Deck product from a drop-down within the property inspector, and then open that product's page within their default browser.
+This sample demonstrates a complete product viewer: it dynamically populates a property-inspector drop-down with Stream Deck products using an SDK data source, saves the selected product with `sdpi-components`, and opens that product's page in the user's default browser.
 
 ## SDK Functionality
 
 The following SDK functionality is demonstrated as part of this plugin:
 
-- Using [sdpi-components](https://sdpi-components.dev/) to persist settings.
-- Populating components in property inspector using [data sources](https://sdpi-components.dev/docs/helpers/data-source).
-- Opening URLs in the user's default browser.
+- Using [sdpi-components](https://sdpi-components.dev/) for the product selector and persisted settings.
+- Populating the selector from the plugin using [data sources](https://sdpi-components.dev/docs/helpers/data-source).
+- Opening the selected product's URL in the user's default browser.
 
 ## Data Sources
 
@@ -18,7 +18,7 @@ Data sources within sdpi-components allow you to populate components within your
 
 ### Step 1. Property Inspector
 
-Within your property inspector, specify a `datasource` attribute on the component you want to populate dynamically ([example](./com.elgato.data-sources.sdPlugin/ui/open-product-page.html#L15)).
+Within your property inspector, specify a `datasource` attribute on the component you want to populate dynamically ([example](./com.elgato.product-viewer.sdPlugin/ui/open-product-page.html#L15)).
 
 <!-- prettier-ignore -->
 ```html

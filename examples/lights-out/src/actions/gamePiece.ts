@@ -175,6 +175,10 @@ export class GamePiece extends SingletonAction<GamePieceSettings> {
 			}
 		}
 
+		if (keys.length === 0) {
+			return;
+		}
+
 		// Variables that track light coverage
 		const totalLights = keys.length;
 		let visibleLights = 0;
@@ -182,8 +186,10 @@ export class GamePiece extends SingletonAction<GamePieceSettings> {
 		// Visibly turn on all of the lights while we're resetting
 		this.setAll(deviceId, LIGHT_ON);
 
-		// Turn all lights off in our internal state tracking. Starting from the "off" state ensures the generated board can be completed
-		this.states.forEach((_, actionId, map) => map.set(actionId, LIGHT_OFF));
+		// Starting from the "off" state ensures the generated board can be completed
+		for (const key of keys) {
+			this.states.set(key.id, LIGHT_OFF);
+		}
 
 		// "Play" the game randomly for some number of iterations, while ensuring that at least 1/3 of the lights are on at the end
 		const iterations = Math.max(10, Math.random() * 50);
@@ -197,7 +203,8 @@ export class GamePiece extends SingletonAction<GamePieceSettings> {
 			// Pick random key and toggle it
 			const key = keys[Math.floor(Math.random() * keys.length)];
 			for (const action of this.adjacentItems(deviceId, key.coordinates!)) {
-				this.toggleState(action.id);
+				const state = this.toggleState(action.id);
+				visibleLights += state === LIGHT_ON ? 1 : -1;
 			}
 		}
 

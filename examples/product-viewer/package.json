@@ -1,5 +1,5 @@
 {
-    "name": "@elgato/example-data-sources",
+    "name": "@elgato/example-product-viewer",
     "private": true,
     "type": "module",
     "scripts": {

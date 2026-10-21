@@ -55,8 +55,8 @@ export class BuiltInLayout extends SingletonAction {
 				ev.action.setFeedbackLayout("$C1");
 				ev.action.setFeedback({
 					title: "Layout $C1",
-					icon1: { value: "imgs/actions/layout/layout.svg" },
-					icon2: { value: "imgs/actions/layout/layout.svg" },
+					icon1: { value: "imgs/actions/built-in-layout/built-in-layout.svg" },
+					icon2: { value: "imgs/actions/built-in-layout/built-in-layout.svg" },
 					indicator1: { value: 25 },
 					indicator2: { value: 75 },
 				});

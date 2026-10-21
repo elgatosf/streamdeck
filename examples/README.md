@@ -36,6 +36,7 @@ If you would like to build a sample yourself, install dependencies from the repo
 ```bash
 # From the repository root
 pnpm install
+pnpm build
 
 # From the selected example directory
 # Install the sample in Stream Deck (*.sdPlugin should be
@@ -51,12 +52,12 @@ For more information on building plugins, please consult our [documentation](htt
 
 All samples are provided under the permissive [MIT license](LICENSE)
 
-| Sample                         | Focus                                                                 |
-| ------------------------------ | --------------------------------------------------------------------- |
-| [Cat Keys](cat-keys)           | `setImage`, `onDidReceiveSettings`, payload settings, visible actions |
-| [Counter](counter)             | `setTitle`, key events                                                |
-| [Data Sources](data-sources)   | Populating property inspectors, `openUrl`                             |
-| [Hello World](hello-world)     | `i18n` / internationalization, `onDidReceiveSettings`                 |
-| [Image Resizer](image-resizer) | Image processing with `sharp`                                         |
-| [Layouts](layouts)             | `setFeedback`, `setFeedbackLayout`, encoders, layouts                 |
-| [Lights Out](lights-out)       | `coordinates`, profiles, visible actions                              |
+| Sample                           | Focus                                                                 |
+| -------------------------------- | --------------------------------------------------------------------- |
+| [Cat Keys](cat-keys)             | `setImage`, `onDidReceiveSettings`, payload settings, visible actions |
+| [Counter](counter)               | `setTitle`, key events                                                |
+| [Product Viewer](product-viewer) | Data sources, property-inspector settings, `openUrl`                  |
+| [Hello World](hello-world)       | `i18n` / internationalization, `onDidReceiveSettings`                 |
+| [Image Resizer](image-resizer)   | Image processing with `sharp`                                         |
+| [Layouts](layouts)               | `setFeedback`, `setFeedbackLayout`, encoders, layouts                 |
+| [Lights Out](lights-out)         | `coordinates`, profiles, visible actions                              |
