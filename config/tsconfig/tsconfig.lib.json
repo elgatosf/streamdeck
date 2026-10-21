@@ -1,0 +1,12 @@
+{
+    "extends": "./tsconfig.json",
+    "compilerOptions": {
+        /* Modules */
+        "module": "nodenext",
+
+        /* Emit */
+        "declaration": true,
+        "outDir": "${configDir}/dist",
+        "sourceMap": true
+    }
+}
