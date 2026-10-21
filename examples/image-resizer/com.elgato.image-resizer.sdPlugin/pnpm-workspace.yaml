@@ -14,5 +14,3 @@ supportedArchitectures:
 
 onlyBuiltDependencies:
   - sharp
-allowBuilds:
-  sharp: true
