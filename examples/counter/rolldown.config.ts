@@ -33,7 +33,7 @@ const config = defineConfig({
 			buildStart() {
 				this.addWatchFile(`${sdPluginFolder}/manifest.json`);
 			},
-			buildEnd() {
+			writeBundle() {
 				if (isWatching) {
 					exec(`streamdeck restart ${sdPlugin}`, (error, stdout, stderr) => {
 						if (stdout) console.log(stdout.trim());
