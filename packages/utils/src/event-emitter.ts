@@ -53,7 +53,12 @@ export class EventEmitter<TMap extends EventMap<TMap>> {
 		}
 
 		for (let i = 0; i < listeners.length;) {
-			const { listener, once } = listeners[i];
+			const { listener, once } = listeners[i] ?? {};
+			if (!listener) {
+				i++;
+				continue;
+			}
+
 			if (once) {
 				this.remove(eventName, listeners, i);
 			} else {
@@ -122,7 +127,7 @@ export class EventEmitter<TMap extends EventMap<TMap>> {
 	): this {
 		const listeners = this.events.get(eventName) ?? [];
 		for (let i = listeners.length - 1; i >= 0; i--) {
-			if (listeners[i].listener === listener) {
+			if (listeners[i]?.listener === listener) {
 				this.remove(eventName, listeners, i);
 			}
 		}
@@ -248,7 +253,10 @@ export class EventEmitter<TMap extends EventMap<TMap>> {
 		listeners: EventListener[],
 		index: number,
 	): void {
-		const [{ listener }] = listeners.splice(index, 1);
+		const [{ listener } = {}] = listeners.splice(index, 1);
+		if (listener === undefined) {
+			return;
+		}
 
 		if (eventName !== "removeListener") {
 			const args = [eventName, listener] as EventArgs<TMap, "removeListener">;
