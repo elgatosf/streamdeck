@@ -34,7 +34,7 @@ Native modules like `sharp` need platform-specific binaries at runtime. We use p
 In [package.json](package.json):
 
 ```json
-"packageManager": "pnpm@10.32.0",
+"packageManager": "pnpm@10.18.0"
 "postinstall": "pnpm --dir com.elgato.image-resizer.sdPlugin install --frozen-lockfile"
 ```
 
