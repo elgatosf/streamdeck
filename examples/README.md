@@ -19,7 +19,7 @@ In this repository, you can find a number of complete plugins for the Stream Dec
 
 ## Prerequisites
 
-To build any of these plugins, you will need to ensure you have [Node.js](https://nodejs.org/en/) (version 20+) and [npm](https://nodejs.org/en/) installed on your system. To run them, all provided samples require Stream Deck 6.5 or higher, unless otherwise specified in the readme for a sample.
+To build any of these plugins, you will need to ensure you have [Node.js](https://nodejs.org/en/) (version 20+) and [npm](https://nodejs.org/en/) installed on your system. To run them, all provided samples require Stream Deck 7.1 or higher, unless otherwise specified in the readme for a sample.
 
 Installing the [Stream Deck CLI](https://github.com/elgatosf/cli) tool is strongly recommended. Once you have Node.js and npm installed, install it with:
 
