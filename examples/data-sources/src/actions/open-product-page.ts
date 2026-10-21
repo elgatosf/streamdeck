@@ -1,5 +1,5 @@
 import streamDeck, { action, SingletonAction, type KeyDownEvent, type SendToPluginEvent } from "@elgato/streamdeck";
-import { JsonValue } from "@elgato/utils";
+import type { JsonValue } from "@elgato/utils";
 
 import type { DataSourcePayload, DataSourceResult } from "../sdpi";
 

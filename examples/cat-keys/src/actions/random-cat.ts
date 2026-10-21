@@ -63,7 +63,7 @@ export class RandomCat extends SingletonAction<RandomCatSettings> {
 	 * Fetches a random cat image and sets it as the action's image.
 	 * @param action The action in which to apply the new cat image.
 	 */
-	private async setRandomCat(action: KeyAction) {
+	private async setRandomCat(action: KeyAction<RandomCatSettings>) {
 		try {
 			const response = await fetch('https://cataas.com/cat?width=144&height=144');
 			const buffer = await response.arrayBuffer();

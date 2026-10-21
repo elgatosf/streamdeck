@@ -31,11 +31,13 @@ npm install -g @elgato/cli
 
 All of the samples have pre-built binaries which can be installed into Stream Deck immediately. Just open the included .streamDeckPlugin file.
 
-If you would like to build a sample yourself, you can do so with the following steps
+If you would like to build a sample yourself, install dependencies from the repository root, then run its existing package scripts from the sample directory:
 
 ```bash
-# Install dependencies
-npm i
+# From the repository root
+pnpm install
+
+# From the selected example directory
 # Install the sample in Stream Deck (*.sdPlugin should be
 # replaced with the name of the folder ending in .sdPlugin)
 streamdeck link *.sdPlugin
@@ -52,7 +54,9 @@ All samples are provided under the permissive [MIT license](LICENSE)
 | Sample                       | Focus                                                                 |
 | ---------------------------- | --------------------------------------------------------------------- |
 | [Cat Keys](cat-keys)         | `setImage`, `onDidReceiveSettings`, payload settings, visible actions |
+| [Counter](counter)           | `setTitle`, key events                                                |
 | [Data Sources](data-sources) | Populating property inspectors, `openUrl`                             |
-| [Layouts](layouts)           | `setFeedback`, `setFeedbackLayout`, encoders, layouts                 |
 | [Hello World](hello-world)   | `i18n` / internationalization, `onDidReceiveSettings`                 |
+| [Image Resizer](image-resizer) | Image processing with `sharp`                                       |
+| [Layouts](layouts)           | `setFeedback`, `setFeedbackLayout`, encoders, layouts                 |
 | [Lights Out](lights-out)     | `coordinates`, profiles, visible actions                              |
