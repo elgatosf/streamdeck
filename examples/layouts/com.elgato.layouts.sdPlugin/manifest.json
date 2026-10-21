@@ -1,0 +1,97 @@
+{
+	"$schema": "https://schemas.elgato.com/streamdeck/plugins/manifest.json",
+	"Name": "Layout Previews",
+	"Version": "0.1.0.0",
+	"Author": "Elgato",
+	"URL": "https://github.com/elgatosf/streamdeck-plugin-samples/tree/main/layouts",
+	"Actions": [
+		{
+			"Name": "Built-in Layout",
+			"UUID": "com.elgato.layouts.built-in-layout",
+			"Icon": "imgs/actions/built-in-layout/built-in-layout",
+			"Tooltip": "Demonstrates switching to different layouts.",
+			"Controllers": [
+				"Encoder"
+			],
+			"States": [
+				{
+					"Image": "imgs/actions/built-in-layout/built-in-layout",
+					"TitleAlignment": "middle",
+					"Title": "Layout $X1"
+				}
+			],
+			"Encoder": {
+				"layout": "$X1",
+				"TriggerDescription": {
+					"Rotate": "Change layouts"
+				}
+			}
+		},
+		{
+			"Name": "Custom Layout",
+			"UUID": "com.elgato.layouts.custom-layout",
+			"Icon": "imgs/actions/custom-layout/custom-layout",
+			"Tooltip": "Demonstrates switching to different layouts.",
+			"Controllers": [
+				"Encoder"
+			],
+			"States": [
+				{
+					"Image": "imgs/actions/custom-layout/custom-layout",
+					"TitleAlignment": "middle",
+					"Title": "Layout $X1"
+				}
+			],
+			"Encoder": {
+				"layout": "layouts/custom-layout-1.json",
+				"TriggerDescription": {
+					"Rotate": "Change layouts"
+				}
+			}
+		},
+		{
+			"Name": "Feedback",
+			"UUID": "com.elgato.layouts.feedback",
+			"Icon": "imgs/actions/feedback/rotate",
+			"Tooltip": "Demonstrates updating layout items.",
+			"Controllers": [
+				"Encoder"
+			],
+			"States": [
+				{
+					"Image": "imgs/actions/feedback/rotate"
+				}
+			],
+			"Encoder": {
+				"layout": "$B1",
+				"TriggerDescription": {
+					"Rotate": "Adjust value"
+				}
+			}
+		}
+	],
+	"Category": "Layout Previews",
+	"CategoryIcon": "imgs/plugin/category-icon",
+	"CodePath": "bin/plugin.js",
+	"Description": "A plugin to demonstate encoder layouts.",
+	"Icon": "imgs/plugin/marketplace",
+	"SDKVersion": 2,
+	"Software": {
+		"MinimumVersion": "6.5"
+	},
+	"OS": [
+		{
+			"Platform": "mac",
+			"MinimumVersion": "10.15"
+		},
+		{
+			"Platform": "windows",
+			"MinimumVersion": "10"
+		}
+	],
+	"Nodejs": {
+		"Version": "20",
+		"Debug": "enabled"
+	},
+	"UUID": "com.elgato.layouts"
+}

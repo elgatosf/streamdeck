@@ -1,0 +1,11 @@
+{
+	"$schema": "https://schemas.elgato.com/streamdeck/plugins/layout.json",
+	"id": "custom-layout-2",
+	"items": [
+		{
+			"key": "my-image",
+			"type": "pixmap",
+			"rect": [0, 0, 200, 100]
+		}
+	]
+}

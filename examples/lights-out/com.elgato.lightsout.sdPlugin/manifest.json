@@ -1,0 +1,107 @@
+{
+	"Name": "Lights-Out",
+	"Version": "0.1.0.0",
+	"Author": "Elgato",
+	"Actions": [
+		{
+			"Name": "Play Piece",
+			"UUID": "com.elgato.lightsout.gamepiece",
+			"Icon": "imgs/actions/gamepiece/icon",
+			"Tooltip": "Used to define the play area for the Lights-Out game",
+			"SupportedInMultiActions": false,
+			"DisableAutomaticStates": true,
+			"Controllers": [
+				"Keypad"
+			],
+			"States": [
+				{
+					"Image": "imgs/actions/gamepiece/on",
+					"TitleAlignment": "middle"
+				},
+				{
+					"Image": "imgs/actions/gamepiece/off",
+					"TitleAlignment": "middle"
+				}
+			]
+		},
+		{
+			"Name": "Reset",
+			"UUID": "com.elgato.lightsout.reset",
+			"Icon": "imgs/actions/reset/icon",
+			"Tooltip": "Resets the game board",
+			"SupportedInMultiActions": false,
+			"DisableAutomaticStates": true,
+			"Controllers": [
+				"Keypad"
+			],
+			"States": [
+				{
+					"Image": "imgs/actions/reset/action",
+					"TitleAlignment": "middle"
+				}
+			]
+		}
+	],
+	"Category": "Lights-Out",
+	"CategoryIcon": "imgs/plugin/category-icon",
+	"CodePath": "bin/plugin.js",
+	"Description": "Play a game of Lights-Out on your Stream Deck",
+	"Icon": "imgs/plugin/marketplace",
+	"SDKVersion": 2,
+	"Software": {
+		"MinimumVersion": "6.5"
+	},
+	"OS": [
+		{
+			"Platform": "mac",
+			"MinimumVersion": "10.15"
+		},
+		{
+			"Platform": "windows",
+			"MinimumVersion": "10"
+		}
+	],
+	"Nodejs": {
+		"Version": "20",
+		"Debug": "--inspect=127.0.0.1:12311"
+	},
+	"UUID": "com.elgato.lightsout",
+	"Profiles": [
+		{
+			"Name": "sd",
+			"DeviceType": 0,
+			"Readonly": false,
+			"DontAutoSwitchWhenInstalled": false
+		},
+		{
+			"Name": "sdxl",
+			"DeviceType": 2,
+			"Readonly": false,
+			"DontAutoSwitchWhenInstalled": false
+		},
+		{
+			"Name": "sd-mini",
+			"DeviceType": 1,
+			"Readonly": false,
+			"DontAutoSwitchWhenInstalled": false
+		},
+		{
+			"Name": "sd-neo",
+			"DeviceType": 9,
+			"Readonly": false,
+			"DontAutoSwitchWhenInstalled": false
+		},
+		{
+			"Name": "sdp",
+			"DeviceType": 7,
+			"Readonly": false,
+			"DontAutoSwitchWhenInstalled": false
+		},
+		{
+			"Name": "sd-mobile",
+			"DeviceType": 3,
+			"Readonly": false,
+			"DontAutoSwitchWhenInstalled": false
+		}
+	]
+}

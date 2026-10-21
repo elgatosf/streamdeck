@@ -1,0 +1,10 @@
+# Node.js
+node_modules/
+
+# Stream Deck files
+*.sdPlugin/bin
+*.sdPlugin/logs
+*.sdPlugin/node_modules
+
+# Stream Deck Plugin Build
+*.streamDeckPlugin

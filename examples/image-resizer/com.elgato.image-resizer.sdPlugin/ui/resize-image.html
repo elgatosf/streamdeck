@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<title>Resize Image Settings</title>
+		<meta charset="utf-8" />
+		<script src="https://sdpi-components.dev/releases/v4/sdpi-components.js"></script>
+	</head>
+	<body>
+		<sdpi-item label="File">
+			<sdpi-file setting="imagePath" accept="image/png, image/jpeg"></sdpi-file>
+		</sdpi-item>
+		<sdpi-item label="Extension">
+			<sdpi-select default="jpg" setting="extension" placeholder="Please choose an extension">
+				<option selected value="jpg">JPG</option>
+				<option value="png">PNG</option>
+				<option value="webp">WEBP</option>
+			</sdpi-select>
+		</sdpi-item>
+		<sdpi-item label="Width (px)">
+			<sdpi-textfield setting="width" pattern="^[0-9]+$" placeholder="1920"> </sdpi-textfield>
+		</sdpi-item>
+		<sdpi-item label="Height (px)">
+			<sdpi-textfield setting="height" pattern="^[0-9]+$" placeholder="1080"> </sdpi-textfield>
+		</sdpi-item>
+	</body>
+</html>

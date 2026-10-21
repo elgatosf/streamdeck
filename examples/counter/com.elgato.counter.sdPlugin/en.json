@@ -1,0 +1,8 @@
+{
+  "Description": "Track the number of times you press a key.", 
+  "Name": "Counter", 
+  "com.elgato.counter.action": {
+    "Name": "Counter", 
+    "Tooltip": "How many times did you get pwned today? Keep track with this counter."
+  }
+}

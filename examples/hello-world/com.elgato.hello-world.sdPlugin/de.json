@@ -1,0 +1,19 @@
+{
+	"Name": "Hallo Welt",
+	"Description": "Ein Beispiel-Plugin, das die Verwendung der Internationalisierungsfunktion demonstriert",
+	"com.elgato.hello-world.newstring": {
+		"Name": "Nächstes",
+		"Tooltip": "Nächstes"
+	},
+	"Localization": {
+		"flash": "Blitz",
+		"selectprop": "Eigenschaft auswählen",
+		"on": "Ein",
+		"off": "Aus",
+		"toggle": "Umschalten",
+		"action": "Aktion",
+		"dynamic": "Dynamisch",
+		"clickme": "Klick mich",
+		"thisLanguage": "Deutsch"
+	}
+}

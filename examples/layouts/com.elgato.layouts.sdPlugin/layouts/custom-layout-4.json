@@ -1,0 +1,45 @@
+{
+	"$schema": "https://schemas.elgato.com/streamdeck/plugins/layout.json",
+	"id": "custom-layout-4",
+	"items": [
+		{
+			"key": "icon1",
+			"type": "pixmap",
+			"rect": [16, 14, 24, 24]
+		},
+		{
+			"key": "icon2",
+			"type": "pixmap",
+			"rect": [16, 38, 24, 24]
+		},
+		{
+			"key": "icon3",
+			"type": "pixmap",
+			"rect": [16, 66, 24, 24]
+		},
+		{
+			"key": "indicator1",
+			"type": "bar",
+			"rect": [48, 22, 136, 10],
+			"value": 0,
+			"subtype": 1,
+			"border_w": 0
+		},
+		{
+			"key": "indicator2",
+			"type": "bar",
+			"rect": [48, 48, 136, 10],
+			"value": 0,
+			"subtype": 2,
+			"border_w": 0
+		},
+		{
+			"key": "indicator3",
+			"type": "bar",
+			"rect": [48, 74, 136, 10],
+			"value": 0,
+			"subtype": 3,
+			"border_w": 0
+		}
+	]
+}

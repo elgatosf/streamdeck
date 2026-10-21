@@ -1,0 +1,8 @@
+{
+  "Description": "Registra el número de veces que pulsas una tecla.", 
+  "Name": "Contador", 
+  "com.elgato.counter.action": {
+    "Name": "Contador", 
+    "Tooltip": "¿Cuántas veces te han matado hoy? Lleva la cuenta con este contador."
+  }
+}

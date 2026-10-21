@@ -1,0 +1,26 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "watch",
+            "type": "process",
+            "command": "npm",
+            "args": ["run", "watch"],
+            "isBackground": true,
+            "problemMatcher": [
+                {
+                    "owner": "watch",
+                    "fileLocation": "relative",
+                    "pattern": {
+                        "regexp": "^$"
+                    },
+                    "background": {
+                        "activeOnStart": true,
+                        "beginsPattern": ".",
+                        "endsPattern": "waiting for changes"
+                    }
+                }
+            ]
+        }
+    ]
+}

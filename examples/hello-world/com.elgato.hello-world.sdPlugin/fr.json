@@ -1,0 +1,19 @@
+{
+	"Name": "Salut le Monde",
+	"Description": "Un exemple de plugin démontrant l'utilisation de la fonctionnalité d'internationalisation",
+	"com.elgato.hello-world.newstring": {
+		"Name": "Suivant",
+		"Tooltip": "Suivant"
+	},
+	"Localization": {
+		"flash": "Flash",
+		"selectprop": "Sélectionner une propriété",
+		"on": "Activer",
+		"off": "Désactiver",
+		"toggle": "Inverser",
+		"action": "Action",
+		"dynamic": "Dynamique",
+		"clickme": "Cliquez ici",
+		"thisLanguage": "Français"
+	}
+}

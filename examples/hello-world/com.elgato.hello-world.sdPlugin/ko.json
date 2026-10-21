@@ -1,0 +1,19 @@
+{
+	"Name": "반갑다 세상아",
+	"Description": "국제화 기능 사용을 보여주는 샘플 플러그인",
+	"com.elgato.hello-world.newstring": {
+		"Name": "다음",
+		"Tooltip": "다음"
+	},
+	"Localization": {
+		"flash": "플래시",
+		"selectprop": "속성 선택",
+		"on": "켬",
+		"off": "끔",
+		"toggle": "토글",
+		"action": "동작",
+		"dynamic": "동적",
+		"clickme": "클릭하세요",
+		"thisLanguage": "한국어"
+	}
+}

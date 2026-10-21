@@ -1,0 +1,19 @@
+{
+	"Name": "Hello World",
+	"Description": "A sample plugin demonstrating the use of internationalization functionality",
+	"com.elgato.hello-world.newstring": {
+		"Name": "Next",
+		"Tooltip": "Next"
+	},
+	"Localization": {
+		"flash": "Flash",
+		"selectprop": "Select property",
+		"on": "On",
+		"off": "Off",
+		"toggle": "Toggle",
+		"action": "Action",
+		"dynamic": "Dynamic",
+		"clickme": "Click Me",
+		"thisLanguage": "English"
+	}
+}

@@ -1,0 +1,8 @@
+{
+  "Description": "Erfasse, wie oft du eine Taste drückst.", 
+  "Name": "Zähler", 
+  "com.elgato.counter.action": {
+    "Name": "Zähler", 
+    "Tooltip": "Wie oft wurdest du heute schon gepwnt? Dieser Zähler sagt es dir."
+  }
+}

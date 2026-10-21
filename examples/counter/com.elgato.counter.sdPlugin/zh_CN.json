@@ -1,0 +1,8 @@
+{
+  "Description": "跟踪您按键的次数。", 
+  "Name": "计数器", 
+  "com.elgato.counter.action": {
+    "Name": "计数器", 
+    "Tooltip": "您今天被击败了多少次？用该计数器进行记录。"
+  }
+}

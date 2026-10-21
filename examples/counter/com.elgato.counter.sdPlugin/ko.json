@@ -1,0 +1,8 @@
+{
+  "Description": "키를 누를 횟수를 체크합니다.", 
+  "Name": "카운터", 
+  "com.elgato.counter.action": {
+    "Name": "카운터", 
+    "Tooltip": "오늘은 몇 번이나 당하셨나요? 이 카운터로 계산하세요."
+  }
+}

@@ -1,0 +1,47 @@
+{
+	"Name": "Hello World",
+	"Version": "0.1.0.0",
+	"Author": "Elgato",
+	"Actions": [
+		{
+			"Name": "Counter",
+			"UUID": "com.elgato.hello-world.newstring",
+			"Icon": "imgs/actions/newstring/icon",
+			"Tooltip": "Displays a count, which increments by one on press.",
+			"PropertyInspectorPath": "ui/newString.html",
+			"Controllers": [
+				"Keypad"
+			],
+			"States": [
+				{
+					"Image": "imgs/actions/newstring/key",
+					"TitleAlignment": "middle"
+				}
+			]
+		}
+	],
+	"Category": "Hello World",
+	"CategoryIcon": "imgs/plugin/category-icon",
+	"CodePath": "bin/plugin.js",
+	"Description": "A sample plugin demonstrating the use of internationalization functionality",
+	"Icon": "imgs/plugin/marketplace",
+	"SDKVersion": 2,
+	"Software": {
+		"MinimumVersion": "6.5"
+	},
+	"OS": [
+		{
+			"Platform": "mac",
+			"MinimumVersion": "10.15"
+		},
+		{
+			"Platform": "windows",
+			"MinimumVersion": "10"
+		}
+	],
+	"Nodejs": {
+		"Version": "20",
+		"Debug": "enabled"
+	},
+	"UUID": "com.elgato.hello-world"
+}

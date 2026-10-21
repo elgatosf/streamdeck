@@ -1,0 +1,19 @@
+{
+	"Name": "Hola mundo",
+	"Description": "Un complemento de muestra que demuestra el uso de la funcionalidad de internacionalización",
+	"com.elgato.hello-world.newstring": {
+		"Name": "Siguiente",
+		"Tooltip": "Siguiente"
+	},
+	"Localization": {
+		"flash": "Flash",
+		"selectprop": "Seleccionar propiedad",
+		"on": "On",
+		"off": "Off",
+		"toggle": "Encender/apagar",
+		"action": "Acción",
+		"dynamic": "Dinámico",
+		"clickme": "Púlsame",
+		"thisLanguage": "Español"
+	}
+}

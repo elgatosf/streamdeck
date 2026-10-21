@@ -1,0 +1,47 @@
+{
+	"Name": "Image Resizer",
+	"Version": "0.1.0.0",
+	"Author": "Elgato",
+	"Actions": [
+		{
+			"Name": "Resize",
+			"UUID": "com.elgato.image-resizer.resize",
+			"Icon": "imgs/plugin/resize",
+			"Tooltip": "Resizes an image.",
+			"PropertyInspectorPath": "ui/resize-image.html",
+			"Controllers": [
+				"Keypad"
+			],
+			"States": [
+				{
+					"Image": "imgs/plugin/resize",
+					"TitleAlignment": "middle"
+				}
+			]
+		}
+	],
+	"Category": "Image Resizer",
+	"CategoryIcon": "imgs/plugin/category-icon",
+	"CodePath": "bin/plugin.js",
+	"Description": "An Elgato Stream Deck plugin that resizes images. This is a sample plugin used to demonstrate utilizing a Node package with native dependencies.",
+	"Icon": "imgs/plugin/marketplace",
+	"SDKVersion": 3,
+	"Software": {
+		"MinimumVersion": "6.9"
+	},
+	"OS": [
+		{
+			"Platform": "mac",
+			"MinimumVersion": "12"
+		},
+		{
+			"Platform": "windows",
+			"MinimumVersion": "10"
+		}
+	],
+	"Nodejs": {
+		"Version": "20",
+		"Debug": "enabled"
+	},
+	"UUID": "com.elgato.image-resizer"
+}

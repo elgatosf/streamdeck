@@ -1,0 +1,19 @@
+{
+	"Name": "こんにちは世界",
+	"Description": "国際化機能の使用方法を示すサンプルプラグイン",
+	"com.elgato.hello-world.newstring": {
+		"Name": "次へ",
+		"Tooltip": "次へ"
+	},
+	"Localization": {
+		"flash": "フラッシュ",
+		"selectprop": "プロパティを選択",
+		"on": "オン",
+		"off": "オフ",
+		"toggle": "切り替え",
+		"action": "アクション",
+		"dynamic": "動的",
+		"clickme": "ここをクリック",
+		"thisLanguage": "日本語"
+	}
+}

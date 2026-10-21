@@ -1,0 +1,28 @@
+{
+    "scripts": {
+        "build": "rollup -c",
+        "watch": "rollup -c -w --watch.onEnd=\"streamdeck restart com.elgato.image-resizer\"",
+        "postinstall": "pnpm --dir com.elgato.image-resizer.sdPlugin install --frozen-lockfile"
+    },
+    "packageManager": "pnpm@10.32.0",
+    "type": "module",
+    "prettier": "@elgato/prettier-config",
+    "devDependencies": {
+        "@elgato/cli": "^1.7.1",
+        "@elgato/prettier-config": "^0.3.3",
+        "@rollup/plugin-commonjs": "^28.0.0",
+        "@rollup/plugin-json": "^6.1.0",
+        "@rollup/plugin-node-resolve": "^15.2.2",
+        "@rollup/plugin-terser": "^0.4.4",
+        "@rollup/plugin-typescript": "^12.1.0",
+        "@tsconfig/node20": "^20.1.2",
+        "@types/node": "~20.15.0",
+        "rollup": "^4.0.2",
+        "tslib": "^2.6.2",
+        "typescript": "^5.2.2"
+    },
+    "dependencies": {
+        "@elgato/streamdeck": "^2.0.0",
+        "sharp": "^0.34.5"
+    }
+}

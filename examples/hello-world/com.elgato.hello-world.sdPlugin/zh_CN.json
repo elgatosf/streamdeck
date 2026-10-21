@@ -1,0 +1,19 @@
+{
+	"Name": "你好世界",
+	"Description": "演示使用国际化功能的示例插件",
+	"com.elgato.hello-world.newstring": {
+		"Name": "下一节",
+		"Tooltip": "下一节"
+	},
+	"Localization": {
+		"flash": "闪光灯",
+		"selectprop": "选择属性",
+		"on": "开",
+		"off": "关",
+		"toggle": "切换",
+		"action": "操作",
+		"dynamic": "动态",
+		"clickme": "点我",
+		"thisLanguage": "中文"
+	}
+}

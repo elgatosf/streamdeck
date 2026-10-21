@@ -1,0 +1,8 @@
+{
+  "Description": "Acompanhe o número de vezes que você pressiona uma tecla.", 
+  "Name": "Contador", 
+  "com.elgato.counter.action": {
+    "Name": "Contador", 
+    "Tooltip": "Quantas vezes você foi pwned hoje? Acompanhe com este contador."
+  }
+}
