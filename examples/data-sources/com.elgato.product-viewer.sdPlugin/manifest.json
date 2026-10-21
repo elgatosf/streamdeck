@@ -23,9 +23,9 @@
     "CodePath": "bin/plugin.js",
     "Description": "Demonstrate populating components with data sources from the plugin",
     "Icon": "imgs/plugin/marketplace",
-    "SDKVersion": 2,
+    "SDKVersion": 3,
     "Software": {
-        "MinimumVersion": "6.5"
+        "MinimumVersion": "7.1"
     },
     "OS": [
         {

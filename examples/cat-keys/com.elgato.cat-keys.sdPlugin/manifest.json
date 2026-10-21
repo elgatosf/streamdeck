@@ -24,9 +24,9 @@
     "CodePath": "bin/plugin.js",
     "Description": "A cute and cuddly plugin to demonstrate basic features of the Stream Deck SDK.",
     "Icon": "imgs/plugin/plugin",
-    "SDKVersion": 2,
+    "SDKVersion": 3,
     "Software": {
-        "MinimumVersion": "6.5"
+        "MinimumVersion": "7.1"
     },
     "OS": [
         {

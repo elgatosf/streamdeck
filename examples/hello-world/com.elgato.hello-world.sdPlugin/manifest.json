@@ -23,9 +23,9 @@
     "CodePath": "bin/plugin.js",
     "Description": "A sample plugin demonstrating the use of internationalization functionality",
     "Icon": "imgs/plugin/marketplace",
-    "SDKVersion": 2,
+    "SDKVersion": 3,
     "Software": {
-        "MinimumVersion": "6.5"
+        "MinimumVersion": "7.1"
     },
     "OS": [
         {

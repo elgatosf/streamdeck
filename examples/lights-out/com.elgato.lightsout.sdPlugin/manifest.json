@@ -43,9 +43,9 @@
     "CodePath": "bin/plugin.js",
     "Description": "Play a game of Lights-Out on your Stream Deck",
     "Icon": "imgs/plugin/marketplace",
-    "SDKVersion": 2,
+    "SDKVersion": 3,
     "Software": {
-        "MinimumVersion": "6.5"
+        "MinimumVersion": "7.1"
     },
     "OS": [
         {
