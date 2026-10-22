@@ -3,7 +3,7 @@ import { basename, extname, join, resolve } from "node:path";
 
 import { colorize } from "../../../common/stdout";
 import { aggregate } from "../../../common/utils";
-import { FilePathOptions } from "../../../json";
+import type { FilePathOptions } from "../../../json";
 import { isPredefinedLayoutLike } from "../../../stream-deck";
 import { getIgnores, streamDeckIgnoreFilename } from "../../../system/fs";
 import { rule } from "../../rule";

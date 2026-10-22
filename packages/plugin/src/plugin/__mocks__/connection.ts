@@ -2,7 +2,9 @@ import { vi } from "vitest";
 
 import { registrationInfo } from "../../api/registration/__mocks__/index.js";
 
-const { connection } = await vi.importActual<typeof import("../connection.js")>("../connection.js");
+const connection: typeof import("../connection.js").connection = (
+	await vi.importActual<typeof import("../connection.js")>("../connection.js")
+).connection;
 
 vi.spyOn(connection, "connect").mockReturnValue(Promise.resolve());
 vi.spyOn(connection, "registrationParameters", "get").mockReturnValue({

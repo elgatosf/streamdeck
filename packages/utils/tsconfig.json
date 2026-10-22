@@ -1,12 +1,6 @@
 {
-    "extends": "@tsconfig/node20/tsconfig.json",
+    "extends": "@elgato/tsconfig/node20/monorepo/lib",
     "compilerOptions": {
-        "erasableSyntaxOnly": true,
-        "lib": ["es2022", "esnext.disposable"],
-        "module": "NodeNext",
-        "noEmit": true,
-        "noImplicitOverride": true,
-        "verbatimModuleSyntax": true
-    },
-    "exclude": ["./dist/", "./node_modules/"]
+        "noEmit": true
+    }
 }

@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { assert, beforeEach, describe, expect, it, vi } from "vitest";
 
 import {
 	type DeviceDidChange,
@@ -51,6 +51,7 @@ describe("devices", () => {
 
 		// Assert.
 		expect(listener).toHaveBeenCalledTimes(2);
+		assert.isDefined(connection.registrationParameters.info.devices[0]);
 		expect(listener).toHaveBeenNthCalledWith<[Device]>(
 			1,
 			new Device(
@@ -106,6 +107,8 @@ describe("devices", () => {
 		expect(deviceService.length).toBe(1);
 
 		const [device] = deviceService;
+		assert.isDefined(device);
+		assert.isDefined(connection.registrationParameters.info.devices[0]);
 		expect(device.id).toBe(connection.registrationParameters.info.devices[0].id);
 		expect(device.isConnected).toBeFalsy();
 		expect(device.name).toBe(connection.registrationParameters.info.devices[0].name);
@@ -135,6 +138,7 @@ describe("devices", () => {
 		expect(deviceService.length).toBe(1);
 
 		const [device] = deviceService;
+		assert.isDefined(device);
 		expect(device.id).toBe("__NEW_DEV__");
 		expect(device.isConnected).toBeTruthy();
 		expect(device.name).toBe("New Device");
@@ -165,6 +169,7 @@ describe("devices", () => {
 		expect(deviceService.length).toBe(1);
 
 		const [device] = deviceService;
+		assert.isDefined(device);
 		expect(device.id).toBe("vsd");
 		expect(device.isConnected).toBe(false);
 		expect(device.name).toBe("Virtual Stream Deck");
@@ -223,6 +228,8 @@ describe("devices", () => {
 
 		// Act.
 		const [device] = deviceService;
+		assert.isDefined(device);
+		assert.isDefined(connection.registrationParameters.info.devices[0]);
 		expect(device.isConnected).toBeFalsy();
 
 		connection.emit("deviceDidConnect", {
@@ -250,6 +257,8 @@ describe("devices", () => {
 
 		// Act.
 		const [device] = deviceService;
+		assert.isDefined(device);
+		assert.isDefined(connection.registrationParameters.info.devices[0]);
 		expect(device.isConnected).toBeFalsy();
 
 		connection.emit("deviceDidConnect", {
@@ -283,6 +292,8 @@ describe("devices", () => {
 
 		// Act.
 		const [device] = deviceService;
+		assert.isDefined(device);
+		assert.isDefined(connection.registrationParameters.info.devices[0]);
 		expect(device.isConnected).toBeFalsy();
 
 		connection.emit("deviceDidDisconnect", {
@@ -306,6 +317,7 @@ describe("devices", () => {
 	it("receive onDeviceDidChange", () => {
 		// Arrange
 		connection.emit("connected", connection.registrationParameters.info);
+		assert.isDefined(connection.registrationParameters.info.devices[0]);
 
 		const listener = vi.fn();
 		const ev = {
@@ -384,6 +396,7 @@ describe("devices", () => {
 	it("receives onDeviceDidDisconnect", () => {
 		// Arrange
 		connection.emit("connected", connection.registrationParameters.info);
+		assert.isDefined(connection.registrationParameters.info.devices[0]);
 
 		const listener = vi.fn();
 		const ev = {

@@ -21,7 +21,7 @@ export function action(definition: ActionDefinition) {
 			/**
 			 * The universally-unique value that identifies the action within the manifest.
 			 */
-			public readonly manifestId: string | undefined = manifestId;
+			public override readonly manifestId: string | undefined = manifestId;
 		};
 	};
 }

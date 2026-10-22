@@ -374,7 +374,7 @@ describe("EventEmitter", () => {
 			test("adding listeners", () => {
 				// Arrange.
 				const newListenerFn = vi.fn();
-				const listeners = [vi.fn(), vi.fn(), vi.fn(), vi.fn(), vi.fn(), vi.fn()];
+				const listeners = [vi.fn(), vi.fn(), vi.fn(), vi.fn(), vi.fn(), vi.fn()] as const;
 
 				const emitter = new EventEmitter<EventMap>();
 				emitter.addListener("newListener", newListenerFn);
@@ -437,7 +437,7 @@ describe("EventEmitter", () => {
 			test("removing listeners", () => {
 				// Arrange.
 				const removeListenerFn = vi.fn();
-				const listeners = [vi.fn(), vi.fn(), vi.fn(), vi.fn()];
+				const listeners = [vi.fn(), vi.fn(), vi.fn(), vi.fn()] as const;
 
 				const emitter = new EventEmitter<EventMap>();
 				emitter.addListener("removeListener", removeListenerFn);
@@ -466,7 +466,7 @@ describe("EventEmitter", () => {
 			test("once listeners", () => {
 				// Arrange.
 				const removeListenerFn = vi.fn();
-				const listeners = [vi.fn(), vi.fn(), vi.fn(), vi.fn()];
+				const listeners = [vi.fn(), vi.fn(), vi.fn(), vi.fn()] as const;
 
 				const emitter = new EventEmitter<EventMap>();
 				emitter.addListener("removeListener", removeListenerFn);
