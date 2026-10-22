@@ -1,0 +1,47 @@
+{
+    "Name": "Counter",
+    "Version": "1.5.0.1",
+    "Author": "Elgato",
+    "Actions": [
+        {
+            "Name": "Count",
+            "UUID": "com.elgato.counter.action",
+            "Icon": "imgs/actions/counter/icon",
+            "Tooltip": "Displays a count, which increments on press.",
+            "PropertyInspectorPath": "ui/increment-counter.html",
+            "Controllers": ["Keypad"],
+            "UserTitleEnabled": false,
+            "States": [
+                {
+                    "Image": "imgs/actions/counter/key",
+                    "TitleAlignment": "middle"
+                }
+            ],
+            "SupportedInMultiActions": false
+        }
+    ],
+    "Category": "Counter",
+    "CategoryIcon": "imgs/plugin/category-icon",
+    "CodePath": "bin/plugin.js",
+    "Description": "Keep count from your Stream Deck. With a single key, tally actions like wins or in-game deaths. No more keeping track on old notepads or in your livestream chat. Now, create simple counters instantly with a press.",
+    "Icon": "imgs/plugin/marketplace",
+    "SDKVersion": 3,
+    "Software": {
+        "MinimumVersion": "7.1"
+    },
+    "OS": [
+        {
+            "Platform": "mac",
+            "MinimumVersion": "12"
+        },
+        {
+            "Platform": "windows",
+            "MinimumVersion": "10"
+        }
+    ],
+    "Nodejs": {
+        "Version": "20",
+        "Debug": "enabled"
+    },
+    "UUID": "com.elgato.counter"
+}

@@ -4,9 +4,10 @@
     "tasks": {
         "build": {
             "dependsOn": ["^build"],
-            "outputs": ["bin/**", "dist/**"]
+            "outputs": ["bin/**", "dist/**", "*.sdPlugin/bin/**"]
         },
         "dev": {
+            "dependsOn": ["^build"],
             "cache": false,
             "persistent": true
         },
