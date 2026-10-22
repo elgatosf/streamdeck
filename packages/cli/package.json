@@ -127,7 +127,7 @@
     },
     "devDependencies": {
         "@elgato/eslint-config": "^0.3.2",
-        "@tsconfig/node20": "^20.1.4",
+        "@elgato/tsconfig": "workspace:^",
         "@types/ejs": "^3.1.5",
         "@types/inquirer": "^9.0.7",
         "@types/lodash": "^4.17.14",

@@ -2,7 +2,7 @@ import { EOL } from "node:os";
 
 import chalk from "chalk";
 
-import { LocationRef } from "../common/location";
+import type { LocationRef } from "../common/location";
 
 /**
  * Provides information about a validation entry.

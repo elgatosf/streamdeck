@@ -2,7 +2,7 @@ import { existsSync } from "node:fs";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 
-import { type SchemaObject } from "ajv";
+import type { SchemaObject } from "ajv";
 import { parse, SemVer } from "semver";
 
 import { getFileStoreDir } from "../config";
