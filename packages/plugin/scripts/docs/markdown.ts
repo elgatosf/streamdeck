@@ -10,7 +10,7 @@
  */
 export function formatJSDocLinks(text: string): string {
 	// Matches `{@link target}` and `{@link target label}`.
-	return text.replaceAll(/{@link\s(.*?)(\s.*?)?}/g, (_: string, ...[link, name]: string[]) => {
+	return text.replaceAll(/{@link\s(.*?)(\s.*?)?}/g, (_: string, link: string, name?: string) => {
 		if (link.startsWith("http://") || link.startsWith("https://")) {
 			return `[${(name ?? link).trim()}](${link})`;
 		}
@@ -161,17 +161,17 @@ export function withHighlightMeta(fence: string, lines: number[]): string {
 		return info;
 	}
 
-	const ranges: string[] = [];
-	for (let i = 0; i < lines.length; i++) {
-		const start = lines[i];
-		while (i + 1 < lines.length && lines[i + 1] === lines[i] + 1) {
-			i++;
+	const ranges: [number, number][] = [];
+	for (const line of lines) {
+		const last = ranges.at(-1);
+		if (last && line === last[1] + 1) {
+			last[1] = line;
+		} else {
+			ranges.push([line, line]);
 		}
-
-		ranges.push(start === lines[i] ? `${start}` : `${start}-${lines[i]}`);
 	}
 
-	return `${info} {${ranges.join(",")}}`;
+	return `${info} {${ranges.map(([start, end]) => (start === end ? `${start}` : `${start}-${end}`)).join(",")}}`;
 }
 
 /**

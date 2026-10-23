@@ -64,8 +64,7 @@ function getAnchors(markdown: string): Set<string> {
 	const lines = markdown.split("\n");
 	let inCode = false;
 
-	for (let i = 0; i < lines.length; i++) {
-		const line = lines[i];
+	for (const line of lines) {
 		if (/^\s*```/.test(line)) {
 			inCode = !inCode;
 			continue;
@@ -76,13 +75,13 @@ function getAnchors(markdown: string): Set<string> {
 		}
 
 		// Explicit anchors, for example `<a id="eslint-installation"></a>`.
-		for (const anchor of line.matchAll(/<a\s[^>]*\bid="([\w-]+)"/g)) {
-			anchors.add(anchor[1]);
+		for (const [, id = ""] of line.matchAll(/<a\s[^>]*\bid="([\w-]+)"/g)) {
+			anchors.add(id);
 		}
 
-		const heading = line.match(/^#{1,6} (.+?)\s*$/);
+		const heading = line.match(/^#{1,6} (.+?)\s*$/)?.[1];
 		if (heading) {
-			const slug = slugify(heading[1]);
+			const slug = slugify(heading);
 			const count = slugCounts.get(slug) ?? 0;
 			slugCounts.set(slug, count + 1);
 			anchors.add(count === 0 ? slug : `${slug}-${count}`);
@@ -150,7 +149,7 @@ for (const page of pages) {
 
 	// Frontmatter; optional, and limited to known keys.
 	const frontmatter = markdown.match(/^---\n([\s\S]*?)\n---\n/);
-	for (const line of frontmatter?.[1].split("\n") ?? []) {
+	for (const line of frontmatter?.[1]?.split("\n") ?? []) {
 		const key = line.match(/^(\w+):/)?.[1];
 		if (key && !frontmatterKeys.includes(key)) {
 			errors.push(`${name}: unknown frontmatter key "${key}", expected one of ${frontmatterKeys.join(", ")}`);
@@ -165,7 +164,7 @@ for (const page of pages) {
 
 	// Links and images; code blocks are skipped.
 	const prose = markdown.replaceAll(/```[\s\S]*?```/g, "").replaceAll(/`[^`\n]*`/g, "");
-	for (const [, isImage, target] of prose.matchAll(/(!?)\[[^\]]*\]\(([^)\s]+)\)/g)) {
+	for (const [, isImage, target = ""] of prose.matchAll(/(!?)\[[^\]]*\]\(([^)\s]+)\)/g)) {
 		if (/^(https?:|mailto:)/.test(target)) {
 			continue;
 		}

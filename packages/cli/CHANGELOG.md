@@ -1,5 +1,12 @@
 # Change Log
 
+## 1.10.3
+
+### Patch Changes
+
+- Updated dependencies [6a57d80]
+    - @elgato/schemas@0.5.3
+
 ## 1.10.2
 
 ### Patch Changes

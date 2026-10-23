@@ -314,7 +314,7 @@ type Manifest = {
 	Nodejs?: {
 		Debug?: string;
 		GenerateProfilerOutput?: boolean;
-		Version: "20" | "24";
+		Version: "20" | "24" | "26";
 	};
 	OS: [
 		{
@@ -994,7 +994,7 @@ Determines whether to generate a profiler output for the plugin; [read more](htt
 
 #### Version
 
-Type: `"20"`, `"24"` (required)
+Type: `"20"`, `"24"`, `"26"` (required)
 
 Version of Node.js to use.
 

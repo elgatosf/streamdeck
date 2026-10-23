@@ -2,7 +2,7 @@ import path from "node:path";
 
 import { ConsoleTarget, type LoggerOptions } from "@elgato/utils/logging";
 import { type FileTargetOptions } from "@elgato/utils/logging/file-target";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, assert, beforeEach, describe, expect, it, vi } from "vitest";
 
 vi.mock("../../common/utils.js");
 vi.mock("@elgato/utils/logging");
@@ -58,6 +58,7 @@ describe("createLogger", () => {
 			await import("../index.js");
 
 			// Assert.
+			assert.isDefined(spyOnFileTarget.mock.instances[0]);
 			expect(Logger).toHaveBeenCalledWith<[LoggerOptions]>({
 				level: "info",
 				minimumLevel: "debug",
@@ -99,6 +100,7 @@ describe("createLogger", () => {
 
 		// Act.
 		const err = new Error("Hello world");
+		assert.isDefined(spyOnProcessOnce.mock.calls[0]);
 		spyOnProcessOnce.mock.calls[0][1](err);
 
 		// Assert.

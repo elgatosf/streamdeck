@@ -79,7 +79,7 @@ export class TupleStructure extends Structure {
 		return this.#context.type.getTupleElements().map((element, i) => {
 			const declaration = target.labeledElementDeclarations?.[i];
 			const name = declaration && ts.isIdentifier(declaration.name) ? declaration.name.text : undefined;
-			const optional = (target.elementFlags[i] & ts.ElementFlags.Optional) !== 0;
+			const optional = ((target.elementFlags[i] ?? 0) & ts.ElementFlags.Optional) !== 0;
 
 			return new TupleMemberStructure(name, optional, element, this.#context.structureBuilder);
 		});

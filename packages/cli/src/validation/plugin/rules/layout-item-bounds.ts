@@ -1,7 +1,7 @@
-import { type Layout } from "@elgato/schemas/streamdeck/plugins";
+import type { Layout } from "@elgato/schemas/streamdeck/plugins";
 import chalk from "chalk";
 
-import { JsonElement, JsonObject } from "../../../json";
+import type { JsonElement, JsonObject } from "../../../json";
 import { rule } from "../../rule";
 import { type PluginContext } from "../plugin";
 
@@ -14,7 +14,7 @@ export const layoutItemsAreWithinBoundsAndNoOverlap = rule<PluginContext>(functi
 			const {
 				node,
 				vertices: { x1, x2, y1, y2 },
-			} = items[i];
+			} = items[i]!;
 
 			// First check the bounds of the rectangle are within the canvas.
 			if (x1 < 0 || x2 > 200 || y1 < 0 || y2 > 100) {
@@ -25,8 +25,8 @@ export const layoutItemsAreWithinBoundsAndNoOverlap = rule<PluginContext>(functi
 			}
 
 			for (let j = i - 1; j >= 0; j--) {
-				if (isOverlap(items[i].vertices, items[j].vertices)) {
-					this.addError(layout.path, `must not overlap ${chalk.blue(items[j].node.location.key)}`, items[i].node);
+				if (isOverlap(items[i]!.vertices, items[j]!.vertices)) {
+					this.addError(layout.path, `must not overlap ${chalk.blue(items[j]!.node.location.key)}`, node);
 				}
 			}
 		}
@@ -43,12 +43,12 @@ function getItemBounds(layout: JsonObject<Layout>): Bounds[] {
 		layout.items?.reduce<Bounds[]>((valid, { rect, zOrder }) => {
 			if (rect?.length === 4) {
 				valid.push({
-					node: rect[0],
+					node: rect[0]!,
 					vertices: {
-						x1: rect[0].value,
-						x2: rect[0].value + rect[2].value,
-						y1: rect[1].value,
-						y2: rect[1].value + rect[3].value,
+						x1: rect[0]!.value,
+						x2: rect[0]!.value + rect[2]!.value,
+						y1: rect[1]!.value,
+						y2: rect[1]!.value + rect[3]!.value,
 						z: zOrder?.value ?? 0,
 					},
 				});

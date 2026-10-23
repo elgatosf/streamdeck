@@ -1,6 +1,6 @@
 {
     "name": "@elgato/streamdeck",
-    "version": "3.0.2",
+    "version": "3.0.3",
     "description": "The official Node.js SDK for creating Stream Deck plugins.",
     "keywords": [
         "elgato",
@@ -39,7 +39,7 @@
         "build": "rm -rf ./dist && tsc -p tsconfig.build.json",
         "dev": "rm -rf ./dist && tsc -p tsconfig.build.json -w",
         "docs:generate": "tsx scripts/docs/generate.ts",
-        "docs:check": "tsx scripts/docs/generate.ts --check && tsx scripts/docs/validate.ts && markdownlint-cli2 && tsc && tsc -p docs/_snippets/node/tsconfig.json && tsc -p docs/_snippets/browser/tsconfig.json",
+        "docs:check": "tsx scripts/docs/generate.ts --check && tsx scripts/docs/validate.ts && markdownlint-cli2 && tsc -p tsconfig.scripts.json && tsc -p docs/_snippets/node/tsconfig.json && tsc -p docs/_snippets/browser/tsconfig.json",
         "lint": "eslint --max-warnings 0",
         "test": "vitest --run --reporter verbose",
         "test:coverage": "vitest run --coverage",
@@ -53,7 +53,7 @@
     },
     "devDependencies": {
         "@elgato/eslint-config": "^0.3.2",
-        "@tsconfig/node20": "^20.1.9",
+        "@elgato/tsconfig": "workspace:^",
         "@types/node": "^24.12.0",
         "@types/ws": "^8.18.1",
         "@vitest/coverage-v8": "^3.2.4",

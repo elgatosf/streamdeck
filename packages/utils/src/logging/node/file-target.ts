@@ -76,14 +76,14 @@ export class FileTarget implements LogTarget {
 					return prev;
 				}
 
-				const match = entry.name.substring(this.#options.fileName.length).match(regex);
-				if (match?.length !== 2) {
+				const logIndex = entry.name.substring(this.#options.fileName.length).match(regex)?.[1];
+				if (!logIndex) {
 					return prev;
 				}
 
 				prev.push({
 					path: path.join(this.#options.dest, entry.name),
-					index: parseInt(match[1]),
+					index: parseInt(logIndex),
 				});
 
 				return prev;
@@ -111,6 +111,10 @@ export class FileTarget implements LogTarget {
 		const logFiles = this.getLogFiles();
 		for (let i = logFiles.length - 1; i >= 0; i--) {
 			const log = logFiles[i];
+			if (!log) {
+				continue;
+			}
+
 			if (i >= this.#options.maxFileCount - 1) {
 				fs.rmSync(log.path);
 			} else {

@@ -88,7 +88,7 @@ export async function sync(opts: SyncOptions): Promise<SyncResult[]> {
 		let contents = original;
 
 		// Generated regions.
-		for (const [match, id] of original.matchAll(generatedRegion)) {
+		for (const [match, id = ""] of original.matchAll(generatedRegion)) {
 			const generator = opts.generators[id];
 			if (!generator) {
 				throw new Error(`Unknown generator "${id}" in ${relative(opts.docsDir, path)}`);
@@ -106,7 +106,7 @@ export async function sync(opts: SyncOptions): Promise<SyncResult[]> {
 		}
 
 		// Snippets.
-		for (const [match, src, openingFence, closingFence] of contents.matchAll(snippetBlock)) {
+		for (const [match, src = "", openingFence = "", closingFence = ""] of contents.matchAll(snippetBlock)) {
 			const snippetPath = join(opts.snippetsDir, src);
 			if (!existsSync(snippetPath)) {
 				throw new Error(`Snippet "${src}" not found, referenced in ${relative(opts.docsDir, path)}`);
