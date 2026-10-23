@@ -1,5 +1,5 @@
 {
-    "extends": "@elgato/tsconfig/node20/app",
+    "extends": "@elgato/tsconfig/node20/bundle",
     "compilerOptions": {
         "customConditions": ["node"],
         "rootDir": "."

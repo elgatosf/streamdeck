@@ -33,18 +33,18 @@ pnpm add -D @elgato/tsconfig
 
 Available TypeScript configurations are determined by two factors:
 
-- Environment — where the code will run, e.g. a browser or Node.js.
-- Build output — what the output of the code is.
+1. Environment — where the code will run, e.g. `dom`, `isomorphic`, `node26`, etc.
+2. Build output — what the output of the code is, either `app`, `bundle`, `lib`, or `monorepo/lib`.
 
 These factors are available in the following combinations:
 
-|              | `app` | `lib` | `monorepo/lib` |
-| ------------ | ----- | ----- | -------------- |
-| `dom`        | ✅    | ✅    | ✅             |
-| `isomorphic` | ❌    | ✅    | ✅             |
-| `node20`     | ✅    | ✅    | ✅             |
-| `node24`     | ✅    | ✅    | ✅             |
-| `node26`     | ✅    | ✅    | ✅             |
+|              | `app` | `bundle` | `lib` | `monorepo/lib` |
+| ------------ | ----- | -------- | ----- | -------------- |
+| `dom`        | ✅    | ✅       | ✅    | ✅             |
+| `isomorphic` | ❌    | ✅       | ✅    | ✅             |
+| `node20`     | ✅    | ✅       | ✅    | ✅             |
+| `node24`     | ✅    | ✅       | ✅    | ✅             |
+| `node26`     | ✅    | ✅       | ✅    | ✅             |
 
 <h3 id="dom">DOM</h3>
 
@@ -52,7 +52,8 @@ Your code runs in a DOM-based environment, such as a browser or QtWebEngine.
 
 ```jsonc
 {
-    "extends": "@elgato/tsconfig/dom/app", // For a bundled app
+    "extends": "@elgato/tsconfig/dom/app", // For an app
+    "extends": "@elgato/tsconfig/dom/bundle", // When using a bundler
     "extends": "@elgato/tsconfig/dom/lib", // For a library
     "extends": "@elgato/tsconfig/dom/monorepo/lib", // For a library in a monorepo
 }
@@ -68,6 +69,7 @@ pnpm add -D @types/node@^24
 
 ```jsonc
 {
+    "extends": "@elgato/tsconfig/isomorphic/bundle", // When using a bundler
     "extends": "@elgato/tsconfig/isomorphic/lib", // For a library
     "extends": "@elgato/tsconfig/isomorphic/monorepo/lib", // For a library in a monorepo
 }
@@ -83,7 +85,8 @@ pnpm add -D @types/node@^20
 
 ```jsonc
 {
-    "extends": "@elgato/tsconfig/node20/app", // For a bundled app
+    "extends": "@elgato/tsconfig/node20/app", // For an app
+    "extends": "@elgato/tsconfig/node20/bundle", // When using a bundler
     "extends": "@elgato/tsconfig/node20/lib", // For a library
     "extends": "@elgato/tsconfig/node20/monorepo/lib", // For a library in a monorepo
 }
@@ -99,7 +102,8 @@ pnpm add -D @types/node@^24
 
 ```jsonc
 {
-    "extends": "@elgato/tsconfig/node24/app", // For a bundled app
+    "extends": "@elgato/tsconfig/node24/app", // For an app
+    "extends": "@elgato/tsconfig/node24/bundle", // When using a bundler
     "extends": "@elgato/tsconfig/node24/lib", // For a library
     "extends": "@elgato/tsconfig/node24/monorepo/lib", // For a library in a monorepo
 }
@@ -115,7 +119,8 @@ pnpm add -D @types/node@^26
 
 ```jsonc
 {
-    "extends": "@elgato/tsconfig/node26/app", // For a bundled app
+    "extends": "@elgato/tsconfig/node26/app", // For an app
+    "extends": "@elgato/tsconfig/node26/bundle", // When using a bundler
     "extends": "@elgato/tsconfig/node26/lib", // For a library
     "extends": "@elgato/tsconfig/node26/monorepo/lib", // For a library in a monorepo
 }
@@ -149,48 +154,56 @@ Each configuration provides access to different libraries based on the environme
 
 ### Build Output
 
-- `app` — a self-contained output built using a bundler, such as [`rolldown`](https://rolldown.rs/).
+- `app` — an unbundled output built using TypeScript, intended to be consumed as a standalone.
+- `bundle` — a self-contained output built using a bundler, such as [`rolldown`](https://rolldown.rs/).
 - `lib` — an unbundled output built using TypeScript, intended to be referenced by another package.
 - `monorepo/lib` — an extension of `lib`, when the code is in a monorepo project.
 
-|                   |   `app`    |   `lib`    |       `monorepo/lib`        |
-| ----------------- | :--------: | :--------: | :-------------------------: |
-| `module`          | `preserve` | `nodenext` |         `nodenext`          |
-| `composite`       |     ❌     |     ❌     |             ✅              |
-| `tsBuildInfoFile` |     -      |     -      | `dist/tsconfig.tsbuildinfo` |
-| `declaration`     |     ❌     |     ✅     |             ✅              |
-| `declarationMap`  |     ❌     |     ❌     |             ✅              |
-| `outDir`          |     -      |   `dist`   |           `dist`            |
-| `noEmit`          |     ✅     |     ❌     |             ❌              |
-| `rootDir`         |   `src`    |   `src`    |            `src`            |
-| `sourceMap`       |     ❌     |     ✅     |             ✅              |
-| `include`         | `["src"]`  | `["src"]`  |          `["src"]`          |
+|                   |   `app`    |  `bundle`  |   `lib`    |       `monorepo/lib`        |
+| ----------------- | :--------: | :--------: | :--------: | :-------------------------: |
+| `module`          | `nodenext` | `preserve` | `nodenext` |         `nodenext`          |
+| `noEmit`          |     ❌     |     ✅     |     ❌     |             ❌              |
+| `outDir`          |   `bin`    |     -      |   `dist`   |           `dist`            |
+| `declaration`     |     ❌     |     ❌     |     ✅     |             ✅              |
+| `sourceMap`       |     ✅     |     ❌     |     ✅     |             ✅              |
+| `composite`       |     ❌     |     ❌     |     ❌     |             ✅              |
+| `declarationMap`  |     ❌     |     ❌     |     ❌     |             ✅              |
+| `tsBuildInfoFile` |     -      |     -      |     -      | `dist/tsconfig.tsbuildinfo` |
+| `rootDir`         |   `src`    |   `src`    |   `src`    |            `src`            |
+| `include`         | `["src"]`  | `["src"]`  | `["src"]`  |          `["src"]`          |
 
 ## Assumptions
 
 ### `outDir`
 
-When building with TypeScript, the output directory is `dist`.
+When building with TypeScript, the output directory is:
+
+- `bin` when the build output is `app`.
+- `dist` when the build output is `lib` or `monorepo/lib`.
 
 ```jsonc
 {
     "extends": "@elgato/tsconfig/dom/lib",
     "compilerOptions": {
-        "outDir": "dist", // Change to override
+        "outDir": "bin", // Change to override
     },
 }
 ```
 
 Applies to:
 
+- `@elgato/tsconfig/dom/app`
 - `@elgato/tsconfig/dom/lib`
 - `@elgato/tsconfig/dom/monorepo/lib`
 - `@elgato/tsconfig/isomorphic/lib`
 - `@elgato/tsconfig/isomorphic/monorepo/lib`
+- `@elgato/tsconfig/node20/app`
 - `@elgato/tsconfig/node20/lib`
 - `@elgato/tsconfig/node20/monorepo/lib`
+- `@elgato/tsconfig/node24/app`
 - `@elgato/tsconfig/node24/lib`
 - `@elgato/tsconfig/node24/monorepo/lib`
+- `@elgato/tsconfig/node26/app`
 - `@elgato/tsconfig/node26/lib`
 - `@elgato/tsconfig/node26/monorepo/lib`
 

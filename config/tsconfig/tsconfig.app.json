@@ -2,9 +2,11 @@
     "extends": "./tsconfig.json",
     "compilerOptions": {
         /* Modules */
-        "module": "preserve",
+        "module": "nodenext",
 
         /* Emit */
-        "noEmit": true
+        "declaration": false,
+        "outDir": "${configDir}/bin",
+        "sourceMap": true
     }
 }
