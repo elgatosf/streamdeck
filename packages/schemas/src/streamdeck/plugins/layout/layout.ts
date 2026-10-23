@@ -1,5 +1,5 @@
-import type { Controller } from "../manifest/latest";
-import type { Rect } from "./rect";
+import type { Controller } from "../manifest/latest.js";
+import type { Rect } from "./rect.js";
 
 /**
  * Defines the structure of a custom layout file.

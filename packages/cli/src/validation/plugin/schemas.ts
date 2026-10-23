@@ -1,4 +1,5 @@
-import { layout, manifest } from "@elgato/schemas/streamdeck/plugins/json";
+import layout from "@elgato/schemas/streamdeck/plugins/layout.json" with { type: "json" };
+import manifest from "@elgato/schemas/streamdeck/plugins/manifest.json" with { type: "json" };
 import type { SchemaObject } from "ajv";
 
 import { schemaStore } from "../../json/store";

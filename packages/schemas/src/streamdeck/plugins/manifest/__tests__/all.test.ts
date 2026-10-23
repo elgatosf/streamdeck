@@ -13,7 +13,7 @@ describe.each(["v6.4", "v6.5", "v6.6", "v6.7", "v6.8"])("%s", (version) => {
 		 */
 		test("Icon", () => {
 			// Arrange, act, assert.
-			const errors = validateStreamDeckPluginManifest(filePath, (m) => (m.Actions[0].Icon = "test.png"));
+			const errors = validateStreamDeckPluginManifest(filePath, (m) => (m.Actions[0]!.Icon = "test.png"));
 			expect(errors).toHaveError({
 				instancePath: "/Actions/0/Icon",
 				keyword: "pattern",
@@ -30,7 +30,7 @@ describe.each(["v6.4", "v6.5", "v6.6", "v6.7", "v6.8"])("%s", (version) => {
 			// Arrange, act.
 			const errors = validateStreamDeckPluginManifest(filePath, (m) => {
 				// @ts-expect-error Test non-HTML file path.
-				m.Actions[0].PropertyInspectorPath = "file.txt";
+				m.Actions[0]!.PropertyInspectorPath = "file.txt";
 			});
 
 			// Assert.
@@ -48,7 +48,7 @@ describe.each(["v6.4", "v6.5", "v6.6", "v6.7", "v6.8"])("%s", (version) => {
 		 */
 		test("UUID", () => {
 			// Arrange, act, assert.
-			const errors = validateStreamDeckPluginManifest(filePath, (m) => (m.Actions[0].UUID = "com.$.test"));
+			const errors = validateStreamDeckPluginManifest(filePath, (m) => (m.Actions[0]!.UUID = "com.$.test"));
 			expect(errors).toHaveError({
 				instancePath: "/Actions/0/UUID",
 				keyword: "pattern",
@@ -67,7 +67,7 @@ describe.each(["v6.4", "v6.5", "v6.6", "v6.7", "v6.8"])("%s", (version) => {
 			 */
 			test("Icon", () => {
 				// Arrange, act, assert.
-				const errors = validateStreamDeckPluginManifest(filePath, (m) => (m.Actions[0].Encoder!.Icon = "test.png"));
+				const errors = validateStreamDeckPluginManifest(filePath, (m) => (m.Actions[0]!.Encoder!.Icon = "test.png"));
 				expect(errors).toHaveError({
 					instancePath: "/Actions/0/Encoder/Icon",
 					keyword: "pattern",
@@ -84,7 +84,7 @@ describe.each(["v6.4", "v6.5", "v6.6", "v6.7", "v6.8"])("%s", (version) => {
 				// Arrange, act, assert.
 				const errors = validateStreamDeckPluginManifest(
 					filePath,
-					(m) => (m.Actions[0].Encoder!.background = "test.png"),
+					(m) => (m.Actions[0]!.Encoder!.background = "test.png"),
 				);
 				expect(errors).toHaveError({
 					instancePath: "/Actions/0/Encoder/background",
@@ -102,7 +102,7 @@ describe.each(["v6.4", "v6.5", "v6.6", "v6.7", "v6.8"])("%s", (version) => {
 				// Arrange, act, assert.
 				const errors = validateStreamDeckPluginManifest(
 					filePath,
-					(m) => (m.Actions[0].Encoder!.layout = "./test.json"),
+					(m) => (m.Actions[0]!.Encoder!.layout = "./test.json"),
 				);
 				expect(errors).toHaveError({
 					instancePath: "/Actions/0/Encoder/layout",
@@ -123,7 +123,10 @@ describe.each(["v6.4", "v6.5", "v6.6", "v6.7", "v6.8"])("%s", (version) => {
 			 */
 			test("Image", () => {
 				// Arrange, act, assert.
-				const errors = validateStreamDeckPluginManifest(filePath, (m) => (m.Actions[0].States[0].Image = "test.png"));
+				const errors = validateStreamDeckPluginManifest(
+					filePath,
+					(m) => (m.Actions[0]!.States[0]!.Image = "test.png"),
+				);
 				expect(errors).toHaveError({
 					instancePath: "/Actions/0/States/0/Image",
 					keyword: "pattern",
@@ -140,7 +143,7 @@ describe.each(["v6.4", "v6.5", "v6.6", "v6.7", "v6.8"])("%s", (version) => {
 				// Arrange, act, assert.
 				const errors = validateStreamDeckPluginManifest(
 					filePath,
-					(m) => (m.Actions[0].States[0].MultiActionImage = "test.png"),
+					(m) => (m.Actions[0]!.States[0]!.MultiActionImage = "test.png"),
 				);
 				expect(errors).toHaveError({
 					instancePath: "/Actions/0/States/0/MultiActionImage",
@@ -235,7 +238,7 @@ describe.each(["v6.4", "v6.5", "v6.6", "v6.7", "v6.8"])("%s", (version) => {
 		test("Name", () => {
 			// Arrange, act.
 			const errors = validateStreamDeckPluginManifest(filePath, (m) => {
-				m.Profiles![0].Name = "other.streamDeckProfile";
+				m.Profiles![0]!.Name = "other.streamDeckProfile";
 			});
 
 			// Assert.

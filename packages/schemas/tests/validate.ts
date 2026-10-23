@@ -1,11 +1,11 @@
 import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 
-import Ajv, { type ErrorObject } from "ajv";
+import { Ajv, type ErrorObject } from "ajv";
 
-import { keywordDefinitions } from "../src/index";
-import type { Manifest } from "../src/streamdeck/plugins/";
-import type { Layout } from "../src/streamdeck/plugins/schemas";
+import { keywordDefinitions } from "../src/index.js";
+import type { Manifest } from "../src/streamdeck/plugins/index.js";
+import type { Layout } from "../src/streamdeck/plugins/schemas.js";
 
 /**
  * Validates the specified manifest file.

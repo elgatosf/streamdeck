@@ -1,1 +1,1 @@
-import "./matchers/to-have-error";
+import "./matchers/to-have-error.js";

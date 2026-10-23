@@ -1,5 +1,5 @@
-import type { Nodejs } from "./latest";
-import type { Manifest_7_1 } from "./v7.1";
+import type { Nodejs } from "./latest.js";
+import type { Manifest_7_1 } from "./v7.1.js";
 
 /**
  * Defines the plugin and available actions, and all information associated with them, including the plugin's entry point, all iconography, action default behavior, etc.

@@ -1,4 +1,4 @@
-import type { Manifest_6_5 } from "./v6.5";
+import type { Manifest_6_5 } from "./v6.5.js";
 
 /**
  * Defines the plugin and available actions, and all information associated with them, including the plugin's entry point, all iconography, action default behavior, etc.

@@ -1,14 +1,11 @@
 {
-    "extends": "@tsconfig/node20/tsconfig.json",
+    "extends": "@elgato/tsconfig/node20/monorepo/lib",
     "compilerOptions": {
-        "customConditions": ["node"],
-        "module": "ES2022",
-        "moduleResolution": "Bundler",
+        "noEmit": true,
+        "rootDir": ".",
         "paths": {
-            "@tests": ["./tests/validate"]
-        },
-        "types": []
+            "@tests": ["./tests/validate.ts"]
+        }
     },
-    "include": ["scripts/**/*", "src/**/*", "tests/**/*", "rollup.config.ts"],
-    "exclude": ["node_modules"]
+    "include": ["src/", "tests/"]
 }

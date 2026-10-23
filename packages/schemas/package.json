@@ -23,24 +23,18 @@
         "url": "git+https://github.com/elgatosf/streamdeck.git"
     },
     "files": [
-        "dist/",
+        "./dist/**/*.{d.ts,js}",
         "streamdeck/"
     ],
+    "type": "module",
     "exports": {
         ".": {
             "types": "./dist/index.d.ts",
-            "import": "./dist/index.mjs",
-            "require": "./dist/index.cjs"
+            "default": "./dist/index.js"
         },
         "./streamdeck/plugins": {
             "types": "./dist/streamdeck/plugins/index.d.ts",
-            "import": "./dist/streamdeck/plugins/index.mjs",
-            "require": "./dist/streamdeck/plugins/index.cjs"
-        },
-        "./streamdeck/plugins/json": {
-            "types": "./dist/streamdeck/plugins/json.d.ts",
-            "import": "./dist/streamdeck/plugins/json.mjs",
-            "require": "./dist/streamdeck/plugins/json.cjs"
+            "default": "./dist/streamdeck/plugins/index.js"
         },
         "./streamdeck/plugins/layout.json": {
             "default": "./streamdeck/plugins/layout.json"
@@ -67,14 +61,10 @@
             ]
         },
         "build:exports": {
-            "command": "rollup --config rollup.config.ts --configPlugin typescript",
-            "dependencies": [
-                "build:schemas"
-            ],
+            "command": "tsc --project tsconfig.build.json",
             "files": [
                 "src/**",
                 "!src/**/__tests__/**",
-                "rollup.config.ts",
                 "tsconfig.json"
             ],
             "output": [
@@ -121,12 +111,9 @@
     },
     "devDependencies": {
         "@elgato/eslint-config": "^0.3.2",
-        "@rollup/plugin-json": "^6.1.0",
-        "@rollup/plugin-node-resolve": "^16.0.0",
-        "@rollup/plugin-typescript": "^12.1.2",
+        "@elgato/tsconfig": "workspace:^",
         "@swc-node/register": "^1.10.9",
         "@swc/core": "^1.10.7",
-        "@tsconfig/node20": "^20.1.4",
         "@types/lodash": "^4.17.14",
         "@types/node": "^22.10.7",
         "@vitest/coverage-v8": "^3.1.4",
@@ -134,8 +121,6 @@
         "eslint": "^9.39.4",
         "lodash": "^4.17.21",
         "nodemon": "^3.1.9",
-        "rollup": "^4.30.1",
-        "rollup-plugin-dts": "^6.1.1",
         "ts-json-schema-generator": "^2.3.0",
         "typescript": "^5.7.3",
         "vitest": "^3.1.3",

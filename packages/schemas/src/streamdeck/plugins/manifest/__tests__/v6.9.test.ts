@@ -50,7 +50,7 @@ describe.each(["6.9" as const])("v%s", (version) => {
 	test("SupportURL is optional", () => {
 		// Arrange, act.
 		const errors = validateStreamDeckPluginManifest(`v${version}.json`, (m) => {
-			m.Actions[0].SupportURL = undefined;
+			m.Actions[0]!.SupportURL = undefined;
 			m.SupportURL = undefined;
 		});
 
