@@ -1,0 +1,44 @@
+{
+    "$schema": "https://schemas.elgato.com/streamdeck/plugins/manifest.json",
+    "Actions": [
+        {
+            "Icon": "action-icon",
+            "Name": "Action One",
+            "States": [
+                {
+                    "Image": "state-image"
+                }
+            ],
+            "UUID": "come.elgato.test.one"
+        }
+    ],
+    "Author": "Elgato",
+    "CodePath": "bin/plugin.js",
+    "Description": "Demo plugin that monitors applications.",
+    "Icon": "plugin-icon",
+    "Name": "Test Plugin",
+    "Nodejs": {
+        "Version": "20"
+    },
+    "OS": [
+        {
+            "Platform": "mac",
+            "MinimumVersion": "13"
+        },
+        {
+            "Platform": "windows",
+            "MinimumVersion": "10"
+        }
+    ],
+    "UUID": "com.elgato.test",
+    "Version": "1.0.0.0",
+    "SDKVersion": 2,
+    "Software": {
+        "MinimumVersion": "6.6"
+    },
+    // [!code highlight:5]
+    "ApplicationsToMonitor": {
+        "windows": ["my-cool-application.exe"],
+        "mac": ["com.test.my-cool-application"]
+    }
+}

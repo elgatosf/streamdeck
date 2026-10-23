@@ -1,0 +1,13 @@
+{
+    "$schema": "https://json.schemastore.org/tsconfig",
+    "compilerOptions": {
+        "esModuleInterop": true,
+        "lib": ["es2022", "esnext.disposable"],
+        "module": "ESNext",
+        "moduleResolution": "bundler",
+        "target": "ESNext",
+        "noEmit": true,
+        "noImplicitOverride": true,
+        "skipLibCheck": true
+    }
+}

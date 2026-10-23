@@ -1,0 +1,51 @@
+{
+    "$schema": "https://schemas.elgato.com/streamdeck/plugins/manifest.json",
+    "Actions": [
+        {
+            "Icon": "action-icon",
+            "Name": "Action With Dial Support",
+            // [!code highlight:12]
+            "Controllers": ["Keypad", "Encoder"],
+            "Encoder": {
+                "background": "touchscreen-background",
+                "layout": "$B1",
+                "TriggerDescription": {
+                    "Push": "Play / Pause",
+                    "Rotate": "Adjust Volume",
+                    "Touch": "Play / Pause",
+                    "LongTouch": "Skip Track"
+                }
+            },
+            "States": [
+                {
+                    "Image": "state-image"
+                }
+            ],
+            "UUID": "come.elgato.test.one"
+        }
+    ],
+    "Author": "Elgato",
+    "CodePath": "bin/plugin.js",
+    "Description": "Demo plugin with dial support.",
+    "Icon": "plugin-icon",
+    "Name": "Test Plugin",
+    "Nodejs": {
+        "Version": "20"
+    },
+    "OS": [
+        {
+            "Platform": "mac",
+            "MinimumVersion": "13"
+        },
+        {
+            "Platform": "windows",
+            "MinimumVersion": "10"
+        }
+    ],
+    "UUID": "com.elgato.test",
+    "Version": "1.0.0.0",
+    "SDKVersion": 2,
+    "Software": {
+        "MinimumVersion": "6.6"
+    }
+}

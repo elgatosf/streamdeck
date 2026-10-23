@@ -1,0 +1,24 @@
+{
+    "Name": "Lautstärkeregler",
+    "Description": "Übernehmen Sie die Kontrolle über Ihre Audiolautstärke",
+    "com.example.volume.adjust": {
+        "Name": "Lautstärkeregelung",
+        "Tooltip": "Kontrollieren Sie Ihre Lautstärke",
+        "States": [
+            {
+                "Name": "Stummschaltung aufheben"
+            },
+            {
+                "Name": "Stumm"
+            }
+        ],
+        "Encoder": {
+            "TriggerDescription": {
+                "LongTouch": "Stumm",
+                "Push": "Stummschaltung umschalten",
+                "Rotate": "Anpassen",
+                "Touch": "Stummschaltung umschalten"
+            }
+        }
+    }
+}
