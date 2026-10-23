@@ -65,7 +65,6 @@
             "files": [
                 "src/**",
                 "!src/**/__tests__/**",
-                "rollup.config.ts",
                 "tsconfig.json"
             ],
             "output": [
