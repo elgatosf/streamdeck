@@ -28,8 +28,8 @@
         "streamdeck": "bin/streamdeck.mjs"
     },
     "files": [
-        "./{bin,dist}/*.{js,cjs,mjs}",
-        "./{bin,dist}/*.d.{cts,ts}",
+        "./bin/*.mjs",
+        "./dist/**/*.{d.ts,js}",
         "./template"
     ],
     "type": "module",

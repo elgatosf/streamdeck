@@ -25,8 +25,7 @@
         "url": "git+https://github.com/elgatosf/streamdeck.git"
     },
     "files": [
-        "./dist/**/*.js",
-        "./dist/**/*.d.ts"
+        "./dist/**/*.{d.ts,js}"
     ],
     "type": "module",
     "main": "./dist/plugin/index.js",

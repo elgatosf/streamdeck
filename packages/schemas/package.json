@@ -23,7 +23,7 @@
         "url": "git+https://github.com/elgatosf/streamdeck.git"
     },
     "files": [
-        "dist/",
+        "./dist/**/*.{d.ts,js}",
         "streamdeck/"
     ],
     "type": "module",
@@ -61,7 +61,7 @@
             ]
         },
         "build:exports": {
-            "command": "tsc --build tsconfig.build.json",
+            "command": "tsc --project tsconfig.build.json",
             "files": [
                 "src/**",
                 "!src/**/__tests__/**",
