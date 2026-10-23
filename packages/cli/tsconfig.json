@@ -1,12 +1,9 @@
 {
-    "extends": "@tsconfig/node20/tsconfig.json",
+    "extends": "@elgato/tsconfig/node20/app",
     "compilerOptions": {
         "customConditions": ["node"],
-        "module": "ESNext",
-        "moduleResolution": "Bundler",
         "resolveJsonModule": true,
-        "types": ["node"]
+        "rootDir": "."
     },
-    "include": ["src", "rolldown.config.ts"],
-    "exclude": ["bin", "node_modules", "template"]
+    "include": ["src", "rolldown.config.ts"]
 }

@@ -1,11 +1,17 @@
 import { keywordDefinitions } from "@elgato/schemas";
 import { parse } from "@humanwhocodes/momoa";
-import Ajv, { type AnySchema, AnySchemaObject, type DefinedError, ErrorObject, KeywordDefinition } from "ajv";
-import { type AnyValidateFunction, DataValidationCxt } from "ajv/dist/types";
-import { type LimitNumberError } from "ajv/dist/vocabularies/validation/limitNumber";
+import Ajv, {
+	type AnySchema,
+	type AnySchemaObject,
+	type DefinedError,
+	type ErrorObject,
+	type KeywordDefinition,
+} from "ajv";
+import type { AnyValidateFunction, DataValidationCxt } from "ajv/dist/types";
+import type { LimitNumberError } from "ajv/dist/vocabularies/validation/limitNumber";
 import _ from "lodash";
 
-import { type JsonLocation, type LocationRef } from "../common/location";
+import type { JsonLocation, LocationRef } from "../common/location";
 import { colorize } from "../common/stdout";
 import { aggregate } from "../common/utils";
 import { JsonObjectMap } from "./map";

@@ -2,7 +2,7 @@
 import _ from "lodash";
 
 import { getConfig } from "../config";
-import { createConsole, createQuietConsole, StdOut } from "./stdout";
+import { createConsole, createQuietConsole, type StdOut } from "./stdout";
 
 // eslint-disable-next-line jsdoc/require-param
 /**

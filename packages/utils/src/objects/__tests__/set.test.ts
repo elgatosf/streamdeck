@@ -39,7 +39,7 @@ describe("set", () => {
 		set(obj, "nested.number", 13);
 
 		// Assert.
-		expect(obj.nested.number).toBe(13);
+		expect(obj.nested?.number).toBe(13);
 	});
 
 	it("should not pollute __proto__", () => {

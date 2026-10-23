@@ -21,7 +21,7 @@ export class OrderedArray<T> extends Array<T> {
 	 * @param value Value to push.
 	 * @returns New length of the array.
 	 */
-	public push(value: T): number {
+	public override push(value: T): number {
 		super.splice(this.#sortedIndex(value), 0, value);
 		return this.length;
 	}
@@ -59,7 +59,7 @@ export class OrderedArray<T> extends Array<T> {
 
 		while (low < high) {
 			const mid = (low + high) >>> 1;
-			const comparison = this.#compare(value, this[mid]);
+			const comparison = this.#compare(value, this[mid]!);
 
 			if (comparison === 0) {
 				return mid;

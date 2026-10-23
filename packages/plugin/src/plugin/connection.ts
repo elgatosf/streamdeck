@@ -110,6 +110,10 @@ class Connection extends EventEmitter<ExtendedEventMap> {
 			const param = process.argv[i];
 			const value = process.argv[++i];
 
+			if (value === undefined) {
+				break;
+			}
+
 			switch (param) {
 				case RegistrationParameter.Port:
 					scopedLogger.debug(`port=${value}`);

@@ -152,10 +152,10 @@ describe("FileTarget", () => {
 	 * @param isDirectory Mock value of {@link fs.Dirent.isDirectory}.
 	 * @returns The mocked {@link fs.Dirent}.
 	 */
-	function mockDirent(name: string, isDirectory = false): fs.Dirent<Buffer<ArrayBufferLike>> {
+	function mockDirent(name: string, isDirectory = false): fs.Dirent<Buffer<ArrayBuffer>> {
 		return {
 			name,
 			isDirectory: vi.fn().mockReturnValue(isDirectory),
-		} as unknown as fs.Dirent<Buffer<ArrayBufferLike>>;
+		} as unknown as fs.Dirent<Buffer<ArrayBuffer>>;
 	}
 });

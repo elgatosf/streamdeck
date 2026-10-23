@@ -3,7 +3,7 @@ import { existsSync, rmSync } from "fs";
 import chalk from "chalk";
 import _ from "lodash";
 
-import { command, GlobalOptions } from "../common/command";
+import { command, type GlobalOptions } from "../common/command";
 import { createConsole, createQuietConsole } from "../common/stdout";
 import { defaultConfig, getFilePath, getLocalConfig, updateConfig } from "../config";
 
@@ -70,7 +70,7 @@ export const set = command<SetOptions>((options, output) => {
 		[options.entry].concat(options.entries).forEach((entry) => {
 			const [path, value] = entry.split("=");
 
-			if (value === undefined) {
+			if (path === undefined || value === undefined) {
 				output.warn(`Ignoring undefined value for key ${chalk.yellow(path)}`);
 			} else if (typeof _.get(defaultConfig, path) !== "object") {
 				_.set(config, path, cast(value, path));

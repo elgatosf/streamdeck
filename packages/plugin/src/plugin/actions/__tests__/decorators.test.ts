@@ -9,7 +9,7 @@ describe("action decorator", () => {
 		@action({ UUID: "com.elgato.test.sample" })
 		class SampleAction extends SingletonAction {
 			/** @inheritdoc */
-			public onWillAppear(): void {
+			public override onWillAppear(): void {
 				/* do something cool */
 			}
 		}
@@ -26,7 +26,7 @@ describe("action decorator", () => {
 		@action({ UUID: "com.elgato.test.sample" })
 		class SampleAction extends SingletonAction<Settings> {
 			/** @inheritdoc */
-			public onWillAppear(): void {
+			public override onWillAppear(): void {
 				/* do something cool */
 			}
 		}

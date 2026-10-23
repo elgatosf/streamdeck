@@ -1,7 +1,7 @@
 import chalk from "chalk";
 
 import { OrderedArray } from "../common/ordered-array";
-import { StdOut } from "../common/stdout";
+import type { StdOut } from "../common/stdout";
 import type { ValidationEntry } from "./entry";
 
 /**
@@ -31,7 +31,7 @@ export class FileValidationResult extends OrderedArray<ValidationEntry> {
 	 * @param entry Entry to add.
 	 * @returns New length of the validation results.
 	 */
-	public push(entry: ValidationEntry): number {
+	public override push(entry: ValidationEntry): number {
 		this.#padding = Math.max(this.#padding, entry.location.length);
 		return super.push(entry);
 	}

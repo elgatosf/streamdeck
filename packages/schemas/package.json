@@ -1,6 +1,6 @@
 {
     "name": "@elgato/schemas",
-    "version": "0.5.2",
+    "version": "0.5.3",
     "description": "Collection of schemas, and TypeScript declarations, to support the creation and validation of Stream Deck SDK files",
     "keywords": [
         "elgato",
@@ -50,8 +50,7 @@
         "dev": "wireit",
         "lint": "eslint . --ext .ts --max-warnings 0",
         "test": "wireit",
-        "test:watch": "nodemon --watch src --ext ts --exec \"pnpm test\"",
-        "type:check": "tsc",
+        "test:watch": "wireit",
         "prepack": "cp ../../LICENSE ."
     },
     "wireit": {
@@ -64,7 +63,10 @@
         "build:exports": {
             "command": "tsc --build tsconfig.build.json",
             "files": [
-                "src/**/*"
+                "src/**",
+                "!src/**/__tests__/**",
+                "rollup.config.ts",
+                "tsconfig.json"
             ],
             "output": [
                 "dist/"
@@ -73,8 +75,9 @@
         "build:schemas": {
             "command": "node -r @swc-node/register ./scripts/build.ts",
             "files": [
-                "scripts/**/*",
-                "src/**/*"
+                "scripts/**",
+                "src/**",
+                "!src/**/__tests__/**"
             ],
             "output": [
                 "streamdeck/"
@@ -90,15 +93,21 @@
         "test": {
             "command": "vitest run --typecheck",
             "files": [
-                "src/**/*",
-                "tests/**/*",
+                "src/**/__tests__/**",
+                "tests/**",
                 "tsconfig.json",
                 "vitest.config.ts"
             ],
             "dependencies": [
-                "build:exports",
                 "build:schemas"
             ]
+        },
+        "test:watch": {
+            "command": "pnpm run test",
+            "service": true,
+            "env": {
+                "WIREIT_WATCH": "true"
+            }
         }
     },
     "devDependencies": {

@@ -4,7 +4,7 @@ import { basename, dirname, join, resolve } from "node:path";
 import { Readable, Writable } from "node:stream";
 import type { ReadableStream } from "node:stream/web";
 
-import { Manifest } from "@elgato/schemas/streamdeck/plugins";
+import type { Manifest } from "@elgato/schemas/streamdeck/plugins";
 import { ZipWriter } from "@zip.js/zip.js";
 import chalk from "chalk";
 

@@ -1,15 +1,15 @@
-import {
-	type ArrayNode,
-	type DocumentNode,
-	type ElementNode,
-	type MemberNode,
-	type NullNode,
-	type ObjectNode,
-	type ValueNode,
+import type {
+	ArrayNode,
+	DocumentNode,
+	ElementNode,
+	MemberNode,
+	NullNode,
+	ObjectNode,
+	ValueNode,
 } from "@humanwhocodes/momoa";
-import { type AnyValidateFunction } from "ajv/dist/types";
+import type { AnyValidateFunction } from "ajv/dist/types";
 
-import { type JsonLocation, type LocationRef } from "../common/location";
+import type { JsonLocation, LocationRef } from "../common/location";
 
 /**
  * JSON object map that provides data parsed from an {@link ObjectNode}, and the locations associated with each node.

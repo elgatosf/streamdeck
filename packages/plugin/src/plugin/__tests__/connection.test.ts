@@ -13,7 +13,7 @@ vi.mock("../logging/index.js");
 const port = ["-port", "12345"];
 const pluginUUID = ["-pluginUUID", "abc123"];
 const registerEvent = ["-registerEvent", "test_event"];
-const info = ["-info", `{"plugin":{"uuid":"com.elgato.test","version":"0.1.0"}}`];
+const info = ["-info", `{"plugin":{"uuid":"com.elgato.test","version":"0.1.0"}}`] as const;
 
 const originalArgv = process.argv;
 
