@@ -58,6 +58,7 @@
             "clean": true,
             "files": [
                 "src/**/*.ts",
+                "../schemas/streamdeck/**/*.json",
                 "rolldown.config.ts"
             ],
             "output": [
@@ -72,6 +73,7 @@
             "clean": true,
             "files": [
                 "src/**/*.ts",
+                "../schemas/streamdeck/**/*.json",
                 "tsconfig.json",
                 "tsup.config.ts"
             ],
@@ -104,6 +106,7 @@
             "command": "tsc --noEmit",
             "files": [
                 "src/**/*.ts",
+                "../schemas/streamdeck/**/*.json",
                 "tsconfig.json"
             ]
         }
