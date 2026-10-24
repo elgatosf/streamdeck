@@ -109,14 +109,7 @@ export class EventEmitter<TMap extends EventMap<TMap>> {
 		eventName: TEventName,
 		listener: (...args: TArgs) => void,
 	): this {
-		const listeners = this.events.get(eventName) ?? [];
-		for (let i = listeners.length - 1; i >= 0; i--) {
-			if (listeners[i]?.invoke === listener) {
-				this.#remove(eventName, listeners, i);
-			}
-		}
-
-		return this;
+		return this.removeListener(eventName, listener);
 	}
 
 	/**
@@ -191,7 +184,10 @@ export class EventEmitter<TMap extends EventMap<TMap>> {
 			this.#remove(eventName, listeners, 0);
 		}
 
-		this.events.delete(eventName);
+		if (this.events.get(eventName)?.length === 0) {
+			this.events.delete(eventName);
+		}
+
 		return this;
 	}
 
@@ -205,7 +201,18 @@ export class EventEmitter<TMap extends EventMap<TMap>> {
 		eventName: TEventName,
 		listener: (...args: TArgs) => void,
 	): this {
-		return this.off(eventName, listener);
+		const listeners = this.events.get(eventName) ?? [];
+		for (let i = listeners.length - 1; i >= 0; i--) {
+			if (listeners[i]?.invoke === listener) {
+				this.#remove(eventName, listeners, i);
+			}
+		}
+
+		if (this.events.get(eventName)?.length === 0) {
+			this.events.delete(eventName);
+		}
+
+		return this;
 	}
 
 	/**
