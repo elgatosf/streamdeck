@@ -1,6 +1,12 @@
 import { describe, expect, expectTypeOf, it, test, vi } from "vitest";
 
-import { type EventArgs, EventEmitter, type EventsOf } from "../index.js";
+import {
+	type EventArgs,
+	EventEmitter,
+	type EventsOf,
+	type NewListenerArgs,
+	type RemoveListenerArgs,
+} from "../index.js";
 
 describe("EventEmitter", () => {
 	describe("adding listeners", () => {
@@ -592,14 +598,16 @@ describe("EventEmitter", () => {
 			const emitter = new EventEmitter<UserServiceEventMap>();
 
 			// Assert
+			type CreateOrGet = ["user.create", (name: string) => void] | ["user.get", (id: number) => void];
+
 			emitter.once("newListener", (...args) =>
 				expectTypeOf(args).toEqualTypeOf<
-					["user.create", (name: string) => void] | ["user.get", (id: number) => void]
+					CreateOrGet | ["removeListener", (...args: RemoveListenerArgs<UserServiceEventMap>) => void]
 				>(),
 			);
 			emitter.once("removeListener", (...args) =>
 				expectTypeOf(args).toEqualTypeOf<
-					["user.create", (name: string) => void] | ["user.get", (id: number) => void]
+					CreateOrGet | ["newListener", (...args: NewListenerArgs<UserServiceEventMap>) => void]
 				>(),
 			);
 		});
