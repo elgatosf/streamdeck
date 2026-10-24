@@ -214,8 +214,7 @@ export class EventEmitter<TMap extends EventMap<TMap>> {
 
 		fn(listeners);
 		if (eventName !== "newListener") {
-			const args = [eventName, listener] as EventArgs<TMap, "newListener">;
-			this.emit("newListener", ...args);
+			this.#emit("newListener", [eventName, listener]);
 		}
 
 		return this;
@@ -265,8 +264,7 @@ export class EventEmitter<TMap extends EventMap<TMap>> {
 		}
 
 		if (eventName !== "removeListener") {
-			const args = [eventName, listener] as EventArgs<TMap, "removeListener">;
-			this.emit("removeListener", ...args);
+			this.#emit("removeListener", [eventName, listener]);
 		}
 	}
 }
