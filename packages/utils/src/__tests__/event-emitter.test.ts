@@ -116,6 +116,84 @@ describe("EventEmitter", () => {
 		});
 	});
 
+	describe("options.signal", () => {
+		/**
+		 * Asserts `EventListenerOptions.signal` removes listeners.
+		 */
+		test("abort removes listener", () => {
+			// Arrange.
+			const emitter = new EventEmitter<EventMap>();
+			const listener = vi.fn();
+
+			const controller = new AbortController();
+
+			emitter.addListener("message", listener, { signal: controller.signal });
+			emitter.on("message", listener, { signal: controller.signal });
+			emitter.once("message", listener, { signal: controller.signal });
+			emitter.prependListener("message", listener, { signal: controller.signal });
+			emitter.prependOnceListener("message", listener, { signal: controller.signal });
+
+			// Act
+			controller.abort();
+			emitter.emit("message", "World");
+
+			// Assert
+			expect(listener).toHaveBeenCalledTimes(0);
+			expect(emitter.listenerCount("message")).toBe(0);
+		});
+
+		/**
+		 * Asserts `EventListenerOptions.signal` does not add listeners if already aborted.
+		 */
+		test("already aborted does not add listener", () => {
+			// Arrange.
+			const emitter = new EventEmitter<EventMap>();
+			const listener = vi.fn();
+
+			const controller = new AbortController();
+			controller.abort();
+
+			// Act.
+			emitter.addListener("message", listener, { signal: controller.signal });
+			emitter.on("message", listener, { signal: controller.signal });
+			emitter.once("message", listener, { signal: controller.signal });
+			emitter.prependListener("message", listener, { signal: controller.signal });
+			emitter.prependOnceListener("message", listener, { signal: controller.signal });
+
+			emitter.emit("message", "Hello");
+
+			// Assert.
+			expect(listener).toHaveBeenCalledTimes(0);
+			expect(emitter.listenerCount("message")).toBe(0);
+		});
+
+		/**
+		 * Asserts listeners removed by `EventListenerOptions.signal` do not fire `removeListener`.
+		 */
+		test("does not emit removeListener after abort", () => {
+			// Arrange.
+			const emitter = new EventEmitter<EventMap>();
+			const listener = vi.fn();
+
+			const controller = new AbortController();
+
+			emitter.addListener("message", listener, { signal: controller.signal });
+			emitter.on("message", listener, { signal: controller.signal });
+			emitter.once("message", listener, { signal: controller.signal });
+			emitter.prependListener("message", listener, { signal: controller.signal });
+			emitter.prependOnceListener("message", listener, { signal: controller.signal });
+
+			const removeListener = vi.fn();
+			emitter.on("removeListener", removeListener);
+
+			// Act
+			controller.abort();
+
+			// Assert
+			expect(removeListener).toHaveBeenCalledTimes(0);
+		});
+	});
+
 	describe("disposable listeners", () => {
 		/**
 		 * Asserts the {@link EventEmitter.disposableOn} adds the event listener.
