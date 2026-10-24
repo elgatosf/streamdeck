@@ -20,7 +20,7 @@ export class EventEmitter<TMap extends EventMap<TMap>> {
 		eventName: TEventName,
 		listener: (...args: TArgs) => void,
 	): this {
-		return this.add(eventName, listener, (listeners) => listeners.push({ listener }));
+		return this.#add(eventName, listener, (listeners) => listeners.push({ listener }));
 	}
 
 	/**
@@ -33,7 +33,7 @@ export class EventEmitter<TMap extends EventMap<TMap>> {
 		eventName: TEventName,
 		listener: (...args: TArgs) => void,
 	): IDisposable {
-		this.add(eventName, listener, (listeners) => listeners.push({ listener }));
+		this.#add(eventName, listener, (listeners) => listeners.push({ listener }));
 		return deferredDisposable(() => this.removeListener(eventName, listener));
 	}
 
@@ -60,7 +60,7 @@ export class EventEmitter<TMap extends EventMap<TMap>> {
 			}
 
 			if (once) {
-				this.remove(eventName, listeners, i);
+				this.#remove(eventName, listeners, i);
 			} else {
 				i++;
 			}
@@ -128,7 +128,7 @@ export class EventEmitter<TMap extends EventMap<TMap>> {
 		const listeners = this.events.get(eventName) ?? [];
 		for (let i = listeners.length - 1; i >= 0; i--) {
 			if (listeners[i]?.listener === listener) {
-				this.remove(eventName, listeners, i);
+				this.#remove(eventName, listeners, i);
 			}
 		}
 
@@ -145,7 +145,7 @@ export class EventEmitter<TMap extends EventMap<TMap>> {
 		eventName: TEventName,
 		listener: (...args: TArgs) => void,
 	): this {
-		return this.add(eventName, listener, (listeners) => listeners.push({ listener }));
+		return this.#add(eventName, listener, (listeners) => listeners.push({ listener }));
 	}
 
 	/**
@@ -158,7 +158,7 @@ export class EventEmitter<TMap extends EventMap<TMap>> {
 		eventName: TEventName,
 		listener: (...args: TArgs) => void,
 	): this {
-		return this.add(eventName, listener, (listeners) => listeners.push({ listener, once: true }));
+		return this.#add(eventName, listener, (listeners) => listeners.push({ listener, once: true }));
 	}
 
 	/**
@@ -171,7 +171,7 @@ export class EventEmitter<TMap extends EventMap<TMap>> {
 		eventName: TEventName,
 		listener: (...args: TArgs) => void,
 	): this {
-		return this.add(eventName, listener, (listeners) => listeners.splice(0, 0, { listener }));
+		return this.#add(eventName, listener, (listeners) => listeners.splice(0, 0, { listener }));
 	}
 
 	/**
@@ -184,7 +184,7 @@ export class EventEmitter<TMap extends EventMap<TMap>> {
 		eventName: TEventName,
 		listener: (...args: TArgs) => void,
 	): this {
-		return this.add(eventName, listener, (listeners) => listeners.splice(0, 0, { listener, once: true }));
+		return this.#add(eventName, listener, (listeners) => listeners.splice(0, 0, { listener, once: true }));
 	}
 
 	/**
@@ -195,7 +195,7 @@ export class EventEmitter<TMap extends EventMap<TMap>> {
 	public removeAllListeners<TEventName extends EventsOf<TMap>>(eventName: TEventName): this {
 		const listeners = this.events.get(eventName) ?? [];
 		while (listeners.length > 0) {
-			this.remove(eventName, listeners, 0);
+			this.#remove(eventName, listeners, 0);
 		}
 
 		this.events.delete(eventName);
@@ -222,7 +222,7 @@ export class EventEmitter<TMap extends EventMap<TMap>> {
 	 * @param fn Function responsible for adding the new event handler function.
 	 * @returns This instance with event {@link listener} added.
 	 */
-	private add<TEventName extends EventsOf<TMap>, TArgs extends EventArgs<TMap, TEventName>>(
+	#add<TEventName extends EventsOf<TMap>, TArgs extends EventArgs<TMap, TEventName>>(
 		eventName: TEventName,
 		listener: (...args: TArgs) => void,
 		fn: (listeners: EventListener[]) => void,
@@ -248,11 +248,7 @@ export class EventEmitter<TMap extends EventMap<TMap>> {
 	 * @param listeners Listeners registered with the event.
 	 * @param index Index of the listener to remove.
 	 */
-	private remove<TEventName extends EventsOf<TMap>>(
-		eventName: TEventName,
-		listeners: EventListener[],
-		index: number,
-	): void {
+	#remove<TEventName extends EventsOf<TMap>>(eventName: TEventName, listeners: EventListener[], index: number): void {
 		const [{ listener } = {}] = listeners.splice(index, 1);
 		if (listener === undefined) {
 			return;
@@ -266,14 +262,14 @@ export class EventEmitter<TMap extends EventMap<TMap>> {
 }
 
 /**
- * Events that occur within all emitters when listeners change.
+ * Default events that all {@link EventEmitter} fire.
  */
-type EventEmitterListenerEvent = "newListener" | "removeListener";
+type DefaultEvent = "newListener" | "removeListener";
 
 /**
- * A map of events and their arguments (represented as an array) that are supplied to the event's listener when the event is emitted.
+ * Map of events and their arguments, represented as a record of arrays.
  * @example
- * type UserService = {
+ * type UserServiceMap = {
  *     created: [id: number, userName: string];
  *     deleted: [id: number];
  * }
@@ -283,35 +279,36 @@ type EventMap<T> = {
 };
 
 /**
- * Parsed {@link EventMap} whereby each property is a `string` that denotes an event name, and the associated value type defines the listener arguments.
+ * Events emitted by an {@link EventEmitter}.
  */
-export type EventsOf<TMap extends EventMap<TMap>> = EventEmitterListenerEvent | keyof TMap | (string & {});
+export type EventsOf<TEventMap extends EventMap<TEventMap>> = DefaultEvent | keyof TEventMap;
 
 /**
- * Parses the event arguments for the specified event from the event map.
+ * Extracts the event arguments for an event from an event map.
  */
-export type EventArgs<TMap extends EventMap<TMap>, TEvent extends EventsOf<TMap>> = TEvent extends keyof TMap
-	? TMap[TEvent] extends unknown[]
-		? TMap[TEvent]
+export type EventArgs<TMap extends EventMap<TMap>, TEventName extends EventsOf<TMap>> = TEventName extends keyof TMap
+	? TMap[TEventName] extends unknown[]
+		? TMap[TEventName]
 		: never
-	: TEvent extends EventEmitterListenerEvent
+	: TEventName extends DefaultEvent
 		? EventArgUnion<TMap>
-		: unknown[];
+		: never;
 
 /**
- * Converts an event map to a union of event arguments, allowing the `newListener` and `removeListener`
- * event listeners to be typed.
+ * Converts an event map to a union of events and their listeners, represented as `[string, listener]`.
  */
 export type EventArgUnion<TMap extends EventMap<TMap>> = {
-	[K in keyof TMap]: TMap[K] extends unknown[] ? [K, (...args: TMap[K]) => void] : never;
+	[TEventName in keyof TMap]: TMap[TEventName] extends unknown[]
+		? [TEventName, (...args: TMap[TEventName]) => void]
+		: never;
 }[keyof TMap];
 
 /**
  * An event listener associated with an event.
  */
-type EventListener = {
+interface EventListener {
 	/**
-	 *
+	 * Callback function called when the event is fired.
 	 * @param args Arguments supplied to the event listener when the event is emitted.
 	 */
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -321,4 +318,4 @@ type EventListener = {
 	 * Determines whether the event listener should be invoked once.
 	 */
 	once?: true;
-};
+}
