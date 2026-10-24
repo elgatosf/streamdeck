@@ -192,7 +192,7 @@ export class EventEmitter<TMap extends EventMap<TMap>> {
 	}
 
 	/**
-	 * Removes all instances of the event {@link listener} registered with {@link eventName}.
+	 * Removes all matching event {@link listener} registered with {@link eventName}.
 	 * @param eventName Name of the event.
 	 * @param listener Event listener function.
 	 * @returns This instance with the event {@link listener} removed.
