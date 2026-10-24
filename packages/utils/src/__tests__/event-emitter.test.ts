@@ -70,6 +70,52 @@ describe("EventEmitter", () => {
 		});
 	});
 
+	describe("options.once", () => {
+		/**
+		 * Asserts `EventListenerOptions.once` removes listeners.
+		 */
+		test("removes listeners", () => {
+			// Arrange.
+			const emitter = new EventEmitter<EventMap>();
+
+			const listener = vi.fn();
+			emitter.addListener("message", listener, { once: true });
+			emitter.disposableOn("message", listener, { once: true });
+			emitter.on("message", listener, { once: true });
+			emitter.prependListener("message", listener, { once: true });
+
+			// Act.
+			emitter.emit("message", "Hello world");
+
+			// Assert.
+			expect(listener).toHaveBeenCalledTimes(4);
+			expect(emitter.listenerCount("message")).toBe(0);
+		});
+
+		/**
+		 * Asserts `EventListenerOptions.once` fires `removeListener` after emitting.
+		 */
+		test("fires removeListener after emitting", () => {
+			// Arrange.
+			const emitter = new EventEmitter<EventMap>();
+
+			const removeListener = vi.fn();
+			emitter.addListener("removeListener", removeListener);
+
+			const listener = vi.fn();
+			emitter.addListener("message", listener, { once: true });
+			emitter.disposableOn("message", listener, { once: true });
+			emitter.on("message", listener, { once: true });
+			emitter.prependListener("message", listener, { once: true });
+
+			// Act.
+			emitter.emit("message", "Hello world");
+
+			// Assert.
+			expect(removeListener).toHaveBeenCalledTimes(4);
+		});
+	});
+
 	describe("disposable listeners", () => {
 		/**
 		 * Asserts the {@link EventEmitter.disposableOn} adds the event listener.
@@ -372,7 +418,7 @@ describe("EventEmitter", () => {
 		});
 	});
 
-	describe("listener events", () => {
+	describe("default events", () => {
 		/**
 		 * Asserts the built-in `newListener` event is emitted.
 		 */
@@ -482,7 +528,6 @@ describe("EventEmitter", () => {
 				emitter.prependOnceListener("another", listeners[2]);
 
 				// Act.
-
 				emitter.emit("another", 1);
 
 				// Assert.

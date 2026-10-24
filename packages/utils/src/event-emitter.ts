@@ -13,27 +13,32 @@ export class EventEmitter<TMap extends EventMap<TMap>> {
 	/**
 	 * Adds the event {@link listener} for the event named {@link eventName}.
 	 * @param eventName Name of the event.
-	 * @param listener Event handler function.
+	 * @param listener Event listener function.
+	 * @param options Event listener options.
 	 * @returns This instance with the {@link listener} added.
 	 */
 	public addListener<TEventName extends EventsOf<TMap>, TArgs extends EventArgs<TMap, TEventName>>(
 		eventName: TEventName,
 		listener: (...args: TArgs) => void,
+		options: EventListenerOptions = {},
 	): this {
-		return this.#add(eventName, listener, (listeners) => listeners.push({ listener }));
+		const newListener = { listener, ...options };
+		return this.#add(eventName, newListener, (listeners) => listeners.push(newListener));
 	}
 
 	/**
 	 * Adds the event {@link listener} for the event named {@link eventName}, and returns a disposable capable of removing the event listener.
 	 * @param eventName Name of the event.
-	 * @param listener Event handler function.
+	 * @param listener Event listener function.
+	 * @param options Event listener options.
 	 * @returns A disposable that removes the listener when disposed.
 	 */
 	public disposableOn<TEventName extends EventsOf<TMap>, TArgs extends EventArgs<TMap, TEventName>>(
 		eventName: TEventName,
 		listener: (...args: TArgs) => void,
+		options: EventListenerOptions = {},
 	): IDisposable {
-		this.#add(eventName, listener, (listeners) => listeners.push({ listener }));
+		this.addListener(eventName, listener, options);
 		return deferredDisposable(() => this.removeListener(eventName, listener));
 	}
 
@@ -97,7 +102,7 @@ export class EventEmitter<TMap extends EventMap<TMap>> {
 	/**
 	 * Removes the event {@link listener} for the event named {@link eventName}.
 	 * @param eventName Name of the event.
-	 * @param listener Event handler function.
+	 * @param listener Event listener function.
 	 * @returns This instance with the event {@link listener} removed.
 	 */
 	public off<TEventName extends EventsOf<TMap>, TArgs extends EventArgs<TMap, TEventName>>(
@@ -117,53 +122,62 @@ export class EventEmitter<TMap extends EventMap<TMap>> {
 	/**
 	 * Adds the event {@link listener} for the event named {@link eventName}.
 	 * @param eventName Name of the event.
-	 * @param listener Event handler function.
+	 * @param listener Event listener function.
+	 * @param options Event listener options.
 	 * @returns This instance with the event {@link listener} added.
 	 */
 	public on<TEventName extends EventsOf<TMap>, TArgs extends EventArgs<TMap, TEventName>>(
 		eventName: TEventName,
 		listener: (...args: TArgs) => void,
+		options: EventListenerOptions = {},
 	): this {
-		return this.#add(eventName, listener, (listeners) => listeners.push({ listener }));
+		return this.addListener(eventName, listener, options);
 	}
 
 	/**
 	 * Adds the **one-time** event {@link listener} for the event named {@link eventName}.
 	 * @param eventName Name of the event.
-	 * @param listener Event handler function.
+	 * @param listener Event listener function.
+	 * @param options Event listener options.
 	 * @returns This instance with the event {@link listener} added.
 	 */
 	public once<TEventName extends EventsOf<TMap>, TArgs extends EventArgs<TMap, TEventName>>(
 		eventName: TEventName,
 		listener: (...args: TArgs) => void,
+		options: EventListenerOptions = {},
 	): this {
-		return this.#add(eventName, listener, (listeners) => listeners.push({ listener, once: true }));
+		return this.addListener(eventName, listener, { ...options, once: true });
 	}
 
 	/**
 	 * Adds the event {@link listener} to the beginning of the listeners for the event named {@link eventName}.
 	 * @param eventName Name of the event.
-	 * @param listener Event handler function.
+	 * @param listener Event listener function.
+	 * @param options Event listener options.
 	 * @returns This instance with the event {@link listener} prepended.
 	 */
 	public prependListener<TEventName extends EventsOf<TMap>, TArgs extends EventArgs<TMap, TEventName>>(
 		eventName: TEventName,
 		listener: (...args: TArgs) => void,
+		options: EventListenerOptions = {},
 	): this {
-		return this.#add(eventName, listener, (listeners) => listeners.splice(0, 0, { listener }));
+		const newListener = { listener, ...options };
+		return this.#add(eventName, newListener, (listeners) => listeners.splice(0, 0, newListener));
 	}
 
 	/**
 	 * Adds the **one-time** event {@link listener} to the beginning of the listeners for the event named {@link eventName}.
 	 * @param eventName Name of the event.
-	 * @param listener Event handler function.
+	 * @param listener Event listener function.
+	 * @param options Event listener options.
 	 * @returns This instance with the event {@link listener} prepended.
 	 */
 	public prependOnceListener<TEventName extends EventsOf<TMap>, TArgs extends EventArgs<TMap, TEventName>>(
 		eventName: TEventName,
 		listener: (...args: TArgs) => void,
+		options: EventListenerOptions = {},
 	): this {
-		return this.#add(eventName, listener, (listeners) => listeners.splice(0, 0, { listener, once: true }));
+		return this.prependListener(eventName, listener, { ...options, once: true });
 	}
 
 	/**
@@ -184,7 +198,7 @@ export class EventEmitter<TMap extends EventMap<TMap>> {
 	/**
 	 * Removes the event {@link listener} for the event named {@link eventName}.
 	 * @param eventName Name of the event.
-	 * @param listener Event handler function.
+	 * @param listener Event listener function.
 	 * @returns This instance with the event {@link listener} removed.
 	 */
 	public removeListener<TEventName extends EventsOf<TMap>, TArgs extends EventArgs<TMap, TEventName>>(
@@ -197,13 +211,13 @@ export class EventEmitter<TMap extends EventMap<TMap>> {
 	/**
 	 * Adds the event {@link listener} for the event named {@link eventName}.
 	 * @param eventName Name of the event.
-	 * @param listener Event handler function.
-	 * @param fn Function responsible for adding the new event handler function.
+	 * @param listener Event listener.
+	 * @param fn Function responsible for adding the new Event listener function.
 	 * @returns This instance with event {@link listener} added.
 	 */
-	#add<TEventName extends EventsOf<TMap>, TArgs extends EventArgs<TMap, TEventName>>(
+	#add<TEventName extends EventsOf<TMap>>(
 		eventName: TEventName,
-		listener: (...args: TArgs) => void,
+		listener: EventListener,
 		fn: (listeners: EventListener[]) => void,
 	): this {
 		let listeners = this.events.get(eventName);
@@ -214,7 +228,7 @@ export class EventEmitter<TMap extends EventMap<TMap>> {
 
 		fn(listeners);
 		if (eventName !== "newListener") {
-			this.#emit("newListener", [eventName, listener]);
+			this.#emit("newListener", [eventName, listener.listener]);
 		}
 
 		return this;
@@ -330,16 +344,21 @@ export type EventArgUnion<TMap extends EventMap<TMap>> = {
 /**
  * An event listener associated with an event.
  */
-interface EventListener {
+interface EventListener extends EventListenerOptions {
 	/**
 	 * Callback function called when the event is fired.
 	 * @param args Arguments supplied to the event listener when the event is emitted.
 	 */
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	listener: (...args: any) => void;
+}
 
+/**
+ * Options associated with an event listener.
+ */
+export interface EventListenerOptions {
 	/**
-	 * Determines whether the event listener should be invoked once.
+	 * Determines whether the event listener should be invoked only once.
 	 */
-	once?: true;
+	once?: boolean;
 }
