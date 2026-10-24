@@ -47,28 +47,7 @@ export class EventEmitter<TMap extends EventMap<TMap>> {
 		eventName: TEventName,
 		...args: TArgs
 	): boolean {
-		const listeners = this.events.get(eventName);
-		if (listeners === undefined) {
-			return false;
-		}
-
-		for (let i = 0; i < listeners.length;) {
-			const { listener, once } = listeners[i] ?? {};
-			if (!listener) {
-				i++;
-				continue;
-			}
-
-			if (once) {
-				this.#remove(eventName, listeners, i);
-			} else {
-				i++;
-			}
-
-			listener(...args);
-		}
-
-		return true;
+		return this.#emit(eventName, args);
 	}
 
 	/**
@@ -243,6 +222,37 @@ export class EventEmitter<TMap extends EventMap<TMap>> {
 	}
 
 	/**
+	 * Emits the {@link eventName}, invoking all event listeners with the specified {@link args}.
+	 * @param eventName Name of the event, including built-in events.
+	 * @param args Arguments supplied to each event listener.
+	 * @returns `true` when there was a listener associated with the event; otherwise `false`.
+	 */
+	#emit(eventName: EventsOf<TMap>, args: readonly unknown[]): boolean {
+		const listeners = this.events.get(eventName);
+		if (listeners === undefined) {
+			return false;
+		}
+
+		for (let i = 0; i < listeners.length;) {
+			const { listener, once } = listeners[i] ?? {};
+			if (!listener) {
+				i++;
+				continue;
+			}
+
+			if (once) {
+				this.#remove(eventName, listeners, i);
+			} else {
+				i++;
+			}
+
+			listener(...args);
+		}
+
+		return true;
+	}
+
+	/**
 	 * Removes the listener at the given index.
 	 * @param eventName Name of the event.
 	 * @param listeners Listeners registered with the event.
@@ -290,9 +300,25 @@ export type EventArgs<TMap extends EventMap<TMap>, TEventName extends EventsOf<T
 	? TMap[TEventName] extends unknown[]
 		? TMap[TEventName]
 		: never
-	: TEventName extends DefaultEvent
-		? EventArgUnion<TMap>
-		: never;
+	: TEventName extends "newListener"
+		? NewListenerArgs<TMap>
+		: TEventName extends "removeListener"
+			? RemoveListenerArgs<TMap>
+			: never;
+
+/**
+ * Arguments supplied to `newListener` listeners; emitted when any listener is added, other than to `newListener`.
+ */
+export type NewListenerArgs<TMap extends EventMap<TMap>> =
+	| EventArgUnion<TMap>
+	| ["removeListener", (...args: RemoveListenerArgs<TMap>) => void];
+
+/**
+ * Arguments supplied to `removeListener` listeners; emitted when any listener is removed, other than from `removeListener`.
+ */
+export type RemoveListenerArgs<TMap extends EventMap<TMap>> =
+	| EventArgUnion<TMap>
+	| ["newListener", (...args: NewListenerArgs<TMap>) => void];
 
 /**
  * Converts an event map to a union of events and their listeners, represented as `[string, listener]`.
