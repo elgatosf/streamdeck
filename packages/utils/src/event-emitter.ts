@@ -187,10 +187,7 @@ export class EventEmitter<TMap extends EventMap<TMap>> {
 			this.#remove(eventName, listeners, 0);
 		}
 
-		if (this.events.get(eventName)?.length === 0) {
-			this.events.delete(eventName);
-		}
-
+		this.#deleteWhenEmpty(eventName);
 		return this;
 	}
 
@@ -211,10 +208,7 @@ export class EventEmitter<TMap extends EventMap<TMap>> {
 			}
 		}
 
-		if (this.events.get(eventName)?.length === 0) {
-			this.events.delete(eventName);
-		}
-
+		this.#deleteWhenEmpty(eventName);
 		return this;
 	}
 
@@ -262,6 +256,8 @@ export class EventEmitter<TMap extends EventMap<TMap>> {
 				if (index > -1) {
 					this.#remove(eventName, listeners, index);
 				}
+
+				this.#deleteWhenEmpty(eventName);
 			},
 		};
 
@@ -279,6 +275,16 @@ export class EventEmitter<TMap extends EventMap<TMap>> {
 
 		addTo(listeners, newListener);
 		return newListener;
+	}
+
+	/**
+	 * Deletes the set of event listeners when no listeners are associated with it.
+	 * @param eventName Name of the event.
+	 */
+	#deleteWhenEmpty(eventName: EventsOf<TMap>): void {
+		if (this.events.get(eventName)?.length === 0) {
+			this.events.delete(eventName);
+		}
 	}
 
 	/**
@@ -309,6 +315,7 @@ export class EventEmitter<TMap extends EventMap<TMap>> {
 			invoke(...args);
 		}
 
+		this.#deleteWhenEmpty(eventName);
 		return true;
 	}
 
