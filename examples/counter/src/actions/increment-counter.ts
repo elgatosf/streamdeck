@@ -22,7 +22,9 @@ export class IncrementCounter extends SingletonAction<CounterSettings> {
 	 * Updates the key title when the action appears.
 	 */
 	override async onWillAppear(ev: WillAppearEvent<CounterSettings>): Promise<void> {
-		await ev.action.setTitle(`${ev.payload.settings.count ?? 0}`);
+		if (ev.action.isKey() || ev.action.isDial()) {
+			await ev.action.setTitle(`${ev.payload.settings.count ?? 0}`);
+		}
 	}
 
 	/**
