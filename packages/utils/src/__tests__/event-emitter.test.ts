@@ -198,7 +198,7 @@ describe("EventEmitter", () => {
 		/**
 		 * Asserts the {@link EventEmitter.disposableOn} adds the event listener.
 		 */
-		it("adds the listener", async () => {
+		it("adds the listener", () => {
 			// Arrange.
 			const emitter = new EventEmitter<EventMap>();
 			const listener = vi.fn();
@@ -213,9 +213,29 @@ describe("EventEmitter", () => {
 		});
 
 		/**
+		 * Asserts {@link EventEmitter.disposableOn} only removes the listener it added.
+		 */
+		it("only removes self", () => {
+			// Arrange.
+			const emitter = new EventEmitter<EventMap>();
+			const listener = vi.fn();
+
+			// Act.
+			const disposer = emitter.disposableOn("message", listener);
+			emitter.disposableOn("message", listener);
+
+			disposer.dispose();
+			emitter.emit("message", "Hello world");
+
+			// Assert.
+			expect(listener).toHaveBeenCalledTimes(1);
+			expect(listener).toHaveBeenCalledWith("Hello world");
+		});
+
+		/**
 		 * Asserts listeners added via {@link EventEmitter.disposableOn} can be removed by disposing.
 		 */
-		it("can remove after emitting", async () => {
+		it("can remove after emitting", () => {
 			// Arrange.
 			const emitter = new EventEmitter<EventMap>();
 			const listener = vi.fn();
@@ -237,7 +257,7 @@ describe("EventEmitter", () => {
 		/**
 		 * Asserts the event listener is removed when disposing the result {@link EventEmitter.disposableOn} via `dispose()`.
 		 */
-		it("dispose", async () => {
+		it("dispose", () => {
 			// Arrange.
 			const emitter = new EventEmitter<EventMap>();
 			const listener = vi.fn();
@@ -254,7 +274,7 @@ describe("EventEmitter", () => {
 		/**
 		 * Asserts the event listener is removed when disposing the result {@link EventEmitter.disposableOn} via `[Symbol.dispose()]`
 		 */
-		it("[Symbol.dispose]", async () => {
+		it("[Symbol.dispose]", () => {
 			// Arrange.
 			const emitter = new EventEmitter<EventMap>();
 			const listener = vi.fn();
@@ -451,6 +471,27 @@ describe("EventEmitter", () => {
 		});
 
 		/**
+		 * Asserts {@link EventEmitter.off} removes all matching listeners.
+		 */
+		test("off removes all matching", () => {
+			// Arrange.
+			const emitter = new EventEmitter<EventMap>();
+			const listener = vi.fn();
+
+			emitter.on("message", listener);
+			emitter.on("message", listener);
+			emitter.on("message", listener);
+			emitter.on("message", listener);
+
+			// Act.
+			expect(emitter.listenerCount("message")).toBe(4);
+			emitter.off("message", listener);
+
+			// Assert.
+			expect(emitter.listenerCount("message")).toBe(0);
+		});
+
+		/**
 		 * Asserts removing all listeners with {@link EventEmitter.removeAllListeners}.
 		 */
 		test("removeAllListeners", () => {
@@ -493,6 +534,27 @@ describe("EventEmitter", () => {
 			expect(one).not.toHaveBeenCalled();
 			expect(two).toHaveBeenCalledTimes(1);
 			expect(two).toHaveBeenCalledWith("Hello world");
+		});
+
+		/**
+		 * Asserts {@link EventEmitter.removeListener} removes all matching listeners.
+		 */
+		test("removeListener removes all matching", () => {
+			// Arrange.
+			const emitter = new EventEmitter<EventMap>();
+			const listener = vi.fn();
+
+			emitter.on("message", listener);
+			emitter.on("message", listener);
+			emitter.on("message", listener);
+			emitter.on("message", listener);
+
+			// Act.
+			expect(emitter.listenerCount("message")).toBe(4);
+			emitter.removeListener("message", listener);
+
+			// Assert.
+			expect(emitter.listenerCount("message")).toBe(0);
 		});
 	});
 
