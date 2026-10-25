@@ -56,7 +56,7 @@ export class EventEmitter<TMap extends EventMap<TMap>> {
 	 * @param args Arguments supplied to each event listener.
 	 * @returns `true` when there was a listener associated with the event; otherwise `false`.
 	 */
-	public emit<TEventName extends ExcludeMetaEventsOf<TMap>, TArgs extends EventArgs<TMap, TEventName>>(
+	public emit<TEventName extends EmittableEventsOf<TMap>, TArgs extends EventArgs<TMap, TEventName>>(
 		eventName: TEventName,
 		...args: TArgs
 	): boolean {
@@ -424,14 +424,14 @@ type EventMap<T> = {
 };
 
 /**
- * Events emitted by an {@link EventEmitter}.
+ * Events emitted by an {@link EventEmitter}, including meta events `newListener` and `removeListener`.
  */
 export type EventsOf<TEventMap extends EventMap<TEventMap>> = MetaEvent | keyof TEventMap;
 
 /**
- * Events emitted externally by an {@link EventEmitter}.
+ * Events that can be emitted externally on an {@link EventEmitter}.
  */
-type ExcludeMetaEventsOf<TEventMap extends EventMap<TEventMap>> = Exclude<keyof TEventMap, MetaEvent>;
+export type EmittableEventsOf<TEventMap extends EventMap<TEventMap>> = Exclude<keyof TEventMap, MetaEvent>;
 
 /**
  * Extracts the event arguments for an event from an event map.
@@ -449,21 +449,21 @@ export type EventArgs<TMap extends EventMap<TMap>, TEventName extends EventsOf<T
 /**
  * Arguments supplied to `newListener` listeners; emitted when any listener is added, other than to `newListener`.
  */
-export type NewListenerArgs<TMap extends EventMap<TMap>> =
+type NewListenerArgs<TMap extends EventMap<TMap>> =
 	| EventArgUnion<TMap>
 	| ["removeListener", (...args: RemoveListenerArgs<TMap>) => void];
 
 /**
  * Arguments supplied to `removeListener` listeners; emitted when any listener is removed, other than from `removeListener`.
  */
-export type RemoveListenerArgs<TMap extends EventMap<TMap>> =
+type RemoveListenerArgs<TMap extends EventMap<TMap>> =
 	| EventArgUnion<TMap>
 	| ["newListener", (...args: NewListenerArgs<TMap>) => void];
 
 /**
  * Converts an event map to a union of events and their listeners, represented as `[string, listener]`.
  */
-export type EventArgUnion<TMap extends EventMap<TMap>> = {
+type EventArgUnion<TMap extends EventMap<TMap>> = {
 	[TEventName in keyof TMap]: TMap[TEventName] extends unknown[]
 		? [TEventName, (...args: TMap[TEventName]) => void]
 		: never;
