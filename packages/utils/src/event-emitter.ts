@@ -56,7 +56,7 @@ export class EventEmitter<TMap extends EventMap<TMap>> {
 	 * @param args Arguments supplied to each event listener.
 	 * @returns `true` when there was a listener associated with the event; otherwise `false`.
 	 */
-	public emit<TEventName extends keyof TMap, TArgs extends EventArgs<TMap, TEventName>>(
+	public emit<TEventName extends ExcludeMetaEventsOf<TMap>, TArgs extends EventArgs<TMap, TEventName>>(
 		eventName: TEventName,
 		...args: TArgs
 	): boolean {
@@ -409,7 +409,7 @@ export class EventEmitter<TMap extends EventMap<TMap>> {
 /**
  * Default events that all {@link EventEmitter} fire.
  */
-type DefaultEvent = "newListener" | "removeListener";
+type MetaEvent = "newListener" | "removeListener";
 
 /**
  * Map of events and their arguments, represented as a record of arrays.
@@ -426,7 +426,12 @@ type EventMap<T> = {
 /**
  * Events emitted by an {@link EventEmitter}.
  */
-export type EventsOf<TEventMap extends EventMap<TEventMap>> = DefaultEvent | keyof TEventMap;
+export type EventsOf<TEventMap extends EventMap<TEventMap>> = MetaEvent | keyof TEventMap;
+
+/**
+ * Events emitted externally by an {@link EventEmitter}.
+ */
+type ExcludeMetaEventsOf<TEventMap extends EventMap<TEventMap>> = Exclude<keyof TEventMap, MetaEvent>;
 
 /**
  * Extracts the event arguments for an event from an event map.
