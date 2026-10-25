@@ -10,12 +10,7 @@ export class EventEmitter<TMap extends EventMap<TMap>> {
 	/**
 	 * Underlying collection of events and their listeners.
 	 */
-	private readonly events = new Map<EventsOf<TMap>, EventListener[]>();
-
-	/**
-	 * Tracks whether registered listeners have been removed, and a cleanup is required.
-	 */
-	#needsCleanup = new Set<EventsOf<TMap>>();
+	private readonly events = new Map<EventsOf<TMap>, EventListenerCollection>();
 
 	/**
 	 * Adds the event {@link listener} for the event named {@link eventName}.
@@ -29,7 +24,7 @@ export class EventEmitter<TMap extends EventMap<TMap>> {
 		listener: (...args: TArgs) => void,
 		options: EventListenerOptions = DEFAULT_OPTIONS,
 	): this {
-		this.#add(eventName, listener, options, (listeners, newListener) => listeners.push(newListener));
+		this.#add(eventName, listener, options, false);
 		return this;
 	}
 
@@ -45,11 +40,12 @@ export class EventEmitter<TMap extends EventMap<TMap>> {
 		listener: (...args: TArgs) => void,
 		options: EventListenerOptions = DEFAULT_OPTIONS,
 	): IDisposable {
-		const newListener = this.#add(eventName, listener, options, (listeners, newListener) =>
-			listeners.push(newListener),
-		);
-
-		return deferredDisposable(() => newListener?.remove());
+		const newListener = this.#add(eventName, listener, options, false);
+		return deferredDisposable(() => {
+			if (newListener) {
+				this.#remove(eventName, newListener);
+			}
+		});
 	}
 
 	/**
@@ -83,8 +79,9 @@ export class EventEmitter<TMap extends EventMap<TMap>> {
 		eventName: TEventName,
 		listener?: (...args: TArgs) => void,
 	): number {
-		const listeners = this.events.get(eventName) ?? [];
-		return listeners.filter((ev) => !ev.disposed && (listener === undefined || ev.invoke === listener)).length;
+		const listeners = this.events.get(eventName)?.listeners ?? [];
+		return listeners.filter(({ disposed, invoke }) => !disposed && (listener === undefined || invoke === listener))
+			.length;
 	}
 
 	/**
@@ -95,7 +92,9 @@ export class EventEmitter<TMap extends EventMap<TMap>> {
 	public listeners<TEventName extends EventsOf<TMap>, TArgs extends EventArgs<TMap, TEventName>>(
 		eventName: TEventName,
 	): ((...args: TArgs) => void)[] {
-		return (this.events.get(eventName) ?? []).filter(({ disposed }) => !disposed).map(({ invoke }) => invoke);
+		return (this.events.get(eventName)?.listeners ?? [])
+			.filter(({ disposed }) => !disposed)
+			.map(({ invoke }) => invoke);
 	}
 
 	/**
@@ -138,7 +137,8 @@ export class EventEmitter<TMap extends EventMap<TMap>> {
 		listener: (...args: TArgs) => void,
 		options: EventListenerOptions = DEFAULT_OPTIONS,
 	): this {
-		return this.addListener(eventName, listener, { ...options, once: true });
+		this.#add(eventName, listener, { once: true, signal: options.signal }, false);
+		return this;
 	}
 
 	/**
@@ -153,7 +153,7 @@ export class EventEmitter<TMap extends EventMap<TMap>> {
 		listener: (...args: TArgs) => void,
 		options: EventListenerOptions = DEFAULT_OPTIONS,
 	): this {
-		this.#add(eventName, listener, options, (listeners, newListener) => listeners.unshift(newListener));
+		this.#add(eventName, listener, options, true);
 		return this;
 	}
 
@@ -169,7 +169,8 @@ export class EventEmitter<TMap extends EventMap<TMap>> {
 		listener: (...args: TArgs) => void,
 		options: EventListenerOptions = DEFAULT_OPTIONS,
 	): this {
-		return this.prependListener(eventName, listener, { ...options, once: true });
+		this.#add(eventName, listener, { once: true, signal: options.signal }, true);
+		return this;
 	}
 
 	/**
@@ -178,17 +179,20 @@ export class EventEmitter<TMap extends EventMap<TMap>> {
 	 * @returns This instance with the event listeners removed
 	 */
 	public removeAllListeners<TEventName extends EventsOf<TMap>>(eventName: TEventName): this {
-		const listeners = this.events.get(eventName);
-		if (!listeners || listeners.length === 0) {
+		const event = this.events.get(eventName);
+		if (!event) {
 			return this;
 		}
 
-		// Iterate over a snapshot, as "removeListener" handlers may mutate the listeners.
-		for (const curr of [...listeners]) {
-			curr.dispose();
+		try {
+			// Iterate over a snapshot, as "removeListener" handlers may mutate the listeners.
+			for (const listener of [...event.listeners]) {
+				this.#dispose(eventName, listener);
+			}
+		} finally {
+			this.#cleanup(eventName);
 		}
 
-		this.#cleanup(eventName);
 		return this;
 	}
 
@@ -202,19 +206,22 @@ export class EventEmitter<TMap extends EventMap<TMap>> {
 		eventName: TEventName,
 		listener: (...args: TArgs) => void,
 	): this {
-		const listeners = this.events.get(eventName);
-		if (!listeners || listeners.length === 0) {
+		const event = this.events.get(eventName);
+		if (!event) {
 			return this;
 		}
 
-		// Iterate over a snapshot, as "removeListener" handlers may mutate the listeners.
-		for (const curr of [...listeners]) {
-			if (curr.invoke === listener) {
-				curr.dispose();
+		try {
+			// Iterate over a snapshot, as "removeListener" handlers may mutate the listeners.
+			for (const currListener of [...event.listeners]) {
+				if (currListener.invoke === listener) {
+					this.#dispose(eventName, currListener);
+				}
 			}
+		} finally {
+			this.#cleanup(eventName);
 		}
 
-		this.#cleanup(eventName);
 		return this;
 	}
 
@@ -226,18 +233,19 @@ export class EventEmitter<TMap extends EventMap<TMap>> {
 	 * @param eventName Name of the event.
 	 * @param listener Event listener function.
 	 * @param options Event listener options.
-	 * @param addTo Function that inserts the new listener into the event's listeners, for example appending or prepending.
+	 * @param prepend Whether the listener is added to the beginning, rather than the end, of the event's listeners.
 	 * @returns The registered listener; otherwise `undefined` when {@link EventListenerOptions.signal} is, or becomes, aborted
 	 * before registration.
 	 */
-	#add<TEventName extends EventsOf<TMap>, TArgs extends EventArgs<TMap, TEventName>>(
-		eventName: TEventName,
-		listener: (...args: TArgs) => void,
+	#add(
+		eventName: EventsOf<TMap>,
+		listener: EventListener["invoke"],
 		options: EventListenerOptions,
-		addTo: (listeners: EventListener[], newListener: EventListener) => void,
+		prepend: boolean,
 	): EventListener | undefined {
 		// When the signal is already aborted, do nothing.
-		if (options.signal?.aborted) {
+		const { signal } = options;
+		if (signal?.aborted) {
 			return;
 		}
 
@@ -247,52 +255,37 @@ export class EventEmitter<TMap extends EventMap<TMap>> {
 		}
 
 		// The signal may have been aborted by a "newListener" handler.
-		if (options.signal?.aborted) {
+		if (signal?.aborted) {
 			return;
 		}
 
-		// Construct the new listener.
 		const newListener: EventListener = {
-			...options,
 			disposed: false,
 			invoke: listener,
-			dispose: (): void => {
-				if (newListener.disposed) {
-					return;
-				}
-
-				// Flag before notifying, so re-entrant emits and disposals see the listener as removed.
-				newListener.disposed = true;
-
-				if (newListener.signal) {
-					newListener.signal.removeEventListener("abort", newListener.remove);
-				}
-
-				if (eventName !== "removeListener" && newListener.signal?.aborted !== true) {
-					this.#emit("removeListener", [eventName, newListener.invoke]);
-				}
-
-				this.#needsCleanup.add(eventName);
-			},
-			remove: (): void => {
-				newListener.dispose();
-				this.#cleanup(eventName);
-			},
+			once: options.once,
+			onAbort: undefined,
+			signal,
 		};
 
-		// Register the abort listener.
-		if (options.signal) {
-			options.signal.addEventListener("abort", newListener.remove, { once: true });
+		// Only listeners with a signal require a closure, as the signal must be given a function to call.
+		if (signal) {
+			newListener.onAbort = (): void => this.#remove(eventName, newListener);
+			signal.addEventListener("abort", newListener.onAbort, { once: true });
 		}
 
-		// Get the current listeners, or create an empty array and save them.
-		let listeners = this.events.get(eventName);
-		if (listeners === undefined) {
-			listeners = [];
-			this.events.set(eventName, listeners);
+		// Get the current entry, or create an empty one and save it.
+		let event = this.events.get(eventName);
+		if (event === undefined) {
+			event = { listeners: [], needsCleanup: false };
+			this.events.set(eventName, event);
 		}
 
-		addTo(listeners, newListener);
+		if (prepend) {
+			event.listeners.unshift(newListener);
+		} else {
+			event.listeners.push(newListener);
+		}
+
 		return newListener;
 	}
 
@@ -304,17 +297,15 @@ export class EventEmitter<TMap extends EventMap<TMap>> {
 	 * @param eventName Name of the event.
 	 */
 	#cleanup(eventName: EventsOf<TMap>): void {
-		if (!this.#needsCleanup.has(eventName)) {
+		const event = this.events.get(eventName);
+		if (!event?.needsCleanup) {
 			return;
 		}
 
-		this.#needsCleanup.delete(eventName);
-		const listeners = this.events.get(eventName);
-		if (!listeners) {
-			return;
-		}
+		event.needsCleanup = false;
 
 		// Compact in place, preserving order, to avoid the per-item cost of splicing.
+		const { listeners } = event;
 		let write = 0;
 		for (const listener of listeners) {
 			if (!listener.disposed) {
@@ -329,32 +320,79 @@ export class EventEmitter<TMap extends EventMap<TMap>> {
 	}
 
 	/**
+	 * Disposes of the {@link listener}, flagging it, and the event named {@link eventName}, for cleanup.
+	 *
+	 * Unregisters the abort handler from the listener's signal, and emits `removeListener` unless the listener belongs to
+	 * `removeListener`, or was removed by its signal being aborted.
+	 * @param eventName Name of the event the listener is registered with.
+	 * @param listener Listener to dispose of.
+	 */
+	#dispose(eventName: EventsOf<TMap>, listener: EventListener): void {
+		if (listener.disposed) {
+			return;
+		}
+
+		// Flag before notifying, so re-entrant emits and disposals see the listener as removed.
+		listener.disposed = true;
+
+		const event = this.events.get(eventName);
+		if (event) {
+			event.needsCleanup = true;
+		}
+
+		const { onAbort, signal } = listener;
+		if (signal && onAbort) {
+			signal.removeEventListener("abort", onAbort);
+		}
+
+		if (eventName !== "removeListener" && signal?.aborted !== true) {
+			this.#emit("removeListener", [eventName, listener.invoke]);
+		}
+	}
+
+	/**
 	 * Emits the {@link eventName}, invoking all event listeners with the specified {@link args}.
 	 * @param eventName Name of the event, including built-in events.
 	 * @param args Arguments supplied to each event listener.
 	 * @returns `true` when there was a listener associated with the event; otherwise `false`.
 	 */
 	#emit(eventName: EventsOf<TMap>, args: readonly unknown[]): boolean {
-		const listeners = this.events.get(eventName);
-		if (listeners === undefined) {
+		const event = this.events.get(eventName);
+		if (event === undefined) {
 			return false;
 		}
 
-		// Iterate over a snapshot so listeners added or removed during emission do not affect this emission.
-		for (const listener of [...listeners]) {
-			if (listener.disposed) {
-				continue;
-			}
+		try {
+			// Iterate over a snapshot so listeners added or removed during emission do not affect this emission.
+			for (const listener of [...event.listeners]) {
+				if (listener.disposed) {
+					continue;
+				}
 
-			if (listener.once) {
-				listener.dispose();
-			}
+				if (listener.once) {
+					this.#dispose(eventName, listener);
+				}
 
-			listener.invoke(...args);
+				listener.invoke(...args);
+			}
+		} finally {
+			this.#cleanup(eventName);
 		}
 
-		this.#cleanup(eventName);
 		return true;
+	}
+
+	/**
+	 * Disposes of the {@link listener}, and immediately removes it from the event named {@link eventName}.
+	 * @param eventName Name of the event the listener is registered with.
+	 * @param listener Listener to remove.
+	 */
+	#remove(eventName: EventsOf<TMap>, listener: EventListener): void {
+		try {
+			this.#dispose(eventName, listener);
+		} finally {
+			this.#cleanup(eventName);
+		}
 	}
 }
 
@@ -417,7 +455,22 @@ export type EventArgUnion<TMap extends EventMap<TMap>> = {
 }[keyof TMap];
 
 /**
- * An event listener associated with an event.
+ * Listeners registered with an event.
+ */
+interface EventListenerCollection {
+	/**
+	 * Listeners in the order they are invoked; may contain disposed listeners until the entry is cleaned up.
+	 */
+	listeners: EventListener[];
+
+	/**
+	 * Indicates whether listeners have been disposed, and must be removed by a cleanup.
+	 */
+	needsCleanup: boolean;
+}
+
+/**
+ * An event listener associated with an event; a plain record with a fixed shape, without per-listener methods.
  */
 interface EventListener extends EventListenerOptions {
 	/**
@@ -426,21 +479,17 @@ interface EventListener extends EventListenerOptions {
 	disposed: boolean;
 
 	/**
-	 * Disposes of the event listener, flagging it for removal.
-	 */
-	dispose: () => void;
-
-	/**
-	 * Disposes and removes the event listener.
-	 */
-	remove: () => void;
-
-	/**
 	 * Callback function called when the event is fired.
 	 * @param args Arguments supplied to the event listener when the event is emitted.
 	 */
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	invoke: (...args: any) => void;
+
+	/**
+	 * Abort handler registered with the `signal`; retained so it can be unregistered when the listener is disposed
+	 * by other means, otherwise long-lived signals would accumulate callbacks that retain the emitter and listener.
+	 */
+	onAbort: (() => void) | undefined;
 }
 
 /**
