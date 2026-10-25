@@ -50,11 +50,13 @@ export class EventEmitter<TMap extends EventMap<TMap>> {
 
 	/**
 	 * Emits the {@link eventName}, invoking all event listeners with the specified {@link args}.
+	 *
+	 * Only events defined by the event map can be emitted; `newListener` and `removeListener` are emitted internally.
 	 * @param eventName Name of the event.
 	 * @param args Arguments supplied to each event listener.
 	 * @returns `true` when there was a listener associated with the event; otherwise `false`.
 	 */
-	public emit<TEventName extends EventsOf<TMap>, TArgs extends EventArgs<TMap, TEventName>>(
+	public emit<TEventName extends keyof TMap, TArgs extends EventArgs<TMap, TEventName>>(
 		eventName: TEventName,
 		...args: TArgs
 	): boolean {

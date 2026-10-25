@@ -1094,6 +1094,25 @@ describe("EventEmitter", () => {
 		});
 
 		/**
+		 * Emitting events is restricted to the event map; default events are emitted internally.
+		 */
+		test("emit event name", () => {
+			// Arrange.
+			const emitter = new EventEmitter<EventMap>();
+			const listener = (message: string): void => void message;
+
+			// Act, assert.
+			// @ts-expect-error: `newListener` is emitted internally.
+			emitter.emit("newListener", "message", listener);
+
+			// @ts-expect-error: `removeListener` is emitted internally.
+			emitter.emit("removeListener", "message", listener);
+
+			// @ts-expect-error: events not within the event map are not valid.
+			emitter.emit("unknown");
+		});
+
+		/**
 		 * Event arguments.
 		 */
 		it("event args", () => {
