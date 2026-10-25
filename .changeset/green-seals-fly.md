@@ -2,4 +2,4 @@
 "@elgato/utils": minor
 ---
 
-Updated `EventEmitter` to prevent manual emits of `newListener` and `removeListener`.
+**Breaking:** `EventEmitter.emit` no longer accepts `newListener` or `removeListener`; these are now only emitted internally when listeners are added or removed.
