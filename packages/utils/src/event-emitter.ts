@@ -371,11 +371,19 @@ export class EventEmitter<TMap extends EventMap<TMap>> {
 					continue;
 				}
 
+				// An earlier "abort" handler may emit before this listener's own abort handler has run.
+				if (listener.signal?.aborted) {
+					this.#dispose(eventName, listener);
+					continue;
+				}
+
 				if (listener.once) {
 					this.#dispose(eventName, listener);
 				}
 
-				listener.invoke(...args);
+				// Invoke unbound, so the callback cannot access the listener record via `this`.
+				const { invoke } = listener;
+				invoke(...args);
 			}
 		} finally {
 			this.#cleanup(eventName);
