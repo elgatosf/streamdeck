@@ -877,6 +877,30 @@ describe("EventEmitter", () => {
 		});
 
 		/**
+		 * Asserts emit returns false when a removeListener handler re-emits an event whose last once listener is being disposed.
+		 */
+		test("emit returns false when re-emitted with only disposed listeners", () => {
+			// Arrange.
+			const emitter = new EventEmitter<EventMap>();
+			const listener = vi.fn();
+			const results: { count: number; emitted: boolean }[] = [];
+			emitter.once("message", listener);
+			emitter.on("removeListener", () => {
+				results.push({ count: emitter.listenerCount("message"), emitted: emitter.emit("message", "Again") });
+			});
+
+			// Act.
+			const emitted = emitter.emit("message", "Hello");
+
+			// Assert.
+			expect(emitted).toBe(true);
+			expect(results).toEqual([{ count: 0, emitted: false }]);
+			expect(listener).toHaveBeenCalledTimes(1);
+			expect(listener).toHaveBeenCalledWith("Hello");
+			expect(emitter.eventNames()).not.toContain("message");
+		});
+
+		/**
 		 * Asserts removeListener is emitted once, when a listener is removed again from within a removeListener handler.
 		 */
 		test("removeListener is emitted once per listener", () => {

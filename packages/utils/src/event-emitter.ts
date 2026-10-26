@@ -368,6 +368,8 @@ export class EventEmitter<TMap extends EventMap<TMap>> {
 			return false;
 		}
 
+		let emitted = false;
+
 		try {
 			// Iterate over a snapshot so listeners added or removed during emission do not affect this emission.
 			for (const listener of [...event.listeners]) {
@@ -385,6 +387,8 @@ export class EventEmitter<TMap extends EventMap<TMap>> {
 					this.#dispose(eventName, listener);
 				}
 
+				emitted = true;
+
 				// Invoke unbound, so the callback cannot access the listener record via `this`.
 				const { invoke } = listener;
 				invoke(...args);
@@ -393,7 +397,7 @@ export class EventEmitter<TMap extends EventMap<TMap>> {
 			this.#cleanup(eventName);
 		}
 
-		return true;
+		return emitted;
 	}
 
 	/**
