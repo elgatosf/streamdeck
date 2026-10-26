@@ -1103,10 +1103,10 @@ describe("EventEmitter", () => {
 
 			// Act, assert.
 			// @ts-expect-error: `newListener` is emitted internally.
-			emitter.emit("newListener", "message", listener);
+			expect(() => emitter.emit("newListener", "message", listener)).toThrow();
 
 			// @ts-expect-error: `removeListener` is emitted internally.
-			emitter.emit("removeListener", "message", listener);
+			expect(() => emitter.emit("removeListener", "message", listener)).toThrow();
 
 			// @ts-expect-error: events not within the event map are not valid.
 			emitter.emit("unknown");

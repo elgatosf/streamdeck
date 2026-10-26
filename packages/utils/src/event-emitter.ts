@@ -60,6 +60,10 @@ export class EventEmitter<TMap extends EventMap<TMap>> {
 		eventName: TEventName,
 		...args: TArgs
 	): boolean {
+		if (eventName === "newListener" || eventName === "removeListener") {
+			throw new Error(`Meta events "newListener" and "removeListener" cannot be emitted externally.`);
+		}
+
 		return this.#emit(eventName, args);
 	}
 
