@@ -1,0 +1,8 @@
+{
+    "extends": "../tsconfig.bundle.json",
+    "compilerOptions": {
+        /* Language and environment */
+        "target": "es2022",
+        "lib": ["es2022", "dom", "dom.iterable"]
+    }
+}
