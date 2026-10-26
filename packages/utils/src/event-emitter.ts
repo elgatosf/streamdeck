@@ -424,12 +424,16 @@ type EventMap<T> = {
 };
 
 /**
- * Events emitted by an {@link EventEmitter}, including meta events `newListener` and `removeListener`.
+ * Observable events emitted by an {@link EventEmitter}.
+ *
+ * Includes meta events `newListener` and `removeListener`
  */
 export type EventsOf<TEventMap extends EventMap<TEventMap>> = MetaEvent | keyof TEventMap;
 
 /**
- * Events that can be emitted externally on an {@link EventEmitter}.
+ * Events that can be emitted on an {@link EventEmitter}.
+ *
+ * Excludes meta events `newListener` and `removeListener`
  */
 export type EmittableEventsOf<TEventMap extends EventMap<TEventMap>> = Exclude<keyof TEventMap, MetaEvent>;
 
@@ -449,14 +453,14 @@ export type EventArgs<TMap extends EventMap<TMap>, TEventName extends EventsOf<T
 /**
  * Arguments supplied to `newListener` listeners; emitted when any listener is added, other than to `newListener`.
  */
-type NewListenerArgs<TMap extends EventMap<TMap>> =
+export type NewListenerArgs<TMap extends EventMap<TMap>> =
 	| EventArgUnion<TMap>
 	| ["removeListener", (...args: RemoveListenerArgs<TMap>) => void];
 
 /**
  * Arguments supplied to `removeListener` listeners; emitted when any listener is removed, other than from `removeListener`.
  */
-type RemoveListenerArgs<TMap extends EventMap<TMap>> =
+export type RemoveListenerArgs<TMap extends EventMap<TMap>> =
 	| EventArgUnion<TMap>
 	| ["newListener", (...args: NewListenerArgs<TMap>) => void];
 
