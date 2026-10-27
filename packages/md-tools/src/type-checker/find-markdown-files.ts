@@ -7,8 +7,8 @@ import { extname, resolve } from "node:path";
 const MARKDOWN_EXTENSIONS: ReadonlySet<string> = new Set([".md", ".mdx"]);
 
 /**
- * Finds the markdown files (`.md` and `.mdx`) matching the glob pattern, sorted to ensure diagnostics are reported in
- * a consistent order.
+ * Finds the markdown files (`.md` and `.mdx`) matching the glob pattern, sorted to ensure diagnostics are reported in a
+ * consistent order.
  * @param source Glob pattern.
  * @param cwd Directory the glob pattern is resolved from.
  * @returns The absolute paths of the markdown files.
