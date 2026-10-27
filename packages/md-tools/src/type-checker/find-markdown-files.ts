@@ -9,13 +9,13 @@ const MARKDOWN_EXTENSIONS: ReadonlySet<string> = new Set([".md", ".mdx"]);
 /**
  * Finds the markdown files (`.md` and `.mdx`) matching the glob pattern, sorted to ensure diagnostics are reported in a
  * consistent order.
- * @param source Glob pattern.
+ * @param pattern Glob pattern.
  * @param cwd Directory the glob pattern is resolved from.
  * @returns The absolute paths of the markdown files.
  */
-export async function findMarkdownFiles(source: string, cwd: string): Promise<string[]> {
+export async function findMarkdownFiles(pattern: string, cwd: string): Promise<string[]> {
 	const entries = await Array.fromAsync(
-		glob(source, {
+		glob(pattern, {
 			cwd,
 			exclude: (entry) => entry.name === "node_modules",
 			withFileTypes: true,
@@ -27,7 +27,7 @@ export async function findMarkdownFiles(source: string, cwd: string): Promise<st
 		.map((entry) => resolve(cwd, entry.parentPath, entry.name));
 
 	if (files.length === 0) {
-		throw new Error(`No markdown files found matching: ${source} (cwd: ${resolve(cwd)})`);
+		throw new Error(`No markdown files found matching: ${pattern} (cwd: ${resolve(cwd)})`);
 	}
 
 	return files.sort();
