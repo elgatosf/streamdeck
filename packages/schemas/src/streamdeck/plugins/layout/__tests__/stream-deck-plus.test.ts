@@ -17,7 +17,7 @@ describe("Stream Deck + layouts", () => {
 	test("width in bounds", () => {
 		// Arrange, act.
 		const errors = validateStreamDeckPluginLayout("stream-deck-plus.json", (layout) => {
-			layout.items[0].rect = [0, 0, 232, 100];
+			layout.items[0]!.rect = [0, 0, 232, 100] satisfies [number, number, number, number];
 		});
 
 		// Assert.

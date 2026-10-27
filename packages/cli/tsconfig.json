@@ -2,6 +2,7 @@
     "extends": "@elgato/tsconfig/node20/app",
     "compilerOptions": {
         "customConditions": ["node"],
+        "resolveJsonModule": true,
         "rootDir": "."
     },
     "include": ["src", "rolldown.config.ts"]

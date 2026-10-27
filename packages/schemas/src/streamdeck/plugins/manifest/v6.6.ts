@@ -1,5 +1,5 @@
-import type { ElementOf } from "../../../utils";
-import type { Manifest_6_9 } from "./v6.9";
+import type { ElementOf } from "../../../utils.js";
+import type { Manifest_6_9 } from "./v6.9.js";
 
 /**
  * Defines the plugin and available actions, and all information associated with them, including the plugin's entry point, all iconography, action default behavior, etc.

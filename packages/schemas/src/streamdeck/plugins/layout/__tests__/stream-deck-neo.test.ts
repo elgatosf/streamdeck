@@ -17,7 +17,7 @@ describe("Stream Deck Neo layouts", () => {
 	test("height in bounds", () => {
 		// Arrange, act.
 		const errors = validateStreamDeckPluginLayout("stream-deck-neo.json", (layout) => {
-			layout.items[0].rect = [0, 0, 200, 100];
+			layout.items[0]!.rect = [0, 0, 200, 100] satisfies [number, number, number, number];
 		});
 
 		// Assert.
@@ -38,7 +38,7 @@ describe("Stream Deck Neo layouts", () => {
 		// Arrange, act.
 		const errors = validateStreamDeckPluginLayout("stream-deck-neo.json", (layout) => {
 			delete layout.controller;
-			layout.items[0].rect = [0, 0, 232, 50];
+			layout.items[0]!.rect = [0, 0, 232, 50] satisfies [number, number, number, number];
 		});
 
 		// Assert (height)

@@ -17,9 +17,9 @@ describe.each(["6.6" as const, "6.7" as const, "6.8" as const])("v%s", (version)
 	test("Actions[].States[] allow more than 2 items", () => {
 		// Arrange, act, assert.
 		const errors = validateStreamDeckPluginManifest(`v${version}.json`, (m) => {
-			m.Actions[0].States.push({ Image: "imgs/two" });
-			m.Actions[0].States.push({ Image: "imgs/three" });
-			m.Actions[0].States.push({ Image: "imgs/four" });
+			m.Actions[0]!.States.push({ Image: "imgs/two" });
+			m.Actions[0]!.States.push({ Image: "imgs/three" });
+			m.Actions[0]!.States.push({ Image: "imgs/four" });
 		});
 		expect(errors).toHaveLength(0);
 	});

@@ -84,7 +84,7 @@ describe("SupportedInKeyLogicActions", () => {
 	it("is supported in 7.0", () => {
 		const errors = validateStreamDeckPluginManifest(
 			`v7.0.json`,
-			(m) => (m.Actions[0].SupportedInKeyLogicActions = true),
+			(m) => (m.Actions[0]!.SupportedInKeyLogicActions = true),
 		);
 		expect(errors).toHaveLength(0);
 	});
@@ -95,7 +95,7 @@ describe("SupportedInKeyLogicActions", () => {
 	it("is not supported in 6.9", () => {
 		const errors = validateStreamDeckPluginManifest(
 			`v6.9.json`,
-			(m) => (m.Actions[0].SupportedInKeyLogicActions = true),
+			(m) => (m.Actions[0]!.SupportedInKeyLogicActions = true),
 		);
 		expect(errors).toHaveError({
 			keyword: "additionalProperties",

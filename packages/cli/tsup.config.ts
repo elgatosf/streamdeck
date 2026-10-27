@@ -19,6 +19,7 @@ export default defineConfig([
 		},
 		outDir: "dist",
 		format: ["esm"],
+		noExternal: [/^@elgato\/schemas\/.*\.json$/],
 		banner,
 		clean: true,
 		dts: true,
