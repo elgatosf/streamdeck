@@ -29,7 +29,7 @@ npm install -g @elgato/cli
 
 ## Building and Running
 
-All of the samples have pre-built binaries which can be installed into Stream Deck immediately. Just open the included .streamDeckPlugin file.
+Where a sample includes a pre-built .streamDeckPlugin file, open it to install the sample into Stream Deck without building. Otherwise, follow the build-and-link instructions below.
 
 If you would like to build a sample yourself, install dependencies from the repository root, then run its existing package scripts from the sample directory:
 
