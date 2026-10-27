@@ -3,8 +3,8 @@ import { join, resolve } from "node:path";
 import ts from "typescript";
 import { describe, expect, test } from "vitest";
 
+import { CodeBlockDiagnostic } from "../code-block-diagnostic.js";
 import type { CodeBlock } from "../read-code-blocks.js";
-import { TypeScriptDiagnostic } from "../ts-diagnostic.js";
 import type { VirtualFile } from "../virtual-file.js";
 
 /**
@@ -79,7 +79,7 @@ function createVirtualFile({
 	};
 }
 
-describe("TypeCheckDiagnostic", () => {
+describe("CodeBlockDiagnostic", () => {
 	/**
 	 * Provides assertions for the properties copied from the TypeScript diagnostic.
 	 */
@@ -93,7 +93,7 @@ describe("TypeCheckDiagnostic", () => {
 			[ts.DiagnosticCategory.Suggestion, "suggestion"],
 			[ts.DiagnosticCategory.Warning, "warning"],
 		])("category %i is %s", (category, expected) => {
-			const diagnostic = new TypeScriptDiagnostic(createDiagnostic({ category }), "tsconfig.json");
+			const diagnostic = new CodeBlockDiagnostic(createDiagnostic({ category }), createVirtualFile());
 
 			expect(diagnostic.category).toBe(expected);
 		});
@@ -102,7 +102,7 @@ describe("TypeCheckDiagnostic", () => {
 		 * Asserts the code is copied from the TypeScript diagnostic.
 		 */
 		test("code", () => {
-			const diagnostic = new TypeScriptDiagnostic(createDiagnostic({ code: 7006 }), "tsconfig.json");
+			const diagnostic = new CodeBlockDiagnostic(createDiagnostic({ code: 7006 }), createVirtualFile());
 
 			expect(diagnostic.code).toBe(7006);
 		});
@@ -111,7 +111,7 @@ describe("TypeCheckDiagnostic", () => {
 		 * Asserts a message string is used as-is.
 		 */
 		test("message", () => {
-			const diagnostic = new TypeScriptDiagnostic(createDiagnostic({ messageText: "Hello world" }), "tsconfig.json");
+			const diagnostic = new CodeBlockDiagnostic(createDiagnostic({ messageText: "Hello world" }), createVirtualFile());
 
 			expect(diagnostic.message).toBe("Hello world");
 		});
@@ -129,7 +129,7 @@ describe("TypeCheckDiagnostic", () => {
 			};
 
 			// Act.
-			const diagnostic = new TypeScriptDiagnostic(createDiagnostic({ messageText }), "tsconfig.json");
+			const diagnostic = new CodeBlockDiagnostic(createDiagnostic({ messageText }), createVirtualFile());
 
 			// Assert.
 			expect(diagnostic.message).toBe("Outer\n  Inner");
@@ -139,43 +139,7 @@ describe("TypeCheckDiagnostic", () => {
 		 * Asserts the diagnostic is an instance of the class.
 		 */
 		test("instance", () => {
-			expect(new TypeScriptDiagnostic(createDiagnostic(), "tsconfig.json")).toBeInstanceOf(TypeScriptDiagnostic);
-		});
-	});
-
-	/**
-	 * Provides assertions for diagnostics that are not associated with a code block, e.g. global diagnostics.
-	 */
-	describe("file path source", () => {
-		/**
-		 * Asserts the link is the path to the file, without a line or column.
-		 */
-		test("links to the file, without a position", () => {
-			// Arrange, act.
-			const diagnostic = new TypeScriptDiagnostic(createDiagnostic(), join(process.cwd(), "config", "tsconfig.json"));
-
-			// Assert.
-			expect(diagnostic.link).toBe("config/tsconfig.json");
-			expect(diagnostic.line).toBeUndefined();
-			expect(diagnostic.column).toBeUndefined();
-		});
-
-		/**
-		 * Asserts a relative path is resolved from the current working directory of the process.
-		 */
-		test("relative path", () => {
-			expect(new TypeScriptDiagnostic(createDiagnostic(), "tsconfig.json").link).toBe("tsconfig.json");
-		});
-
-		/**
-		 * Asserts a path outside the current working directory of the process is relative, using forward slashes.
-		 */
-		test("path outside of the current working directory", () => {
-			// Arrange, act.
-			const diagnostic = new TypeScriptDiagnostic(createDiagnostic(), resolve("..", "other", "tsconfig.json"));
-
-			// Assert.
-			expect(diagnostic.link).toBe("../other/tsconfig.json");
+			expect(new CodeBlockDiagnostic(createDiagnostic(), createVirtualFile())).toBeInstanceOf(CodeBlockDiagnostic);
 		});
 	});
 
@@ -192,7 +156,7 @@ describe("TypeCheckDiagnostic", () => {
 			const file = createVirtualFile({ code, column: 3, line: 4 });
 
 			// Act.
-			const diagnostic = new TypeScriptDiagnostic(createDiagnosticAt(code, "a:"), file);
+			const diagnostic = new CodeBlockDiagnostic(createDiagnosticAt(code, "a:"), file);
 
 			// Assert.
 			expect(diagnostic.line).toBe(6);
@@ -208,11 +172,26 @@ describe("TypeCheckDiagnostic", () => {
 			const file = createVirtualFile({ code, line: 3 });
 
 			// Act.
-			const diagnostic = new TypeScriptDiagnostic(createDiagnosticAt(code, "const"), file);
+			const diagnostic = new CodeBlockDiagnostic(createDiagnosticAt(code, "const"), file);
 
 			// Assert.
 			expect(diagnostic.line).toBe(4);
 			expect(diagnostic.column).toBe(1);
+		});
+
+		/**
+		 * Asserts the file is the absolute path to the markdown file containing the code block.
+		 */
+		test("file is the markdown file", () => {
+			// Arrange.
+			const markdownFile = join(process.cwd(), "docs", "README.md");
+			const file = createVirtualFile({ code: "const a = 1;", file: markdownFile });
+
+			// Act.
+			const diagnostic = new CodeBlockDiagnostic(createDiagnostic(), file);
+
+			// Assert.
+			expect(diagnostic.file).toBe(markdownFile);
 		});
 
 		/**
@@ -224,10 +203,26 @@ describe("TypeCheckDiagnostic", () => {
 			const file = createVirtualFile({ code, file: join(process.cwd(), "docs", "README.md"), line: 3 });
 
 			// Act.
-			const diagnostic = new TypeScriptDiagnostic(createDiagnosticAt(code, "a:"), file);
+			const diagnostic = new CodeBlockDiagnostic(createDiagnosticAt(code, "a:"), file);
 
 			// Assert.
 			expect(diagnostic.link).toBe("docs/README.md:4:7");
+		});
+
+		/**
+		 * Asserts a markdown file outside the current working directory of the process is linked using a relative path,
+		 * with forward slashes.
+		 */
+		test("markdown file outside of the current working directory", () => {
+			// Arrange.
+			const code = "const a: number = 'x';";
+			const file = createVirtualFile({ code, file: resolve("..", "other", "README.md"), line: 3 });
+
+			// Act.
+			const diagnostic = new CodeBlockDiagnostic(createDiagnosticAt(code, "a:"), file);
+
+			// Assert.
+			expect(diagnostic.link).toBe("../other/README.md:4:7");
 		});
 
 		/**
@@ -238,7 +233,7 @@ describe("TypeCheckDiagnostic", () => {
 			const file = createVirtualFile({ code: "const a = 1;", column: 3, line: 7 });
 
 			// Act.
-			const diagnostic = new TypeScriptDiagnostic(createDiagnostic(), file);
+			const diagnostic = new CodeBlockDiagnostic(createDiagnostic(), file);
 
 			// Assert.
 			expect(diagnostic.line).toBe(7);

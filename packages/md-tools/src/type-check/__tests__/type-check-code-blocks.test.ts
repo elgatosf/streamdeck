@@ -2,8 +2,8 @@ import { join, relative } from "node:path";
 
 import { describe, expect, test } from "vitest";
 
+import type { CodeBlockDiagnostic } from "../code-block-diagnostic.js";
 import { readCodeBlocks } from "../read-code-blocks.js";
-import type { TypeScriptDiagnostic } from "../ts-diagnostic.js";
 import { typeCheckCodeBlocks } from "../type-check-code-blocks.js";
 
 const FIXTURES_DIR = join(import.meta.dirname, "fixtures");
@@ -14,7 +14,7 @@ const FIXTURES_DIR = join(import.meta.dirname, "fixtures");
  * @param tsconfigFile tsconfig file, relative to the fixtures directory.
  * @returns The diagnostics.
  */
-async function check(fileName: string, tsconfigFile = "tsconfig.json"): Promise<TypeScriptDiagnostic[]> {
+async function check(fileName: string, tsconfigFile = "tsconfig.json"): Promise<CodeBlockDiagnostic[]> {
 	return typeCheckCodeBlocks({
 		codeBlocks: await readCodeBlocks(join(FIXTURES_DIR, fileName)),
 		cwd: FIXTURES_DIR,
@@ -50,11 +50,12 @@ describe("typeCheckCodeBlocks", () => {
 
 	describe("diagnostics", () => {
 		test("semantic error", async () => {
-			expect(await check("semantic-error.md")).toEqual<TypeScriptDiagnostic[]>([
+			expect(await check("semantic-error.md")).toEqual<CodeBlockDiagnostic[]>([
 				{
 					category: "error",
 					code: 2322,
 					column: 7,
+					file: join(FIXTURES_DIR, "semantic-error.md"),
 					line: 4,
 					link: linkTo("semantic-error.md", 4, 7),
 					message: "Type 'string' is not assignable to type 'number'.",

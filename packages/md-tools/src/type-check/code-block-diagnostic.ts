@@ -7,7 +7,7 @@ import type { VirtualFile } from "./virtual-file.js";
 /**
  * Diagnostic reported for a code block, with positions relative to the markdown file.
  */
-export class TypeScriptDiagnostic {
+export class CodeBlockDiagnostic {
 	/**
 	 * Category of the diagnostic, as reported by TypeScript.
 	 */
@@ -21,16 +21,21 @@ export class TypeScriptDiagnostic {
 	/**
 	 * 1-based column within the markdown file.
 	 */
-	public readonly column?: number;
+	public readonly column: number;
+
+	/**
+	 * Absolute path to the markdown file containing the code block the diagnostic was reported for.
+	 */
+	public readonly file: string;
 
 	/**
 	 * 1-based line within the markdown file.
 	 */
-	public readonly line?: number;
+	public readonly line: number;
 
 	/**
 	 * Link to the location within the markdown file, e.g. `docs/README.md:12:5`; the path is relative to the current
-	 * working directory of the process. Diagnostics that are not associated with a code block link to the tsconfig file.
+	 * working directory of the process.
 	 */
 	public readonly link: string;
 
@@ -40,22 +45,18 @@ export class TypeScriptDiagnostic {
 	public readonly message: string;
 
 	/**
-	 * Initializes a new instance of the {@link TypeScriptDiagnostic} class from the TypeScript diagnostic.
+	 * Initializes a new instance of the {@link CodeBlockDiagnostic} class from the TypeScript diagnostic.
 	 * @param diagnostic TypeScript diagnostic.
-	 * @param source Virtual file of the code block the diagnostic was reported for, or the path to the file to link to
-	 * when the diagnostic is not associated with a code block, e.g. the tsconfig file.
+	 * @param source Virtual file of the code block the diagnostic was reported for.
 	 */
-	constructor(diagnostic: ts.Diagnostic, source: VirtualFile | string) {
-		this.category = ts.DiagnosticCategory[diagnostic.category].toLowerCase() as TypeScriptDiagnostic["category"];
+	constructor(diagnostic: ts.Diagnostic, source: VirtualFile) {
+		this.category = ts.DiagnosticCategory[diagnostic.category].toLowerCase() as CodeBlockDiagnostic["category"];
 		this.code = diagnostic.code;
 		this.message = ts.flattenDiagnosticMessageText(diagnostic.messageText, "\n");
 
-		if (typeof source === "string") {
-			this.link = toLinkPath(source);
-			return;
-		}
-
 		const { start } = source.entry.position;
+		this.file = source.entry.file;
+
 		if (diagnostic.file !== undefined && diagnostic.start !== undefined) {
 			// Code blocks are fenced, so the code starts on the line after the opening fence, aligned with the fence.
 			const { character, line } = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start);
@@ -67,15 +68,7 @@ export class TypeScriptDiagnostic {
 			this.column = start.column;
 		}
 
-		this.link = `${toLinkPath(source.entry.file)}:${this.line}:${this.column}`;
+		const linkPath = relative(process.cwd(), resolve(this.file)).replaceAll("\\", "/");
+		this.link = `${linkPath}:${this.line}:${this.column}`;
 	}
-}
-
-/**
- * Gets the path used within a diagnostic link, relative to the current working directory of the process.
- * @param file Path to the file.
- * @returns The path.
- */
-function toLinkPath(file: string): string {
-	return relative(process.cwd(), resolve(file)).replaceAll("\\", "/");
 }

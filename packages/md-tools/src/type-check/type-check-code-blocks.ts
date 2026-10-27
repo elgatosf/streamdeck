@@ -2,8 +2,8 @@ import { dirname, resolve } from "node:path";
 
 import ts from "typescript";
 
+import { CodeBlockDiagnostic } from "./code-block-diagnostic.js";
 import type { CodeBlock } from "./read-code-blocks.js";
-import { TypeScriptDiagnostic } from "./ts-diagnostic.js";
 import type { VirtualFile } from "./virtual-file.js";
 
 /**
@@ -22,10 +22,10 @@ const EXTENSIONS: Readonly<Record<string, string>> = {
  * Type checks the TypeScript code blocks using the specified tsconfig. Each code block is treated as its own module,
  * resolved as if it were a file within `cwd`, and all code blocks are type checked together within a single program.
  * @param options Options.
- * @returns The diagnostics, in the order of the code blocks; diagnostics not associated with a code block are first.
+ * @returns The diagnostics, in the order of the code blocks.
  * @throws When the tsconfig file cannot be read, or is invalid.
  */
-export function typeCheckCodeBlocks(options: TypeCheckCodeBlocksOptions): TypeScriptDiagnostic[] {
+export function typeCheckCodeBlocks(options: TypeCheckCodeBlocksOptions): CodeBlockDiagnostic[] {
 	const cwd = resolve(options.cwd);
 
 	// Map each TypeScript code block to a virtual file, keyed by its normalized path so the compiler host can look it
@@ -50,8 +50,7 @@ export function typeCheckCodeBlocks(options: TypeCheckCodeBlocksOptions): TypeSc
 
 	// Create a program whose root files are only the virtual files; any files they import are resolved, and loaded, from
 	// the file system by the compiler host.
-	const tsconfigFile = resolve(cwd, options.tsconfigFile);
-	const compilerOptions = getCompilerOptions(tsconfigFile);
+	const compilerOptions = getCompilerOptions(resolve(cwd, options.tsconfigFile));
 	const host = createCompilerHost(compilerOptions, virtualFiles);
 	const program = ts.createProgram({
 		host,
@@ -59,11 +58,9 @@ export function typeCheckCodeBlocks(options: TypeCheckCodeBlocksOptions): TypeSc
 		rootNames: Array.from(virtualFiles.values(), (f) => f.fileName),
 	});
 
-	// Global diagnostics are not associated with a source file (e.g. a missing library), so they link to the tsconfig.
-	const diagnostics = program.getGlobalDiagnostics().map((d) => new TypeScriptDiagnostic(d, tsconfigFile));
-
-	// Collect the diagnostics for each virtual file only; diagnostics within imported files (e.g. dependencies) are not
-	// the responsibility of the markdown, and are therefore ignored.
+	// Collect the diagnostics for each virtual file only; global diagnostics (e.g. a missing library), and diagnostics
+	// within imported files (e.g. dependencies), are not associated with a code block, and are therefore ignored.
+	const diagnostics: CodeBlockDiagnostic[] = [];
 	for (const file of virtualFiles.values()) {
 		const sourceFile = program.getSourceFile(file.fileName);
 		if (sourceFile === undefined) {
@@ -72,7 +69,7 @@ export function typeCheckCodeBlocks(options: TypeCheckCodeBlocksOptions): TypeSc
 
 		// Syntactic diagnostics (e.g. a missing bracket) are reported before semantic diagnostics (e.g. type errors).
 		for (const d of [...program.getSyntacticDiagnostics(sourceFile), ...program.getSemanticDiagnostics(sourceFile)]) {
-			diagnostics.push(new TypeScriptDiagnostic(d, file));
+			diagnostics.push(new CodeBlockDiagnostic(d, file));
 		}
 	}
 

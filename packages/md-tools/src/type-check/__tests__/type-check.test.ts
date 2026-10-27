@@ -2,7 +2,7 @@ import { join, relative } from "node:path";
 
 import { describe, expect, test } from "vitest";
 
-import type { TypeScriptDiagnostic } from "../ts-diagnostic.js";
+import type { CodeBlockDiagnostic } from "../code-block-diagnostic.js";
 import { typeCheck } from "../type-check.js";
 
 const FIXTURES_DIR = join(import.meta.dirname, "fixtures");
@@ -12,7 +12,7 @@ const FIXTURES_DIR = join(import.meta.dirname, "fixtures");
  * @param source Glob pattern, relative to the fixtures directory.
  * @returns The diagnostics.
  */
-function check(source: string): Promise<TypeScriptDiagnostic[]> {
+function check(source: string): Promise<CodeBlockDiagnostic[]> {
 	return typeCheck({
 		cwd: FIXTURES_DIR,
 		src: source,

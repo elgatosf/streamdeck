@@ -1,6 +1,6 @@
+import type { CodeBlockDiagnostic } from "./code-block-diagnostic.js";
 import { findMarkdownFiles } from "./find-markdown-files.js";
 import { readCodeBlocks } from "./read-code-blocks.js";
-import type { TypeScriptDiagnostic } from "./ts-diagnostic.js";
 import { typeCheckCodeBlocks } from "./type-check-code-blocks.js";
 
 /**
@@ -8,7 +8,7 @@ import { typeCheckCodeBlocks } from "./type-check-code-blocks.js";
  * @param options Options.
  * @returns The diagnostics, with positions relative to their markdown file.
  */
-export async function typeCheck(options: TypeCheckOptions): Promise<TypeScriptDiagnostic[]> {
+export async function typeCheck(options: TypeCheckOptions): Promise<CodeBlockDiagnostic[]> {
 	const { src, cwd = process.cwd(), tsconfigFile = "tsconfig.json" } = options;
 
 	const markdownFiles = await findMarkdownFiles(src, cwd);
