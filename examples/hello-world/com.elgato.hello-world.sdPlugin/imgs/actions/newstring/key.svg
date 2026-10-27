@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="144"
+   height="144"
+   viewBox="0 0 38.099999 38.100001"
+   version="1.1"
+   id="svg5"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs2" />
+  <g
+     id="layer1">
+    <g
+       aria-label="A字"
+       id="text6646"
+       style="font-size:25.4px;fill:#ffffff;fill-opacity:0.23;stroke-width:0.264583"
+       transform="matrix(0.88881544,0,0,0.88881884,7.4333766,26.560891)">
+      <path
+         id="path16578"
+         style="-inkscape-font-specification:Verdana;fill:#ffffff;fill-opacity:0.23;stroke-width:0.999999"
+         d="m 14.048828,-87.677734 -25.40625,69.796875 h 9.4218751 l 6.84375,-19.453125 H 23.525391 v -7.96875 H 7.7207031 l 12.2812499,-34.265625 8.654297,24.240234 h 9.542969 L 26.423828,-87.677734 Z m 26.689453,66.384765 1.201172,3.41211 h 9.890625 l -1.208984,-3.320313 c -1.415793,0.0127 -2.827306,0.02118 -4.216797,-0.002 -1.631801,-0.09864 -3.88243,0.297829 -5.666016,-0.08984 z"
+         transform="scale(0.26458333)" />
+      <path
+         d="m 19.421109,-4.2199579 v 1.2898437 h 9.723438 v 1.8851562 h -9.723438 v 5.7546875 q 0,1.5874999 -1.5875,1.5874999 H 15.154703 L 14.658609,4.4120732 h 2.38125 q 0.396875,0 0.396875,-0.396875 V -1.044958 H 7.1179843 V -2.9301142 H 17.436734 v -2.5796874 l 0.992188,0.1984375 2.778125,-1.8851562 h -9.525 v -1.885156 h 11.509375 l 0.396875,-0.396875 1.686718,1.686718 -0.595312,0.198438 z m -0.09922,-8.8304681 h 9.227343 v 4.9609367 H 26.564857 V -11.16527 H 9.7968913 v 3.2742187 h -1.984375 v -5.1593747 h 9.2273427 v -2.678906 h 2.182813 q 0.992187,0.198437 0.09922,0.79375 z"
+         style="-inkscape-font-specification:Verdana;fill:#ffffff;fill-opacity:0.23"
+         id="path16580" />
+    </g>
+    <text
+       xml:space="preserve"
+       style="font-size:25.4px;line-height:1.25;font-family:sans-serif;stroke-width:0.264583"
+       x="0.42525774"
+       y="30.363403"
+       id="text11718"><tspan
+         id="tspan11716"
+         style="stroke-width:0.264583"
+         x="0.42525774"
+         y="30.363403"></tspan></text>
+  </g>
+</svg>

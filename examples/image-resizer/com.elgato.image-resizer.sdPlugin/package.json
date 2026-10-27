@@ -1,0 +1,7 @@
+{
+    "type": "module",
+    "dependencies": {
+        "sharp": "^0.34.5"
+    },
+    "packageManager": "pnpm@10.18.0"
+}

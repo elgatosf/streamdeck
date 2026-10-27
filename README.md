@@ -115,4 +115,4 @@ There are four available options when configuring the `Debug` property within th
 - Learn about [key](https://docs.elgato.com/streamdeck/sdk/guides/keys) and [dial](https://docs.elgato.com/streamdeck/sdk/guides/dials) actions.
 - Understand your plugin's metadata within the [manifest JSON file](https://docs.elgato.com/streamdeck/sdk/references/manifest)
 - Bundle your plugin for [distribution](https://docs.elgato.com/streamdeck/sdk/guides/distribution).
-- Explore [Stream Deck plugin samples](https://github.com/elgatosf/streamdeck-plugin-samples)
+- Explore the [Stream Deck plugin examples](./examples/README.md).

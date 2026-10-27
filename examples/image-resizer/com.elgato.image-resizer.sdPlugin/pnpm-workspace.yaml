@@ -1,0 +1,16 @@
+packages:
+  - .
+
+nodeLinker: hoisted
+packageImportMethod: copy
+
+supportedArchitectures:
+  os:
+    - win32
+    - darwin
+  cpu:
+    - x64
+    - arm64
+
+onlyBuiltDependencies:
+  - sharp
