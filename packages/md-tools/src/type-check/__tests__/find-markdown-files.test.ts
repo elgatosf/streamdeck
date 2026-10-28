@@ -114,7 +114,7 @@ describe("findMarkdownFiles", () => {
 
 	/**
 	 * Provides assertions for directories, using a temporary directory as they cannot be represented as static
-	 * fixtures (e.g. `node_modules` is ignored by git).
+	 * fixtures (e.g. empty directories are not tracked by git).
 	 */
 	describe("directories", () => {
 		let cwd: string;
@@ -124,12 +124,10 @@ describe("findMarkdownFiles", () => {
 
 			mkdirSync(join(cwd, "docs", "nested"), { recursive: true });
 			mkdirSync(join(cwd, "folder.md"));
-			mkdirSync(join(cwd, "node_modules", "pkg"), { recursive: true });
 
 			writeFileSync(join(cwd, "README.md"), "# Root");
 			writeFileSync(join(cwd, "docs", "guide.md"), "# Guide");
 			writeFileSync(join(cwd, "docs", "nested", "deep.md"), "# Deep");
-			writeFileSync(join(cwd, "node_modules", "pkg", "README.md"), "# Package");
 		});
 
 		afterAll(() => {
@@ -144,7 +142,7 @@ describe("findMarkdownFiles", () => {
 		});
 
 		/**
-		 * Asserts a globstar matches files within nested directories, excluding `node_modules`.
+		 * Asserts a globstar matches files within nested directories.
 		 */
 		test("globstar", async () => {
 			expect(await findMarkdownFiles("**/*.md", cwd)).toEqual([
@@ -174,13 +172,6 @@ describe("findMarkdownFiles", () => {
 			} finally {
 				rmSync(mixed, { force: true, recursive: true });
 			}
-		});
-
-		/**
-		 * Asserts files within `node_modules` are not matched, even when explicitly specified.
-		 */
-		test("node_modules is excluded", async () => {
-			await expect(findMarkdownFiles("node_modules/**/*.md", cwd)).rejects.toThrow(/^No markdown files found/);
 		});
 	});
 });

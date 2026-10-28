@@ -124,6 +124,14 @@ describe("typeCheckCodeBlocks", () => {
 				linkTo("uneven-indentation.md", 5, 11),
 			]);
 		});
+
+		test("code blocks within MDX JSX elements", async () => {
+			expect((await check("mdx.mdx")).map((d) => d.link)).toEqual([
+				linkTo("mdx.mdx", 14, 7),
+				linkTo("mdx.mdx", 20, 11),
+				linkTo("mdx.mdx", 27, 7),
+			]);
+		});
 	});
 
 	describe("languages", () => {

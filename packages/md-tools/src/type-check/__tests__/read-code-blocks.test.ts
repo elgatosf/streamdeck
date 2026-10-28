@@ -117,6 +117,45 @@ describe("readCodeBlocks", () => {
 	});
 
 	/**
+	 * Provides assertions for MDX files, which are parsed as MDX rather than markdown.
+	 */
+	describe("mdx.mdx", () => {
+		let entries: CodeBlock[];
+
+		beforeAll(async () => {
+			entries = await read("mdx.mdx");
+		});
+
+		/**
+		 * Asserts code blocks within JSX elements are found, including those without surrounding blank lines, and those
+		 * indented within the element; ESM imports and exports are not treated as content.
+		 */
+		test("code blocks within JSX elements", () => {
+			expect(entries.map((e) => [e.value, e.position.start.line, e.position.start.column])).toEqual([
+				['const a: number = "x";', 13, 1],
+				['const b: number = "x";', 19, 5],
+				['const c: number = "x";', 26, 1],
+			]);
+		});
+
+		/**
+		 * Asserts the column each line starts at accounts for the indentation within the JSX element.
+		 */
+		test("line columns", () => {
+			expect(entries.map((e) => e.lineColumns)).toEqual([[1], [5], [1]]);
+		});
+	});
+
+	/**
+	 * Asserts an MDX file that cannot be parsed throws, including the path of the file within the message.
+	 */
+	test("invalid MDX throws", async () => {
+		await expect(read("invalid.mdx")).rejects.toThrow(
+			`Failed to parse MDX file: ${join(FIXTURES_DIR, "invalid.mdx")}: Expected a closing tag for \`<Tabs>\``,
+		);
+	});
+
+	/**
 	 * Provides assertions for code blocks nested within other markdown nodes.
 	 */
 	describe("nested.md", () => {

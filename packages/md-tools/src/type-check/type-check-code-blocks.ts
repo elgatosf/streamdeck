@@ -165,6 +165,7 @@ function getCompilerOptions(tsconfigFile: string): ts.CompilerOptions {
 		emitDeclarationOnly: false,
 		incremental: false,
 		noEmit: true,
+		noCheck: false,
 		tsBuildInfoFile: undefined,
 
 		// Treat every code block as a module, even without imports or exports, so that top-level declarations are scoped

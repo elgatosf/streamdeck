@@ -14,13 +14,7 @@ const MARKDOWN_EXTENSIONS: ReadonlySet<string> = new Set([".md", ".mdx"]);
  * @returns The absolute paths of the markdown files.
  */
 export async function findMarkdownFiles(pattern: string, cwd: string): Promise<string[]> {
-	const entries = await Array.fromAsync(
-		glob(pattern, {
-			cwd,
-			exclude: (entry) => entry.name === "node_modules",
-			withFileTypes: true,
-		}),
-	);
+	const entries = await Array.fromAsync(glob(pattern, { cwd, withFileTypes: true }));
 
 	const files = entries
 		.filter((entry) => entry.isFile() && MARKDOWN_EXTENSIONS.has(extname(entry.name).toLowerCase()))
