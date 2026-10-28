@@ -1,4 +1,5 @@
 import { join, resolve } from "node:path";
+import { pathToFileURL } from "node:url";
 
 import ts from "typescript";
 import { describe, expect, test } from "vitest";
@@ -195,34 +196,35 @@ describe("CodeBlockDiagnostic", () => {
 		});
 
 		/**
-		 * Asserts the link is the path to the markdown file, including the line and column.
+		 * Asserts the link is the file URL of the markdown file, including the line and column.
 		 */
 		test("links to the markdown file, with a position", () => {
 			// Arrange.
 			const code = "const a: number = 'x';";
-			const file = createVirtualFile({ code, file: join(process.cwd(), "docs", "README.md"), line: 3 });
+			const markdownFile = join(process.cwd(), "docs", "README.md");
+			const file = createVirtualFile({ code, file: markdownFile, line: 3 });
 
 			// Act.
 			const diagnostic = new CodeBlockDiagnostic(createDiagnosticAt(code, "a:"), file);
 
 			// Assert.
-			expect(diagnostic.link).toBe("docs/README.md:4:7");
+			expect(diagnostic.link).toBe(`${pathToFileURL(markdownFile).href}:4:7`);
 		});
 
 		/**
-		 * Asserts a markdown file outside the current working directory of the process is linked using a relative path,
-		 * with forward slashes.
+		 * Asserts a markdown file outside the current working directory of the process is linked using its file URL.
 		 */
 		test("markdown file outside of the current working directory", () => {
 			// Arrange.
 			const code = "const a: number = 'x';";
-			const file = createVirtualFile({ code, file: resolve("..", "other", "README.md"), line: 3 });
+			const markdownFile = resolve("..", "other", "README.md");
+			const file = createVirtualFile({ code, file: markdownFile, line: 3 });
 
 			// Act.
 			const diagnostic = new CodeBlockDiagnostic(createDiagnosticAt(code, "a:"), file);
 
 			// Assert.
-			expect(diagnostic.link).toBe("../other/README.md:4:7");
+			expect(diagnostic.link).toBe(`${pathToFileURL(markdownFile).href}:4:7`);
 		});
 
 		/**
@@ -238,7 +240,7 @@ describe("CodeBlockDiagnostic", () => {
 			// Assert.
 			expect(diagnostic.line).toBe(7);
 			expect(diagnostic.column).toBe(3);
-			expect(diagnostic.link).toBe("README.md:7:3");
+			expect(diagnostic.link).toBe(`${pathToFileURL(resolve("README.md")).href}:7:3`);
 		});
 	});
 });

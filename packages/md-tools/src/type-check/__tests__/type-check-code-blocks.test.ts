@@ -1,4 +1,5 @@
-import { join, relative } from "node:path";
+import { join } from "node:path";
+import { pathToFileURL } from "node:url";
 
 import { describe, expect, test } from "vitest";
 
@@ -30,7 +31,7 @@ async function check(fileName: string, tsconfigFile = "tsconfig.json"): Promise<
  * @returns The link.
  */
 function linkTo(fileName: string, line: number, column: number): string {
-	return `${relative(process.cwd(), join(FIXTURES_DIR, fileName)).replaceAll("\\", "/")}:${line}:${column}`;
+	return `${pathToFileURL(join(FIXTURES_DIR, fileName)).href}:${line}:${column}`;
 }
 
 describe("typeCheckCodeBlocks", () => {

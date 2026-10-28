@@ -35,8 +35,7 @@ export class CodeBlockDiagnostic {
 	public readonly line: number;
 
 	/**
-	 * Link to the location within the markdown file, e.g. `docs/README.md:12:5`; the path is relative to the current
-	 * working directory of the process.
+	 * File URL of the location within the markdown file, e.g. `file:///C:/docs/README.md:12:5`.
 	 */
 	public readonly link: string;
 

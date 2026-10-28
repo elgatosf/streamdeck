@@ -1,4 +1,5 @@
-import { join, relative } from "node:path";
+import { join } from "node:path";
+import { pathToFileURL } from "node:url";
 
 import { describe, expect, test } from "vitest";
 
@@ -28,7 +29,7 @@ function check(source: string): Promise<CodeBlockDiagnostic[]> {
  * @returns The link.
  */
 function linkTo(fileName: string, line: number, column: number): string {
-	return `${relative(process.cwd(), join(FIXTURES_DIR, fileName)).replaceAll("\\", "/")}:${line}:${column}`;
+	return `${pathToFileURL(join(FIXTURES_DIR, fileName)).href}:${line}:${column}`;
 }
 
 describe("typeCheck", () => {
@@ -64,7 +65,7 @@ describe("typeCheck", () => {
 			"nested.md",
 			"semantic-error.md",
 			"syntax-error.md",
-		].map((fileName) => relative(process.cwd(), join(FIXTURES_DIR, fileName)).replaceAll("\\", "/"));
+		].map((fileName) => pathToFileURL(join(FIXTURES_DIR, fileName)).href);
 
 		// Act.
 		const diagnostics = await check("*.md");
