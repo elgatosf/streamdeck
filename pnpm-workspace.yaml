@@ -3,6 +3,10 @@ packages:
   - "examples/*"
   - "packages/*"
 
+# Link dependencies to local workspace packages when their version satisfies the range,
+# allowing examples to declare real versions (for standalone use) whilst resolving locally.
+linkWorkspacePackages: true
+
 blockExoticSubdeps: true
 trustPolicy: no-downgrade
 

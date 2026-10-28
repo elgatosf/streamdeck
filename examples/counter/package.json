@@ -7,10 +7,10 @@
         "watch": "rolldown -c rolldown.config.ts -w"
     },
     "dependencies": {
-        "@elgato/streamdeck": "workspace:*"
+        "@elgato/streamdeck": "^3.0.3"
     },
     "devDependencies": {
-        "@elgato/cli": "workspace:*",
+        "@elgato/cli": "^1.10.3",
         "@elgato/prettier-config": "^0.3.3",
         "@tsconfig/node20": "^20.1.2",
         "@types/node": "^20.19.0",

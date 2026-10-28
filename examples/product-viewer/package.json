@@ -7,11 +7,11 @@
         "watch": "rollup -c -w --watch.onEnd=\"streamdeck restart com.elgato.product-viewer\""
     },
     "dependencies": {
-        "@elgato/streamdeck": "workspace:*",
-        "@elgato/utils": "workspace:*"
+        "@elgato/streamdeck": "^3.0.3",
+        "@elgato/utils": "^0.6.1"
     },
     "devDependencies": {
-        "@elgato/cli": "workspace:*",
+        "@elgato/cli": "^1.10.3",
         "@rollup/plugin-commonjs": "^28.0.0",
         "@rollup/plugin-node-resolve": "^15.2.2",
         "@rollup/plugin-terser": "^0.4.4",

@@ -7,10 +7,10 @@
         "watch": "rollup -c -w --watch.onEnd=\"streamdeck restart com.elgato.cat-keys\""
     },
     "dependencies": {
-        "@elgato/streamdeck": "workspace:*"
+        "@elgato/streamdeck": "^3.0.3"
     },
     "devDependencies": {
-        "@elgato/cli": "workspace:*",
+        "@elgato/cli": "^1.10.3",
         "@rollup/plugin-commonjs": "^28.0.2",
         "@rollup/plugin-node-resolve": "^16.0.0",
         "@rollup/plugin-terser": "^0.4.4",
