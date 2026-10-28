@@ -48,6 +48,7 @@ describe("findMarkdownFiles", () => {
 					"semantic-error.md",
 					"syntax-error.md",
 					"unclosed-fence.md",
+					"uneven-indentation.md",
 					"valid.md",
 				),
 			);

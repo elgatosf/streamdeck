@@ -49,6 +49,7 @@ function createDiagnosticAt(code: string, search: string): ts.Diagnostic {
  * @param options.column 1-based column of the opening fence within the markdown file.
  * @param options.file Path to the markdown file.
  * @param options.line 1-based line of the opening fence within the markdown file.
+ * @param options.lineColumns 1-based column each line of the code starts at; defaults to the column of the fence.
  * @returns The virtual file.
  */
 function createVirtualFile({
@@ -56,15 +57,18 @@ function createVirtualFile({
 	column = 1,
 	file = resolve("README.md"),
 	line = 1,
+	lineColumns = code.split("\n").map(() => column),
 }: {
 	code?: string;
 	column?: number;
 	file?: string;
 	line?: number;
+	lineColumns?: number[];
 } = {}): VirtualFile {
 	const entry: CodeBlock = {
 		file,
 		lang: "ts",
+		lineColumns,
 		meta: null,
 		position: {
 			end: { column: column + 3, line: line + code.split("\n").length + 1 },
@@ -162,6 +166,23 @@ describe("CodeBlockDiagnostic", () => {
 			// Assert.
 			expect(diagnostic.line).toBe(6);
 			expect(diagnostic.column).toBe(9);
+		});
+
+		/**
+		 * Asserts the column is relative to the start of the line within the markdown file, when the line is not aligned
+		 * with the opening fence.
+		 */
+		test("line indented less than the fence", () => {
+			// Arrange.
+			const code = "const ok = 1;\nconst a: number = 'x';";
+			const file = createVirtualFile({ code, column: 3, line: 4, lineColumns: [3, 1] });
+
+			// Act.
+			const diagnostic = new CodeBlockDiagnostic(createDiagnosticAt(code, "a:"), file);
+
+			// Assert.
+			expect(diagnostic.line).toBe(6);
+			expect(diagnostic.column).toBe(7);
 		});
 
 		/**

@@ -58,10 +58,10 @@ export class CodeBlockDiagnostic {
 		this.file = source.entry.file;
 
 		if (diagnostic.file !== undefined && diagnostic.start !== undefined) {
-			// Code blocks are fenced, so the code starts on the line after the opening fence, aligned with the fence.
+			// Code blocks are fenced, so the code starts on the line after the opening fence.
 			const { character, line } = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start);
 			this.line = start.line + line + 1;
-			this.column = start.column + character;
+			this.column = (source.entry.lineColumns[line] ?? start.column) + character;
 		} else {
 			// Fallback to the start of the code block.
 			this.line = start.line;
@@ -69,7 +69,6 @@ export class CodeBlockDiagnostic {
 		}
 
 		const linkPath = pathToFileURL(resolve(this.file));
-
 		this.link = `${linkPath}:${this.line}:${this.column}`;
 	}
 }

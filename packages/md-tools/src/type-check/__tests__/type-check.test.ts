@@ -65,6 +65,7 @@ describe("typeCheck", () => {
 			"nested.md",
 			"semantic-error.md",
 			"syntax-error.md",
+			"uneven-indentation.md",
 		].map((fileName) => pathToFileURL(join(FIXTURES_DIR, fileName)).href);
 
 		// Act.

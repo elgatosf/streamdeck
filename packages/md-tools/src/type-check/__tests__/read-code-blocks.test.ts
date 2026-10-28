@@ -105,6 +105,18 @@ describe("readCodeBlocks", () => {
 	});
 
 	/**
+	 * Asserts the column each line starts at is relative to the markdown file, including lines that are indented less,
+	 * or more, than the opening fence.
+	 */
+	test("line columns", async () => {
+		const entry = await readSingle("uneven-indentation.md");
+
+		expect(entry.value).toBe('const a: number = "x";\n  const b: number = "x";');
+		expect(entry.position.start).toMatchObject({ column: 3, line: 3 });
+		expect(entry.lineColumns).toEqual([1, 3]);
+	});
+
+	/**
 	 * Provides assertions for code blocks nested within other markdown nodes.
 	 */
 	describe("nested.md", () => {
@@ -127,6 +139,7 @@ describe("readCodeBlocks", () => {
 		test("nested within a list", () => {
 			expect(entries[0]?.value).toBe('const ok = 1;\nconst a: number = "x";');
 			expect(entries[0]?.position.start).toMatchObject({ column: 5, line: 5 });
+			expect(entries[0]?.lineColumns).toEqual([5, 5]);
 		});
 
 		/**
@@ -135,6 +148,7 @@ describe("readCodeBlocks", () => {
 		test("nested within a blockquote", () => {
 			expect(entries[1]?.value).toBe('const b: number = "x";');
 			expect(entries[1]?.position.start).toMatchObject({ column: 3, line: 10 });
+			expect(entries[1]?.lineColumns).toEqual([3]);
 		});
 
 		/**

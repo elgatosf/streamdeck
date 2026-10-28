@@ -117,6 +117,13 @@ describe("typeCheckCodeBlocks", () => {
 				linkTo("nested.md", 15, 7),
 			]);
 		});
+
+		test("lines indented less, and more, than the opening fence", async () => {
+			expect((await check("uneven-indentation.md")).map((d) => d.link)).toEqual([
+				linkTo("uneven-indentation.md", 4, 7),
+				linkTo("uneven-indentation.md", 5, 11),
+			]);
+		});
 	});
 
 	describe("languages", () => {
