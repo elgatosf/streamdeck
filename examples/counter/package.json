@@ -7,15 +7,14 @@
         "watch": "rolldown -c rolldown.config.ts -w"
     },
     "dependencies": {
-        "@elgato/streamdeck": "workspace:*"
+        "@elgato/streamdeck": "^3.0.3"
     },
     "devDependencies": {
-        "@elgato/cli": "^1.7.1",
-        "@elgato/prettier-config": "^0.3.3",
+        "@elgato/cli": "^1.10.3",
         "@tsconfig/node20": "^20.1.2",
         "@types/node": "^20.19.0",
         "rolldown": "^1.0.0-rc.6",
         "typescript": "^5.2.2"
     },
-    "prettier": "@elgato/prettier-config"
+    "packageManager": "pnpm@10.18.0"
 }
