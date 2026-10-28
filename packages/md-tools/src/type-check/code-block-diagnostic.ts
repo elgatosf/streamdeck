@@ -1,4 +1,5 @@
-import { relative, resolve } from "node:path";
+import { resolve } from "node:path";
+import { pathToFileURL } from "node:url";
 
 import ts from "typescript";
 
@@ -68,7 +69,8 @@ export class CodeBlockDiagnostic {
 			this.column = start.column;
 		}
 
-		const linkPath = relative(process.cwd(), resolve(this.file)).replaceAll("\\", "/");
+		const linkPath = pathToFileURL(resolve(this.file));
+
 		this.link = `${linkPath}:${this.line}:${this.column}`;
 	}
 }
