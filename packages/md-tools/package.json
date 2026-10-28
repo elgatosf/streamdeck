@@ -1,7 +1,7 @@
 {
     "name": "@elgato/md-tools",
-    "version": "0.0.0",
-    "description": "Markdown tools, including code snippet type-checking, and templating.",
+    "private": true,
+    "description": "Tools for working with markdown files.",
     "keywords": [
         "elgato",
         "markdown",
