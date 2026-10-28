@@ -19,12 +19,12 @@ In this repository, you can find a number of complete plugins for the Stream Dec
 
 ## Prerequisites
 
-To build any of these plugins, you will need to ensure you have [Node.js](https://nodejs.org/en/) (version 20+) and [npm](https://nodejs.org/en/) installed on your system. To run them, all provided samples require Stream Deck 7.1 or higher, unless otherwise specified in the readme for a sample.
+To build any of these plugins, you will need to ensure you have [Node.js](https://nodejs.org/en/) (version 20+) and [pnpm](https://pnpm.io/installation) installed on your system; pnpm is required to install the dependencies of the samples. To run them, all provided samples require Stream Deck 7.1 or higher, unless otherwise specified in the readme for a sample.
 
-Installing the [Stream Deck CLI](https://github.com/elgatosf/cli) tool is strongly recommended. Once you have Node.js and npm installed, install it with:
+Installing the [Stream Deck CLI](https://github.com/elgatosf/cli) tool is strongly recommended. Once you have Node.js and pnpm installed, install it with:
 
 ```bash
-npm install -g @elgato/cli
+pnpm add -g @elgato/cli
 ```
 
 ## Building and Running
@@ -43,8 +43,10 @@ pnpm build
 # replaced with the name of the folder ending in .sdPlugin)
 streamdeck link *.sdPlugin
 # Build the sample and watch for changes
-npm run watch
+pnpm watch
 ```
+
+Samples can also be built outside of this repository; copy the sample's directory, and run `pnpm install` from within it before following the steps above.
 
 For more information on building plugins, please consult our [documentation](https://docs.elgato.com/streamdeck/sdk/introduction/getting-started)
 
