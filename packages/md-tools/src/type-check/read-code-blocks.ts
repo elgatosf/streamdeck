@@ -7,7 +7,7 @@ import { unified } from "unified";
 import type { Position } from "unist";
 
 /**
- * Reads all fenced code blocks (```` ``` ```` or `~~~`) within the markdown file; indented code blocks are ignored.
+ * Reads all fenced code blocks within the markdown file; indented code blocks are ignored.
  * @param file Path to the markdown file.
  * @returns The fenced code blocks, in the order they appear within the file.
  */

@@ -189,6 +189,6 @@ function getKey(fileName: string): string {
  * @param messageText Message text.
  * @returns The message.
  */
-function flatten(messageText: string | ts.DiagnosticMessageChain): string {
+function flatten(messageText: ts.DiagnosticMessageChain | string): string {
 	return ts.flattenDiagnosticMessageText(messageText, "\n");
 }
