@@ -31,22 +31,24 @@ pnpm add -g @elgato/cli
 
 Where a sample includes a pre-built .streamDeckPlugin file, open it to install the sample into Stream Deck without building. Otherwise, follow the build-and-link instructions below.
 
-If you would like to build a sample yourself, install dependencies from the repository root, then run its existing package scripts from the sample directory:
+Each sample is a self-contained project, and can be downloaded and built on its own. To build a sample yourself, copy or download its directory, and run the following from within it:
 
 ```bash
-# From the repository root
+# Install the sample's dependencies
 pnpm install
-pnpm build
 
-# From the selected example directory
 # Install the sample in Stream Deck (*.sdPlugin should be
 # replaced with the name of the folder ending in .sdPlugin)
 streamdeck link *.sdPlugin
+
 # Build the sample and watch for changes
 pnpm watch
 ```
 
-Samples can also be built outside of this repository; copy the sample's directory, and run `pnpm install` from within it before following the steps above.
+To build the sample once, without watching for changes, run `pnpm build`.
+
+> [!NOTE]
+> When working within this repository, run `pnpm install` and `pnpm build` from the repository root instead; samples will then use the local Stream Deck SDK packages.
 
 For more information on building plugins, please consult our [documentation](https://docs.elgato.com/streamdeck/sdk/introduction/getting-started)
 
