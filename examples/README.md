@@ -19,32 +19,36 @@ In this repository, you can find a number of complete plugins for the Stream Dec
 
 ## Prerequisites
 
-To build any of these plugins, you will need to ensure you have [Node.js](https://nodejs.org/en/) (version 20+) and [npm](https://nodejs.org/en/) installed on your system. To run them, all provided samples require Stream Deck 7.1 or higher, unless otherwise specified in the readme for a sample.
+To build any of these plugins, you will need to ensure you have [Node.js](https://nodejs.org/en/) (version 20+) and [pnpm](https://pnpm.io/installation) installed on your system; pnpm is required to install the dependencies of the samples. To run them, all provided samples require Stream Deck 7.1 or higher, unless otherwise specified in the readme for a sample.
 
-Installing the [Stream Deck CLI](https://github.com/elgatosf/cli) tool is strongly recommended. Once you have Node.js and npm installed, install it with:
+Installing the [Stream Deck CLI](https://github.com/elgatosf/cli) tool is strongly recommended. Once you have Node.js and pnpm installed, install it with:
 
 ```bash
-npm install -g @elgato/cli
+pnpm add -g @elgato/cli
 ```
 
 ## Building and Running
 
 Where a sample includes a pre-built .streamDeckPlugin file, open it to install the sample into Stream Deck without building. Otherwise, follow the build-and-link instructions below.
 
-If you would like to build a sample yourself, install dependencies from the repository root, then run its existing package scripts from the sample directory:
+Each sample is a self-contained project, and can be downloaded and built on its own. To build a sample yourself, copy or download its directory, and run the following from within it:
 
 ```bash
-# From the repository root
+# Install the sample's dependencies
 pnpm install
-pnpm build
 
-# From the selected example directory
 # Install the sample in Stream Deck (*.sdPlugin should be
 # replaced with the name of the folder ending in .sdPlugin)
 streamdeck link *.sdPlugin
+
 # Build the sample and watch for changes
-npm run watch
+pnpm watch
 ```
+
+To build the sample once, without watching for changes, run `pnpm build`.
+
+> [!NOTE]
+> When working within this repository, run `pnpm install` and `pnpm build` from the repository root instead; samples will then use the local Stream Deck SDK packages.
 
 For more information on building plugins, please consult our [documentation](https://docs.elgato.com/streamdeck/sdk/introduction/getting-started)
 
