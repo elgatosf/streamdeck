@@ -12,7 +12,7 @@
         "sharp": "^0.34.5"
     },
     "devDependencies": {
-        "@elgato/cli": "^1.7.1",
+        "@elgato/cli": "workspace:*",
         "@elgato/prettier-config": "^0.3.3",
         "@rollup/plugin-commonjs": "^28.0.0",
         "@rollup/plugin-json": "^6.1.0",

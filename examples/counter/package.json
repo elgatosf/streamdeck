@@ -10,7 +10,7 @@
         "@elgato/streamdeck": "workspace:*"
     },
     "devDependencies": {
-        "@elgato/cli": "^1.7.1",
+        "@elgato/cli": "workspace:*",
         "@elgato/prettier-config": "^0.3.3",
         "@tsconfig/node20": "^20.1.2",
         "@types/node": "^20.19.0",
