@@ -11,11 +11,9 @@
     },
     "devDependencies": {
         "@elgato/cli": "^1.10.3",
-        "@elgato/prettier-config": "^0.3.3",
         "@tsconfig/node20": "^20.1.2",
         "@types/node": "^20.19.0",
         "rolldown": "^1.0.0-rc.6",
         "typescript": "^5.2.2"
-    },
-    "prettier": "@elgato/prettier-config"
+    }
 }
