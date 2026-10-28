@@ -15,5 +15,6 @@
         "@types/node": "^20.19.0",
         "rolldown": "^1.0.0-rc.6",
         "typescript": "^5.2.2"
-    }
+    },
+    "packageManager": "pnpm@10.18.0"
 }
