@@ -132,9 +132,9 @@ describe("readCodeBlocks", () => {
 		 */
 		test("code blocks within JSX elements", () => {
 			expect(entries.map((e) => [e.value, e.position.start.line, e.position.start.column])).toEqual([
-				['const a: number = "x";', 13, 1],
-				['const b: number = "x";', 19, 5],
-				['const c: number = "x";', 26, 1],
+				['const a: number = "x";', 14, 1],
+				['const b: number = "x";', 20, 5],
+				['const c: number = "x";', 27, 1],
 			]);
 		});
 

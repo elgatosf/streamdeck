@@ -127,9 +127,9 @@ describe("typeCheckCodeBlocks", () => {
 
 		test("code blocks within MDX JSX elements", async () => {
 			expect((await check("mdx.mdx")).map((d) => d.link)).toEqual([
-				linkTo("mdx.mdx", 14, 7),
-				linkTo("mdx.mdx", 20, 11),
-				linkTo("mdx.mdx", 27, 7),
+				linkTo("mdx.mdx", 15, 7),
+				linkTo("mdx.mdx", 21, 11),
+				linkTo("mdx.mdx", 28, 7),
 			]);
 		});
 	});
