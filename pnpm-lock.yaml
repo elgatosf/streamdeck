@@ -36,11 +36,11 @@ importers:
   examples/cat-keys:
     dependencies:
       '@elgato/streamdeck':
-        specifier: ^3.0.3
+        specifier: ^3.0.4
         version: link:../../packages/plugin
     devDependencies:
       '@elgato/cli':
-        specifier: ^1.10.3
+        specifier: ^1.10.4
         version: link:../../packages/cli
       '@rollup/plugin-commonjs':
         specifier: ^28.0.2
@@ -73,11 +73,11 @@ importers:
   examples/counter:
     dependencies:
       '@elgato/streamdeck':
-        specifier: ^3.0.3
+        specifier: ^3.0.4
         version: link:../../packages/plugin
     devDependencies:
       '@elgato/cli':
-        specifier: ^1.10.3
+        specifier: ^1.10.4
         version: link:../../packages/cli
       '@tsconfig/node20':
         specifier: ^20.1.2
@@ -95,11 +95,11 @@ importers:
   examples/hello-world:
     dependencies:
       '@elgato/streamdeck':
-        specifier: ^3.0.3
+        specifier: ^3.0.4
         version: link:../../packages/plugin
     devDependencies:
       '@elgato/cli':
-        specifier: ^1.10.3
+        specifier: ^1.10.4
         version: link:../../packages/cli
       '@rollup/plugin-commonjs':
         specifier: ^28.0.2
@@ -132,14 +132,14 @@ importers:
   examples/image-resizer:
     dependencies:
       '@elgato/streamdeck':
-        specifier: ^3.0.3
+        specifier: ^3.0.4
         version: link:../../packages/plugin
       sharp:
         specifier: ^0.34.5
         version: 0.34.5
     devDependencies:
       '@elgato/cli':
-        specifier: ^1.10.3
+        specifier: ^1.10.4
         version: link:../../packages/cli
       '@rollup/plugin-commonjs':
         specifier: ^28.0.0
@@ -175,11 +175,11 @@ importers:
   examples/layouts:
     dependencies:
       '@elgato/streamdeck':
-        specifier: ^3.0.3
+        specifier: ^3.0.4
         version: link:../../packages/plugin
     devDependencies:
       '@elgato/cli':
-        specifier: ^1.10.3
+        specifier: ^1.10.4
         version: link:../../packages/cli
       '@rollup/plugin-commonjs':
         specifier: ^28.0.2
@@ -212,11 +212,11 @@ importers:
   examples/lights-out:
     dependencies:
       '@elgato/streamdeck':
-        specifier: ^3.0.3
+        specifier: ^3.0.4
         version: link:../../packages/plugin
     devDependencies:
       '@elgato/cli':
-        specifier: ^1.10.3
+        specifier: ^1.10.4
         version: link:../../packages/cli
       '@rollup/plugin-commonjs':
         specifier: ^28.0.2
@@ -249,14 +249,14 @@ importers:
   examples/product-viewer:
     dependencies:
       '@elgato/streamdeck':
-        specifier: ^3.0.3
+        specifier: ^3.0.4
         version: link:../../packages/plugin
       '@elgato/utils':
-        specifier: ^0.6.1
+        specifier: ^0.6.2
         version: link:../../packages/utils
     devDependencies:
       '@elgato/cli':
-        specifier: ^1.10.3
+        specifier: ^1.10.4
         version: link:../../packages/cli
       '@rollup/plugin-commonjs':
         specifier: ^28.0.0
