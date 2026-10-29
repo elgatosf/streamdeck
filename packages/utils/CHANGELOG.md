@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.6.2
+
+### Patch Changes
+
+- 21893cf: Updated TypeScript configuration to use @elgato/tsconfig.
+
 ## 0.6.1
 
 ### Patch Changes

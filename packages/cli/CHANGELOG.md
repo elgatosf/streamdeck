@@ -1,5 +1,15 @@
 # Change Log
 
+## 1.10.4
+
+### Patch Changes
+
+- b3807ab: Updated TypeScript configuration to use @elgato/tsconfig.
+- Updated dependencies [835f07a]
+- Updated dependencies [835f07a]
+- Updated dependencies [835f07a]
+    - @elgato/schemas@0.6.0
+
 ## 1.10.3
 
 ### Patch Changes

@@ -1,5 +1,17 @@
 # Change Log
 
+## 3.0.4
+
+### Patch Changes
+
+- 67d39eb: Updated TypeScript configuration to use @elgato/tsconfig.
+- Updated dependencies [835f07a]
+- Updated dependencies [835f07a]
+- Updated dependencies [835f07a]
+- Updated dependencies [21893cf]
+    - @elgato/schemas@0.6.0
+    - @elgato/utils@0.6.2
+
 ## 3.0.3
 
 ### Patch Changes

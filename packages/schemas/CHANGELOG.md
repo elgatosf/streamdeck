@@ -1,5 +1,16 @@
 # Change Log
 
+## 0.6.0
+
+### Minor Changes
+
+- 835f07a: Removed pre-bundled JSON files in favour of JSON module resolution.
+- 835f07a: Removed support for older CommonJS module resolution.
+
+### Patch Changes
+
+- 835f07a: Updated TypeScript configuration to use @elgato/tsconfig.
+
 ## 0.5.3
 
 ### Patch Changes
