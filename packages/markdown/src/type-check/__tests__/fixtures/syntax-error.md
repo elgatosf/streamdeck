@@ -1,0 +1,5 @@
+# Syntax error
+
+```ts
+const = ;
+```
