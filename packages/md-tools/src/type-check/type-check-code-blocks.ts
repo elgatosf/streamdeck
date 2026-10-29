@@ -167,9 +167,12 @@ function getCompilerOptions(tsconfigFile: string): ts.CompilerOptions {
 		// diagnostics unrelated to the code blocks, e.g. composite projects requiring all files to be listed.
 		composite: false,
 		declaration: false,
+		declarationDir: undefined,
 		declarationMap: false,
 		emitDeclarationOnly: false,
 		incremental: false,
+		isolatedDeclarations: false,
+		mapRoot: undefined,
 		noEmit: true,
 		noCheck: false,
 		tsBuildInfoFile: undefined,
