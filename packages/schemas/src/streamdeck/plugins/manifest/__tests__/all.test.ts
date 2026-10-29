@@ -123,10 +123,7 @@ describe.each(["v6.4", "v6.5", "v6.6", "v6.7", "v6.8"])("%s", (version) => {
 			 */
 			test("Image", () => {
 				// Arrange, act, assert.
-				const errors = validateStreamDeckPluginManifest(
-					filePath,
-					(m) => (m.Actions[0]!.States[0]!.Image = "test.png"),
-				);
+				const errors = validateStreamDeckPluginManifest(filePath, (m) => (m.Actions[0]!.States[0]!.Image = "test.png"));
 				expect(errors).toHaveError({
 					instancePath: "/Actions/0/States/0/Image",
 					keyword: "pattern",
