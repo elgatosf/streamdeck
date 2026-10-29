@@ -1,6 +1,5 @@
 # Uneven indentation
 
-  ```ts
+```ts
 const a: number = "x";
-    const b: number = "x";
-  ```
+const b: number = "x";

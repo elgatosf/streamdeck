@@ -58,6 +58,12 @@ export function typeCheckCodeBlocks(options: TypeCheckCodeBlocksOptions): CodeBl
 		rootNames: Array.from(virtualFiles.values(), (f) => f.fileName),
 	});
 
+	// Ensure we have a valid tsconfig file.
+	const optionsDiagnostics = program.getOptionsDiagnostics();
+	if (optionsDiagnostics.length > 0) {
+		throw new Error(`Invalid tsconfig file: ${optionsDiagnostics.map((d) => flatten(d.messageText)).join("\n")}`);
+	}
+
 	// Collect the diagnostics for each virtual file only; global diagnostics (e.g. a missing library), and diagnostics
 	// within imported files (e.g. dependencies), are not associated with a code block, and are therefore ignored.
 	const diagnostics: CodeBlockDiagnostic[] = [];

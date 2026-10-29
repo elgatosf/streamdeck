@@ -154,5 +154,11 @@ describe("typeCheckCodeBlocks", () => {
 		test("invalid tsconfig throws", async () => {
 			await expect(check("semantic-error.md", "tsconfig.invalid.json")).rejects.toThrow(/^Invalid tsconfig file:/);
 		});
+
+		test("invalid compiler option combinations throw", async () => {
+			await expect(check("semantic-error.md", "tsconfig.invalid-options.json")).rejects.toThrow(
+				/^Invalid tsconfig file:/,
+			);
+		});
 	});
 });
