@@ -374,7 +374,7 @@ importers:
         specifier: ^0.14.13
         version: 0.14.13
 
-  packages/md-tools:
+  packages/markdown:
     dependencies:
       remark:
         specifier: ^15.0.1

@@ -1,5 +1,5 @@
 {
-    "name": "@elgato/md-tools",
+    "name": "@elgato/markdown",
     "private": true,
     "description": "Tools for working with markdown files.",
     "keywords": [
