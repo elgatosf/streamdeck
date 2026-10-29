@@ -124,10 +124,12 @@ describe("findMarkdownFiles", () => {
 
 			mkdirSync(join(cwd, "docs", "nested"), { recursive: true });
 			mkdirSync(join(cwd, "folder.md"));
+			mkdirSync(join(cwd, "node_modules", "pkg"), { recursive: true });
 
 			writeFileSync(join(cwd, "README.md"), "# Root");
 			writeFileSync(join(cwd, "docs", "guide.md"), "# Guide");
 			writeFileSync(join(cwd, "docs", "nested", "deep.md"), "# Deep");
+			writeFileSync(join(cwd, "node_modules", "pkg", "README.md"), "# Dependency");
 		});
 
 		afterAll(() => {
@@ -149,7 +151,18 @@ describe("findMarkdownFiles", () => {
 				join(cwd, "README.md"),
 				join(cwd, "docs", "guide.md"),
 				join(cwd, "docs", "nested", "deep.md"),
+				join(cwd, "node_modules", "pkg", "README.md"),
 			]);
+		});
+
+		/**
+		 * Asserts dependency markdown is included when the glob explicitly enters node_modules.
+		 */
+		test("node_modules is included when matched", async () => {
+			const dependencyReadme = join(cwd, "node_modules", "pkg", "README.md");
+
+			expect(await findMarkdownFiles("node_modules/**/*.md", cwd)).toEqual([dependencyReadme]);
+			expect(await findMarkdownFiles("node_modules/pkg/README.md", cwd)).toEqual([dependencyReadme]);
 		});
 
 		/**

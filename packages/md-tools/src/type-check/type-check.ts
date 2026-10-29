@@ -34,14 +34,12 @@ export interface TypeCheckOptions {
 
 	/**
 	 * Glob pattern of the markdown files containing the code blocks, e.g. `README.md` or `docs/*.md`, matched using
-	 * Node.js' built-in `glob`. Patterns are resolved from {@link TypeCheckOptions.cwd}, and `node_modules` directories
-	 * are ignored.
+	 * Node.js' built-in `glob`. Patterns are resolved from {@link TypeCheckOptions.cwd}.
 	 */
 	src: string;
 
 	/**
-	 * Path to the tsconfig file whose compiler options are used when type checking, relative to
-	 * {@link TypeCheckOptions.cwd}.
+	 * Path to the tsconfig file whose compiler options are used when type checking, relative to {@link TypeCheckOptions.cwd}.
 	 */
 	tsconfigFile?: string;
 }
