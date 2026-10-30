@@ -30,7 +30,9 @@
     "files": [
         "./bin/*.mjs",
         "./dist/**/*.{d.ts,js}",
-        "./template"
+        "./template",
+        "./docs",
+        "./AGENTS.md"
     ],
     "type": "module",
     "main": "./dist/index.js",
