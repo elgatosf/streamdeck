@@ -1,0 +1,46 @@
+---
+sidebar_label: streamdeck dev
+toc_max_heading_level: 4
+---
+
+# streamdeck dev
+
+Controls developer mode.
+
+## Synopsis
+
+```text
+streamdeck dev [-d|--disable]
+```
+
+## Description
+
+Developer mode enables the local development of Stream Deck plugins, and provides you with additional capabilities for building and debugging plugin with Stream Deck.
+
+Whilst enabled:
+
+- Debuggers, for example VS Code, can be attached to Node.js plugins.
+- The property inspector can be debugged locally at [http://localhost:23654/](http://localhost:23654/).
+
+## Examples
+
+Enable developer mode:
+
+```bash
+streamdeck dev
+```
+
+Disable developer mode:
+
+```bash
+streamdeck dev --disable
+```
+
+## Configuration
+
+#### `--disable`
+
+- Default: `false`
+- Type: Boolean
+
+Disables developer mode.

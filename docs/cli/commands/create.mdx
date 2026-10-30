@@ -1,0 +1,73 @@
+---
+sidebar_label: streamdeck create
+sidebar_position: 0
+toc_max_heading_level: 4
+---
+
+# streamdeck create
+
+Stream Deck plugin creation wizard.
+
+## Synopsis
+
+```text
+streamdeck create
+```
+
+## Description
+
+The `create` command guides you through a creation wizard, scaffolding a Stream Deck plugin. You will be prompted to provide the following information:
+
+- **Author**, the name of the plugin author, i.e. you.
+- **Plugin Name**, the name of your plugin.
+- **Plugin UUID**, the unique identifier of your plugin.
+- **Description**, a brief description of your plugin.
+
+Once the command has completed, the plugin will be automatically installed in Stream Deck, ready-to-run.
+
+## Examples
+
+Create a Stream Deck plugin:
+
+```bash
+streamdeck create
+```
+
+```text title="Terminal output"
+.___ _                        ___         _
+/ __| |_ _ _ ___ __ _ _ __   |   \ ___ __| |__
+\__ \  _| '_/ -_) _` | '  \  | |) / -_) _| / /
+|___/\__|_| \___\__,_|_|_|_| |___/\___\__|_\_\
+
+Welcome to the Stream Deck Plugin creation wizard.
+
+This utility will guide you through creating a local development environment for a plugin.
+For more information on building plugins see https://docs.elgato.com.
+
+Press ^C at any time to quit.
+
+? Author: Elgato
+? Plugin Name: Counter
+? Plugin UUID: com.elgato.counter
+? Description: A simple counter that increments on each press
+
+? Create Stream Deck plugin from information above? Yes
+
+Creating Counter...
+✔ Enabling developer mode
+✔ Generating plugin
+✔ Installing dependencies
+✔ Building plugin
+✔ Finalizing setup
+
+Successfully created plugin!
+
+? Would you like to open the plugin in VS Code? (Y/n)
+```
+
+The scaffolded plugin will be written to a directory named "counter", within the current working directory.
+
+## See also
+
+- [streamdeck dev](./dev.mdx)
+- [streamdeck link](./link.mdx)
