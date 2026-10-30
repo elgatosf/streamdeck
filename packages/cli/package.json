@@ -46,7 +46,7 @@
         "dev:exports": "wireit",
         "lint": "eslint --max-warnings 0",
         "typecheck": "wireit",
-        "prepack": "cp ../../LICENSE ."
+        "prepack": "cp ../../LICENSE . && rm -rf docs && cp -R ../../docs/cli docs"
     },
     "wireit": {
         "build": {

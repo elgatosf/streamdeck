@@ -19,6 +19,7 @@ publish-plan.json
 /packages/plugin/README.md
 
 # @elgato/cli
+/packages/cli/docs/
 /packages/cli/.cli.cache
 /packages/cli/template/com.*.sdPlugin/bin
 /packages/cli/template/com.*.sdPlugin/logs
