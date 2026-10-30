@@ -216,7 +216,7 @@ export class ActionBase<TSettings extends JsonObject> extends ActionContext {
 					}),
 				);
 
-				return this.#settings as TSettings;
+				return structuredClone(this.#settings as TSettings);
 			}
 		}
 
