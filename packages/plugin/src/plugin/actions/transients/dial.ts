@@ -29,7 +29,7 @@ export class DialAction<TSettings extends JsonObject> extends ActionBase<TSettin
 
 		if (this.onDialDown) {
 			connection.on(`dialDown:${source.action}:${source.context}`, () => this.onDialDown?.(), {
-				signal: this.signal,
+				signal: this.disposeSignal,
 			});
 		}
 
@@ -37,13 +37,13 @@ export class DialAction<TSettings extends JsonObject> extends ActionBase<TSettin
 			connection.on(
 				`dialRotate:${source.action}:${source.context}`,
 				({ payload: { pressed, ticks } }) => this.onDialRotate?.({ pressed, ticks }),
-				{ signal: this.signal },
+				{ signal: this.disposeSignal },
 			);
 		}
 
 		if (this.onDialUp) {
 			connection.on(`dialUp:${source.action}:${source.context}`, () => this.onDialUp?.(), {
-				signal: this.signal,
+				signal: this.disposeSignal,
 			});
 		}
 
@@ -51,7 +51,7 @@ export class DialAction<TSettings extends JsonObject> extends ActionBase<TSettin
 			connection.on(
 				`touchTap:${source.action}:${source.context}`,
 				(ev) => this.onTouchTap?.({ hold: ev.payload.hold, tapPos: ev.payload.tapPos }),
-				{ signal: this.signal },
+				{ signal: this.disposeSignal },
 			);
 		}
 	}

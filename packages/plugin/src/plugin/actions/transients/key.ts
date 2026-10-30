@@ -35,13 +35,13 @@ export class KeyAction<TSettings extends JsonObject> extends ActionBase<TSetting
 
 		if (this.onKeyDown) {
 			connection.on(`keyDown:${source.action}:${source.context}`, () => this.onKeyDown?.(), {
-				signal: this.signal,
+				signal: this.disposeSignal,
 			});
 		}
 
 		if (this.onKeyUp) {
 			connection.on(`keyUp:${source.action}:${source.context}`, () => this.onKeyUp?.(), {
-				signal: this.signal,
+				signal: this.disposeSignal,
 			});
 		}
 	}

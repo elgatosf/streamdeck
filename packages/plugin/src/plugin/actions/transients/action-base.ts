@@ -46,7 +46,6 @@ export class ActionBase<TSettings extends JsonObject> extends ActionContext {
 	constructor(source: WillAppear<TSettings>) {
 		super(source);
 
-		const { signal } = this.#eventController;
 		this.#settings = source.payload.settings;
 
 		// Maintain a cache of the settings.
@@ -55,9 +54,7 @@ export class ActionBase<TSettings extends JsonObject> extends ActionContext {
 			(ev) => {
 				this.#settings = ev.payload.settings;
 			},
-			{
-				signal,
-			},
+			{ signal: this.disposeSignal },
 		);
 
 		// Remove the action from the store.
@@ -68,9 +65,7 @@ export class ActionBase<TSettings extends JsonObject> extends ActionContext {
 				actionStore.delete(ev.context);
 				this.onWillDisappear?.();
 			},
-			{
-				once: true,
-			},
+			{ once: true },
 		);
 
 		if (this.onDidReceiveResources) {
@@ -82,7 +77,7 @@ export class ActionBase<TSettings extends JsonObject> extends ActionContext {
 						this.onDidReceiveResources?.({ resources: ev.payload.resources });
 					}
 				},
-				{ signal },
+				{ signal: this.disposeSignal },
 			);
 		}
 
@@ -95,7 +90,7 @@ export class ActionBase<TSettings extends JsonObject> extends ActionContext {
 						this.onDidReceiveSettings?.({ settings: ev.payload.settings as TSettings });
 					}
 				},
-				{ signal },
+				{ signal: this.disposeSignal },
 			);
 		}
 
@@ -103,7 +98,7 @@ export class ActionBase<TSettings extends JsonObject> extends ActionContext {
 			connection.on(
 				`propertyInspectorDidAppear:${source.action}:${source.context}`,
 				() => this.onPropertyInspectorDidAppear?.(),
-				{ signal },
+				{ signal: this.disposeSignal },
 			);
 		}
 
@@ -111,7 +106,7 @@ export class ActionBase<TSettings extends JsonObject> extends ActionContext {
 			connection.on(
 				`propertyInspectorDidDisappear:${source.action}:${source.context}`,
 				() => this.onPropertyInspectorDidDisappear?.(),
-				{ signal },
+				{ signal: this.disposeSignal },
 			);
 		}
 
@@ -119,7 +114,7 @@ export class ActionBase<TSettings extends JsonObject> extends ActionContext {
 			connection.on(
 				`sendToPlugin:${source.action}:${source.context}`,
 				(ev) => this.onSendToPlugin?.({ payload: ev.payload }),
-				{ signal },
+				{ signal: this.disposeSignal },
 			);
 		}
 
@@ -131,7 +126,7 @@ export class ActionBase<TSettings extends JsonObject> extends ActionContext {
 						title: ev.payload.title,
 						titleParameters: ev.payload.titleParameters,
 					}),
-				{ signal },
+				{ signal: this.disposeSignal },
 			);
 		}
 	}
@@ -184,10 +179,10 @@ export class ActionBase<TSettings extends JsonObject> extends ActionContext {
 	public onWillDisappear?(): Promise<void> | void;
 
 	/**
-	 * Signal that is aborted when the action disappears; used to remove the action's event listeners.
+	 * Signal that is aborted when the action is disposed; used to remove the action's event listeners.
 	 * @returns The signal.
 	 */
-	protected get signal(): AbortSignal {
+	protected get disposeSignal(): AbortSignal {
 		return this.#eventController.signal;
 	}
 
