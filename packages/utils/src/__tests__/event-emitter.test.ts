@@ -1,6 +1,12 @@
 import { describe, expect, expectTypeOf, it, test, vi } from "vitest";
 
-import { type EventArgs, EventEmitter, type EventsOf } from "../index.js";
+import {
+	type EventArgs,
+	EventEmitter,
+	type EventsOf,
+	type NewListenerArgs,
+	type RemoveListenerArgs,
+} from "../index.js";
 
 describe("EventEmitter", () => {
 	describe("adding listeners", () => {
@@ -64,11 +70,189 @@ describe("EventEmitter", () => {
 		});
 	});
 
+	describe("options.once", () => {
+		/**
+		 * Asserts `EventListenerOptions.once` removes listeners.
+		 */
+		test("removes listeners", () => {
+			// Arrange.
+			const emitter = new EventEmitter<EventMap>();
+
+			const listener = vi.fn();
+			emitter.addListener("message", listener, { once: true });
+			emitter.disposableOn("message", listener, { once: true });
+			emitter.on("message", listener, { once: true });
+			emitter.prependListener("message", listener, { once: true });
+
+			// Act.
+			emitter.emit("message", "Hello world");
+
+			// Assert.
+			expect(listener).toHaveBeenCalledTimes(4);
+			expect(emitter.listenerCount("message")).toBe(0);
+		});
+
+		/**
+		 * Asserts `EventListenerOptions.once` fires `removeListener` after emitting.
+		 */
+		test("fires removeListener after emitting", () => {
+			// Arrange.
+			const emitter = new EventEmitter<EventMap>();
+
+			const removeListener = vi.fn();
+			emitter.addListener("removeListener", removeListener);
+
+			const listener = vi.fn();
+			emitter.addListener("message", listener, { once: true });
+			emitter.disposableOn("message", listener, { once: true });
+			emitter.on("message", listener, { once: true });
+			emitter.prependListener("message", listener, { once: true });
+
+			// Act.
+			emitter.emit("message", "Hello world");
+
+			// Assert.
+			expect(removeListener).toHaveBeenCalledTimes(4);
+		});
+	});
+
+	describe("options.signal", () => {
+		/**
+		 * Asserts `EventListenerOptions.signal` removes listeners.
+		 */
+		test("abort removes listener", () => {
+			// Arrange.
+			const emitter = new EventEmitter<EventMap>();
+			const listener = vi.fn();
+
+			const controller = new AbortController();
+
+			emitter.addListener("message", listener, { signal: controller.signal });
+			emitter.on("message", listener, { signal: controller.signal });
+			emitter.once("message", listener, { signal: controller.signal });
+			emitter.prependListener("message", listener, { signal: controller.signal });
+			emitter.prependOnceListener("message", listener, { signal: controller.signal });
+
+			// Act
+			controller.abort();
+			emitter.emit("message", "World");
+
+			// Assert
+			expect(listener).toHaveBeenCalledTimes(0);
+			expect(emitter.listenerCount("message")).toBe(0);
+		});
+
+		/**
+		 * Asserts `EventListenerOptions.signal` does not add listeners if already aborted.
+		 */
+		test("already aborted does not add listener", () => {
+			// Arrange.
+			const emitter = new EventEmitter<EventMap>();
+			const listener = vi.fn();
+
+			const controller = new AbortController();
+			controller.abort();
+
+			// Act.
+			emitter.addListener("message", listener, { signal: controller.signal });
+			emitter.on("message", listener, { signal: controller.signal });
+			emitter.once("message", listener, { signal: controller.signal });
+			emitter.prependListener("message", listener, { signal: controller.signal });
+			emitter.prependOnceListener("message", listener, { signal: controller.signal });
+
+			emitter.emit("message", "Hello");
+
+			// Assert.
+			expect(listener).toHaveBeenCalledTimes(0);
+			expect(emitter.listenerCount("message")).toBe(0);
+		});
+
+		/**
+		 * Asserts listeners removed by `EventListenerOptions.signal` do not fire `removeListener`.
+		 */
+		test("does not emit removeListener after abort", () => {
+			// Arrange.
+			const emitter = new EventEmitter<EventMap>();
+			const listener = vi.fn();
+
+			const controller = new AbortController();
+
+			emitter.addListener("message", listener, { signal: controller.signal });
+			emitter.on("message", listener, { signal: controller.signal });
+			emitter.once("message", listener, { signal: controller.signal });
+			emitter.prependListener("message", listener, { signal: controller.signal });
+			emitter.prependOnceListener("message", listener, { signal: controller.signal });
+
+			const removeListener = vi.fn();
+			emitter.on("removeListener", removeListener);
+
+			// Act
+			controller.abort();
+
+			// Assert
+			expect(removeListener).toHaveBeenCalledTimes(0);
+		});
+
+		/**
+		 * Asserts aborting removes the event entirely when no other listeners remain.
+		 */
+		test("abort removes the event", () => {
+			// Arrange.
+			const emitter = new EventEmitter<EventMap>();
+			const controller = new AbortController();
+			emitter.on("message", vi.fn(), { signal: controller.signal });
+
+			// Act.
+			controller.abort();
+
+			// Assert.
+			expect(emitter.eventNames()).toEqual([]);
+			expect(emitter.listeners("message")).toEqual([]);
+			expect(emitter.emit("message", "Hello")).toBe(false);
+		});
+
+		/**
+		 * Asserts the abort handler is unregistered from the signal when the listener is removed by other means.
+		 */
+		test.each([
+			{
+				name: "off",
+				remove: (emitter: EventEmitter<EventMap>, listener: () => void): void => void emitter.off("message", listener),
+			},
+			{
+				name: "removeAllListeners",
+				remove: (emitter: EventEmitter<EventMap>): void => void emitter.removeAllListeners("message"),
+			},
+			{
+				name: "once",
+				once: true,
+				remove: (emitter: EventEmitter<EventMap>): void => void emitter.emit("message", "Hello"),
+			},
+		])("unregisters abort handler on $name", ({ remove, once }) => {
+			// Arrange.
+			const emitter = new EventEmitter<EventMap>();
+			const listener = vi.fn();
+			const controller = new AbortController();
+			const addEventListener = vi.spyOn(controller.signal, "addEventListener");
+			const removeEventListener = vi.spyOn(controller.signal, "removeEventListener");
+
+			emitter.on("message", listener, { signal: controller.signal, once });
+
+			// Act.
+			remove(emitter, listener);
+
+			// Assert.
+			expect(addEventListener).toHaveBeenCalledTimes(1);
+			expect(removeEventListener).toHaveBeenCalledTimes(1);
+			expect(removeEventListener.mock.calls[0]?.[1]).toBe(addEventListener.mock.calls[0]?.[1]);
+		});
+	});
+
 	describe("disposable listeners", () => {
 		/**
 		 * Asserts the {@link EventEmitter.disposableOn} adds the event listener.
 		 */
-		it("adds the listener", async () => {
+		it("adds the listener", () => {
 			// Arrange.
 			const emitter = new EventEmitter<EventMap>();
 			const listener = vi.fn();
@@ -83,9 +267,29 @@ describe("EventEmitter", () => {
 		});
 
 		/**
+		 * Asserts {@link EventEmitter.disposableOn} only removes the listener it added.
+		 */
+		it("only removes self", () => {
+			// Arrange.
+			const emitter = new EventEmitter<EventMap>();
+			const listener = vi.fn();
+
+			// Act.
+			const disposer = emitter.disposableOn("message", listener);
+			emitter.disposableOn("message", listener);
+
+			disposer.dispose();
+			emitter.emit("message", "Hello world");
+
+			// Assert.
+			expect(listener).toHaveBeenCalledTimes(1);
+			expect(listener).toHaveBeenCalledWith("Hello world");
+		});
+
+		/**
 		 * Asserts listeners added via {@link EventEmitter.disposableOn} can be removed by disposing.
 		 */
-		it("can remove after emitting", async () => {
+		it("can remove after emitting", () => {
 			// Arrange.
 			const emitter = new EventEmitter<EventMap>();
 			const listener = vi.fn();
@@ -107,7 +311,7 @@ describe("EventEmitter", () => {
 		/**
 		 * Asserts the event listener is removed when disposing the result {@link EventEmitter.disposableOn} via `dispose()`.
 		 */
-		it("dispose", async () => {
+		it("dispose", () => {
 			// Arrange.
 			const emitter = new EventEmitter<EventMap>();
 			const listener = vi.fn();
@@ -124,7 +328,7 @@ describe("EventEmitter", () => {
 		/**
 		 * Asserts the event listener is removed when disposing the result {@link EventEmitter.disposableOn} via `[Symbol.dispose()]`
 		 */
-		it("[Symbol.dispose]", async () => {
+		it("[Symbol.dispose]", () => {
 			// Arrange.
 			const emitter = new EventEmitter<EventMap>();
 			const listener = vi.fn();
@@ -321,6 +525,27 @@ describe("EventEmitter", () => {
 		});
 
 		/**
+		 * Asserts {@link EventEmitter.off} removes all matching listeners.
+		 */
+		test("off removes all matching", () => {
+			// Arrange.
+			const emitter = new EventEmitter<EventMap>();
+			const listener = vi.fn();
+
+			emitter.on("message", listener);
+			emitter.on("message", listener);
+			emitter.on("message", listener);
+			emitter.on("message", listener);
+
+			// Act.
+			expect(emitter.listenerCount("message")).toBe(4);
+			emitter.off("message", listener);
+
+			// Assert.
+			expect(emitter.listenerCount("message")).toBe(0);
+		});
+
+		/**
 		 * Asserts removing all listeners with {@link EventEmitter.removeAllListeners}.
 		 */
 		test("removeAllListeners", () => {
@@ -364,9 +589,30 @@ describe("EventEmitter", () => {
 			expect(two).toHaveBeenCalledTimes(1);
 			expect(two).toHaveBeenCalledWith("Hello world");
 		});
+
+		/**
+		 * Asserts {@link EventEmitter.removeListener} removes all matching listeners.
+		 */
+		test("removeListener removes all matching", () => {
+			// Arrange.
+			const emitter = new EventEmitter<EventMap>();
+			const listener = vi.fn();
+
+			emitter.on("message", listener);
+			emitter.on("message", listener);
+			emitter.on("message", listener);
+			emitter.on("message", listener);
+
+			// Act.
+			expect(emitter.listenerCount("message")).toBe(4);
+			emitter.removeListener("message", listener);
+
+			// Assert.
+			expect(emitter.listenerCount("message")).toBe(0);
+		});
 	});
 
-	describe("listener events", () => {
+	describe("default events", () => {
 		/**
 		 * Asserts the built-in `newListener` event is emitted.
 		 */
@@ -476,7 +722,6 @@ describe("EventEmitter", () => {
 				emitter.prependOnceListener("another", listeners[2]);
 
 				// Act.
-
 				emitter.emit("another", 1);
 
 				// Assert.
@@ -523,6 +768,317 @@ describe("EventEmitter", () => {
 		});
 	});
 
+	describe("re-entrancy", () => {
+		/**
+		 * Asserts a listener removing itself during emission does not cause subsequent listeners to be skipped.
+		 */
+		test("removing self during emit", () => {
+			// Arrange.
+			const emitter = new EventEmitter<EventMap>();
+			const self = vi.fn(() => emitter.off("message", self));
+			const next = vi.fn();
+			emitter.on("message", self).on("message", next);
+
+			// Act.
+			emitter.emit("message", "Hello");
+
+			// Assert.
+			expect(self).toHaveBeenCalledTimes(1);
+			expect(next).toHaveBeenCalledTimes(1);
+			expect(emitter.listeners("message")).toEqual([next]);
+		});
+
+		/**
+		 * Asserts a listener disposing itself during emission does not cause subsequent listeners to be skipped.
+		 */
+		test("disposing self during emit", () => {
+			// Arrange.
+			const emitter = new EventEmitter<EventMap>();
+			const disposable = emitter.disposableOn("message", () => disposable[Symbol.dispose]());
+			const next = vi.fn();
+			emitter.on("message", next);
+
+			// Act.
+			emitter.emit("message", "Hello");
+
+			// Assert.
+			expect(next).toHaveBeenCalledTimes(1);
+			expect(emitter.listenerCount("message")).toBe(1);
+		});
+
+		/**
+		 * Asserts a listener removed by an earlier listener during emission is not invoked.
+		 */
+		test("removing a later listener during emit", () => {
+			// Arrange.
+			const emitter = new EventEmitter<EventMap>();
+			const later = vi.fn();
+			emitter.on("message", () => emitter.off("message", later)).on("message", later);
+
+			// Act.
+			emitter.emit("message", "Hello");
+
+			// Assert.
+			expect(later).not.toHaveBeenCalled();
+		});
+
+		/**
+		 * Asserts listeners added during emission are not invoked until the next emission.
+		 */
+		test("adding a listener during emit", () => {
+			// Arrange.
+			const emitter = new EventEmitter<EventMap>();
+			const late = vi.fn();
+			emitter.once("message", () => emitter.on("message", late));
+
+			// Act.
+			emitter.emit("message", "First");
+			emitter.emit("message", "Second");
+
+			// Assert.
+			expect(late).toHaveBeenCalledTimes(1);
+			expect(late).toHaveBeenCalledWith("Second");
+		});
+
+		/**
+		 * Asserts a nested emission does not cause the outer emission to skip listeners.
+		 */
+		test("nested emit", () => {
+			// Arrange.
+			const emitter = new EventEmitter<EventMap>();
+			const next = vi.fn();
+			emitter.once("message", () => emitter.emit("message", "Inner"));
+			emitter.on("message", next);
+
+			// Act.
+			emitter.emit("message", "Outer");
+
+			// Assert.
+			expect(next).toHaveBeenCalledTimes(2);
+			expect(next).toHaveBeenNthCalledWith(1, "Inner");
+			expect(next).toHaveBeenNthCalledWith(2, "Outer");
+		});
+
+		/**
+		 * Asserts a once listener is not invoked again when a removeListener handler re-emits the event.
+		 */
+		test("once listener is not re-invoked by removeListener handler", () => {
+			// Arrange.
+			const emitter = new EventEmitter<EventMap>();
+			const listener = vi.fn();
+			emitter.once("message", listener);
+			emitter.on("removeListener", () => emitter.emit("message", "Again"));
+
+			// Act.
+			emitter.emit("message", "Hello");
+
+			// Assert.
+			expect(listener).toHaveBeenCalledTimes(1);
+		});
+
+		/**
+		 * Asserts emit returns false when a removeListener handler re-emits an event whose last once listener is being disposed.
+		 */
+		test("emit returns false when re-emitted with only disposed listeners", () => {
+			// Arrange.
+			const emitter = new EventEmitter<EventMap>();
+			const listener = vi.fn();
+			const results: { count: number; emitted: boolean }[] = [];
+			emitter.once("message", listener);
+			emitter.on("removeListener", () => {
+				results.push({ count: emitter.listenerCount("message"), emitted: emitter.emit("message", "Again") });
+			});
+
+			// Act.
+			const emitted = emitter.emit("message", "Hello");
+
+			// Assert.
+			expect(emitted).toBe(true);
+			expect(results).toEqual([{ count: 0, emitted: false }]);
+			expect(listener).toHaveBeenCalledTimes(1);
+			expect(listener).toHaveBeenCalledWith("Hello");
+			expect(emitter.eventNames()).not.toContain("message");
+		});
+
+		/**
+		 * Asserts removeListener is emitted once, when a listener is removed again from within a removeListener handler.
+		 */
+		test("removeListener is emitted once per listener", () => {
+			// Arrange.
+			const emitter = new EventEmitter<EventMap>();
+			const listener = vi.fn();
+			const removeListener = vi.fn(() => emitter.off("message", listener));
+			emitter.on("message", listener);
+			emitter.on("removeListener", removeListener);
+
+			// Act.
+			emitter.off("message", listener);
+
+			// Assert.
+			expect(removeListener).toHaveBeenCalledTimes(1);
+		});
+
+		/**
+		 * Asserts once listeners are not counted whilst being invoked.
+		 */
+		test("listenerCount within once listener", () => {
+			// Arrange.
+			const emitter = new EventEmitter<EventMap>();
+			let count: number | undefined;
+			let listeners: unknown[] | undefined;
+			emitter.once("message", () => {
+				count = emitter.listenerCount("message");
+				listeners = emitter.listeners("message");
+			});
+
+			// Act.
+			emitter.emit("message", "Hello");
+
+			// Assert.
+			expect(count).toBe(0);
+			expect(listeners).toEqual([]);
+		});
+
+		/**
+		 * Asserts removeAllListeners terminates, and retains listeners added by removeListener handlers.
+		 */
+		test("removeAllListeners with removeListener handler that adds listeners", () => {
+			// Arrange.
+			const emitter = new EventEmitter<EventMap>();
+			const added = vi.fn();
+			emitter.on("message", vi.fn());
+			emitter.on("removeListener", () => emitter.on("message", added));
+
+			// Act.
+			emitter.removeAllListeners("message");
+
+			// Assert.
+			expect(emitter.listeners("message")).toEqual([added]);
+		});
+
+		/**
+		 * Asserts disposed listeners are cleaned up per event, when emitting another event before the cleanup occurs.
+		 */
+		test("once listener emitting another event is cleaned up", () => {
+			// Arrange.
+			const emitter = new EventEmitter<EventMap>();
+			emitter.on("other", vi.fn());
+			emitter.once("message", () => emitter.emit("other", 1));
+
+			// Act.
+			emitter.emit("message", "Hello");
+
+			// Assert.
+			expect(emitter.eventNames()).toEqual(["other"]);
+			expect(emitter.emit("message", "Again")).toBe(false);
+		});
+	});
+
+	describe("exceptions", () => {
+		/**
+		 * Asserts a throwing once listener is still removed, and its event deleted, when the error propagates from emit.
+		 */
+		test("throwing once listener is cleaned up", () => {
+			// Arrange.
+			const emitter = new EventEmitter<EventMap>();
+			const error = new Error("Listener failed");
+			emitter.once("message", () => {
+				throw error;
+			});
+
+			// Act, assert.
+			expect(() => emitter.emit("message", "Hello")).toThrow(error);
+			expect(emitter.eventNames()).toEqual([]);
+			expect(emitter.emit("message", "Again")).toBe(false);
+		});
+
+		/**
+		 * Asserts listeners before a throwing listener are invoked, and listeners after it are retained for later emits.
+		 */
+		test("throwing listener does not affect other listeners", () => {
+			// Arrange.
+			const emitter = new EventEmitter<EventMap>();
+			const before = vi.fn();
+			const after = vi.fn();
+			const throws = vi.fn(() => {
+				throw new Error("Listener failed");
+			});
+
+			emitter.on("message", before).once("message", throws).on("message", after);
+
+			// Act.
+			expect(() => emitter.emit("message", "Hello")).toThrow();
+			emitter.emit("message", "Again");
+
+			// Assert.
+			expect(before).toHaveBeenCalledTimes(2);
+			expect(throws).toHaveBeenCalledTimes(1);
+			expect(after).toHaveBeenCalledTimes(1);
+			expect(after).toHaveBeenCalledWith("Again");
+			expect(emitter.listeners("message")).toEqual([before, after]);
+		});
+
+		/**
+		 * Asserts a throwing removeListener handler propagates from removeListener, and the disposed listener is removed.
+		 */
+		test("throwing removeListener handler during removeListener", () => {
+			// Arrange.
+			const emitter = new EventEmitter<EventMap>();
+			const listener = vi.fn();
+			const error = new Error("Handler failed");
+			emitter.on("message", listener).on("message", listener);
+			emitter.on("removeListener", () => {
+				throw error;
+			});
+
+			// Act.
+			expect(() => emitter.removeListener("message", listener)).toThrow(error);
+
+			// Assert; the first match is removed, and the remaining match is retained as the error interrupted removal.
+			expect(emitter.listenerCount("message")).toBe(1);
+			expect(emitter.listeners("message")).toEqual([listener]);
+		});
+
+		/**
+		 * Asserts a throwing removeListener handler propagates from removeAllListeners, and the disposed listener is removed.
+		 */
+		test("throwing removeListener handler during removeAllListeners", () => {
+			// Arrange.
+			const emitter = new EventEmitter<EventMap>();
+			const first = vi.fn();
+			const second = vi.fn();
+			emitter.on("message", first).on("message", second);
+			emitter.on("removeListener", () => {
+				throw new Error("Handler failed");
+			});
+
+			// Act.
+			expect(() => emitter.removeAllListeners("message")).toThrow();
+
+			// Assert.
+			expect(emitter.listeners("message")).toEqual([second]);
+		});
+
+		/**
+		 * Asserts a throwing removeListener handler propagates from disposing, and the listener is removed.
+		 */
+		test("throwing removeListener handler during dispose", () => {
+			// Arrange.
+			const emitter = new EventEmitter<EventMap>();
+			const disposable = emitter.disposableOn("message", vi.fn());
+			emitter.on("removeListener", () => {
+				throw new Error("Handler failed");
+			});
+
+			// Act.
+			expect(() => disposable.dispose()).toThrow();
+
+			// Assert.
+			expect(emitter.eventNames()).toEqual(["removeListener"]);
+			expect(emitter.listenerCount("message")).toBe(0);
+		});
+	});
+
 	/* eslint-disable @typescript-eslint/no-unused-vars */
 	describe("types", () => {
 		/**
@@ -551,7 +1107,7 @@ describe("EventEmitter", () => {
 
 			// Assert.
 			expectTypeOf(emitter.eventNames()).toEqualTypeOf<
-				("another" | "array" | "empty" | "message" | "newListener" | "other" | "removeListener" | (string & {}))[]
+				("another" | "array" | "empty" | "message" | "newListener" | "other" | "removeListener")[]
 			>();
 
 			// @ts-expect-error: arguments of type `string` are not valid
@@ -559,6 +1115,25 @@ describe("EventEmitter", () => {
 				invalid: string;
 				valid: [name: string];
 			}>;
+		});
+
+		/**
+		 * Emitting events is restricted to the event map; default events are emitted internally.
+		 */
+		test("emit event name", () => {
+			// Arrange.
+			const emitter = new EventEmitter<EventMap>();
+			const listener = (message: string): void => void message;
+
+			// Act, assert.
+			// @ts-expect-error: `newListener` is emitted internally.
+			expect(() => emitter.emit("newListener", "message", listener)).toThrow();
+
+			// @ts-expect-error: `removeListener` is emitted internally.
+			expect(() => emitter.emit("removeListener", "message", listener)).toThrow();
+
+			// @ts-expect-error: events not within the event map are not valid.
+			emitter.emit("unknown");
 		});
 
 		/**
@@ -592,14 +1167,16 @@ describe("EventEmitter", () => {
 			const emitter = new EventEmitter<UserServiceEventMap>();
 
 			// Assert
+			type CreateOrGet = ["user.create", (name: string) => void] | ["user.get", (id: number) => void];
+
 			emitter.once("newListener", (...args) =>
 				expectTypeOf(args).toEqualTypeOf<
-					["user.create", (name: string) => void] | ["user.get", (id: number) => void]
+					CreateOrGet | ["removeListener", (...args: RemoveListenerArgs<UserServiceEventMap>) => void]
 				>(),
 			);
 			emitter.once("removeListener", (...args) =>
 				expectTypeOf(args).toEqualTypeOf<
-					["user.create", (name: string) => void] | ["user.get", (id: number) => void]
+					CreateOrGet | ["newListener", (...args: NewListenerArgs<UserServiceEventMap>) => void]
 				>(),
 			);
 		});

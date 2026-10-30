@@ -1,5 +1,15 @@
 export * from "./enumerable.js";
-export * from "./event-emitter.js";
+
+export {
+	EventEmitter,
+	type EmittableEventsOf,
+	type EventArgs,
+	type EventListenerOptions,
+	type EventsOf,
+	type NewListenerArgs,
+	type RemoveListenerArgs,
+} from "./event-emitter.js";
+
 export * from "./explicit-resource-management/index.js";
 export * from "./json.js";
 export * from "./lazy.js";
