@@ -9,13 +9,13 @@ import type {
 	GetSettings,
 	PluginEventMap,
 	Resources,
-} from "../../api/index.js";
-import { connection } from "../connection.js";
-import { logger } from "../logging/index.js";
-import { requiresVersion } from "../validation.js";
-import { settingsCache } from "./cache.js";
-import { actionConfig } from "./config.js";
-import { ActionContext } from "./context.js";
+} from "../../../api/index.js";
+import { connection } from "../../connection.js";
+import { logger } from "../../logging/index.js";
+import { requiresVersion } from "../../validation.js";
+import { settingsCache } from "../cache.js";
+import { actionConfig } from "../config.js";
+import { ActionContext } from "../context.js";
 import type { DialAction } from "./dial.js";
 import type { KeyAction } from "./key.js";
 import type { NeoInfobarAction } from "./neo-infobar.js";

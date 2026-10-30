@@ -1,8 +1,8 @@
 import { vi } from "vitest";
 
 const { ReadOnlyActionStore } = await vi.importActual<typeof import("../store.js")>("../store");
-const { KeyAction } = await vi.importActual<typeof import("../key.js")>("../key");
-const { DialAction } = await vi.importActual<typeof import("../dial.js")>("../dial");
+const { KeyAction } = await vi.importActual<typeof import("../transients/key.js")>("../transients/key");
+const { DialAction } = await vi.importActual<typeof import("../transients/dial.js")>("../transients/dial");
 
 export const actionStore = {
 	set: vi.fn(),

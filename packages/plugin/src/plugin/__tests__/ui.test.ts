@@ -9,8 +9,8 @@ import {
 	type SendToPropertyInspector,
 } from "../../api/index.js";
 import type { Action } from "../actions/action.js";
-import { KeyAction } from "../actions/key.js";
 import { actionStore } from "../actions/store.js";
+import { KeyAction } from "../actions/transients/key.js";
 import { connection } from "../connection.js";
 import { Device } from "../devices/device.js";
 import { deviceStore } from "../devices/store.js";

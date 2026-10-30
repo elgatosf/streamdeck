@@ -1,23 +1,23 @@
 import type { JsonObject } from "@elgato/utils";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, test, vi } from "vitest";
 
-import type { Settings } from "../../../api/__mocks__/events.js";
-import { DeviceType, type GetSettings, type SetSettings, type WillAppear } from "../../../api/index.js";
-import { connection } from "../../connection.js";
-import { Device } from "../../devices/device.js";
-import { deviceStore } from "../../devices/store.js";
-import { logger } from "../../logging/index.js";
+import type { Settings } from "../../../../api/__mocks__/events.js";
+import { DeviceType, type GetSettings, type SetSettings, type WillAppear } from "../../../../api/index.js";
+import { connection } from "../../../connection.js";
+import { Device } from "../../../devices/device.js";
+import { deviceStore } from "../../../devices/store.js";
+import { logger } from "../../../logging/index.js";
 import { ActionBase } from "../action-base.js";
-import { settingsCache } from "../cache.js";
-import { actionConfig } from "../config.js";
 import { DialAction } from "../dial.js";
 import { KeyAction } from "../key.js";
 import { NeoInfobarAction } from "../neo-infobar.js";
+import { settingsCache } from "../../cache.js";
+import { actionConfig } from "../../config.js";
 
-vi.mock("../../devices/store.js");
-vi.mock("../../logging/index.js");
-vi.mock("../../manifest.js");
-vi.mock("../../connection.js");
+vi.mock("../../../devices/store.js");
+vi.mock("../../../logging/index.js");
+vi.mock("../../../manifest.js");
+vi.mock("../../../connection.js");
 
 describe("Action", () => {
 	// Mock source.

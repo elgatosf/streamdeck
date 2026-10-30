@@ -1,7 +1,7 @@
 import type { JsonObject } from "@elgato/utils";
 
-import type { Coordinates, FeedbackPayload, SetTriggerDescription, WillAppear } from "../../api/index.js";
-import { connection } from "../connection.js";
+import type { Coordinates, FeedbackPayload, SetTriggerDescription, WillAppear } from "../../../api/index.js";
+import { connection } from "../../connection.js";
 import { ActionBase } from "./action-base.js";
 
 /**

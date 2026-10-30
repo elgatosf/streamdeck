@@ -1,17 +1,17 @@
 import type { JsonObject } from "@elgato/utils";
 import { beforeAll, describe, expect, it, vi } from "vitest";
 
-import { DeviceType, type SetFeedback, type SetFeedbackLayout, type WillAppear } from "../../../api/index.js";
-import { connection } from "../../connection.js";
-import { Device } from "../../devices/device.js";
-import { deviceStore } from "../../devices/store.js";
+import { DeviceType, type SetFeedback, type SetFeedbackLayout, type WillAppear } from "../../../../api/index.js";
+import { connection } from "../../../connection.js";
+import { Device } from "../../../devices/device.js";
+import { deviceStore } from "../../../devices/store.js";
 import { ActionBase } from "../action-base.js";
 import { NeoInfobarAction } from "../neo-infobar.js";
 
-vi.mock("../../devices/store.js");
-vi.mock("../../logging/index.js");
-vi.mock("../../manifest.js");
-vi.mock("../../connection.js");
+vi.mock("../../../devices/store.js");
+vi.mock("../../../logging/index.js");
+vi.mock("../../../manifest.js");
+vi.mock("../../../connection.js");
 
 describe("NeoInfobarAction", () => {
 	// Mock source.

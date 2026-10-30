@@ -23,8 +23,8 @@ import type {
 } from "../../api/index.js";
 import type { Action } from "../actions/action.js";
 import type { ActionContext } from "../actions/context.js";
-import type { DialAction } from "../actions/dial.js";
-import type { KeyAction } from "../actions/key.js";
+import type { DialAction } from "../actions/transients/dial.js";
+import type { KeyAction } from "../actions/transients/key.js";
 import type { Device } from "../devices/index.js";
 import { ActionEvent, ActionWithoutPayloadEvent } from "./action-event.js";
 import { ApplicationEvent } from "./application-event.js";

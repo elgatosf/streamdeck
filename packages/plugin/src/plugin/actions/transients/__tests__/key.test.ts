@@ -10,17 +10,17 @@ import {
 	type ShowOk,
 	Target,
 	type WillAppear,
-} from "../../../api/index.js";
-import { connection } from "../../connection.js";
-import { Device } from "../../devices/device.js";
-import { deviceStore } from "../../devices/store.js";
+} from "../../../../api/index.js";
+import { connection } from "../../../connection.js";
+import { Device } from "../../../devices/device.js";
+import { deviceStore } from "../../../devices/store.js";
 import { ActionBase } from "../action-base.js";
 import { KeyAction } from "../key.js";
 
-vi.mock("../../devices/store.js");
-vi.mock("../../logging/index.js");
-vi.mock("../../manifest.js");
-vi.mock("../../connection.js");
+vi.mock("../../../devices/store.js");
+vi.mock("../../../logging/index.js");
+vi.mock("../../../manifest.js");
+vi.mock("../../../connection.js");
 
 describe("KeyAction", () => {
 	// Mock source.

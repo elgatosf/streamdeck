@@ -1,8 +1,8 @@
 import type { JsonObject } from "@elgato/utils";
 
-import type { DialAction } from "./dial.js";
-import type { KeyAction } from "./key.js";
-import type { NeoInfobarAction } from "./neo-infobar.js";
+import type { DialAction } from "./transients/dial.js";
+import type { KeyAction } from "./transients/key.js";
+import type { NeoInfobarAction } from "./transients/neo-infobar.js";
 
 /**
  * Union of available action types.

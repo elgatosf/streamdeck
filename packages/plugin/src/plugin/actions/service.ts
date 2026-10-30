@@ -34,11 +34,11 @@ import type { Action } from "./action.js";
 import { settingsCache } from "./cache.js";
 import { actionConfig } from "./config.js";
 import { ActionContext } from "./context.js";
-import { DialAction } from "./dial.js";
-import { KeyAction } from "./key.js";
-import { NeoInfobarAction } from "./neo-infobar.js";
 import type { SingletonAction } from "./singleton-action.js";
 import { actionStore, ReadOnlyActionStore } from "./store.js";
+import { DialAction } from "./transients/dial.js";
+import { KeyAction } from "./transients/key.js";
+import { NeoInfobarAction } from "./transients/neo-infobar.js";
 
 const manifest = new Lazy<Manifest | null>(() => getManifest());
 
