@@ -38,7 +38,6 @@ import {
 } from "../../events/index.js";
 import type { UIController } from "../../ui.js";
 import type { Action } from "../action.js";
-import { settingsCache } from "../cache.js";
 import { actionConfig } from "../config.js";
 import { ActionContext } from "../context.js";
 import { actionService, type ActionService } from "../service.js";
@@ -576,13 +575,13 @@ describe("actions", () => {
 		});
 
 		/**
-		 * Asserts settings cache lifecycle updates for appear, settings updates, and disappear events.
+		 * Asserts actions created from willAppear cache their settings, and update them from contextualized didReceiveSettings.
 		 */
-		it("updates settings cache on willAppear/didReceiveSettings and clears on willDisappear", () => {
+		it("creates actions that cache their settings", async () => {
 			// Arrange.
 			actionConfig.useLegacySettingsBehavior = false;
 			const context = "cache-lifecycle-context";
-			settingsCache.delete(context);
+			const spyOnSend = vi.spyOn(connection, "send");
 
 			const willAppear = {
 				action: "com.elgato.test.key",
@@ -604,117 +603,30 @@ describe("actions", () => {
 			} satisfies WillAppear<Settings>;
 
 			const didReceiveSettings = {
-				action: "com.elgato.test.key",
-				context,
-				device: "device123",
+				...willAppear,
 				event: "didReceiveSettings",
 				payload: {
-					controller: "Keypad",
-					coordinates: {
-						column: 1,
-						row: 1,
-					},
-					isInMultiAction: false,
-					resources: {},
+					...willAppear.payload,
 					settings: {
 						name: "Updated",
 					},
 				},
 			} satisfies DidReceiveSettings<Settings>;
 
-			const willDisappear = {
-				action: "com.elgato.test.key",
-				context,
-				device: "device123",
-				event: "willDisappear",
-				payload: {
-					controller: "Keypad",
-					coordinates: {
-						column: 1,
-						row: 1,
-					},
-					isInMultiAction: false,
-					resources: {},
-					settings: {
-						name: "Updated",
-					},
-				},
-			} satisfies WillDisappear<Settings>;
-
-			// Act, assert (set on appear).
+			// Act (appear).
 			connection.emit("willAppear", willAppear);
-			expect(settingsCache.get(context)).toEqual({
-				name: "FromAppear",
-			});
+			const action = vi.mocked(actionStore.set).mock.lastCall?.[0];
 
-			// Act, assert (update on settings event).
-			connection.emit("didReceiveSettings", didReceiveSettings);
-			expect(settingsCache.get(context)).toEqual({
-				name: "Updated",
-			});
+			// Assert (cached from appear).
+			expect(action?.id).toBe(context);
+			await expect(action?.getSettings()).resolves.toEqual({ name: "FromAppear" });
 
-			// Act, assert (delete on disappear).
-			connection.emit("willDisappear", willDisappear);
-			expect(settingsCache.get(context)).toBeUndefined();
-		});
+			// Act (settings received).
+			connection.emit(`didReceiveSettings:${didReceiveSettings.action}:${context}`, didReceiveSettings);
 
-		/**
-		 * Asserts settings cache is not updated when legacy settings behavior is enabled.
-		 */
-		it("does not update settings cache when useLegacySettingsBehavior is true", () => {
-			// Arrange.
-			actionConfig.useLegacySettingsBehavior = true;
-			const context = "cache-skip-context";
-			settingsCache.delete(context);
-
-			const willAppear = {
-				action: "com.elgato.test.key",
-				context,
-				device: "device123",
-				event: "willAppear",
-				payload: {
-					controller: "Keypad",
-					coordinates: {
-						column: 1,
-						row: 1,
-					},
-					isInMultiAction: false,
-					resources: {},
-					settings: {
-						name: "FromAppear",
-					},
-				},
-			} satisfies WillAppear<Settings>;
-
-			const didReceiveSettings = {
-				action: "com.elgato.test.key",
-				context,
-				device: "device123",
-				event: "didReceiveSettings",
-				payload: {
-					controller: "Keypad",
-					coordinates: {
-						column: 1,
-						row: 1,
-					},
-					isInMultiAction: false,
-					resources: {},
-					settings: {
-						name: "Updated",
-					},
-				},
-			} satisfies DidReceiveSettings<Settings>;
-
-			// Act, assert (cache should NOT be set on appear).
-			connection.emit("willAppear", willAppear);
-			expect(settingsCache.get(context)).toBeUndefined();
-
-			// Act, assert (cache should NOT be updated on settings event).
-			connection.emit("didReceiveSettings", didReceiveSettings);
-			expect(settingsCache.get(context)).toBeUndefined();
-
-			// Cleanup.
-			actionConfig.useLegacySettingsBehavior = false;
+			// Assert (cache updated, without requesting the settings).
+			await expect(action?.getSettings()).resolves.toEqual({ name: "Updated" });
+			expect(spyOnSend).not.toHaveBeenCalled();
 		});
 	});
 

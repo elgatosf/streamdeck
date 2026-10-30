@@ -4,7 +4,6 @@ import type { IDisposable, JsonObject } from "@elgato/utils";
 
 import type { DidReceiveGlobalSettings, DidReceiveSettings } from "../api/index.js";
 import type { Action } from "./actions/action.js";
-import { settingsCache } from "./actions/cache.js";
 import { actionConfig } from "./actions/config.js";
 import { actionStore } from "./actions/store.js";
 import { connection } from "./connection.js";
@@ -48,8 +47,6 @@ export const settings = {
 		try {
 			actionConfig.useLegacySettingsBehavior = value;
 			validateSettingsBehavior();
-
-			settingsCache.clear();
 		} catch (err) {
 			actionConfig.useLegacySettingsBehavior = prev;
 			throw err;

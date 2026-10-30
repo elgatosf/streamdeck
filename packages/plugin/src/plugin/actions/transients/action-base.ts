@@ -9,13 +9,14 @@ import type {
 	GetSettings,
 	PluginEventMap,
 	Resources,
+	WillAppear,
 } from "../../../api/index.js";
 import { connection } from "../../connection.js";
 import { logger } from "../../logging/index.js";
 import { requiresVersion } from "../../validation.js";
-import { settingsCache } from "../cache.js";
 import { actionConfig } from "../config.js";
 import { ActionContext } from "../context.js";
+import { actionStore } from "../store.js";
 import type { DialAction } from "./dial.js";
 import type { KeyAction } from "./key.js";
 import type { NeoInfobarAction } from "./neo-infobar.js";
@@ -27,6 +28,45 @@ const REQUEST_TIMEOUT = 15 * 1000; // 15s
  * @template TSettings The type of settings associated with the action.
  */
 export class ActionBase<TSettings extends JsonObject> extends ActionContext {
+	/**
+	 * Cache of the settings.
+	 */
+	#settings: Readonly<JsonObject> | undefined;
+
+	/**
+	 * Initializes a new instance of an {@link ActionBase} class.
+	 * @param source Source of the action.
+	 */
+	constructor(source: WillAppear<TSettings>) {
+		super(source);
+
+		const eventController = new AbortController();
+		this.#settings = source.payload.settings;
+
+		// Maintain a cache of the settings.
+		connection.prependListener(
+			`didReceiveSettings:${source.action}:${source.context}`,
+			(ev) => {
+				this.#settings = ev.payload.settings;
+			},
+			{
+				signal: eventController.signal,
+			},
+		);
+
+		// Remove the action from the store.
+		connection.prependListener(
+			`willDisappear:${source.action}:${source.context}`,
+			(ev) => {
+				eventController.abort();
+				actionStore.delete(ev.context);
+			},
+			{
+				once: true,
+			},
+		);
+	}
+
 	/**
 	 * Gets the resources (files) associated with this action; these resources are embedded into the action when it is
 	 * exported, either individually, or as part of a profile.
@@ -47,18 +87,17 @@ export class ActionBase<TSettings extends JsonObject> extends ActionContext {
 	 */
 	public async getSettings(): Promise<TSettings> {
 		if (!actionConfig.useLegacySettingsBehavior) {
-			const cached = settingsCache.get(this.id);
-			if (cached !== undefined) {
+			if (this.#settings !== undefined) {
 				logger.trace(
 					JSON.stringify({
 						event: "getSettings",
 						context: this.id,
 						source: "cache",
-						settings: cached,
+						settings: this.#settings,
 					}),
 				);
 
-				return cached as TSettings;
+				return this.#settings as TSettings;
 			}
 		}
 
@@ -119,7 +158,7 @@ export class ActionBase<TSettings extends JsonObject> extends ActionContext {
 	 * @returns `Promise` resolved when the settings are sent to Stream Deck.
 	 */
 	public setSettings(value: TSettings): Promise<void> {
-		settingsCache.delete(this.id);
+		this.#settings = undefined;
 		return connection.send({
 			event: "setSettings",
 			context: this.id,

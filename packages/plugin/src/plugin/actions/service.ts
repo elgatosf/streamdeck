@@ -31,8 +31,6 @@ import { getManifest } from "../manifest.js";
 import { settings } from "../settings.js";
 import { ui } from "../ui.js";
 import type { Action } from "./action.js";
-import { settingsCache } from "./cache.js";
-import { actionConfig } from "./config.js";
 import { ActionContext } from "./context.js";
 import type { SingletonAction } from "./singleton-action.js";
 import { actionStore, ReadOnlyActionStore } from "./store.js";
@@ -55,24 +53,7 @@ class ActionService extends ReadOnlyActionStore {
 		// Adds the action to the store.
 		connection.prependListener("willAppear", (ev) => {
 			const action = this.#createAction(ev);
-
 			actionStore.set(action);
-			if (!actionConfig.useLegacySettingsBehavior) {
-				settingsCache.set(ev.context, ev.payload.settings);
-			}
-		});
-
-		// Update the settings cache when settings are received.
-		connection.prependListener("didReceiveSettings", (ev) => {
-			if (!actionConfig.useLegacySettingsBehavior) {
-				settingsCache.set(ev.context, ev.payload.settings);
-			}
-		});
-
-		// Remove the action from the store.
-		connection.prependListener("willDisappear", (ev) => {
-			actionStore.delete(ev.context);
-			settingsCache.delete(ev.context);
 		});
 	}
 

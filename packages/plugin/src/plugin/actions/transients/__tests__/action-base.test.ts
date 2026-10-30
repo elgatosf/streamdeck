@@ -2,17 +2,24 @@ import type { JsonObject } from "@elgato/utils";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, test, vi } from "vitest";
 
 import type { Settings } from "../../../../api/__mocks__/events.js";
-import { DeviceType, type GetSettings, type SetSettings, type WillAppear } from "../../../../api/index.js";
+import {
+	DeviceType,
+	type DidReceiveSettings,
+	type GetSettings,
+	type SetSettings,
+	type WillAppear,
+	type WillDisappear,
+} from "../../../../api/index.js";
 import { connection } from "../../../connection.js";
 import { Device } from "../../../devices/device.js";
 import { deviceStore } from "../../../devices/store.js";
 import { logger } from "../../../logging/index.js";
+import { actionConfig } from "../../config.js";
+import { actionStore } from "../../store.js";
 import { ActionBase } from "../action-base.js";
 import { DialAction } from "../dial.js";
 import { KeyAction } from "../key.js";
 import { NeoInfobarAction } from "../neo-infobar.js";
-import { settingsCache } from "../../cache.js";
-import { actionConfig } from "../../config.js";
 
 vi.mock("../../../devices/store.js");
 vi.mock("../../../logging/index.js");
@@ -54,9 +61,38 @@ describe("Action", () => {
 
 	beforeAll(() => vi.spyOn(deviceStore, "getDeviceById").mockReturnValue(device));
 	afterEach(() => {
-		settingsCache.delete(source.context);
+		// Dispose of the listeners registered by actions created during the test.
+		connection.emit(`willDisappear:${source.action}:${source.context}`, { ...source, event: "willDisappear" });
 		vi.clearAllMocks();
 	});
+
+	/**
+	 * Emits the `didReceiveSettings` event for the action, contextualized and then un-contextualized, as per the
+	 * {@link connection}.
+	 * @param settings Settings received.
+	 * @param context Action instance the settings are for.
+	 */
+	function emitDidReceiveSettings(settings: JsonObject, context = source.context): void {
+		const ev = {
+			action: source.action,
+			context,
+			device: source.device,
+			event: "didReceiveSettings",
+			payload: {
+				controller: "Keypad",
+				coordinates: {
+					column: 1,
+					row: 2,
+				},
+				isInMultiAction: false,
+				resources: {},
+				settings,
+			},
+		} satisfies DidReceiveSettings<JsonObject>;
+
+		connection.emit(`didReceiveSettings:${ev.action}:${ev.context}`, ev);
+		connection.emit("didReceiveSettings", ev);
+	}
 
 	/**
 	 * Asserts the constructor of {@link ActionBase} sets the properties from the source.
@@ -75,24 +111,63 @@ describe("Action", () => {
 		expect(deviceStore.getDeviceById).toHaveBeenLastCalledWith(source.device);
 	});
 
+	/**
+	 * Asserts the action is removed from the store when it disappears, and subsequent `willDisappear` events for the
+	 * same action are ignored.
+	 */
+	it("removes the action from the store once on willDisappear", () => {
+		// Arrange.
+		const action = new KeyAction(source);
+		actionStore.set(action);
+
+		const spyOnDelete = vi.spyOn(actionStore, "delete");
+		const willDisappear = {
+			...source,
+			event: "willDisappear",
+		} satisfies WillDisappear<JsonObject>;
+
+		// Act (first).
+		connection.emit(`willDisappear:${source.action}:${source.context}`, willDisappear);
+
+		// Assert (first).
+		expect(spyOnDelete).toHaveBeenCalledTimes(1);
+		expect(spyOnDelete).toHaveBeenCalledWith(source.context);
+		expect(actionStore.getActionById(source.context)).toBeUndefined();
+
+		// Act (subsequent); the action is re-added so that an unexpected removal would be observable.
+		actionStore.set(action);
+		connection.emit(`willDisappear:${source.action}:${source.context}`, willDisappear);
+
+		// Assert (subsequent).
+		expect(spyOnDelete).toHaveBeenCalledTimes(1);
+		expect(actionStore.getActionById(source.context)).toBe(action);
+
+		// Cleanup.
+		actionStore.delete(source.context);
+	});
+
 	describe("with useLegacySettingsBehavior set to false", () => {
 		beforeEach(() => (actionConfig.useLegacySettingsBehavior = false));
 
 		/**
-		 * Asserts {@link ActionBase.getSettings} returns cached settings when the cache is valid.
+		 * Asserts {@link ActionBase.getSettings} returns the settings from the source, without requesting them.
 		 */
-		it("getSettings returns cached settings", async () => {
+		it("getSettings returns settings cached from the source", async () => {
 			// Arrange.
-			const action = new ActionBase(source);
-			const cachedSettings = { name: "Cached" };
+			const action = new ActionBase({
+				...source,
+				payload: {
+					...source.payload,
+					settings: { name: "Source" },
+				},
+			});
 			const spyOnTrace = vi.spyOn(logger, "trace");
-			settingsCache.set(action.id, cachedSettings);
 
 			// Act.
 			const result = await action.getSettings();
 
 			// Assert.
-			expect(result).toEqual(cachedSettings);
+			expect(result).toEqual({ name: "Source" });
 			expect(connection.send).not.toHaveBeenCalled();
 			expect(spyOnTrace).toHaveBeenCalledTimes(1);
 			expect(spyOnTrace).toHaveBeenCalledWith(
@@ -100,74 +175,38 @@ describe("Action", () => {
 					event: "getSettings",
 					context: action.id,
 					source: "cache",
-					settings: cachedSettings,
+					settings: { name: "Source" },
 				}),
 			);
 		});
-	});
-
-	describe("with useLegacySettingsBehavior set to true", () => {
-		beforeAll(() => (actionConfig.useLegacySettingsBehavior = true));
-		afterAll(() => (actionConfig.useLegacySettingsBehavior = false));
 
 		/**
-		 * Asserts {@link ActionBase.getSettings} ignores cached settings when legacy settings behavior is enabled.
+		 * Asserts {@link ActionBase.getSettings} returns the settings last received for the action.
 		 */
-		it("getSettings ignores cached settings", async () => {
+		it("getSettings returns settings cached from didReceiveSettings", async () => {
 			// Arrange.
 			const action = new ActionBase(source);
-			const spyOnTrace = vi.spyOn(logger, "trace");
-			settingsCache.set(action.id, { name: "Cached" });
 
 			// Act.
-			const settings = action.getSettings();
-
-			// Assert (Command sent instead of cache hit).
-			expect(connection.send).toHaveBeenCalledTimes(1);
-			expect(connection.send).toHaveBeenLastCalledWith<[GetSettings]>({
-				event: "getSettings",
-				context: action.id,
-				id: expect.any(String),
-			});
-			expect(spyOnTrace).not.toHaveBeenCalled();
-
-			// Act (Event).
-			connection.emit("didReceiveSettings", {
-				action: action.manifestId,
-				context: action.id,
-				event: "didReceiveSettings",
-				device: "device123",
-				payload: {
-					controller: "Keypad",
-					coordinates: {
-						column: 1,
-						row: 2,
-					},
-					isInMultiAction: false,
-					resources: {},
-					settings: {
-						name: "Fresh",
-					},
-				},
-			});
+			emitDidReceiveSettings({ name: "Other" }, "__other__");
+			emitDidReceiveSettings({ name: "Received" });
+			const result = await action.getSettings();
 
 			// Assert.
-			await expect(settings).resolves.toEqual({
-				name: "Fresh",
-			});
-			expect(settingsCache.get(action.id)).toEqual({
-				name: "Cached",
-			});
+			expect(result).toEqual({ name: "Received" });
+			expect(connection.send).not.toHaveBeenCalled();
 		});
 
 		/**
-		 * Asserts {@link ActionBase.getSettings} requests settings from the connection and does not populate cache.
+		 * Asserts {@link ActionBase.setSettings} invalidates the cache, and the settings are then requested and cached.
 		 */
-		it("getSettings fetches without populating cache", async () => {
+		it("getSettings requests settings after setSettings", async () => {
 			// Arrange.
 			const action = new ActionBase(source);
+			await action.setSettings({ name: "Updated" });
+			vi.mocked(connection.send).mockClear();
 
-			// Array, act (Command).
+			// Act (Command).
 			const settings = action.getSettings();
 
 			// Assert (Command).
@@ -178,85 +217,96 @@ describe("Action", () => {
 				id: expect.any(String),
 			});
 
+			// Act (Event).
+			emitDidReceiveSettings({ name: "Updated" });
+
+			// Assert (Event).
+			await expect(settings).resolves.toEqual({ name: "Updated" });
+
+			// Act, assert (cached).
+			await expect(action.getSettings()).resolves.toEqual({ name: "Updated" });
+			expect(connection.send).toHaveBeenCalledTimes(1);
+		});
+
+		/**
+		 * Asserts the action stops caching settings, and is removed from the store, when it disappears.
+		 */
+		it("stops caching settings on willDisappear", async () => {
+			// Arrange.
+			const action = new ActionBase({
+				...source,
+				payload: {
+					...source.payload,
+					settings: { name: "Source" },
+				},
+			});
+			const spyOnDelete = vi.spyOn(actionStore, "delete");
+			const willDisappear = {
+				...source,
+				event: "willDisappear",
+			} satisfies WillDisappear<JsonObject>;
+
+			// Act.
+			connection.emit(`willDisappear:${source.action}:${source.context}`, willDisappear);
+			emitDidReceiveSettings({ name: "Received" });
+
+			// Assert.
+			expect(spyOnDelete).toHaveBeenCalledTimes(1);
+			expect(spyOnDelete).toHaveBeenCalledWith(source.context);
+			await expect(action.getSettings()).resolves.toEqual({ name: "Source" });
+		});
+	});
+
+	describe("with useLegacySettingsBehavior set to true", () => {
+		beforeAll(() => (actionConfig.useLegacySettingsBehavior = true));
+		afterAll(() => (actionConfig.useLegacySettingsBehavior = false));
+
+		/**
+		 * Asserts {@link ActionBase.getSettings} always requests the settings, ignoring the cache.
+		 */
+		it("getSettings ignores cached settings", async () => {
+			// Arrange.
+			const action = new ActionBase({
+				...source,
+				payload: {
+					...source.payload,
+					settings: { name: "Source" },
+				},
+			});
+			const spyOnTrace = vi.spyOn(logger, "trace");
+
+			// Act (Command).
+			const settings = action.getSettings();
+
+			// Assert (Command).
+			expect(connection.send).toHaveBeenCalledTimes(1);
+			expect(connection.send).toHaveBeenLastCalledWith<[GetSettings]>({
+				event: "getSettings",
+				context: action.id,
+				id: expect.any(String),
+			});
+			expect(spyOnTrace).not.toHaveBeenCalled();
+
 			await expect(Promise.race([settings, false])).resolves.toBe(false);
 
 			// Act (Event).
-			connection.emit("didReceiveSettings", {
-				action: "com.other.test.one",
-				context: "__other__", // Other action.
-				event: "didReceiveSettings",
-				device: "device123",
-				payload: {
-					controller: "Keypad",
-					coordinates: {
-						column: 0,
-						row: 0,
-					},
-					isInMultiAction: false,
-					resources: {},
-					settings: {
-						name: "Other",
-					},
-				},
-			});
-
-			connection.emit("didReceiveSettings", {
-				action: action.manifestId,
-				context: action.id, // Correct action.
-				event: "didReceiveSettings",
-				device: "device123",
-				payload: {
-					controller: "Keypad",
-					coordinates: {
-						column: 1,
-						row: 3,
-					},
-					isInMultiAction: false,
-					resources: {},
-					settings: {
-						name: "Elgato",
-					},
-				},
-			});
+			emitDidReceiveSettings({ name: "Other" }, "__other__");
+			emitDidReceiveSettings({ name: "Elgato" });
 
 			// Assert (Event).
 			await expect(settings).resolves.toEqual({
 				name: "Elgato",
 			} satisfies Settings);
-			expect(settingsCache.get(action.id)).toBeUndefined();
 
 			// Act (Repeat).
 			const nextSettings = action.getSettings();
+			emitDidReceiveSettings({ name: "Elgato Again" });
 
-			// Assert (Repeat command).
+			// Assert (Repeat).
 			expect(connection.send).toHaveBeenCalledTimes(2);
-
-			connection.emit("didReceiveSettings", {
-				action: action.manifestId,
-				context: action.id,
-				event: "didReceiveSettings",
-				device: "device123",
-				payload: {
-					controller: "Keypad",
-					coordinates: {
-						column: 1,
-						row: 3,
-					},
-					isInMultiAction: false,
-					resources: {},
-					settings: {
-						name: "Elgato Again",
-					},
-				},
-			});
-
-			await expect(nextSettings).resolves.toEqual({
-				name: "Elgato Again",
-			});
-			expect(settingsCache.get(action.id)).toBeUndefined();
+			await expect(nextSettings).resolves.toEqual({ name: "Elgato Again" });
 		});
 	});
-
 	/**
 	 * Asserts type-checking when the controller is "Keypad".
 	 */
@@ -311,24 +361,6 @@ describe("Action", () => {
 	describe("sending", () => {
 		let action!: KeyAction<Settings>;
 		beforeAll(() => (action = new KeyAction(source as WillAppear<Settings>)));
-
-		/**
-		 * Asserts {@link ActionBase.setSettings} invalidates the settings cache.
-		 */
-		it("setSettings invalidates cache", async () => {
-			// Arrange.
-			const action = new ActionBase(source);
-			settingsCache.set(action.id, { name: "Cached" });
-
-			// Act.
-			await action.setSettings({ name: "Updated" });
-
-			// Assert.
-			expect(settingsCache.get(action.id)).toBeUndefined();
-
-			// Cleanup.
-			settingsCache.delete(action.id);
-		});
 
 		/**
 		 * Asserts {@link ActionBase.setSettings} forwards the command to the {@link connection}.

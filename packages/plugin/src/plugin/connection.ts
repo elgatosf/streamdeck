@@ -18,15 +18,6 @@ import { logger } from "./logging/index.js";
  */
 class Connection extends EventEmitter<ConnectionEventMap> {
 	/**
-	 * When true, events related to actions are emitted twice, once contextualized, and once un-contextualized.
-	 *
-	 * For example, when `willAppear` is received from Stream Deck:
-	 * - `false` fires `willAppear`
-	 * - `true` fires `willAppear:{action}:{context}` and then `willAppear`
-	 */
-	public enableContextualizedActionEvents = false;
-
-	/**
 	 * Private backing field for {@link Connection.registrationParameters}.
 	 */
 	private _registrationParameters: RegistrationParameters | undefined;
@@ -179,11 +170,11 @@ class Connection extends EventEmitter<ConnectionEventMap> {
 	}
 
 	/**
-	 * Determines whether the {@link message} relates to an action, i.e. it identifies an action and its instance.
+	 * Determines whether the {@link message} relates to an action.
 	 * @param message Message received from Stream Deck.
-	 * @returns `true` when the message has an `action` and `context`; otherwise `false`.
+	 * @returns `true` when the message has an `action` and `context`.
 	 */
-	private isActionEvent(message: object): boolean {
+	private isActionEvent(message: EventIdentifier<unknown>): boolean {
 		return Object.hasOwn(message, "action") && Object.hasOwn(message, "context");
 	}
 
@@ -197,7 +188,9 @@ class Connection extends EventEmitter<ConnectionEventMap> {
 			if (message.event) {
 				this.logger.trace(ev.data.toString());
 
-				if (this.enableContextualizedActionEvents && this.isActionEvent(message)) {
+				// Action events are emitted contextualized, e.g. `keyDown:{action}:{context}`, and then un-contextualized.
+				// willAppear events are not contextualized because the context is not known until after this event.
+				if (this.isActionEvent(message) && message.event !== "willAppear") {
 					this.emit(
 						`${message.event}:${message.action}:${message.context}` as keyof ContextualizedActionEventMap,
 						message,
@@ -252,7 +245,7 @@ type ConnectionEventMap = ContextualizedActionEventMap &
 
 /**
  * Map of action events, contextualized to an action and its instance, in the format `{event}:{action}:{context}`, for
- * example `willAppear:com.elgato.counter.increment:ABC123`.
+ * example `keyDown:com.elgato.counter.increment:ABC123`.
  */
 type ContextualizedActionEventMap = {
 	[TEventName in ActionEvent["event"] as `${TEventName}:${string}:${string}`]: [
@@ -261,8 +254,9 @@ type ContextualizedActionEventMap = {
 };
 
 /**
- * Events received by the plugin, from Stream Deck, that relate to an action.
+ * Events received by the plugin, from Stream Deck, that relate to an existing action; `willAppear` is excluded as it
+ * occurs before the action exists.
  */
-type ActionEvent = Extract<PluginEvent, ActionIdentifier>;
+type ActionEvent = Exclude<Extract<PluginEvent, ActionIdentifier>, EventIdentifier<"willAppear">>;
 
 export const connection = new Connection();
