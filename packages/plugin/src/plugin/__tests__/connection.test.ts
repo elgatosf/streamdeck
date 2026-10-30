@@ -2,7 +2,7 @@ import { Logger } from "@elgato/utils/logging";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { type WS as WebSocketServer } from "vitest-websocket-mock";
 
-import type { Settings } from "../../api/__mocks__/events.js";
+import { applicationDidLaunch, type Settings, willAppear } from "../../api/__mocks__/events.js";
 import type { ApplicationDidLaunch, DidReceiveGlobalSettings, OpenUrl } from "../../api/index.js";
 import { registrationInfo } from "../../api/registration/__mocks__/index.js";
 import { type connection as Connection } from "../connection.js";
@@ -143,6 +143,99 @@ describe("connection", () => {
 						name: "Elgato",
 					},
 				},
+			});
+		});
+
+		describe("contextualized action events", () => {
+			/**
+			 * Asserts contextualized action events are not emitted by default.
+			 */
+			it("does not emit contextualized events by default", async () => {
+				// Arrange.
+				const contextualizedListener = vi.fn();
+				const listener = vi.fn();
+				connection.on(`willAppear:${willAppear.action}:${willAppear.context}`, contextualizedListener);
+				connection.on("willAppear", listener);
+
+				await connection.connect();
+
+				// Act.
+				server.send(willAppear);
+
+				// Assert.
+				expect(contextualizedListener).not.toHaveBeenCalled();
+				expect(listener).toHaveBeenCalledTimes(1);
+				expect(listener).toHaveBeenCalledWith(willAppear);
+			});
+
+			/**
+			 * Asserts action events are emitted contextualized, and then un-contextualized, when enabled.
+			 */
+			it("emits contextualized and then un-contextualized events when enabled", async () => {
+				// Arrange.
+				const calls: string[] = [];
+				const contextualizedListener = vi.fn(() => calls.push("contextualized"));
+				const listener = vi.fn(() => calls.push("un-contextualized"));
+
+				connection.enableContextualizedActionEvents = true;
+				connection.on(`willAppear:${willAppear.action}:${willAppear.context}`, contextualizedListener);
+				connection.on("willAppear", listener);
+
+				await connection.connect();
+
+				// Act.
+				server.send(willAppear);
+
+				// Assert.
+				expect(contextualizedListener).toHaveBeenCalledTimes(1);
+				expect(contextualizedListener).toHaveBeenCalledWith(willAppear);
+				expect(listener).toHaveBeenCalledTimes(1);
+				expect(listener).toHaveBeenCalledWith(willAppear);
+				expect(calls).toStrictEqual(["contextualized", "un-contextualized"]);
+			});
+
+			/**
+			 * Asserts contextualized action events are only emitted to listeners of the matching action and context.
+			 */
+			it("only emits to the matching action and context", async () => {
+				// Arrange.
+				const otherActionListener = vi.fn();
+				const otherContextListener = vi.fn();
+				const otherEventListener = vi.fn();
+
+				connection.enableContextualizedActionEvents = true;
+				connection.on(`willAppear:com.elgato.test.other:${willAppear.context}`, otherActionListener);
+				connection.on(`willAppear:${willAppear.action}:other-context`, otherContextListener);
+				connection.on(`willDisappear:${willAppear.action}:${willAppear.context}`, otherEventListener);
+
+				await connection.connect();
+
+				// Act.
+				server.send(willAppear);
+
+				// Assert.
+				expect(otherActionListener).not.toHaveBeenCalled();
+				expect(otherContextListener).not.toHaveBeenCalled();
+				expect(otherEventListener).not.toHaveBeenCalled();
+			});
+
+			/**
+			 * Asserts events that are not related to an action are not contextualized.
+			 */
+			it("does not contextualize non-action events", async () => {
+				// Arrange.
+				const spyOnEmit = vi.spyOn(connection, "emit");
+				connection.enableContextualizedActionEvents = true;
+
+				await connection.connect();
+				spyOnEmit.mockClear();
+
+				// Act.
+				server.send(applicationDidLaunch);
+
+				// Assert.
+				expect(spyOnEmit).toHaveBeenCalledTimes(1);
+				expect(spyOnEmit).toHaveBeenCalledWith("applicationDidLaunch", applicationDidLaunch);
 			});
 		});
 

@@ -1,7 +1,14 @@
 import { EventEmitter, withResolvers } from "@elgato/utils";
 import WebSocket from "ws";
 
-import type { PluginCommand, PluginEventMap, RegistrationInfo } from "../api/index.js";
+import type {
+	ActionIdentifier,
+	EventIdentifier,
+	PluginCommand,
+	PluginEvent,
+	PluginEventMap,
+	RegistrationInfo,
+} from "../api/index.js";
 import { RegistrationParameter } from "../api/index.js";
 import { Version } from "./common/version.js";
 import { logger } from "./logging/index.js";
@@ -9,7 +16,16 @@ import { logger } from "./logging/index.js";
 /**
  * Provides a connection between the plugin and the Stream Deck allowing for messages to be sent and received.
  */
-class Connection extends EventEmitter<ExtendedEventMap> {
+class Connection extends EventEmitter<ConnectionEventMap> {
+	/**
+	 * When true, events related to actions are emitted twice, once contextualized, and once un-contextualized.
+	 *
+	 * For example, when `willAppear` is received from Stream Deck:
+	 * - `false` fires `willAppear`
+	 * - `true` fires `willAppear:{action}:{context}` and then `willAppear`
+	 */
+	public enableContextualizedActionEvents = false;
+
 	/**
 	 * Private backing field for {@link Connection.registrationParameters}.
 	 */
@@ -163,6 +179,15 @@ class Connection extends EventEmitter<ExtendedEventMap> {
 	}
 
 	/**
+	 * Determines whether the {@link message} relates to an action, i.e. it identifies an action and its instance.
+	 * @param message Message received from Stream Deck.
+	 * @returns `true` when the message has an `action` and `context`; otherwise `false`.
+	 */
+	private isActionEvent(message: object): boolean {
+		return Object.hasOwn(message, "action") && Object.hasOwn(message, "context");
+	}
+
+	/**
 	 * Attempts to emit the {@link ev} that was received from the {@link Connection.connection}.
 	 * @param ev Event message data received from Stream Deck.
 	 */
@@ -171,7 +196,15 @@ class Connection extends EventEmitter<ExtendedEventMap> {
 			const message = JSON.parse(ev.data.toString());
 			if (message.event) {
 				this.logger.trace(ev.data.toString());
-				this.emit(message.event, message);
+
+				if (this.enableContextualizedActionEvents && this.isActionEvent(message)) {
+					this.emit(
+						`${message.event}:${message.action}:${message.context}` as keyof ContextualizedActionEventMap,
+						message,
+					);
+				}
+
+				this.emit(message.event as PluginEvent["event"], message);
 			} else {
 				this.logger.warn(`Received unknown message: ${ev.data}`);
 			}
@@ -207,13 +240,29 @@ type RegistrationParameters = {
 };
 
 /**
- * An extended event map that includes connection events.
+ * An extended event map that includes contextualized action events and connection events.
  */
-type ExtendedEventMap = PluginEventMap & {
-	/**
-	 * Occurs when a connection is established.
-	 */
-	connected: [info: RegistrationInfo];
+type ConnectionEventMap = ContextualizedActionEventMap &
+	PluginEventMap & {
+		/**
+		 * Occurs when a connection is established.
+		 */
+		connected: [info: RegistrationInfo];
+	};
+
+/**
+ * Map of action events, contextualized to an action and its instance, in the format `{event}:{action}:{context}`, for
+ * example `willAppear:com.elgato.counter.increment:ABC123`.
+ */
+type ContextualizedActionEventMap = {
+	[TEventName in ActionEvent["event"] as `${TEventName}:${string}:${string}`]: [
+		event: Extract<ActionEvent, EventIdentifier<TEventName>>,
+	];
 };
+
+/**
+ * Events received by the plugin, from Stream Deck, that relate to an action.
+ */
+type ActionEvent = Extract<PluginEvent, ActionIdentifier>;
 
 export const connection = new Connection();
