@@ -50,6 +50,7 @@
         "dev": "wireit",
         "lint": "eslint . --ext .ts --max-warnings 0",
         "test": "wireit",
+        "test:coverage": "wireit",
         "test:watch": "wireit",
         "prepack": "cp ../../LICENSE ."
     },
@@ -90,7 +91,19 @@
             }
         },
         "test": {
-            "command": "vitest run --typecheck",
+            "command": "vitest run",
+            "files": [
+                "src/**/__tests__/**",
+                "tests/**",
+                "tsconfig.json",
+                "vitest.config.ts"
+            ],
+            "dependencies": [
+                "build:schemas"
+            ]
+        },
+        "test:coverage": {
+            "command": "vitest run --coverage",
             "files": [
                 "src/**/__tests__/**",
                 "tests/**",

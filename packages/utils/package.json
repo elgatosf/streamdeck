@@ -49,9 +49,9 @@
         "dev": "tsc --project tsconfig.build.json --watch",
         "lint": "eslint --max-warnings 0",
         "preversion": "npm run build && npm test && npm run lint",
-        "test": "vitest run --typecheck",
+        "test": "vitest run",
         "test:coverage": "vitest run --coverage",
-        "test:watch": "vitest --typecheck",
+        "test:watch": "vitest",
         "type:check": "tsc",
         "prepack": "cp ../../LICENSE ."
     },

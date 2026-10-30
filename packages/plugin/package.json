@@ -35,7 +35,7 @@
         "build": "rm -rf ./dist && tsc -p tsconfig.build.json",
         "dev": "rm -rf ./dist && tsc -p tsconfig.build.json -w",
         "lint": "eslint --max-warnings 0",
-        "test": "vitest --run --reporter verbose",
+        "test": "vitest run",
         "test:coverage": "vitest run --coverage",
         "test:watch": "vitest",
         "prepack": "cp ../../README.md . && cp ../../LICENSE ."

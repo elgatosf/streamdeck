@@ -17,12 +17,15 @@
         },
         "lint": {},
         "test": {
-            "outputs": ["coverage/**"]
+            "dependsOn": ["^build"],
+            "outputs": []
         },
         "test:coverage": {
+            "dependsOn": ["^build"],
             "outputs": ["coverage/**"]
         },
         "test:watch": {
+            "dependsOn": ["^build"],
             "cache": false,
             "interactive": true,
             "persistent": true
