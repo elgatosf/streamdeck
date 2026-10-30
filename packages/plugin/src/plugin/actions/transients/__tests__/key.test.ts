@@ -1,6 +1,7 @@
 import type { JsonObject } from "@elgato/utils";
-import { beforeAll, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 
+import { keyDown, keyUp } from "../../../../api/__mocks__/events.js";
 import {
 	DeviceType,
 	type SetImage,
@@ -277,6 +278,93 @@ describe("KeyAction", () => {
 				context: action.id,
 				event: "showOk",
 			});
+		});
+	});
+
+	describe("events", () => {
+		// Source with the same identity as the mock events.
+		const eventSource: WillAppear<JsonObject> = { ...source, action: keyDown.action, context: keyDown.context };
+
+		// Dispose of the listeners registered by actions created during the test.
+		afterEach(() =>
+			connection.emit(`willDisappear:${eventSource.action}:${eventSource.context}`, {
+				...eventSource,
+				event: "willDisappear",
+			}),
+		);
+
+		/**
+		 * Asserts {@link KeyAction.onKeyDown} and {@link KeyAction.onKeyUp} are called, without arguments.
+		 */
+		it("calls onKeyDown and onKeyUp without arguments", () => {
+			// Arrange.
+			const onKeyDown = vi.fn();
+			const onKeyUp = vi.fn();
+
+			class TestAction extends KeyAction<JsonObject> {
+				/** @inheritdoc */
+				public override onKeyDown(...args: unknown[]): void {
+					onKeyDown(...args);
+				}
+
+				/** @inheritdoc */
+				public override onKeyUp(...args: unknown[]): void {
+					onKeyUp(...args);
+				}
+			}
+
+			new TestAction(eventSource);
+
+			// Act.
+			connection.emit(`keyDown:${keyDown.action}:${keyDown.context}`, keyDown);
+			connection.emit(`keyUp:${keyUp.action}:${keyUp.context}`, keyUp);
+
+			// Assert.
+			expect(onKeyDown).toHaveBeenCalledTimes(1);
+			expect(onKeyDown).toHaveBeenCalledWith();
+			expect(onKeyUp).toHaveBeenCalledTimes(1);
+			expect(onKeyUp).toHaveBeenCalledWith();
+		});
+
+		/**
+		 * Asserts event listeners are only added when the associated method is defined.
+		 */
+		it("does not listen for events without a method", () => {
+			// Arrange.
+			const spyOnOn = vi.spyOn(connection, "on");
+
+			// Act.
+			new KeyAction(eventSource);
+
+			// Assert.
+			expect(spyOnOn).not.toHaveBeenCalled();
+		});
+
+		/**
+		 * Asserts methods are no longer called once the action disappears.
+		 */
+		it("stops calling methods after willDisappear", () => {
+			// Arrange.
+			const onKeyDown = vi.fn();
+
+			class TestAction extends KeyAction<JsonObject> {
+				/** @inheritdoc */
+				public override onKeyDown(): void {
+					onKeyDown();
+				}
+			}
+
+			new TestAction(eventSource);
+			connection.emit(`willDisappear:${eventSource.action}:${eventSource.context}`, {
+				...eventSource,
+				event: "willDisappear",
+			});
+
+			// Act.
+			connection.emit(`keyDown:${keyDown.action}:${keyDown.context}`, keyDown);
+
+			// Assert.
+			expect(onKeyDown).not.toHaveBeenCalled();
 		});
 	});
 });

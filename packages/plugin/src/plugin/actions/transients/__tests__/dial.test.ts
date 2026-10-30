@@ -1,6 +1,7 @@
 import type { JsonObject } from "@elgato/utils";
-import { beforeAll, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 
+import { dialDown, dialRotate, dialUp, touchTap } from "../../../../api/__mocks__/events.js";
 import {
 	DeviceType,
 	type SetFeedback,
@@ -14,7 +15,7 @@ import { connection } from "../../../connection.js";
 import { Device } from "../../../devices/device.js";
 import { deviceStore } from "../../../devices/store.js";
 import { ActionBase } from "../action-base.js";
-import { DialAction } from "../dial.js";
+import { DialAction, type DialRotateArgs, type TouchTapArgs } from "../dial.js";
 
 vi.mock("../../../devices/store.js");
 vi.mock("../../../logging/index.js");
@@ -265,6 +266,120 @@ describe("DialAction", () => {
 				context: action.id,
 				event: "showAlert",
 			});
+		});
+	});
+
+	describe("events", () => {
+		// Source with the same identity as the mock events.
+		const eventSource: WillAppear<JsonObject> = { ...source, action: dialDown.action, context: dialDown.context };
+
+		// Dispose of the listeners registered by actions created during the test.
+		afterEach(() =>
+			connection.emit(`willDisappear:${eventSource.action}:${eventSource.context}`, {
+				...eventSource,
+				event: "willDisappear",
+			}),
+		);
+
+		/**
+		 * Asserts {@link DialAction.onDialDown} and {@link DialAction.onDialUp} are called, without arguments.
+		 */
+		it("calls onDialDown and onDialUp without arguments", () => {
+			// Arrange.
+			const onDialDown = vi.fn();
+			const onDialUp = vi.fn();
+
+			class TestAction extends DialAction<JsonObject> {
+				/** @inheritdoc */
+				public override onDialDown(...args: unknown[]): void {
+					onDialDown(...args);
+				}
+
+				/** @inheritdoc */
+				public override onDialUp(...args: unknown[]): void {
+					onDialUp(...args);
+				}
+			}
+
+			new TestAction(eventSource);
+
+			// Act.
+			connection.emit(`dialDown:${dialDown.action}:${dialDown.context}`, dialDown);
+			connection.emit(`dialUp:${dialUp.action}:${dialUp.context}`, dialUp);
+
+			// Assert.
+			expect(onDialDown).toHaveBeenCalledTimes(1);
+			expect(onDialDown).toHaveBeenCalledWith();
+			expect(onDialUp).toHaveBeenCalledTimes(1);
+			expect(onDialUp).toHaveBeenCalledWith();
+		});
+
+		/**
+		 * Asserts {@link DialAction.onDialRotate} is called with only the rotation information.
+		 */
+		it("calls onDialRotate with the rotation", () => {
+			// Arrange.
+			const onDialRotate = vi.fn();
+
+			class TestAction extends DialAction<JsonObject> {
+				/** @inheritdoc */
+				public override onDialRotate(args: DialRotateArgs): void {
+					onDialRotate(args);
+				}
+			}
+
+			new TestAction(eventSource);
+
+			// Act.
+			connection.emit(`dialRotate:${dialRotate.action}:${dialRotate.context}`, dialRotate);
+
+			// Assert.
+			expect(onDialRotate).toHaveBeenCalledTimes(1);
+			expect(onDialRotate).toHaveBeenCalledWith<[DialRotateArgs]>({
+				pressed: dialRotate.payload.pressed,
+				ticks: dialRotate.payload.ticks,
+			});
+		});
+
+		/**
+		 * Asserts {@link DialAction.onTouchTap} is called with only the tap information.
+		 */
+		it("calls onTouchTap with the tap", () => {
+			// Arrange.
+			const onTouchTap = vi.fn();
+
+			class TestAction extends DialAction<JsonObject> {
+				/** @inheritdoc */
+				public override onTouchTap(args: TouchTapArgs): void {
+					onTouchTap(args);
+				}
+			}
+
+			new TestAction(eventSource);
+
+			// Act.
+			connection.emit(`touchTap:${touchTap.action}:${touchTap.context}`, touchTap);
+
+			// Assert.
+			expect(onTouchTap).toHaveBeenCalledTimes(1);
+			expect(onTouchTap).toHaveBeenCalledWith<[TouchTapArgs]>({
+				hold: touchTap.payload.hold,
+				tapPos: touchTap.payload.tapPos,
+			});
+		});
+
+		/**
+		 * Asserts event listeners are only added when the associated method is defined.
+		 */
+		it("does not listen for events without a method", () => {
+			// Arrange.
+			const spyOnOn = vi.spyOn(connection, "on");
+
+			// Act.
+			new DialAction(eventSource);
+
+			// Assert.
+			expect(spyOnOn).not.toHaveBeenCalled();
 		});
 	});
 });

@@ -32,6 +32,18 @@ export class KeyAction<TSettings extends JsonObject> extends ActionBase<TSetting
 
 		this.#coordinates = !source.payload.isInMultiAction ? Object.freeze(source.payload.coordinates) : undefined;
 		this.#source = source;
+
+		if (this.onKeyDown) {
+			connection.on(`keyDown:${source.action}:${source.context}`, () => this.onKeyDown?.(), {
+				signal: this.signal,
+			});
+		}
+
+		if (this.onKeyUp) {
+			connection.on(`keyUp:${source.action}:${source.context}`, () => this.onKeyUp?.(), {
+				signal: this.signal,
+			});
+		}
 	}
 
 	/**
@@ -41,6 +53,16 @@ export class KeyAction<TSettings extends JsonObject> extends ActionBase<TSetting
 	public get coordinates(): Coordinates | undefined {
 		return this.#coordinates;
 	}
+
+	/**
+	 * Occurs when the user presses the key.
+	 */
+	public onKeyDown?(): Promise<void> | void;
+
+	/**
+	 * Occurs when the user releases the pressed key.
+	 */
+	public onKeyUp?(): Promise<void> | void;
 
 	/**
 	 * Determines whether the key is part of a multi-action.

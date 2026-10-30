@@ -1,9 +1,17 @@
 import type { JsonObject } from "@elgato/utils";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, test, vi } from "vitest";
 
-import type { Settings } from "../../../../api/__mocks__/events.js";
+import {
+	didReceivePropertyInspectorMessage,
+	didReceiveSettings,
+	propertyInspectorDidAppear,
+	propertyInspectorDidDisappear,
+	type Settings,
+	titleParametersDidChange,
+} from "../../../../api/__mocks__/events.js";
 import {
 	DeviceType,
+	type DidReceiveResources,
 	type DidReceiveSettings,
 	type GetSettings,
 	type SetSettings,
@@ -16,7 +24,13 @@ import { deviceStore } from "../../../devices/store.js";
 import { logger } from "../../../logging/index.js";
 import { actionConfig } from "../../config.js";
 import { actionStore } from "../../store.js";
-import { ActionBase } from "../action-base.js";
+import {
+	ActionBase,
+	type DidReceiveResourcesArgs,
+	type DidReceiveSettingsArgs,
+	type SendToPluginArgs,
+	type TitleParametersDidChangeArgs,
+} from "../action-base.js";
 import { DialAction } from "../dial.js";
 import { KeyAction } from "../key.js";
 import { NeoInfobarAction } from "../neo-infobar.js";
@@ -380,6 +394,254 @@ describe("Action", () => {
 					name: "Elgato",
 				},
 			});
+		});
+	});
+
+	describe("events", () => {
+		// Identity of the action the events are for.
+		const identity = { action: source.action, context: source.context };
+
+		/**
+		 * Asserts {@link ActionBase.onDidReceiveSettings} is called with only the settings, and only when the settings
+		 * were not requested.
+		 */
+		it("calls onDidReceiveSettings with the settings", () => {
+			// Arrange.
+			actionConfig.useLegacySettingsBehavior = false;
+			const onDidReceiveSettings = vi.fn();
+
+			class TestAction extends ActionBase<JsonObject> {
+				/** @inheritdoc */
+				public override onDidReceiveSettings(args: DidReceiveSettingsArgs<JsonObject>): void {
+					onDidReceiveSettings(args);
+				}
+			}
+
+			new TestAction(source);
+			const ev = { ...didReceiveSettings, ...identity };
+
+			// Act.
+			connection.emit(`didReceiveSettings:${source.action}:${source.context}`, { ...ev, id: "request" });
+			connection.emit(`didReceiveSettings:${source.action}:${source.context}`, ev);
+
+			// Assert.
+			expect(onDidReceiveSettings).toHaveBeenCalledTimes(1);
+			expect(onDidReceiveSettings).toHaveBeenCalledWith<[DidReceiveSettingsArgs<JsonObject>]>({
+				settings: ev.payload.settings,
+			});
+		});
+
+		/**
+		 * Asserts {@link ActionBase.onDidReceiveSettings} is also called for requested settings when using the legacy
+		 * settings behavior.
+		 */
+		it("calls onDidReceiveSettings for requested settings with legacy behavior", () => {
+			// Arrange.
+			actionConfig.useLegacySettingsBehavior = true;
+			const onDidReceiveSettings = vi.fn();
+
+			class TestAction extends ActionBase<JsonObject> {
+				/** @inheritdoc */
+				public override onDidReceiveSettings(args: DidReceiveSettingsArgs<JsonObject>): void {
+					onDidReceiveSettings(args);
+				}
+			}
+
+			new TestAction(source);
+
+			// Act.
+			connection.emit(`didReceiveSettings:${source.action}:${source.context}`, {
+				...didReceiveSettings,
+				...identity,
+				id: "request",
+			});
+
+			// Assert.
+			expect(onDidReceiveSettings).toHaveBeenCalledTimes(1);
+
+			// Cleanup.
+			actionConfig.useLegacySettingsBehavior = false;
+		});
+
+		/**
+		 * Asserts {@link ActionBase.onDidReceiveResources} is called with only the resources, and only when the
+		 * resources were not requested.
+		 */
+		it("calls onDidReceiveResources with the resources", () => {
+			// Arrange.
+			const onDidReceiveResources = vi.fn();
+
+			class TestAction extends ActionBase<JsonObject> {
+				/** @inheritdoc */
+				public override onDidReceiveResources(args: DidReceiveResourcesArgs): void {
+					onDidReceiveResources(args);
+				}
+			}
+
+			new TestAction(source);
+			const ev = {
+				...didReceiveSettings,
+				...identity,
+				event: "didReceiveResources",
+				payload: {
+					...didReceiveSettings.payload,
+					resources: { file: "c:\\file.txt" },
+				},
+			} satisfies DidReceiveResources<JsonObject>;
+
+			// Act.
+			connection.emit(`didReceiveResources:${source.action}:${source.context}`, { ...ev, id: "request" });
+			connection.emit(`didReceiveResources:${source.action}:${source.context}`, ev);
+
+			// Assert.
+			expect(onDidReceiveResources).toHaveBeenCalledTimes(1);
+			expect(onDidReceiveResources).toHaveBeenCalledWith<[DidReceiveResourcesArgs]>({
+				resources: { file: "c:\\file.txt" },
+			});
+		});
+
+		/**
+		 * Asserts the property inspector methods are called, without arguments.
+		 */
+		it("calls onPropertyInspectorDidAppear and onPropertyInspectorDidDisappear without arguments", () => {
+			// Arrange.
+			const onPropertyInspectorDidAppear = vi.fn();
+			const onPropertyInspectorDidDisappear = vi.fn();
+
+			class TestAction extends ActionBase<JsonObject> {
+				/** @inheritdoc */
+				public override onPropertyInspectorDidAppear(...args: unknown[]): void {
+					onPropertyInspectorDidAppear(...args);
+				}
+
+				/** @inheritdoc */
+				public override onPropertyInspectorDidDisappear(...args: unknown[]): void {
+					onPropertyInspectorDidDisappear(...args);
+				}
+			}
+
+			new TestAction(source);
+
+			// Act.
+			connection.emit(`propertyInspectorDidAppear:${source.action}:${source.context}`, {
+				...propertyInspectorDidAppear,
+				...identity,
+			});
+			connection.emit(`propertyInspectorDidDisappear:${source.action}:${source.context}`, {
+				...propertyInspectorDidDisappear,
+				...identity,
+			});
+
+			// Assert.
+			expect(onPropertyInspectorDidAppear).toHaveBeenCalledTimes(1);
+			expect(onPropertyInspectorDidAppear).toHaveBeenCalledWith();
+			expect(onPropertyInspectorDidDisappear).toHaveBeenCalledTimes(1);
+			expect(onPropertyInspectorDidDisappear).toHaveBeenCalledWith();
+		});
+
+		/**
+		 * Asserts {@link ActionBase.onSendToPlugin} is called with only the payload.
+		 */
+		it("calls onSendToPlugin with the payload", () => {
+			// Arrange.
+			const onSendToPlugin = vi.fn();
+
+			class TestAction extends ActionBase<JsonObject> {
+				/** @inheritdoc */
+				public override onSendToPlugin(args: SendToPluginArgs): void {
+					onSendToPlugin(args);
+				}
+			}
+
+			new TestAction(source);
+			const ev = { ...didReceivePropertyInspectorMessage, ...identity };
+
+			// Act.
+			connection.emit(`sendToPlugin:${source.action}:${source.context}`, ev);
+
+			// Assert.
+			expect(onSendToPlugin).toHaveBeenCalledTimes(1);
+			expect(onSendToPlugin).toHaveBeenCalledWith<[SendToPluginArgs]>({ payload: ev.payload });
+		});
+
+		/**
+		 * Asserts {@link ActionBase.onTitleParametersDidChange} is called with only the title and its parameters.
+		 */
+		it("calls onTitleParametersDidChange with the title and parameters", () => {
+			// Arrange.
+			const onTitleParametersDidChange = vi.fn();
+
+			class TestAction extends ActionBase<JsonObject> {
+				/** @inheritdoc */
+				public override onTitleParametersDidChange(args: TitleParametersDidChangeArgs): void {
+					onTitleParametersDidChange(args);
+				}
+			}
+
+			new TestAction(source);
+			const ev = { ...titleParametersDidChange, ...identity };
+
+			// Act.
+			connection.emit(`titleParametersDidChange:${source.action}:${source.context}`, ev);
+
+			// Assert.
+			expect(onTitleParametersDidChange).toHaveBeenCalledTimes(1);
+			expect(onTitleParametersDidChange).toHaveBeenCalledWith<[TitleParametersDidChangeArgs]>({
+				title: ev.payload.title,
+				titleParameters: ev.payload.titleParameters,
+			});
+		});
+
+		/**
+		 * Asserts {@link ActionBase.onWillDisappear} is called once, without arguments, and other methods are no
+		 * longer called afterwards.
+		 */
+		it("calls onWillDisappear once without arguments, and then stops calling methods", () => {
+			// Arrange.
+			const onWillDisappear = vi.fn();
+			const onSendToPlugin = vi.fn();
+
+			class TestAction extends ActionBase<JsonObject> {
+				/** @inheritdoc */
+				public override onSendToPlugin(): void {
+					onSendToPlugin();
+				}
+
+				/** @inheritdoc */
+				public override onWillDisappear(...args: unknown[]): void {
+					onWillDisappear(...args);
+				}
+			}
+
+			new TestAction(source);
+			const willDisappear = { ...source, event: "willDisappear" } satisfies WillDisappear<JsonObject>;
+
+			// Act.
+			connection.emit(`willDisappear:${source.action}:${source.context}`, willDisappear);
+			connection.emit(`willDisappear:${source.action}:${source.context}`, willDisappear);
+			connection.emit(`sendToPlugin:${source.action}:${source.context}`, {
+				...didReceivePropertyInspectorMessage,
+				...identity,
+			});
+
+			// Assert.
+			expect(onWillDisappear).toHaveBeenCalledTimes(1);
+			expect(onWillDisappear).toHaveBeenCalledWith();
+			expect(onSendToPlugin).not.toHaveBeenCalled();
+		});
+
+		/**
+		 * Asserts event listeners are only added when the associated method is defined.
+		 */
+		it("does not listen for events without a method", () => {
+			// Arrange.
+			const spyOnOn = vi.spyOn(connection, "on");
+
+			// Act.
+			new ActionBase(source);
+
+			// Assert.
+			expect(spyOnOn).not.toHaveBeenCalled();
 		});
 	});
 });

@@ -26,6 +26,34 @@ export class DialAction<TSettings extends JsonObject> extends ActionBase<TSettin
 		}
 
 		this.#coordinates = Object.freeze(source.payload.coordinates);
+
+		if (this.onDialDown) {
+			connection.on(`dialDown:${source.action}:${source.context}`, () => this.onDialDown?.(), {
+				signal: this.signal,
+			});
+		}
+
+		if (this.onDialRotate) {
+			connection.on(
+				`dialRotate:${source.action}:${source.context}`,
+				({ payload: { pressed, ticks } }) => this.onDialRotate?.({ pressed, ticks }),
+				{ signal: this.signal },
+			);
+		}
+
+		if (this.onDialUp) {
+			connection.on(`dialUp:${source.action}:${source.context}`, () => this.onDialUp?.(), {
+				signal: this.signal,
+			});
+		}
+
+		if (this.onTouchTap) {
+			connection.on(
+				`touchTap:${source.action}:${source.context}`,
+				(ev) => this.onTouchTap?.({ hold: ev.payload.hold, tapPos: ev.payload.tapPos }),
+				{ signal: this.signal },
+			);
+		}
 	}
 
 	/**
@@ -35,6 +63,28 @@ export class DialAction<TSettings extends JsonObject> extends ActionBase<TSettin
 	public get coordinates(): Readonly<Coordinates> {
 		return this.#coordinates;
 	}
+
+	/**
+	 * Occurs when the user presses the dial.
+	 */
+	public onDialDown?(): Promise<void> | void;
+
+	/**
+	 * Occurs when the user rotates the dial.
+	 * @param args Arguments that contain information about the rotation.
+	 */
+	public onDialRotate?(args: DialRotateArgs): Promise<void> | void;
+
+	/**
+	 * Occurs when the user releases the pressed dial.
+	 */
+	public onDialUp?(): Promise<void> | void;
+
+	/**
+	 * Occurs when the user taps the touchscreen.
+	 * @param args Arguments that contain information about the tap.
+	 */
+	public onTouchTap?(args: TouchTapArgs): Promise<void> | void;
 
 	/**
 	 * Sets the feedback for the current layout associated with this action instance, allowing for the visual items to be updated. Layouts are a powerful way to provide dynamic information
@@ -141,3 +191,33 @@ export class DialAction<TSettings extends JsonObject> extends ActionBase<TSettin
  * Options that define the trigger descriptions associated with an action.
  */
 export type TriggerDescriptionOptions = SetTriggerDescription["payload"];
+
+/**
+ * Arguments provided when the user rotates a dial.
+ */
+export interface DialRotateArgs {
+	/**
+	 * Determines whether the dial was pressed whilst the rotation occurred.
+	 */
+	readonly pressed: boolean;
+
+	/**
+	 * Number of ticks the dial was rotated; this can be a positive (clockwise) or negative (counter-clockwise) number.
+	 */
+	readonly ticks: number;
+}
+
+/**
+ * Arguments provided when the user taps the touchscreen.
+ */
+export interface TouchTapArgs {
+	/**
+	 * Determines whether the tap was considered "held".
+	 */
+	readonly hold: boolean;
+
+	/**
+	 * Coordinates of where the touchscreen tap occurred, relative to the canvas of the action.
+	 */
+	readonly tapPos: readonly [x: number, y: number];
+}
