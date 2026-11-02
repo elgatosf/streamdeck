@@ -1,9 +1,12 @@
 import { BarSubType, DeviceType, Target } from "@streamdeck/core";
+import type * as core from "@streamdeck/core";
 import { describe, expect, it, vi } from "vitest";
+import { expectTypeOf } from "vitest";
 
 import { SingletonAction } from "../actions/singleton-action.js";
 import { Version } from "../common/version.js";
 import { connection } from "../connection.js";
+import type * as sdk from "../index.js";
 import streamDeckAsDefaultExport, { streamDeck } from "../index.js";
 import { logger } from "../logging/index.js";
 import * as ManifestModule from "../manifest.js";
@@ -121,5 +124,24 @@ describe("index", () => {
 		expect(index.DeviceType).toBe(DeviceType);
 		expect(index.SingletonAction).toBe(SingletonAction);
 		expect(index.Target).toBe(Target);
+	});
+
+	/**
+	 * Asserts the re-exporting from core.
+	 */
+	it("re-exports the existing protocol types from core", () => {
+		expectTypeOf<sdk.Bar>().toEqualTypeOf<core.Bar>();
+		expectTypeOf<sdk.Controller>().toEqualTypeOf<core.Controller>();
+		expectTypeOf<sdk.Coordinates>().toEqualTypeOf<core.Coordinates>();
+		expectTypeOf<sdk.DeviceInfo>().toEqualTypeOf<core.DeviceInfo>();
+		expectTypeOf<sdk.FeedbackPayload>().toEqualTypeOf<core.FeedbackPayload>();
+		expectTypeOf<sdk.GBar>().toEqualTypeOf<core.GBar>();
+		expectTypeOf<sdk.Language>().toEqualTypeOf<core.Language>();
+		expectTypeOf<sdk.Manifest>().toEqualTypeOf<core.Manifest>();
+		expectTypeOf<sdk.Pixmap>().toEqualTypeOf<core.Pixmap>();
+		expectTypeOf<sdk.RegistrationInfo>().toEqualTypeOf<core.RegistrationInfo>();
+		expectTypeOf<sdk.Size>().toEqualTypeOf<core.Size>();
+		expectTypeOf<sdk.State>().toEqualTypeOf<core.State>();
+		expectTypeOf<sdk.Text>().toEqualTypeOf<core.Text>();
 	});
 });
