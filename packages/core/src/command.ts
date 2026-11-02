@@ -1,6 +1,7 @@
 import type { JsonObject, JsonValue } from "@elgato/utils";
 
-import type { DidReceiveGlobalSettings, DidReceiveSettings, State } from "./events/index.js";
+import type { DidReceiveSettings, State } from "./events/action.js";
+import type { DidReceiveGlobalSettings } from "./events/system.js";
 import type { FeedbackPayload } from "./layout.js";
 import type { Resources } from "./resources.js";
 import type { Target } from "./target.js";

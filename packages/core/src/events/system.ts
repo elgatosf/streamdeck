@@ -1,7 +1,7 @@
+import type { Manifest } from "@elgato/schemas/streamdeck/plugins";
 import type { JsonObject } from "@elgato/utils";
 
-import type { Manifest } from "../index.js";
-import type { EventIdentifier } from "./index.js";
+import type { EventIdentifier } from "./events.js";
 
 /**
  * Occurs when a monitored application is launched. Monitored applications can be defined in the `manifest.json` file via the {@link Manifest.ApplicationsToMonitor} property. See also

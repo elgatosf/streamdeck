@@ -3,7 +3,7 @@ import type { JsonObject } from "@elgato/utils";
 
 import type { Resources } from "../resources.js";
 import type { DeviceIdentifier } from "./device.js";
-import type { EventIdentifier } from "./index.js";
+import type { EventIdentifier } from "./events.js";
 
 /**
  * Occurs when the settings associated with an action instance are requested, or when the settings
