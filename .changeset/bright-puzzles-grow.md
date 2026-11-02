@@ -1,5 +1,5 @@
 ---
-"@streamdeck/core": patch
+"@streamdeck/core": minor
 ---
 
-Move the Stream Deck application API types and enums into `@streamdeck/core`.
+Move the Stream Deck app API types and enums into `@streamdeck/core`.
