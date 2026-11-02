@@ -1,0 +1,47 @@
+---
+sidebar_label: streamdeck unlink
+toc_max_heading_level: 4
+---
+
+# streamdeck unlink
+
+Unlinks the plugin from Stream Deck.
+
+## Synopsis
+
+```text
+streamdeck unlink [options] <uuid>
+
+Arguments
+  uuid         Plugin to unlink
+
+Options:
+  -d|--delete  Enable deletion of non-linked plugins
+```
+
+## Description
+
+Unlinks the linked (developer) plugin from Stream Deck, effectively uninstalling it. The plugin's original source directory remains unaffected.
+
+Available from version 1.5.0.
+
+## Examples
+
+Unlink a plugin with the UUID `com.elgato.hello-world`.
+
+```bash
+streamdeck unlink com.elgato.hello-world
+```
+
+## Configuration
+
+#### `-d|--delete`
+
+- Default: `false`
+- Type: Boolean
+
+Enables the removal of plugins that are not linked plugins, i.e. those installed regularly. When `true` and the plugin is not a linked plugin, the plugin is deleted.
+
+## See Also
+
+- [streamdeck link](./link.mdx)

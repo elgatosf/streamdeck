@@ -1,0 +1,32 @@
+---
+sidebar_label: streamdeck restart
+toc_max_heading_level: 4
+---
+
+# streamdeck restart
+
+Restarts the Stream Deck plugin.
+
+## Synopsis
+
+```text
+streamdeck restart <uuid>
+```
+
+## Description
+
+Instructs Stream Deck to restart (stop and then start) the Stream Deck plugin, identified by the plugin's UUID. If the plugin is not already running, Stream Deck will start it.
+
+Restarting the plugin will result in all resources associated with the plugin, including the manifest JSON file, being reloaded.
+
+## Examples
+
+Restart plugin with UUID `com.elgato.hello-world`.
+
+```bash
+streamdeck restart com.elgato.hello-world
+```
+
+## See Also
+
+- [streamdeck stop](./stop.mdx)

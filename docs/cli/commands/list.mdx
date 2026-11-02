@@ -1,0 +1,50 @@
+---
+sidebar_label: streamdeck list
+toc_max_heading_level: 4
+---
+
+# streamdeck list
+
+Displays a list of installed plugins.
+
+## Synopsis
+
+```text
+streamdeck list [options]
+
+Options:
+  -a|--all    Show all plugins (default: false)
+```
+
+## Description
+
+Displays a list of installed plugins, and their source paths.
+
+Available from version 1.5.0.
+
+## Examples
+
+### Linked Plugins
+
+```bash
+streamdeck list
+```
+
+```bash
+streamdeck -l
+```
+
+### All Plugins
+
+```bash
+streamdeck list --all
+```
+
+## Configuration
+
+#### `-a|--all`
+
+- Default: `false`
+- Type: Boolean
+
+When `true`, all installed plugins are shown.

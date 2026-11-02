@@ -1,0 +1,85 @@
+---
+sidebar_label: streamdeck config
+toc_max_heading_level: 4
+---
+
+# streamdeck config
+
+Manage the local CLI configuration files.
+
+## Synopsis
+
+```text
+streamdeck config set <key>=<value> [<key>=<value>...]
+streamdeck config unset <key> [<key>...]
+streamdeck config list
+streamdeck config reset
+```
+
+## Description
+
+The CLI gets its configuration settings from local configuration files. These configuration settings define the output of commands and how they're executed, and enable customization of interaction. The `streamdeck config` command can be used to update and manage these settings.
+
+## Examples
+
+Set the `packageManager` property to `yarn`:
+
+```bash
+streamdeck config set packageManager=yarn
+```
+
+Reduce motion within the CLI:
+
+```bash
+streamdeck config set reduceMotion=true
+```
+
+## Sub-commands
+
+### set
+
+```text
+streamdeck config set <key>=<value> [<key>=<value>...]
+```
+
+Sets each of the configuration keys to the value provided.
+
+### unset
+
+```text
+streamdeck config <key> [<key>...]
+```
+
+Sets each of the configuration keys to their default values.
+
+### reset
+
+```text
+streamdeck config reset
+```
+
+Resets all configuration keys to their default values.
+
+### list
+
+```text
+streamdeck config list
+```
+
+Lists the defined configuration, eg. values defined using [config set](#set).
+
+## Configuration options
+
+#### reduceMotion
+
+- Default: `false`
+- Type: Boolean
+
+Determines whether feedback provided should prefer reduced motion; when `true`, the busy indicator will be rendered as a static indicator.
+
+#### packageManager
+
+- Default: `npm`
+- Type: `bun`, `npm`, `pnpm`, `yarn`
+
+The package manager to use when creating a new project.

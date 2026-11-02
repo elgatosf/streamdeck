@@ -1,0 +1,41 @@
+---
+sidebar_label: streamdeck link
+toc_max_heading_level: 4
+---
+
+# streamdeck link
+
+Link (install) the plugin to Stream Deck.
+
+## Synopsis
+
+```text
+streamdeck link <path>
+```
+
+## Description
+
+Links the specified directory to Stream Deck, effectively installing the plugin, allowing it to be accessed from within Stream Deck. When the path is unspecified, the current working directory is used.
+
+<Warning title="Directory name">
+	The directory name must reflect the UUID of your plugin and be suffixed with `.sdPlugin`. For example, a plugin with
+	the UUID `com.elgato.hello-world` must be located in a directory named `com.elgato.hello-world.sdPlugin/`.
+</Warning>
+
+## Examples
+
+Link the current working directory:
+
+```bash
+streamdeck link
+```
+
+Link the directory, `com.elgato.hello-world.sdPlugin`:
+
+```bash
+streamdeck link com.elgato.hello-world.sdPlugin
+```
+
+## See Also
+
+- [streamdeck unlink](./unlink.mdx)

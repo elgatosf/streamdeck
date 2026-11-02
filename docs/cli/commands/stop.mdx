@@ -1,0 +1,32 @@
+---
+sidebar_label: streamdeck stop
+toc_max_heading_level: 4
+---
+
+# streamdeck stop
+
+Stops the Stream Deck plugin.
+
+## Synopsis
+
+```text
+streamdeck stop <uuid>
+
+alias: s
+```
+
+## Description
+
+Instructs Stream Deck to stop the plugin, as identified by the plugin's UUID. When stopped, the plugin and all of its resources are unloaded from Stream Deck allowing the plugin to be changed.
+
+## Examples
+
+Stop the plugin with UUID `com.elgato.hello-world`:
+
+```bash
+streamdeck stop com.elgato.hello-world
+```
+
+## See Also
+
+- [streamdeck restart](./restart.mdx)
