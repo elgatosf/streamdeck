@@ -1,7 +1,7 @@
 {
     "name": "@streamdeck/core",
     "version": "0.0.0",
-    "description": "Stream Deck application API protocol types and enums.",
+    "description": "Types and enums used to create Stream Deck plugins.",
     "keywords": [
         "elgato"
     ],
