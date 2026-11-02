@@ -374,6 +374,31 @@ importers:
         specifier: ^0.14.13
         version: 0.14.13
 
+  packages/core:
+    dependencies:
+      '@elgato/schemas':
+        specifier: workspace:*
+        version: link:../schemas
+      '@elgato/utils':
+        specifier: workspace:*
+        version: link:../utils
+    devDependencies:
+      '@elgato/eslint-config':
+        specifier: ^0.3.2
+        version: 0.3.2(@eslint/js@9.39.4)(eslint-plugin-jsdoc@54.7.0(eslint@9.39.4))(eslint@9.39.4)(typescript-eslint@8.54.0(eslint@9.39.4)(typescript@5.9.3))(typescript@5.9.3)
+      '@elgato/tsconfig':
+        specifier: workspace:^
+        version: link:../../config/tsconfig
+      '@types/node':
+        specifier: ^22.15.19
+        version: 22.20.1
+      eslint:
+        specifier: ^9.39.4
+        version: 9.39.4
+      typescript:
+        specifier: ^5.8.3
+        version: 5.9.3
+
   packages/markdown:
     dependencies:
       remark:
@@ -419,12 +444,12 @@ importers:
 
   packages/plugin:
     dependencies:
-      '@elgato/schemas':
-        specifier: workspace:*
-        version: link:../schemas
       '@elgato/utils':
         specifier: workspace:*
         version: link:../utils
+      '@streamdeck/core':
+        specifier: workspace:*
+        version: link:../core
       ws:
         specifier: ^8.19.0
         version: 8.19.0

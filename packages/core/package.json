@@ -1,0 +1,49 @@
+{
+    "name": "@streamdeck/core",
+    "version": "0.0.0",
+    "description": "Stream Deck application API protocol types and enums.",
+    "keywords": [
+        "elgato"
+    ],
+    "homepage": "https://github.com/elgatosf/streamdeck/tree/main/packages/core#readme",
+    "bugs": {
+        "url": "https://github.com/elgatosf/streamdeck/issues"
+    },
+    "license": "MIT",
+    "author": {
+        "name": "Elgato",
+        "url": "https://www.elgato.com"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/elgatosf/streamdeck.git"
+    },
+    "files": [
+        "./dist/**/*.{d.ts,js}"
+    ],
+    "type": "module",
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "default": "./dist/index.js"
+        }
+    },
+    "scripts": {
+        "build": "tsc --project tsconfig.build.json",
+        "dev": "tsc --project tsconfig.build.json --watch",
+        "lint": "eslint --max-warnings 0",
+        "type:check": "tsc",
+        "prepack": "cp ../../LICENSE ."
+    },
+    "dependencies": {
+        "@elgato/schemas": "workspace:*",
+        "@elgato/utils": "workspace:*"
+    },
+    "devDependencies": {
+        "@elgato/eslint-config": "^0.3.2",
+        "@elgato/tsconfig": "workspace:^",
+        "@types/node": "^22.15.19",
+        "eslint": "^9.39.4",
+        "typescript": "^5.8.3"
+    }
+}

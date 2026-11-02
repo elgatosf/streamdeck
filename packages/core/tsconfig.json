@@ -1,0 +1,6 @@
+{
+    "extends": "@elgato/tsconfig/node20/monorepo/lib",
+    "compilerOptions": {
+        "noEmit": true
+    }
+}
