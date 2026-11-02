@@ -34,6 +34,11 @@ describe("connection", () => {
 
 		({ connection } = await import("../connection.js"));
 		process.argv = [...port, ...pluginUUID, ...registerEvent, ...info];
+
+		// @ts-expect-error: prevent process.exit() from exiting
+		vi.spyOn(process, "exit").mockImplementation(() => {
+			/* no-op */
+		});
 	});
 
 	// Reset modules to purge the state.
