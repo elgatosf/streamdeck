@@ -19,43 +19,43 @@ Generates Markdown documentation for a TypeScript type and the types it referenc
 ```ts
 import { writeFileSync } from "node:fs";
 
-import { generateMarkdown } from "@elgato/markdown";
+import { createDocumentationSource } from "@elgato/markdown";
 
-const markdown = generateMarkdown({
-    src: "src/manifest.ts",
-    typeName: "Manifest",
-    format: "flat",
+const source = createDocumentationSource({
+    src: "src/index.ts",
     tsconfigFile: "tsconfig.json",
 });
 
+const markdown = await source.generate({ typeName: "Manifest", format: "flat" });
 writeFileSync("manifest.md", markdown);
 ```
 
-| Option         | Description                                                                                        |
-| -------------- | -------------------------------------------------------------------------------------------------- |
-| `src`          | Required path to the TypeScript file declaring the type.                                           |
-| `typeName`     | Required name of the type to document.                                                             |
-| `format`       | Required output format: `flat` for property headings, or `table` for property tables.              |
-| `tsconfigFile` | Optional path to the tsconfig used to resolve types. If omitted, strict compiler options are used. |
-| `tags`         | Optional iterable of JSDoc tag names to include, without the `@` prefix.                           |
-
-Paths are resolved relative to the current working directory. `generateMarkdown` returns the Markdown without writing a file. It throws if a file cannot be read, the type is not found, or the format is unsupported. The type can be declared in `src`, or re-exported by it, e.g. from an `index.ts`.
-
-To document multiple types, or formats, from the same file, use `createDocumentationSource`; the file is loaded once, and each type is discovered once.
+`createDocumentationSource` accepts the `src`, `tsconfigFile`, and `tags` options. `src` is the required path to a TypeScript file declaring or re-exporting the types; paths are resolved relative to the current working directory. The optional `tsconfigFile` selects compiler settings used to resolve referenced types, and `tags` selects the JSDoc tags to include (without the `@` prefix). When no tsconfig is supplied, strict compiler options are used.
 
 ```ts
-import { createDocumentationSource } from "@elgato/markdown";
-
-const source = createDocumentationSource({ src: "src/index.ts", tsconfigFile: "tsconfig.json" });
-
-const manifest = source.generate("Manifest", "flat");
-const manifestTable = source.generate("Manifest", "table");
-const layout = source.generate("Layout", "flat");
+const manifest = await source.generate({ typeName: "Manifest", format: "flat" });
+const manifestTable = await source.generate({ typeName: "Manifest", format: "table" });
+const layout = await source.generate({ typeName: "Layout", format: "flat", headingOffset: 1 });
 ```
 
-`createDocumentationSource` accepts the `src`, `tsconfigFile`, and `tags` options, and throws if a file cannot be read; `generate` throws if the type is not found, or the format is unsupported.
+`generate` accepts the required `typeName` and `format` options, plus optional `overview` and `headingOffset`. The format is `flat` for property headings or `table` for property tables. Each type is discovered once per source, so different formats can reuse the same model. Creating a source throws if a file cannot be read; `generate` returns a promise that rejects if the type is missing, the format is unsupported, a code block cannot be formatted, or the heading offset is invalid or pushes a heading beyond level 6.
 
-Every heading has a unique anchor, `{type}` or `{type}.{property}`. Only the `@default`, `@defaultValue`, `@deprecated`, `@remarks`, `@see`, and `@since` tags are included by default; use the `tags` option to change them.
+The root type, and each referenced object type, is rendered with an overview of its definition. Overviews are `collapsed` by default, referencing other types by name, e.g. `Actions: Action[];`. When `expanded`, referenced object types, including those within arrays, tuples, and unions, are inlined as nested structures, and generic types are instantiated with their type arguments; enums, unions of literals, and recursive references are still referenced by name.
+
+```ts
+const manifest = await source.generate({ typeName: "Manifest", format: "flat", overview: "expanded" });
+const layout = await source.generate({ typeName: "Layout", format: "table", overview: "expanded" });
+```
+
+Generated TypeScript code blocks are formatted with oxfmt using the shared Markdown formatting configuration. Property and enum member snippets are formatted in their respective TypeScript contexts.
+
+The flat format uses three heading levels, and the table format two, so the maximum `headingOffset` is `3` and `4` respectively.
+
+Headings have explicit, unique lowercase IDs, e.g. ``# `Manifest` {#manifest}`` and ``### `Actions` {#manifest-actions}``. Names are separated by hyphens and duplicate IDs receive numeric suffixes. Table rows use HTML anchors with the same ID format.
+
+The `{#id}` heading syntax requires a renderer that supports explicit heading IDs, such as Docusaurus for Markdown or Astro with a heading-ID remark plugin. It is not supported by all Markdown renderers, and MDX requires additional compatibility configuration.
+
+Only the `@default`, `@defaultValue`, `@deprecated`, `@remarks`, `@see`, and `@since` tags are included by default; use the `tags` option to change them.
 
 Internally, discovery produces a model that is independent of ts-morph, and each generator renders that model. New formats can be added by implementing a generator, adding the format to `DocumentationFormat`, and registering it with the generators in `generate-markdown.ts`.
 
