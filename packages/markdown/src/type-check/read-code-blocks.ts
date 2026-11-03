@@ -17,10 +17,12 @@ import type { Position } from "unist";
 export async function readCodeBlocks(file: string): Promise<CodeBlock[]> {
 	const path = resolve(file);
 
-	// Normalize line endings so code is consistent regardless of how the file was saved, or checked out.
-	const markdown = (await readFile(path, { encoding: "utf8" })).replaceAll("\r\n", "\n");
+	// Normalize line endings so code is consistent regardless of how the file was saved, or checked out; MDX files have
+	// custom heading identifiers escaped so positions within the tree match the markdown.
+	const isMdx = extname(path).toLowerCase() === ".mdx";
+	const markdown = normalize(await readFile(path, { encoding: "utf8" }), isMdx);
 	const lines = markdown.split("\n");
-	const tree = parse(path, markdown);
+	const tree = parse(path, markdown, isMdx);
 	const entries: CodeBlock[] = [];
 
 	const visit = (node: Nodes): void => {
@@ -43,19 +45,20 @@ export async function readCodeBlocks(file: string): Promise<CodeBlock[]> {
 }
 
 /**
- * Parses the markdown; files with an `.mdx` extension are parsed as MDX.
- * @param path Path to the markdown file.
+ * Parses the markdown.
+ * @param path Path to the markdown file, used for error reporting.
  * @param markdown Markdown to parse.
+ * @param isMdx Whether the markdown should be parsed as MDX.
  * @returns The syntax tree.
  * @throws When an MDX file cannot be parsed.
  */
-function parse(path: string, markdown: string): Root {
-	if (extname(path).toLowerCase() !== ".mdx") {
+function parse(path: string, markdown: string, isMdx: boolean): Root {
+	if (!isMdx) {
 		return unified().use(remarkParse).parse(markdown);
 	}
 
 	try {
-		return unified().use(remarkParse).use(remarkMdx).parse(escapeHeadingIds(markdown));
+		return unified().use(remarkParse).use(remarkMdx).parse(markdown);
 	} catch (error) {
 		throw new Error(`Failed to parse MDX file: ${path}: ${error instanceof Error ? error.message : String(error)}`, {
 			cause: error,
@@ -64,12 +67,18 @@ function parse(path: string, markdown: string): Root {
 }
 
 /**
- * Escapes custom heading identifiers, e.g. `## Title {#custom-id}`, so they are not parsed as MDX expressions; this
- * mirrors Docusaurus, which escapes them before parsing MDX.
- * @param markdown Markdown to escape.
- * @returns The markdown with custom heading identifiers escaped.
+ * Normalizes the markdown: line endings become `\n`, and within MDX, custom heading identifiers, e.g.
+ * `## Title {#custom-id}`, are escaped so they are not parsed as MDX expressions, mirroring Docusaurus.
+ * @param markdown Markdown to normalize.
+ * @param isMdx Whether the markdown is MDX.
+ * @returns The normalized markdown.
  */
-function escapeHeadingIds(markdown: string): string {
+function normalize(markdown: string, isMdx: boolean): string {
+	markdown = markdown.replaceAll("\r\n", "\n");
+	if (!isMdx) {
+		return markdown;
+	}
+
 	// Matches a heading line containing `{#`, e.g. `## Title {#custom-id}`, so the brace can be escaped.
 	return markdown.replaceAll(/^#{1,6}(?!#).*\{#/gm, (heading) => heading.replace("{#", "\\{#"));
 }

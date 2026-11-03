@@ -94,7 +94,7 @@ Metadata associated with your plugin's actions are stored within your plugin's m
 	"Icon": "static/imgs/plugin/marketplace",
 	"SDKVersion": 2,
 	"Software": {
-		"MinimumVersion": "6.6"
+		"MinimumVersion": "7.1"
 	},
 	"OS": [
 		{
@@ -268,9 +268,11 @@ export class IncrementCounter extends SingletonAction {
 	 */
 	override onKeyDown(ev: KeyDownEvent) {
 		// Iterate over visible actions with the UUID "com.elgato.hello-world.increment".
-		// [!code highlight:4]
+		// [!code highlight:6]
 		this.actions.forEach((action) => {
-			ev.action.setTitle("Hello world!");
+			if (action.isKey() || action.isDial()) {
+				action.setTitle("Hello world!");
+			}
 		});
 	}
 }

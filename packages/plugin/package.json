@@ -68,7 +68,8 @@
         "tsx": "^4.23.15",
         "typescript": "^5.9.3",
         "vitest": "^3.2.4",
-        "vitest-websocket-mock": "^0.5.0"
+        "vitest-websocket-mock": "^0.5.0",
+        "zod": "^3.25.76"
     },
     "engines": {
         "node": ">=20.5.1"
