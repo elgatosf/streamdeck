@@ -17,7 +17,13 @@ publish-plan.json
 /config/*/LICENSE
 /packages/*/LICENSE
 /packages/plugin/README.md
+
+# @elgato/streamdeck
 /packages/plugin/docs/
+/docs/sdk/**/_*.g.mdx
+!/docs/sdk/references/websocket/_registration-ui-connect.g.mdx
+!/docs/sdk/references/websocket/_ui-commands.g.mdx
+!/docs/sdk/references/websocket/_ui-events.g.mdx
 
 # @elgato/cli
 /packages/cli/docs/

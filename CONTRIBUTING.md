@@ -137,7 +137,15 @@ This project uses ESLint and Oxfmt to maintain consistent code style.
 
 ## Documentation
 
-The SDK documentation lives in `docs/sdk`, and the CLI documentation in `docs/cli`; both are published with their packages. TypeScript code blocks in the SDK documentation are type checked against the SDK:
+The SDK documentation lives in `docs/sdk`, and the CLI documentation in `docs/cli`; both are published with their packages.
+
+Partials prefixed with an underscore and suffixed `.g.mdx`, such as the manifest and WebSocket references, are generated from the SDK's type declarations after building:
+
+```
+pnpm --filter @elgato/streamdeck run docs:generate
+```
+
+TypeScript code blocks in the SDK documentation are type checked against the SDK:
 
 ```
 pnpm --filter @elgato/streamdeck run docs:check
