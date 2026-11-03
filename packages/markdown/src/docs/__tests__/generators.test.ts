@@ -1,7 +1,9 @@
 import remarkParse from "remark-parse";
+import { Project } from "ts-morph";
 import { unified } from "unified";
 import { beforeAll, describe, expect, test, vi } from "vitest";
 
+import { discoverTypes } from "../discovery/discover-types.js";
 import type { DocsGenerator } from "../generators/generator.js";
 import { referenceGenerator } from "../generators/reference.js";
 import { tableGenerator } from "../generators/table.js";
@@ -27,6 +29,7 @@ function createModel(): DocumentationModel {
 		readonly: false,
 		description: { text: `The ${name} | with a pipe,\nand a new line.`, tags: [] },
 		references,
+		properties: [],
 	});
 
 	const os: TypeDocumentation = {
@@ -88,6 +91,24 @@ function getIds(markdown: string): string[] {
 	const headings = [...markdown.matchAll(/^#{1,6} .+ \{#([^}\s]+)\}$/gm)].map(([, id]) => id!);
 	const rows = [...markdown.matchAll(/<a id="([^"]+)"><\/a>/g)].map(([, id]) => id!);
 	return [...headings, ...rows];
+}
+
+/**
+ * Discovers a type whose `font` property has an inline object type with a documented property.
+ * @returns Documentation model.
+ */
+function discoverInlineFont(): DocumentationModel {
+	const project = new Project({ useInMemoryFileSystem: true, compilerOptions: { strict: true } });
+	const source = project.createSourceFile(
+		"/root.ts",
+		`export interface Root {
+			font?: {
+				/** Font size in pixels. */
+				size?: number;
+			};
+		}`,
+	);
+	return discoverTypes(source.getInterfaceOrThrow("Root"));
 }
 
 describe.each<[string, DocsGenerator]>([
@@ -275,6 +296,18 @@ describe("flat generator", () => {
 	});
 
 	/**
+	 * Asserts properties of inline object types are documented by their path, and each links to its parent.
+	 */
+	test("inline object properties are documented by their path, linking to their parent", async () => {
+		const output = await referenceGenerator.generate(discoverInlineFont());
+
+		expect(output).toContain(
+			"### `font.size` {#root-font-size}\n\n```typescript\nsize?: number;\n```\n\n**Optional.**\n\n**Property of:** [`font`](#root-font).\n\nFont size in pixels.",
+		);
+		expect(output).not.toContain("type Property");
+	});
+
+	/**
 	 * Asserts enums are rendered with their definition, and a heading for each member.
 	 */
 	test("enum definitions and members are rendered", () => {
@@ -341,6 +374,40 @@ describe("table generator", () => {
 				'| <a id="root-os"></a>`os` | `OS`<br>See [OS](#os) | No | The os \\| with a pipe, and a new line. |\n' +
 				'| <a id="root-path"></a>`path` | `Path \\| Path[]`<br>See [Path](#path) | Yes | The path \\| with a pipe, and a new line. |',
 		);
+	});
+
+	/**
+	 * Asserts properties of inline object types are rendered as rows, identified by their path.
+	 */
+	test("inline object properties are rendered as rows by their path", async () => {
+		const output = await tableGenerator.generate(discoverInlineFont());
+
+		expect(output).toMatch(/\| <a id="root-font-size"><\/a>`font\.size` \| `number` \| No \| Font size in pixels\. \|/);
+	});
+
+	/**
+	 * Asserts code blocks within descriptions keep their line breaks, as encoded newlines, within a table cell.
+	 */
+	test("multiline code examples retain their line boundaries in descriptions", async () => {
+		const project = new Project({ useInMemoryFileSystem: true, compilerOptions: { strict: true } });
+		const source = project.createSourceFile(
+			"/root.ts",
+			`export interface Root {
+				/**
+				 * Example:
+				 *
+				 * \`\`\`ts
+				 * // Keep the following statement separate.
+				 * const first = 1;
+				 * const second = 2;
+				 * \`\`\`
+				 */
+				example: string;
+			}`,
+		);
+		const output = await tableGenerator.generate(discoverTypes(source.getInterfaceOrThrow("Root")));
+
+		expect(output).toContain("// Keep the following statement separate.&#10;const first = 1;&#10;const second = 2;");
 	});
 
 	/**

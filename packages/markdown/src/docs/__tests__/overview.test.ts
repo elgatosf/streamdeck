@@ -118,6 +118,61 @@ describe("formatOverview", () => {
 	});
 
 	/**
+	 * Asserts single boolean literals are not widened to `boolean`, and optional tuple unions remain valid TypeScript.
+	 */
+	test("expanded preserves boolean literals and optional tuple unions", () => {
+		const model = discover(`
+			type Child = { name: string };
+			export interface Root {
+				enabled: true | Child;
+				disabled: false | Child;
+				pair: [("a" | "b")?, (Child | null)?];
+			}
+		`);
+
+		expect(formatOverview(model.root, "expanded")).toContain(
+			[
+				"    enabled: true | {",
+				"        name: string;",
+				"    };",
+				"    disabled: false | {",
+				"        name: string;",
+				"    };",
+				'    pair: [("a" | "b")?, (null | {',
+				"        name: string;",
+				"    })?];",
+			].join("\n"),
+		);
+		const generated = new Project({ useInMemoryFileSystem: true }).createSourceFile(
+			"/generated.ts",
+			formatOverview(model.root, "expanded"),
+		);
+		expect(generated.getPreEmitDiagnostics().map((diagnostic) => diagnostic.getCode())).not.toContain(17019);
+		const collapsed = new Project({ useInMemoryFileSystem: true }).createSourceFile(
+			"/collapsed.ts",
+			model.root.definition,
+		);
+		expect(collapsed.getPreEmitDiagnostics().map((diagnostic) => diagnostic.getCode())).not.toContain(17019);
+	});
+
+	/**
+	 * Asserts variadic tuple elements, e.g. `...T`, are not rendered as rest elements, e.g. `...T[]`.
+	 */
+	test("expanded preserves generic variadic tuple elements", () => {
+		const model = discover(`
+			type Child = { name: string };
+			export interface Root<T extends unknown[]> {
+				pair: [Child, ...T];
+				values: [Child, ...number[]];
+			}
+		`);
+
+		const expanded = formatOverview(model.root, "expanded");
+		expect(expanded).toContain("pair: [{\n        name: string;\n    }, ...T];");
+		expect(expanded).toContain("values: [{\n        name: string;\n    }, ...number[]];");
+	});
+
+	/**
 	 * Asserts interfaces are expanded without a trailing semicolon.
 	 */
 	test("expanded interfaces", () => {

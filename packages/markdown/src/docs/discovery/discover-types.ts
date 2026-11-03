@@ -128,10 +128,7 @@ export function loadSourceFile(filePath: string, tsConfigFilePath?: string): Sou
 		strict: true,
 	};
 
-	const project =
-		tsConfigFilePath === undefined
-			? new Project({ compilerOptions })
-			: new Project({ tsConfigFilePath, skipAddingFilesFromTsConfig: true });
+	const project = tsConfigFilePath === undefined ? new Project({ compilerOptions }) : new Project({ tsConfigFilePath });
 
 	return project.addSourceFileAtPath(filePath);
 }
@@ -184,6 +181,11 @@ export function discoverTypes(root: DocumentableDeclaration, options: DiscoveryO
 			}
 		});
 	};
+	const linkProperty = (property: DiscoveredProperty): PropertyDocumentation => {
+		const references: TypeDocumentation[] = [];
+		resolve(property.references, references);
+		return { ...property, references, properties: property.properties.map(linkProperty) };
+	};
 
 	for (const [declaration, type] of discovered) {
 		const references: TypeDocumentation[] = [];
@@ -197,11 +199,7 @@ export function discoverTypes(root: DocumentableDeclaration, options: DiscoveryO
 			definition: type.definition,
 			expandedDefinition: getExpandedDefinition(declaration) ?? type.definition,
 			members: type.members,
-			properties: type.properties.map((property): PropertyDocumentation => {
-				const propertyReferences: TypeDocumentation[] = [];
-				resolve(property.references, propertyReferences);
-				return { ...property, references: propertyReferences };
-			}),
+			properties: type.properties.map(linkProperty),
 			references,
 		});
 	}
@@ -274,10 +272,19 @@ function discoverType(declaration: DocumentableDeclaration, tags: ReadonlySet<st
 		definition: getObjectDefinition(declaration, properties),
 		properties,
 		members: [],
-		references: unique([...properties.flatMap((property) => property.references), ...typeParameterReferences]).filter(
+		references: unique([...properties.flatMap(getPropertyReferences), ...typeParameterReferences]).filter(
 			(reference) => reference !== declaration,
 		),
 	};
+}
+
+/**
+ * Collects references from a property and its inline object properties.
+ * @param property Property.
+ * @returns References in declaration order.
+ */
+function getPropertyReferences(property: DiscoveredProperty): DocumentableDeclaration[] {
+	return [...property.references, ...property.properties.flatMap(getPropertyReferences)];
 }
 
 /**

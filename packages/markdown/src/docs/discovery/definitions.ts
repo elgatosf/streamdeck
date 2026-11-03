@@ -2,7 +2,7 @@ import { Node, ts, type InterfaceDeclaration, type Type, type TypeAliasDeclarati
 
 import { formatPropertySignature } from "../format.js";
 import type { DocumentableDeclaration } from "./declaration.js";
-import { formatType, isObjectLike, resolvePropertyType } from "./properties.js";
+import { formatType, formatUnion, isObjectLike, resolvePropertyType } from "./properties.js";
 
 /**
  * Indentation of each level of nesting.
@@ -71,7 +71,7 @@ function expandObject(
 	const inner = indent + INDENT;
 	const lines = properties.map((symbol) => {
 		const property = resolvePropertyType(symbol, root);
-		const expanded = expandType(property.type, property.text, root, inner, ancestors);
+		const expanded = expandType(property.type, property.text, root, inner, ancestors, property.optional);
 		return inner + formatPropertySignature({ ...property, name: symbol.getName(), type: expanded });
 	});
 
@@ -86,6 +86,7 @@ function expandObject(
  * @param root Declaration types are resolved relative to.
  * @param indent Indentation of the line the type starts on.
  * @param ancestors Keys of the types being expanded.
+ * @param excludeUndefined Whether to omit undefined from an optional property union.
  * @returns TypeScript type.
  */
 function expandType(
@@ -94,6 +95,7 @@ function expandType(
 	root: DocumentableDeclaration,
 	indent: string,
 	ancestors: ReadonlySet<unknown>,
+	excludeUndefined = false,
 ): string {
 	if (!containsExpandable(type, ancestors, new Set())) {
 		return text;
@@ -113,21 +115,9 @@ function expandType(
 			: expand(inner);
 
 	if (type.isUnion()) {
-		const members: string[] = [];
-		let boolean = false;
-		for (const member of type.getUnionTypes()) {
-			// The checker can expose `boolean` as `true | false`; emit it once when reconstructing the union.
-			if (member.isBooleanLiteral()) {
-				if (!boolean) {
-					members.push("boolean");
-					boolean = true;
-				}
-			} else {
-				members.push(expand(member));
-			}
-		}
-
-		return members.join(" | ");
+		// Optional properties imply `undefined`, which is omitted as it is represented by the `?` modifier.
+		const members = type.getUnionTypes().filter((member) => !excludeUndefined || !member.isUndefined());
+		return formatUnion(members, expand);
 	}
 
 	if (type.isArray() || type.isReadonlyArray()) {
@@ -140,11 +130,22 @@ function expandType(
 		const target = (type.compilerType as unknown as ts.TupleTypeReference).target;
 		const elements = type.getTupleElements().map((inner, i) => {
 			const flags = target.elementFlags[i] ?? ts.ElementFlags.Required;
-			if (flags & ts.ElementFlags.Variable) {
+			if (flags & ts.ElementFlags.Variadic) {
+				return `...${expand(inner)}`;
+			}
+
+			if (flags & ts.ElementFlags.Rest) {
 				return `...${element(inner)}[]`;
 			}
 
-			return flags & ts.ElementFlags.Optional ? `${element(inner.getNonNullableType())}?` : expand(inner);
+			if (flags & ts.ElementFlags.Optional) {
+				// Optional elements imply `undefined`; unions are parenthesized, as `A | B?` is invalid.
+				const types = inner.isUnion() ? inner.getUnionTypes().filter((member) => !member.isUndefined()) : [inner];
+				const text = formatUnion(types, expand);
+				return `${types.length > 1 ? `(${text})` : text}?`;
+			}
+
+			return expand(inner);
 		});
 
 		return `${target.readonly ? "readonly " : ""}[${elements.join(", ")}]`;

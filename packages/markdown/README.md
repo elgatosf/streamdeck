@@ -49,6 +49,9 @@ const layout = await source.generate({ typeName: "Layout", format: "table", over
 
 Generated TypeScript code blocks are formatted with oxfmt using the shared Markdown formatting configuration. Property and enum member snippets are formatted in their respective TypeScript contexts.
 
+<!-- Dotted paths keep inline members identifiable without turning anonymous object types into separate chapters. -->
+Properties of inline object types, e.g. `font: { size: number }`, are documented alongside the type's own properties using their path, e.g. `font.size`; inline objects within arrays, tuples, and unions are included. In the flat format, each nested property links to the property it belongs to.
+
 The flat format uses three heading levels, and the table format two, so the maximum `headingOffset` is `3` and `4` respectively.
 
 Headings have explicit, unique lowercase IDs, e.g. ``# `Manifest` {#manifest}`` and ``### `Actions` {#manifest-actions}``. Names are separated by hyphens and duplicate IDs receive numeric suffixes. Table rows use HTML anchors with the same ID format.
@@ -92,6 +95,7 @@ writeFileSync("README.md", markdown);
 | `data`   | Required content of each section, keyed by the section's identifier, as a `Map` or object. |
 
 `format` returns the Markdown without writing a file. Markers are kept, and content is separated from them by blank lines, so a file can be formatted repeatedly. Sections without data are left unchanged, and multiple sections can share an identifier. Only top-level markers are recognized, so markers within code blocks, lists, block quotes, or paragraphs are ignored. It throws if the file cannot be read, a marker is unmatched, sections are nested, or `data` contains an identifier without a section.
+<!-- Top-level-only markers avoid treating examples and quoted Markdown as instructions to rewrite content. -->
 
 ### Type Checking
 

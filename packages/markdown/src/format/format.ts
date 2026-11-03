@@ -1,14 +1,13 @@
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 
-import type { Html } from "mdast";
 import remarkParse from "remark-parse";
 import { unified } from "unified";
 
 /**
- * Pattern of a marker that starts or ends a section, e.g. `<!-- format:start id -->`.
+ * Pattern of a line that is a marker that starts or ends a section, e.g. `<!-- format:start id -->`.
  */
-const MARKER = /^<!--\s*format:(start|end)\s+(\S+)\s*-->$/;
+const MARKER = /^[ \t]*(<!--[ \t]*format:(start|end)[ \t]+(\S+)[ \t]*-->)[ \t]*$/gm;
 
 /**
  * Options used to format a Markdown file.
@@ -55,9 +54,14 @@ interface OpenSection {
 	readonly id: string;
 
 	/**
-	 * Node of the start marker.
+	 * Location of the start marker, used in errors, e.g. `README.md:3`.
 	 */
-	readonly node: Html;
+	readonly location: string;
+
+	/**
+	 * Offset immediately after the start marker.
+	 */
+	readonly start: number;
 }
 
 /**
@@ -100,8 +104,9 @@ export function format(options: FormatOptions): string {
 }
 
 /**
- * Finds the sections within the Markdown; only top-level markers are considered, so markers within code blocks,
- * lists, block quotes, etc. are ignored.
+ * Finds the sections within the Markdown; only markers on their own line within top-level HTML are considered, so
+ * markers within code blocks, lists, block quotes, etc. are ignored. Lines of each HTML node are searched, rather than
+ * the node as a whole, because CommonMark groups a marker with an adjacent HTML block, e.g. `<div>…</div>`.
  * @param path Path to the Markdown file, used in errors.
  * @param markdown Markdown.
  * @returns Sections, in the order they appear.
@@ -113,37 +118,47 @@ function findSections(path: string, markdown: string): Section[] {
 	let open: OpenSection | undefined;
 
 	for (const node of tree.children) {
-		if (node.type !== "html") {
+		const offset = node.position?.start.offset;
+		const end = node.position?.end.offset;
+		if (node.type !== "html" || offset === undefined || end === undefined) {
 			continue;
 		}
 
-		const match = MARKER.exec(node.value.trim());
-		if (match === null) {
-			continue;
-		}
+		const html = markdown.slice(offset, end);
+		for (const match of html.matchAll(MARKER)) {
+			const [line, marker = "", kind, id = ""] = match;
+			const start = offset + match.index + line.indexOf(marker);
+			const location = `${path}:${node.position!.start.line + countLines(html.slice(0, match.index))}`;
 
-		const [, kind, id = ""] = match;
-		const location = `${path}:${node.position?.start.line}`;
+			if (kind === "start") {
+				if (open !== undefined) {
+					throw new Error(`Section "${id}" starts within section "${open.id}" at ${location}.`);
+				}
 
-		if (kind === "start") {
-			if (open !== undefined) {
-				throw new Error(`Section "${id}" starts within section "${open.id}" at ${location}.`);
+				open = { id, location, start: start + marker.length };
+			} else {
+				if (open?.id !== id) {
+					throw new Error(`Section "${id}" ends without starting at ${location}.`);
+				}
+
+				sections.push({ id, start: open.start, end: start });
+				open = undefined;
 			}
-
-			open = { id, node };
-		} else {
-			if (open?.id !== id) {
-				throw new Error(`Section "${id}" ends without starting at ${location}.`);
-			}
-
-			sections.push({ id, start: open.node.position!.end.offset!, end: node.position!.start.offset! });
-			open = undefined;
 		}
 	}
 
 	if (open !== undefined) {
-		throw new Error(`Section "${open.id}" does not end at ${path}:${open.node.position?.start.line}.`);
+		throw new Error(`Section "${open.id}" does not end at ${open.location}.`);
 	}
 
 	return sections;
+}
+
+/**
+ * Counts the line breaks within text, supporting `\r\n`, `\n`, and `\r`.
+ * @param text Text.
+ * @returns Number of line breaks.
+ */
+function countLines(text: string): number {
+	return text.match(/\r\n|\r|\n/g)?.length ?? 0;
 }

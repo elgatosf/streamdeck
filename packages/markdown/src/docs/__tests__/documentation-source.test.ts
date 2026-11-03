@@ -141,6 +141,22 @@ export interface Detail {
 	});
 
 	/**
+	 * Asserts one-shot tag iterables are read once, so they apply to every generated type.
+	 */
+	test("reuses one-shot tag iterables for every requested root", async () => {
+		const sourceFile = join(directory, "multiple.ts");
+		writeFileSync(
+			sourceFile,
+			"/** @custom alpha */\nexport interface Alpha { a: string }\n/** @custom beta */\nexport interface Beta { b: string }",
+		);
+		const source = createDocumentationSource({ src: sourceFile, tags: new Set(["custom"]).values() });
+
+		for (const typeName of ["Alpha", "Beta"]) {
+			expect(await source.generate({ typeName, format: "flat" })).toContain("**@custom**");
+		}
+	});
+
+	/**
 	 * Asserts overview and heading offset options are passed to the selected generator.
 	 */
 	test("passes generation options to the generator", async () => {

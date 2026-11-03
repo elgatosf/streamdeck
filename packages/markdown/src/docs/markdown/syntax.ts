@@ -123,7 +123,11 @@ export function inlineCode(code: string): string {
  * @returns HTML without newlines; a single paragraph is unwrapped.
  */
 export function inlineHtml(markdown: string): string {
-	const html = parser.render(markdown).trim().replace(/\n/g, "");
+	const html = parser
+		.render(markdown)
+		.trim()
+		.replace(/(<pre\b[^>]*>[\s\S]*?<\/pre>)/g, (block) => block.replace(/\n/g, "&#10;"))
+		.replace(/\n/g, "");
 	const content = /^<p>(.*)<\/p>$/.exec(html)?.[1];
 	return content !== undefined && !content.includes("<p>") ? content : html;
 }

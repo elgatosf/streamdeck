@@ -79,6 +79,7 @@ export interface DocumentationSource {
 export function createDocumentationSource(options: DocumentationSourceOptions): DocumentationSource {
 	const { src, tsconfigFile, tags } = options;
 	const source = loadSourceFile(src, tsconfigFile);
+	const selectedTags = tags === undefined ? undefined : new Set(tags);
 	const models = new Map<string, DocumentationModel>();
 
 	const discover = (typeName: string): DocumentationModel => {
@@ -89,7 +90,7 @@ export function createDocumentationSource(options: DocumentationSourceOptions): 
 				throw new Error(`Unable to find type "${typeName}" in ${src}.`);
 			}
 
-			model = discoverTypes(declaration, { tags });
+			model = discoverTypes(declaration, { tags: selectedTags });
 			models.set(typeName, model);
 		}
 

@@ -99,6 +99,11 @@ export interface PropertyDocumentation {
 	 * Documented types referenced by the property's type.
 	 */
 	readonly references: readonly TypeDocumentation[];
+
+	/**
+	 * Properties of an inline object type, in declaration order.
+	 */
+	readonly properties: readonly PropertyDocumentation[];
 }
 
 /**

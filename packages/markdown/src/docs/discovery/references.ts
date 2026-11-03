@@ -3,10 +3,9 @@ import { Node, SyntaxKind, type Type } from "ts-morph";
 import type { DocumentableDeclaration } from "./declaration.js";
 
 /**
- * Finds the named, user-defined types referenced by types; containers (arrays, tuples, unions, and intersections) are
- * walked, whereas named types are not, as they are documented separately. Declaration-file types are excluded to
- * avoid documenting library internals; visited types and ordered declaration sets prevent cycles and duplicate
- * references.
+ * Finds the named, user-defined types referenced by types; containers and generic type arguments are walked, whereas
+ * named type bodies are not, as they are documented separately. Declaration-file types are excluded to avoid
+ * documenting library internals; visited types and ordered declaration sets prevent cycles and duplicate references.
  * @param types Types to inspect.
  * @param owner Declaration to exclude from the references, e.g. to prevent a type referencing itself.
  * @returns Referenced declarations, in the order they were found.
@@ -33,6 +32,9 @@ export function getReferences(types: readonly Type[], owner?: DocumentableDeclar
 				if (declaration !== owner) {
 					references.add(declaration);
 				}
+				(type.getAliasTypeArguments().length > 0 ? type.getAliasTypeArguments() : type.getTypeArguments()).forEach(
+					visit,
+				);
 				return;
 			}
 		}

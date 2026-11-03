@@ -131,6 +131,15 @@ describe("format", () => {
 	});
 
 	/**
+	 * Asserts markers are found when CommonMark groups them with an adjacent HTML block.
+	 */
+	test("finds section markers adjacent to top-level HTML blocks", () => {
+		const target = write("<!-- format:start a -->\n<div>Old</div>\n<!-- format:end a -->\n");
+
+		expect(format({ target, data: { a: "New" } })).toBe("<!-- format:start a -->\n\nNew\n\n<!-- format:end a -->\n");
+	});
+
+	/**
 	 * Asserts content uses the line endings of the file.
 	 */
 	test("preserves CRLF line endings", () => {

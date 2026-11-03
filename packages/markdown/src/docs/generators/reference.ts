@@ -4,7 +4,7 @@ import { createHeading, document, inlineCode, joinDeferredBlocks, type DeferredB
 import { typescriptCodeBlock } from "../markdown/typescript.js";
 import type { TypeDocumentation } from "../model.js";
 import type { DocsGenerator } from "./generator.js";
-import { getOrderedEntries } from "./ordered-entries.js";
+import { flattenProperty, getOrderedEntries } from "./ordered-entries.js";
 import { formatOverview } from "./overview.js";
 
 /**
@@ -40,13 +40,23 @@ export const referenceGenerator: DocsGenerator = {
 
 			for (const entry of getOrderedEntries(type)) {
 				if ("type" in entry) {
-					blocks.push(
-						heading(3, inlineCode(entry.name), anchors.reserve(`${id}-${entry.name}`)),
-						() => typescriptCodeBlock(formatPropertySignature(entry), "property"),
-						entry.optional ? "**Optional.**" : "**Required.**",
-						formatDescription(entry.description),
-						references(entry.references),
-					);
+					// Nested properties link to their parent, as their signature does not show the object they belong to.
+					const ids = new Map<string, string>();
+					for (const property of flattenProperty(entry)) {
+						const propertyId = anchors.reserve(`${id}-${property.path}`);
+						ids.set(property.path, propertyId);
+
+						blocks.push(
+							heading(3, inlineCode(property.path), propertyId),
+							() => typescriptCodeBlock(formatPropertySignature(property), "property"),
+							property.optional ? "**Optional.**" : "**Required.**",
+							property.parent === undefined
+								? ""
+								: `**Property of:** [${inlineCode(property.parent)}](#${ids.get(property.parent)}).`,
+							formatDescription(property.description),
+							references(property.references),
+						);
+					}
 				} else {
 					blocks.push(
 						heading(3, inlineCode(entry.name), anchors.reserve(`${id}-${entry.name}`)),

@@ -12,7 +12,7 @@ import {
 } from "../markdown/syntax.js";
 import { typescriptCodeBlock } from "../markdown/typescript.js";
 import type { DocsGenerator } from "./generator.js";
-import { getOrderedEntries } from "./ordered-entries.js";
+import { flattenProperty, getOrderedEntries } from "./ordered-entries.js";
 import { formatOverview } from "./overview.js";
 
 /**
@@ -45,7 +45,8 @@ export const tableGenerator: DocsGenerator = {
 			}
 
 			const entries = getOrderedEntries(type);
-			const properties = entries.filter((entry) => "type" in entry);
+			// Properties of inline object types are listed in the same table, by their path, e.g. `font.size`.
+			const properties = entries.flatMap((entry) => ("type" in entry ? flattenProperty(entry) : []));
 			const members = entries.filter((entry) => "value" in entry);
 
 			// Discovery populates either properties or enum members, which need different table columns. Rows use HTML
@@ -61,7 +62,7 @@ export const tableGenerator: DocsGenerator = {
 						properties.map((property) => {
 							const links = anchors.link(property.references);
 							return [
-								anchor(anchors.reserve(`${id}-${property.name}`)) + inlineCode(property.name),
+								anchor(anchors.reserve(`${id}-${property.path}`)) + inlineCode(property.path),
 								inlineCode(property.type) + (links.length > 0 ? `<br>See ${links}` : ""),
 								property.optional ? "No" : "Yes",
 								inlineHtml(formatDescription(property.description)),

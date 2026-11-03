@@ -170,6 +170,143 @@ describe("discoverTypes", () => {
 	});
 
 	/**
+	 * Asserts properties redeclared within an intersection use the checker-resolved type, e.g. `"special"` rather than
+	 * the `string` declared by the base type.
+	 */
+	test("uses checker-resolved property types for intersections", () => {
+		const model = discover(
+			{
+				"/root.ts": `
+					type Base = { kind: string; value: string | number; active?: boolean };
+					export type Root = Base & { kind: "special"; value: number; active: true };
+				`,
+			},
+			"Root",
+		);
+
+		expect(model.root.properties.map((property) => [property.name, property.type, property.optional])).toEqual([
+			["kind", '"special"', false],
+			["value", "number", false],
+			["active", "true", false],
+		]);
+	});
+
+	/**
+	 * Asserts properties of inline object types are discovered with their descriptions.
+	 */
+	test("discovers descriptions on inline object properties", () => {
+		const model = discover(
+			{
+				"/root.ts": `
+					export interface Root {
+						font?: {
+							/** Font size in pixels. */
+							size?: number;
+							/** Font weight. */
+							weight?: number;
+						};
+					}
+				`,
+			},
+			"Root",
+		);
+
+		expect(model.root.properties[0]?.properties.map((property) => [property.name, property.description.text])).toEqual([
+			["size", "Font size in pixels."],
+			["weight", "Font weight."],
+		]);
+	});
+
+	/**
+	 * Asserts inline object types within arrays and unions are discovered, with each property discovered once, and
+	 * named types are not, as they are documented separately.
+	 */
+	test("discovers inline object properties within arrays and unions", () => {
+		const model = discover(
+			{
+				"/root.ts": `
+					interface Named { hidden: string }
+					export interface Root {
+						items: { id: string }[];
+						choice?: { a: string } | { a: string; b: number } | Named | string;
+					}
+				`,
+			},
+			"Root",
+		);
+
+		expect(
+			model.root.properties.map((property) => [property.name, property.properties.map(({ name }) => name)]),
+		).toEqual([
+			["items", ["id"]],
+			["choice", ["a", "b"]],
+		]);
+	});
+
+	/**
+	 * Asserts generic type arguments of referenced types are discovered, e.g. `Detail` in `Wrapper<Detail>`.
+	 */
+	test("discovers references in instantiated inherited generic properties", () => {
+		const model = discover(
+			{
+				"/root.ts": `
+					interface Wrapper<T> { item: T }
+					interface Detail { name: string }
+					interface Base<T> { options: Wrapper<T> }
+					export interface Root extends Base<Detail> {}
+				`,
+			},
+			"Root",
+		);
+
+		expect(names(model.root.references)).toEqual(["Wrapper", "Detail"]);
+		expect(names(model.root.properties[0]!.references)).toEqual(["Wrapper", "Detail"]);
+	});
+
+	/**
+	 * Asserts `null` is retained when removing the `undefined` implied by an optional property.
+	 */
+	test("preserves null in optional inherited generic properties", () => {
+		const model = discover(
+			{
+				"/root.ts": `
+					interface Base<T> { value?: T }
+					export interface Root extends Base<string | null> {}
+				`,
+			},
+			"Root",
+		);
+
+		expect(model.root.properties.map((property) => [property.name, property.type, property.optional])).toEqual([
+			["value", "null | string", true],
+		]);
+	});
+
+	/**
+	 * Asserts tuple aliases are referenced by name, and optional tuple unions remain parenthesized.
+	 */
+	test("preserves tuple aliases and parenthesizes optional tuple unions", () => {
+		const model = discover(
+			{
+				"/root.ts": `
+					type Rect = [x: number, y: number];
+					export interface Root {
+						rect: Rect;
+						pair: [string, ("a" | "b")?];
+					}
+				`,
+			},
+			"Root",
+		);
+
+		expect(model.root.properties.map((property) => [property.name, property.type])).toEqual([
+			["rect", "Rect"],
+			["pair", '[string, ("a" | "b")?]'],
+		]);
+		expect(names(model.root.references)).toEqual(["Rect"]);
+	});
+
+	/**
 	 * Asserts type aliases erased by the type checker, e.g. within unions and type parameter defaults, are discovered.
 	 */
 	test("discovers aliases erased by the type checker", () => {
@@ -269,5 +406,24 @@ describe("discoverTypesFromFile", () => {
 
 		expect(discoverTypesFromFile({ filePath, typeName: "Manifest" }).root.name).toBe("Manifest");
 		expect(discoverTypesFromFile({ filePath, typeName: "Layout" }).root.name).toBe("Layout");
+	});
+
+	/**
+	 * Asserts ambient declarations included by the tsconfig are loaded, so types referencing them are resolved.
+	 */
+	test("loads ambient declarations included by the tsconfig", () => {
+		dir = mkdtempSync(join(tmpdir(), "docs-"));
+		const filePath = join(dir, "root.ts");
+		const tsConfigFilePath = join(dir, "tsconfig.json");
+		writeFileSync(filePath, 'export interface Root { kind: GlobalType["kind"] }');
+		writeFileSync(join(dir, "globals.d.ts"), 'interface GlobalType { kind: "internal" | "public" }');
+		writeFileSync(
+			tsConfigFilePath,
+			JSON.stringify({ compilerOptions: { strict: true }, files: ["root.ts", "globals.d.ts"] }),
+		);
+
+		expect(discoverTypesFromFile({ filePath, typeName: "Root", tsConfigFilePath }).root.properties[0]?.type).toBe(
+			'"internal" | "public"',
+		);
 	});
 });
