@@ -1,0 +1,566 @@
+---
+sidebar_position: 3
+---
+
+import Commands from "./_dials-commands.g.mdx";
+import Events from "./_dials-events.g.mdx";
+
+# Dials & Touch Strip
+
+Dial actions are a combination of two parts of Stream Deck, the dial itself and a portion of the touch strip.
+
+## What are dials?
+
+The dial and touch strip portion that make up a dial action are collectively known as an "Encoder". Combined, they allow for your plugin to receive dial and touch events, as well as provide feedback on the touch strip in the form of layouts.
+
+<Image src="../assets/dials.png" alt="Screenshot of Stream Deck software highlighting an action slot" zoom />
+
+## Layouts
+
+Layouts are the rendering engine used to display information on a Stream Deck + (Classic | XL) touch strip. Layouts on Stream Deck + (Classic | XL) are <Dimensions width="200" height="100" />, and are composed of [layout items](../references/layouts.mdx) whose values can be updated at runtime to display dynamic information.
+
+There are several [built-in layouts](#built-in-layouts) available to dial actions. Alternatively dial actions may use [custom layouts](#custom-layouts).
+
+### Built-in Layouts
+
+There are several built-in layouts available when rendering information on the Stream Deck + touch strip.
+
+<Tabs>
+<TabItem value="Icon ($X1)">
+	<Image
+		src="../assets/layout-x1.png"
+		alt="Preview of the built-in layout $X1. There is a title placeholder, and an icon placeholder"
+	/>
+
+    {/* prettier-ignore */}
+    ```jsonc title='JSON file for pre-defined layout "$X1"'
+    {
+        "$schema": "https://schemas.elgato.com/streamdeck/plugins/layout.json",
+        "id": "$X1",
+        "items": [
+            {
+                "key": "title",
+                "type": "text",
+                "rect": [16, 10, 136, 24],
+                "font": { "size": 16, "weight": 600 },
+                "alignment": "left"
+            },
+            {
+                "key": "icon",
+                "type": "pixmap",
+                "rect": [76, 40, 48, 48]
+            }
+        ]
+    }
+    ```
+
+</TabItem>
+<TabItem value="Canvas ($A0)">
+	<Image
+		src="../assets/layout-a0.png"
+		alt="Preview of the built-in layout $A1. There is a title placeholder, a full canvas placeholder, and a smaller canvas placeholder that sits on-top of the full canvas"
+	/>
+
+    Note: The `canvas` is denoted in yellow, and the `full-canvas` in gray.
+
+    {/* prettier-ignore */}
+    ```jsonc title='JSON file for pre-defined layout "$A0"'
+    {
+        "$schema": "https://schemas.elgato.com/streamdeck/plugins/layout.json",
+        "id": "$A0",
+        "items": [
+            {
+                "key": "full-canvas",
+                "type": "pixmap",
+                "rect": [0, 0, 200, 100]
+            },
+            {
+                "key": "title",
+                "type": "text",
+                "rect": [16, 10, 136, 24],
+                "zOrder": 1,
+                "font": { "size": 16, "weight": 600 },
+                "alignment": "left"
+            },
+            {
+                "key": "canvas",
+                "type": "pixmap",
+                "rect": [16, 34, 136, 54],
+                "zOrder": 1
+            }
+        ]
+    }
+    ```
+
+</TabItem>
+<TabItem value="Value ($A1)">
+	<Image
+		src="../assets/layout-a1.png"
+		alt="Preview of the built-in layout $A1. There is a title placeholder, an icon placeholder, and a value placeholder"
+	/>
+
+    {/* prettier-ignore */}
+    ```jsonc title='JSON file for pre-defined layout "$A1"'
+    {
+        "$schema": "https://schemas.elgato.com/streamdeck/plugins/layout.json",
+        "id": "$A1",
+        "items": [
+            {
+                "key": "title",
+                "type": "text",
+                "rect": [16, 10, 136, 24],
+                "font": { "size": 16, "weight": 600 },
+                "alignment": "left"
+            },
+            {
+                "key": "icon",
+                "type": "pixmap",
+                "rect": [16, 40, 48, 48]
+            },
+            {
+                "key": "value",
+                "type": "text",
+                "rect": [76, 40, 108, 32],
+                "font": { "size": 24, "weight": 600 },
+                "alignment": "right"
+            }
+        ]
+    }
+    ```
+
+</TabItem>
+<TabItem value="Indicator ($B1)">
+	<Image
+		src="../assets/layout-b1.png"
+		alt="Preview of the built-in layout $B1. There is a title placeholder, an icon placeholder, a value placeholder, and a bar"
+	/>
+
+    {/* prettier-ignore */}
+    ```jsonc title='JSON file for pre-defined layout "$B1"'
+    {
+        "$schema": "https://schemas.elgato.com/streamdeck/plugins/layout.json",
+        "id": "$B1",
+        "items": [
+            {
+                "key": "title",
+                "type": "text",
+                "rect": [16, 10, 136, 24],
+                "font": { "size": 16, "weight": 600 },
+                "alignment": "left"
+            },
+            {
+                "key": "icon",
+                "type": "pixmap",
+                "rect": [16, 40, 48, 48]
+            },
+            {
+                "key": "value",
+                "type": "text",
+                "rect": [76, 40, 108, 32],
+                "font": { "size": 24, "weight": 600 },
+                "alignment": "right"
+            },
+            {
+                "key": "indicator",
+                "type": "bar",
+                "rect": [76, 74, 108, 12],
+                "value": 0,
+                "subtype": 4,
+                "border_w": 0
+            }
+        ]
+    }
+    ```
+
+</TabItem>
+<TabItem value="Gradient indicator ($B2)">
+	<Image
+		src="../assets/layout-b2.png"
+		alt="Preview of the built-in layout $B2. There is a title placeholder, an icon placeholder, a value placeholder, and a gradient bar"
+	/>
+
+    {/* prettier-ignore */}
+    ```jsonc title='JSON file for pre-defined layout "$B2"'
+    {
+        "$schema": "https://schemas.elgato.com/streamdeck/plugins/layout.json",
+        "id": "$B2",
+        "items": [
+            {
+                "key": "title",
+                "type": "text",
+                "rect": [16, 10, 136, 24],
+                "font": { "size": 16, "weight": 600 },
+                "alignment": "left"
+            },
+            {
+                "key": "icon",
+                "type": "pixmap",
+                "rect": [16, 40, 48, 48]
+            },
+            {
+                "key": "value",
+                "type": "text",
+                "rect": [76, 40, 108, 32],
+                "font": { "size": 24, "weight": 600 },
+                "alignment": "right"
+            },
+            {
+                "key": "indicator",
+                "type": "gbar",
+                "rect": [76, 74, 108, 20],
+                "value": 0,
+                "subtype": 4,
+                "bar_h": 12,
+                "border_w": 0,
+                "bar_bg_c": "0:#ff0000,0.33:#a6d4ec,0.66:#f4b675,1:#00ff00"
+            }
+        ]
+    }
+    ```
+
+</TabItem>
+<TabItem value="Double indicator ($C1)">
+	<Image
+		src="../assets/layout-c1.png"
+		alt="Preview of the built-in layout $C1. There is a title placeholder, and two icon placeholders with adjacent bars"
+	/>
+
+    {/* prettier-ignore */}
+    ```jsonc title='JSON file for pre-defined layout "$C1"'
+    {
+        "$schema": "https://schemas.elgato.com/streamdeck/plugins/layout.json",
+        "id": "$C1",
+        "items": [
+            {
+                "key": "title",
+                "type": "text",
+                "rect": [16, 10, 136, 24],
+                "font": { "size": 16, "weight": 600 },
+                "alignment": "left"
+            },
+            {
+                "key": "icon1",
+                "type": "pixmap",
+                "rect": [16, 40, 24, 24]
+            },
+            {
+                "key": "icon2",
+                "type": "pixmap",
+                "rect": [16, 68, 24, 24]
+            },
+            {
+                "key": "indicator1",
+                "type": "bar",
+                "rect": [48, 46, 136, 12],
+                "value": 0,
+                "subtype": 4,
+                "border_w": 0
+            },
+            {
+                "key": "indicator2",
+                "type": "bar",
+                "rect": [48, 74, 136, 12],
+                "value": 0,
+                "subtype": 4,
+                "border_w": 0
+            }
+        ]
+    }
+    ```
+
+</TabItem>
+</Tabs>
+
+### Custom Layouts
+
+Custom layouts are represented as JSON files, located in the `*.sdPlugin` folder. Layout files are composed of [layout items](../references/layouts.mdx) that define the structure of the layout; the value of these items can then be controlled at runtime to display dynamic information. On Stream Deck + (Classic | XL), layouts are <Dimensions width="200" height="100" />.
+
+The following is an example of a custom layout that renders the title, with an image on either side:
+
+{/* prettier-ignore */}
+```jsonc title="Custom layout JSON file"
+{
+    "$schema": "https://schemas.elgato.com/streamdeck/plugins/layout.json",
+    "id": "custom-layout",
+    "controller": "Encoder",
+    "items": [
+        {
+            "type": "pixmap",
+            "key": "leading",
+            "rect": [10, 40, 20, 20]
+        },
+        {
+            "key": "title",
+            "type": "text",
+            "rect": [40, 40, 120, 20],
+            "font": {
+                "size": 20
+            }
+        },
+        {
+            "key": "trailing",
+            "type": "pixmap",
+            "rect": [170, 40, 20, 20]
+        }
+    ]
+}
+```
+
+<Image
+	src="../assets/layout-custom.png"
+	alt="Stream Deck + custom layout with the title in the middle, and an image either side."
+/>
+
+In summary, layout items within a layout:
+
+- Must have a unique `key`.
+- Must have their `type` and `rect` defined.
+- Must not overlap with other items in the layout, see [`zOrder`](../references/layouts.mdx#bar-zorder).
+- Must be within the bounds of the layout.
+
+Layout items can also be assigned a pre-defined `key` that will enable users to control them—these are:
+
+- `"title"` — as with [key actions](./keys.mdx#display-precedence), users can set a custom title for dial/touch strip actions, which will take precedence over the plugin provided title.
+- `"icon"` — as with [key actions](./keys.mdx#display-precedence), users can set a custom icon for dial/touch strip actions, which will take precedence over the plugin provided icon.
+
+<Warning>
+
+Layouts will not render when:
+
+- A layout item is outside the allotted bounds of the layout.
+- Layout items overlap on the same `zOrder`.
+
+For assistance with debugging layouts, try using the CLI tool's [`validate`](../../docs/streamdeck/cli/commands/validate.mdx) command, or referring to the [Stream Deck app logs](./logging.mdx#stream-deck-logs).
+
+</Warning>
+
+### Setting Default Layouts
+
+The default layout of an action is defined within the manifest by specifying the [`Actions[].Encoder.layout`](../references/manifest.mdx#encoder-layout) property. This value can be either the name of a built-in layout, or the file path to a custom layout.
+
+{/* prettier-ignore */}
+```jsonc title="Default layout using a built-in layout"
+{
+    "$schema": "https://schemas.elgato.com/streamdeck/plugins/manifest.json",
+    "Actions": [
+        {
+            "Icon": "action-icon",
+            "Name": "Action One",
+            "Controllers": ["Encoder"],
+            // [!code highlight:4]
+            "Encoder": {
+                "layout": "$B1"
+            },
+            "States": [
+                {
+                    "Image": "state-image"
+                }
+            ],
+            "UUID": "come.elgato.test.one"
+        }
+    ],
+    "Author": "Elgato",
+    "Software": {
+        "MinimumVersion": "6.6"
+    }
+    // ...
+}
+```
+
+{/* prettier-ignore */}
+```jsonc title="Default layout using a custom layout file"
+{
+    "$schema": "https://schemas.elgato.com/streamdeck/plugins/manifest.json",
+    "Actions": [
+        {
+            "Icon": "action-icon",
+            "Name": "Action One",
+            "Controllers": ["Encoder"],
+            // [!code highlight:4]
+            "Encoder": {
+                "layout": "custom-layout.json"
+            },
+            "States": [
+                {
+                    "Image": "state-image"
+                }
+            ],
+            "UUID": "come.elgato.test.one"
+        }
+    ],
+    "Author": "Elgato",
+    "Software": {
+        "MinimumVersion": "6.6"
+    }
+    // ...
+}
+```
+
+### Changing Layouts
+
+The layout of a dial action instance can be changed at runtime using the [`setFeedbackLayout`](#setfeedbacklayout) function, for example:
+
+```ts title="Action class updating its layout to a custom layout file"
+import { action, SingletonAction, WillAppearEvent } from "@elgato/streamdeck";
+
+@action({ UUID: "com.elgato.test.one" })
+export class IncrementCounter extends SingletonAction {
+	/**
+	 * Occurs when the action will appear.
+	 */
+	override async onWillAppear(ev: WillAppearEvent): Promise<void> {
+		if (ev.action.isDial()) {
+			// Specify built-in layout name (e.g. "$B1"), or path to the custom layout file.
+			await ev.action.setFeedbackLayout("custom-layout.json"); // [!code highlight]
+		}
+	}
+}
+```
+
+### Updating Layout Items
+
+Layout items can be updated at runtime using the [`setFeedback`](#setfeedback) function, with items referenced by their `key`. All properties, with the exception of their `rect` can be updated; in addition, the `value` of a layout item can be updated implicitly or explicitly.
+
+The following example demonstrates updating the `value` of the `indicator` item implicitly:
+
+```ts title="Updating $B1's indicator implicitly"
+import { action, DialUpEvent, SingletonAction } from "@elgato/streamdeck";
+
+@action({ UUID: "com.elgato.layout-image-test.increment" })
+export class IncrementCounter extends SingletonAction<CounterSettings> {
+	/**
+	 * Occurs when the user releases a dial.
+	 */
+	override async onDialUp(ev: DialUpEvent<CounterSettings>): Promise<void> {
+		await ev.action.setFeedback({
+			indicator: 50, // [!code highlight]
+		});
+	}
+}
+
+/**
+ * Settings for {@link IncrementCounter}.
+ */
+type CounterSettings = {
+	count?: number;
+	incrementBy?: number;
+};
+```
+
+The following example demonstrates updating the `value` of the `indicator` item explicitly:
+
+```ts title="Updating $B1's indicator explicitly"
+import { action, DialUpEvent, SingletonAction } from "@elgato/streamdeck";
+
+@action({ UUID: "com.elgato.layout-image-test.increment" })
+export class IncrementCounter extends SingletonAction<CounterSettings> {
+	/**
+	 * Occurs when the user releases a dial.
+	 */
+	override async onDialUp(ev: DialUpEvent<CounterSettings>): Promise<void> {
+		await ev.action.setFeedback({
+			indicator: {
+				value: 50, // [!code highlight]
+				range: {
+					min: 0,
+					max: 100,
+				},
+			},
+		});
+	}
+}
+
+/**
+ * Settings for {@link IncrementCounter}.
+ */
+type CounterSettings = {
+	count?: number;
+	incrementBy?: number;
+};
+```
+
+<Image src="../assets/touch-strip.png" alt="Stream Deck + touch strip with updated layout values." />
+
+## Trigger Descriptions
+
+Trigger descriptions can help the user to understand what the encoder does in a particular dial action. This can be set in the manifest file using the [`Actions[].Encoder.TriggerDescriptions`](../references/manifest.mdx#triggerdescriptions) property.
+
+<Image
+	src="../assets/trigger-descriptions.png"
+	alt="Screenshot of Stream Deck software highlighting trigger descriptions"
+	zoom
+/>
+
+{/* prettier-ignore */}
+```jsonc title="Manifest JSON file, with an action referencing a trigger description"
+{
+    "Actions": [
+        {
+            "Icon": "action-icon",
+            "Name": "Trigger Description Example",
+            "Controllers": ["Encoder"],
+            "Encoder": {
+                "layout": "$A1",
+                // [!code highlight:7]
+                "TriggerDescription": {
+                    "Push": "Play / Pause",
+                    "Rotate": "Adjust Volume",
+                    "Touch": "Play / Pause",
+                    "LongTouch": "Skip Track"
+                }
+            }
+        }
+    ]
+    // ...
+}
+```
+
+### Update Trigger Descriptions
+
+You can programmatically update the trigger descriptions using the [`setTriggerDescription`](#settriggerdescription) function.
+
+```ts title="Action class updating its trigger description"
+import { action, DialUpEvent, SingletonAction } from "@elgato/streamdeck";
+
+@action({ UUID: "com.elgato.trigger-description-example.increment" })
+export class IncrementCounter extends SingletonAction<CounterSettings> {
+	/**
+	 * Occurs when the user releases a dial.
+	 */
+	override async onDialUp(ev: DialUpEvent<CounterSettings>): Promise<void> {
+		// [!code highlight:7]
+		await ev.action.setTriggerDescription({
+			push: "Increment counter",
+			rotate: "Adjust increment",
+			touch: "Increment counter",
+			longTouch: "Reset counter",
+		});
+	}
+}
+
+/**
+ * Settings for {@link IncrementCounter}.
+ */
+type CounterSettings = {
+	count?: number;
+	incrementBy?: number;
+};
+```
+
+## Events
+
+Dial actions receive the following events, available as overridable methods on the `SingletonAction` class.
+
+<Events />
+
+## Commands
+
+The following commands are available to dial actions.
+
+<Warning>
+	Some events, such as [`onWillAppear`](./actions.mdx#onwillappear), are applicable to all action types. To invoke
+	commands only available to dial actions within these events, you must first assert the action is a dial by calling
+	[`ev.action.isDial()`](./actions.mdx#isdial).
+</Warning>
+
+<Commands />

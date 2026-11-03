@@ -1,0 +1,475 @@
+
+
+### DidReceiveGlobalSettings{#didreceiveglobalsettings}
+
+Occurs when the settings associated with the plugin are requested, or when the the plugin's settings
+were updated by the plugin.
+
+```ts
+type DidReceiveGlobalSettings = {
+    event: "didReceiveGlobalSettings";
+    payload: {
+        settings: JsonObject;
+    };
+};
+```
+
+
+
+<ObjectMember name="event" >
+	<ObjectMember.Type>"didReceiveGlobalSettings"</ObjectMember.Type>
+	
+Name of the event.
+	
+</ObjectMember>
+
+<ObjectMember name="payload" >
+	<ObjectMember.Type>object</ObjectMember.Type>
+	
+Additional information about the event.
+	
+
+<ObjectMember name="settings" >
+	<ObjectMember.Type>JsonObject</ObjectMember.Type>
+	
+Global settings associated with this plugin.
+	
+</ObjectMember>
+
+</ObjectMember>
+
+
+### DidReceiveResources{#didreceiveresources}
+
+Occurs when the resources associated with an action instance are requested, or when the the resources
+are updated in the property inspector.
+
+```ts
+type DidReceiveResources = {
+    action: string;
+    context: string;
+    device: string;
+    event: "didReceiveResources";
+    id?: string;
+    payload:
+        | {
+              controller: "Keypad";
+              isInMultiAction: true;
+              resources: {
+                  [key: string]: string;
+              };
+              settings: JsonObject;
+              state?: number;
+          }
+        | {
+              controller: "Encoder" | "Keypad" | "Neo";
+              coordinates: {
+                  column: number;
+                  row: number;
+              };
+              isInMultiAction: false;
+              resources: {
+                  [key: string]: string;
+              };
+              settings: JsonObject;
+              state?: number;
+          };
+};
+```
+
+
+
+<ObjectMember name="action" >
+	<ObjectMember.Type>string</ObjectMember.Type>
+	
+Unique identifier of the action as defined within the plugin's manifest (`Actions[].UUID`) e.g. "com.elgato.wavelink.mute".
+	
+</ObjectMember>
+
+<ObjectMember name="context" >
+	<ObjectMember.Type>string</ObjectMember.Type>
+	
+Identifies the instance of an action that caused the event, i.e. the specific key or dial. This identifier can be used to provide feedback to the Stream Deck, persist and
+request settings associated with the action instance, etc.
+	
+</ObjectMember>
+
+<ObjectMember name="device" >
+	<ObjectMember.Type>string</ObjectMember.Type>
+	
+Unique identifier of the Stream Deck device that this event is associated with.
+	
+</ObjectMember>
+
+<ObjectMember name="event" >
+	<ObjectMember.Type>"didReceiveResources"</ObjectMember.Type>
+	
+Name of the event used to identify what occurred.
+	
+</ObjectMember>
+
+<ObjectMember name="id" optional>
+	<ObjectMember.Type>string</ObjectMember.Type>
+	
+Identifier provided when requesting the resources, used to identify the source of the request.
+
+This is always undefined if the event is received because the resources were changed in the property
+inspector.
+	
+</ObjectMember>
+
+<ObjectMember name="payload" >
+	<ObjectMember.Type>MultiActionPayload | SingleActionPayload</ObjectMember.Type>
+	
+Contextualized information for this event.
+	
+One of:
+
+<details>
+    <summary>MultiActionPayload</summary>
+    
+
+<ObjectMember name="controller" >
+	<ObjectMember.Type>"Keypad"</ObjectMember.Type>
+	
+Defines the controller type the action is applicable to. **Keypad** refers to a standard action on a Stream Deck device, e.g. 1 of the 15 buttons on the Stream Deck MK.2,
+or a pedal on the Stream Deck Pedal, etc., whereas an **Encoder** refers to a dial / touchscreen on the Stream Deck +.
+
+NB: Requires Stream Deck 6.5 for `WillAppear` and `WillDisappear` events.
+	
+</ObjectMember>
+
+<ObjectMember name="isInMultiAction" >
+	<ObjectMember.Type>true</ObjectMember.Type>
+	
+Determines whether the action is part of a multi-action.
+
+NB. Requires Stream Deck 6.7 when accessed from the property inspector.
+	
+</ObjectMember>
+
+<ObjectMember name="resources" >
+	<ObjectMember.Type>Resources</ObjectMember.Type>
+	
+Resources (files) associated with the action.
+
+Available from Stream Deck 7.1.
+	
+
+</ObjectMember>
+
+<ObjectMember name="settings" >
+	<ObjectMember.Type>JsonObject</ObjectMember.Type>
+	
+Settings associated with the action instance.
+	
+</ObjectMember>
+
+<ObjectMember name="state" optional>
+	<ObjectMember.Type>number</ObjectMember.Type>
+	
+Current state of the action; only applicable to actions that have multiple states defined within the `manifest.json` file.
+	
+</ObjectMember>
+
+</details>
+
+<details>
+    <summary>SingleActionPayload</summary>
+    
+
+<ObjectMember name="controller" >
+	<ObjectMember.Type>Controller</ObjectMember.Type>
+	
+Defines the controller type the action is applicable to. **Keypad** refers to a standard action on a Stream Deck device, e.g. 1 of the 15 buttons on the Stream Deck MK.2,
+or a pedal on the Stream Deck Pedal, etc., whereas an **Encoder** refers to a dial / touchscreen on the Stream Deck +.
+	
+</ObjectMember>
+
+<ObjectMember name="coordinates" >
+	<ObjectMember.Type>Coordinates</ObjectMember.Type>
+	
+Coordinates that identify the location of an action.
+	
+
+<ObjectMember name="column" >
+	<ObjectMember.Type>number</ObjectMember.Type>
+	
+Column the action instance is located in, indexed from 0.
+	
+</ObjectMember>
+
+<ObjectMember name="row" >
+	<ObjectMember.Type>number</ObjectMember.Type>
+	
+Row the action instance is located on, indexed from 0.
+
+Note: When the device is Stream Deck +, the row can be 0 for keys (`Keypad`), and will _always_
+be 0 for dials (`Encoder`); to differentiate between actions types, cross-check the `controller`.
+	
+</ObjectMember>
+
+</ObjectMember>
+
+<ObjectMember name="isInMultiAction" >
+	<ObjectMember.Type>false</ObjectMember.Type>
+	
+Determines whether the action is part of a multi-action.
+
+NB. Requires Stream Deck 6.7 when accessed from the property inspector.
+	
+</ObjectMember>
+
+<ObjectMember name="resources" >
+	<ObjectMember.Type>Resources</ObjectMember.Type>
+	
+Resources (files) associated with the action.
+
+Available from Stream Deck 7.1.
+	
+
+</ObjectMember>
+
+<ObjectMember name="settings" >
+	<ObjectMember.Type>JsonObject</ObjectMember.Type>
+	
+Settings associated with the action instance.
+	
+</ObjectMember>
+
+<ObjectMember name="state" optional>
+	<ObjectMember.Type>number</ObjectMember.Type>
+	
+Current state of the action; only applicable to actions that have multiple states defined within the `manifest.json` file.
+	
+</ObjectMember>
+
+</details>
+
+        
+</ObjectMember>
+
+
+### DidReceiveSettings{#didreceivesettings}
+
+Occurs when the settings associated with an action instance are requested, or when the the settings
+were updated by the plugin.
+
+```ts
+type DidReceiveSettings = {
+    action: string;
+    context: string;
+    device: string;
+    event: "didReceiveSettings";
+    payload:
+        | {
+              controller: "Keypad";
+              isInMultiAction: true;
+              settings: JsonObject;
+              state?: number;
+          }
+        | {
+              controller: "Keypad" | "Encoder" | "Neo";
+              coordinates: {
+                  column: number;
+                  row: number;
+              };
+              isInMultiAction: false;
+              settings: JsonObject;
+              state?: number;
+          };
+};
+```
+
+
+
+<ObjectMember name="action" >
+	<ObjectMember.Type>string</ObjectMember.Type>
+	
+Identifies the action type, as specified by the UUID within the manifest.
+	
+</ObjectMember>
+
+<ObjectMember name="context" >
+	<ObjectMember.Type>string</ObjectMember.Type>
+	
+Identifier for the instance of the action the event is for.
+	
+</ObjectMember>
+
+<ObjectMember name="device" >
+	<ObjectMember.Type>string</ObjectMember.Type>
+	
+Identifier for the Stream Deck device the action is on.
+	
+</ObjectMember>
+
+<ObjectMember name="event" >
+	<ObjectMember.Type>"didReceiveSettings"</ObjectMember.Type>
+	
+Name of the event.
+	
+</ObjectMember>
+
+<ObjectMember name="payload" >
+	<ObjectMember.Type>ActionPayload</ObjectMember.Type>
+	
+Additional information about the action.
+	
+One of:
+
+<details>
+    <summary>MultiActionPayload</summary>
+    
+
+<ObjectMember name="controller" >
+	<ObjectMember.Type>"Keypad"</ObjectMember.Type>
+	
+Defines the controller type of the action.
+
+- **Keypad** refers to a standard key action on a Stream Deck device.
+- **Encoder** refers to a dial / touchscreen on the Stream Deck +
+	
+</ObjectMember>
+
+<ObjectMember name="isInMultiAction" >
+	<ObjectMember.Type>true</ObjectMember.Type>
+	
+Determines whether the action is part of a multi-action.
+
+**Note:** Requires Stream Deck 6.7.
+	
+</ObjectMember>
+
+<ObjectMember name="settings" >
+	<ObjectMember.Type>JsonObject</ObjectMember.Type>
+	
+Settings associated with the action instance.
+	
+</ObjectMember>
+
+<ObjectMember name="state" optional>
+	<ObjectMember.Type>number</ObjectMember.Type>
+	
+Current state of the action; only applicable to actions that support multiple states.
+	
+</ObjectMember>
+
+</details>
+
+<details>
+    <summary>SingleActionPayload</summary>
+    
+
+<ObjectMember name="controller" >
+	<ObjectMember.Type>Controller</ObjectMember.Type>
+	
+Defines the controller type of the action.
+
+- **Keypad** refers to a standard key action on a Stream Deck device.
+- **Encoder** refers to a dial / touchscreen on the Stream Deck +
+	
+</ObjectMember>
+
+<ObjectMember name="coordinates" >
+	<ObjectMember.Type>Coordinates</ObjectMember.Type>
+	
+Coordinates that identify the location of the action.
+	
+
+<ObjectMember name="column" >
+	<ObjectMember.Type>number</ObjectMember.Type>
+	
+Column the action instance is located on; indexed from 0.
+
+**Note:** For devices that support multiple controllers, for example Stream Deck +, each controller
+is treated separately, therefore there may be instances of `Keypad` and `Encoder` that have the
+same coordinates.
+	
+</ObjectMember>
+
+<ObjectMember name="row" >
+	<ObjectMember.Type>number</ObjectMember.Type>
+	
+Row the action instance is located on; indexed from 0.
+
+**Note:** For devices that support multiple controllers, for example Stream Deck +, each controller
+is treated separately, therefore there may be instances of `Keypad` and `Encoder` that have the
+same coordinates.
+	
+</ObjectMember>
+
+</ObjectMember>
+
+<ObjectMember name="isInMultiAction" >
+	<ObjectMember.Type>false</ObjectMember.Type>
+	
+Determines whether the action is part of a multi-action.
+
+NB. Requires Stream Deck 6.7 when accessed from the property inspector.
+	
+</ObjectMember>
+
+<ObjectMember name="settings" >
+	<ObjectMember.Type>JsonObject</ObjectMember.Type>
+	
+Settings associated with the action instance.
+	
+</ObjectMember>
+
+<ObjectMember name="state" optional>
+	<ObjectMember.Type>number</ObjectMember.Type>
+	
+Current state of the action; only applicable to actions that support multiple states.
+	
+</ObjectMember>
+
+</details>
+
+        
+</ObjectMember>
+
+
+### SendToPropertyInspector{#sendtopropertyinspector}
+
+Occurs when a payload was sent to the property inspector from the plugin.
+
+```ts
+type SendToPropertyInspector = {
+    action: string;
+    context: string;
+    event: "sendToPropertyInspector";
+    payload: JsonValue;
+};
+```
+
+
+
+<ObjectMember name="action" >
+	<ObjectMember.Type>string</ObjectMember.Type>
+	
+Identifies the action type, as specified by the UUID within the manifest.
+	
+</ObjectMember>
+
+<ObjectMember name="context" >
+	<ObjectMember.Type>string</ObjectMember.Type>
+	
+Identifier for the instance of the action the event is for.
+	
+</ObjectMember>
+
+<ObjectMember name="event" >
+	<ObjectMember.Type>"sendToPropertyInspector"</ObjectMember.Type>
+	
+Name of the event.
+	
+</ObjectMember>
+
+<ObjectMember name="payload" >
+	<ObjectMember.Type>JsonValue</ObjectMember.Type>
+	
+The payload sent to the property inspector.
+	
+</ObjectMember>
+

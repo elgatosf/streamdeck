@@ -1,0 +1,64 @@
+---
+sidebar_position: 2
+title: Property Inspector (UI)
+---
+
+import RegistrationInfo from "./_registration-info.g.mdx";
+import ConnectFn from "./_registration-ui-connect.g.mdx";
+import Commands from "./_ui-commands.g.mdx";
+import Events from "./_ui-events.g.mdx";
+
+The property inspector (UI) connects to Stream Deck using a WebSocket, allowing it to directly receive a subset of events, and send commands. The WebSocket connection also allows the property inspector to communicate with the application-layer (i.e. the plugin).
+
+## Registration
+
+<Tabs>
+<TabItem value="Manually">
+A connection with Stream Deck is established within the property inspector by defining a function on the `window`, named [`connectElgatoStreamDeckSocket`](#connectelgatostreamdecksocket). Once the DOM has loaded, Stream Deck will invoke this function and provide registration information, including the port to connect on.
+
+Below is an example of implementing the `connectElgatoStreamDeckSocket` function to establish a connection with Stream Deck:
+
+```js title="Connecting to Stream Deck in the property inspector"
+window.connectElgatoStreamDeckSocket = (port, uuid, event, info, actionInfo) => {
+	const infoObj = JSON.parse(info); // Information about Stream Deck and the plugin.
+	const actionInfo = JSON.parse(actionInfo); // Information about the action the UI is for.
+
+	// Establish a connection with Stream Deck
+	const connection = new WebSocket(`ws://127.0.0.1:${port}`);
+	connection.onopen = () => {
+		connection.send(JSON.stringify({ event, uuid }));
+	};
+};
+```
+
+</TabItem>
+
+<TabItem value="Automatically">
+Registration within the property inspector is automatically managed by [sdpi-components](https://sdpi-components.dev/), and a [Stream Deck Client](https://sdpi-components.dev/docs/helpers/stream-deck-client) is available to make communicating with Stream Deck easy. For example.
+
+{/* prettier-ignore */}
+```js title="Get global settings in the property inspector"
+SDPIComponents
+	.streamDeckClient
+	.getGlobalSettings()
+	.then((settings) => {
+		console.log(settings);
+	});
+```
+
+{/* prettier-ignore-end */}
+
+</TabItem>
+</Tabs>
+
+<ConnectFn />
+
+<RegistrationInfo />
+
+## Events
+
+<Events />
+
+## Commands
+
+<Commands />

@@ -1,0 +1,15 @@
+### v6.5.0{#stream-deck-6-5-0}
+
+<Warning>
+	Please note, from Stream Deck 6.5 onwards, `dialPress` will not be emitted by the API. Plugins should use `dialDown`
+	and `dialUp` to receive events relating to dial presses.
+</Warning>
+
+<ul>
+	<li>Added support for receiving deep-link messages.</li>
+	<li>Added support for switching to a specific profile page when calling `switchToProfile`.</li>
+	<li>Added `controller` information to `WillAppear` and `WillDisappear` events for multi-actions.</li>
+	<li>Added support for Node.js plugins with the `.cjs` or `.mjs` file extensions.</li>
+	<li>Removed `dialPress` event in favour of `dialDown` and `dialUp`.</li>
+	<li>Updated Node.js runtime to v20.8.1.</li>
+</ul>

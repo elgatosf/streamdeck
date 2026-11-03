@@ -1,0 +1,264 @@
+---
+sidebar_position: 1
+sidebar_label: Manifest
+title: Manifest
+---
+
+import TypeScriptDeclaration from "./_manifest-declaration.g.mdx";
+import Definitions from "./_manifest-definitions.g.mdx";
+
+The manifest JSON file defines your plugin, and provides important metadata that determines how your plugin is executed, and rendered within Stream Deck; this includes:
+
+- Your plugin's entry point, aka [CodePath](#manifest-codepath).
+- Your [actions](#manifest-actions) metadata, such as the name, icon, states etc.
+- Minimum required version of [Stream Deck](#manifest-software), and [Node.js](#manifest-nodejs).
+- Supported [operating systems](#manifest-os).
+
+## Examples
+
+<Tabs>
+<TabItem value="Basic">
+
+```json title="manifest.json"
+{
+	"$schema": "https://schemas.elgato.com/streamdeck/plugins/manifest.json",
+	"Actions": [
+		{
+			"Icon": "action-icon",
+			"Name": "Action One",
+			"States": [
+				{
+					"Image": "state-image"
+				}
+			],
+			"UUID": "come.elgato.test.one"
+		}
+	],
+	"Author": "Elgato",
+	"CodePath": "bin/plugin.js",
+	"Description": "Demo plugin with a minimal manifest.",
+	"Icon": "plugin-icon",
+	"Name": "Test Plugin",
+	"Nodejs": {
+		"Version": "20"
+	},
+	"OS": [
+		{
+			"Platform": "mac",
+			"MinimumVersion": "13"
+		},
+		{
+			"Platform": "windows",
+			"MinimumVersion": "10"
+		}
+	],
+	"UUID": "com.elgato.test",
+	"Version": "1.0.0.0",
+	"SDKVersion": 2,
+	"Software": {
+		"MinimumVersion": "6.6"
+	}
+}
+```
+
+</TabItem>
+<TabItem value="Dial support">
+
+```json title="manifest.json"
+{
+	"$schema": "https://schemas.elgato.com/streamdeck/plugins/manifest.json",
+	"Actions": [
+		{
+			"Icon": "action-icon",
+			"Name": "Action With Dial Support",
+			// [!code highlight:12]
+			"Controllers": ["Keypad", "Encoder"],
+			"Encoder": {
+				"background": "touchscreen-background",
+				"layout": "$B1",
+				"TriggerDescription": {
+					"Push": "Play / Pause",
+					"Rotate": "Adjust Volume",
+					"Touch": "Play / Pause",
+					"LongTouch": "Skip Track"
+				}
+			},
+			"States": [
+				{
+					"Image": "state-image"
+				}
+			],
+			"UUID": "come.elgato.test.one"
+		}
+	],
+	"Author": "Elgato",
+	"CodePath": "bin/plugin.js",
+	"Description": "Demo plugin with dial support.",
+	"Icon": "plugin-icon",
+	"Name": "Test Plugin",
+	"Nodejs": {
+		"Version": "20"
+	},
+	"OS": [
+		{
+			"Platform": "mac",
+			"MinimumVersion": "13"
+		},
+		{
+			"Platform": "windows",
+			"MinimumVersion": "10"
+		}
+	],
+	"UUID": "com.elgato.test",
+	"Version": "1.0.0.0",
+	"SDKVersion": 2,
+	"Software": {
+		"MinimumVersion": "6.6"
+	}
+}
+```
+
+</TabItem>
+<TabItem value="Profiles">
+
+```json title="manifest.json"
+{
+	"$schema": "https://schemas.elgato.com/streamdeck/plugins/manifest.json",
+	"Actions": [
+		{
+			"Icon": "action-icon",
+			"Name": "Action One",
+			"States": [
+				{
+					"Image": "state-image"
+				}
+			],
+			"UUID": "come.elgato.test.one"
+		}
+	],
+	"Author": "Elgato",
+	"CodePath": "bin/plugin.js",
+	"Description": "Demo plugin with pre-defined profiles.",
+	"Icon": "plugin-icon",
+	"Name": "Test Plugin",
+	"Nodejs": {
+		"Version": "20"
+	},
+	"OS": [
+		{
+			"Platform": "mac",
+			"MinimumVersion": "13"
+		},
+		{
+			"Platform": "windows",
+			"MinimumVersion": "10"
+		}
+	],
+	// [!code highlight:13]
+	"Profiles": [
+		{
+			"DeviceType": 2,
+			"DontAutoSwitchWhenInstalled": true,
+			"Name": "Custom Profile (SD XL)"
+		},
+		{
+			"DeviceType": 7,
+			"DontAutoSwitchWhenInstalled": true,
+			"Name": "Custom Profile (SD +)"
+		}
+	],
+	"UUID": "com.elgato.test",
+	"Version": "1.0.0.0",
+	"SDKVersion": 2,
+	"Software": {
+		"MinimumVersion": "6.6"
+	}
+}
+```
+
+</TabItem>
+<TabItem value="App monitoring">
+
+```json title="manifest.json"
+{
+	"$schema": "https://schemas.elgato.com/streamdeck/plugins/manifest.json",
+	"Actions": [
+		{
+			"Icon": "action-icon",
+			"Name": "Action One",
+			"States": [
+				{
+					"Image": "state-image"
+				}
+			],
+			"UUID": "come.elgato.test.one"
+		}
+	],
+	"Author": "Elgato",
+	"CodePath": "bin/plugin.js",
+	"Description": "Demo plugin that monitors applications.",
+	"Icon": "plugin-icon",
+	"Name": "Test Plugin",
+	"Nodejs": {
+		"Version": "20"
+	},
+	"OS": [
+		{
+			"Platform": "mac",
+			"MinimumVersion": "13"
+		},
+		{
+			"Platform": "windows",
+			"MinimumVersion": "10"
+		}
+	],
+	"UUID": "com.elgato.test",
+	"Version": "1.0.0.0",
+	"SDKVersion": 2,
+	"Software": {
+		"MinimumVersion": "6.6"
+	},
+	// [!code highlight:5]
+	"ApplicationsToMonitor": {
+		"windows": ["my-cool-application.exe"],
+		"mac": ["com.test.my-cool-application"]
+	}
+}
+```
+
+</TabItem>
+</Tabs>
+
+## JSON Schema
+
+A JSON schema is available for the manifest JSON file, providing intellisense and validation, and is available at the following URL:
+
+```text title="JSON schema URL"
+https://schemas.elgato.com/streamdeck/plugins/manifest.json
+```
+
+You can reference this URL using the `$schema` property within your manifest:
+
+```json title="Manifest JSON file" {2}
+{
+	"$schema": "https://schemas.elgato.com/streamdeck/plugins/manifest.json",
+	"Author": "Elgato",
+	"Name": "Test Plugin"
+	// ...
+}
+```
+
+## TypeScript Declaration
+
+<TypeScriptDeclaration />
+
+<Warning title="File path extensions">
+	Some file path properties within the manifest must have their file extension omitted. For example
+	[Icon](#manifest-icon) and a profile's [Name](#profile-name) are extension-less file paths, whereas properties such as
+	[CodePath](#manifest-codepath) and [PropertyInspectorPath](#manifest-propertyinspectorpath) require an extension. For
+	more information, please refer to the documentation of the property.
+</Warning>
+
+## Definitions
+
+<Definitions />

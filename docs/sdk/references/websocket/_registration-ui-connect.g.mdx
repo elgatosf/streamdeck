@@ -1,0 +1,19 @@
+
+### connectElgatoStreamDeckSocket
+
+
+Connects to the Stream Deck, enabling the UI to interact with the plugin, and access the Stream Deck API.
+
+```ts
+window.connectElgatoStreamDeckSocket = (port: string, uuid: string, event: string, info: string, actionInfo: string) => void | Promise<void>
+```
+
+**Parameters**
+
+| Name | Description |
+| - | - |
+| port | Port to be used when connecting to Stream Deck. |
+| uuid | Identifies the UI; this must be provided when establishing the connection with Stream Deck. |
+| event | Name of the event that identifies the registration procedure; this must be provided when establishing the connection with Stream Deck. |
+| info | Information about the Stream Deck application and operating system. |
+| actionInfo | Information about the action the UI is associated with. |

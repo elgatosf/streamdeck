@@ -1,0 +1,842 @@
+
+
+### GetGlobalSettings{#getglobalsettings}
+
+Gets the global settings associated with the plugin. Causes `DidReceiveGlobalSettings` to be emitted.
+
+```ts
+type GetGlobalSettings = {
+    context: string;
+    event: "getGlobalSettings";
+    id?: string;
+};
+```
+
+
+
+<ObjectMember name="context" >
+	<ObjectMember.Type>string</ObjectMember.Type>
+	
+Defines the context of the command, e.g. which action instance the command is intended for.
+	
+</ObjectMember>
+
+<ObjectMember name="event" >
+	<ObjectMember.Type>"getGlobalSettings"</ObjectMember.Type>
+	
+Name of the command, used to identify the request.
+	
+</ObjectMember>
+
+<ObjectMember name="id" optional>
+	<ObjectMember.Type>string</ObjectMember.Type>
+	
+Optional identifier that can be used to identify the response to this request.
+	
+</ObjectMember>
+
+
+### GetResources{#getresources}
+
+Gets the resources (files) associated with the action; these resources are embedded into the action
+when it is exported, either individually, or as part of a profile.
+
+Available from Stream Deck 7.1.
+
+```ts
+type GetResources = {
+    context: string;
+    event: "getResources";
+    id?: string;
+};
+```
+
+
+
+<ObjectMember name="context" >
+	<ObjectMember.Type>string</ObjectMember.Type>
+	
+Defines the context of the command, e.g. which action instance the command is intended for.
+	
+</ObjectMember>
+
+<ObjectMember name="event" >
+	<ObjectMember.Type>"getResources"</ObjectMember.Type>
+	
+Name of the command, used to identify the request.
+	
+</ObjectMember>
+
+<ObjectMember name="id" optional>
+	<ObjectMember.Type>string</ObjectMember.Type>
+	
+Optional identifier that can be used to identify the response to this request.
+	
+</ObjectMember>
+
+
+### GetSettings{#getsettings}
+
+Gets the settings associated with an instance of an action. Causes `DidReceiveSettings` to be emitted.
+
+```ts
+type GetSettings = {
+    context: string;
+    event: "getSettings";
+    id?: string;
+};
+```
+
+
+
+<ObjectMember name="context" >
+	<ObjectMember.Type>string</ObjectMember.Type>
+	
+Defines the context of the command, e.g. which action instance the command is intended for.
+	
+</ObjectMember>
+
+<ObjectMember name="event" >
+	<ObjectMember.Type>"getSettings"</ObjectMember.Type>
+	
+Name of the command, used to identify the request.
+	
+</ObjectMember>
+
+<ObjectMember name="id" optional>
+	<ObjectMember.Type>string</ObjectMember.Type>
+	
+Optional identifier that can be used to identify the response to this request.
+	
+</ObjectMember>
+
+
+### LogMessage{#logmessage}
+
+Logs a message to the file-system.
+
+```ts
+type LogMessage = {
+    event: "logMessage";
+    payload: {
+        message: string;
+    };
+};
+```
+
+
+
+<ObjectMember name="event" >
+	<ObjectMember.Type>"logMessage"</ObjectMember.Type>
+	
+Name of the command, used to identify the request.
+	
+</ObjectMember>
+
+<ObjectMember name="payload" >
+	<ObjectMember.Type>TPayload</ObjectMember.Type>
+	
+Additional information supplied as part of the command.
+	
+
+<ObjectMember name="message" >
+	<ObjectMember.Type>string</ObjectMember.Type>
+	
+Message to log.
+	
+</ObjectMember>
+
+</ObjectMember>
+
+
+### OpenUrl{#openurl}
+
+Opens the URL in the user's default browser.
+
+```ts
+type OpenUrl = {
+    event: "openUrl";
+    payload: {
+        url: string;
+    };
+};
+```
+
+
+
+<ObjectMember name="event" >
+	<ObjectMember.Type>"openUrl"</ObjectMember.Type>
+	
+Name of the command, used to identify the request.
+	
+</ObjectMember>
+
+<ObjectMember name="payload" >
+	<ObjectMember.Type>TPayload</ObjectMember.Type>
+	
+Additional information supplied as part of the command.
+	
+
+<ObjectMember name="url" >
+	<ObjectMember.Type>string</ObjectMember.Type>
+	
+URL to open.
+	
+</ObjectMember>
+
+</ObjectMember>
+
+
+### SendToPropertyInspector{#sendtopropertyinspector}
+
+Sends a message to the property inspector.
+
+```ts
+type SendToPropertyInspector = {
+    context: string;
+    event: "sendToPropertyInspector";
+    payload: JsonValue;
+};
+```
+
+
+
+<ObjectMember name="context" >
+	<ObjectMember.Type>string</ObjectMember.Type>
+	
+Defines the context of the command, e.g. which action instance the command is intended for.
+	
+</ObjectMember>
+
+<ObjectMember name="event" >
+	<ObjectMember.Type>"sendToPropertyInspector"</ObjectMember.Type>
+	
+Name of the command, used to identify the request.
+	
+</ObjectMember>
+
+<ObjectMember name="payload" >
+	<ObjectMember.Type>JsonValue</ObjectMember.Type>
+	
+Additional information supplied as part of the command.
+	
+</ObjectMember>
+
+
+### SetFeedback{#setfeedback}
+
+Set's the feedback of an existing layout associated with an action instance.
+
+```ts
+type SetFeedback = {
+    context: string;
+    event: "setFeedback";
+    payload: {
+        [string]:
+            | string
+            | number
+            | {
+                  background?: string;
+                  bar_bg_c?: string;
+                  bar_border_c?: string;
+                  bar_fill_c?: string;
+                  border_w?: number;
+                  enabled?: boolean;
+                  opacity?: 0 | 0.1 | 0.2 | 0.3 | 0.4 | 0.5 | 0.6 | 0.7 | 0.8 | 0.9 | 1;
+                  range?: {
+                      max: number;
+                      min: number;
+                  };
+                  subtype?: 0 | 1 | 2 | 3 | 4;
+                  value?: number;
+                  zOrder?: number;
+              }
+            | {
+                  background?: string;
+                  bar_bg_c?: string;
+                  bar_border_c?: string;
+                  bar_fill_c?: string;
+                  bar_h?: number;
+                  border_w?: number;
+                  enabled?: boolean;
+                  opacity?: 0 | 0.1 | 0.2 | 0.3 | 0.4 | 0.5 | 0.6 | 0.7 | 0.8 | 0.9 | 1;
+                  range?: {
+                      max: number;
+                      min: number;
+                  };
+                  subtype?: 0 | 1 | 2 | 3 | 4;
+                  value?: number;
+                  zOrder?: number;
+              }
+            | {
+                  background?: string;
+                  enabled?: boolean;
+                  opacity?: 0 | 0.1 | 0.2 | 0.3 | 0.4 | 0.5 | 0.6 | 0.7 | 0.8 | 0.9 | 1;
+                  value?: string;
+                  zOrder?: number;
+              }
+            | {
+                  alignment?: "center" | "left" | "right";
+                  background?: string;
+                  color?: string;
+                  enabled?: boolean;
+                  font?: {
+                      size?: number;
+                      weight?: number;
+                  };
+                  opacity?: 0 | 0.1 | 0.2 | 0.3 | 0.4 | 0.5 | 0.6 | 0.7 | 0.8 | 0.9 | 1;
+                  "text-overflow"?: "clip" | "ellipsis" | "fade";
+                  value?: string;
+                  zOrder?: number;
+              };
+    };
+};
+```
+
+
+
+<ObjectMember name="context" >
+	<ObjectMember.Type>string</ObjectMember.Type>
+	
+Defines the context of the command, e.g. which action instance the command is intended for.
+	
+</ObjectMember>
+
+<ObjectMember name="event" >
+	<ObjectMember.Type>"setFeedback"</ObjectMember.Type>
+	
+Name of the command, used to identify the request.
+	
+</ObjectMember>
+
+<ObjectMember name="payload" >
+	<ObjectMember.Type>TPayload</ObjectMember.Type>
+	
+Additional information supplied as part of the command.
+	
+
+</ObjectMember>
+
+
+### SetFeedbackLayout{#setfeedbacklayout}
+
+Sets the layout associated with an action instance.
+
+```ts
+type SetFeedbackLayout = {
+    context: string;
+    event: "setFeedbackLayout";
+    payload: {
+        layout: string;
+    };
+};
+```
+
+
+
+<ObjectMember name="context" >
+	<ObjectMember.Type>string</ObjectMember.Type>
+	
+Defines the context of the command, e.g. which action instance the command is intended for.
+	
+</ObjectMember>
+
+<ObjectMember name="event" >
+	<ObjectMember.Type>"setFeedbackLayout"</ObjectMember.Type>
+	
+Name of the command, used to identify the request.
+	
+</ObjectMember>
+
+<ObjectMember name="payload" >
+	<ObjectMember.Type>TPayload</ObjectMember.Type>
+	
+Additional information supplied as part of the command.
+	
+
+<ObjectMember name="layout" >
+	<ObjectMember.Type>string</ObjectMember.Type>
+	
+Name of a pre-defined layout, or relative path to a custom one.
+	
+</ObjectMember>
+
+</ObjectMember>
+
+
+### SetGlobalSettings{#setglobalsettings}
+
+Sets the global settings associated with the plugin.
+
+```ts
+type SetGlobalSettings = {
+    context: string;
+    event: "setGlobalSettings";
+    payload: JsonObject;
+};
+```
+
+
+
+<ObjectMember name="context" >
+	<ObjectMember.Type>string</ObjectMember.Type>
+	
+Defines the context of the command, e.g. which action instance the command is intended for.
+	
+</ObjectMember>
+
+<ObjectMember name="event" >
+	<ObjectMember.Type>"setGlobalSettings"</ObjectMember.Type>
+	
+Name of the command, used to identify the request.
+	
+</ObjectMember>
+
+<ObjectMember name="payload" >
+	<ObjectMember.Type>JsonObject</ObjectMember.Type>
+	
+Additional information supplied as part of the command.
+	
+</ObjectMember>
+
+
+### SetImage{#setimage}
+
+Sets the image associated with an action instance.
+
+```ts
+type SetImage = {
+    context: string;
+    event: "setImage";
+    payload: {
+        image?: string;
+        state?: number;
+        target?: Target;
+    };
+};
+```
+
+
+
+<ObjectMember name="context" >
+	<ObjectMember.Type>string</ObjectMember.Type>
+	
+Defines the context of the command, e.g. which action instance the command is intended for.
+	
+</ObjectMember>
+
+<ObjectMember name="event" >
+	<ObjectMember.Type>"setImage"</ObjectMember.Type>
+	
+Name of the command, used to identify the request.
+	
+</ObjectMember>
+
+<ObjectMember name="payload" >
+	<ObjectMember.Type>TPayload</ObjectMember.Type>
+	
+Additional information supplied as part of the command.
+	
+
+<ObjectMember name="image" optional>
+	<ObjectMember.Type>string</ObjectMember.Type>
+	
+Image to display; this can be either a path to a local file within the plugin's folder, a base64 encoded `string` with the mime type declared (e.g. PNG, JPEG, etc.),
+	
+</ObjectMember>
+
+<ObjectMember name="state" optional>
+	<ObjectMember.Type>number</ObjectMember.Type>
+	
+Action state the command applies to; when no state is supplied, the image is set for both states. **Note**, only applies to multi-state actions.
+	
+</ObjectMember>
+
+<ObjectMember name="target" optional>
+	<ObjectMember.Type>Target</ObjectMember.Type>
+	
+Specifies which aspects of the Stream Deck should be updated, hardware, software, or both.
+	
+</ObjectMember>
+
+</ObjectMember>
+
+
+### SetResources{#setresources}
+
+Sets the resources (files) associated with the action; these resources are embedded into the action
+when it is exported, either individually, or as part of a profile.
+
+Available from Stream Deck 7.1.
+
+```ts
+type SetResources = {
+    context: string;
+    event: "setResources";
+    payload: {
+        [key: string]: string;
+    };
+};
+```
+
+
+
+<ObjectMember name="context" >
+	<ObjectMember.Type>string</ObjectMember.Type>
+	
+Defines the context of the command, e.g. which action instance the command is intended for.
+	
+</ObjectMember>
+
+<ObjectMember name="event" >
+	<ObjectMember.Type>"setResources"</ObjectMember.Type>
+	
+Name of the command, used to identify the request.
+	
+</ObjectMember>
+
+<ObjectMember name="payload" >
+	<ObjectMember.Type>TPayload</ObjectMember.Type>
+	
+Additional information supplied as part of the command.
+	
+
+</ObjectMember>
+
+
+### SetSettings{#setsettings}
+
+Sets the settings associated with an instance of an action.
+
+```ts
+type SetSettings = {
+    context: string;
+    event: "setSettings";
+    payload: JsonObject;
+};
+```
+
+
+
+<ObjectMember name="context" >
+	<ObjectMember.Type>string</ObjectMember.Type>
+	
+Defines the context of the command, e.g. which action instance the command is intended for.
+	
+</ObjectMember>
+
+<ObjectMember name="event" >
+	<ObjectMember.Type>"setSettings"</ObjectMember.Type>
+	
+Name of the command, used to identify the request.
+	
+</ObjectMember>
+
+<ObjectMember name="payload" >
+	<ObjectMember.Type>JsonObject</ObjectMember.Type>
+	
+Additional information supplied as part of the command.
+	
+</ObjectMember>
+
+
+### SetState{#setstate}
+
+Sets the current state of an action instance.
+
+```ts
+type SetState = {
+    context: string;
+    event: "setState";
+    payload: {
+        state: number;
+    };
+};
+```
+
+
+
+<ObjectMember name="context" >
+	<ObjectMember.Type>string</ObjectMember.Type>
+	
+Defines the context of the command, e.g. which action instance the command is intended for.
+	
+</ObjectMember>
+
+<ObjectMember name="event" >
+	<ObjectMember.Type>"setState"</ObjectMember.Type>
+	
+Name of the command, used to identify the request.
+	
+</ObjectMember>
+
+<ObjectMember name="payload" >
+	<ObjectMember.Type>TPayload</ObjectMember.Type>
+	
+Additional information supplied as part of the command.
+	
+
+<ObjectMember name="state" >
+	<ObjectMember.Type>number</ObjectMember.Type>
+	
+State to set; this be either 0, or 1.
+	
+</ObjectMember>
+
+</ObjectMember>
+
+
+### SetTitle{#settitle}
+
+Sets the title displayed for an instance of an action.
+
+```ts
+type SetTitle = {
+    context: string;
+    event: "setTitle";
+    payload: {
+        state?: number;
+        target?: Target;
+        title?: string;
+    };
+};
+```
+
+
+
+<ObjectMember name="context" >
+	<ObjectMember.Type>string</ObjectMember.Type>
+	
+Defines the context of the command, e.g. which action instance the command is intended for.
+	
+</ObjectMember>
+
+<ObjectMember name="event" >
+	<ObjectMember.Type>"setTitle"</ObjectMember.Type>
+	
+Name of the command, used to identify the request.
+	
+</ObjectMember>
+
+<ObjectMember name="payload" >
+	<ObjectMember.Type>TPayload</ObjectMember.Type>
+	
+Additional information supplied as part of the command.
+	
+
+<ObjectMember name="state" optional>
+	<ObjectMember.Type>number</ObjectMember.Type>
+	
+Action state the request applies to; when no state is supplied, the title is set for both states. **Note**, only applies to multi-state actions.
+	
+</ObjectMember>
+
+<ObjectMember name="target" optional>
+	<ObjectMember.Type>Target</ObjectMember.Type>
+	
+Specifies which aspects of the Stream Deck should be updated, hardware, software, or both.
+	
+</ObjectMember>
+
+<ObjectMember name="title" optional>
+	<ObjectMember.Type>string</ObjectMember.Type>
+	
+Title to display; when no title is specified, the title will reset to the title set by the user.
+	
+</ObjectMember>
+
+</ObjectMember>
+
+
+### SetTriggerDescription{#settriggerdescription}
+
+Sets the trigger descriptions associated with an encoder action instance.
+
+```ts
+type SetTriggerDescription = {
+    context: string;
+    event: "setTriggerDescription";
+    payload: {
+        longTouch?: string;
+        push?: string;
+        rotate?: string;
+        touch?: string;
+    };
+};
+```
+
+
+
+<ObjectMember name="context" >
+	<ObjectMember.Type>string</ObjectMember.Type>
+	
+Defines the context of the command, e.g. which action instance the command is intended for.
+	
+</ObjectMember>
+
+<ObjectMember name="event" >
+	<ObjectMember.Type>"setTriggerDescription"</ObjectMember.Type>
+	
+Name of the command, used to identify the request.
+	
+</ObjectMember>
+
+<ObjectMember name="payload" >
+	<ObjectMember.Type>TPayload</ObjectMember.Type>
+	
+Additional information supplied as part of the command.
+	
+
+<ObjectMember name="longTouch" optional>
+	<ObjectMember.Type>string</ObjectMember.Type>
+	
+Touchscreen "long-touch" interaction behavior description; when `undefined`, the description will not be shown.
+	
+</ObjectMember>
+
+<ObjectMember name="push" optional>
+	<ObjectMember.Type>string</ObjectMember.Type>
+	
+Dial "push" (press) interaction behavior description; when `undefined`, the description will not be shown.
+	
+</ObjectMember>
+
+<ObjectMember name="rotate" optional>
+	<ObjectMember.Type>string</ObjectMember.Type>
+	
+Dial rotation interaction behavior description; when `undefined`, the description will not be shown.
+	
+</ObjectMember>
+
+<ObjectMember name="touch" optional>
+	<ObjectMember.Type>string</ObjectMember.Type>
+	
+Touchscreen "touch" interaction behavior description; when `undefined`, the description will not be shown.
+	
+</ObjectMember>
+
+</ObjectMember>
+
+
+### ShowAlert{#showalert}
+
+Temporarily shows an alert (i.e. warning), in the form of an exclamation mark in a yellow triangle, on the action instance. Used to provide visual feedback when an action failed.
+
+```ts
+type ShowAlert = {
+    context: string;
+    event: "showAlert";
+};
+```
+
+
+
+<ObjectMember name="context" >
+	<ObjectMember.Type>string</ObjectMember.Type>
+	
+Defines the context of the command, e.g. which action instance the command is intended for.
+	
+</ObjectMember>
+
+<ObjectMember name="event" >
+	<ObjectMember.Type>"showAlert"</ObjectMember.Type>
+	
+Name of the command, used to identify the request.
+	
+</ObjectMember>
+
+
+### ShowOk{#showok}
+
+Temporarily shows an "OK" (i.e. success), in the form of a check-mark in a green circle, on the action instance. Used to provide visual feedback when an action successfully executed.
+
+```ts
+type ShowOk = {
+    context: string;
+    event: "showOk";
+};
+```
+
+
+
+<ObjectMember name="context" >
+	<ObjectMember.Type>string</ObjectMember.Type>
+	
+Defines the context of the command, e.g. which action instance the command is intended for.
+	
+</ObjectMember>
+
+<ObjectMember name="event" >
+	<ObjectMember.Type>"showOk"</ObjectMember.Type>
+	
+Name of the command, used to identify the request.
+	
+</ObjectMember>
+
+
+### SwitchToProfile{#switchtoprofile}
+
+Switches to the profile, as distributed by the plugin, on the specified device.
+
+NB: Plugins may only switch to profiles distributed with the plugin, as defined within the manifest, and cannot access user-defined profiles.
+
+```ts
+type SwitchToProfile = {
+    context: string;
+    device: string;
+    event: "switchToProfile";
+    payload: {
+        page?: number;
+        profile?: string;
+    };
+};
+```
+
+
+
+<ObjectMember name="context" >
+	<ObjectMember.Type>string</ObjectMember.Type>
+	
+Defines the context of the command, e.g. which action instance the command is intended for.
+	
+</ObjectMember>
+
+<ObjectMember name="device" >
+	<ObjectMember.Type>string</ObjectMember.Type>
+	
+Unique identifier of the device where the profile should be set.
+	
+</ObjectMember>
+
+<ObjectMember name="event" >
+	<ObjectMember.Type>"switchToProfile"</ObjectMember.Type>
+	
+Name of the command, used to identify the request.
+	
+</ObjectMember>
+
+<ObjectMember name="payload" >
+	<ObjectMember.Type>TPayload</ObjectMember.Type>
+	
+Additional information supplied as part of the command.
+	
+
+<ObjectMember name="page" optional>
+	<ObjectMember.Type>number</ObjectMember.Type>
+	
+Optional page to show when switching to the profile, indexed from 0. When `undefined`, the
+page that was previously visible (when switching away from the profile will be made visible.
+	
+</ObjectMember>
+
+<ObjectMember name="profile" optional>
+	<ObjectMember.Type>string</ObjectMember.Type>
+	
+Name of the profile to switch to; the name must be identical to the one provided in the manifest.
+
+When not specified, Stream Deck will switch to the previous profile.
+	
+</ObjectMember>
+
+</ObjectMember>
+
