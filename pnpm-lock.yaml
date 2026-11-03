@@ -376,9 +376,15 @@ importers:
 
   packages/markdown:
     dependencies:
+      '@elgato/oxfmt-config':
+        specifier: workspace:^
+        version: link:../../config/oxfmt-config
       markdown-it:
         specifier: ^15.0.3
         version: 15.0.3
+      oxfmt:
+        specifier: ^0.70.0
+        version: 0.70.0
       remark:
         specifier: ^15.0.1
         version: 15.0.1
