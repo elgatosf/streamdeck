@@ -8,7 +8,7 @@ Tools for working with Markdown files.
 
 </div>
 
-`@elgato/markdown` is a private package for use within the Elgato workspace. It provides type checking for TypeScript code blocks in Markdown and MDX files, and generates Markdown documentation from TypeScript types.
+`@elgato/markdown` is a private package for use within the Elgato workspace. It provides type checking for TypeScript code blocks in Markdown and MDX files, generates Markdown documentation from TypeScript types, and formats sections of Markdown files.
 
 ## Features
 
@@ -58,6 +58,40 @@ const layout = source.generate("Layout", "flat");
 Every heading has a unique anchor, `{type}` or `{type}.{property}`. Only the `@default`, `@defaultValue`, `@deprecated`, `@remarks`, `@see`, and `@since` tags are included by default; use the `tags` option to change them.
 
 Internally, discovery produces a model that is independent of ts-morph, and each generator renders that model. New formats can be added by implementing a generator, adding the format to `DocumentationFormat`, and registering it with the generators in `generate-markdown.ts`.
+
+### Format
+
+Replaces the content of sections within a Markdown file. Sections start with `<!-- format:start {id} -->`, and end with `<!-- format:end {id} -->`.
+
+```md
+# Manifest
+
+<!-- format:start manifest -->
+
+This content is replaced.
+
+<!-- format:end manifest -->
+```
+
+```ts
+import { writeFileSync } from "node:fs";
+
+import { format } from "@elgato/markdown";
+
+const markdown = format({
+    target: "README.md",
+    data: { manifest: "## Properties" },
+});
+
+writeFileSync("README.md", markdown);
+```
+
+| Option   | Description                                                                                |
+| -------- | ------------------------------------------------------------------------------------------ |
+| `target` | Required path to the Markdown file, resolved relative to the current working directory.    |
+| `data`   | Required content of each section, keyed by the section's identifier, as a `Map` or object. |
+
+`format` returns the Markdown without writing a file. Markers are kept, and content is separated from them by blank lines, so a file can be formatted repeatedly. Sections without data are left unchanged, and multiple sections can share an identifier. Only top-level markers are recognized, so markers within code blocks, lists, block quotes, or paragraphs are ignored. It throws if the file cannot be read, a marker is unmatched, sections are nested, or `data` contains an identifier without a section.
 
 ### Type Checking
 
