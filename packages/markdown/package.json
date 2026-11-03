@@ -42,9 +42,11 @@
         "prepack": "cp ../../LICENSE ."
     },
     "dependencies": {
+        "markdown-it": "^15.0.3",
         "remark": "^15.0.1",
         "remark-mdx": "^3.1.1",
         "remark-parse": "^11.0.0",
+        "ts-morph": "^28.0.0",
         "unified": "^11.0.5"
     },
     "devDependencies": {
