@@ -4,7 +4,9 @@ import type { DocumentableDeclaration } from "./declaration.js";
 
 /**
  * Finds the named, user-defined types referenced by types; containers (arrays, tuples, unions, and intersections) are
- * walked, whereas named types are not, as they are documented separately.
+ * walked, whereas named types are not, as they are documented separately. Declaration-file types are excluded to
+ * avoid documenting library internals; visited types and ordered declaration sets prevent cycles and duplicate
+ * references.
  * @param types Types to inspect.
  * @param owner Declaration to exclude from the references, e.g. to prevent a type referencing itself.
  * @returns Referenced declarations, in the order they were found.
@@ -25,6 +27,7 @@ export function getReferences(types: readonly Type[], owner?: DocumentableDeclar
 
 		const symbol = type.getAliasSymbol() ?? type.getSymbol();
 		for (const node of symbol?.getDeclarations() ?? []) {
+			// Enum members are documented through their parent enum, not as separate types.
 			const declaration = Node.isEnumMember(node) ? node.getParent() : node;
 			if (isDocumentable(declaration) && !declaration.getSourceFile().isDeclarationFile()) {
 				if (declaration !== owner) {
@@ -65,7 +68,8 @@ export function getNodeReferences(node: Node | undefined, owner?: DocumentableDe
 	 * @param current Node to visit.
 	 */
 	function visit(current: Node): void {
-		// Computed types, e.g. `(typeof Versions)[number]`, are resolved by the type checker.
+		// The checker resolves computed types, e.g. `(typeof Versions)[number]`; scanning their syntax would instead
+		// discover intermediate names that are not necessarily references in the resolved type.
 		if (
 			Node.isIndexedAccessTypeNode(current) ||
 			Node.isTypeQuery(current) ||
@@ -76,6 +80,7 @@ export function getNodeReferences(node: Node | undefined, owner?: DocumentableDe
 
 		if (Node.isTypeReference(current)) {
 			let symbol = current.getTypeName().getSymbol();
+			// Resolve import aliases to the original declaration so references share its identity.
 			symbol = symbol?.getAliasedSymbol() ?? symbol;
 			for (const declaration of symbol?.getDeclarations() ?? []) {
 				if (isDocumentable(declaration) && declaration !== owner && !declaration.getSourceFile().isDeclarationFile()) {

@@ -1,4 +1,14 @@
-import { Node, SyntaxKind, TypeFormatFlags, ts, type Symbol as MorphSymbol, type Type, type TypeNode } from "ts-morph";
+import {
+	Node,
+	SyntaxKind,
+	TypeFormatFlags,
+	ts,
+	type Symbol as MorphSymbol,
+	type PropertyDeclaration,
+	type PropertySignature,
+	type Type,
+	type TypeNode,
+} from "ts-morph";
 
 import type { Description } from "../model.js";
 import type { DocumentableDeclaration } from "./declaration.js";
@@ -6,7 +16,8 @@ import { getDescription } from "./descriptions.js";
 import { getNodeReferences, getReferences } from "./references.js";
 
 /**
- * Property discovered on a type, with references to the declarations of other types.
+ * Property discovered on a type, with references to the declarations of other types. References remain declarations
+ * until discovery links the complete graph into the compiler-independent model.
  */
 export interface DiscoveredProperty {
 	/**
@@ -42,7 +53,8 @@ export interface DiscoveredProperty {
 
 /**
  * Determines whether a type is best documented by its properties, e.g. object literals, interfaces, and intersections
- * of them; arrays, tuples, functions, and dictionaries are not.
+ * of them; arrays, tuples, functions, and dictionaries are not. Excluding containers, callable types, and index
+ * signatures avoids presenting library members or open-ended keys as a fixed list of documented properties.
  * @param type Type to check.
  * @returns `true` when the type is documented by its properties.
  */
@@ -64,7 +76,8 @@ export function isObjectLike(type: Type): boolean {
 }
 
 /**
- * Discovers a property of a type, resolving properties inherited from intersections and generic types.
+ * Discovers a property of a type, resolving properties inherited from intersections and generic types. Checker and
+ * syntax references are combined because the checker resolves instantiated types but can erase named aliases.
  * @param symbol Symbol of the property.
  * @param owner Declaration of the type the property belongs to.
  * @param tags Names of the JSDoc tags to include.
@@ -75,37 +88,83 @@ export function discoverProperty(
 	owner: DocumentableDeclaration,
 	tags: ReadonlySet<string>,
 ): DiscoveredProperty {
-	const declaration = symbol
-		.getDeclarations()
-		.find((node) => Node.isPropertySignature(node) || Node.isPropertyDeclaration(node));
-	const optional = symbol.hasFlags(ts.SymbolFlags.Optional);
-	const typeNode = declaration?.getTypeNode();
-
-	let type: Type;
-	let text: string;
-	let references: DocumentableDeclaration[];
-
-	// The declared type preserves aliases (e.g. `Action[]`), and is used unless it must be instantiated, for example a
-	// property inherited from `Base<T>` whose type is `T`.
-	if (typeNode !== undefined && (typeNode.getAncestors().includes(owner) || !dependsOnTypeParameters(typeNode))) {
-		type = typeNode.getType();
-		text = formatType(type, typeNode);
-		references = [...new Set([...getReferences([type]), ...getNodeReferences(typeNode)])];
-	} else {
-		type = symbol.getTypeAtLocation(owner);
-		type = optional ? type.getNonNullableType() : type;
-		text = formatType(type, owner);
-		references = getReferences([type]);
-	}
+	const { declaration, type, typeNode, text, optional, readonly } = resolvePropertyType(symbol, owner);
+	const references =
+		typeNode === undefined
+			? getReferences([type])
+			: [...new Set([...getReferences([type]), ...getNodeReferences(typeNode)])];
 
 	return {
 		name: symbol.getName(),
 		type: text,
 		optional,
-		readonly: declaration !== undefined && declaration.isReadonly(),
+		readonly,
 		description: declaration === undefined ? { text: "", tags: [] } : getDescription(declaration, tags),
 		references,
 	};
+}
+
+/**
+ * Type of a property, resolved relative to the type that owns it. When present, the source node preserves aliases;
+ * otherwise the checker supplies the type, including generic substitutions, in the owner's context.
+ */
+export interface ResolvedPropertyType {
+	/**
+	 * Declaration of the property, when it is declared as a property signature or declaration.
+	 */
+	readonly declaration: PropertyDeclaration | PropertySignature | undefined;
+
+	/**
+	 * Type of the property, excluding the `undefined` implied by `optional`.
+	 */
+	readonly type: Type;
+
+	/**
+	 * Declared type node the type was resolved from; `undefined` when the type was instantiated.
+	 */
+	readonly typeNode: TypeNode | undefined;
+
+	/**
+	 * TypeScript type of the property.
+	 */
+	readonly text: string;
+
+	/**
+	 * Determines whether the property is optional.
+	 */
+	readonly optional: boolean;
+
+	/**
+	 * Determines whether the property is read-only.
+	 */
+	readonly readonly: boolean;
+}
+
+/**
+ * Resolves the type of a property, instantiating properties inherited from intersections and generic types.
+ * @param symbol Symbol of the property.
+ * @param owner Declaration the property is resolved relative to.
+ * @returns Resolved type of the property.
+ */
+export function resolvePropertyType(symbol: MorphSymbol, owner: DocumentableDeclaration): ResolvedPropertyType {
+	const declaration = symbol
+		.getDeclarations()
+		.find((node) => Node.isPropertySignature(node) || Node.isPropertyDeclaration(node));
+	const optional = symbol.hasFlags(ts.SymbolFlags.Optional);
+	const readonly = declaration !== undefined && declaration.isReadonly();
+	const typeNode = declaration?.getTypeNode();
+
+	// The declared type preserves aliases (e.g. `Action[]`), and is used unless it must be instantiated, for example a
+	// property inherited from `Base<T>` whose type is `T`.
+	if (typeNode !== undefined && (typeNode.getAncestors().includes(owner) || !dependsOnTypeParameters(typeNode))) {
+		const type = typeNode.getType();
+		return { declaration, type, typeNode, text: formatType(type, typeNode), optional, readonly };
+	}
+
+	// The owner supplies the context for generic substitutions; the original node may reference unresolved parameters.
+	let type = symbol.getTypeAtLocation(owner);
+	type = optional ? type.getNonNullableType() : type;
+	return { declaration, type, typeNode: undefined, text: formatType(type, owner), optional, readonly };
 }
 
 /**
@@ -120,7 +179,8 @@ function dependsOnTypeParameters(typeNode: TypeNode): boolean {
 }
 
 /**
- * Formats a type as TypeScript, without truncation.
+ * Formats a type as TypeScript, without truncation. Full type text is needed for emitted code rather than the
+ * abbreviated text the checker may produce for display.
  * @param type Type to format.
  * @param enclosingNode Node used to determine how the type's names are qualified.
  * @returns TypeScript type.

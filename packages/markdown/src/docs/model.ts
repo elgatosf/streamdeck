@@ -1,6 +1,7 @@
 /**
  * Documentation of a root type and the types it references; the model is independent of how the types were
- * discovered, allowing generators to render documentation without knowledge of the TypeScript compiler.
+ * discovered, allowing generators to render documentation without knowledge of the TypeScript compiler. References
+ * share type objects rather than names, preserving identity for recursive graphs and types with the same name.
  */
 export interface DocumentationModel {
 	/**
@@ -41,6 +42,13 @@ export interface TypeDocumentation {
 	 * from intersections are included.
 	 */
 	readonly definition: string;
+
+	/**
+	 * Definition of the type, with the object types it references inlined as nested structures; equal to `definition`
+	 * when the type is not object-like. Both forms are computed during discovery so generators can select an overview
+	 * without access to the compiler.
+	 */
+	readonly expandedDefinition: string;
 
 	/**
 	 * Properties of an `object` type, in declaration order.

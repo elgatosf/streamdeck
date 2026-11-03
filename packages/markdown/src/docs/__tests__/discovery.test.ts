@@ -45,6 +45,9 @@ function names(types: readonly TypeDocumentation[]): string[] {
 }
 
 describe("discoverTypes", () => {
+	/**
+	 * Asserts referenced types are discovered transitively and breadth-first, with each type discovered once.
+	 */
 	test("discovers referenced types breadth-first, once", () => {
 		const model = discover(
 			{
@@ -63,6 +66,9 @@ describe("discoverTypes", () => {
 		expect(getType(model, "Root").properties.map((p) => p.type)).toEqual(["Action[]", "[OS, OS?]", "Root"]);
 	});
 
+	/**
+	 * Asserts properties are described with their type, optionality, readonliness, and filtered JSDoc tags.
+	 */
 	test("describes properties", () => {
 		const model = discover(
 			{
@@ -95,6 +101,9 @@ describe("discoverTypes", () => {
 		expect(model.root.definition).toContain('"text-overflow": "clip" | "ellipsis";');
 	});
 
+	/**
+	 * Asserts enums are documented with their members, including imported enums referenced by member, and computed types are resolved.
+	 */
 	test("documents enums, including imported enums accessed by member", () => {
 		const model = discover(
 			{
@@ -130,6 +139,9 @@ describe("discoverTypes", () => {
 		]);
 	});
 
+	/**
+	 * Asserts intersections are flattened into a single object, and inherited generic properties are instantiated.
+	 */
 	test("flattens intersections and resolves inherited generic properties", () => {
 		const model = discover(
 			{
@@ -157,6 +169,9 @@ describe("discoverTypes", () => {
 		expect(names(gbar.references)).toEqual(["Opacity"]);
 	});
 
+	/**
+	 * Asserts type aliases erased by the type checker, e.g. within unions and type parameter defaults, are discovered.
+	 */
 	test("discovers aliases erased by the type checker", () => {
 		const model = discover(
 			{
@@ -176,6 +191,9 @@ describe("discoverTypes", () => {
 		expect(names(getType(model, "Rect").references)).toEqual(["X"]);
 	});
 
+	/**
+	 * Asserts interfaces are documented with definitions that include their properties.
+	 */
 	test("documents interfaces", () => {
 		const model = discover(
 			{
@@ -192,6 +210,9 @@ describe("discoverTypes", () => {
 		expect(getType(model, "Child").definition).toBe("interface Child {\n    name: string;\n}");
 	});
 
+	/**
+	 * Asserts only the specified JSDoc tags are included in descriptions.
+	 */
 	test("filters tags", () => {
 		const project = new Project({ useInMemoryFileSystem: true });
 		const source = project.createSourceFile(
@@ -219,6 +240,9 @@ describe("discoverTypesFromFile", () => {
 		}
 	});
 
+	/**
+	 * Asserts the type declared within the file is discovered, and a missing type throws.
+	 */
 	test("discovers the type within the file", () => {
 		dir = mkdtempSync(join(tmpdir(), "docs-"));
 		const filePath = join(dir, "root.ts");
@@ -231,6 +255,9 @@ describe("discoverTypesFromFile", () => {
 		);
 	});
 
+	/**
+	 * Asserts types re-exported by the file, directly or transitively, are discovered.
+	 */
 	test("discovers types re-exported by the file", () => {
 		dir = mkdtempSync(join(tmpdir(), "docs-"));
 		writeFileSync(join(dir, "manifest.ts"), "export interface Manifest { name: string }");

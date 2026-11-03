@@ -1,11 +1,12 @@
 import type { TypeDocumentation } from "../model.js";
 
 /**
- * Unique anchor ids within a single Markdown document, based on `{typeRef}` or `{typeRef.propName}`.
+ * Unique anchor ids within a single Markdown document, based on `{typeRef}` or `{typeRef}-{propName}`.
  */
 export interface Anchors {
 	/**
-	 * Reserves an anchor id, suffixing it (e.g. `-2`) when the id is already in use.
+	 * Reserves a lowercase, hyphen-separated anchor id, suffixing it (e.g. `-2`) when the id is already in use.
+	 * Names with no remaining letters, marks, or numbers use `section` so they still produce a linkable id.
 	 * @param base Preferred id.
 	 * @returns Unique id.
 	 */
@@ -27,7 +28,9 @@ export interface Anchors {
 }
 
 /**
- * Creates a registry of unique anchor ids for a single Markdown document.
+ * Creates a registry of unique anchor ids for a single Markdown document. Headings and table rows share the same
+ * namespace; type identities are cached so a link can reserve an id before its heading and similarly named types
+ * still receive distinct ids.
  * @returns Anchor registry.
  */
 export function createAnchors(): Anchors {
@@ -36,9 +39,15 @@ export function createAnchors(): Anchors {
 
 	const anchors: Anchors = {
 		reserve(base: string): string {
-			let id = base;
+			// Normalize consistently across renderers while retaining Unicode letters, marks, and numbers.
+			const normalized = base
+				.toLowerCase()
+				.replace(/[^\p{L}\p{M}\p{N}]+/gu, "-")
+				.replace(/^-+|-+$/g, "");
+			const preferred = normalized || "section";
+			let id = preferred;
 			for (let i = 2; ids.has(id); i++) {
-				id = `${base}-${i}`;
+				id = `${preferred}-${i}`;
 			}
 
 			ids.add(id);

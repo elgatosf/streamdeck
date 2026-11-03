@@ -1,17 +1,22 @@
 import { formatDescription, formatPropertySignature } from "../format.js";
 import { createAnchors } from "../markdown/anchors.js";
-import { codeBlock, document, heading, inlineCode, joinBlocks } from "../markdown/syntax.js";
+import { createHeading, document, inlineCode, joinDeferredBlocks, type DeferredBlock } from "../markdown/syntax.js";
+import { typescriptCodeBlock } from "../markdown/typescript.js";
 import type { TypeDocumentation } from "../model.js";
 import type { DocsGenerator } from "./generator.js";
+import { getOrderedEntries } from "./ordered-entries.js";
+import { formatOverview } from "./overview.js";
 
 /**
  * Generates a Markdown reference that documents each type in a chapter, with a heading for each property and enum
- * member; the root type's chapter includes an overview of the type.
+ * member. The root has a level 1 heading and a labelled overview; referenced types use level 2 headings followed by
+ * their definitions, and individual properties and members use level 3 headings. Descriptions remain Markdown.
  */
 export const referenceGenerator: DocsGenerator = {
 	name: "flat",
-	generate(model): string {
+	async generate(model, options = {}): Promise<string> {
 		const anchors = createAnchors();
+		const heading = createHeading(options.headingOffset);
 
 		/**
 		 * Renders links to referenced types.
@@ -21,41 +26,43 @@ export const referenceGenerator: DocsGenerator = {
 		const references = (references: readonly TypeDocumentation[]): string =>
 			references.length === 0 ? "" : `**References:** ${anchors.link(references)}.`;
 
-		return document(
-			model.types.map((type) => {
-				const isRoot = type === model.root;
-				const id = anchors.type(type);
-				const blocks = [
-					heading(isRoot ? 1 : 2, inlineCode(type.name), id),
-					formatDescription(type.description),
-					isRoot ? heading(2, "Overview", anchors.reserve(`${id}.overview`)) : "",
-					codeBlock(type.definition),
-				];
+		// Reserve anchors and validate headings before starting concurrent formatting, so completion order cannot
+		// affect IDs and invalid headings fail before formatter work begins.
+		const chapters = model.types.map((type) => {
+			const isRoot = type === model.root;
+			const id = anchors.type(type);
+			const blocks: DeferredBlock[] = [
+				heading(isRoot ? 1 : 2, inlineCode(type.name), id),
+				formatDescription(type.description),
+				isRoot ? heading(2, "Overview", anchors.reserve(`${id}-overview`)) : "",
+				(): Promise<string> => typescriptCodeBlock(formatOverview(type, options.overview)),
+			];
 
-				for (const property of type.properties) {
+			for (const entry of getOrderedEntries(type)) {
+				if ("type" in entry) {
 					blocks.push(
-						heading(3, inlineCode(property.name), anchors.reserve(`${id}.${property.name}`)),
-						codeBlock(formatPropertySignature(property)),
-						property.optional ? "**Optional.**" : "**Required.**",
-						formatDescription(property.description),
-						references(property.references),
+						heading(3, inlineCode(entry.name), anchors.reserve(`${id}-${entry.name}`)),
+						() => typescriptCodeBlock(formatPropertySignature(entry), "property"),
+						entry.optional ? "**Optional.**" : "**Required.**",
+						formatDescription(entry.description),
+						references(entry.references),
+					);
+				} else {
+					blocks.push(
+						heading(3, inlineCode(entry.name), anchors.reserve(`${id}-${entry.name}`)),
+						() => typescriptCodeBlock(`${entry.name} = ${entry.value}`, "member"),
+						formatDescription(entry.description),
 					);
 				}
+			}
 
-				for (const member of type.members) {
-					blocks.push(
-						heading(3, inlineCode(member.name), anchors.reserve(`${id}.${member.name}`)),
-						codeBlock(`${member.name} = ${member.value}`),
-						formatDescription(member.description),
-					);
-				}
+			// Avoid repeating property references at the type level; types without properties have no per-property list.
+			if (type.properties.length === 0) {
+				blocks.push(references(type.references));
+			}
 
-				if (type.properties.length === 0) {
-					blocks.push(references(type.references));
-				}
-
-				return joinBlocks(blocks);
-			}),
-		);
+			return blocks;
+		});
+		return document(await Promise.all(chapters.map(joinDeferredBlocks)));
 	},
 };

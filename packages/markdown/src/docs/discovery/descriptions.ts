@@ -3,7 +3,8 @@ import type { JSDocableNode } from "ts-morph";
 import type { Description } from "../model.js";
 
 /**
- * Reads the description, and allowed tags, from the JSDoc of a node.
+ * Reads the description, and allowed tags, from the JSDoc of a node. JSDoc blocks become separate Markdown paragraphs,
+ * and filtering here gives every generator the same tags without exposing unselected metadata.
  * @param node Documented node.
  * @param tags Names of the tags to include; other tags, e.g. schema-specific tags, are omitted.
  * @returns Description of the node.

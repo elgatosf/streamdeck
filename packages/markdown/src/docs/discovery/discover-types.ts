@@ -9,6 +9,7 @@ import type {
 	TypeDocumentation,
 } from "../model.js";
 import type { DocumentableDeclaration } from "./declaration.js";
+import { formatObjectDefinition, getExpandedDefinition } from "./definitions.js";
 import { getDescription } from "./descriptions.js";
 import { discoverProperty, isObjectLike, type DiscoveredProperty } from "./properties.js";
 import { getNodeReferences, getReferences } from "./references.js";
@@ -31,7 +32,8 @@ export const DEFAULT_TAGS: ReadonlySet<string> = new Set([
  */
 export interface DiscoveryOptions {
 	/**
-	 * Names of the JSDoc tags, without the `@` prefix, to include in descriptions; default is {@link DEFAULT_TAGS}.
+	 * Names of the JSDoc tags, without the `@` prefix, to include in descriptions. When omitted, {@link DEFAULT_TAGS}
+	 * is used; when supplied, this replaces the defaults.
 	 */
 	readonly tags?: Iterable<string>;
 }
@@ -41,12 +43,13 @@ export interface DiscoveryOptions {
  */
 export interface FileDiscoveryOptions extends DiscoveryOptions {
 	/**
-	 * Path to the file that declares the type.
+	 * Path to the file that declares or exports the type.
 	 */
 	readonly filePath: string;
 
 	/**
-	 * Name of the type, declared in `filePath`, to document; the type can be a type alias, interface, or enum.
+	 * Name of the type, declared or exported by `filePath`, to document; the type can be a type alias, interface, or
+	 * enum.
 	 */
 	readonly typeName: string;
 
@@ -58,7 +61,8 @@ export interface FileDiscoveryOptions extends DiscoveryOptions {
 }
 
 /**
- * Type discovered from its declaration, with references to the declarations of other types.
+ * Type discovered from its declaration, with references to the declarations of other types. This intermediate form
+ * keeps compiler declarations until the whole graph has been discovered; they are then linked to shared model objects.
  */
 interface DiscoveredType {
 	/**
@@ -109,7 +113,9 @@ export function discoverTypesFromFile(options: FileDiscoveryOptions): Documentat
 }
 
 /**
- * Loads a source file, within a project, from which types can be discovered.
+ * Loads a source file, within a project, from which types can be discovered. A supplied tsconfig provides resolution
+ * options without eagerly adding every configured file; dependencies are resolved from the requested source as needed.
+ * Without a tsconfig, strict ESNext and bundler defaults support modern TypeScript imports.
  * @param filePath Path to the file.
  * @param tsConfigFilePath Optional path to the `tsconfig.json` file used to resolve types; when `undefined`, strict
  * compiler options are used.
@@ -137,7 +143,7 @@ export function loadSourceFile(filePath: string, tsConfigFilePath?: string): Sou
  * @returns Declaration of the type; otherwise `undefined` when the type cannot be found.
  */
 export function findDeclaration(source: SourceFile, typeName: string): DocumentableDeclaration | undefined {
-	// Exported declarations include re-exports, e.g. `export * from "./manifest.js"` within an index file.
+	// Prefer exports to resolve re-exports, then fall back to local declarations so unexported types can be documented.
 	return (
 		source.getExportedDeclarations().get(typeName)?.find(isDocumentableDeclaration) ??
 		source.getTypeAlias(typeName) ??
@@ -157,14 +163,15 @@ export function discoverTypes(root: DocumentableDeclaration, options: DiscoveryO
 	const discovered = new Map<DocumentableDeclaration, DiscoveredType>();
 	const declarations = new Set<DocumentableDeclaration>([root]);
 
-	// Iterating a set includes items added during iteration, discovering transitive references breadth-first.
+	// Iterating a set includes newly added references, giving breadth-first order with the root first and each
+	// declaration visited once, even when references repeat or form cycles.
 	for (const declaration of declarations) {
 		const type = discoverType(declaration, tags);
 		discovered.set(declaration, type);
 		type.references.forEach((reference) => declarations.add(reference));
 	}
 
-	// Documentation references each other, so all documentation is created before references are resolved.
+	// Create every model object before linking references, so cycles and repeated references share the same identities.
 	const documentation = new Map<DocumentableDeclaration, TypeDocumentation>();
 	const resolvers: (() => void)[] = [];
 	const resolve = (references: readonly DocumentableDeclaration[], target: TypeDocumentation[]): void => {
@@ -182,11 +189,13 @@ export function discoverTypes(root: DocumentableDeclaration, options: DiscoveryO
 		const references: TypeDocumentation[] = [];
 		resolve(type.references, references);
 
+		// Precompute both overview forms while the compiler is available; generators only receive the model.
 		documentation.set(declaration, {
 			name: declaration.getName(),
 			kind: type.kind,
 			description: type.description,
 			definition: type.definition,
+			expandedDefinition: getExpandedDefinition(declaration) ?? type.definition,
 			members: type.members,
 			properties: type.properties.map((property): PropertyDocumentation => {
 				const propertyReferences: TypeDocumentation[] = [];
@@ -204,7 +213,10 @@ export function discoverTypes(root: DocumentableDeclaration, options: DiscoveryO
 		throw new Error(`Unable to document type "${root.getName()}".`);
 	}
 
-	return { root: rootDocumentation, types: [...documentation.values()] };
+	return {
+		root: rootDocumentation,
+		types: [...documentation.values()],
+	};
 }
 
 /**
@@ -231,7 +243,7 @@ function discoverType(declaration: DocumentableDeclaration, tags: ReadonlySet<st
 		};
 	}
 
-	// Type parameter constraints and defaults are referenced, e.g. `Rect` in `Layout<TRect = Rect>`.
+	// Constraints and defaults can reference types absent from the properties, e.g. `Rect` in `Layout<TRect = Rect>`.
 	const typeParameterReferences = declaration
 		.getTypeParameters()
 		.flatMap((parameter) => [parameter.getConstraint(), parameter.getDefault()])
@@ -240,6 +252,7 @@ function discoverType(declaration: DocumentableDeclaration, tags: ReadonlySet<st
 
 	const type = declaration.getType();
 	if (!isObjectLike(type)) {
+		// Keep the declaration's syntax for non-objects instead of documenting container or callable members as properties.
 		return {
 			kind: "other",
 			description,
@@ -268,7 +281,8 @@ function discoverType(declaration: DocumentableDeclaration, tags: ReadonlySet<st
 }
 
 /**
- * Renders the definition of an object type, with its resolved properties and without documentation.
+ * Renders the definition of an object type, with its resolved properties and without documentation. Rebuilding the
+ * body makes inherited and intersection members visible even when they are not written directly in the declaration.
  * @param declaration Declaration of the type.
  * @param properties Resolved properties of the type.
  * @returns TypeScript definition.
@@ -277,18 +291,12 @@ function getObjectDefinition(
 	declaration: InterfaceDeclaration | TypeAliasDeclaration,
 	properties: readonly DiscoveredProperty[],
 ): string {
-	const exported = declaration.isExported() ? "export " : "";
-	const parameters = declaration.getTypeParameters();
-	const typeParameters =
-		parameters.length > 0 ? `<${parameters.map((parameter) => parameter.getText()).join(", ")}>` : "";
 	const body =
 		properties.length > 0
 			? `{\n${properties.map((property) => `    ${formatPropertySignature(property)}`).join("\n")}\n}`
 			: "{}";
 
-	return Node.isInterfaceDeclaration(declaration)
-		? `${exported}interface ${declaration.getName()}${typeParameters} ${body}`
-		: `${exported}type ${declaration.getName()}${typeParameters} = ${body};`;
+	return formatObjectDefinition(declaration, body);
 }
 
 /**

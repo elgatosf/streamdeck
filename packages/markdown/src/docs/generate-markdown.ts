@@ -1,14 +1,20 @@
 import { discoverTypes, findDeclaration, loadSourceFile } from "./discovery/discover-types.js";
-import type { DocsGenerator } from "./generators/generator.js";
+import type { DocsGenerator, GeneratorOptions } from "./generators/generator.js";
+import type { OverviewStyle } from "./generators/overview.js";
 import { referenceGenerator } from "./generators/reference.js";
 import { tableGenerator } from "./generators/table.js";
 import type { DocumentationModel } from "./model.js";
+
+export type { OverviewStyle };
 
 /**
  * Format used to document a type.
  */
 export type DocumentationFormat = "flat" | "table";
 
+/**
+ * The format union and its registered implementations must stay in sync.
+ */
 const generators = {
 	flat: referenceGenerator,
 	table: tableGenerator,
@@ -35,26 +41,11 @@ export interface DocumentationSourceOptions {
 }
 
 /**
- * TypeScript file from which Markdown documentation can be generated for the types it declares, or exports.
+ * Options used to generate Markdown documentation for a type.
  */
-export interface DocumentationSource {
+export interface DocumentationOptions extends GeneratorOptions {
 	/**
-	 * Generates Markdown documentation for a type and the types it references; each type is discovered once, and can
-	 * be generated in multiple formats.
-	 * @param typeName Name of the type declared, or exported, by the source.
-	 * @param format Format used to document the type.
-	 * @returns Generated Markdown.
-	 * @throws When the format is unsupported, or the type is not found.
-	 */
-	generate(typeName: string, format: DocumentationFormat): string;
-}
-
-/**
- * Options used to generate Markdown documentation for a TypeScript type.
- */
-export interface GenerateMarkdownOptions extends DocumentationSourceOptions {
-	/**
-	 * Name of the type declared, or exported, by `src`.
+	 * Name of the type declared, or exported, by the source.
 	 */
 	readonly typeName: string;
 
@@ -65,8 +56,22 @@ export interface GenerateMarkdownOptions extends DocumentationSourceOptions {
 }
 
 /**
- * Loads a TypeScript file from which Markdown documentation can be generated for multiple types and formats, without
- * reloading the file or rediscovering types.
+ * TypeScript file from which Markdown documentation can be generated for the types it declares, or exports.
+ */
+export interface DocumentationSource {
+	/**
+	 * Generates Markdown documentation for a type and the types it references; each requested root is discovered once,
+	 * and can be generated in multiple formats.
+	 * @param options Options used to generate the documentation.
+	 * @returns Promise resolving to the generated Markdown.
+	 * @throws When the format or heading offset is unsupported, the type is not found, or a code block cannot be formatted.
+	 */
+	generate(options: DocumentationOptions): Promise<string>;
+}
+
+/**
+ * Loads a TypeScript file once for documentation of multiple root types and formats. Discovery is lazy and cached per
+ * root name, so formats share a model while different roots retain their own reference graphs.
  * @param options Options used to load the file and discover types.
  * @returns Source from which documentation can be generated.
  * @throws When the source or tsconfig file cannot be read.
@@ -92,29 +97,14 @@ export function createDocumentationSource(options: DocumentationSourceOptions): 
 	};
 
 	return {
-		generate(typeName: string, format: DocumentationFormat): string {
+		async generate(options: DocumentationOptions): Promise<string> {
+			const { typeName, format, overview, headingOffset } = options;
+			// Reject inherited Object properties as well as unknown formats from untyped callers.
 			if (!Object.hasOwn(generators, format)) {
 				throw new Error(`Unsupported documentation format "${String(format)}".`);
 			}
 
-			return generators[format].generate(discover(typeName));
+			return generators[format].generate(discover(typeName), { overview, headingOffset });
 		},
 	};
-}
-
-/**
- * Generates Markdown documentation for a TypeScript type and the types it references. When documenting multiple types
- * or formats from the same file, prefer {@link createDocumentationSource}.
- * @param options Options used to discover and generate documentation.
- * @returns Generated Markdown.
- * @throws When the format is unsupported, the source or tsconfig file cannot be read, or the type is not found.
- */
-export function generateMarkdown(options: GenerateMarkdownOptions): string {
-	const { typeName, format } = options;
-
-	if (!Object.hasOwn(generators, format)) {
-		throw new Error(`Unsupported documentation format "${String(format)}".`);
-	}
-
-	return createDocumentationSource(options).generate(typeName, format);
 }

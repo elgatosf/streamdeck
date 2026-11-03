@@ -42,7 +42,9 @@
         "prepack": "cp ../../LICENSE ."
     },
     "dependencies": {
+        "@elgato/oxfmt-config": "workspace:^",
         "markdown-it": "^15.0.3",
+        "oxfmt": "^0.70.0",
         "remark": "^15.0.1",
         "remark-mdx": "^3.1.1",
         "remark-parse": "^11.0.0",

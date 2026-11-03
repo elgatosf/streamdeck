@@ -1,10 +1,10 @@
 export {
 	createDocumentationSource,
-	generateMarkdown,
 	type DocumentationFormat,
+	type DocumentationOptions,
 	type DocumentationSource,
 	type DocumentationSourceOptions,
-	type GenerateMarkdownOptions,
+	type OverviewStyle,
 } from "./docs/generate-markdown.js";
 
 export { format, type FormatOptions } from "./format/format.js";
