@@ -55,12 +55,23 @@ function parse(path: string, markdown: string): Root {
 	}
 
 	try {
-		return unified().use(remarkParse).use(remarkMdx).parse(markdown);
+		return unified().use(remarkParse).use(remarkMdx).parse(escapeHeadingIds(markdown));
 	} catch (error) {
 		throw new Error(`Failed to parse MDX file: ${path}: ${error instanceof Error ? error.message : String(error)}`, {
 			cause: error,
 		});
 	}
+}
+
+/**
+ * Escapes custom heading identifiers, e.g. `## Title {#custom-id}`, so they are not parsed as MDX expressions; this
+ * mirrors Docusaurus, which escapes them before parsing MDX.
+ * @param markdown Markdown to escape.
+ * @returns The markdown with custom heading identifiers escaped.
+ */
+function escapeHeadingIds(markdown: string): string {
+	// Matches a heading line containing `{#`, e.g. `## Title {#custom-id}`, so the brace can be escaped.
+	return markdown.replaceAll(/^#{1,6}(?!#).*\{#/gm, (heading) => heading.replace("{#", "\\{#"));
 }
 
 /**

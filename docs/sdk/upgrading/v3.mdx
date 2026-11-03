@@ -92,7 +92,7 @@ export class ExampleNeoInfobarAction extends SingletonAction {
 <Tabs>
 <TabItem value="Before">
 
-```ts
+```ts nocheck
 streamDeck.settings.onDidReceiveGlobalSettings((ev) => {
 	// Fired when the settings change in the property inspector
 	// and when getting the settings.
@@ -104,7 +104,7 @@ const settings = await streamDeck.settings.getGlobalSettings();
 </TabItem>
 <TabItem value="Now">
 
-```ts
+```ts nocheck
 streamDeck.settings.onDidReceiveGlobalSettings((ev) => {
 	// Fired when the settings change in the property inspector.
 });
@@ -120,7 +120,7 @@ The improved settings events lifecycle is enabled through message identifiers, i
 
 Should your plugin require an older version of Stream Deck, you can temporarily retain the previous behavior by setting `useLegacySettingsBehavior` to `true` before connecting:
 
-```ts
+```ts nocheck
 streamDeck.settings.useLegacySettingsBehavior = true;
 await streamDeck.connect();
 ```
@@ -141,7 +141,7 @@ await streamDeck.connect();
 <Tabs>
 <TabItem value="Before">
 
-```ts title="getSettings could specify a different settings type"
+```ts title="getSettings could specify a different settings type" nocheck
 export class SampleAction extends SingletonAction<Settings> {
 	override async onKeyDown(ev: KeyDownEvent<Settings>): Promise<void> {
 		// No error, `SomeOtherSettings` type differs from `Settings`
@@ -153,7 +153,7 @@ export class SampleAction extends SingletonAction<Settings> {
 </TabItem>
 <TabItem value="Now">
 
-```ts title="getSettings return type is always the SingletonAction settings type"
+```ts title="getSettings return type is always the SingletonAction settings type" nocheck
 export class SampleAction extends SingletonAction<Settings> {
 	override async onKeyDown(ev: KeyDownEvent<Settings>): Promise<void> {
 		// Get settings return type is `Settings`
@@ -175,7 +175,7 @@ The `Action` type is now a union of `KeyAction`, `DialAction`, and `NeoInfobarAc
 <Tabs>
 <TabItem value="Before">
 
-```ts
+```ts nocheck
 export class SampleAction extends SingletonAction {
 	override async onWillAppear(ev: WillAppearEvent): Promise<void> {
 		// Action is key or dial
@@ -188,7 +188,7 @@ export class SampleAction extends SingletonAction {
 </TabItem>
 <TabItem value="Now">
 
-```ts
+```ts nocheck
 export class SampleAction extends SingletonAction {
 	override async onWillAppear(ev: WillAppearEvent): Promise<void> {
 		// Action is key, dial, or Neo Infobar
@@ -212,7 +212,7 @@ Additionally, when referencing the `Action`, `KeyAction`, `DialAction`, or `NeoI
 <Tabs>
 <TabItem value="Before">
 
-```ts title="Unspecified settings type"
+```ts title="Unspecified settings type" nocheck
 import type { KeyAction } from "@elgato/streamdeck";
 
 const action: KeyAction; // [!code highlight]
@@ -221,7 +221,7 @@ const action: KeyAction; // [!code highlight]
 </TabItem>
 <TabItem value="Now">
 
-```ts title="Specified settings type"
+```ts title="Specified settings type" nocheck
 import type { KeyAction } from "@elgato/streamdeck";
 
 type Settings = {

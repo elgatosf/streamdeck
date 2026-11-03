@@ -34,7 +34,7 @@ export function typeCheckCodeBlocks(options: TypeCheckCodeBlocksOptions): CodeBl
 
 	options.codeBlocks.forEach((entry, i) => {
 		const ext = EXTENSIONS[entry.lang?.toLowerCase() ?? ""];
-		if (ext === undefined) {
+		if (ext === undefined || isNoCheck(entry)) {
 			return;
 		}
 
@@ -135,6 +135,16 @@ function createCompilerHost(
 	};
 
 	return host;
+}
+
+/**
+ * Determines whether the code block opts out of type checking with `nocheck` in its meta, i.e. the info string after
+ * the language; intended for fragments that are not complete modules.
+ * @param entry Code block.
+ * @returns `true` when the code block should not be type checked; otherwise `false`.
+ */
+function isNoCheck(entry: CodeBlock): boolean {
+	return entry.meta?.split(/\s+/).includes("nocheck") ?? false;
 }
 
 /**

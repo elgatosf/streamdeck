@@ -45,5 +45,8 @@ jobs:
       - name: "🖌️ Lint"
         run: pnpm run lint
 
+      - name: "📚 Check documentation"
+        run: pnpm --filter @elgato/streamdeck run docs:check
+
       - name: "🧪 Test"
         run: pnpm run test

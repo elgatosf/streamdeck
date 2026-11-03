@@ -18,6 +18,7 @@ Thank you for your interest in contributing to the Stream Deck SDK! We welcome c
 - [Code Style](#code-style)
     - [Linting](#linting)
     - [Style Guidelines](#style-guidelines)
+- [Documentation](#documentation)
 
 ## Code of Conduct
 
@@ -133,3 +134,13 @@ This project uses ESLint and Oxfmt to maintain consistent code style.
 - Write clear, self-documenting code with meaningful variable and function names.
 - Add JSDoc comments for public APIs.
 - Keep functions focused and concise.
+
+## Documentation
+
+The SDK documentation lives in `docs/sdk`, and the CLI documentation in `docs/cli`; both are published with their packages. TypeScript code blocks in the SDK documentation are type checked against the SDK:
+
+```
+pnpm --filter @elgato/streamdeck run docs:check
+```
+
+Code blocks that are intentionally incomplete, for example a fragment that omits its imports, opt out with `nocheck` after the language, e.g. ` ```ts nocheck `.

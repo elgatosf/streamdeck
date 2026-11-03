@@ -70,7 +70,7 @@ Accessing embedded resource file paths can be achieved using either:
 
 Continuing from the above `PlayAction` example, the following demonstrates playing the embedded audio file when the action's key down occurs.
 
-```ts title="Accessing resources"
+```ts title="Accessing resources" nocheck
 import { action, type DidReceiveSettingsEvent, type KeyDownEvent, SingletonAction } from "@elgato/streamdeck";
 
 import { audioService } from "./audio-service";
@@ -107,7 +107,7 @@ type Settings = {
 
 When setting resources, the payload must be a map of file paths identifiable by a key, for example:
 
-```ts title="Original action resources"
+```ts title="Original action resources" nocheck
 {
     fileOne: "C:\\audio\\track.mp3",
     fileTwo: "C:\\config.json"
@@ -116,7 +116,7 @@ When setting resources, the payload must be a map of file paths identifiable by 
 
 Using this map structure ensures Stream Deck can mutate the file paths when an action or profile is imported. For example, if the above action were to be exported and imported into another Stream Deck, the file paths may look as follows:
 
-```ts title="Imported action resources"
+```ts title="Imported action resources" nocheck
 {
     fileOne: "C:\\...\\7ae61d68-6882-41dd-8e90-3c54114fa2cf\\track.mp3",
     fileTwo: "C:\\...\\7ae61d68-6882-41dd-8e90-3c54114fa2cf\\config.json"
