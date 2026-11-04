@@ -5,7 +5,7 @@ export {
 	type DocumentationSource,
 	type DocumentationSourceOptions,
 	type OverviewStyle,
-} from "./docs/generate-markdown.js";
+} from "./docs-generators/generate-markdown.js";
 
 export { format, type FormatOptions } from "./format/format.js";
 
