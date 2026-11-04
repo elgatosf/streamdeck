@@ -1,4 +1,3 @@
-import { Project } from "ts-morph";
 import { describe, expect, test } from "vitest";
 
 import { discoverTypes } from "../discovery/discover-types.js";
@@ -6,6 +5,7 @@ import { formatOverview } from "../generators/overview.js";
 import { referenceGenerator } from "../generators/reference.js";
 import { tableGenerator } from "../generators/table.js";
 import type { DocumentationModel } from "../model.js";
+import { createTestProject } from "./test-project.js";
 
 /**
  * Discovers the `Root` type declared in the in-memory source.
@@ -13,7 +13,7 @@ import type { DocumentationModel } from "../model.js";
  * @returns Documentation model.
  */
 function discover(text: string): DocumentationModel {
-	const project = new Project({ useInMemoryFileSystem: true, compilerOptions: { strict: true } });
+	const project = createTestProject();
 	const source = project.createSourceFile("/root.ts", text);
 	return discoverTypes(source.getTypeAlias("Root") ?? source.getInterfaceOrThrow("Root"));
 }
@@ -143,15 +143,11 @@ describe("formatOverview", () => {
 				"    })?];",
 			].join("\n"),
 		);
-		const generated = new Project({ useInMemoryFileSystem: true }).createSourceFile(
-			"/generated.ts",
-			formatOverview(model.root, "expanded"),
-		);
+		const project = createTestProject();
+		const generated = project.createSourceFile("/generated.ts", formatOverview(model.root, "expanded"));
+		const collapsed = project.createSourceFile("/collapsed.ts", model.root.definition);
+
 		expect(generated.getPreEmitDiagnostics().map((diagnostic) => diagnostic.getCode())).not.toContain(17019);
-		const collapsed = new Project({ useInMemoryFileSystem: true }).createSourceFile(
-			"/collapsed.ts",
-			model.root.definition,
-		);
 		expect(collapsed.getPreEmitDiagnostics().map((diagnostic) => diagnostic.getCode())).not.toContain(17019);
 	});
 
@@ -223,16 +219,17 @@ describe("formatOverview", () => {
 	});
 });
 
+const generatorOverviewModel = discover(`
+	enum Kind { A = "a" }
+	type Child = { name: string; kind: Kind };
+	type Parent = { child: Child };
+	export type Root = { parent: Parent };
+`);
+
 describe.each([
 	["flat", referenceGenerator],
 	["table", tableGenerator],
 ] as const)("%s generator overview", (_, generator) => {
-	const model = discover(`
-		enum Kind { A = "a" }
-		type Child = { name: string; kind: Kind };
-		type Parent = { child: Child };
-		export type Root = { parent: Parent };
-	`);
 	const parent = "```typescript\ntype Parent = {\n    child: Child;\n};\n```";
 	const expandedParent =
 		"```typescript\ntype Parent = {\n    child: {\n        name: string;\n        kind: Kind;\n    };\n};\n```";
@@ -241,10 +238,10 @@ describe.each([
 	 * Asserts the root overview is collapsed by default, and expanded when requested.
 	 */
 	test("respects the overview option", async () => {
-		const collapsed = await generator.generate(model);
-		const expanded = await generator.generate(model, { overview: "expanded" });
+		const collapsed = await generator.generate(generatorOverviewModel);
+		const expanded = await generator.generate(generatorOverviewModel, { overview: "expanded" });
 
-		expect(collapsed).toBe(await generator.generate(model, { overview: "collapsed" }));
+		expect(collapsed).toBe(await generator.generate(generatorOverviewModel, { overview: "collapsed" }));
 		expect(collapsed).toContain("```typescript\nexport type Root = {\n    parent: Parent;\n};\n```");
 		expect(expanded).toContain(
 			"```typescript\nexport type Root = {\n    parent: {\n        child: {\n            name: string;\n            kind: Kind;\n        };\n    };\n};\n```",
@@ -256,8 +253,8 @@ describe.each([
 	 * overviews change between styles.
 	 */
 	test("referenced object types render an overview", async () => {
-		const collapsed = await generator.generate(model);
-		const expanded = await generator.generate(model, { overview: "expanded" });
+		const collapsed = await generator.generate(generatorOverviewModel);
+		const expanded = await generator.generate(generatorOverviewModel, { overview: "expanded" });
 
 		expect(collapsed).toContain(`## \`Parent\` {#parent}\n\n${parent}`);
 		expect(expanded).toContain(`## \`Parent\` {#parent}\n\n${expandedParent}`);
@@ -265,7 +262,7 @@ describe.each([
 			"## `Child` {#child}\n\n```typescript\ntype Child = {\n    name: string;\n    kind: Kind;\n};\n```",
 		);
 
-		const restored = model.types.reduce(
+		const restored = generatorOverviewModel.types.reduce(
 			(markdown, type) => markdown.replace(type.expandedDefinition, type.definition),
 			expanded,
 		);

@@ -7,7 +7,6 @@ import { afterAll, beforeAll, describe, expect, expectTypeOf, test, vi } from "v
 import * as markdown from "../../index.js";
 import { createDocumentationSource, type DocumentationOptions, type DocumentationSource } from "../../index.js";
 import * as discovery from "../discovery/discover-types.js";
-import { discoverTypesFromFile } from "../discovery/discover-types.js";
 import { referenceGenerator } from "../generators/reference.js";
 import { tableGenerator } from "../generators/table.js";
 
@@ -15,6 +14,7 @@ describe("createDocumentationSource", () => {
 	let directory = "";
 	let src = "";
 	let tsconfigFile = "";
+	let source: DocumentationSource;
 
 	beforeAll(() => {
 		directory = mkdtempSync(join(tmpdir(), "markdown-docs-"));
@@ -52,11 +52,15 @@ export interface Detail {
 					module: "ESNext",
 					moduleResolution: "Bundler",
 					strict: true,
+					lib: ["ESNext"],
 					baseUrl: ".",
 					paths: { "@docs/*": ["./*"] },
 				},
 			}),
 		);
+
+		// The root fixture is unchanged between tests, so formats can share the source and its cached discovery model.
+		source = createDocumentationSource({ src, tsconfigFile });
 	});
 
 	afterAll(() => {
@@ -91,21 +95,26 @@ export interface Detail {
 			link: "See [Detail](#detail)",
 		},
 	] as const)("generates $format documentation", async ({ format, generator, property, link }) => {
-		const source = createDocumentationSource({ src, tsconfigFile });
-		const result = await source.generate({ typeName: "Root", format });
-		const model = discoverTypesFromFile({ filePath: src, typeName: "Root", tsConfigFilePath: tsconfigFile });
+		const generate = vi.spyOn(generator, "generate");
 
-		expect(result).toBe(await generator.generate(model));
-		expect(result).toContain("# `Root` {#root}");
-		expect(result).toContain("## Overview {#root-overview}");
-		expect(result).toContain("export interface Root {");
-		expect(result).toContain(property);
-		expect(result).toContain(link);
-		expect(result).toContain("## `Detail` {#detail}");
-		expect(result).toContain("**@deprecated**");
-		expect(result).not.toContain("Custom documentation.");
-		expect(result).not.toContain("Hidden file tag.");
-		expect(result).not.toContain("Hidden example.");
+		try {
+			const result = await source.generate({ typeName: "Root", format });
+
+			expect(generate).toHaveBeenCalledOnce();
+			expect(result).toBe(await generate.mock.results[0]!.value);
+			expect(result).toContain("# `Root` {#root}");
+			expect(result).toContain("## Overview {#root-overview}");
+			expect(result).toContain("export interface Root {");
+			expect(result).toContain(property);
+			expect(result).toContain(link);
+			expect(result).toContain("## `Detail` {#detail}");
+			expect(result).toContain("**@deprecated**");
+			expect(result).not.toContain("Custom documentation.");
+			expect(result).not.toContain("Hidden file tag.");
+			expect(result).not.toContain("Hidden example.");
+		} finally {
+			generate.mockRestore();
+		}
 	});
 
 	/**
@@ -121,10 +130,9 @@ export interface Detail {
 	 */
 	test("uses the supplied tsconfig to resolve referenced types", async () => {
 		const withoutConfig = createDocumentationSource({ src });
-		const withConfig = createDocumentationSource({ src, tsconfigFile });
 
 		expect(await withoutConfig.generate({ typeName: "Root", format: "flat" })).not.toContain("## `Detail`");
-		expect(await withConfig.generate({ typeName: "Root", format: "flat" })).toContain("## `Detail`");
+		expect(await source.generate({ typeName: "Root", format: "flat" })).toContain("## `Detail`");
 	});
 
 	/**
@@ -160,23 +168,35 @@ export interface Detail {
 	 * Asserts overview and heading offset options are passed to the selected generator.
 	 */
 	test("passes generation options to the generator", async () => {
-		const model = discoverTypesFromFile({ filePath: src, typeName: "Root", tsConfigFilePath: tsconfigFile });
-		const source = createDocumentationSource({ src, tsconfigFile });
 		const options = { overview: "expanded", headingOffset: 2 } as const;
 
-		expect(await source.generate({ ...options, typeName: "Root", format: "flat" })).toBe(
-			await referenceGenerator.generate(model, options),
-		);
-		expect(await source.generate({ ...options, typeName: "Root", format: "table" })).toBe(
-			await tableGenerator.generate(model, options),
-		);
+		for (const [format, generator] of [
+			["flat", referenceGenerator],
+			["table", tableGenerator],
+		] as const) {
+			const generate = vi.spyOn(generator, "generate");
+
+			try {
+				const result = await source.generate({ ...options, typeName: "Root", format });
+
+				expect(generate).toHaveBeenCalledOnce();
+				expect(generate).toHaveBeenCalledWith(
+					expect.objectContaining({ root: expect.objectContaining({ name: "Root" }) }),
+					options,
+				);
+				expect(result).toBe(await generate.mock.results[0]!.value);
+				expect(result).toContain("### `Root` {#root}");
+				expect(result).toContain("detail: {\n        label: string;\n    };");
+			} finally {
+				generate.mockRestore();
+			}
+		}
 	});
 
 	/**
 	 * Asserts unsupported formats throw, including names of properties inherited from `Object`.
 	 */
 	test.each(["html", "constructor", "__proto__"])("rejects unsupported format %s", async (format) => {
-		const source = createDocumentationSource({ src });
 		await expect(
 			// @ts-expect-error Deliberately test invalid input from an untyped caller.
 			source.generate({ typeName: "Root", format }),
@@ -187,7 +207,6 @@ export interface Detail {
 	 * Asserts missing types reject generation, while missing source and tsconfig files fail during source creation.
 	 */
 	test("reports missing types and files", async () => {
-		const source = createDocumentationSource({ src });
 		await expect(source.generate({ typeName: "Missing", format: "flat" })).rejects.toThrow(
 			`Unable to find type "Missing" in ${src}.`,
 		);

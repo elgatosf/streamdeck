@@ -1,5 +1,4 @@
 import remarkParse from "remark-parse";
-import { Project } from "ts-morph";
 import { unified } from "unified";
 import { beforeAll, describe, expect, test, vi } from "vitest";
 
@@ -9,6 +8,7 @@ import { referenceGenerator } from "../generators/reference.js";
 import { tableGenerator } from "../generators/table.js";
 import * as ts from "../markdown/ts-code-block.js";
 import type { DocumentationModel, PropertyDocumentation, TypeDocumentation } from "../model.js";
+import { createTestProject } from "./test-project.js";
 
 /**
  * Creates a model, independent of discovery, where the root references an enum, an alias, and an object with a
@@ -98,7 +98,7 @@ function getIds(markdown: string): string[] {
  * @returns Documentation model.
  */
 function discoverInlineFont(): DocumentationModel {
-	const project = new Project({ useInMemoryFileSystem: true, compilerOptions: { strict: true } });
+	const project = createTestProject();
 	const source = project.createSourceFile(
 		"/root.ts",
 		`export interface Root {
@@ -389,7 +389,7 @@ describe("table generator", () => {
 	 * Asserts code blocks within descriptions keep their line breaks, as encoded newlines, within a table cell.
 	 */
 	test("multiline code examples retain their line boundaries in descriptions", async () => {
-		const project = new Project({ useInMemoryFileSystem: true, compilerOptions: { strict: true } });
+		const project = createTestProject();
 		const source = project.createSourceFile(
 			"/root.ts",
 			`export interface Root {

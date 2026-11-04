@@ -2,11 +2,11 @@ import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
-import { Project } from "ts-morph";
 import { afterEach, describe, expect, test } from "vitest";
 
 import { discoverTypes, discoverTypesFromFile } from "../discovery/discover-types.js";
 import type { DocumentationModel, TypeDocumentation } from "../model.js";
+import { createTestProject } from "./test-project.js";
 
 /**
  * Discovers a type declared in in-memory source files.
@@ -15,7 +15,7 @@ import type { DocumentationModel, TypeDocumentation } from "../model.js";
  * @returns Documentation model.
  */
 function discover(files: Record<string, string>, typeName: string): DocumentationModel {
-	const project = new Project({ useInMemoryFileSystem: true, compilerOptions: { strict: true } });
+	const project = createTestProject();
 	const sources = Object.entries(files).map(([path, text]) => project.createSourceFile(path, text));
 	const source = sources[0]!;
 	const declaration = source.getTypeAlias(typeName) ?? source.getInterface(typeName) ?? source.getEnumOrThrow(typeName);
@@ -351,7 +351,7 @@ describe("discoverTypes", () => {
 	 * Asserts only the specified JSDoc tags are included in descriptions.
 	 */
 	test("filters tags", () => {
-		const project = new Project({ useInMemoryFileSystem: true });
+		const project = createTestProject();
 		const source = project.createSourceFile(
 			"/root.ts",
 			`/**
@@ -419,7 +419,7 @@ describe("discoverTypesFromFile", () => {
 		writeFileSync(join(dir, "globals.d.ts"), 'interface GlobalType { kind: "internal" | "public" }');
 		writeFileSync(
 			tsConfigFilePath,
-			JSON.stringify({ compilerOptions: { strict: true }, files: ["root.ts", "globals.d.ts"] }),
+			JSON.stringify({ compilerOptions: { strict: true, lib: ["ESNext"] }, files: ["root.ts", "globals.d.ts"] }),
 		);
 
 		expect(discoverTypesFromFile({ filePath, typeName: "Root", tsConfigFilePath }).root.properties[0]?.type).toBe(
