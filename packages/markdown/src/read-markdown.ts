@@ -52,15 +52,32 @@ function parse(path: string, markdown: string, isMdx: boolean): Root {
 
 /**
  * Masks custom heading identifiers, e.g. `## Title {#custom-id}`, with whitespace so they are not parsed as MDX
- * expressions; the length is unchanged, so positions within the tree match the markdown.
+ * expressions; the length is unchanged, so positions within the tree match the markdown. Fenced code blocks are left
+ * as is, so their content is unchanged within the tree.
  * @param markdown Markdown to mask.
  * @returns The masked markdown.
  */
 function maskHeadingIds(markdown: string): string {
-	// Matches a custom identifier at the end of a heading line, e.g. `{#custom-id}`.
-	return markdown.replaceAll(/^(#{1,6}(?!#).*)\{#[^}]+\}(?=[ \t]*$)/gm, (heading, text: string) =>
-		text.padEnd(heading.length),
-	);
+	let fence: string | undefined;
+
+	return markdown
+		.split("\n")
+		.map((line) => {
+			// Matches a code fence, e.g. ` ``` ` or `~~~`; a fence closes when a matching fence of the same character follows.
+			const opening = /^\s{0,3}(`{3,}|~{3,})/.exec(line)?.[1];
+			if (fence === undefined) {
+				fence = opening;
+			} else if (opening !== undefined && opening[0] === fence[0] && opening.length >= fence.length) {
+				fence = undefined;
+				return line;
+			}
+
+			// Matches a custom identifier at the end of a heading line, e.g. `{#custom-id}`.
+			return fence === undefined
+				? line.replace(/^(#{1,6}(?!#).*)\{#[^}]+\}(?=[ \t]*$)/, (heading, text: string) => text.padEnd(heading.length))
+				: line;
+		})
+		.join("\n");
 }
 
 /**
