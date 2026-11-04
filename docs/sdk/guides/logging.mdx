@@ -129,13 +129,13 @@ streamDeck.logger.trace("Detailed messages");
 streamDeck.connect();
 ```
 
-| Level                        | Value            | Description                                                                                                                                                         |
-| ---------------------------- | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| <Anchor>Error</Anchor>       | `LogLevel.ERROR` | Logs that require immediate attention. For example, module failure, unexpected behavior, or data loss/corruption.                                                   |
-| <Anchor>Warning</Anchor>     | `LogLevel.WARN`  | Represents abnormal behavior, but a recoverable state. For example, a value resorting to a fallback value.                                                          |
-| <Anchor>Information</Anchor> | `LogLevel.INFO`  | General information.                                                                                                                                                |
-| <Anchor>Debug</Anchor>       | `LogLevel.DEBUG` | Log entries for debugging and development. For example, variable values.                                                                                            |
-| <Anchor>Trace</Anchor>       | `LogLevel.TRACE` | Detailed entries for analyzing the context and flow of execution. For example, network traffic, IPC communication. These entries may contain sensitive information. |
+| Level                        | Value     | Description                                                                                                                                                         |
+| ---------------------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| <Anchor>Error</Anchor>       | `"error"` | Logs that require immediate attention. For example, module failure, unexpected behavior, or data loss/corruption.                                                   |
+| <Anchor>Warning</Anchor>     | `"warn"`  | Represents abnormal behavior, but a recoverable state. For example, a value resorting to a fallback value.                                                          |
+| <Anchor>Information</Anchor> | `"info"`  | General information.                                                                                                                                                |
+| <Anchor>Debug</Anchor>       | `"debug"` | Log entries for debugging and development. For example, variable values.                                                                                            |
+| <Anchor>Trace</Anchor>       | `"trace"` | Detailed entries for analyzing the context and flow of execution. For example, network traffic, IPC communication. These entries may contain sensitive information. |
 
 You can also control _lowest_ level that will be written to the logger, for example if you want to only log error and warning messages, you would do the following:
 
