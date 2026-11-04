@@ -1,5 +1,6 @@
 {
     "name": "@elgato/markdown",
+    "version": "0.1.0",
     "private": true,
     "description": "Tools for working with markdown files.",
     "keywords": [
