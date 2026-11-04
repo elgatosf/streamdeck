@@ -1,7 +1,7 @@
 import { formatDescription, formatPropertySignature } from "../format.js";
 import { createAnchors } from "../markdown/anchors.js";
 import { createHeading, document, inlineCode, joinDeferredBlocks, type DeferredBlock } from "../markdown/syntax.js";
-import { typescriptCodeBlock } from "../markdown/typescript.js";
+import { tsCodeBlock } from "../markdown/ts-code-block.js";
 import type { TypeDocumentation } from "../model.js";
 import type { DocsGenerator } from "./generator.js";
 import { flattenProperty, getOrderedEntries } from "./ordered-entries.js";
@@ -35,7 +35,7 @@ export const referenceGenerator: DocsGenerator = {
 				heading(isRoot ? 1 : 2, inlineCode(type.name), id),
 				formatDescription(type.description),
 				isRoot ? heading(2, "Overview", anchors.reserve(`${id}-overview`)) : "",
-				(): Promise<string> => typescriptCodeBlock(formatOverview(type, options.overview)),
+				(): Promise<string> => tsCodeBlock(formatOverview(type, options.overview)),
 			];
 
 			for (const entry of getOrderedEntries(type)) {
@@ -48,7 +48,7 @@ export const referenceGenerator: DocsGenerator = {
 
 						blocks.push(
 							heading(3, inlineCode(property.path), propertyId),
-							() => typescriptCodeBlock(formatPropertySignature(property), "property"),
+							() => tsCodeBlock(formatPropertySignature(property), "property"),
 							property.optional ? "**Optional.**" : "**Required.**",
 							property.parent === undefined
 								? ""
@@ -60,7 +60,7 @@ export const referenceGenerator: DocsGenerator = {
 				} else {
 					blocks.push(
 						heading(3, inlineCode(entry.name), anchors.reserve(`${id}-${entry.name}`)),
-						() => typescriptCodeBlock(`${entry.name} = ${entry.value}`, "member"),
+						() => tsCodeBlock(`${entry.name} = ${entry.value}`, "member"),
 						formatDescription(entry.description),
 					);
 				}

@@ -25,7 +25,7 @@ const formatOptions = { ...config, ...markdownOptions, endOfLine: "lf" } as cons
  * @returns Formatted fenced code block.
  * @throws When oxfmt cannot format the code.
  */
-export async function typescriptCodeBlock(code: string, kind: TypeScriptCodeKind = "declaration"): Promise<string> {
+export async function tsCodeBlock(code: string, kind: TypeScriptCodeKind = "declaration"): Promise<string> {
 	const wrapper = kind === "property" ? "interface __Documentation" : kind === "member" ? "enum __Documentation" : "";
 	const source = wrapper.length > 0 ? `${wrapper} {\n${code}\n}` : code;
 	const result = await format("documentation.ts", source, formatOptions);

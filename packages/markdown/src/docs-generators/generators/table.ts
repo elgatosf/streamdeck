@@ -10,7 +10,7 @@ import {
 	table,
 	type DeferredBlock,
 } from "../markdown/syntax.js";
-import { typescriptCodeBlock } from "../markdown/typescript.js";
+import { tsCodeBlock } from "../markdown/ts-code-block.js";
 import type { DocsGenerator } from "./generator.js";
 import { flattenProperty, getOrderedEntries } from "./ordered-entries.js";
 import { formatOverview } from "./overview.js";
@@ -38,10 +38,10 @@ export const tableGenerator: DocsGenerator = {
 
 			if (isRoot) {
 				blocks.push(heading(2, "Overview", anchors.reserve(`${id}-overview`)), () =>
-					typescriptCodeBlock(formatOverview(type, options.overview)),
+					tsCodeBlock(formatOverview(type, options.overview)),
 				);
 			} else if (type.kind === "object") {
-				blocks.push(() => typescriptCodeBlock(formatOverview(type, options.overview)));
+				blocks.push(() => tsCodeBlock(formatOverview(type, options.overview)));
 			}
 
 			const entries = getOrderedEntries(type);
@@ -84,7 +84,7 @@ export const tableGenerator: DocsGenerator = {
 			} else {
 				// Root and object definitions have already been rendered above.
 				if (!isRoot && type.kind !== "object") {
-					blocks.push(() => typescriptCodeBlock(type.definition));
+					blocks.push(() => tsCodeBlock(type.definition));
 				}
 				if (type.references.length > 0) {
 					blocks.push(`**References:** ${anchors.link(type.references)}.`);

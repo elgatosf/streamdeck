@@ -7,7 +7,7 @@ import { discoverTypes } from "../discovery/discover-types.js";
 import type { DocsGenerator } from "../generators/generator.js";
 import { referenceGenerator } from "../generators/reference.js";
 import { tableGenerator } from "../generators/table.js";
-import * as typescript from "../markdown/typescript.js";
+import * as ts from "../markdown/ts-code-block.js";
 import type { DocumentationModel, PropertyDocumentation, TypeDocumentation } from "../model.js";
 
 /**
@@ -343,7 +343,7 @@ describe("flat generator", () => {
 	 * Asserts an invalid heading offset is rejected before any code block formatting starts.
 	 */
 	test("validates headings before formatting", async () => {
-		const format = vi.spyOn(typescript, "typescriptCodeBlock");
+		const format = vi.spyOn(ts, "tsCodeBlock");
 		const model = createModel();
 		const root = { ...model.root, definition: "type Root = {" };
 
