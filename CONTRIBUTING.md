@@ -139,11 +139,7 @@ This project uses ESLint and Oxfmt to maintain consistent code style.
 
 The SDK documentation lives in `docs/sdk`, and the CLI documentation in `docs/cli`; both are published with their packages.
 
-Partials prefixed with an underscore and suffixed `.g.mdx`, such as the manifest and WebSocket references, are generated from the SDK's type declarations after building:
-
-```
-pnpm --filter @elgato/streamdeck run docs:generate
-```
+Partials prefixed with an underscore and suffixed `.g.mdx`, such as the manifest and WebSocket references, are a snapshot generated from the SDK's type declarations by the documentation site's tooling; they are not edited by hand.
 
 Links are checked, including anchors and whether external URLs respond, and TypeScript code blocks in the SDK documentation are type checked against the SDK:
 

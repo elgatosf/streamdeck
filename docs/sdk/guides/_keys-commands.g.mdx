@@ -1,0 +1,171 @@
+
+<details>
+<summary>
+	### getResources
+</summary>
+	
+Gets the resources (files) associated with this action; these resources are embedded into the action when it is
+exported, either individually, or as part of a profile.
+
+Available from Stream Deck 7.1.
+	```ts  
+function getResources(): Promise<Resources>
+```
+	
+</details>
+
+<details>
+<summary>
+	### getSettings
+</summary>
+	
+Gets the settings associated this action instance.
+	```ts  
+function getSettings(): Promise<TSettings>
+```
+	
+</details>
+
+<details>
+<summary>
+	### setImage
+</summary>
+	
+Sets the `image` to be display for this action instance.
+
+NB: The image can only be set by the plugin when the the user has not specified a custom image.
+	```ts  
+function setImage(image?: string, options?: ImageOptions): Promise<void>
+```
+	
+		**Parameters**
+		
+			<ObjectMember name="image" optional>
+				<ObjectMember.Type>string</ObjectMember.Type>
+				<p>Image to display; this can be either a path to a local file within the plugin's folder, a base64 encoded `string` with the mime type declared (e.g. PNG, JPEG, etc.),
+or an SVG `string`. When `undefined`, the image from the manifest will be used.</p>
+			</ObjectMember>
+		
+			<ObjectMember name="options" optional>
+				<ObjectMember.Type>ImageOptions</ObjectMember.Type>
+				<p>Additional options that define where and how the image should be rendered.</p>
+			</ObjectMember>
+		
+	
+</details>
+
+<details>
+<summary>
+	### setResources
+</summary>
+	
+Sets the resources (files) associated with this action; these resources are embedded into the action when it is
+exported, either individually, or as part of a profile.
+
+Available from Stream Deck 7.1.
+	```ts  
+function setResources(resources: Resources): Promise<void>
+```
+	
+		**Parameters**
+		
+			<ObjectMember name="resources" >
+				<ObjectMember.Type>Resources</ObjectMember.Type>
+				<p>The resources as a map of file paths.</p>
+			</ObjectMember>
+		
+	
+</details>
+
+<details>
+<summary>
+	### setSettings
+</summary>
+	
+Sets the settings associated with this action instance.
+	```ts  
+function setSettings(value: TSettings): Promise<void>
+```
+	
+		**Parameters**
+		
+			<ObjectMember name="value" >
+				<ObjectMember.Type>TSettings</ObjectMember.Type>
+				<p>Settings to persist.</p>
+			</ObjectMember>
+		
+	
+</details>
+
+<details>
+<summary>
+	### setState
+</summary>
+	
+Sets the current `state` of this action instance; only applies to actions that have multiple states defined within the manifest.
+	```ts  
+function setState(state: number): Promise<void>
+```
+	
+		**Parameters**
+		
+			<ObjectMember name="state" >
+				<ObjectMember.Type>number</ObjectMember.Type>
+				<p>State to set; this be either 0, or 1.</p>
+			</ObjectMember>
+		
+	
+</details>
+
+<details>
+<summary>
+	### setTitle
+</summary>
+	
+Sets the `title` displayed for this action instance.
+
+NB: The title can only be set by the plugin when the the user has not specified a custom title.
+	```ts  
+function setTitle(title?: string, options?: TitleOptions): Promise<void>
+```
+	
+		**Parameters**
+		
+			<ObjectMember name="title" optional>
+				<ObjectMember.Type>string</ObjectMember.Type>
+				<p>Title to display; when `undefined` the title within the manifest will be used.</p>
+			</ObjectMember>
+		
+			<ObjectMember name="options" optional>
+				<ObjectMember.Type>TitleOptions</ObjectMember.Type>
+				<p>Additional options that define where and how the title should be rendered.</p>
+			</ObjectMember>
+		
+	
+</details>
+
+<details>
+<summary>
+	### showAlert
+</summary>
+	
+Shows a temporary alert (i.e. warning), in the form of an exclamation mark in a yellow triangle, on the key.
+	```ts  
+function showAlert(): Promise<void>
+```
+	
+</details>
+
+<details>
+<summary>
+	### showOk
+</summary>
+	
+Temporarily shows an "OK" (i.e. success), in the form of a check-mark in a green circle, on this action instance.
+Used to provide visual feedback when an action successfully
+executed.
+	```ts  
+function showOk(): Promise<void>
+```
+	
+</details>
