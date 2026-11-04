@@ -1,4 +1,4 @@
-import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
@@ -31,7 +31,7 @@ describe("format", () => {
 	/**
 	 * Asserts the content between markers is replaced, separated from the markers by blank lines, and markers are kept.
 	 */
-	test("replaces the content of sections, keeping the markers", () => {
+	test("replaces the content of sections, keeping the markers", async () => {
 		const target = write(
 			[
 				"# Title",
@@ -51,7 +51,8 @@ describe("format", () => {
 			].join("\n"),
 		);
 
-		expect(format({ target, data: { a: "New A", b: "\n\n## New B\n\nText\n" } })).toBe(
+		await expect(format({ path: target, data: { a: "New A", b: "\n\n## New B\n\nText\n" } })).resolves.toBeUndefined();
+		expect(readFileSync(target, "utf8")).toBe(
 			[
 				"# Title",
 				"",
@@ -78,42 +79,45 @@ describe("format", () => {
 	/**
 	 * Asserts data can be supplied as a `Map`.
 	 */
-	test("accepts a map", () => {
+	test("accepts a map", async () => {
 		const target = write("<!-- format:start a -->\n<!-- format:end a -->\n");
-		expect(format({ target, data: new Map([["a", "A"]]) })).toBe(
-			"<!-- format:start a -->\n\nA\n\n<!-- format:end a -->\n",
-		);
+		await format({ path: target, data: new Map([["a", "A"]]) });
+		expect(readFileSync(target, "utf8")).toBe("<!-- format:start a -->\n\nA\n\n<!-- format:end a -->\n");
 	});
 
 	/**
 	 * Asserts formatting formatted Markdown with the same data does not change it.
 	 */
-	test("is idempotent", () => {
+	test("is idempotent", async () => {
 		const target = write("<!-- format:start a -->\nOld\n<!-- format:end a -->\n");
-		const once = format({ target, data: { a: "New" } });
+		await format({ path: target, data: { a: "New" } });
+		const once = readFileSync(target, "utf8");
 
-		writeFileSync(target, once);
-		expect(format({ target, data: { a: "New" } })).toBe(once);
+		await format({ path: target, data: { a: "New" } });
+		expect(readFileSync(target, "utf8")).toBe(once);
 	});
 
 	/**
 	 * Asserts empty content empties the section.
 	 */
-	test("empties sections with empty content", () => {
+	test("empties sections with empty content", async () => {
 		const target = write("<!-- format:start a -->\nOld\n<!-- format:end a -->\n");
-		expect(format({ target, data: { a: "" } })).toBe("<!-- format:start a -->\n\n<!-- format:end a -->\n");
+		await format({ path: target, data: { a: "" } });
+		expect(readFileSync(target, "utf8")).toBe("<!-- format:start a -->\n\n<!-- format:end a -->\n");
 	});
 
 	/**
 	 * Asserts sections without data are left unchanged.
 	 */
-	test("leaves sections without data unchanged", () => {
+	test("leaves sections without data unchanged", async () => {
 		const markdown =
 			"<!-- format:start a -->\nA\n<!-- format:end a -->\n<!-- format:start b -->\nB\n<!-- format:end b -->\n";
 		const target = write(markdown);
 
-		expect(format({ target, data: {} })).toBe(markdown);
-		expect(format({ target, data: { b: "New" } })).toBe(
+		await format({ path: target, data: {} });
+		expect(readFileSync(target, "utf8")).toBe(markdown);
+		await format({ path: target, data: { b: "New" } });
+		expect(readFileSync(target, "utf8")).toBe(
 			"<!-- format:start a -->\nA\n<!-- format:end a -->\n<!-- format:start b -->\n\nNew\n\n<!-- format:end b -->\n",
 		);
 	});
@@ -121,11 +125,12 @@ describe("format", () => {
 	/**
 	 * Asserts every section with the identifier is replaced.
 	 */
-	test("replaces every section with the same identifier", () => {
+	test("replaces every section with the same identifier", async () => {
 		const target = write(
 			"<!-- format:start a -->\n<!-- format:end a -->\n\n<!-- format:start a -->\n<!-- format:end a -->\n",
 		);
-		expect(format({ target, data: { a: "A" } })).toBe(
+		await format({ path: target, data: { a: "A" } });
+		expect(readFileSync(target, "utf8")).toBe(
 			"<!-- format:start a -->\n\nA\n\n<!-- format:end a -->\n\n<!-- format:start a -->\n\nA\n\n<!-- format:end a -->\n",
 		);
 	});
@@ -133,18 +138,20 @@ describe("format", () => {
 	/**
 	 * Asserts markers are found when CommonMark groups them with an adjacent HTML block.
 	 */
-	test("finds section markers adjacent to top-level HTML blocks", () => {
+	test("finds section markers adjacent to top-level HTML blocks", async () => {
 		const target = write("<!-- format:start a -->\n<div>Old</div>\n<!-- format:end a -->\n");
 
-		expect(format({ target, data: { a: "New" } })).toBe("<!-- format:start a -->\n\nNew\n\n<!-- format:end a -->\n");
+		await format({ path: target, data: { a: "New" } });
+		expect(readFileSync(target, "utf8")).toBe("<!-- format:start a -->\n\nNew\n\n<!-- format:end a -->\n");
 	});
 
 	/**
 	 * Asserts content uses the line endings of the file.
 	 */
-	test("preserves CRLF line endings", () => {
+	test("preserves CRLF line endings", async () => {
 		const target = write("<!-- format:start a -->\r\nOld\r\n<!-- format:end a -->\r\n");
-		expect(format({ target, data: { a: "One\nTwo" } })).toBe(
+		await format({ path: target, data: { a: "One\nTwo" } });
+		expect(readFileSync(target, "utf8")).toBe(
 			"<!-- format:start a -->\r\n\r\nOne\r\nTwo\r\n\r\n<!-- format:end a -->\r\n",
 		);
 	});
@@ -152,7 +159,7 @@ describe("format", () => {
 	/**
 	 * Asserts markers within code blocks, block quotes, and paragraphs are ignored.
 	 */
-	test("ignores markers that are not top-level", () => {
+	test("ignores markers that are not top-level", async () => {
 		const markdown = [
 			"```md",
 			"<!-- format:start a -->",
@@ -167,46 +174,60 @@ describe("format", () => {
 		].join("\n");
 		const target = write(markdown);
 
-		expect(format({ target, data: {} })).toBe(markdown);
-		expect(() => format({ target, data: { a: "A" } })).toThrow(`Unable to find section "a" in ${target}.`);
+		await format({ path: target, data: {} });
+		expect(readFileSync(target, "utf8")).toBe(markdown);
+		await expect(format({ path: target, data: { a: "A" } })).rejects.toThrow(
+			`Unable to find section "a" in ${target}.`,
+		);
+		expect(readFileSync(target, "utf8")).toBe(markdown);
 	});
 
 	/**
 	 * Asserts data without a matching section throws.
 	 */
-	test("throws when data has no matching section", () => {
+	test("throws when data has no matching section", async () => {
 		const target = write("# Title\n");
-		expect(() => format({ target, data: { missing: "" } })).toThrow(`Unable to find section "missing" in ${target}.`);
+		await expect(format({ path: target, data: { missing: "" } })).rejects.toThrow(
+			`Unable to find section "missing" in ${target}.`,
+		);
+		expect(readFileSync(target, "utf8")).toBe("# Title\n");
 	});
 
 	/**
 	 * Asserts a start marker without an end marker throws.
 	 */
-	test("throws when a section does not end", () => {
+	test("throws when a section does not end", async () => {
 		const target = write("# Title\n\n<!-- format:start a -->\n");
-		expect(() => format({ target, data: {} })).toThrow(`Section "a" does not end at ${target}:3.`);
+		await expect(format({ path: target, data: {} })).rejects.toThrow(`Section "a" does not end at ${target}:3.`);
+		expect(readFileSync(target, "utf8")).toBe("# Title\n\n<!-- format:start a -->\n");
 	});
 
 	/**
 	 * Asserts an end marker without a matching start marker throws.
 	 */
-	test("throws when a section ends without starting", () => {
+	test("throws when a section ends without starting", async () => {
 		const target = write("<!-- format:start a -->\n<!-- format:end b -->\n");
-		expect(() => format({ target, data: {} })).toThrow(`Section "b" ends without starting at ${target}:2.`);
+		await expect(format({ path: target, data: {} })).rejects.toThrow(
+			`Section "b" ends without starting at ${target}:2.`,
+		);
+		expect(readFileSync(target, "utf8")).toBe("<!-- format:start a -->\n<!-- format:end b -->\n");
 	});
 
 	/**
 	 * Asserts a start marker within an open section throws.
 	 */
-	test("throws when sections are nested", () => {
+	test("throws when sections are nested", async () => {
 		const target = write("<!-- format:start a -->\n<!-- format:start b -->\n");
-		expect(() => format({ target, data: {} })).toThrow(`Section "b" starts within section "a" at ${target}:2.`);
+		await expect(format({ path: target, data: {} })).rejects.toThrow(
+			`Section "b" starts within section "a" at ${target}:2.`,
+		);
+		expect(readFileSync(target, "utf8")).toBe("<!-- format:start a -->\n<!-- format:start b -->\n");
 	});
 
 	/**
 	 * Asserts a file that cannot be read throws.
 	 */
-	test("throws when the file cannot be read", () => {
-		expect(() => format({ target: join(dir, "missing.md"), data: {} })).toThrow();
+	test("throws when the file cannot be read", async () => {
+		await expect(format({ path: join(dir, "missing.md"), data: {} })).rejects.toMatchObject({ code: "ENOENT" });
 	});
 });

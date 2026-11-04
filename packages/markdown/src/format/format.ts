@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs";
+import { readFile, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
 
 import remarkParse from "remark-parse";
@@ -16,7 +16,7 @@ export interface FormatOptions {
 	/**
 	 * Path to the Markdown file to format.
 	 */
-	readonly target: string;
+	readonly path: string;
 
 	/**
 	 * Content of each section, keyed by the section's identifier.
@@ -67,14 +67,14 @@ interface OpenSection {
 /**
  * Formats a Markdown file by replacing the content of each section, between `<!-- format:start {id} -->` and
  * `<!-- format:end {id} -->` markers, with the data that has the section's identifier. Markers are kept so the file
- * can be formatted again; sections without data are left unchanged.
+ * can be formatted again; sections without data are left unchanged. The target file is overwritten with the result.
  * @param options Options used to format the file.
- * @returns Formatted Markdown.
- * @throws When the file cannot be read, markers are unmatched or nested, or data has no matching section.
+ * @returns Promise resolving when the formatted Markdown has been written.
+ * @throws When the file cannot be read or written, markers are unmatched or nested, or data has no matching section.
  */
-export function format(options: FormatOptions): string {
-	const path = resolve(options.target);
-	const markdown = readFileSync(path, { encoding: "utf8" });
+export async function format(options: FormatOptions): Promise<void> {
+	const path = resolve(options.path);
+	const markdown = await readFile(path, { encoding: "utf8" });
 	const data = options.data instanceof Map ? options.data : new Map(Object.entries(options.data));
 	const sections = findSections(path, markdown);
 
@@ -100,7 +100,8 @@ export function format(options: FormatOptions): string {
 		offset = section.end;
 	}
 
-	return result + markdown.slice(offset);
+	result += markdown.slice(offset);
+	await writeFile(path, result, { encoding: "utf8" });
 }
 
 /**
