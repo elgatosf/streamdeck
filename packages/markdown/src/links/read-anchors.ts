@@ -14,7 +14,7 @@ import { readMarkdown } from "../read-markdown.js";
  * @throws When an MDX file cannot be parsed.
  */
 export async function readAnchors(file: string, visited = new Set<string>()): Promise<Set<string>> {
-	const { isMdx, path, tree } = await readMarkdown(file);
+	const { isMdx, markdown, path, tree } = await readMarkdown(file);
 	visited.add(path);
 
 	const anchors = new Set<string>();
@@ -23,7 +23,9 @@ export async function readAnchors(file: string, visited = new Set<string>()): Pr
 
 	const visit = (node: Nodes): void => {
 		if (node.type === "heading") {
-			anchors.add(getHeadingId(getText(node), slugCounts));
+			// Custom identifiers are masked within the tree, so the heading's source is checked for one.
+			const { end, start } = node.position ?? {};
+			anchors.add(getHeadingId(markdown.slice(start?.offset, end?.offset), getText(node), slugCounts));
 		} else if (node.type === "mdxJsxFlowElement" || node.type === "mdxJsxTextElement") {
 			const id = node.attributes.find((attr) => attr.type === "mdxJsxAttribute" && attr.name === "id");
 			if (typeof id?.value === "string") {
@@ -56,13 +58,14 @@ export async function readAnchors(file: string, visited = new Set<string>()): Pr
 
 /**
  * Gets the identifier of the heading; either the custom identifier, or the slug of the text.
+ * @param source Source of the heading, as written in the markdown.
  * @param text Text of the heading.
  * @param slugCounts Number of times each slug has been used, so duplicate headings are suffixed, e.g. `title-1`.
  * @returns The identifier.
  */
-function getHeadingId(text: string, slugCounts: Map<string, number>): string {
+function getHeadingId(source: string, text: string, slugCounts: Map<string, number>): string {
 	// Matches a custom identifier at the end of the heading, e.g. `{#custom-id}`.
-	const custom = /\{#([^}]+)\}\s*$/.exec(text);
+	const custom = /\{#([^}]+)\}\s*$/.exec(source);
 	if (custom?.[1] !== undefined) {
 		return custom[1];
 	}

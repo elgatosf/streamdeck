@@ -1,4 +1,4 @@
-import { readMarkdown, unescapeHeadingIds } from "../read-markdown.js";
+import { readMarkdown } from "../read-markdown.js";
 import { getLinks, type Link } from "./read-links.js";
 
 /**
@@ -10,22 +10,46 @@ import { getLinks, type Link } from "./read-links.js";
  */
 export async function rewriteLinks(file: string, rewrite: (link: Link) => string | undefined): Promise<string> {
 	const parsed = await readMarkdown(file);
-	const { isMdx, path } = parsed;
-	let result = parsed.markdown;
+	const edits: Edit[] = [];
 
-	// Rewrite the links last to first, so the spans of links yet to be rewritten remain valid.
-	for (const link of getLinks(parsed).reverse()) {
+	for (const link of getLinks(parsed)) {
 		const url = rewrite(link);
 		if (url === undefined || url === link.url) {
 			continue;
 		}
 
 		if (link.destination === undefined) {
-			throw new Error(`Unable to rewrite link "${link.url}" in ${path}:${link.position.start.line}`);
+			throw new Error(`Unable to rewrite link "${link.url}" in ${parsed.path}:${link.position.start.line}`);
 		}
 
-		result = result.slice(0, link.destination.start) + url + result.slice(link.destination.end);
+		edits.push({ ...link.destination, text: url });
 	}
 
-	return isMdx ? unescapeHeadingIds(result) : result;
+	// Apply the edits last to first, so the offsets of edits yet to be applied remain valid.
+	let result = parsed.markdown;
+	for (const { end, start, text } of edits.sort((a, b) => b.start - a.start)) {
+		result = result.slice(0, start) + text + result.slice(end);
+	}
+
+	return result;
+}
+
+/**
+ * Replacement of a span within the markdown.
+ */
+interface Edit {
+	/**
+	 * Offset the span ends at, exclusive.
+	 */
+	end: number;
+
+	/**
+	 * Offset the span starts at, inclusive.
+	 */
+	start: number;
+
+	/**
+	 * Text that replaces the span.
+	 */
+	text: string;
 }
