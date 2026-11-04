@@ -2,6 +2,8 @@
 sidebar_position: 3
 ---
 
+import RuntimeVersions from "./_runtime-versions.mdx";
+
 # Plugin Environment
 
 In this article you'll learn more about how Stream Deck plugins built with the Stream Deck SDK are executed, and the different runtime environments.
@@ -33,14 +35,9 @@ Similar to a web app, the layers of a plugin use separate JavaScript runtimes.
 
 ### Runtime Versions
 
-The latest JavaScript runtime versions are:
+The JavaScript runtime versions, by Stream Deck version, are:
 
-<RuntimeVersions limit="3" />
-
-<details>
-	<summary>Full list of JavaScript runtime versions.</summary>
-	<RuntimeVersions />
-</details>
+<RuntimeVersions />
 
 <Tip>
 	From Stream Deck 7.1, Node.js versions are automatically updated to the latest versions supported by Stream Deck.
