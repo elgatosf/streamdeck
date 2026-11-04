@@ -14,7 +14,8 @@ const MARKDOWN_EXTENSIONS: ReadonlySet<string> = new Set([".md", ".mdx"]);
 /**
  * Checks the links within the markdown files matching the source glob pattern. Relative links must resolve to a file,
  * and when they target an anchor, the anchor must exist within the file. HTTP(S) links are requested, and must not
- * respond with an error status. Links with other schemes, e.g. `mailto:`, are ignored.
+ * respond with an error status; loopback addresses, e.g. `http://localhost:1234`, document local services and are
+ * not requested. Links with other schemes, e.g. `mailto:`, are ignored.
  * @param options Options.
  * @returns The problems found, with positions relative to their markdown file.
  */
@@ -48,6 +49,12 @@ export async function checkLinks(options: CheckLinksOptions): Promise<LinkProble
 		// Matches a URL scheme, e.g. `https:` or `mailto:`.
 		if (/^[a-z][a-z0-9+.-]*:/i.test(url)) {
 			if (!external || !/^https?:/i.test(url) || ignore.some((prefix) => url.startsWith(prefix))) {
+				return undefined;
+			}
+
+			// Matches a loopback host, e.g. `http://localhost:23654/` or `http://127.0.0.1/`, as the local service is
+			// unlikely to be running where the links are checked, e.g. in CI.
+			if (/^https?:\/\/(localhost|127\.0\.0\.1|\[::1\])(?=[:/?#]|$)/i.test(url)) {
 				return undefined;
 			}
 
@@ -158,7 +165,8 @@ export interface CheckLinksOptions {
 	cwd?: string;
 
 	/**
-	 * Whether HTTP(S) links are requested to check they respond successfully; defaults to `true`.
+	 * Whether HTTP(S) links are requested to check they respond successfully; defaults to `true`. Loopback addresses,
+	 * e.g. `http://localhost:23654/`, are never requested.
 	 */
 	external?: boolean;
 
