@@ -8,7 +8,7 @@ In this article you'll learn about preparing and packaging your plugin ready for
 
 ## Overview
 
-Plugins are packaged into `.streamDeckPlugin` files using the [Stream Deck CLI](../../docs/streamdeck/cli/intro.mdx), and once packaged, contain everything your plugin needs to be distributed on Marketplace, or directly to users.
+Plugins are packaged into `.streamDeckPlugin` files using the [Stream Deck CLI](../../cli/intro.mdx), and once packaged, contain everything your plugin needs to be distributed on Marketplace, or directly to users.
 
 Below of an overview of creating a Stream Deck plugin, through to Marketplace.
 
@@ -106,7 +106,7 @@ To prepare and access a DRM protected version of your plugin.
 
 ## Packaging
 
-When your plugin is ready for distribution, you can package it into a `.streamDeckPlugin` installer file using the Stream Deck CLI's [`pack`](../../docs/streamdeck/cli/commands/pack.mdx) command.
+When your plugin is ready for distribution, you can package it into a `.streamDeckPlugin` installer file using the Stream Deck CLI's [`pack`](../../cli/commands/pack.mdx) command.
 
 ```bash title="Example of packaging a plugin"
 # Pack the *.sdPlugin directory
@@ -116,14 +116,13 @@ streamdeck pack com.elgato.hello-world.sdPlugin
 Running the `pack` command does the following
 
 1. Validates your plugin and supporting files.
-   - See also [`validate`](../../docs/streamdeck/cli/commands/validate.mdx).
+   - See also [`validate`](../../cli/commands/validate.mdx).
 2. Bundles the contents of the `*.sdPlugin` directory.
 3. Outputs the `.streamDeckPlugin` installer file.
 
 <Tip title="Ignoring files">
 	When packaging your plugin, you can ignore files by specifying paths, using `.gitignore` specification, within a
-	`.sdignore` file. [Learn more about ignoring files when
-	packaging](../../docs/streamdeck/cli/commands/pack.mdx#description).
+	`.sdignore` file. [Learn more about ignoring files when packaging](../../cli/commands/pack.mdx#description).
 </Tip>
 
 ## Publishing
@@ -137,12 +136,12 @@ Marketplace provides a platform for your plugin, and allows you to reach million
 
 To publish on Marketplace, you should follow these steps:
 
-1. [Review plugin guidelines](../../docs/sync/7jPsXtEDoon2S42hbRbXek.mdx) — Make sure your plugin conforms to Stream Deck and Marketplace style guidelines.
-2. [Create an app icon](../../docs/sync/5hdKZvVI2mGQmqvLnUy7hi.mdx) — Create an eye-catching app icon.
-3. [Create gallery items](../../docs/sync/5hdKZvVI2mGQmqvLnUy7hi.mdx) — Showcase your plugins functionality.
+1. [Review plugin guidelines](../style-guide/plugin-guidelines.mdx) — Make sure your plugin conforms to Stream Deck and Marketplace style guidelines.
+2. [Create an app icon](https://docs.elgato.com/guidelines/products) — Create an eye-catching app icon.
+3. [Create gallery items](https://docs.elgato.com/guidelines/products) — Showcase your plugins functionality.
 4. [Submit for review](https://maker.elgato.com) — Submit, manage, and review your products using Maker Console.
 
-You can also learn more about submitting products to Marketplace in [Become a Maker](../../docs/sync/7MpNh5rCKQiHHrVLkJ7cWh.mdx).
+You can also learn more about submitting products to Marketplace in [Become a Maker](https://docs.elgato.com/marketplace/become-a-maker).
 
 <Info title="Returning Makers">
 	Returning Maker? After creating an account within Maker Console, if you are unable to see your plugins, please contact

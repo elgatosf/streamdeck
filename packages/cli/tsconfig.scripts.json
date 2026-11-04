@@ -1,0 +1,9 @@
+{
+    "extends": "@elgato/tsconfig/node20/app",
+    "compilerOptions": {
+        "customConditions": ["node"],
+        "noEmit": true,
+        "rootDir": "."
+    },
+    "include": ["scripts"]
+}

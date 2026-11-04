@@ -44,9 +44,10 @@
         "dev": "wireit",
         "dev:bin": "wireit",
         "dev:exports": "wireit",
+        "docs:check": "tsc -p tsconfig.scripts.json && node scripts/check-docs.ts",
         "lint": "eslint --max-warnings 0",
         "typecheck": "wireit",
-        "prepack": "cp ../../LICENSE . && rm -rf docs && cp -R ../../docs/cli docs"
+        "prepack": "cp ../../LICENSE . && node scripts/pack-docs.ts"
     },
     "wireit": {
         "build": {
@@ -132,6 +133,7 @@
     },
     "devDependencies": {
         "@elgato/eslint-config": "^0.3.2",
+        "@elgato/markdown": "workspace:^",
         "@elgato/tsconfig": "workspace:^",
         "@types/ejs": "^3.1.5",
         "@types/inquirer": "^9.0.7",

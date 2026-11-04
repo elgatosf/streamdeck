@@ -42,7 +42,7 @@
         "test": "vitest --run --reporter verbose",
         "test:coverage": "vitest run --coverage",
         "test:watch": "vitest",
-        "prepack": "cp ../../README.md . && cp ../../LICENSE . && pnpm run docs:generate && rm -rf docs && cp -R ../../docs/sdk docs"
+        "prepack": "cp ../../README.md . && cp ../../LICENSE . && pnpm run docs:generate && node scripts/pack-docs.ts"
     },
     "dependencies": {
         "@elgato/schemas": "workspace:*",

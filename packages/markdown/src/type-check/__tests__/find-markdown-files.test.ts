@@ -4,7 +4,7 @@ import { join, relative } from "node:path";
 
 import { afterAll, beforeAll, describe, expect, test } from "vitest";
 
-import { findMarkdownFiles } from "../find-markdown-files.js";
+import { findMarkdownFiles } from "../../find-markdown-files.js";
 
 const FIXTURES_DIR = join(import.meta.dirname, "fixtures");
 

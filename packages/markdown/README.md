@@ -57,3 +57,43 @@ Each block is checked as a separate module. Imports are resolved from `cwd` usin
 - `message`, the TypeScript diagnostic message.
 
 The function throws if the tsconfig cannot be read or is invalid, if no Markdown files match `src`, or if an MDX file cannot be parsed.
+
+### Link Checking
+
+Finds Markdown files and checks their links. Relative links must resolve to a file, and when they target an anchor, the anchor must exist within that file: a heading (by slug or custom `{#id}`), a JSX element's `id`, or either of those within an MDX file imported as a partial. HTTP(S) links are requested, and must not respond with an error status.
+
+```ts
+import { checkLinks } from "@elgato/markdown";
+
+const problems = await checkLinks({
+    ignore: ["https://www.npmjs.com/"],
+    src: "docs/**/*.md",
+});
+
+for (const problem of problems) {
+    console.log(`${problem.link}: ${problem.url}: ${problem.message}`);
+}
+```
+
+| Option     | Description                                                                                  |
+| ---------- | -------------------------------------------------------------------------------------------- |
+| `src`      | Required glob pattern for the Markdown files to check.                                       |
+| `cwd`      | Directory used to resolve the glob. Defaults to `process.cwd()`.                             |
+| `external` | Whether HTTP(S) links are requested. Defaults to `true`.                                     |
+| `ignore`   | Prefixes of HTTP(S) links that are not requested, e.g. sites that reject automated requests. |
+
+Each `LinkProblem` includes the `file`, `line`, `column`, and `link` of the link, its `url`, and a `message` describing the problem.
+
+### Link Rewriting
+
+Rewrites the URLs of a file's links, for example to replace relative links with absolute ones when copying documentation elsewhere. The file is not modified.
+
+```ts
+import { rewriteLinks } from "@elgato/markdown";
+
+const markdown = await rewriteLinks("docs/intro.md", (link) => {
+    return link.url.startsWith("../cli/") ? `https://example.com/${link.url.slice(3)}` : undefined;
+});
+```
+
+The callback receives each `Link` (its `file`, `position`, `type`, and `url`) and returns the new URL, or `undefined` to leave the link as is.

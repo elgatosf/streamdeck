@@ -26,7 +26,7 @@ Much like [settings](./settings.mdx), resources are associated with an instance 
 
 - [`action.setResources`](./actions.mdx#setresources) - Sets resources associated with an instance of an action.
 - [`action.getResources`](./actions.mdx#getresources) - Gets resources associated with an instance of an action.
-- [`SingletonAction.onDidReceiveResources`](./actions#ondidreceiveresources) - Occurs when resources are updated within the property inspector.
+- [`SingletonAction.onDidReceiveResources`](./actions.mdx#ondidreceiveresources) - Occurs when resources are updated within the property inspector.
 
 <Tip>
 	Resources use Stream Deck's new message identifiers, meaning `onDidReceiveResources` is **only** called when the
@@ -66,7 +66,7 @@ With the resource now embedded into the action, the file be compressed alongside
 Accessing embedded resource file paths can be achieved using either:
 
 - [`action.getResources`](./actions.mdx#getresources)
-- [`SingletonAction.onDidReceiveResources`](./actions#ondidreceiveresources)
+- [`SingletonAction.onDidReceiveResources`](./actions.mdx#ondidreceiveresources)
 
 Continuing from the above `PlayAction` example, the following demonstrates playing the embedded audio file when the action's key down occurs.
 

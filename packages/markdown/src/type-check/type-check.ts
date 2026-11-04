@@ -1,5 +1,5 @@
+import { findMarkdownFiles } from "../find-markdown-files.js";
 import type { CodeBlockDiagnostic } from "./code-block-diagnostic.js";
-import { findMarkdownFiles } from "./find-markdown-files.js";
 import { readCodeBlocks } from "./read-code-blocks.js";
 import { typeCheckCodeBlocks } from "./type-check-code-blocks.js";
 
