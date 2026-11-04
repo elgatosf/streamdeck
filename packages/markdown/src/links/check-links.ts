@@ -120,18 +120,23 @@ export async function checkLinks(options: CheckLinksOptions): Promise<LinkProble
 
 /**
  * Fetches the URL to determine whether it responds successfully; `HEAD` is attempted first, falling back to `GET` as
- * some servers do not support `HEAD`.
+ * some servers do not support `HEAD`. A rate limited response (`429`) is inconclusive, and is not a problem.
  * @param url URL to fetch.
  * @returns The problem with the response; otherwise `undefined`.
  */
 async function fetchStatus(url: string): Promise<string | undefined> {
 	try {
 		let response = await fetch(url, { method: "HEAD", signal: AbortSignal.timeout(15_000) });
-		if (!response.ok) {
+		if (!response.ok && response.status !== 429) {
 			response = await fetch(url, { method: "GET", signal: AbortSignal.timeout(15_000) });
 		}
 
-		return response.ok ? undefined : `HTTP ${response.status} ${response.statusText}`.trim();
+		// Too many requests means the server is rate limiting the check, not that the link is broken.
+		if (response.ok || response.status === 429) {
+			return undefined;
+		}
+
+		return `HTTP ${response.status} ${response.statusText}`.trim();
 	} catch (error) {
 		return `Request failed: ${error instanceof Error ? error.message : String(error)}`;
 	}

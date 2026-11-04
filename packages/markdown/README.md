@@ -60,7 +60,7 @@ The function throws if the tsconfig cannot be read or is invalid, if no Markdown
 
 ### Link Checking
 
-Finds Markdown files and checks their links. Relative links must resolve to a file, and when they target an anchor, the anchor must exist within that file: a heading (by slug or custom `{#id}`), a JSX element's `id`, or either of those within an MDX file imported as a partial. HTTP(S) links are requested, and must not respond with an error status; loopback addresses, e.g. `http://localhost:23654/`, are never requested.
+Finds Markdown files and checks their links. Relative links must resolve to a file, and when they target an anchor, the anchor must exist within that file: a heading (by slug or custom `{#id}`), a JSX element's `id`, or either of those within an MDX file imported as a partial. HTTP(S) links are requested, and must not respond with an error status; a rate limited response (`429`) is not treated as an error. Loopback addresses, e.g. `http://localhost:23654/`, are never requested.
 
 ```ts
 import { checkLinks } from "@elgato/markdown";
