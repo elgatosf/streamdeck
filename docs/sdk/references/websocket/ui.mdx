@@ -21,7 +21,7 @@ Below is an example of implementing the `connectElgatoStreamDeckSocket` function
 ```js title="Connecting to Stream Deck in the property inspector"
 window.connectElgatoStreamDeckSocket = (port, uuid, event, info, actionInfo) => {
 	const infoObj = JSON.parse(info); // Information about Stream Deck and the plugin.
-	const actionInfo = JSON.parse(actionInfo); // Information about the action the UI is for.
+	const actionInfoObj = JSON.parse(actionInfo); // Information about the action the UI is for.
 
 	// Establish a connection with Stream Deck
 	const connection = new WebSocket(`ws://127.0.0.1:${port}`);
