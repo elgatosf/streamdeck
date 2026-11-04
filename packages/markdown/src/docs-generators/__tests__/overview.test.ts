@@ -169,6 +169,40 @@ describe("formatOverview", () => {
 	});
 
 	/**
+	 * Asserts expanded unions retain valid callable and constructable members in properties, arrays, and tuples.
+	 */
+	test("expanded preserves callable unions", async () => {
+		const model = discover(`
+			interface Child { name: string }
+			export interface Root {
+				value: Child | (() => string);
+				create: Child | (new (name: string) => Child);
+				array: (Child | (() => string))[];
+				tuple: [(Child | (() => string))?];
+				single: [Child, (() => string)?];
+				singleConstructor: [Child, (new (name: string) => Child)?];
+			}
+		`);
+		const expanded = formatOverview(model.root, "expanded");
+
+		expect(expanded).toContain(" | (() => string)");
+		expect(expanded).toContain(" | (new (name: string) => Child)");
+		expect(expanded).toContain("}, (() => string)?];");
+		expect(expanded).toContain("}, (new (name: string) => Child)?];");
+		const source = createTestProject().createSourceFile(
+			"/generated.ts",
+			`interface Child { name: string }\n${expanded}`,
+		);
+		expect(source.getPreEmitDiagnostics().map((diagnostic) => diagnostic.getCode())).toEqual([]);
+
+		for (const generator of [referenceGenerator, tableGenerator]) {
+			expect(await generator.generate(model, { overview: "expanded" })).toContain(
+				"```typescript\nexport interface Root",
+			);
+		}
+	});
+
+	/**
 	 * Asserts interfaces are expanded without a trailing semicolon.
 	 */
 	test("expanded interfaces", () => {

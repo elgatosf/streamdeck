@@ -81,7 +81,7 @@ Pass these to `source.generate`:
 
 <!-- Dotted paths keep inline members identifiable without turning anonymous object types into separate chapters. -->
 
-- Inline object properties use dotted paths, e.g. `font.size`, including within arrays, tuples, and unions. Flat output links nested properties to their parent.
+- Inline object properties use dotted paths, e.g. `font.size`, including within arrays, tuples, and unions. Recursive paths stop at the first repeated type. Flat output links nested properties to their parent.
 - Headings use unique, lowercase, hyphenated IDs, e.g. `{#manifest-actions}`; duplicate IDs get numeric suffixes. Use a renderer that supports explicit heading IDs, such as Docusaurus or Astro with a heading-ID plugin. MDX may need additional configuration; table rows use HTML anchors.
 - Creating a source throws if files cannot be read. Generation rejects for missing types, unsupported formats, invalid heading offsets, or formatting errors.
 

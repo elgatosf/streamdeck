@@ -58,6 +58,15 @@ export interface DiscoveredProperty {
 }
 
 /**
+ * Determines whether a type has call or construct signatures.
+ * @param type Type to check.
+ * @returns `true` when the type can be called or constructed.
+ */
+export function hasCallOrConstructSignatures(type: Type): boolean {
+	return type.getCallSignatures().length > 0 || type.getConstructSignatures().length > 0;
+}
+
+/**
  * Determines whether a type is best documented by its properties, e.g. object literals, interfaces, and intersections
  * of them; arrays, tuples, functions, and dictionaries are not. Excluding containers, callable types, and index
  * signatures avoids presenting library members or open-ended keys as a fixed list of documented properties.
@@ -74,8 +83,7 @@ export function isObjectLike(type: Type): boolean {
 		!type.isArray() &&
 		!type.isReadonlyArray() &&
 		!type.isTuple() &&
-		type.getCallSignatures().length === 0 &&
-		type.getConstructSignatures().length === 0 &&
+		!hasCallOrConstructSignatures(type) &&
 		type.getStringIndexType() === undefined &&
 		type.getNumberIndexType() === undefined
 	);
@@ -87,19 +95,21 @@ export function isObjectLike(type: Type): boolean {
  * @param symbol Symbol of the property.
  * @param owner Declaration of the type the property belongs to.
  * @param tags Names of the JSDoc tags to include.
+ * @param ancestors Inline object types already visited on this property path.
  * @returns Discovered property.
  */
 export function discoverProperty(
 	symbol: MorphSymbol,
 	owner: DocumentableDeclaration,
 	tags: ReadonlySet<string>,
+	ancestors: ReadonlySet<Type> = new Set(),
 ): DiscoveredProperty {
 	const { declaration, type, typeNode, text, optional, readonly } = resolvePropertyType(symbol, owner);
 	const references =
 		typeNode === undefined
 			? getReferences([type])
 			: [...new Set([...getReferences([type]), ...getNodeReferences(typeNode)])];
-	const properties = getInlineProperties(type, owner, tags);
+	const properties = getInlineProperties(type, owner, tags, ancestors);
 
 	return {
 		name: symbol.getName(),
@@ -116,22 +126,30 @@ export function discoverProperty(
  * Discovers the properties of the inline object types within a type, looking through unions, arrays, and tuples so
  * that, for example, `{ size: number } | string` and `{ size: number }[]` both document `size`. Named types are not
  * included as they are documented separately. When several inline objects declare the same property, the first is
- * kept so each property path is documented once.
+ * kept so each property path is documented once. Recursive objects are expanded only once per property path.
  * @param type Property type.
  * @param owner Declaration the property is resolved relative to.
  * @param tags Names of the JSDoc tags to include.
+ * @param ancestors Inline object types already visited on this property path.
  * @returns Properties of the inline object types.
  */
 function getInlineProperties(
 	type: Type,
 	owner: DocumentableDeclaration,
 	tags: ReadonlySet<string>,
+	ancestors: ReadonlySet<Type>,
 ): DiscoveredProperty[] {
 	const properties = new Map<string, DiscoveredProperty>();
 	for (const object of getInlineObjects(type, new Set())) {
+		if (ancestors.has(object)) {
+			continue;
+		}
+
+		// Track ancestors per branch so a shared inline type is still documented under each sibling.
+		const path = new Set([...ancestors, object]);
 		for (const symbol of object.getProperties()) {
 			if (!properties.has(symbol.getName())) {
-				properties.set(symbol.getName(), discoverProperty(symbol, owner, tags));
+				properties.set(symbol.getName(), discoverProperty(symbol, owner, tags, path));
 			}
 		}
 	}
@@ -224,8 +242,8 @@ export function resolvePropertyType(symbol: MorphSymbol, owner: DocumentableDecl
 	// `Base & { kind: "special" }`, whose type is the intersection of its declarations.
 	if (
 		typeNode !== undefined &&
-		(typeNode.getAncestors().includes(owner) ||
-			(symbol.getDeclarations().length === 1 && !dependsOnTypeParameters(typeNode)))
+		symbol.getDeclarations().length === 1 &&
+		(typeNode.getAncestors().includes(owner) || !dependsOnTypeParameters(typeNode))
 	) {
 		const type = typeNode.getType();
 		return { declaration, type, typeNode, text: formatType(type, typeNode), optional, readonly };
@@ -256,13 +274,54 @@ function dependsOnTypeParameters(typeNode: TypeNode): boolean {
  * @returns TypeScript type.
  */
 export function formatType(type: Type, enclosingNode: Node): string {
-	// TypeScript prints optional tuple elements as `(T | undefined)?`; restore the source form `T?`, keeping the
-	// parentheses of unions, e.g. `("a" | "b")?`, as `"a" | "b"?` is invalid.
-	return type
-		.getText(enclosingNode, TypeFormatFlags.NoTruncation)
-		.replace(/\(([^()]+?) \| undefined\)\?/g, (_, inner: string) =>
-			inner.includes(" | ") ? `(${inner})?` : `${inner}?`,
-		);
+	return normalizeOptionalTupleElements(type.getText(enclosingNode, TypeFormatFlags.NoTruncation));
+}
+
+/**
+ * Removes the `undefined` implied by optional tuple elements in checker output. Syntax-aware edits avoid changing
+ * identical text inside string or template literal types.
+ * @param text TypeScript type.
+ * @returns Type with optional tuple elements normalized.
+ */
+function normalizeOptionalTupleElements(text: string): string {
+	if (!text.includes(" | undefined)?")) {
+		return text;
+	}
+
+	const prefix = "type T = ";
+	const source = ts.createSourceFile("type.ts", `${prefix}${text};`, ts.ScriptTarget.Latest, true);
+	const removals: [start: number, end: number][] = [];
+
+	const visit = (node: ts.Node): void => {
+		if (
+			ts.isOptionalTypeNode(node) &&
+			ts.isTupleTypeNode(node.parent) &&
+			ts.isParenthesizedTypeNode(node.type) &&
+			ts.isUnionTypeNode(node.type.type)
+		) {
+			const types = node.type.type.types;
+			const last = types.at(-1);
+			const previous = types.at(-2);
+			if (last?.kind === ts.SyntaxKind.UndefinedKeyword && previous !== undefined) {
+				removals.push([previous.getEnd() - prefix.length, last.getEnd() - prefix.length]);
+
+				// The compiler factory retains parentheses when the remaining type requires them.
+				if (types.length === 2 && ts.factory.createOptionalTypeNode(previous).type === previous) {
+					const start = node.type.getStart(source) - prefix.length;
+					const end = node.type.getEnd() - prefix.length;
+					removals.push([start, start + 1], [end - 1, end]);
+				}
+			}
+		}
+
+		ts.forEachChild(node, visit);
+	};
+
+	visit(source);
+	for (const [start, end] of removals.sort((a, b) => b[0] - a[0])) {
+		text = text.slice(0, start) + text.slice(end);
+	}
+	return text;
 }
 
 /**
@@ -292,7 +351,12 @@ function formatTypeWithoutUndefined(type: Type, enclosingNode: Node): string {
  */
 export function formatUnion(types: readonly Type[], format: (type: Type) => string): string {
 	const booleans = types.filter((type) => type.isBooleanLiteral()).map((type) => type.getText());
-	const members = types.filter((type) => !type.isBooleanLiteral()).map(format);
+	const otherTypes = types.filter((type) => !type.isBooleanLiteral());
+	const isUnion = otherTypes.length + (booleans.length > 0 ? 1 : 0) > 1;
+	const members = otherTypes.map((type) => {
+		const text = format(type);
+		return isUnion && hasCallOrConstructSignatures(type) ? `(${text})` : text;
+	});
 
 	if (booleans.length > 0) {
 		members.unshift(booleans.length > 1 ? "boolean" : booleans[0]!);

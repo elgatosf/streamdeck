@@ -15,6 +15,15 @@ export function getReferences(types: readonly Type[], owner?: DocumentableDeclar
 	const visited = new Set<Type>();
 
 	/**
+	 * Visits generic arguments even when their outer type is excluded, e.g. `Detail` in `Promise<Detail>`.
+	 * @param type Type whose arguments are visited.
+	 */
+	function visitTypeArguments(type: Type): void {
+		const typeArguments = type.getAliasTypeArguments();
+		(typeArguments.length > 0 ? typeArguments : type.getTypeArguments()).forEach(visit);
+	}
+
+	/**
 	 * Visits a type, adding it to the references when it is a named type.
 	 * @param type Type to visit.
 	 */
@@ -32,13 +41,12 @@ export function getReferences(types: readonly Type[], owner?: DocumentableDeclar
 				if (declaration !== owner) {
 					references.add(declaration);
 				}
-				(type.getAliasTypeArguments().length > 0 ? type.getAliasTypeArguments() : type.getTypeArguments()).forEach(
-					visit,
-				);
+				visitTypeArguments(type);
 				return;
 			}
 		}
 
+		visitTypeArguments(type);
 		if (type.isArray() || type.isReadonlyArray()) {
 			visit(type.getArrayElementTypeOrThrow());
 		} else if (type.isTuple()) {

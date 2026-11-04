@@ -2,7 +2,13 @@ import { Node, ts, type InterfaceDeclaration, type Type, type TypeAliasDeclarati
 
 import { formatPropertySignature } from "../format.js";
 import type { DocumentableDeclaration } from "./declaration.js";
-import { formatType, formatUnion, isObjectLike, resolvePropertyType } from "./properties.js";
+import {
+	formatType,
+	formatUnion,
+	hasCallOrConstructSignatures,
+	isObjectLike,
+	resolvePropertyType,
+} from "./properties.js";
 
 /**
  * Indentation of each level of nesting.
@@ -139,10 +145,11 @@ function expandType(
 			}
 
 			if (flags & ts.ElementFlags.Optional) {
-				// Optional elements imply `undefined`; unions are parenthesized, as `A | B?` is invalid.
+				// Optional elements imply `undefined`; unions and callable types need parentheses before `?`.
 				const types = inner.isUnion() ? inner.getUnionTypes().filter((member) => !member.isUndefined()) : [inner];
 				const text = formatUnion(types, expand);
-				return `${types.length > 1 ? `(${text})` : text}?`;
+				const parenthesize = types.length > 1 || (types.length === 1 && hasCallOrConstructSignatures(types[0]!));
+				return `${parenthesize ? `(${text})` : text}?`;
 			}
 
 			return expand(inner);

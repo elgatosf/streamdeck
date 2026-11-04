@@ -5,6 +5,8 @@ import { join } from "node:path";
 import { afterEach, describe, expect, test } from "vitest";
 
 import { discoverTypes, discoverTypesFromFile } from "../discovery/discover-types.js";
+import { referenceGenerator } from "../generators/reference.js";
+import { tableGenerator } from "../generators/table.js";
 import type { DocumentationModel, TypeDocumentation } from "../model.js";
 import { createTestProject } from "./test-project.js";
 
@@ -192,6 +194,33 @@ describe("discoverTypes", () => {
 	});
 
 	/**
+	 * Asserts intersection properties use the resolved type even when the first declaration is within the root.
+	 */
+	test("resolves locally declared intersection properties", async () => {
+		const model = discover(
+			{
+				"/root.ts": `
+					type Base = { kind: "special"; value: number; active: true };
+					export type Root = { kind: string; value: string | number; active?: boolean } & Base;
+				`,
+			},
+			"Root",
+		);
+
+		expect(model.root.properties.map((property) => [property.name, property.type, property.optional])).toEqual([
+			["kind", '"special"', false],
+			["value", "number", false],
+			["active", "true", false],
+		]);
+
+		for (const generator of [referenceGenerator, tableGenerator]) {
+			const output = await generator.generate(model);
+			expect(output).toContain('kind: "special";');
+			expect(output).not.toContain("kind: string;");
+		}
+	});
+
+	/**
 	 * Asserts properties of inline object types are discovered with their descriptions.
 	 */
 	test("discovers descriptions on inline object properties", () => {
@@ -244,6 +273,42 @@ describe("discoverTypes", () => {
 	});
 
 	/**
+	 * Asserts recursive inline properties terminate on each branch without suppressing sibling properties.
+	 */
+	test("terminates recursive inline properties", async () => {
+		const model = discover(
+			{
+				"/root.ts": `
+					export interface Root {
+						first: {
+							/** Node label. */
+							label: string;
+							next?: Root["first"];
+							children?: Root["first"][];
+						};
+						second: Root["first"];
+					}
+				`,
+			},
+			"Root",
+		);
+
+		for (const property of model.root.properties) {
+			expect(property.properties.map(({ name }) => name)).toEqual(["label", "next", "children"]);
+			expect(property.properties[0]?.description.text).toBe("Node label.");
+			expect(property.properties[1]?.properties).toEqual([]);
+			expect(property.properties[2]?.properties).toEqual([]);
+		}
+
+		for (const generator of [referenceGenerator, tableGenerator]) {
+			const output = await generator.generate(model);
+			expect(output).toContain("first.label");
+			expect(output).toContain("second.label");
+			expect(output).not.toContain("first.next.label");
+		}
+	});
+
+	/**
 	 * Asserts generic type arguments of referenced types are discovered, e.g. `Detail` in `Wrapper<Detail>`.
 	 */
 	test("discovers references in instantiated inherited generic properties", () => {
@@ -264,6 +329,39 @@ describe("discoverTypes", () => {
 	});
 
 	/**
+	 * Asserts instantiated library types expose their user-defined generic arguments as references and links.
+	 */
+	test("discovers references within library generic types", async () => {
+		const model = discover(
+			{
+				"/root.ts": `
+					interface Detail { label: string }
+					interface Wrapper<T> { item: T }
+					interface Base<T> {
+						promise: Promise<T>;
+						mapping: Map<string, T>;
+						nested: Promise<Wrapper<T>>;
+					}
+					export interface Root extends Base<Detail> {}
+				`,
+			},
+			"Root",
+		);
+
+		expect(model.root.properties.map((property) => [property.name, names(property.references)])).toEqual([
+			["promise", ["Detail"]],
+			["mapping", ["Detail"]],
+			["nested", ["Wrapper", "Detail"]],
+		]);
+		expect(names(model.types)).toEqual(expect.arrayContaining(["Root", "Detail", "Wrapper"]));
+
+		const flat = await referenceGenerator.generate(model);
+		const table = await tableGenerator.generate(model);
+		expect(flat).toContain("**References:** [Detail](#detail).");
+		expect(table).toContain("See [Detail](#detail)");
+	});
+
+	/**
 	 * Asserts `null` is retained when removing the `undefined` implied by an optional property.
 	 */
 	test("preserves null in optional inherited generic properties", () => {
@@ -280,6 +378,38 @@ describe("discoverTypes", () => {
 		expect(model.root.properties.map((property) => [property.name, property.type, property.optional])).toEqual([
 			["value", "null | string", true],
 		]);
+	});
+
+	/**
+	 * Asserts callable and constructable members remain parenthesized in optional inherited unions.
+	 */
+	test("parenthesizes optional inherited callable unions", async () => {
+		const model = discover(
+			{
+				"/root.ts": `
+					interface Child { name: string }
+					interface Base<T, C> { value?: T | Child | null; create?: C | Child }
+					export interface Root extends Base<() => string, new (name: string) => Child> {}
+				`,
+			},
+			"Root",
+		);
+
+		expect(model.root.properties.map((property) => [property.name, property.type])).toEqual([
+			["value", "null | (() => string) | Child"],
+			["create", "(new (name: string) => Child) | Child"],
+		]);
+		const source = createTestProject().createSourceFile(
+			"/generated.ts",
+			`interface Child { name: string }\n${model.root.definition}`,
+		);
+		expect(source.getPreEmitDiagnostics().map((diagnostic) => diagnostic.getCode())).toEqual([]);
+
+		for (const generator of [referenceGenerator, tableGenerator]) {
+			const output = await generator.generate(model);
+			expect(output).toContain("value?: null | (() => string) | Child;");
+			expect(output).toContain("create?: (new (name: string) => Child) | Child;");
+		}
 	});
 
 	/**
@@ -304,6 +434,44 @@ describe("discoverTypes", () => {
 			["pair", '[string, ("a" | "b")?]'],
 		]);
 		expect(names(model.root.references)).toEqual(["Rect"]);
+	});
+
+	/**
+	 * Asserts optional tuple formatting does not rewrite string or template literal contents.
+	 */
+	test("preserves literal contents when formatting optional tuples", async () => {
+		const model = discover(
+			{
+				"/root.ts": `
+					export interface Root<T> {
+						value: "(x | undefined)?";
+						template: \`prefix (x | undefined)? \${string}\`;
+						tuple: ["(x | undefined)?"?, string?];
+						nested: [[string?]?];
+						keys: [(keyof T)?];
+						callback: [(() => string)?];
+					}
+				`,
+			},
+			"Root",
+		);
+
+		expect(model.root.properties.map((property) => [property.name, property.type])).toEqual([
+			["value", '"(x | undefined)?"'],
+			["template", "`prefix (x | undefined)? ${string}`"],
+			["tuple", '["(x | undefined)?"?, string?]'],
+			["nested", "[[string?]?]"],
+			["keys", "[(keyof T)?]"],
+			["callback", "[(() => string)?]"],
+		]);
+		const source = createTestProject().createSourceFile("/generated.ts", model.root.definition);
+		expect(source.getPreEmitDiagnostics().map((diagnostic) => diagnostic.getCode())).toEqual([]);
+
+		for (const generator of [referenceGenerator, tableGenerator]) {
+			const output = await generator.generate(model);
+			expect(output).toContain('"(x | undefined)?"');
+			expect(output).toContain("`prefix (x | undefined)? ${string}`");
+		}
 	});
 
 	/**
