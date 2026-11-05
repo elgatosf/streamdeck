@@ -139,7 +139,7 @@ This project uses ESLint and Oxfmt to maintain consistent code style.
 
 The SDK documentation lives in `docs/sdk`, and the CLI documentation in `docs/cli`; both are published with their packages.
 
-Partials prefixed with an underscore and suffixed `.g.mdx`, such as the manifest and WebSocket references, are a snapshot generated from the SDK's type declarations by the documentation site's tooling; they are not edited by hand. The runtime versions in `docs/sdk/introduction/_runtime-versions.mdx` are a snapshot of the documentation site's table, updated with each Stream Deck release.
+Partials prefixed with an underscore and suffixed `.g.mdx`, such as the manifest and WebSocket references, are a snapshot generated from the SDK's type declarations by the documentation site's tooling; they are not edited by hand. The runtime versions table in `docs/sdk/introduction/plugin-environment.mdx` is updated with each Stream Deck release.
 
 Links are checked, including anchors and whether external URLs respond, and TypeScript code blocks in the SDK documentation are type checked against the SDK:
 
