@@ -13,7 +13,7 @@ for (const problem of problems) {
 // Partials prefixed with an underscore are skipped, as they are generated from the SDK's type declarations.
 const diagnostics = await typeCheck({
 	src: "../../docs/sdk/**/[!_]*.mdx",
-	tsconfigFile: "tsconfig.docs.json",
+	tsconfigFile: "tsconfig.scripts.json",
 });
 
 for (const diagnostic of diagnostics) {

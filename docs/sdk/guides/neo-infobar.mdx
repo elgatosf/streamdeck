@@ -95,7 +95,7 @@ For assistance with debugging layouts, try using the CLI tool's [`validate`](../
 The layout of a Neo Infobar action instance is set using the [`setFeedbackLayout`](#setfeedbacklayout) function, and must be set every time the [`onWillAppear`](#onwillappear) event occurs, for example:
 
 ```ts title="Action class updating its layout to a custom layout file"
-import { action, SingletonAction, WillAppearEvent } from "@elgato/streamdeck";
+import { action, SingletonAction, type WillAppearEvent } from "@elgato/streamdeck";
 
 @action({ UUID: "com.elgato.example.neo-infobar" })
 export class NeoInfobarExampleAction extends SingletonAction {
@@ -118,7 +118,7 @@ Layout items can be updated at runtime using the [`setFeedback`](#setfeedback) f
 The following example demonstrates updating the `value` of the `title` item implicitly:
 
 ```ts title="Updating the title implicitly"
-import { action, SingletonAction, WillAppearEvent } from "@elgato/streamdeck";
+import { action, SingletonAction, type WillAppearEvent } from "@elgato/streamdeck";
 
 @action({ UUID: "com.elgato.example.neo-infobar" })
 export class NeoInfobarExampleAction extends SingletonAction {
@@ -142,7 +142,7 @@ export class NeoInfobarExampleAction extends SingletonAction {
 The following example demonstrates updating the `value` of the `title` item explicitly; this is useful when more than one property needs to be updated on an item:
 
 ```ts title="Updating the title explicitly"
-import { action, SingletonAction, WillAppearEvent } from "@elgato/streamdeck";
+import { action, SingletonAction, type WillAppearEvent } from "@elgato/streamdeck";
 
 @action({ UUID: "com.elgato.example.neo-infobar" })
 export class NeoInfobarExampleAction extends SingletonAction {

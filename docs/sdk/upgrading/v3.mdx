@@ -63,7 +63,7 @@ To get started with Neo Infobar actions, add or update an action to the manifest
 Within your action's implementation, you can then access Neo Infobar methods by checking the action type using `isNeoInfobar()`.
 
 ```ts title="Example of a Neo Infobar action using layouts"
-import { action, SingletonAction, WillAppearEvent } from "@elgato/streamdeck";
+import { action, SingletonAction, type WillAppearEvent } from "@elgato/streamdeck";
 
 @action({ UUID: "com.elgato.example.neo-infobar" })
 export class ExampleNeoInfobarAction extends SingletonAction {

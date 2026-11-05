@@ -50,7 +50,7 @@ The following image shows the Discord "Mute" action which has two states, "Mute"
 The desired state can then be accessed, as the index (for example 0 or 1), within your plugin in the following way:
 
 ```ts title="Accessing the user desired state"
-import { action, KeyDownEvent, SingletonAction } from "@elgato/streamdeck";
+import { action, type KeyDownEvent, SingletonAction } from "@elgato/streamdeck";
 
 /**
  * Example Discord Mute action.
@@ -78,7 +78,7 @@ All actions have a title; in the case of a key action, the title is rendered eit
 The follow example demonstrates updating the title an action on key down.
 
 ```ts title="Setting action title"
-import { action, KeyDownEvent, SingletonAction } from "@elgato/streamdeck";
+import { action, type KeyDownEvent, SingletonAction } from "@elgato/streamdeck";
 
 /**
  * Example action that updates the title.
@@ -97,7 +97,7 @@ export class IncrementCounter extends SingletonAction {
 You can also update the title on a more granular level using options.
 
 ```ts title="Setting action title for specified state"
-import { action, KeyDownEvent, SingletonAction, Target } from "@elgato/streamdeck";
+import { action, type KeyDownEvent, SingletonAction, Target } from "@elgato/streamdeck";
 
 /**
  * Example action that updates the title.
@@ -139,7 +139,7 @@ Your plugin can update an action key's image[†](#display-precedence) using the
 The image of a key action be be updated using an encoded SVG string, and is useful if your plugin needs to customize the image before rendering.
 
 ```ts title="Setting action image using a dynamic SVG"
-import { action, KeyDownEvent, SingletonAction } from "@elgato/streamdeck";
+import { action, type KeyDownEvent, SingletonAction } from "@elgato/streamdeck";
 
 /**
  * Example action that updates the key action image from an SVG on key press.
@@ -171,7 +171,7 @@ type CounterSettings = {
 The image of a key action can be updated using an [image data URL](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URLs) with a multitude of [MIME types](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types#image_types) and base64 encoded data.
 
 ```ts title="Setting action image using image data URL"
-import { action, KeyDownEvent, SingletonAction } from "@elgato/streamdeck";
+import { action, type KeyDownEvent, SingletonAction } from "@elgato/streamdeck";
 
 /**
  * Example action that updates the key action image from a data URL on key press.
@@ -196,7 +196,7 @@ export class IncrementCounter extends SingletonAction {
 You can update the image of a key action directly from a file located on disk.
 
 ```ts title="Setting action image using image path"
-import { action, KeyDownEvent, SingletonAction } from "@elgato/streamdeck";
+import { action, type KeyDownEvent, SingletonAction } from "@elgato/streamdeck";
 
 /**
  * Example action that updates the key action image from a file.
@@ -218,7 +218,7 @@ export class IncrementCounter extends SingletonAction {
 You can also provide optional `ImageOptions` to specify a `Target` (hardware, software, or both) and a state (0 or 1), when updating images of an action key.
 
 ```ts title="Setting action image with specified target options"
-import { action, KeyDownEvent, SingletonAction, Target } from "@elgato/streamdeck";
+import { action, type KeyDownEvent, SingletonAction, Target } from "@elgato/streamdeck";
 
 /**
  * Example action that updates the key action image with additional options.

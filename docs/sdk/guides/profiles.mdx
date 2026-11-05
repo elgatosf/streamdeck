@@ -98,7 +98,7 @@ Once you have your `.streamDeckProfile` file, you can utilize it in your plugin 
 Now that you've created a profile for your target device, your plugin can switch to it using its name as the identifier.
 
 ```ts title="Switch profile on key down"
-import streamDeck, { action, KeyDownEvent, SingletonAction } from "@elgato/streamdeck";
+import streamDeck, { action, type KeyDownEvent, SingletonAction } from "@elgato/streamdeck";
 
 @action({ UUID: "com.elgato.example.action" })
 export class IncrementCounter extends SingletonAction {

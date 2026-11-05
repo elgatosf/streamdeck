@@ -401,7 +401,7 @@ The default layout of an action is defined within the manifest by specifying the
 The layout of a dial action instance can be changed at runtime using the [`setFeedbackLayout`](#setfeedbacklayout) function, for example:
 
 ```ts title="Action class updating its layout to a custom layout file"
-import { action, SingletonAction, WillAppearEvent } from "@elgato/streamdeck";
+import { action, SingletonAction, type WillAppearEvent } from "@elgato/streamdeck";
 
 @action({ UUID: "com.elgato.test.one" })
 export class IncrementCounter extends SingletonAction {
@@ -424,7 +424,7 @@ Layout items can be updated at runtime using the [`setFeedback`](#setfeedback) f
 The following example demonstrates updating the `value` of the `indicator` item implicitly:
 
 ```ts title="Updating $B1's indicator implicitly"
-import { action, DialUpEvent, SingletonAction } from "@elgato/streamdeck";
+import { action, type DialUpEvent, SingletonAction } from "@elgato/streamdeck";
 
 @action({ UUID: "com.elgato.layout-image-test.increment" })
 export class IncrementCounter extends SingletonAction<CounterSettings> {
@@ -450,7 +450,7 @@ type CounterSettings = {
 The following example demonstrates updating the `value` of the `indicator` item explicitly:
 
 ```ts title="Updating $B1's indicator explicitly"
-import { action, DialUpEvent, SingletonAction } from "@elgato/streamdeck";
+import { action, type DialUpEvent, SingletonAction } from "@elgato/streamdeck";
 
 @action({ UUID: "com.elgato.layout-image-test.increment" })
 export class IncrementCounter extends SingletonAction<CounterSettings> {
@@ -520,7 +520,7 @@ Trigger descriptions can help the user to understand what the encoder does in a 
 You can programmatically update the trigger descriptions using the [`setTriggerDescription`](#settriggerdescription) function.
 
 ```ts title="Action class updating its trigger description"
-import { action, DialUpEvent, SingletonAction } from "@elgato/streamdeck";
+import { action, type DialUpEvent, SingletonAction } from "@elgato/streamdeck";
 
 @action({ UUID: "com.elgato.trigger-description-example.increment" })
 export class IncrementCounter extends SingletonAction<CounterSettings> {

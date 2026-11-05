@@ -3,6 +3,9 @@
     "compilerOptions": {
         "customConditions": ["node"],
         "noEmit": true,
+        "paths": {
+            "@elgato/streamdeck": ["./src/plugin/index.ts"]
+        },
         "rootDir": "."
     },
     "include": ["scripts"]

@@ -11,7 +11,7 @@ In this article you'll make changes to your newly generated Stream Deck plugin, 
 The logic that controls the "Counter" action, in the newly generated Stream Deck plugin, is located within the `IncrementCounter` class, which will look like this:
 
 ```ts title="src/actions/increment-counter.ts"
-import { action, KeyDownEvent, SingletonAction, WillAppearEvent } from "@elgato/streamdeck";
+import { action, type KeyDownEvent, SingletonAction, type WillAppearEvent } from "@elgato/streamdeck";
 
 @action({ UUID: "com.elgato.hello-world.increment" })
 export class IncrementCounter extends SingletonAction<CounterSettings> {
@@ -70,7 +70,7 @@ Actions extend the `SingletonAction` class which provides virtual methods for in
 Within the `IncrementCounter` class, the `onKeyDown` method can be updated so that the count is doubled on each press; the method could be updated to look something like this:
 
 ```ts title="Key down event changes" {18-22}
-import { action, KeyDownEvent, SingletonAction, WillAppearEvent } from "@elgato/streamdeck";
+import { action, type KeyDownEvent, SingletonAction, type WillAppearEvent } from "@elgato/streamdeck";
 
 @action({ UUID: "com.elgato.hello-world.increment" })
 export class IncrementCounter extends SingletonAction<CounterSettings> {
@@ -189,7 +189,7 @@ An alternative approach to applying changes in real-time is hot-reloading, or li
 With hot-reload running, let's apply changes for the new change request.
 
 ```ts title="More key down even changes" {18-24}
-import { action, KeyDownEvent, SingletonAction, WillAppearEvent } from "@elgato/streamdeck";
+import { action, type KeyDownEvent, SingletonAction, type WillAppearEvent } from "@elgato/streamdeck";
 
 @action({ UUID: "com.elgato.hello-world.increment" })
 export class IncrementCounter extends SingletonAction<CounterSettings> {

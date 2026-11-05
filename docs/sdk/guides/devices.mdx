@@ -42,7 +42,7 @@ Within the Stream Deck SDK, devices are referenced against an enumeration of kno
 Your plugin can monitor when a Stream Deck device is connected using the `onDeviceDidConnect` event.
 
 ```ts title="Device connected callback" {3}
-import streamDeck, { DeviceDidConnectEvent } from "@elgato/streamdeck";
+import streamDeck, { type DeviceDidConnectEvent } from "@elgato/streamdeck";
 
 streamDeck.devices.onDeviceDidConnect((ev: DeviceDidConnectEvent) => {
 	const { id, isConnected, name, size, type } = ev.device;
@@ -72,7 +72,7 @@ streamDeck.devices.onDeviceDidChange((ev: DeviceDidChangeEvent) => {
 Your plugin can monitor when a Stream Deck device disconnects using the `onDeviceDidDisconnect` event.
 
 ```ts title="Device disconnected callback" {3}
-import streamDeck, { DeviceDidDisconnectEvent } from "@elgato/streamdeck";
+import streamDeck, { type DeviceDidDisconnectEvent } from "@elgato/streamdeck";
 
 streamDeck.devices.onDeviceDidDisconnect((ev: DeviceDidDisconnectEvent) => {
 	const { id, isConnected, name, size, type } = ev.device;

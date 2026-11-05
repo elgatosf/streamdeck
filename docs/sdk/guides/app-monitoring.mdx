@@ -96,7 +96,7 @@ osascript -e 'id of app "Application Name"'
 To listen for a registered application launching, your plugin can subscribe to the `onApplicationDidLaunch` event.
 
 ```ts title="Application launch event callback" {3}
-import streamDeck, { ApplicationDidLaunchEvent } from "@elgato/streamdeck";
+import streamDeck, { type ApplicationDidLaunchEvent } from "@elgato/streamdeck";
 
 streamDeck.system.onApplicationDidLaunch((ev: ApplicationDidLaunchEvent) => {
 	// Handle a registered application launching
@@ -109,7 +109,7 @@ streamDeck.system.onApplicationDidLaunch((ev: ApplicationDidLaunchEvent) => {
 To listen for a registered application terminating, your plugin can subscribe to the `onApplicationDidTerminate` event.
 
 ```ts title="Application terminate event callback" {3}
-import streamDeck, { ApplicationDidTerminateEvent } from "@elgato/streamdeck";
+import streamDeck, { type ApplicationDidTerminateEvent } from "@elgato/streamdeck";
 
 streamDeck.system.onApplicationDidTerminate((ev: ApplicationDidTerminateEvent) => {
 	// Handle a registered application terminating.
