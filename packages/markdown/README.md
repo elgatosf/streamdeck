@@ -36,7 +36,7 @@ for (const file of files) {
 }
 ```
 
-`readMarkdownFiles(pattern, cwd)` matches `.md` and `.mdx` files using Node.js' built-in `glob`, sorted by path. `cwd` defaults to the current working directory. It throws if no files match, a file cannot be read, or an MDX file cannot be parsed. Use `readMarkdown(path)` for one file, or `new MarkdownFile(path, content)` for content already in memory.
+`readMarkdownFiles(pattern, baseDir)` matches `.md` and `.mdx` files using Node.js' built-in `glob`, sorted by path. `baseDir` is the directory the glob is resolved from and defaults to the current working directory. It throws if no files match, a file cannot be read, or an MDX file cannot be parsed. Use `readMarkdown(path)` for one file, or `new MarkdownFile(path, content)` for content already in memory.
 
 ## Type Checking
 
@@ -44,7 +44,7 @@ for (const file of files) {
 
 ```ts
 const diagnostics = typeCheck(files, {
-    cwd: process.cwd(),
+    codeBlockDir: process.cwd(),
     tsconfigFile: "tsconfig.json",
 });
 
@@ -57,12 +57,12 @@ for (const diagnostic of diagnostics) {
 
 Fenced code blocks labeled `ts`, `typescript`, `tsx`, `mts`, or `cts` are type-checked; language labels are case-insensitive. JavaScript, unlabeled, and indented code blocks are ignored, as are blocks with `nocheck` in their fence metadata. MDX code blocks inside JSX elements are included.
 
-Each block is checked as a separate module. Imports are resolved from `cwd` using the compiler options in the specified tsconfig.
+Each block is checked as a separate module located in `codeBlockDir`, independently of the Markdown file's location. Imports and module settings are resolved from that directory using the compiler options in the specified tsconfig.
 
 | Option         | Description                                                                                 |
 | -------------- | ------------------------------------------------------------------------------------------- |
-| `cwd`          | Directory used to resolve the tsconfig and code block imports. Defaults to `process.cwd()`. |
-| `tsconfigFile` | Tsconfig path relative to `cwd`. Defaults to `tsconfig.json`.                               |
+| `codeBlockDir` | Directory used to resolve the tsconfig and code block imports. Defaults to `process.cwd()`. |
+| `tsconfigFile` | Tsconfig path relative to `codeBlockDir`. Defaults to `tsconfig.json`.                      |
 
 ### Diagnostics
 

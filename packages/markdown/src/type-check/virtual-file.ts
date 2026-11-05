@@ -10,7 +10,7 @@ export interface VirtualFile {
 	entry: CodeBlock;
 
 	/**
-	 * Absolute path of the virtual file, located within the `cwd` so imports are resolved from there.
+	 * Absolute path of the virtual file, located within `codeBlockDir` so imports are resolved from there.
 	 */
 	fileName: string;
 }

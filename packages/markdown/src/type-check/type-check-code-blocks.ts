@@ -20,13 +20,13 @@ const EXTENSIONS: Readonly<Record<string, string>> = {
 
 /**
  * Type checks the TypeScript code blocks using the specified tsconfig. Each code block is treated as its own module,
- * resolved as if it were a file within `cwd`, and all code blocks are type checked together within a single program.
+ * resolved as if it were a file within `codeBlockDir`, and all code blocks are type checked together within a single program.
  * @param options Options.
  * @returns The diagnostics, in the order of the code blocks.
  * @throws When the tsconfig file cannot be read, or is invalid.
  */
 export function typeCheckCodeBlocks(options: TypeCheckCodeBlocksOptions): CodeBlockDiagnostic[] {
-	const cwd = resolve(options.cwd);
+	const codeBlockDir = resolve(options.codeBlockDir);
 
 	// Map each TypeScript code block to a virtual file, keyed by its normalized path so the compiler host can look it
 	// up regardless of how TypeScript formats the path.
@@ -39,7 +39,7 @@ export function typeCheckCodeBlocks(options: TypeCheckCodeBlocksOptions): CodeBl
 		}
 
 		// The index guarantees a unique file name per code block, and the extension determines how the code is parsed.
-		const fileName = resolve(cwd, `__md_code_block_${i}${ext}`);
+		const fileName = resolve(codeBlockDir, `__md_code_block_${i}${ext}`);
 		virtualFiles.set(getKey(fileName), { entry, fileName });
 	});
 
@@ -50,7 +50,7 @@ export function typeCheckCodeBlocks(options: TypeCheckCodeBlocksOptions): CodeBl
 
 	// Create a program whose root files are only the virtual files; any files they import are resolved, and loaded, from
 	// the file system by the compiler host.
-	const compilerOptions = getCompilerOptions(resolve(cwd, options.tsconfigFile));
+	const compilerOptions = getCompilerOptions(resolve(codeBlockDir, options.tsconfigFile));
 	const host = createCompilerHost(compilerOptions, virtualFiles);
 	const program = ts.createProgram({
 		host,
@@ -87,20 +87,20 @@ export function typeCheckCodeBlocks(options: TypeCheckCodeBlocksOptions): CodeBl
  */
 export interface TypeCheckCodeBlocksOptions {
 	/**
+	 * Directory the code blocks are type checked from; each code block is treated as a module located within this
+	 * directory, so imports (e.g. relative paths and `node_modules`) and the module format (e.g. the `type` in
+	 * `package.json`) are resolved from here.
+	 */
+	codeBlockDir: string;
+
+	/**
 	 * Code blocks to type check; only code blocks whose language is TypeScript (e.g. `ts` or `tsx`) are type checked.
 	 */
 	codeBlocks: CodeBlock[];
 
 	/**
-	 * Directory the code blocks are type checked from; each code block is treated as a module located within this
-	 * directory, so imports (e.g. relative paths and `node_modules`) and the module format (e.g. the `type` in
-	 * `package.json`) are resolved from here.
-	 */
-	cwd: string;
-
-	/**
 	 * Path to the tsconfig file whose compiler options are used when type checking, relative to
-	 * {@link TypeCheckCodeBlocksOptions.cwd}.
+	 * {@link TypeCheckCodeBlocksOptions.codeBlockDir}.
 	 */
 	tsconfigFile: string;
 }

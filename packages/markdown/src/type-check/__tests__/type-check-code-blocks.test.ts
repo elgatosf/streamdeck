@@ -18,8 +18,8 @@ const FIXTURES_DIR = join(import.meta.dirname, "fixtures");
  */
 async function check(fileName: string, tsconfigFile = "tsconfig.json"): Promise<CodeBlockDiagnostic[]> {
 	return typeCheckCodeBlocks({
+		codeBlockDir: FIXTURES_DIR,
 		codeBlocks: readCodeBlocks(await readMarkdown(join(FIXTURES_DIR, fileName))),
-		cwd: FIXTURES_DIR,
 		tsconfigFile,
 	});
 }
@@ -45,7 +45,7 @@ describe("typeCheckCodeBlocks", () => {
 			expect(await check("javascript-only.md", "missing.json")).toEqual([]);
 		});
 
-		test("valid code blocks, imports resolved relative to cwd, and each code block is its own module", async () => {
+		test("valid code blocks, imports resolved relative to codeBlockDir, and each code block is its own module", async () => {
 			expect(await check("valid.md")).toEqual([]);
 		});
 	});
@@ -95,8 +95,8 @@ describe("typeCheckCodeBlocks", () => {
 
 			// Act.
 			const diagnostics = typeCheckCodeBlocks({
+				codeBlockDir: FIXTURES_DIR,
 				codeBlocks: entries,
-				cwd: FIXTURES_DIR,
 				tsconfigFile: "tsconfig.json",
 			});
 

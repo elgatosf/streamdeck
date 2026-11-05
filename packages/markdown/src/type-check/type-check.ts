@@ -10,11 +10,11 @@ import { typeCheckCodeBlocks } from "./type-check-code-blocks.js";
  * @returns The diagnostics, with positions relative to their markdown file.
  */
 export function typeCheck(files: readonly MarkdownFile[], options: TypeCheckOptions = {}): CodeBlockDiagnostic[] {
-	const { cwd = process.cwd(), tsconfigFile = "tsconfig.json" } = options;
+	const { codeBlockDir = process.cwd(), tsconfigFile = "tsconfig.json" } = options;
 
 	return typeCheckCodeBlocks({
+		codeBlockDir,
 		codeBlocks: files.flatMap((file) => readCodeBlocks(file)),
-		cwd,
 		tsconfigFile,
 	});
 }
@@ -26,12 +26,13 @@ export interface TypeCheckOptions {
 	/**
 	 * Directory the code blocks are type checked from; each code block is treated as a module located within this
 	 * directory, so imports (e.g. relative paths and `node_modules`) and the module format (e.g. the `type` in
-	 * `package.json`) are resolved from here.
+	 * `package.json`) are resolved from here. Defaults to the current working directory.
 	 */
-	cwd?: string;
+	codeBlockDir?: string;
 
 	/**
-	 * Path to the tsconfig file whose compiler options are used when type checking, relative to {@link TypeCheckOptions.cwd}.
+	 * Path to the tsconfig file whose compiler options are used when type checking, relative to
+	 * {@link TypeCheckOptions.codeBlockDir}.
 	 */
 	tsconfigFile?: string;
 }

@@ -65,7 +65,7 @@ async function checkDocs(): Promise<void> {
 	);
 	const diagnostics = typeCheck(sdkFiles, {
 		// Virtual snippets must be within the SDK's rootDir (src); its package self-reference resolves to source.
-		cwd: join(root, "packages/plugin/src"),
+		codeBlockDir: join(root, "packages/plugin/src"),
 		tsconfigFile: join(root, "packages/plugin/tsconfig.json"),
 	});
 	for (const diagnostic of diagnostics) {

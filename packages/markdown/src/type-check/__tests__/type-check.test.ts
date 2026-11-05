@@ -16,7 +16,7 @@ const FIXTURES_DIR = join(import.meta.dirname, "fixtures");
  */
 async function check(source: string): Promise<CodeBlockDiagnostic[]> {
 	return typeCheck(await readMarkdownFiles(source, FIXTURES_DIR), {
-		cwd: FIXTURES_DIR,
+		codeBlockDir: FIXTURES_DIR,
 		tsconfigFile: "tsconfig.json",
 	});
 }
