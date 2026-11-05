@@ -2,7 +2,8 @@ import { stat } from "node:fs/promises";
 import { dirname, extname, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 
-import { findMarkdownFiles } from "../find-markdown-files.js";
+import type { MarkdownFile } from "../markdown-file.js";
+import { readMarkdown } from "../read-markdown.js";
 import { readAnchors } from "./read-anchors.js";
 import { type Link, readLinks } from "./read-links.js";
 
@@ -12,18 +13,21 @@ import { type Link, readLinks } from "./read-links.js";
 const MARKDOWN_EXTENSIONS: ReadonlySet<string> = new Set([".md", ".mdx"]);
 
 /**
- * Checks the links within the markdown files matching the source glob pattern. Relative links must resolve to a file,
+ * Checks links from the files' shared syntax trees. Relative links must resolve to a file,
  * and when they target an anchor, the anchor must exist within the file. HTTP(S) links are requested, and must not
  * respond with an error status; loopback addresses, e.g. `http://localhost:1234`, document local services and are
  * not requested. Links with other schemes, e.g. `mailto:`, are ignored.
+ * @param files Markdown files held in memory. Linked files and imported partials outside this set are loaded on demand.
  * @param options Options.
  * @returns The problems found, with positions relative to their markdown file.
  */
-export async function checkLinks(options: CheckLinksOptions): Promise<LinkProblem[]> {
-	const { cwd = process.cwd(), external = true, ignore = [], src } = options;
-
-	const files = await findMarkdownFiles(src, cwd);
-	const links = (await Promise.all(files.map((file) => readLinks(file)))).flat();
+export async function checkLinks(
+	files: readonly MarkdownFile[],
+	options: CheckLinksOptions = {},
+): Promise<LinkProblem[]> {
+	const { external = true, ignore = [] } = options;
+	const links = files.flatMap((file) => readLinks(file));
+	const markdown = new Map(files.map((file) => [file.path, Promise.resolve(file)]));
 
 	const anchors = new Map<string, Promise<Set<string>>>();
 	const responses = new Map<string, Promise<string | undefined>>();
@@ -68,10 +72,12 @@ export async function checkLinks(options: CheckLinksOptions): Promise<LinkProble
 		const [path = "", hash] = url.split("#", 2);
 		const target = path === "" ? link.file : resolve(dirname(link.file), decodeURIComponent(path.split("?")[0] ?? ""));
 
-		try {
-			await stat(target);
-		} catch {
-			return `File not found: ${target}`;
+		if (!markdown.has(target)) {
+			try {
+				await stat(target);
+			} catch {
+				return `File not found: ${target}`;
+			}
 		}
 
 		if (hash === undefined || !MARKDOWN_EXTENSIONS.has(extname(target).toLowerCase())) {
@@ -86,15 +92,30 @@ export async function checkLinks(options: CheckLinksOptions): Promise<LinkProble
 	}
 
 	/**
-	 * Gets the anchors within the file, reading them once per file.
+	 * Gets the anchors within the file, collecting them once per file.
 	 * @param file Path to the markdown file.
 	 * @returns The anchors.
 	 */
-	function getAnchors(file: string): Promise<Set<string>> {
+	async function getAnchors(file: string): Promise<Set<string>> {
 		let result = anchors.get(file);
 		if (result === undefined) {
-			result = readAnchors(file);
+			result = readAnchors(await load(file), load);
 			anchors.set(file, result);
+		}
+
+		return result;
+	}
+
+	/**
+	 * Loads a target or partial once, reusing the supplied files and any files loaded during this check.
+	 * @param path Absolute path to the markdown file.
+	 * @returns The file held in memory.
+	 */
+	function load(path: string): Promise<MarkdownFile> {
+		let result = markdown.get(path);
+		if (result === undefined) {
+			result = readMarkdown(path);
+			markdown.set(path, result);
 		}
 
 		return result;
@@ -165,11 +186,6 @@ function toProblem(link: Link, message: string): LinkProblem {
  */
 export interface CheckLinksOptions {
 	/**
-	 * Directory the source glob pattern is resolved from; defaults to the current working directory.
-	 */
-	cwd?: string;
-
-	/**
 	 * Whether HTTP(S) links are requested to check they respond successfully; defaults to `true`. Loopback addresses,
 	 * e.g. `http://localhost:23654/`, are never requested.
 	 */
@@ -180,12 +196,6 @@ export interface CheckLinksOptions {
 	 * automated requests.
 	 */
 	ignore?: string[];
-
-	/**
-	 * Glob pattern of the markdown files containing the links, e.g. `README.md` or `docs/*.md`, matched using
-	 * Node.js' built-in `glob`. Patterns are resolved from {@link CheckLinksOptions.cwd}.
-	 */
-	src: string;
 }
 
 /**

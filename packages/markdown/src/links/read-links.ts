@@ -1,26 +1,16 @@
 import type { Definition, Image, Link as LinkNode, Nodes } from "mdast";
 import type { Position } from "unist";
 
-import { type Markdown, readMarkdown } from "../read-markdown.js";
+import type { MarkdownFile } from "../markdown-file.js";
 
 /**
- * Reads all links within the markdown file: inline links, images, and link reference definitions. Files with an
- * `.mdx` extension are parsed as MDX, so links within JSX elements are found; JSX attributes, e.g. `href`, are not.
- * @param file Path to the markdown file.
+ * Reads links from the file's shared syntax tree: inline links, images, and link reference definitions. Links within
+ * MDX JSX elements are included; JSX attributes, e.g. `href`, are not.
+ * @param file Markdown file held in memory.
  * @returns The links, in the order they appear within the file.
- * @throws When an MDX file cannot be parsed.
  */
-export async function readLinks(file: string): Promise<Link[]> {
-	return getLinks(await readMarkdown(file));
-}
-
-/**
- * Gets the links within the parsed markdown.
- * @param parsed Parsed markdown.
- * @returns The links, in the order they appear within the markdown.
- */
-export function getLinks(parsed: Markdown): Link[] {
-	const { markdown, path, tree } = parsed;
+export function readLinks(file: MarkdownFile): Link[] {
+	const { markdown, path, tree } = file;
 	const links: Link[] = [];
 
 	const visit = (node: Nodes): void => {

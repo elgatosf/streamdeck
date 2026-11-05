@@ -2,19 +2,25 @@ import { dirname, resolve } from "node:path";
 
 import type { Nodes } from "mdast";
 
+import type { MarkdownFile } from "../markdown-file.js";
 import { readMarkdown } from "../read-markdown.js";
 
 /**
  * Reads the anchors within the markdown file that a link can target: headings, identified by their slug or a custom
  * identifier (`## Title {#custom-id}`), `id` attributes of JSX elements, and the anchors of markdown files imported
  * into MDX, which Docusaurus renders inline as partials.
- * @param file Path to the markdown file.
- * @param visited Files already read, to prevent circular imports being read again.
+ * @param file Markdown file held in memory.
+ * @param load Loads imported partials, reusing files already held in memory.
+ * @param visited Files already visited, to prevent circular imports being visited again.
  * @returns The anchors.
  * @throws When an MDX file cannot be parsed.
  */
-export async function readAnchors(file: string, visited = new Set<string>()): Promise<Set<string>> {
-	const { isMdx, markdown, path, tree } = await readMarkdown(file);
+export async function readAnchors(
+	file: MarkdownFile,
+	load: (path: string) => Promise<MarkdownFile> = readMarkdown,
+	visited = new Set<string>(),
+): Promise<Set<string>> {
+	const { isMdx, markdown, path, tree } = file;
 	visited.add(path);
 
 	const anchors = new Set<string>();
@@ -46,8 +52,12 @@ export async function readAnchors(file: string, visited = new Set<string>()): Pr
 	visit(tree);
 
 	if (isMdx) {
-		for (const partial of partials.filter((partial) => !visited.has(partial))) {
-			for (const anchor of await readAnchors(partial, visited)) {
+		for (const partial of partials) {
+			if (visited.has(partial)) {
+				continue;
+			}
+
+			for (const anchor of await readAnchors(await load(partial), load, visited)) {
 				anchors.add(anchor);
 			}
 		}

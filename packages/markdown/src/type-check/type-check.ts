@@ -1,23 +1,21 @@
-import { findMarkdownFiles } from "../find-markdown-files.js";
+import type { MarkdownFile } from "../markdown-file.js";
 import type { CodeBlockDiagnostic } from "./code-block-diagnostic.js";
 import { readCodeBlocks } from "./read-code-blocks.js";
 import { typeCheckCodeBlocks } from "./type-check-code-blocks.js";
 
 /**
- * Type checks the TypeScript code blocks within the markdown files matching the source glob pattern.
+ * Type checks TypeScript code blocks from the files' shared syntax trees in a single TypeScript program.
+ * @param files Markdown files held in memory.
  * @param options Options.
  * @returns The diagnostics, with positions relative to their markdown file.
  */
-export async function typeCheck(options: TypeCheckOptions): Promise<CodeBlockDiagnostic[]> {
-	const { src, cwd = process.cwd(), tsconfigFile = "tsconfig.json" } = options;
-
-	const markdownFiles = await findMarkdownFiles(src, cwd);
-	const codeBlocks = await Promise.all(markdownFiles.map((file) => readCodeBlocks(file)));
+export function typeCheck(files: readonly MarkdownFile[], options: TypeCheckOptions = {}): CodeBlockDiagnostic[] {
+	const { cwd = process.cwd(), tsconfigFile = "tsconfig.json" } = options;
 
 	return typeCheckCodeBlocks({
-		codeBlocks: codeBlocks.flat(),
+		codeBlocks: files.flatMap((file) => readCodeBlocks(file)),
 		cwd,
-		tsconfigFile: tsconfigFile,
+		tsconfigFile,
 	});
 }
 
@@ -31,12 +29,6 @@ export interface TypeCheckOptions {
 	 * `package.json`) are resolved from here.
 	 */
 	cwd?: string;
-
-	/**
-	 * Glob pattern of the markdown files containing the code blocks, e.g. `README.md` or `docs/*.md`, matched using
-	 * Node.js' built-in `glob`. Patterns are resolved from {@link TypeCheckOptions.cwd}.
-	 */
-	src: string;
 
 	/**
 	 * Path to the tsconfig file whose compiler options are used when type checking, relative to {@link TypeCheckOptions.cwd}.

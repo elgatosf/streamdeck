@@ -4,10 +4,10 @@
  * Usage: node scripts/docs.mts check
  *        node scripts/docs.mts pack [cli|sdk]
  */
-import { cp, rm, writeFile } from "node:fs/promises";
-import { dirname, join, relative, resolve, sep } from "node:path";
+import { cp, rm } from "node:fs/promises";
+import { basename, dirname, join, relative, resolve, sep } from "node:path";
 
-import { checkLinks, findMarkdownFiles, type Link, rewriteLinks, typeCheck } from "@elgato/markdown";
+import { checkLinks, type Link, readMarkdownFiles, typeCheck } from "@elgato/markdown";
 
 const root = resolve(import.meta.dirname, "..");
 const docsDir = join(root, "docs");
@@ -50,20 +50,22 @@ function usageError(): never {
 
 /** Checks documentation links and SDK TypeScript examples. */
 async function checkDocs(): Promise<void> {
-	const problems = await checkLinks({
+	const files = await readMarkdownFiles("**/*.mdx", docsDir);
+	const problems = await checkLinks(files, {
 		// npmjs.com rejects automated requests.
 		ignore: ["https://www.npmjs.com/"],
-		src: join(docsDir, "**/*.mdx"),
 	});
 	for (const problem of problems) {
 		console.error(`${problem.link}: ${problem.url}: ${problem.message}`);
 	}
 
-	const diagnostics = await typeCheck({
+	// Partials prefixed with an underscore are generated from the SDK's type declarations.
+	const sdkFiles = files.filter(
+		(file) => file.path.startsWith(join(docsDir, "sdk") + sep) && !basename(file.path).startsWith("_"),
+	);
+	const diagnostics = typeCheck(sdkFiles, {
 		// Virtual snippets must be within the SDK's rootDir (src); its package self-reference resolves to source.
 		cwd: join(root, "packages/plugin/src"),
-		// Partials prefixed with an underscore are generated from the SDK's type declarations.
-		src: join(docsDir, "sdk/**/[!_]*.mdx"),
 		tsconfigFile: join(root, "packages/plugin/tsconfig.json"),
 	});
 	for (const diagnostic of diagnostics) {
@@ -87,13 +89,19 @@ async function checkDocs(): Promise<void> {
 async function packDocs(section: string, packageName: string): Promise<void> {
 	const src = join(docsDir, section);
 	const dest = join(root, "packages", packageName, "docs");
+	const files = await readMarkdownFiles("**/*", src);
+
+	for (const file of files) {
+		file.rewriteLinks((link) => toSiteUrl(link, src));
+	}
 
 	await rm(dest, { force: true, recursive: true });
-	await cp(src, dest, { recursive: true });
+	// Copy assets only; the markdown is written from memory below.
+	const markdownPaths = new Set(files.map((file) => file.path));
+	await cp(src, dest, { filter: (path) => !markdownPaths.has(path), recursive: true });
 
-	for (const file of await findMarkdownFiles("**/*", src)) {
-		const markdown = await rewriteLinks(file, (link) => toSiteUrl(link, src));
-		await writeFile(join(dest, relative(src, file)), markdown);
+	for (const file of files) {
+		await file.write(join(dest, relative(src, file.path)));
 	}
 
 	console.log(`Packed ${section} documentation into ${relative(root, dest)}.`);

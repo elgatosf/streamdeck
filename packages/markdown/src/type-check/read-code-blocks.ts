@@ -1,17 +1,16 @@
 import type { Code, Nodes } from "mdast";
 import type { Position } from "unist";
 
-import { readMarkdown } from "../read-markdown.js";
+import type { MarkdownFile } from "../markdown-file.js";
 
 /**
- * Reads all fenced code blocks within the markdown file; indented code blocks are ignored. Files with an `.mdx`
- * extension are parsed as MDX, so code blocks within JSX elements are found.
- * @param file Path to the markdown file.
+ * Reads all fenced code blocks from the file's shared syntax tree; indented code blocks are ignored. Code blocks
+ * within MDX JSX elements are included.
+ * @param file Markdown file held in memory.
  * @returns The fenced code blocks, in the order they appear within the file.
- * @throws When an MDX file cannot be parsed.
  */
-export async function readCodeBlocks(file: string): Promise<CodeBlock[]> {
-	const { markdown, path, tree } = await readMarkdown(file);
+export function readCodeBlocks(file: MarkdownFile): CodeBlock[] {
+	const { markdown, path, tree } = file;
 	const lines = markdown.split("\n");
 	const entries: CodeBlock[] = [];
 
