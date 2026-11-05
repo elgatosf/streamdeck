@@ -1,4 +1,13 @@
+export {
+	createDocumentationSource,
+	type DocumentationFormat,
+	type DocumentationOptions,
+	type DocumentationSource,
+	type DocumentationSourceOptions,
+	type OverviewStyle,
+} from "./docs-generators/generate-markdown.js";
 export { findMarkdownFiles } from "./find-markdown-files.js";
+export { format, type FormatOptions } from "./format/format.js";
 export { checkLinks, type CheckLinksOptions, type LinkProblem } from "./links/check-links.js";
 export { type Link, readLinks, type Span } from "./links/read-links.js";
 export { rewriteLinks } from "./links/rewrite-links.js";

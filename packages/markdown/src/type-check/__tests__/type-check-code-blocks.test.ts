@@ -36,21 +36,39 @@ function linkTo(fileName: string, line: number, column: number): string {
 }
 
 describe("typeCheckCodeBlocks", () => {
+	/**
+	 * Provides assertions for Markdown without type errors.
+	 */
 	describe("valid code", () => {
+		/**
+		 * Asserts Markdown without code blocks has no diagnostics.
+		 */
 		test("no code blocks", async () => {
 			expect(await check("no-code-blocks.md")).toEqual([]);
 		});
 
+		/**
+		 * Asserts the tsconfig is not read when there are no TypeScript code blocks.
+		 */
 		test("no TypeScript code blocks does not read the tsconfig", async () => {
 			expect(await check("javascript-only.md", "missing.json")).toEqual([]);
 		});
 
+		/**
+		 * Asserts valid code blocks have no diagnostics, imports are resolved relative to codeBlockDir, and each code block is its own module.
+		 */
 		test("valid code blocks, imports resolved relative to codeBlockDir, and each code block is its own module", async () => {
 			expect(await check("valid.md")).toEqual([]);
 		});
 	});
 
+	/**
+	 * Provides assertions for the diagnostics reported for type errors.
+	 */
 	describe("diagnostics", () => {
+		/**
+		 * Asserts a semantic error is reported with its position within the Markdown file.
+		 */
 		test("semantic error", async () => {
 			expect(await check("semantic-error.md")).toEqual<CodeBlockDiagnostic[]>([
 				{
@@ -65,12 +83,18 @@ describe("typeCheckCodeBlocks", () => {
 			]);
 		});
 
+		/**
+		 * Asserts a syntax error is reported.
+		 */
 		test("syntax error", async () => {
 			const [diagnostic] = await check("syntax-error.md");
 
 			expect(diagnostic).toMatchObject({ category: "error", line: 4 });
 		});
 
+		/**
+		 * Asserts errors from imports, and unresolved imports, are reported.
+		 */
 		test("imports", async () => {
 			expect(await check("imports.md")).toMatchObject([
 				{ code: 2345, link: linkTo("imports.md", 6, 8) },
@@ -78,6 +102,9 @@ describe("typeCheckCodeBlocks", () => {
 			]);
 		});
 
+		/**
+		 * Asserts multiple errors within, and across, code blocks are reported in order.
+		 */
 		test("multiple errors within, and across, code blocks", async () => {
 			expect((await check("multiple-errors.md")).map((d) => d.link)).toEqual([
 				linkTo("multiple-errors.md", 4, 7),
@@ -86,6 +113,9 @@ describe("typeCheckCodeBlocks", () => {
 			]);
 		});
 
+		/**
+		 * Asserts code blocks from multiple files are linked to their own file.
+		 */
 		test("code blocks from multiple files are linked to their own file", async () => {
 			// Arrange.
 			const entries = [
@@ -110,7 +140,13 @@ describe("typeCheckCodeBlocks", () => {
 		});
 	});
 
+	/**
+	 * Provides assertions for the positions of diagnostics within the Markdown file.
+	 */
 	describe("positions", () => {
+		/**
+		 * Asserts positions account for code blocks within lists and block quotes.
+		 */
 		test("code blocks within a list, a blockquote, and at the top-level", async () => {
 			expect((await check("nested.md")).map((d) => d.link)).toEqual([
 				linkTo("nested.md", 7, 11),
@@ -119,6 +155,9 @@ describe("typeCheckCodeBlocks", () => {
 			]);
 		});
 
+		/**
+		 * Asserts positions account for lines indented less, and more, than the opening fence.
+		 */
 		test("lines indented less, and more, than the opening fence", async () => {
 			expect((await check("uneven-indentation.md")).map((d) => d.link)).toEqual([
 				linkTo("uneven-indentation.md", 4, 7),
@@ -126,6 +165,9 @@ describe("typeCheckCodeBlocks", () => {
 			]);
 		});
 
+		/**
+		 * Asserts positions account for code blocks within MDX JSX elements.
+		 */
 		test("code blocks within MDX JSX elements", async () => {
 			expect((await check("mdx.mdx")).map((d) => d.link)).toEqual([
 				linkTo("mdx.mdx", 15, 7),
@@ -135,27 +177,48 @@ describe("typeCheckCodeBlocks", () => {
 		});
 	});
 
+	/**
+	 * Provides assertions for the languages of code blocks.
+	 */
 	describe("languages", () => {
+		/**
+		 * Asserts only code blocks labeled as TypeScript are type checked.
+		 */
 		test("only TypeScript code blocks are type checked", async () => {
 			// ts, typescript, tsx, mts, cts, TS, TypeScript; js, javascript, json, sh, unlabelled, and indented are not.
 			expect((await check("languages.md")).map((d) => d.line)).toEqual([4, 8, 12, 16, 20, 24, 28]);
 		});
 	});
 
+	/**
+	 * Provides assertions for the tsconfig used to type check code blocks.
+	 */
 	describe("tsconfig", () => {
+		/**
+		 * Asserts the compiler options of the tsconfig are used.
+		 */
 		test("compiler options are respected", async () => {
 			expect(await check("implicit-any.md", "tsconfig.json")).toMatchObject([{ code: 7006 }]);
 			expect(await check("implicit-any.md", "tsconfig.loose.json")).toEqual([]);
 		});
 
+		/**
+		 * Asserts a missing tsconfig throws.
+		 */
 		test("missing tsconfig throws", async () => {
 			await expect(check("semantic-error.md", "missing.json")).rejects.toThrow(/^Failed to read tsconfig file:/);
 		});
 
+		/**
+		 * Asserts an invalid tsconfig throws.
+		 */
 		test("invalid tsconfig throws", async () => {
 			await expect(check("semantic-error.md", "tsconfig.invalid.json")).rejects.toThrow(/^Invalid tsconfig file:/);
 		});
 
+		/**
+		 * Asserts invalid combinations of compiler options throw.
+		 */
 		test("invalid compiler option combinations throw", async () => {
 			await expect(check("semantic-error.md", "tsconfig.invalid-options.json")).rejects.toThrow(
 				/^Invalid tsconfig file:/,
