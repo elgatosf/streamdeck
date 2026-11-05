@@ -1,0 +1,8 @@
+{
+    "extends": "@elgato/tsconfig/node24/app",
+    "compilerOptions": {
+        "noEmit": true,
+        "rootDir": "."
+    },
+    "include": ["*.mts"]
+}

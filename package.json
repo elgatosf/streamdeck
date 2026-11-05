@@ -3,6 +3,8 @@
     "scripts": {
         "build": "turbo run build",
         "dev": "turbo run dev",
+        "docs:check": "tsc -p scripts/tsconfig.json && node scripts/docs.mts check",
+        "docs:pack": "node scripts/docs.mts pack",
         "fmt": "oxfmt",
         "fmt:check": "oxfmt --check",
         "lint": "turbo run lint",
@@ -12,9 +14,13 @@
     },
     "devDependencies": {
         "@changesets/cli": "^3.0.3",
+        "@elgato/markdown": "workspace:^",
         "@elgato/oxfmt-config": "workspace:^",
+        "@elgato/tsconfig": "workspace:^",
+        "@types/node": "^24.12.0",
         "oxfmt": "^0.70.0",
         "turbo": "^2.8.14",
+        "typescript": "^5.9.3",
         "zod": "^3.25.76"
     },
     "packageManager": "pnpm@10.18.0"

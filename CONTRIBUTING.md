@@ -144,10 +144,11 @@ Partials prefixed with an underscore and suffixed `.g.mdx`, such as the manifest
 Links are checked, including anchors and whether external URLs respond, and TypeScript code blocks in the SDK documentation are type checked against the SDK:
 
 ```
-pnpm --filter @elgato/streamdeck run docs:check
-pnpm --filter @elgato/cli run docs:check
+pnpm docs:check
 ```
 
 Links between the SDK and CLI documentation are relative, e.g. `../../cli/intro.mdx`; links to pages that only exist on docs.elgato.com use the full URL. When a package is packed, its documentation is copied into its `docs` folder, and links to documentation outside that folder are rewritten to docs.elgato.com.
+
+Checking and packaging are centralized in `scripts/docs.mts`. To prepare both packages' documentation without packing them, run `pnpm docs:pack`.
 
 Code blocks that are intentionally incomplete, for example a fragment that omits its imports, opt out with `nocheck` after the language, e.g. ` ```ts nocheck `.

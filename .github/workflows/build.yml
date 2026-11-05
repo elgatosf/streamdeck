@@ -48,7 +48,7 @@ jobs:
       # Requests external links once, as sites rate limit the concurrent requests from the matrix.
       - name: "📚 Check documentation"
         if: matrix.os == 'macos-latest' && matrix.node_version == 24
-        run: pnpm --filter @elgato/streamdeck run docs:check && pnpm --filter @elgato/cli run docs:check
+        run: pnpm run docs:check
 
       - name: "🧪 Test"
         run: pnpm run test
