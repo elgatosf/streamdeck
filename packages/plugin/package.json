@@ -28,21 +28,21 @@
         "./dist/**/*.{d.ts,js}"
     ],
     "type": "module",
-    "main": "./dist/plugin/index.js",
-    "types": "./dist/plugin/index.d.ts",
-    "exports": "./dist/plugin/index.js",
+    "main": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "exports": "./dist/index.js",
     "scripts": {
         "build": "rm -rf ./dist && tsc -p tsconfig.build.json",
         "dev": "rm -rf ./dist && tsc -p tsconfig.build.json -w",
         "lint": "eslint --max-warnings 0",
-        "test": "vitest --run --reporter verbose",
+        "test": "vitest --run --typecheck --reporter verbose",
         "test:coverage": "vitest run --coverage",
-        "test:watch": "vitest",
+        "test:watch": "vitest --typecheck",
         "prepack": "cp ../../README.md . && cp ../../LICENSE ."
     },
     "dependencies": {
-        "@elgato/schemas": "workspace:*",
         "@elgato/utils": "workspace:*",
+        "@streamdeck/core": "workspace:*",
         "ws": "^8.19.0"
     },
     "devDependencies": {
