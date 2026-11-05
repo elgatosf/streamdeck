@@ -1,9 +1,7 @@
-
-
 ### Manifest{#manifest}
 
-
 Defines the plugin and available actions, and all information associated with them, including the plugin's entry point, all iconography, action default behavior, etc.
+
 <p>
 	<strong>Properties</strong>
 </p>
@@ -13,7 +11,6 @@ Defines the plugin and available actions, and all information associated with th
 	<p>Collection of actions provided by the plugin, and all of their information; this can include actions that are available to users via the actions list, and actions that are
 hidden to the user but available to pre-defined profiles distributed with the plugin (<code>Manifest.Actions.VisibleInActionsList</code>).</p>
 
-	
 </ObjectMember>
 
 <ObjectMember name="ApplicationsToMonitor" id="manifest-applicationstomonitor" optional>
@@ -25,14 +22,12 @@ hidden to the user but available to pre-defined profiles distributed with the pl
 <li><code>streamDeck.system.onApplicationDidTerminate(...)</code></li>
 </ul>
 
-	
 </ObjectMember>
 
 <ObjectMember name="Author" id="manifest-author" >
 	<ObjectMember.Type>string</ObjectMember.Type>
 	<p>Author's name that will be displayed on the plugin's product page on the Marketplace, e.g. &quot;Elgato&quot;.</p>
 
-	
 </ObjectMember>
 
 <ObjectMember name="Category" id="manifest-category" optional>
@@ -41,7 +36,6 @@ hidden to the user but available to pre-defined profiles distributed with the pl
 <p>Note: <code>Category</code> should be distinctive and synonymous with your plugin, and it is therefore recommended that this be the same value as the plugin's <code>Name</code> field. When <code>undefined</code>, the
 actions will be available under the &quot;Custom&quot; group.</p>
 
-	
 </ObjectMember>
 
 <ObjectMember name="CategoryIcon" id="manifest-categoryicon" optional>
@@ -60,7 +54,6 @@ the plugin, and enable users to quickly identify the plugin.</p>
 <li>imgs/category</li>
 </ul>
 
-	
 </ObjectMember>
 
 <ObjectMember name="CodePath" id="manifest-codepath" >
@@ -73,7 +66,6 @@ the plugin, and enable users to quickly identify the plugin.</p>
 <li>Counter.exe</li>
 </ul>
 
-	
 </ObjectMember>
 
 <ObjectMember name="CodePathMac" id="manifest-codepathmac" optional>
@@ -85,7 +77,6 @@ the plugin, and enable users to quickly identify the plugin.</p>
 <li>Counter</li>
 </ul>
 
-	
 </ObjectMember>
 
 <ObjectMember name="CodePathWin" id="manifest-codepathwin" optional>
@@ -97,21 +88,18 @@ the plugin, and enable users to quickly identify the plugin.</p>
 <li>Counter.exe</li>
 </ul>
 
-	
 </ObjectMember>
 
 <ObjectMember name="DefaultWindowSize" id="manifest-defaultwindowsize" optional>
 	<ObjectMember.Type>[number, number]</ObjectMember.Type>
 	<p>Size of a window (<code>[width, height]</code>) opened when calling <code>window.open()</code> from the property inspector. Default value is <code>[500, 650]</code>.</p>
 
-	
 </ObjectMember>
 
 <ObjectMember name="Description" id="manifest-description" >
 	<ObjectMember.Type>string</ObjectMember.Type>
 	<p>Description of the plugin, and the functionality it provides, that will be displayed on the plugin's product page on the Marketplace.</p>
 
-	
 </ObjectMember>
 
 <ObjectMember name="Icon" id="manifest-icon" >
@@ -128,14 +116,12 @@ the plugin, and enable users to quickly identify the plugin.</p>
 <li>imgs/plugin</li>
 </ul>
 
-	
 </ObjectMember>
 
 <ObjectMember name="Name" id="manifest-name" >
 	<ObjectMember.Type>string</ObjectMember.Type>
 	<p>Name of the plugin, e.g. &quot;Wave Link&quot;, &quot;Camera Hub&quot;, &quot;Control Center&quot;, etc.</p>
 
-	
 </ObjectMember>
 
 <ObjectMember name="Nodejs" id="manifest-nodejs" optional>
@@ -148,14 +134,12 @@ the plugin, and enable users to quickly identify the plugin.</p>
 <li><a href="https://nodejs.org/api/cli.html#--no-global-search-paths"><code>--no-global-search-paths</code></a></li>
 </ul>
 
-	
 </ObjectMember>
 
 <ObjectMember name="OS" id="manifest-os" >
 	<ObjectMember.Type>[<a href="#os">OS</a>, <a href="#os">OS</a>?]</ObjectMember.Type>
 	<p>Collection of operating systems, and their minimum required versions, that the plugin supports.</p>
 
-	
 </ObjectMember>
 
 <ObjectMember name="Profiles" id="manifest-profiles" optional>
@@ -165,7 +149,6 @@ the plugin, and enable users to quickly identify the plugin.</p>
 <p><strong>Also see:</strong>
 <code>streamDeck.profiles.switchToProfile(...)</code></p>
 
-	
 </ObjectMember>
 
 <ObjectMember name="PropertyInspectorPath" id="manifest-propertyinspectorpath" optional>
@@ -183,21 +166,18 @@ allowing them to configure the action's settings.</p>
 <li><code>streamDeck.ui.onSendToPlugin(...)</code></li>
 </ul>
 
-	
 </ObjectMember>
 
 <ObjectMember name="SDKVersion" id="manifest-sdkversion" >
 	<ObjectMember.Type>2, 3</ObjectMember.Type>
 	<p>Preferred SDK version (version 3 is recommended).</p>
 
-	
 </ObjectMember>
 
 <ObjectMember name="Software" id="manifest-software" >
 	<ObjectMember.Type><a href="#software">Software</a></ObjectMember.Type>
 	<p>Determines the Stream Deck software requirements for this plugin.</p>
 
-	
 </ObjectMember>
 
 <ObjectMember name="SupportURL" id="manifest-supporturl" optional>
@@ -210,7 +190,6 @@ allowing them to configure the action's settings.</p>
 </ul>
 <p>Available from Stream Deck 6.9.</p>
 
-	
 </ObjectMember>
 
 <ObjectMember name="URL" id="manifest-url" optional>
@@ -222,7 +201,6 @@ allowing them to configure the action's settings.</p>
 <li>https://corsair.com</li>
 </ul>
 
-	
 </ObjectMember>
 
 <ObjectMember name="UUID" id="manifest-uuid" >
@@ -241,21 +219,18 @@ allowing them to configure the action's settings.</p>
 <li>tv.twitch</li>
 </ul>
 
-	
 </ObjectMember>
 
 <ObjectMember name="Version" id="manifest-version" >
 	<ObjectMember.Type>string</ObjectMember.Type>
 	<p>Version of the plugin, in the format <code>\{major\}.\{minor\}.\{patch\}.\{build\}</code>.</p>
 
-	
 </ObjectMember>
-
 
 ### Action{#action}
 
-
 Provides information about an action provided by the plugin.
+
 <p>
 	<strong>Properties</strong>
 </p>
@@ -269,7 +244,6 @@ Provides information about an action provided by the plugin.
 <li><strong>Neo</strong> refers to the infobar found on Stream Deck Neo (available from Stream Deck 7.6).</li>
 </ul>
 
-	
 </ObjectMember>
 
 <ObjectMember name="DisableAutomaticStates" id="action-disableautomaticstates" optional>
@@ -277,21 +251,18 @@ Provides information about an action provided by the plugin.
 	<p>Determines whether the state of the action should automatically toggle when the user presses the action; only applies to actions that have more than one state defined. Default is
 <code>false</code>.</p>
 
-	
 </ObjectMember>
 
 <ObjectMember name="DisableCaching" id="action-disablecaching" optional>
 	<ObjectMember.Type>boolean</ObjectMember.Type>
 	<p>Determines whether Stream Deck should cache images associated with the plugin, and its actions. Default is <code>false</code>.</p>
 
-	
 </ObjectMember>
 
 <ObjectMember name="Encoder" id="action-encoder" optional>
 	<ObjectMember.Type><a href="#encoder">Encoder</a></ObjectMember.Type>
 	<p>Provides information about how the action functions as part of an <code>Encoder</code> (dial / touchscreen).</p>
 
-	
 </ObjectMember>
 
 <ObjectMember name="Icon" id="action-icon" >
@@ -309,21 +280,18 @@ Provides information about an action provided by the plugin.
 <li>imgs/actions/mute</li>
 </ul>
 
-	
 </ObjectMember>
 
 <ObjectMember name="Name" id="action-name" >
 	<ObjectMember.Type>string</ObjectMember.Type>
 	<p>Name of the action; this is displayed to the user in the actions list, and is used throughout the Stream Deck application to visually identify the action.</p>
 
-	
 </ObjectMember>
 
 <ObjectMember name="OS" id="action-os" optional>
 	<ObjectMember.Type>("mac", "windows")[]</ObjectMember.Type>
 	<p>Operating system that the action supports.</p>
 
-	
 </ObjectMember>
 
 <ObjectMember name="PropertyInspectorPath" id="action-propertyinspectorpath" optional>
@@ -337,7 +305,6 @@ action, allowing them to configure the action's settings. When <code>undefined</
 <li>actions/join-voice-chat/settings.html</li>
 </ul>
 
-	
 </ObjectMember>
 
 <ObjectMember name="States" id="action-states" >
@@ -345,7 +312,6 @@ action, allowing them to configure the action's settings. When <code>undefined</
 	<p>States the action can be in. When two states are defined the action will act as a toggle, with users being able to select their preferred iconography for each state.</p>
 <p>Note: Automatic toggling of the state on action activation can be disabled by setting <code>DisableAutomaticStates</code> to <code>true</code>.</p>
 
-	
 </ObjectMember>
 
 <ObjectMember name="SupportedInKeyLogicActions" id="action-supportedinkeylogicactions" optional>
@@ -353,14 +319,12 @@ action, allowing them to configure the action's settings. When <code>undefined</
 	<p>Determines whether the action is available to users when they are creating key logic actions. Default is <code>true</code>.</p>
 <p>Available from Stream Deck 7.0.</p>
 
-	
 </ObjectMember>
 
 <ObjectMember name="SupportedInMultiActions" id="action-supportedinmultiactions" optional>
 	<ObjectMember.Type>boolean</ObjectMember.Type>
 	<p>Determines whether the action is available to users when they are creating multi-actions. Default is <code>true</code>.</p>
 
-	
 </ObjectMember>
 
 <ObjectMember name="SupportURL" id="action-supporturl" optional>
@@ -373,14 +337,12 @@ action, allowing them to configure the action's settings. When <code>undefined</
 </ul>
 <p>Available from Stream Deck 6.9.</p>
 
-	
 </ObjectMember>
 
 <ObjectMember name="Tooltip" id="action-tooltip" optional>
 	<ObjectMember.Type>string</ObjectMember.Type>
 	<p>Tooltip shown to the user when they hover over the action within the actions list in the Stream Deck application.</p>
 
-	
 </ObjectMember>
 
 <ObjectMember name="UUID" id="action-uuid" >
@@ -401,7 +363,6 @@ to identify the source of the event.</p>
 <li>tv.twitch.go-live</li>
 </ul>
 
-	
 </ObjectMember>
 
 <ObjectMember name="UserTitleEnabled" id="action-usertitleenabled" optional>
@@ -409,7 +370,6 @@ to identify the source of the event.</p>
 	<p>Determines whether the title field is available to the user when viewing the action's property inspector. Setting this to <code>false</code> will disable the user from specifying a
 title, thus allowing the plugin to have exclusive access to the title. Default is <code>true</code>, i.e. the title field is enabled.</p>
 
-	
 </ObjectMember>
 
 <ObjectMember name="VisibleInActionsList" id="action-visibleinactionslist" optional>
@@ -417,16 +377,12 @@ title, thus allowing the plugin to have exclusive access to the title. Default i
 	<p>Determines whether the action is available to users via the actions list in the Stream Deck application. Setting this to <code>false</code> allows for the action to be used as
 part of pre-defined profiles distributed with the plugins, whilst not being available to users. Default is <code>true</code>.</p>
 
-	
 </ObjectMember>
-
-
-
 
 ### ApplicationMonitoring{#applicationmonitoring}
 
-
 Applications to monitor on Mac and Windows; upon a monitored application being launched or terminated, Stream Deck will notify the plugin.
+
 <p>
 	<strong>Properties</strong>
 </p>
@@ -439,7 +395,6 @@ Applications to monitor on Mac and Windows; upon a monitored application being l
 <li>com.apple.mail</li>
 </ul>
 
-	
 </ObjectMember>
 
 <ObjectMember name="windows" id="applicationmonitoring-windows" optional>
@@ -450,18 +405,12 @@ Applications to monitor on Mac and Windows; upon a monitored application being l
 <li>Notepad.exe</li>
 </ul>
 
-	
 </ObjectMember>
-
-
-
-
-
 
 ### Encoder{#encoder}
 
-
 Provides information about how the action functions as part of an `Encoder` (dial / touchscreen).
+
 <p>
 	<strong>Properties</strong>
 </p>
@@ -482,7 +431,6 @@ action.</p>
 <li>imgs/join-voice-chat-encoder</li>
 </ul>
 
-	
 </ObjectMember>
 
 <ObjectMember name="StackColor" id="encoder-stackcolor" optional>
@@ -495,7 +443,6 @@ action.</p>
 <li>#0038A8</li>
 </ul>
 
-	
 </ObjectMember>
 
 <ObjectMember name="TriggerDescription" id="encoder-triggerdescription" optional>
@@ -507,7 +454,6 @@ action.</p>
 <li>&quot;Play / Pause&quot;</li>
 </ul>
 
-	
 </ObjectMember>
 
 <ObjectMember name="background" id="encoder-background" optional>
@@ -525,7 +471,6 @@ action.</p>
 <li>imgs/bright-blue-bg</li>
 </ul>
 
-	
 </ObjectMember>
 
 <ObjectMember name="layout" id="encoder-layout" optional>
@@ -546,16 +491,12 @@ action.</p>
 <li>layouts/my-custom-layout.json</li>
 </ul>
 
-	
 </ObjectMember>
-
-
-
 
 ### Nodejs{#nodejs}
 
-
 Configuration options for Node.js based plugins.
+
 <p>
 	<strong>Properties</strong>
 </p>
@@ -573,30 +514,24 @@ a set of <a href="https://nodejs.org/api/cli.html">command-line arguments</a>.</
 <li><code>&quot;--inspect=127.0.0.1:12345&quot;</code> runs a local debugger on port <code>12345</code>.</li>
 </ul>
 
-	
 </ObjectMember>
 
 <ObjectMember name="GenerateProfilerOutput" id="nodejs-generateprofileroutput" optional>
 	<ObjectMember.Type>boolean</ObjectMember.Type>
 	<p>Determines whether to generate a profiler output for the plugin; <a href="https://nodejs.org/en/docs/guides/simple-profiling">read more</a>.</p>
 
-	
 </ObjectMember>
 
 <ObjectMember name="Version" id="nodejs-version" >
 	<ObjectMember.Type>"20", "24"</ObjectMember.Type>
 	<p>Version of Node.js to use.</p>
 
-	
 </ObjectMember>
-
-
-
 
 ### OS{#os}
 
-
 Operating system that the plugin supports, and the minimum required version needed to run the plugin.
+
 <p>
 	<strong>Properties</strong>
 </p>
@@ -605,23 +540,18 @@ Operating system that the plugin supports, and the minimum required version need
 	<ObjectMember.Type>string</ObjectMember.Type>
 	<p>Minimum version required of the operating system to run the plugin.</p>
 
-	
 </ObjectMember>
 
 <ObjectMember name="Platform" id="os-platform" >
 	<ObjectMember.Type>"mac", "windows"</ObjectMember.Type>
 	<p>Operating system supported by the plugin.</p>
 
-	
 </ObjectMember>
-
-
-
 
 ### Profile{#profile}
 
-
 Provides information for pre-defined profile distributed with this plugin.
+
 <p>
 	<strong>Properties</strong>
 </p>
@@ -632,7 +562,6 @@ Provides information for pre-defined profile distributed with this plugin.
 the plugin attempts to switch to it. Default is <code>true</code>.</p>
 <p>Available from Stream Deck 6.6.</p>
 
-	
 </ObjectMember>
 
 <ObjectMember name="DeviceType" id="profile-devicetype" >
@@ -656,14 +585,12 @@ the plugin attempts to switch to it. Default is <code>true</code>.</p>
 <li>Stream Deck + XL (13)</li>
 </ul>
 
-	
 </ObjectMember>
 
 <ObjectMember name="DontAutoSwitchWhenInstalled" id="profile-dontautoswitchwheninstalled" optional>
 	<ObjectMember.Type>boolean</ObjectMember.Type>
 	<p>Determines whether the Stream Deck application should automatically switch to the profile when it is first installed. Default value is <code>false</code>.</p>
 
-	
 </ObjectMember>
 
 <ObjectMember name="Name" id="profile-name" >
@@ -675,23 +602,18 @@ the plugin attempts to switch to it. Default is <code>true</code>.</p>
 <li>profiles/super-cool-profile</li>
 </ul>
 
-	
 </ObjectMember>
 
 <ObjectMember name="Readonly" id="profile-readonly" optional>
 	<ObjectMember.Type>boolean</ObjectMember.Type>
 	<p>Determines whether the profile is read-only, or if the user is able to customize it within the Stream Deck application. Default value is <code>false</code>.</p>
 
-	
 </ObjectMember>
-
-
-
 
 ### Software{#software}
 
-
 Determines the Stream Deck software requirements for this plugin.
+
 <p>
 	<strong>Properties</strong>
 </p>
@@ -700,18 +622,14 @@ Determines the Stream Deck software requirements for this plugin.
 	<ObjectMember.Type>"6.4", "6.5", "6.6", "6.7", "6.8", "6.9", "7.0", "7.1", "7.2", "7.3", "7.4", "7.5", "7.6"</ObjectMember.Type>
 	<p>Minimum version of the Stream Deck application required for this plugin to run.</p>
 
-	
 </ObjectMember>
 
-
-
-
 ### State{#state}
-
 
 States the action can be in. When two states are defined the action will act as a toggle, with users being able to select their preferred iconography for each state.
 
 Note: Automatic toggling of the state on action activation can be disabled by setting `DisableAutomaticStates` to `true`.
+
 <p>
 	<strong>Properties</strong>
 </p>
@@ -721,7 +639,6 @@ Note: Automatic toggling of the state on action activation can be disabled by se
 	<p>Default font-family to be used when rendering the title of this state.</p>
 <p>Note: Can be overridden by the user in the Stream Deck application.</p>
 
-	
 </ObjectMember>
 
 <ObjectMember name="FontSize" id="state-fontsize" optional>
@@ -729,7 +646,6 @@ Note: Automatic toggling of the state on action activation can be disabled by se
 	<p>Default font-size to be used when rendering the title of this state.</p>
 <p>Note: Can be overridden by the user in the Stream Deck application.</p>
 
-	
 </ObjectMember>
 
 <ObjectMember name="FontStyle" id="state-fontstyle" optional>
@@ -737,7 +653,6 @@ Note: Automatic toggling of the state on action activation can be disabled by se
 	<p>Default font-style to be used when rendering the title of this state.</p>
 <p>Note: Can be overridden by the user in the Stream Deck application.</p>
 
-	
 </ObjectMember>
 
 <ObjectMember name="FontUnderline" id="state-fontunderline" optional>
@@ -745,7 +660,6 @@ Note: Automatic toggling of the state on action activation can be disabled by se
 	<p>Determines whether the title associated with this state is underlined by default.</p>
 <p>Note: Can be overridden by the user in the Stream Deck application.</p>
 
-	
 </ObjectMember>
 
 <ObjectMember name="Image" id="state-image" >
@@ -763,7 +677,6 @@ Note: Automatic toggling of the state on action activation can be disabled by se
 <li>assets/icons/mute</li>
 </ul>
 
-	
 </ObjectMember>
 
 <ObjectMember name="MultiActionImage" id="state-multiactionimage" optional>
@@ -781,7 +694,6 @@ Note: Automatic toggling of the state on action activation can be disabled by se
 <li>assets/icons/mute</li>
 </ul>
 
-	
 </ObjectMember>
 
 <ObjectMember name="Name" id="state-name" optional>
@@ -789,7 +701,6 @@ Note: Automatic toggling of the state on action activation can be disabled by se
 	<p>Name of the state; when multiple states are defined this value is shown to the user when the action is being added to a multi-action. The user is then able to specify which
 state they would like to activate as part of the multi-action.</p>
 
-	
 </ObjectMember>
 
 <ObjectMember name="ShowTitle" id="state-showtitle" optional>
@@ -797,14 +708,12 @@ state they would like to activate as part of the multi-action.</p>
 	<p>Determines whether the title should be shown.</p>
 <p>Note: Can be overridden by the user in the Stream Deck application.</p>
 
-	
 </ObjectMember>
 
 <ObjectMember name="Title" id="state-title" optional>
 	<ObjectMember.Type>string</ObjectMember.Type>
 	<p>Default title to be shown when the action is added to the Stream Deck.</p>
 
-	
 </ObjectMember>
 
 <ObjectMember name="TitleAlignment" id="state-titlealignment" optional>
@@ -812,7 +721,6 @@ state they would like to activate as part of the multi-action.</p>
 	<p>Default title alignment to be used when rendering the title of this state.</p>
 <p>Note: Can be overridden by the user in the Stream Deck application.</p>
 
-	
 </ObjectMember>
 
 <ObjectMember name="TitleColor" id="state-titlecolor" optional>
@@ -826,20 +734,17 @@ state they would like to activate as part of the multi-action.</p>
 <li>#FFFFFF</li>
 </ul>
 
-	
 </ObjectMember>
 
-
-
-
 ### TriggerDescriptions{#triggerdescriptions}
-
 
 Descriptions that define the interaction of the action when it is associated with a dial / touchscreen on the Stream Deck +. This information is shown to the user.
 
 **Examples:**
+
 - "Adjust volume"
 - "Play / Pause"
+
 <p>
 	<strong>Properties</strong>
 </p>
@@ -848,26 +753,22 @@ Descriptions that define the interaction of the action when it is associated wit
 	<ObjectMember.Type>string</ObjectMember.Type>
 	<p>Touchscreen &quot;long-touch&quot; interaction behavior description.</p>
 
-	
 </ObjectMember>
 
 <ObjectMember name="Push" id="triggerdescriptions-push" optional>
 	<ObjectMember.Type>string</ObjectMember.Type>
 	<p>Dial &quot;push&quot; (press) interaction behavior description.</p>
 
-	
 </ObjectMember>
 
 <ObjectMember name="Rotate" id="triggerdescriptions-rotate" optional>
 	<ObjectMember.Type>string</ObjectMember.Type>
 	<p>Dial rotation interaction behavior description.</p>
 
-	
 </ObjectMember>
 
 <ObjectMember name="Touch" id="triggerdescriptions-touch" optional>
 	<ObjectMember.Type>string</ObjectMember.Type>
 	<p>Touchscreen &quot;touch&quot; interaction behavior description.</p>
 
-	
 </ObjectMember>

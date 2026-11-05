@@ -10,8 +10,5 @@ export default defineConfig({
 
 		// Ignore test fixtures as they intentionally have unexpected formats
 		"packages/markdown/src/type-check/__tests__/fixtures/",
-
-		// Ignore documentation partials generated from the SDK's type declarations
-		"docs/sdk/**/_*.g.mdx",
 	],
 });

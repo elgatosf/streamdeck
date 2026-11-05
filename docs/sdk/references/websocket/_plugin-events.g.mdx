@@ -1,5 +1,3 @@
-
-
 ### ApplicationDidLaunch{#applicationdidlaunch}
 
 Occurs when a monitored application is launched. Monitored applications can be defined in the `manifest.json` file via the `Manifest.ApplicationsToMonitor` property. See also
@@ -7,37 +5,29 @@ Occurs when a monitored application is launched. Monitored applications can be d
 
 ```ts
 type ApplicationDidLaunch = {
-    event: "applicationDidLaunch";
-    payload: {
-        application: string;
-    };
+	event: "applicationDidLaunch";
+	payload: {
+		application: string;
+	};
 };
 ```
 
-
-
-<ObjectMember name="event" >
+<ObjectMember name="event">
 	<ObjectMember.Type>"applicationDidLaunch"</ObjectMember.Type>
-	
-Name of the event used to identify what occurred.
-	
+	Name of the event used to identify what occurred.
 </ObjectMember>
 
 <ObjectMember name="payload" >
 	<ObjectMember.Type>object</ObjectMember.Type>
 	
 Payload containing information about the application that triggered the event.
-	
 
-<ObjectMember name="application" >
+<ObjectMember name="application">
 	<ObjectMember.Type>string</ObjectMember.Type>
-	
-Name of the application that triggered the event.
-	
+	Name of the application that triggered the event.
 </ObjectMember>
 
 </ObjectMember>
-
 
 ### ApplicationDidTerminate{#applicationdidterminate}
 
@@ -46,37 +36,29 @@ Occurs when a monitored application terminates. Monitored applications can be de
 
 ```ts
 type ApplicationDidTerminate = {
-    event: "applicationDidTerminate";
-    payload: {
-        application: string;
-    };
+	event: "applicationDidTerminate";
+	payload: {
+		application: string;
+	};
 };
 ```
 
-
-
-<ObjectMember name="event" >
+<ObjectMember name="event">
 	<ObjectMember.Type>"applicationDidTerminate"</ObjectMember.Type>
-	
-Name of the event used to identify what occurred.
-	
+	Name of the event used to identify what occurred.
 </ObjectMember>
 
 <ObjectMember name="payload" >
 	<ObjectMember.Type>object</ObjectMember.Type>
 	
 Payload containing information about the application that triggered the event.
-	
 
-<ObjectMember name="application" >
+<ObjectMember name="application">
 	<ObjectMember.Type>string</ObjectMember.Type>
-	
-Name of the application that triggered the event.
-	
+	Name of the application that triggered the event.
 </ObjectMember>
 
 </ObjectMember>
-
 
 ### DeviceDidChange{#devicedidchange}
 
@@ -86,79 +68,62 @@ Available from Stream Deck 7.0.
 
 ```ts
 type DeviceDidChange = {
-    device: string;
-    deviceInfo: {
-        name: string;
-        size: {
-            columns: number;
-            rows: number;
-        };
-        type: DeviceType;
-    };
-    event: "deviceDidChange";
+	device: string;
+	deviceInfo: {
+		name: string;
+		size: {
+			columns: number;
+			rows: number;
+		};
+		type: DeviceType;
+	};
+	event: "deviceDidChange";
 };
 ```
 
-
-
-<ObjectMember name="device" >
+<ObjectMember name="device">
 	<ObjectMember.Type>string</ObjectMember.Type>
-	
-Unique identifier of the Stream Deck device that this event is associated with.
-	
+	Unique identifier of the Stream Deck device that this event is associated with.
 </ObjectMember>
 
 <ObjectMember name="deviceInfo" >
 	<ObjectMember.Type>DeviceInfo</ObjectMember.Type>
 	
 Information about the device that changed.
-	
 
-<ObjectMember name="name" >
+<ObjectMember name="name">
 	<ObjectMember.Type>string</ObjectMember.Type>
-	
-Name of the device, as specified by the user in the Stream Deck application.
-	
+	Name of the device, as specified by the user in the Stream Deck application.
 </ObjectMember>
 
 <ObjectMember name="size" >
 	<ObjectMember.Type>Size</ObjectMember.Type>
 	
 Number of action slots, excluding dials / touchscreens, available to the device.
-	
 
-<ObjectMember name="columns" >
+<ObjectMember name="columns">
 	<ObjectMember.Type>number</ObjectMember.Type>
-	
-Number of columns available on the Stream Deck device.
-	
+	Number of columns available on the Stream Deck device.
 </ObjectMember>
 
-<ObjectMember name="rows" >
+<ObjectMember name="rows">
 	<ObjectMember.Type>number</ObjectMember.Type>
-	
-Number of rows available on the Stream Deck device.
-	
+	Number of rows available on the Stream Deck device.
 </ObjectMember>
 
 </ObjectMember>
 
-<ObjectMember name="type" >
+<ObjectMember name="type">
 	<ObjectMember.Type>DeviceType</ObjectMember.Type>
-	
-Type of the device that was connected, e.g. Stream Deck +, Stream Deck Pedal, etc. See `DeviceType`.
-	
+	Type of the device that was connected, e.g. Stream Deck +, Stream Deck Pedal, etc. See `DeviceType`.
 </ObjectMember>
 
 </ObjectMember>
 
-<ObjectMember name="event" >
+<ObjectMember name="event">
 	<ObjectMember.Type>"deviceDidChange"</ObjectMember.Type>
-	
-Name of the event used to identify what occurred.
-	
+	Name of the event used to identify what occurred.
 </ObjectMember>
-
 
 ### DeviceDidConnect{#devicedidconnect}
 
@@ -166,79 +131,62 @@ Occurs when a Stream Deck device is connected. See also `DeviceDidDisconnect`.
 
 ```ts
 type DeviceDidConnect = {
-    device: string;
-    deviceInfo: {
-        name: string;
-        size: {
-            columns: number;
-            rows: number;
-        };
-        type: DeviceType;
-    };
-    event: "deviceDidConnect";
+	device: string;
+	deviceInfo: {
+		name: string;
+		size: {
+			columns: number;
+			rows: number;
+		};
+		type: DeviceType;
+	};
+	event: "deviceDidConnect";
 };
 ```
 
-
-
-<ObjectMember name="device" >
+<ObjectMember name="device">
 	<ObjectMember.Type>string</ObjectMember.Type>
-	
-Unique identifier of the Stream Deck device that this event is associated with.
-	
+	Unique identifier of the Stream Deck device that this event is associated with.
 </ObjectMember>
 
 <ObjectMember name="deviceInfo" >
 	<ObjectMember.Type>DeviceInfo</ObjectMember.Type>
 	
 Information about the newly connected device.
-	
 
-<ObjectMember name="name" >
+<ObjectMember name="name">
 	<ObjectMember.Type>string</ObjectMember.Type>
-	
-Name of the device, as specified by the user in the Stream Deck application.
-	
+	Name of the device, as specified by the user in the Stream Deck application.
 </ObjectMember>
 
 <ObjectMember name="size" >
 	<ObjectMember.Type>Size</ObjectMember.Type>
 	
 Number of action slots, excluding dials / touchscreens, available to the device.
-	
 
-<ObjectMember name="columns" >
+<ObjectMember name="columns">
 	<ObjectMember.Type>number</ObjectMember.Type>
-	
-Number of columns available on the Stream Deck device.
-	
+	Number of columns available on the Stream Deck device.
 </ObjectMember>
 
-<ObjectMember name="rows" >
+<ObjectMember name="rows">
 	<ObjectMember.Type>number</ObjectMember.Type>
-	
-Number of rows available on the Stream Deck device.
-	
+	Number of rows available on the Stream Deck device.
 </ObjectMember>
 
 </ObjectMember>
 
-<ObjectMember name="type" >
+<ObjectMember name="type">
 	<ObjectMember.Type>DeviceType</ObjectMember.Type>
-	
-Type of the device that was connected, e.g. Stream Deck +, Stream Deck Pedal, etc. See `DeviceType`.
-	
+	Type of the device that was connected, e.g. Stream Deck +, Stream Deck Pedal, etc. See `DeviceType`.
 </ObjectMember>
 
 </ObjectMember>
 
-<ObjectMember name="event" >
+<ObjectMember name="event">
 	<ObjectMember.Type>"deviceDidConnect"</ObjectMember.Type>
-	
-Name of the event used to identify what occurred.
-	
+	Name of the event used to identify what occurred.
 </ObjectMember>
-
 
 ### DeviceDidDisconnect{#devicediddisconnect}
 
@@ -246,27 +194,20 @@ Occurs when a Stream Deck device is disconnected. See also `DeviceDidConnect`.
 
 ```ts
 type DeviceDidDisconnect = {
-    device: string;
-    event: "deviceDidDisconnect";
+	device: string;
+	event: "deviceDidDisconnect";
 };
 ```
 
-
-
-<ObjectMember name="device" >
+<ObjectMember name="device">
 	<ObjectMember.Type>string</ObjectMember.Type>
-	
-Unique identifier of the Stream Deck device that this event is associated with.
-	
+	Unique identifier of the Stream Deck device that this event is associated with.
 </ObjectMember>
 
-<ObjectMember name="event" >
+<ObjectMember name="event">
 	<ObjectMember.Type>"deviceDidDisconnect"</ObjectMember.Type>
-	
-Name of the event used to identify what occurred.
-	
+	Name of the event used to identify what occurred.
 </ObjectMember>
-
 
 ### DialDown{#dialdown}
 
@@ -276,80 +217,66 @@ NB: For other action types see `KeyDown`.
 
 ```ts
 type DialDown = {
-    action: string;
-    context: string;
-    device: string;
-    event: "dialDown";
-    payload: {
-        controller: "Encoder";
-        coordinates: {
-            column: number;
-            row: number;
-        };
-        resources: {
-            [key: string]: string;
-        };
-        settings: JsonObject;
-    };
+	action: string;
+	context: string;
+	device: string;
+	event: "dialDown";
+	payload: {
+		controller: "Encoder";
+		coordinates: {
+			column: number;
+			row: number;
+		};
+		resources: {
+			[key: string]: string;
+		};
+		settings: JsonObject;
+	};
 };
 ```
 
-
-
-<ObjectMember name="action" >
+<ObjectMember name="action">
 	<ObjectMember.Type>string</ObjectMember.Type>
-	
-Unique identifier of the action as defined within the plugin's manifest (`Actions[].UUID`) e.g. "com.elgato.wavelink.mute".
-	
+	Unique identifier of the action as defined within the plugin's manifest (`Actions[].UUID`) e.g.
+	"com.elgato.wavelink.mute".
 </ObjectMember>
 
-<ObjectMember name="context" >
+<ObjectMember name="context">
 	<ObjectMember.Type>string</ObjectMember.Type>
-	
-Identifies the instance of an action that caused the event, i.e. the specific key or dial. This identifier can be used to provide feedback to the Stream Deck, persist and
-request settings associated with the action instance, etc.
-	
+	Identifies the instance of an action that caused the event, i.e. the specific key or dial. This identifier can be used
+	to provide feedback to the Stream Deck, persist and request settings associated with the action instance, etc.
 </ObjectMember>
 
-<ObjectMember name="device" >
+<ObjectMember name="device">
 	<ObjectMember.Type>string</ObjectMember.Type>
-	
-Unique identifier of the Stream Deck device that this event is associated with.
-	
+	Unique identifier of the Stream Deck device that this event is associated with.
 </ObjectMember>
 
-<ObjectMember name="event" >
+<ObjectMember name="event">
 	<ObjectMember.Type>"dialDown"</ObjectMember.Type>
-	
-Name of the event used to identify what occurred.
-	
+	Name of the event used to identify what occurred.
 </ObjectMember>
 
 <ObjectMember name="payload" >
 	<ObjectMember.Type>TPayload</ObjectMember.Type>
 	
 Contextualized information for this event.
-	
 
-<ObjectMember name="controller" >
+<ObjectMember name="controller">
 	<ObjectMember.Type>"Encoder"</ObjectMember.Type>
-	
-Defines the controller type the action is applicable to. **Keypad** refers to a standard action on a Stream Deck device, e.g. 1 of the 15 buttons on the Stream Deck MK.2,
-or a pedal on the Stream Deck Pedal, etc., whereas an **Encoder** refers to a dial / touchscreen on the Stream Deck +.
-	
+	Defines the controller type the action is applicable to. **Keypad** refers to a standard action on a Stream Deck
+	device, e.g. 1 of the 15 buttons on the Stream Deck MK.2, or a pedal on the Stream Deck Pedal, etc., whereas an
+	**Encoder** refers to a dial / touchscreen on the Stream Deck +.
 </ObjectMember>
 
 <ObjectMember name="coordinates" >
 	<ObjectMember.Type>Coordinates</ObjectMember.Type>
 	
 Coordinates that identify the location of the action.
-	
 
-<ObjectMember name="column" >
+<ObjectMember name="column">
 	<ObjectMember.Type>number</ObjectMember.Type>
-	
-Column the action instance is located in, indexed from 0.
-	
+	Column the action instance is located in, indexed from 0.
 </ObjectMember>
 
 <ObjectMember name="row" >
@@ -359,7 +286,7 @@ Row the action instance is located on, indexed from 0.
 
 Note: When the device is Stream Deck +, the row can be 0 for keys (`Keypad`), and will _always_
 be 0 for dials (`Encoder`); to differentiate between actions types, cross-check the `controller`.
-	
+
 </ObjectMember>
 
 </ObjectMember>
@@ -370,19 +297,15 @@ be 0 for dials (`Encoder`); to differentiate between actions types, cross-check 
 Resources (files) associated with the action.
 
 Available from Stream Deck 7.1.
-	
 
 </ObjectMember>
 
-<ObjectMember name="settings" >
+<ObjectMember name="settings">
 	<ObjectMember.Type>JsonObject</ObjectMember.Type>
-	
-Settings associated with the action instance.
-	
+	Settings associated with the action instance.
 </ObjectMember>
 
 </ObjectMember>
-
 
 ### DialRotate{#dialrotate}
 
@@ -390,82 +313,68 @@ Occurs when the user rotates a dial (Stream Deck +).
 
 ```ts
 type DialRotate = {
-    action: string;
-    context: string;
-    device: string;
-    event: "dialRotate";
-    payload: {
-        controller: "Encoder";
-        coordinates: {
-            column: number;
-            row: number;
-        };
-        pressed: boolean;
-        resources: {
-            [key: string]: string;
-        };
-        settings: JsonObject;
-        ticks: number;
-    };
+	action: string;
+	context: string;
+	device: string;
+	event: "dialRotate";
+	payload: {
+		controller: "Encoder";
+		coordinates: {
+			column: number;
+			row: number;
+		};
+		pressed: boolean;
+		resources: {
+			[key: string]: string;
+		};
+		settings: JsonObject;
+		ticks: number;
+	};
 };
 ```
 
-
-
-<ObjectMember name="action" >
+<ObjectMember name="action">
 	<ObjectMember.Type>string</ObjectMember.Type>
-	
-Unique identifier of the action as defined within the plugin's manifest (`Actions[].UUID`) e.g. "com.elgato.wavelink.mute".
-	
+	Unique identifier of the action as defined within the plugin's manifest (`Actions[].UUID`) e.g.
+	"com.elgato.wavelink.mute".
 </ObjectMember>
 
-<ObjectMember name="context" >
+<ObjectMember name="context">
 	<ObjectMember.Type>string</ObjectMember.Type>
-	
-Identifies the instance of an action that caused the event, i.e. the specific key or dial. This identifier can be used to provide feedback to the Stream Deck, persist and
-request settings associated with the action instance, etc.
-	
+	Identifies the instance of an action that caused the event, i.e. the specific key or dial. This identifier can be used
+	to provide feedback to the Stream Deck, persist and request settings associated with the action instance, etc.
 </ObjectMember>
 
-<ObjectMember name="device" >
+<ObjectMember name="device">
 	<ObjectMember.Type>string</ObjectMember.Type>
-	
-Unique identifier of the Stream Deck device that this event is associated with.
-	
+	Unique identifier of the Stream Deck device that this event is associated with.
 </ObjectMember>
 
-<ObjectMember name="event" >
+<ObjectMember name="event">
 	<ObjectMember.Type>"dialRotate"</ObjectMember.Type>
-	
-Name of the event used to identify what occurred.
-	
+	Name of the event used to identify what occurred.
 </ObjectMember>
 
 <ObjectMember name="payload" >
 	<ObjectMember.Type>TPayload</ObjectMember.Type>
 	
 Contextualized information for this event.
-	
 
-<ObjectMember name="controller" >
+<ObjectMember name="controller">
 	<ObjectMember.Type>"Encoder"</ObjectMember.Type>
-	
-Defines the controller type the action is applicable to. **Keypad** refers to a standard action on a Stream Deck device, e.g. 1 of the 15 buttons on the Stream Deck MK.2,
-or a pedal on the Stream Deck Pedal, etc., whereas an **Encoder** refers to a dial / touchscreen on the Stream Deck +.
-	
+	Defines the controller type the action is applicable to. **Keypad** refers to a standard action on a Stream Deck
+	device, e.g. 1 of the 15 buttons on the Stream Deck MK.2, or a pedal on the Stream Deck Pedal, etc., whereas an
+	**Encoder** refers to a dial / touchscreen on the Stream Deck +.
 </ObjectMember>
 
 <ObjectMember name="coordinates" >
 	<ObjectMember.Type>Coordinates</ObjectMember.Type>
 	
 Coordinates that identify the location of the action.
-	
 
-<ObjectMember name="column" >
+<ObjectMember name="column">
 	<ObjectMember.Type>number</ObjectMember.Type>
-	
-Column the action instance is located in, indexed from 0.
-	
+	Column the action instance is located in, indexed from 0.
 </ObjectMember>
 
 <ObjectMember name="row" >
@@ -475,16 +384,14 @@ Row the action instance is located on, indexed from 0.
 
 Note: When the device is Stream Deck +, the row can be 0 for keys (`Keypad`), and will _always_
 be 0 for dials (`Encoder`); to differentiate between actions types, cross-check the `controller`.
-	
-</ObjectMember>
 
 </ObjectMember>
 
-<ObjectMember name="pressed" >
+</ObjectMember>
+
+<ObjectMember name="pressed">
 	<ObjectMember.Type>boolean</ObjectMember.Type>
-	
-Determines whether the dial was pressed whilst the rotation occurred.
-	
+	Determines whether the dial was pressed whilst the rotation occurred.
 </ObjectMember>
 
 <ObjectMember name="resources" >
@@ -493,26 +400,20 @@ Determines whether the dial was pressed whilst the rotation occurred.
 Resources (files) associated with the action.
 
 Available from Stream Deck 7.1.
-	
 
 </ObjectMember>
 
-<ObjectMember name="settings" >
+<ObjectMember name="settings">
 	<ObjectMember.Type>JsonObject</ObjectMember.Type>
-	
-Settings associated with the action instance.
-	
+	Settings associated with the action instance.
 </ObjectMember>
 
-<ObjectMember name="ticks" >
+<ObjectMember name="ticks">
 	<ObjectMember.Type>number</ObjectMember.Type>
-	
-Number of ticks the dial was rotated; this can be a positive (clockwise) or negative (counter-clockwise) number.
-	
+	Number of ticks the dial was rotated; this can be a positive (clockwise) or negative (counter-clockwise) number.
 </ObjectMember>
 
 </ObjectMember>
-
 
 ### DialUp{#dialup}
 
@@ -522,80 +423,66 @@ NB: For other action types see `KeyUp`.
 
 ```ts
 type DialUp = {
-    action: string;
-    context: string;
-    device: string;
-    event: "dialUp";
-    payload: {
-        controller: "Encoder";
-        coordinates: {
-            column: number;
-            row: number;
-        };
-        resources: {
-            [key: string]: string;
-        };
-        settings: JsonObject;
-    };
+	action: string;
+	context: string;
+	device: string;
+	event: "dialUp";
+	payload: {
+		controller: "Encoder";
+		coordinates: {
+			column: number;
+			row: number;
+		};
+		resources: {
+			[key: string]: string;
+		};
+		settings: JsonObject;
+	};
 };
 ```
 
-
-
-<ObjectMember name="action" >
+<ObjectMember name="action">
 	<ObjectMember.Type>string</ObjectMember.Type>
-	
-Unique identifier of the action as defined within the plugin's manifest (`Actions[].UUID`) e.g. "com.elgato.wavelink.mute".
-	
+	Unique identifier of the action as defined within the plugin's manifest (`Actions[].UUID`) e.g.
+	"com.elgato.wavelink.mute".
 </ObjectMember>
 
-<ObjectMember name="context" >
+<ObjectMember name="context">
 	<ObjectMember.Type>string</ObjectMember.Type>
-	
-Identifies the instance of an action that caused the event, i.e. the specific key or dial. This identifier can be used to provide feedback to the Stream Deck, persist and
-request settings associated with the action instance, etc.
-	
+	Identifies the instance of an action that caused the event, i.e. the specific key or dial. This identifier can be used
+	to provide feedback to the Stream Deck, persist and request settings associated with the action instance, etc.
 </ObjectMember>
 
-<ObjectMember name="device" >
+<ObjectMember name="device">
 	<ObjectMember.Type>string</ObjectMember.Type>
-	
-Unique identifier of the Stream Deck device that this event is associated with.
-	
+	Unique identifier of the Stream Deck device that this event is associated with.
 </ObjectMember>
 
-<ObjectMember name="event" >
+<ObjectMember name="event">
 	<ObjectMember.Type>"dialUp"</ObjectMember.Type>
-	
-Name of the event used to identify what occurred.
-	
+	Name of the event used to identify what occurred.
 </ObjectMember>
 
 <ObjectMember name="payload" >
 	<ObjectMember.Type>TPayload</ObjectMember.Type>
 	
 Contextualized information for this event.
-	
 
-<ObjectMember name="controller" >
+<ObjectMember name="controller">
 	<ObjectMember.Type>"Encoder"</ObjectMember.Type>
-	
-Defines the controller type the action is applicable to. **Keypad** refers to a standard action on a Stream Deck device, e.g. 1 of the 15 buttons on the Stream Deck MK.2,
-or a pedal on the Stream Deck Pedal, etc., whereas an **Encoder** refers to a dial / touchscreen on the Stream Deck +.
-	
+	Defines the controller type the action is applicable to. **Keypad** refers to a standard action on a Stream Deck
+	device, e.g. 1 of the 15 buttons on the Stream Deck MK.2, or a pedal on the Stream Deck Pedal, etc., whereas an
+	**Encoder** refers to a dial / touchscreen on the Stream Deck +.
 </ObjectMember>
 
 <ObjectMember name="coordinates" >
 	<ObjectMember.Type>Coordinates</ObjectMember.Type>
 	
 Coordinates that identify the location of the action.
-	
 
-<ObjectMember name="column" >
+<ObjectMember name="column">
 	<ObjectMember.Type>number</ObjectMember.Type>
-	
-Column the action instance is located in, indexed from 0.
-	
+	Column the action instance is located in, indexed from 0.
 </ObjectMember>
 
 <ObjectMember name="row" >
@@ -605,7 +492,7 @@ Row the action instance is located on, indexed from 0.
 
 Note: When the device is Stream Deck +, the row can be 0 for keys (`Keypad`), and will _always_
 be 0 for dials (`Encoder`); to differentiate between actions types, cross-check the `controller`.
-	
+
 </ObjectMember>
 
 </ObjectMember>
@@ -616,19 +503,15 @@ be 0 for dials (`Encoder`); to differentiate between actions types, cross-check 
 Resources (files) associated with the action.
 
 Available from Stream Deck 7.1.
-	
 
 </ObjectMember>
 
-<ObjectMember name="settings" >
+<ObjectMember name="settings">
 	<ObjectMember.Type>JsonObject</ObjectMember.Type>
-	
-Settings associated with the action instance.
-	
+	Settings associated with the action instance.
 </ObjectMember>
 
 </ObjectMember>
-
 
 ### DidReceiveDeepLink{#didreceivedeeplink}
 
@@ -637,37 +520,29 @@ can be routed to the plugin using the URL format `streamdeck://plugins/message/<
 
 ```ts
 type DidReceiveDeepLink = {
-    event: "didReceiveDeepLink";
-    payload: {
-        url: string;
-    };
+	event: "didReceiveDeepLink";
+	payload: {
+		url: string;
+	};
 };
 ```
 
-
-
-<ObjectMember name="event" >
+<ObjectMember name="event">
 	<ObjectMember.Type>"didReceiveDeepLink"</ObjectMember.Type>
-	
-Name of the event used to identify what occurred.
-	
+	Name of the event used to identify what occurred.
 </ObjectMember>
 
 <ObjectMember name="payload" >
 	<ObjectMember.Type>object</ObjectMember.Type>
 	
 Payload containing information about the URL that triggered the event.
-	
 
-<ObjectMember name="url" >
+<ObjectMember name="url">
 	<ObjectMember.Type>string</ObjectMember.Type>
-	
-The deep-link URL, with the prefix omitted.
-	
+	The deep-link URL, with the prefix omitted.
 </ObjectMember>
 
 </ObjectMember>
-
 
 ### DidReceiveGlobalSettings{#didreceiveglobalsettings}
 
@@ -675,21 +550,17 @@ Occurs when the plugin receives the global settings from Stream Deck.
 
 ```ts
 type DidReceiveGlobalSettings = {
-    event: "didReceiveGlobalSettings";
-    id?: string;
-    payload: {
-        settings: JsonObject;
-    };
+	event: "didReceiveGlobalSettings";
+	id?: string;
+	payload: {
+		settings: JsonObject;
+	};
 };
 ```
 
-
-
-<ObjectMember name="event" >
+<ObjectMember name="event">
 	<ObjectMember.Type>"didReceiveGlobalSettings"</ObjectMember.Type>
-	
-Name of the event used to identify what occurred.
-	
+	Name of the event used to identify what occurred.
 </ObjectMember>
 
 <ObjectMember name="id" optional>
@@ -698,24 +569,20 @@ Name of the event used to identify what occurred.
 Identifier provided when requesting the settings, used to identify the source of the request.
 
 This is always undefined if the event is received because the settings were changed in the property inspector.
-	
+
 </ObjectMember>
 
 <ObjectMember name="payload" >
 	<ObjectMember.Type>object</ObjectMember.Type>
 	
 Additional information about the event that occurred.
-	
 
-<ObjectMember name="settings" >
+<ObjectMember name="settings">
 	<ObjectMember.Type>JsonObject</ObjectMember.Type>
-	
-Global settings associated with this plugin.
-	
+	Global settings associated with this plugin.
 </ObjectMember>
 
 </ObjectMember>
-
 
 ### DidReceivePropertyInspectorMessage{#didreceivepropertyinspectormessage}
 
@@ -723,44 +590,34 @@ Occurs when a payload was received from the UI.
 
 ```ts
 type DidReceivePropertyInspectorMessage = {
-    action: string;
-    context: string;
-    event: "sendToPlugin";
-    payload: JsonValue;
+	action: string;
+	context: string;
+	event: "sendToPlugin";
+	payload: JsonValue;
 };
 ```
 
-
-
-<ObjectMember name="action" >
+<ObjectMember name="action">
 	<ObjectMember.Type>string</ObjectMember.Type>
-	
-Unique identifier of the action as defined within the plugin's manifest (`Actions[].UUID`) e.g. "com.elgato.wavelink.mute".
-	
+	Unique identifier of the action as defined within the plugin's manifest (`Actions[].UUID`) e.g.
+	"com.elgato.wavelink.mute".
 </ObjectMember>
 
-<ObjectMember name="context" >
+<ObjectMember name="context">
 	<ObjectMember.Type>string</ObjectMember.Type>
-	
-Identifies the instance of an action that caused the event, i.e. the specific key or dial. This identifier can be used to provide feedback to the Stream Deck, persist and
-request settings associated with the action instance, etc.
-	
+	Identifies the instance of an action that caused the event, i.e. the specific key or dial. This identifier can be used
+	to provide feedback to the Stream Deck, persist and request settings associated with the action instance, etc.
 </ObjectMember>
 
-<ObjectMember name="event" >
+<ObjectMember name="event">
 	<ObjectMember.Type>"sendToPlugin"</ObjectMember.Type>
-	
-Name of the event used to identify what occurred.
-	
+	Name of the event used to identify what occurred.
 </ObjectMember>
 
-<ObjectMember name="payload" >
+<ObjectMember name="payload">
 	<ObjectMember.Type>JsonValue</ObjectMember.Type>
-	
-Contextualized information for this event.
-	
+	Contextualized information for this event.
 </ObjectMember>
-
 
 ### DidReceiveResources{#didreceiveresources}
 
@@ -769,66 +626,57 @@ are updated in the property inspector.
 
 ```ts
 type DidReceiveResources = {
-    action: string;
-    context: string;
-    device: string;
-    event: "didReceiveResources";
-    id?: string;
-    payload:
-        | {
-              controller: "Keypad";
-              isInMultiAction: true;
-              resources: {
-                  [key: string]: string;
-              };
-              settings: JsonObject;
-              state?: number;
-          }
-        | {
-              controller: "Encoder" | "Keypad" | "Neo";
-              coordinates: {
-                  column: number;
-                  row: number;
-              };
-              isInMultiAction: false;
-              resources: {
-                  [key: string]: string;
-              };
-              settings: JsonObject;
-              state?: number;
-          };
+	action: string;
+	context: string;
+	device: string;
+	event: "didReceiveResources";
+	id?: string;
+	payload:
+		| {
+				controller: "Keypad";
+				isInMultiAction: true;
+				resources: {
+					[key: string]: string;
+				};
+				settings: JsonObject;
+				state?: number;
+		  }
+		| {
+				controller: "Encoder" | "Keypad" | "Neo";
+				coordinates: {
+					column: number;
+					row: number;
+				};
+				isInMultiAction: false;
+				resources: {
+					[key: string]: string;
+				};
+				settings: JsonObject;
+				state?: number;
+		  };
 };
 ```
 
-
-
-<ObjectMember name="action" >
+<ObjectMember name="action">
 	<ObjectMember.Type>string</ObjectMember.Type>
-	
-Unique identifier of the action as defined within the plugin's manifest (`Actions[].UUID`) e.g. "com.elgato.wavelink.mute".
-	
+	Unique identifier of the action as defined within the plugin's manifest (`Actions[].UUID`) e.g.
+	"com.elgato.wavelink.mute".
 </ObjectMember>
 
-<ObjectMember name="context" >
+<ObjectMember name="context">
 	<ObjectMember.Type>string</ObjectMember.Type>
-	
-Identifies the instance of an action that caused the event, i.e. the specific key or dial. This identifier can be used to provide feedback to the Stream Deck, persist and
-request settings associated with the action instance, etc.
-	
+	Identifies the instance of an action that caused the event, i.e. the specific key or dial. This identifier can be used
+	to provide feedback to the Stream Deck, persist and request settings associated with the action instance, etc.
 </ObjectMember>
 
-<ObjectMember name="device" >
+<ObjectMember name="device">
 	<ObjectMember.Type>string</ObjectMember.Type>
-	
-Unique identifier of the Stream Deck device that this event is associated with.
-	
+	Unique identifier of the Stream Deck device that this event is associated with.
 </ObjectMember>
 
-<ObjectMember name="event" >
+<ObjectMember name="event">
 	<ObjectMember.Type>"didReceiveResources"</ObjectMember.Type>
-	
-Name of the event used to identify what occurred.
-	
+	Name of the event used to identify what occurred.
 </ObjectMember>
 
 <ObjectMember name="id" optional>
@@ -838,7 +686,7 @@ Identifier provided when requesting the resources, used to identify the source o
 
 This is always undefined if the event is received because the resources were changed in the property
 inspector.
-	
+
 </ObjectMember>
 
 <ObjectMember name="payload" >
@@ -850,7 +698,6 @@ One of:
 
 <details>
     <summary>MultiActionPayload</summary>
-    
 
 <ObjectMember name="controller" >
 	<ObjectMember.Type>"Keypad"</ObjectMember.Type>
@@ -859,7 +706,7 @@ Defines the controller type the action is applicable to. **Keypad** refers to a 
 or a pedal on the Stream Deck Pedal, etc., whereas an **Encoder** refers to a dial / touchscreen on the Stream Deck +.
 
 NB: Requires Stream Deck 6.5 for `WillAppear` and `WillDisappear` events.
-	
+
 </ObjectMember>
 
 <ObjectMember name="isInMultiAction" >
@@ -868,7 +715,7 @@ NB: Requires Stream Deck 6.5 for `WillAppear` and `WillDisappear` events.
 Determines whether the action is part of a multi-action.
 
 NB. Requires Stream Deck 6.7 when accessed from the property inspector.
-	
+
 </ObjectMember>
 
 <ObjectMember name="resources" >
@@ -877,49 +724,40 @@ NB. Requires Stream Deck 6.7 when accessed from the property inspector.
 Resources (files) associated with the action.
 
 Available from Stream Deck 7.1.
-	
 
 </ObjectMember>
 
-<ObjectMember name="settings" >
+<ObjectMember name="settings">
 	<ObjectMember.Type>JsonObject</ObjectMember.Type>
-	
-Settings associated with the action instance.
-	
+	Settings associated with the action instance.
 </ObjectMember>
 
 <ObjectMember name="state" optional>
 	<ObjectMember.Type>number</ObjectMember.Type>
-	
-Current state of the action; only applicable to actions that have multiple states defined within the `manifest.json` file.
-	
+	Current state of the action; only applicable to actions that have multiple states defined within the `manifest.json`
+	file.
 </ObjectMember>
 
 </details>
 
 <details>
     <summary>SingleActionPayload</summary>
-    
 
-<ObjectMember name="controller" >
+<ObjectMember name="controller">
 	<ObjectMember.Type>Controller</ObjectMember.Type>
-	
-Defines the controller type the action is applicable to. **Keypad** refers to a standard action on a Stream Deck device, e.g. 1 of the 15 buttons on the Stream Deck MK.2,
-or a pedal on the Stream Deck Pedal, etc., whereas an **Encoder** refers to a dial / touchscreen on the Stream Deck +.
-	
+	Defines the controller type the action is applicable to. **Keypad** refers to a standard action on a Stream Deck
+	device, e.g. 1 of the 15 buttons on the Stream Deck MK.2, or a pedal on the Stream Deck Pedal, etc., whereas an
+	**Encoder** refers to a dial / touchscreen on the Stream Deck +.
 </ObjectMember>
 
 <ObjectMember name="coordinates" >
 	<ObjectMember.Type>Coordinates</ObjectMember.Type>
 	
 Coordinates that identify the location of an action.
-	
 
-<ObjectMember name="column" >
+<ObjectMember name="column">
 	<ObjectMember.Type>number</ObjectMember.Type>
-	
-Column the action instance is located in, indexed from 0.
-	
+	Column the action instance is located in, indexed from 0.
 </ObjectMember>
 
 <ObjectMember name="row" >
@@ -929,7 +767,7 @@ Row the action instance is located on, indexed from 0.
 
 Note: When the device is Stream Deck +, the row can be 0 for keys (`Keypad`), and will _always_
 be 0 for dials (`Encoder`); to differentiate between actions types, cross-check the `controller`.
-	
+
 </ObjectMember>
 
 </ObjectMember>
@@ -940,7 +778,7 @@ be 0 for dials (`Encoder`); to differentiate between actions types, cross-check 
 Determines whether the action is part of a multi-action.
 
 NB. Requires Stream Deck 6.7 when accessed from the property inspector.
-	
+
 </ObjectMember>
 
 <ObjectMember name="resources" >
@@ -949,29 +787,23 @@ NB. Requires Stream Deck 6.7 when accessed from the property inspector.
 Resources (files) associated with the action.
 
 Available from Stream Deck 7.1.
-	
 
 </ObjectMember>
 
-<ObjectMember name="settings" >
+<ObjectMember name="settings">
 	<ObjectMember.Type>JsonObject</ObjectMember.Type>
-	
-Settings associated with the action instance.
-	
+	Settings associated with the action instance.
 </ObjectMember>
 
 <ObjectMember name="state" optional>
 	<ObjectMember.Type>number</ObjectMember.Type>
-	
-Current state of the action; only applicable to actions that have multiple states defined within the `manifest.json` file.
-	
+	Current state of the action; only applicable to actions that have multiple states defined within the `manifest.json`
+	file.
 </ObjectMember>
 
 </details>
 
-        
 </ObjectMember>
-
 
 ### DidReceiveSettings{#didreceivesettings}
 
@@ -980,66 +812,57 @@ are updated in the property inspector.
 
 ```ts
 type DidReceiveSettings = {
-    action: string;
-    context: string;
-    device: string;
-    event: "didReceiveSettings";
-    id?: string;
-    payload:
-        | {
-              controller: "Keypad";
-              isInMultiAction: true;
-              resources: {
-                  [key: string]: string;
-              };
-              settings: JsonObject;
-              state?: number;
-          }
-        | {
-              controller: "Encoder" | "Keypad" | "Neo";
-              coordinates: {
-                  column: number;
-                  row: number;
-              };
-              isInMultiAction: false;
-              resources: {
-                  [key: string]: string;
-              };
-              settings: JsonObject;
-              state?: number;
-          };
+	action: string;
+	context: string;
+	device: string;
+	event: "didReceiveSettings";
+	id?: string;
+	payload:
+		| {
+				controller: "Keypad";
+				isInMultiAction: true;
+				resources: {
+					[key: string]: string;
+				};
+				settings: JsonObject;
+				state?: number;
+		  }
+		| {
+				controller: "Encoder" | "Keypad" | "Neo";
+				coordinates: {
+					column: number;
+					row: number;
+				};
+				isInMultiAction: false;
+				resources: {
+					[key: string]: string;
+				};
+				settings: JsonObject;
+				state?: number;
+		  };
 };
 ```
 
-
-
-<ObjectMember name="action" >
+<ObjectMember name="action">
 	<ObjectMember.Type>string</ObjectMember.Type>
-	
-Unique identifier of the action as defined within the plugin's manifest (`Actions[].UUID`) e.g. "com.elgato.wavelink.mute".
-	
+	Unique identifier of the action as defined within the plugin's manifest (`Actions[].UUID`) e.g.
+	"com.elgato.wavelink.mute".
 </ObjectMember>
 
-<ObjectMember name="context" >
+<ObjectMember name="context">
 	<ObjectMember.Type>string</ObjectMember.Type>
-	
-Identifies the instance of an action that caused the event, i.e. the specific key or dial. This identifier can be used to provide feedback to the Stream Deck, persist and
-request settings associated with the action instance, etc.
-	
+	Identifies the instance of an action that caused the event, i.e. the specific key or dial. This identifier can be used
+	to provide feedback to the Stream Deck, persist and request settings associated with the action instance, etc.
 </ObjectMember>
 
-<ObjectMember name="device" >
+<ObjectMember name="device">
 	<ObjectMember.Type>string</ObjectMember.Type>
-	
-Unique identifier of the Stream Deck device that this event is associated with.
-	
+	Unique identifier of the Stream Deck device that this event is associated with.
 </ObjectMember>
 
-<ObjectMember name="event" >
+<ObjectMember name="event">
 	<ObjectMember.Type>"didReceiveSettings"</ObjectMember.Type>
-	
-Name of the event used to identify what occurred.
-	
+	Name of the event used to identify what occurred.
 </ObjectMember>
 
 <ObjectMember name="id" optional>
@@ -1049,7 +872,7 @@ Identifier provided when requesting the settings, used to identify the source of
 
 This is always undefined if the event is received because the settings were changed in the property
 inspector.
-	
+
 </ObjectMember>
 
 <ObjectMember name="payload" >
@@ -1061,7 +884,6 @@ One of:
 
 <details>
     <summary>MultiActionPayload</summary>
-    
 
 <ObjectMember name="controller" >
 	<ObjectMember.Type>"Keypad"</ObjectMember.Type>
@@ -1070,7 +892,7 @@ Defines the controller type the action is applicable to. **Keypad** refers to a 
 or a pedal on the Stream Deck Pedal, etc., whereas an **Encoder** refers to a dial / touchscreen on the Stream Deck +.
 
 NB: Requires Stream Deck 6.5 for `WillAppear` and `WillDisappear` events.
-	
+
 </ObjectMember>
 
 <ObjectMember name="isInMultiAction" >
@@ -1079,7 +901,7 @@ NB: Requires Stream Deck 6.5 for `WillAppear` and `WillDisappear` events.
 Determines whether the action is part of a multi-action.
 
 NB. Requires Stream Deck 6.7 when accessed from the property inspector.
-	
+
 </ObjectMember>
 
 <ObjectMember name="resources" >
@@ -1088,49 +910,40 @@ NB. Requires Stream Deck 6.7 when accessed from the property inspector.
 Resources (files) associated with the action.
 
 Available from Stream Deck 7.1.
-	
 
 </ObjectMember>
 
-<ObjectMember name="settings" >
+<ObjectMember name="settings">
 	<ObjectMember.Type>JsonObject</ObjectMember.Type>
-	
-Settings associated with the action instance.
-	
+	Settings associated with the action instance.
 </ObjectMember>
 
 <ObjectMember name="state" optional>
 	<ObjectMember.Type>number</ObjectMember.Type>
-	
-Current state of the action; only applicable to actions that have multiple states defined within the `manifest.json` file.
-	
+	Current state of the action; only applicable to actions that have multiple states defined within the `manifest.json`
+	file.
 </ObjectMember>
 
 </details>
 
 <details>
     <summary>SingleActionPayload</summary>
-    
 
-<ObjectMember name="controller" >
+<ObjectMember name="controller">
 	<ObjectMember.Type>Controller</ObjectMember.Type>
-	
-Defines the controller type the action is applicable to. **Keypad** refers to a standard action on a Stream Deck device, e.g. 1 of the 15 buttons on the Stream Deck MK.2,
-or a pedal on the Stream Deck Pedal, etc., whereas an **Encoder** refers to a dial / touchscreen on the Stream Deck +.
-	
+	Defines the controller type the action is applicable to. **Keypad** refers to a standard action on a Stream Deck
+	device, e.g. 1 of the 15 buttons on the Stream Deck MK.2, or a pedal on the Stream Deck Pedal, etc., whereas an
+	**Encoder** refers to a dial / touchscreen on the Stream Deck +.
 </ObjectMember>
 
 <ObjectMember name="coordinates" >
 	<ObjectMember.Type>Coordinates</ObjectMember.Type>
 	
 Coordinates that identify the location of an action.
-	
 
-<ObjectMember name="column" >
+<ObjectMember name="column">
 	<ObjectMember.Type>number</ObjectMember.Type>
-	
-Column the action instance is located in, indexed from 0.
-	
+	Column the action instance is located in, indexed from 0.
 </ObjectMember>
 
 <ObjectMember name="row" >
@@ -1140,7 +953,7 @@ Row the action instance is located on, indexed from 0.
 
 Note: When the device is Stream Deck +, the row can be 0 for keys (`Keypad`), and will _always_
 be 0 for dials (`Encoder`); to differentiate between actions types, cross-check the `controller`.
-	
+
 </ObjectMember>
 
 </ObjectMember>
@@ -1151,7 +964,7 @@ be 0 for dials (`Encoder`); to differentiate between actions types, cross-check 
 Determines whether the action is part of a multi-action.
 
 NB. Requires Stream Deck 6.7 when accessed from the property inspector.
-	
+
 </ObjectMember>
 
 <ObjectMember name="resources" >
@@ -1160,29 +973,23 @@ NB. Requires Stream Deck 6.7 when accessed from the property inspector.
 Resources (files) associated with the action.
 
 Available from Stream Deck 7.1.
-	
 
 </ObjectMember>
 
-<ObjectMember name="settings" >
+<ObjectMember name="settings">
 	<ObjectMember.Type>JsonObject</ObjectMember.Type>
-	
-Settings associated with the action instance.
-	
+	Settings associated with the action instance.
 </ObjectMember>
 
 <ObjectMember name="state" optional>
 	<ObjectMember.Type>number</ObjectMember.Type>
-	
-Current state of the action; only applicable to actions that have multiple states defined within the `manifest.json` file.
-	
+	Current state of the action; only applicable to actions that have multiple states defined within the `manifest.json`
+	file.
 </ObjectMember>
 
 </details>
 
-        
 </ObjectMember>
-
 
 ### KeyDown{#keydown}
 
@@ -1192,66 +999,57 @@ NB: For dials / touchscreens see `DialDown`.
 
 ```ts
 type KeyDown = {
-    action: string;
-    context: string;
-    device: string;
-    event: "keyDown";
-    payload:
-        | {
-              controller: "Keypad";
-              isInMultiAction: true;
-              resources: {
-                  [key: string]: string;
-              };
-              settings: JsonObject;
-              state?: number;
-              userDesiredState: number;
-          }
-        | {
-              controller: "Keypad";
-              coordinates: {
-                  column: number;
-                  row: number;
-              };
-              isInMultiAction: false;
-              resources: {
-                  [key: string]: string;
-              };
-              settings: JsonObject;
-              state?: number;
-          };
+	action: string;
+	context: string;
+	device: string;
+	event: "keyDown";
+	payload:
+		| {
+				controller: "Keypad";
+				isInMultiAction: true;
+				resources: {
+					[key: string]: string;
+				};
+				settings: JsonObject;
+				state?: number;
+				userDesiredState: number;
+		  }
+		| {
+				controller: "Keypad";
+				coordinates: {
+					column: number;
+					row: number;
+				};
+				isInMultiAction: false;
+				resources: {
+					[key: string]: string;
+				};
+				settings: JsonObject;
+				state?: number;
+		  };
 };
 ```
 
-
-
-<ObjectMember name="action" >
+<ObjectMember name="action">
 	<ObjectMember.Type>string</ObjectMember.Type>
-	
-Unique identifier of the action as defined within the plugin's manifest (`Actions[].UUID`) e.g. "com.elgato.wavelink.mute".
-	
+	Unique identifier of the action as defined within the plugin's manifest (`Actions[].UUID`) e.g.
+	"com.elgato.wavelink.mute".
 </ObjectMember>
 
-<ObjectMember name="context" >
+<ObjectMember name="context">
 	<ObjectMember.Type>string</ObjectMember.Type>
-	
-Identifies the instance of an action that caused the event, i.e. the specific key or dial. This identifier can be used to provide feedback to the Stream Deck, persist and
-request settings associated with the action instance, etc.
-	
+	Identifies the instance of an action that caused the event, i.e. the specific key or dial. This identifier can be used
+	to provide feedback to the Stream Deck, persist and request settings associated with the action instance, etc.
 </ObjectMember>
 
-<ObjectMember name="device" >
+<ObjectMember name="device">
 	<ObjectMember.Type>string</ObjectMember.Type>
-	
-Unique identifier of the Stream Deck device that this event is associated with.
-	
+	Unique identifier of the Stream Deck device that this event is associated with.
 </ObjectMember>
 
-<ObjectMember name="event" >
+<ObjectMember name="event">
 	<ObjectMember.Type>"keyDown"</ObjectMember.Type>
-	
-Name of the event used to identify what occurred.
-	
+	Name of the event used to identify what occurred.
 </ObjectMember>
 
 <ObjectMember name="payload" >
@@ -1263,7 +1061,6 @@ One of:
 
 <details>
     <summary>MultiActionKeyGesturePayload</summary>
-    
 
 <ObjectMember name="controller" >
 	<ObjectMember.Type>"Keypad"</ObjectMember.Type>
@@ -1272,7 +1069,7 @@ Defines the controller type the action is applicable to. **Keypad** refers to a 
 or a pedal on the Stream Deck Pedal, etc., whereas an **Encoder** refers to a dial / touchscreen on the Stream Deck +.
 
 NB: Requires Stream Deck 6.5 for `WillAppear` and `WillDisappear` events.
-	
+
 </ObjectMember>
 
 <ObjectMember name="isInMultiAction" >
@@ -1281,7 +1078,7 @@ NB: Requires Stream Deck 6.5 for `WillAppear` and `WillDisappear` events.
 Determines whether the action is part of a multi-action.
 
 NB. Requires Stream Deck 6.7 when accessed from the property inspector.
-	
+
 </ObjectMember>
 
 <ObjectMember name="resources" >
@@ -1290,57 +1087,46 @@ NB. Requires Stream Deck 6.7 when accessed from the property inspector.
 Resources (files) associated with the action.
 
 Available from Stream Deck 7.1.
-	
 
 </ObjectMember>
 
-<ObjectMember name="settings" >
+<ObjectMember name="settings">
 	<ObjectMember.Type>JsonObject</ObjectMember.Type>
-	
-Settings associated with the action instance.
-	
+	Settings associated with the action instance.
 </ObjectMember>
 
 <ObjectMember name="state" optional>
 	<ObjectMember.Type>number</ObjectMember.Type>
-	
-Current state of the action; only applicable to actions that have multiple states defined within the `manifest.json` file.
-	
+	Current state of the action; only applicable to actions that have multiple states defined within the `manifest.json`
+	file.
 </ObjectMember>
 
-<ObjectMember name="userDesiredState" >
+<ObjectMember name="userDesiredState">
 	<ObjectMember.Type>number</ObjectMember.Type>
-	
-Desired state as specified by the user; only applicable to actions that have multiple states defined within the `manifest.json` file, and when this action instance is
-part of a multi-action.
-	
+	Desired state as specified by the user; only applicable to actions that have multiple states defined within the
+	`manifest.json` file, and when this action instance is part of a multi-action.
 </ObjectMember>
 
 </details>
 
 <details>
     <summary>SingleActionPayload</summary>
-    
 
-<ObjectMember name="controller" >
+<ObjectMember name="controller">
 	<ObjectMember.Type>"Keypad"</ObjectMember.Type>
-	
-Defines the controller type the action is applicable to. **Keypad** refers to a standard action on a Stream Deck device, e.g. 1 of the 15 buttons on the Stream Deck MK.2,
-or a pedal on the Stream Deck Pedal, etc., whereas an **Encoder** refers to a dial / touchscreen on the Stream Deck +.
-	
+	Defines the controller type the action is applicable to. **Keypad** refers to a standard action on a Stream Deck
+	device, e.g. 1 of the 15 buttons on the Stream Deck MK.2, or a pedal on the Stream Deck Pedal, etc., whereas an
+	**Encoder** refers to a dial / touchscreen on the Stream Deck +.
 </ObjectMember>
 
 <ObjectMember name="coordinates" >
 	<ObjectMember.Type>Coordinates</ObjectMember.Type>
 	
 Coordinates that identify the location of an action.
-	
 
-<ObjectMember name="column" >
+<ObjectMember name="column">
 	<ObjectMember.Type>number</ObjectMember.Type>
-	
-Column the action instance is located in, indexed from 0.
-	
+	Column the action instance is located in, indexed from 0.
 </ObjectMember>
 
 <ObjectMember name="row" >
@@ -1350,7 +1136,7 @@ Row the action instance is located on, indexed from 0.
 
 Note: When the device is Stream Deck +, the row can be 0 for keys (`Keypad`), and will _always_
 be 0 for dials (`Encoder`); to differentiate between actions types, cross-check the `controller`.
-	
+
 </ObjectMember>
 
 </ObjectMember>
@@ -1361,7 +1147,7 @@ be 0 for dials (`Encoder`); to differentiate between actions types, cross-check 
 Determines whether the action is part of a multi-action.
 
 NB. Requires Stream Deck 6.7 when accessed from the property inspector.
-	
+
 </ObjectMember>
 
 <ObjectMember name="resources" >
@@ -1370,29 +1156,23 @@ NB. Requires Stream Deck 6.7 when accessed from the property inspector.
 Resources (files) associated with the action.
 
 Available from Stream Deck 7.1.
-	
 
 </ObjectMember>
 
-<ObjectMember name="settings" >
+<ObjectMember name="settings">
 	<ObjectMember.Type>JsonObject</ObjectMember.Type>
-	
-Settings associated with the action instance.
-	
+	Settings associated with the action instance.
 </ObjectMember>
 
 <ObjectMember name="state" optional>
 	<ObjectMember.Type>number</ObjectMember.Type>
-	
-Current state of the action; only applicable to actions that have multiple states defined within the `manifest.json` file.
-	
+	Current state of the action; only applicable to actions that have multiple states defined within the `manifest.json`
+	file.
 </ObjectMember>
 
 </details>
 
-        
 </ObjectMember>
-
 
 ### KeyUp{#keyup}
 
@@ -1402,66 +1182,57 @@ NB: For dials / touchscreens see `DialUp`.
 
 ```ts
 type KeyUp = {
-    action: string;
-    context: string;
-    device: string;
-    event: "keyUp";
-    payload:
-        | {
-              controller: "Keypad";
-              isInMultiAction: true;
-              resources: {
-                  [key: string]: string;
-              };
-              settings: JsonObject;
-              state?: number;
-              userDesiredState: number;
-          }
-        | {
-              controller: "Keypad";
-              coordinates: {
-                  column: number;
-                  row: number;
-              };
-              isInMultiAction: false;
-              resources: {
-                  [key: string]: string;
-              };
-              settings: JsonObject;
-              state?: number;
-          };
+	action: string;
+	context: string;
+	device: string;
+	event: "keyUp";
+	payload:
+		| {
+				controller: "Keypad";
+				isInMultiAction: true;
+				resources: {
+					[key: string]: string;
+				};
+				settings: JsonObject;
+				state?: number;
+				userDesiredState: number;
+		  }
+		| {
+				controller: "Keypad";
+				coordinates: {
+					column: number;
+					row: number;
+				};
+				isInMultiAction: false;
+				resources: {
+					[key: string]: string;
+				};
+				settings: JsonObject;
+				state?: number;
+		  };
 };
 ```
 
-
-
-<ObjectMember name="action" >
+<ObjectMember name="action">
 	<ObjectMember.Type>string</ObjectMember.Type>
-	
-Unique identifier of the action as defined within the plugin's manifest (`Actions[].UUID`) e.g. "com.elgato.wavelink.mute".
-	
+	Unique identifier of the action as defined within the plugin's manifest (`Actions[].UUID`) e.g.
+	"com.elgato.wavelink.mute".
 </ObjectMember>
 
-<ObjectMember name="context" >
+<ObjectMember name="context">
 	<ObjectMember.Type>string</ObjectMember.Type>
-	
-Identifies the instance of an action that caused the event, i.e. the specific key or dial. This identifier can be used to provide feedback to the Stream Deck, persist and
-request settings associated with the action instance, etc.
-	
+	Identifies the instance of an action that caused the event, i.e. the specific key or dial. This identifier can be used
+	to provide feedback to the Stream Deck, persist and request settings associated with the action instance, etc.
 </ObjectMember>
 
-<ObjectMember name="device" >
+<ObjectMember name="device">
 	<ObjectMember.Type>string</ObjectMember.Type>
-	
-Unique identifier of the Stream Deck device that this event is associated with.
-	
+	Unique identifier of the Stream Deck device that this event is associated with.
 </ObjectMember>
 
-<ObjectMember name="event" >
+<ObjectMember name="event">
 	<ObjectMember.Type>"keyUp"</ObjectMember.Type>
-	
-Name of the event used to identify what occurred.
-	
+	Name of the event used to identify what occurred.
 </ObjectMember>
 
 <ObjectMember name="payload" >
@@ -1473,7 +1244,6 @@ One of:
 
 <details>
     <summary>MultiActionKeyGesturePayload</summary>
-    
 
 <ObjectMember name="controller" >
 	<ObjectMember.Type>"Keypad"</ObjectMember.Type>
@@ -1482,7 +1252,7 @@ Defines the controller type the action is applicable to. **Keypad** refers to a 
 or a pedal on the Stream Deck Pedal, etc., whereas an **Encoder** refers to a dial / touchscreen on the Stream Deck +.
 
 NB: Requires Stream Deck 6.5 for `WillAppear` and `WillDisappear` events.
-	
+
 </ObjectMember>
 
 <ObjectMember name="isInMultiAction" >
@@ -1491,7 +1261,7 @@ NB: Requires Stream Deck 6.5 for `WillAppear` and `WillDisappear` events.
 Determines whether the action is part of a multi-action.
 
 NB. Requires Stream Deck 6.7 when accessed from the property inspector.
-	
+
 </ObjectMember>
 
 <ObjectMember name="resources" >
@@ -1500,57 +1270,46 @@ NB. Requires Stream Deck 6.7 when accessed from the property inspector.
 Resources (files) associated with the action.
 
 Available from Stream Deck 7.1.
-	
 
 </ObjectMember>
 
-<ObjectMember name="settings" >
+<ObjectMember name="settings">
 	<ObjectMember.Type>JsonObject</ObjectMember.Type>
-	
-Settings associated with the action instance.
-	
+	Settings associated with the action instance.
 </ObjectMember>
 
 <ObjectMember name="state" optional>
 	<ObjectMember.Type>number</ObjectMember.Type>
-	
-Current state of the action; only applicable to actions that have multiple states defined within the `manifest.json` file.
-	
+	Current state of the action; only applicable to actions that have multiple states defined within the `manifest.json`
+	file.
 </ObjectMember>
 
-<ObjectMember name="userDesiredState" >
+<ObjectMember name="userDesiredState">
 	<ObjectMember.Type>number</ObjectMember.Type>
-	
-Desired state as specified by the user; only applicable to actions that have multiple states defined within the `manifest.json` file, and when this action instance is
-part of a multi-action.
-	
+	Desired state as specified by the user; only applicable to actions that have multiple states defined within the
+	`manifest.json` file, and when this action instance is part of a multi-action.
 </ObjectMember>
 
 </details>
 
 <details>
     <summary>SingleActionPayload</summary>
-    
 
-<ObjectMember name="controller" >
+<ObjectMember name="controller">
 	<ObjectMember.Type>"Keypad"</ObjectMember.Type>
-	
-Defines the controller type the action is applicable to. **Keypad** refers to a standard action on a Stream Deck device, e.g. 1 of the 15 buttons on the Stream Deck MK.2,
-or a pedal on the Stream Deck Pedal, etc., whereas an **Encoder** refers to a dial / touchscreen on the Stream Deck +.
-	
+	Defines the controller type the action is applicable to. **Keypad** refers to a standard action on a Stream Deck
+	device, e.g. 1 of the 15 buttons on the Stream Deck MK.2, or a pedal on the Stream Deck Pedal, etc., whereas an
+	**Encoder** refers to a dial / touchscreen on the Stream Deck +.
 </ObjectMember>
 
 <ObjectMember name="coordinates" >
 	<ObjectMember.Type>Coordinates</ObjectMember.Type>
 	
 Coordinates that identify the location of an action.
-	
 
-<ObjectMember name="column" >
+<ObjectMember name="column">
 	<ObjectMember.Type>number</ObjectMember.Type>
-	
-Column the action instance is located in, indexed from 0.
-	
+	Column the action instance is located in, indexed from 0.
 </ObjectMember>
 
 <ObjectMember name="row" >
@@ -1560,7 +1319,7 @@ Row the action instance is located on, indexed from 0.
 
 Note: When the device is Stream Deck +, the row can be 0 for keys (`Keypad`), and will _always_
 be 0 for dials (`Encoder`); to differentiate between actions types, cross-check the `controller`.
-	
+
 </ObjectMember>
 
 </ObjectMember>
@@ -1571,7 +1330,7 @@ be 0 for dials (`Encoder`); to differentiate between actions types, cross-check 
 Determines whether the action is part of a multi-action.
 
 NB. Requires Stream Deck 6.7 when accessed from the property inspector.
-	
+
 </ObjectMember>
 
 <ObjectMember name="resources" >
@@ -1580,29 +1339,23 @@ NB. Requires Stream Deck 6.7 when accessed from the property inspector.
 Resources (files) associated with the action.
 
 Available from Stream Deck 7.1.
-	
 
 </ObjectMember>
 
-<ObjectMember name="settings" >
+<ObjectMember name="settings">
 	<ObjectMember.Type>JsonObject</ObjectMember.Type>
-	
-Settings associated with the action instance.
-	
+	Settings associated with the action instance.
 </ObjectMember>
 
 <ObjectMember name="state" optional>
 	<ObjectMember.Type>number</ObjectMember.Type>
-	
-Current state of the action; only applicable to actions that have multiple states defined within the `manifest.json` file.
-	
+	Current state of the action; only applicable to actions that have multiple states defined within the `manifest.json`
+	file.
 </ObjectMember>
 
 </details>
 
-        
 </ObjectMember>
-
 
 ### PropertyInspectorDidAppear{#propertyinspectordidappear}
 
@@ -1610,44 +1363,34 @@ Occurs when the property inspector associated with the action becomes visible, i
 
 ```ts
 type PropertyInspectorDidAppear = {
-    action: string;
-    context: string;
-    device: string;
-    event: "propertyInspectorDidAppear";
+	action: string;
+	context: string;
+	device: string;
+	event: "propertyInspectorDidAppear";
 };
 ```
 
-
-
-<ObjectMember name="action" >
+<ObjectMember name="action">
 	<ObjectMember.Type>string</ObjectMember.Type>
-	
-Unique identifier of the action as defined within the plugin's manifest (`Actions[].UUID`) e.g. "com.elgato.wavelink.mute".
-	
+	Unique identifier of the action as defined within the plugin's manifest (`Actions[].UUID`) e.g.
+	"com.elgato.wavelink.mute".
 </ObjectMember>
 
-<ObjectMember name="context" >
+<ObjectMember name="context">
 	<ObjectMember.Type>string</ObjectMember.Type>
-	
-Identifies the instance of an action that caused the event, i.e. the specific key or dial. This identifier can be used to provide feedback to the Stream Deck, persist and
-request settings associated with the action instance, etc.
-	
+	Identifies the instance of an action that caused the event, i.e. the specific key or dial. This identifier can be used
+	to provide feedback to the Stream Deck, persist and request settings associated with the action instance, etc.
 </ObjectMember>
 
-<ObjectMember name="device" >
+<ObjectMember name="device">
 	<ObjectMember.Type>string</ObjectMember.Type>
-	
-Unique identifier of the Stream Deck device that this event is associated with.
-	
+	Unique identifier of the Stream Deck device that this event is associated with.
 </ObjectMember>
 
-<ObjectMember name="event" >
+<ObjectMember name="event">
 	<ObjectMember.Type>"propertyInspectorDidAppear"</ObjectMember.Type>
-	
-Name of the event used to identify what occurred.
-	
+	Name of the event used to identify what occurred.
 </ObjectMember>
-
 
 ### PropertyInspectorDidDisappear{#propertyinspectordiddisappear}
 
@@ -1655,44 +1398,34 @@ Occurs when the property inspector associated with the action becomes invisible,
 
 ```ts
 type PropertyInspectorDidDisappear = {
-    action: string;
-    context: string;
-    device: string;
-    event: "propertyInspectorDidDisappear";
+	action: string;
+	context: string;
+	device: string;
+	event: "propertyInspectorDidDisappear";
 };
 ```
 
-
-
-<ObjectMember name="action" >
+<ObjectMember name="action">
 	<ObjectMember.Type>string</ObjectMember.Type>
-	
-Unique identifier of the action as defined within the plugin's manifest (`Actions[].UUID`) e.g. "com.elgato.wavelink.mute".
-	
+	Unique identifier of the action as defined within the plugin's manifest (`Actions[].UUID`) e.g.
+	"com.elgato.wavelink.mute".
 </ObjectMember>
 
-<ObjectMember name="context" >
+<ObjectMember name="context">
 	<ObjectMember.Type>string</ObjectMember.Type>
-	
-Identifies the instance of an action that caused the event, i.e. the specific key or dial. This identifier can be used to provide feedback to the Stream Deck, persist and
-request settings associated with the action instance, etc.
-	
+	Identifies the instance of an action that caused the event, i.e. the specific key or dial. This identifier can be used
+	to provide feedback to the Stream Deck, persist and request settings associated with the action instance, etc.
 </ObjectMember>
 
-<ObjectMember name="device" >
+<ObjectMember name="device">
 	<ObjectMember.Type>string</ObjectMember.Type>
-	
-Unique identifier of the Stream Deck device that this event is associated with.
-	
+	Unique identifier of the Stream Deck device that this event is associated with.
 </ObjectMember>
 
-<ObjectMember name="event" >
+<ObjectMember name="event">
 	<ObjectMember.Type>"propertyInspectorDidDisappear"</ObjectMember.Type>
-	
-Name of the event used to identify what occurred.
-	
+	Name of the event used to identify what occurred.
 </ObjectMember>
-
 
 ### SystemDidWakeUp{#systemdidwakeup}
 
@@ -1700,19 +1433,14 @@ Occurs when the computer wakes up.
 
 ```ts
 type SystemDidWakeUp = {
-    event: "systemDidWakeUp";
+	event: "systemDidWakeUp";
 };
 ```
 
-
-
-<ObjectMember name="event" >
+<ObjectMember name="event">
 	<ObjectMember.Type>"systemDidWakeUp"</ObjectMember.Type>
-	
-Name of the event used to identify what occurred.
-	
+	Name of the event used to identify what occurred.
 </ObjectMember>
-
 
 ### TitleParametersDidChange{#titleparametersdidchange}
 
@@ -1720,91 +1448,77 @@ Occurs when the user updates an action's title settings in the Stream Deck appli
 
 ```ts
 type TitleParametersDidChange = {
-    action: string;
-    context: string;
-    device: string;
-    event: "titleParametersDidChange";
-    payload: {
-        controller: "Encoder" | "Keypad" | "Neo";
-        coordinates: {
-            column: number;
-            row: number;
-        };
-        resources: {
-            [key: string]: string;
-        };
-        settings: JsonObject;
-        state?: number;
-        title: string;
-        titleParameters: {
-            fontFamily: string;
-            fontSize: number;
-            fontStyle: "" | "Bold Italic" | "Bold" | "Italic" | "Regular";
-            fontUnderline: boolean;
-            showTitle: boolean;
-            titleAlignment: "bottom" | "middle" | "top";
-            titleColor: string;
-        };
-    };
+	action: string;
+	context: string;
+	device: string;
+	event: "titleParametersDidChange";
+	payload: {
+		controller: "Encoder" | "Keypad" | "Neo";
+		coordinates: {
+			column: number;
+			row: number;
+		};
+		resources: {
+			[key: string]: string;
+		};
+		settings: JsonObject;
+		state?: number;
+		title: string;
+		titleParameters: {
+			fontFamily: string;
+			fontSize: number;
+			fontStyle: "" | "Bold Italic" | "Bold" | "Italic" | "Regular";
+			fontUnderline: boolean;
+			showTitle: boolean;
+			titleAlignment: "bottom" | "middle" | "top";
+			titleColor: string;
+		};
+	};
 };
 ```
 
-
-
-<ObjectMember name="action" >
+<ObjectMember name="action">
 	<ObjectMember.Type>string</ObjectMember.Type>
-	
-Unique identifier of the action as defined within the plugin's manifest (`Actions[].UUID`) e.g. "com.elgato.wavelink.mute".
-	
+	Unique identifier of the action as defined within the plugin's manifest (`Actions[].UUID`) e.g.
+	"com.elgato.wavelink.mute".
 </ObjectMember>
 
-<ObjectMember name="context" >
+<ObjectMember name="context">
 	<ObjectMember.Type>string</ObjectMember.Type>
-	
-Identifies the instance of an action that caused the event, i.e. the specific key or dial. This identifier can be used to provide feedback to the Stream Deck, persist and
-request settings associated with the action instance, etc.
-	
+	Identifies the instance of an action that caused the event, i.e. the specific key or dial. This identifier can be used
+	to provide feedback to the Stream Deck, persist and request settings associated with the action instance, etc.
 </ObjectMember>
 
-<ObjectMember name="device" >
+<ObjectMember name="device">
 	<ObjectMember.Type>string</ObjectMember.Type>
-	
-Unique identifier of the Stream Deck device that this event is associated with.
-	
+	Unique identifier of the Stream Deck device that this event is associated with.
 </ObjectMember>
 
-<ObjectMember name="event" >
+<ObjectMember name="event">
 	<ObjectMember.Type>"titleParametersDidChange"</ObjectMember.Type>
-	
-Name of the event used to identify what occurred.
-	
+	Name of the event used to identify what occurred.
 </ObjectMember>
 
 <ObjectMember name="payload" >
 	<ObjectMember.Type>TPayload</ObjectMember.Type>
 	
 Contextualized information for this event.
-	
 
-<ObjectMember name="controller" >
+<ObjectMember name="controller">
 	<ObjectMember.Type>Controller</ObjectMember.Type>
-	
-Defines the controller type the action is applicable to. **Keypad** refers to a standard action on a Stream Deck device, e.g. 1 of the 15 buttons on the Stream Deck MK.2,
-or a pedal on the Stream Deck Pedal, etc., whereas an **Encoder** refers to a dial / touchscreen on the Stream Deck +.
-	
+	Defines the controller type the action is applicable to. **Keypad** refers to a standard action on a Stream Deck
+	device, e.g. 1 of the 15 buttons on the Stream Deck MK.2, or a pedal on the Stream Deck Pedal, etc., whereas an
+	**Encoder** refers to a dial / touchscreen on the Stream Deck +.
 </ObjectMember>
 
 <ObjectMember name="coordinates" >
 	<ObjectMember.Type>Coordinates</ObjectMember.Type>
 	
 Coordinates that identify the location of an action.
-	
 
-<ObjectMember name="column" >
+<ObjectMember name="column">
 	<ObjectMember.Type>number</ObjectMember.Type>
-	
-Column the action instance is located in, indexed from 0.
-	
+	Column the action instance is located in, indexed from 0.
 </ObjectMember>
 
 <ObjectMember name="row" >
@@ -1814,7 +1528,7 @@ Row the action instance is located on, indexed from 0.
 
 Note: When the device is Stream Deck +, the row can be 0 for keys (`Keypad`), and will _always_
 be 0 for dials (`Encoder`); to differentiate between actions types, cross-check the `controller`.
-	
+
 </ObjectMember>
 
 </ObjectMember>
@@ -1825,90 +1539,68 @@ be 0 for dials (`Encoder`); to differentiate between actions types, cross-check 
 Resources (files) associated with the action.
 
 Available from Stream Deck 7.1.
-	
 
 </ObjectMember>
 
-<ObjectMember name="settings" >
+<ObjectMember name="settings">
 	<ObjectMember.Type>JsonObject</ObjectMember.Type>
-	
-Settings associated with the action instance.
-	
+	Settings associated with the action instance.
 </ObjectMember>
 
 <ObjectMember name="state" optional>
 	<ObjectMember.Type>number</ObjectMember.Type>
-	
-Current state of the action; only applicable to actions that have multiple states defined within the `manifest.json` file.
-	
+	Current state of the action; only applicable to actions that have multiple states defined within the `manifest.json`
+	file.
 </ObjectMember>
 
-<ObjectMember name="title" >
+<ObjectMember name="title">
 	<ObjectMember.Type>string</ObjectMember.Type>
-	
-Title of the action, as specified by the user or dynamically by the plugin.
-	
+	Title of the action, as specified by the user or dynamically by the plugin.
 </ObjectMember>
 
 <ObjectMember name="titleParameters" >
 	<ObjectMember.Type>object</ObjectMember.Type>
 	
 Defines aesthetic properties that determine how the title should be rendered.
-	
 
-<ObjectMember name="fontFamily" >
+<ObjectMember name="fontFamily">
 	<ObjectMember.Type>string</ObjectMember.Type>
-	
-Font-family the title will be rendered with.
-	
+	Font-family the title will be rendered with.
 </ObjectMember>
 
-<ObjectMember name="fontSize" >
+<ObjectMember name="fontSize">
 	<ObjectMember.Type>number</ObjectMember.Type>
-	
-Font-size the title will be rendered in.
-	
+	Font-size the title will be rendered in.
 </ObjectMember>
 
-<ObjectMember name="fontStyle" >
+<ObjectMember name="fontStyle">
 	<ObjectMember.Type>"" | "Bold Italic" | "Bold" | "Italic" | "Regular"</ObjectMember.Type>
-	
-Typography of the title.
-	
+	Typography of the title.
 </ObjectMember>
 
-<ObjectMember name="fontUnderline" >
+<ObjectMember name="fontUnderline">
 	<ObjectMember.Type>boolean</ObjectMember.Type>
-	
-Determines whether the font should be underlined.
-	
+	Determines whether the font should be underlined.
 </ObjectMember>
 
-<ObjectMember name="showTitle" >
+<ObjectMember name="showTitle">
 	<ObjectMember.Type>boolean</ObjectMember.Type>
-	
-Determines whether the user has opted to show, or hide the title for this action instance.
-	
+	Determines whether the user has opted to show, or hide the title for this action instance.
 </ObjectMember>
 
-<ObjectMember name="titleAlignment" >
+<ObjectMember name="titleAlignment">
 	<ObjectMember.Type>"bottom" | "middle" | "top"</ObjectMember.Type>
-	
-Alignment of the title.
-	
+	Alignment of the title.
 </ObjectMember>
 
-<ObjectMember name="titleColor" >
+<ObjectMember name="titleColor">
 	<ObjectMember.Type>string</ObjectMember.Type>
-	
-Color of the title, represented as a hexadecimal value.
-	
+	Color of the title, represented as a hexadecimal value.
 </ObjectMember>
 
 </ObjectMember>
 
 </ObjectMember>
-
 
 ### TouchTap{#touchtap}
 
@@ -1916,82 +1608,68 @@ Occurs when the user taps the touchscreen (Stream Deck +).
 
 ```ts
 type TouchTap = {
-    action: string;
-    context: string;
-    device: string;
-    event: "touchTap";
-    payload: {
-        controller: "Encoder";
-        coordinates: {
-            column: number;
-            row: number;
-        };
-        hold: boolean;
-        resources: {
-            [key: string]: string;
-        };
-        settings: JsonObject;
-        tapPos: [x: number, y: number];
-    };
+	action: string;
+	context: string;
+	device: string;
+	event: "touchTap";
+	payload: {
+		controller: "Encoder";
+		coordinates: {
+			column: number;
+			row: number;
+		};
+		hold: boolean;
+		resources: {
+			[key: string]: string;
+		};
+		settings: JsonObject;
+		tapPos: [x: number, y: number];
+	};
 };
 ```
 
-
-
-<ObjectMember name="action" >
+<ObjectMember name="action">
 	<ObjectMember.Type>string</ObjectMember.Type>
-	
-Unique identifier of the action as defined within the plugin's manifest (`Actions[].UUID`) e.g. "com.elgato.wavelink.mute".
-	
+	Unique identifier of the action as defined within the plugin's manifest (`Actions[].UUID`) e.g.
+	"com.elgato.wavelink.mute".
 </ObjectMember>
 
-<ObjectMember name="context" >
+<ObjectMember name="context">
 	<ObjectMember.Type>string</ObjectMember.Type>
-	
-Identifies the instance of an action that caused the event, i.e. the specific key or dial. This identifier can be used to provide feedback to the Stream Deck, persist and
-request settings associated with the action instance, etc.
-	
+	Identifies the instance of an action that caused the event, i.e. the specific key or dial. This identifier can be used
+	to provide feedback to the Stream Deck, persist and request settings associated with the action instance, etc.
 </ObjectMember>
 
-<ObjectMember name="device" >
+<ObjectMember name="device">
 	<ObjectMember.Type>string</ObjectMember.Type>
-	
-Unique identifier of the Stream Deck device that this event is associated with.
-	
+	Unique identifier of the Stream Deck device that this event is associated with.
 </ObjectMember>
 
-<ObjectMember name="event" >
+<ObjectMember name="event">
 	<ObjectMember.Type>"touchTap"</ObjectMember.Type>
-	
-Name of the event used to identify what occurred.
-	
+	Name of the event used to identify what occurred.
 </ObjectMember>
 
 <ObjectMember name="payload" >
 	<ObjectMember.Type>TPayload</ObjectMember.Type>
 	
 Contextualized information for this event.
-	
 
-<ObjectMember name="controller" >
+<ObjectMember name="controller">
 	<ObjectMember.Type>"Encoder"</ObjectMember.Type>
-	
-Defines the controller type the action is applicable to. **Keypad** refers to a standard action on a Stream Deck device, e.g. 1 of the 15 buttons on the Stream Deck MK.2,
-or a pedal on the Stream Deck Pedal, etc., whereas an **Encoder** refers to a dial / touchscreen on the Stream Deck +.
-	
+	Defines the controller type the action is applicable to. **Keypad** refers to a standard action on a Stream Deck
+	device, e.g. 1 of the 15 buttons on the Stream Deck MK.2, or a pedal on the Stream Deck Pedal, etc., whereas an
+	**Encoder** refers to a dial / touchscreen on the Stream Deck +.
 </ObjectMember>
 
 <ObjectMember name="coordinates" >
 	<ObjectMember.Type>Coordinates</ObjectMember.Type>
 	
 Coordinates that identify the location of the action.
-	
 
-<ObjectMember name="column" >
+<ObjectMember name="column">
 	<ObjectMember.Type>number</ObjectMember.Type>
-	
-Column the action instance is located in, indexed from 0.
-	
+	Column the action instance is located in, indexed from 0.
 </ObjectMember>
 
 <ObjectMember name="row" >
@@ -2001,16 +1679,14 @@ Row the action instance is located on, indexed from 0.
 
 Note: When the device is Stream Deck +, the row can be 0 for keys (`Keypad`), and will _always_
 be 0 for dials (`Encoder`); to differentiate between actions types, cross-check the `controller`.
-	
-</ObjectMember>
 
 </ObjectMember>
 
-<ObjectMember name="hold" >
+</ObjectMember>
+
+<ObjectMember name="hold">
 	<ObjectMember.Type>boolean</ObjectMember.Type>
-	
-Determines whether the tap was considered "held".
-	
+	Determines whether the tap was considered "held".
 </ObjectMember>
 
 <ObjectMember name="resources" >
@@ -2019,26 +1695,20 @@ Determines whether the tap was considered "held".
 Resources (files) associated with the action.
 
 Available from Stream Deck 7.1.
-	
 
 </ObjectMember>
 
-<ObjectMember name="settings" >
+<ObjectMember name="settings">
 	<ObjectMember.Type>JsonObject</ObjectMember.Type>
-	
-Settings associated with the action instance.
-	
+	Settings associated with the action instance.
 </ObjectMember>
 
-<ObjectMember name="tapPos" >
+<ObjectMember name="tapPos">
 	<ObjectMember.Type>[x: number, y: number]</ObjectMember.Type>
-	
-Coordinates of where the touchscreen tap occurred, relative to the canvas of the action.
-	
+	Coordinates of where the touchscreen tap occurred, relative to the canvas of the action.
 </ObjectMember>
 
 </ObjectMember>
-
 
 ### WillAppear{#willappear}
 
@@ -2047,65 +1717,56 @@ page". An action refers to _all_ types of actions, e.g. keys, dials, touchscreen
 
 ```ts
 type WillAppear = {
-    action: string;
-    context: string;
-    device: string;
-    event: "willAppear";
-    payload:
-        | {
-              controller: "Keypad";
-              isInMultiAction: true;
-              resources: {
-                  [key: string]: string;
-              };
-              settings: JsonObject;
-              state?: number;
-          }
-        | {
-              controller: "Encoder" | "Keypad" | "Neo";
-              coordinates: {
-                  column: number;
-                  row: number;
-              };
-              isInMultiAction: false;
-              resources: {
-                  [key: string]: string;
-              };
-              settings: JsonObject;
-              state?: number;
-          };
+	action: string;
+	context: string;
+	device: string;
+	event: "willAppear";
+	payload:
+		| {
+				controller: "Keypad";
+				isInMultiAction: true;
+				resources: {
+					[key: string]: string;
+				};
+				settings: JsonObject;
+				state?: number;
+		  }
+		| {
+				controller: "Encoder" | "Keypad" | "Neo";
+				coordinates: {
+					column: number;
+					row: number;
+				};
+				isInMultiAction: false;
+				resources: {
+					[key: string]: string;
+				};
+				settings: JsonObject;
+				state?: number;
+		  };
 };
 ```
 
-
-
-<ObjectMember name="action" >
+<ObjectMember name="action">
 	<ObjectMember.Type>string</ObjectMember.Type>
-	
-Unique identifier of the action as defined within the plugin's manifest (`Actions[].UUID`) e.g. "com.elgato.wavelink.mute".
-	
+	Unique identifier of the action as defined within the plugin's manifest (`Actions[].UUID`) e.g.
+	"com.elgato.wavelink.mute".
 </ObjectMember>
 
-<ObjectMember name="context" >
+<ObjectMember name="context">
 	<ObjectMember.Type>string</ObjectMember.Type>
-	
-Identifies the instance of an action that caused the event, i.e. the specific key or dial. This identifier can be used to provide feedback to the Stream Deck, persist and
-request settings associated with the action instance, etc.
-	
+	Identifies the instance of an action that caused the event, i.e. the specific key or dial. This identifier can be used
+	to provide feedback to the Stream Deck, persist and request settings associated with the action instance, etc.
 </ObjectMember>
 
-<ObjectMember name="device" >
+<ObjectMember name="device">
 	<ObjectMember.Type>string</ObjectMember.Type>
-	
-Unique identifier of the Stream Deck device that this event is associated with.
-	
+	Unique identifier of the Stream Deck device that this event is associated with.
 </ObjectMember>
 
-<ObjectMember name="event" >
+<ObjectMember name="event">
 	<ObjectMember.Type>"willAppear"</ObjectMember.Type>
-	
-Name of the event used to identify what occurred.
-	
+	Name of the event used to identify what occurred.
 </ObjectMember>
 
 <ObjectMember name="payload" >
@@ -2117,7 +1778,6 @@ One of:
 
 <details>
     <summary>MultiActionPayload</summary>
-    
 
 <ObjectMember name="controller" >
 	<ObjectMember.Type>"Keypad"</ObjectMember.Type>
@@ -2126,7 +1786,7 @@ Defines the controller type the action is applicable to. **Keypad** refers to a 
 or a pedal on the Stream Deck Pedal, etc., whereas an **Encoder** refers to a dial / touchscreen on the Stream Deck +.
 
 NB: Requires Stream Deck 6.5 for `WillAppear` and `WillDisappear` events.
-	
+
 </ObjectMember>
 
 <ObjectMember name="isInMultiAction" >
@@ -2135,7 +1795,7 @@ NB: Requires Stream Deck 6.5 for `WillAppear` and `WillDisappear` events.
 Determines whether the action is part of a multi-action.
 
 NB. Requires Stream Deck 6.7 when accessed from the property inspector.
-	
+
 </ObjectMember>
 
 <ObjectMember name="resources" >
@@ -2144,49 +1804,40 @@ NB. Requires Stream Deck 6.7 when accessed from the property inspector.
 Resources (files) associated with the action.
 
 Available from Stream Deck 7.1.
-	
 
 </ObjectMember>
 
-<ObjectMember name="settings" >
+<ObjectMember name="settings">
 	<ObjectMember.Type>JsonObject</ObjectMember.Type>
-	
-Settings associated with the action instance.
-	
+	Settings associated with the action instance.
 </ObjectMember>
 
 <ObjectMember name="state" optional>
 	<ObjectMember.Type>number</ObjectMember.Type>
-	
-Current state of the action; only applicable to actions that have multiple states defined within the `manifest.json` file.
-	
+	Current state of the action; only applicable to actions that have multiple states defined within the `manifest.json`
+	file.
 </ObjectMember>
 
 </details>
 
 <details>
     <summary>SingleActionPayload</summary>
-    
 
-<ObjectMember name="controller" >
+<ObjectMember name="controller">
 	<ObjectMember.Type>Controller</ObjectMember.Type>
-	
-Defines the controller type the action is applicable to. **Keypad** refers to a standard action on a Stream Deck device, e.g. 1 of the 15 buttons on the Stream Deck MK.2,
-or a pedal on the Stream Deck Pedal, etc., whereas an **Encoder** refers to a dial / touchscreen on the Stream Deck +.
-	
+	Defines the controller type the action is applicable to. **Keypad** refers to a standard action on a Stream Deck
+	device, e.g. 1 of the 15 buttons on the Stream Deck MK.2, or a pedal on the Stream Deck Pedal, etc., whereas an
+	**Encoder** refers to a dial / touchscreen on the Stream Deck +.
 </ObjectMember>
 
 <ObjectMember name="coordinates" >
 	<ObjectMember.Type>Coordinates</ObjectMember.Type>
 	
 Coordinates that identify the location of an action.
-	
 
-<ObjectMember name="column" >
+<ObjectMember name="column">
 	<ObjectMember.Type>number</ObjectMember.Type>
-	
-Column the action instance is located in, indexed from 0.
-	
+	Column the action instance is located in, indexed from 0.
 </ObjectMember>
 
 <ObjectMember name="row" >
@@ -2196,7 +1847,7 @@ Row the action instance is located on, indexed from 0.
 
 Note: When the device is Stream Deck +, the row can be 0 for keys (`Keypad`), and will _always_
 be 0 for dials (`Encoder`); to differentiate between actions types, cross-check the `controller`.
-	
+
 </ObjectMember>
 
 </ObjectMember>
@@ -2207,7 +1858,7 @@ be 0 for dials (`Encoder`); to differentiate between actions types, cross-check 
 Determines whether the action is part of a multi-action.
 
 NB. Requires Stream Deck 6.7 when accessed from the property inspector.
-	
+
 </ObjectMember>
 
 <ObjectMember name="resources" >
@@ -2216,29 +1867,23 @@ NB. Requires Stream Deck 6.7 when accessed from the property inspector.
 Resources (files) associated with the action.
 
 Available from Stream Deck 7.1.
-	
 
 </ObjectMember>
 
-<ObjectMember name="settings" >
+<ObjectMember name="settings">
 	<ObjectMember.Type>JsonObject</ObjectMember.Type>
-	
-Settings associated with the action instance.
-	
+	Settings associated with the action instance.
 </ObjectMember>
 
 <ObjectMember name="state" optional>
 	<ObjectMember.Type>number</ObjectMember.Type>
-	
-Current state of the action; only applicable to actions that have multiple states defined within the `manifest.json` file.
-	
+	Current state of the action; only applicable to actions that have multiple states defined within the `manifest.json`
+	file.
 </ObjectMember>
 
 </details>
 
-        
 </ObjectMember>
-
 
 ### WillDisappear{#willdisappear}
 
@@ -2247,65 +1892,56 @@ touchscreens, pedals, etc.
 
 ```ts
 type WillDisappear = {
-    action: string;
-    context: string;
-    device: string;
-    event: "willDisappear";
-    payload:
-        | {
-              controller: "Keypad";
-              isInMultiAction: true;
-              resources: {
-                  [key: string]: string;
-              };
-              settings: JsonObject;
-              state?: number;
-          }
-        | {
-              controller: "Encoder" | "Keypad" | "Neo";
-              coordinates: {
-                  column: number;
-                  row: number;
-              };
-              isInMultiAction: false;
-              resources: {
-                  [key: string]: string;
-              };
-              settings: JsonObject;
-              state?: number;
-          };
+	action: string;
+	context: string;
+	device: string;
+	event: "willDisappear";
+	payload:
+		| {
+				controller: "Keypad";
+				isInMultiAction: true;
+				resources: {
+					[key: string]: string;
+				};
+				settings: JsonObject;
+				state?: number;
+		  }
+		| {
+				controller: "Encoder" | "Keypad" | "Neo";
+				coordinates: {
+					column: number;
+					row: number;
+				};
+				isInMultiAction: false;
+				resources: {
+					[key: string]: string;
+				};
+				settings: JsonObject;
+				state?: number;
+		  };
 };
 ```
 
-
-
-<ObjectMember name="action" >
+<ObjectMember name="action">
 	<ObjectMember.Type>string</ObjectMember.Type>
-	
-Unique identifier of the action as defined within the plugin's manifest (`Actions[].UUID`) e.g. "com.elgato.wavelink.mute".
-	
+	Unique identifier of the action as defined within the plugin's manifest (`Actions[].UUID`) e.g.
+	"com.elgato.wavelink.mute".
 </ObjectMember>
 
-<ObjectMember name="context" >
+<ObjectMember name="context">
 	<ObjectMember.Type>string</ObjectMember.Type>
-	
-Identifies the instance of an action that caused the event, i.e. the specific key or dial. This identifier can be used to provide feedback to the Stream Deck, persist and
-request settings associated with the action instance, etc.
-	
+	Identifies the instance of an action that caused the event, i.e. the specific key or dial. This identifier can be used
+	to provide feedback to the Stream Deck, persist and request settings associated with the action instance, etc.
 </ObjectMember>
 
-<ObjectMember name="device" >
+<ObjectMember name="device">
 	<ObjectMember.Type>string</ObjectMember.Type>
-	
-Unique identifier of the Stream Deck device that this event is associated with.
-	
+	Unique identifier of the Stream Deck device that this event is associated with.
 </ObjectMember>
 
-<ObjectMember name="event" >
+<ObjectMember name="event">
 	<ObjectMember.Type>"willDisappear"</ObjectMember.Type>
-	
-Name of the event used to identify what occurred.
-	
+	Name of the event used to identify what occurred.
 </ObjectMember>
 
 <ObjectMember name="payload" >
@@ -2317,7 +1953,6 @@ One of:
 
 <details>
     <summary>MultiActionPayload</summary>
-    
 
 <ObjectMember name="controller" >
 	<ObjectMember.Type>"Keypad"</ObjectMember.Type>
@@ -2326,7 +1961,7 @@ Defines the controller type the action is applicable to. **Keypad** refers to a 
 or a pedal on the Stream Deck Pedal, etc., whereas an **Encoder** refers to a dial / touchscreen on the Stream Deck +.
 
 NB: Requires Stream Deck 6.5 for `WillAppear` and `WillDisappear` events.
-	
+
 </ObjectMember>
 
 <ObjectMember name="isInMultiAction" >
@@ -2335,7 +1970,7 @@ NB: Requires Stream Deck 6.5 for `WillAppear` and `WillDisappear` events.
 Determines whether the action is part of a multi-action.
 
 NB. Requires Stream Deck 6.7 when accessed from the property inspector.
-	
+
 </ObjectMember>
 
 <ObjectMember name="resources" >
@@ -2344,49 +1979,40 @@ NB. Requires Stream Deck 6.7 when accessed from the property inspector.
 Resources (files) associated with the action.
 
 Available from Stream Deck 7.1.
-	
 
 </ObjectMember>
 
-<ObjectMember name="settings" >
+<ObjectMember name="settings">
 	<ObjectMember.Type>JsonObject</ObjectMember.Type>
-	
-Settings associated with the action instance.
-	
+	Settings associated with the action instance.
 </ObjectMember>
 
 <ObjectMember name="state" optional>
 	<ObjectMember.Type>number</ObjectMember.Type>
-	
-Current state of the action; only applicable to actions that have multiple states defined within the `manifest.json` file.
-	
+	Current state of the action; only applicable to actions that have multiple states defined within the `manifest.json`
+	file.
 </ObjectMember>
 
 </details>
 
 <details>
     <summary>SingleActionPayload</summary>
-    
 
-<ObjectMember name="controller" >
+<ObjectMember name="controller">
 	<ObjectMember.Type>Controller</ObjectMember.Type>
-	
-Defines the controller type the action is applicable to. **Keypad** refers to a standard action on a Stream Deck device, e.g. 1 of the 15 buttons on the Stream Deck MK.2,
-or a pedal on the Stream Deck Pedal, etc., whereas an **Encoder** refers to a dial / touchscreen on the Stream Deck +.
-	
+	Defines the controller type the action is applicable to. **Keypad** refers to a standard action on a Stream Deck
+	device, e.g. 1 of the 15 buttons on the Stream Deck MK.2, or a pedal on the Stream Deck Pedal, etc., whereas an
+	**Encoder** refers to a dial / touchscreen on the Stream Deck +.
 </ObjectMember>
 
 <ObjectMember name="coordinates" >
 	<ObjectMember.Type>Coordinates</ObjectMember.Type>
 	
 Coordinates that identify the location of an action.
-	
 
-<ObjectMember name="column" >
+<ObjectMember name="column">
 	<ObjectMember.Type>number</ObjectMember.Type>
-	
-Column the action instance is located in, indexed from 0.
-	
+	Column the action instance is located in, indexed from 0.
 </ObjectMember>
 
 <ObjectMember name="row" >
@@ -2396,7 +2022,7 @@ Row the action instance is located on, indexed from 0.
 
 Note: When the device is Stream Deck +, the row can be 0 for keys (`Keypad`), and will _always_
 be 0 for dials (`Encoder`); to differentiate between actions types, cross-check the `controller`.
-	
+
 </ObjectMember>
 
 </ObjectMember>
@@ -2407,7 +2033,7 @@ be 0 for dials (`Encoder`); to differentiate between actions types, cross-check 
 Determines whether the action is part of a multi-action.
 
 NB. Requires Stream Deck 6.7 when accessed from the property inspector.
-	
+
 </ObjectMember>
 
 <ObjectMember name="resources" >
@@ -2416,26 +2042,20 @@ NB. Requires Stream Deck 6.7 when accessed from the property inspector.
 Resources (files) associated with the action.
 
 Available from Stream Deck 7.1.
-	
 
 </ObjectMember>
 
-<ObjectMember name="settings" >
+<ObjectMember name="settings">
 	<ObjectMember.Type>JsonObject</ObjectMember.Type>
-	
-Settings associated with the action instance.
-	
+	Settings associated with the action instance.
 </ObjectMember>
 
 <ObjectMember name="state" optional>
 	<ObjectMember.Type>number</ObjectMember.Type>
-	
-Current state of the action; only applicable to actions that have multiple states defined within the `manifest.json` file.
-	
+	Current state of the action; only applicable to actions that have multiple states defined within the `manifest.json`
+	file.
 </ObjectMember>
 
 </details>
 
-        
 </ObjectMember>
-

@@ -1,106 +1,131 @@
-
 <details>
+
 <summary>
-	### getResources
+
+### getResources
+
 </summary>
-	
+
 Gets the resources (files) associated with this action; these resources are embedded into the action when it is
 exported, either individually, or as part of a profile.
 
 Available from Stream Deck 7.1.
-	```ts  
-function getResources(): Promise<Resources>
+
+```ts
+function getResources(): Promise<Resources>;
 ```
-	
+
 </details>
 
 <details>
+
 <summary>
-	### getSettings
+
+### getSettings
+
 </summary>
-	
+
 Gets the settings associated this action instance.
-	```ts  
-function getSettings(): Promise<TSettings>
+
+```ts
+function getSettings(): Promise<TSettings>;
 ```
-	
+
 </details>
 
 <details>
+
 <summary>
-	### isDial
+
+### isDial
+
 </summary>
-	
+
 Determines whether this instance is a dial.
-	```ts  
-function isDial(): boolean
+
+```ts
+function isDial(): boolean;
 ```
-	
+
 </details>
 
 <details>
+
 <summary>
-	### isKey
+
+### isKey
+
 </summary>
-	
+
 Determines whether this instance is a key.
-	```ts  
-function isKey(): boolean
+
+```ts
+function isKey(): boolean;
 ```
-	
+
 </details>
 
 <details>
+
 <summary>
-	### isNeoInfobar
+
+### isNeoInfobar
+
 </summary>
-	
+
 Determines whether this instance is an Infobar.
-	```ts  
-function isNeoInfobar(): boolean
+
+```ts
+function isNeoInfobar(): boolean;
 ```
-	
+
 </details>
 
 <details>
+
 <summary>
-	### setResources
+
+### setResources
+
 </summary>
-	
+
 Sets the resources (files) associated with this action; these resources are embedded into the action when it is
 exported, either individually, or as part of a profile.
 
 Available from Stream Deck 7.1.
-	```ts  
-function setResources(resources: Resources): Promise<void>
+
+```ts
+function setResources(resources: Resources): Promise<void>;
 ```
-	
-		**Parameters**
-		
-			<ObjectMember name="resources" >
-				<ObjectMember.Type>Resources</ObjectMember.Type>
-				<p>The resources as a map of file paths.</p>
-			</ObjectMember>
-		
-	
+
+**Parameters**
+
+<ObjectMember name="resources">
+	<ObjectMember.Type>Resources</ObjectMember.Type>
+	<p>The resources as a map of file paths.</p>
+</ObjectMember>
+
 </details>
 
 <details>
+
 <summary>
-	### setSettings
+
+### setSettings
+
 </summary>
-	
+
 Sets the settings associated with this action instance.
-	```ts  
-function setSettings(value: TSettings): Promise<void>
+
+```ts
+function setSettings(value: TSettings): Promise<void>;
 ```
-	
-		**Parameters**
-		
-			<ObjectMember name="value" >
-				<ObjectMember.Type>TSettings</ObjectMember.Type>
-				<p>Settings to persist.</p>
-			</ObjectMember>
-		
-	
+
+**Parameters**
+
+<ObjectMember name="value">
+	<ObjectMember.Type>TSettings</ObjectMember.Type>
+	<p>Settings to persist.</p>
+</ObjectMember>
+
 </details>

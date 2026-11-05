@@ -1,9 +1,7 @@
-
-
 ### Layout{#layout}
 
-
 Defines the structure of a custom layout file.
+
 <p>
 	<strong>Properties</strong>
 </p>
@@ -12,28 +10,24 @@ Defines the structure of a custom layout file.
 	<ObjectMember.Type>"Encoder", "Neo"</ObjectMember.Type>
 	<p>Controller the layout is intended for.</p>
 
-	
 </ObjectMember>
 
 <ObjectMember name="id" id="layout-id" >
 	<ObjectMember.Type>string</ObjectMember.Type>
 	<p>Unique identifier associated with the layout.</p>
 
-	
 </ObjectMember>
 
 <ObjectMember name="items" id="layout-items" >
 	<ObjectMember.Type>(<a href="#bar">Bar</a>, <a href="#gbar">GBar</a>, <a href="#pixmap">Pixmap</a>, <a href="#text">Text</a>)[]</ObjectMember.Type>
 	<p>Items within the layout.</p>
 
-	
 </ObjectMember>
-
 
 ### Bar{#bar}
 
-
 Bar layout item used to render a horizontal bar with a filler, e.g. a progress bar. The amount to fill the bar by can be specified by setting the `value`.
+
 <p>
 	<strong>Properties</strong>
 </p>
@@ -49,14 +43,12 @@ format <code>[\{offset\}:\{color\}[,]]</code>.</p>
 <li>&quot;0:#ff0000,0.5:yellow,1:#00ff00&quot; (Gradient)</li>
 </ul>
 
-	
 </ObjectMember>
 
 <ObjectMember name="enabled" id="bar-enabled" optional>
 	<ObjectMember.Type>boolean</ObjectMember.Type>
 	<p>Determines whether the item is enabled (i.e. visible); default is <code>true</code>.</p>
 
-	
 </ObjectMember>
 
 <ObjectMember name="key" id="bar-key" >
@@ -64,7 +56,6 @@ format <code>[\{offset\}:\{color\}[,]]</code>.</p>
 	<p>Unique name used to identify the layout item. When calling <code>setFeedback</code> this value should be used as the key as part of the object that represents the feedback.</p>
 <p>Note: The <code>key</code> of the layout item cannot be changed at runtime.</p>
 
-	
 </ObjectMember>
 
 <ObjectMember name="opacity" id="bar-opacity" optional>
@@ -72,7 +63,6 @@ format <code>[\{offset\}:\{color\}[,]]</code>.</p>
 	<p>Defines the opacity of the item being shown based on a single-decimal value ranging from <code>0..1</code>, e.g. <code>0.1</code>, <code>0.2</code>, etc. with <code>0</code> being invisible and <code>1</code> being fully visible.
 Default is <code>1</code>.</p>
 
-	
 </ObjectMember>
 
 <ObjectMember name="rect" id="bar-rect" >
@@ -87,7 +77,6 @@ not be overlapping with other items. For items that may overlap, consider using 
 </ul>
 <p>Note: The <code>rect</code> of the layout item cannot be changed at runtime.</p>
 
-	
 </ObjectMember>
 
 <ObjectMember name="type" id="bar-type" >
@@ -95,14 +84,12 @@ not be overlapping with other items. For items that may overlap, consider using 
 	<p>Type of layout item this instance represents, e.g. &quot;pixmap&quot;, &quot;bar&quot;, etc.</p>
 <p>Note: The <code>type</code> of the layout item cannot be changed at runtime.</p>
 
-	
 </ObjectMember>
 
 <ObjectMember name="zOrder" id="bar-zorder" optional>
 	<ObjectMember.Type>number</ObjectMember.Type>
 	<p>Z-order of the item, used to layer items within a layout; must be between 0-700. Items with the same <code>zOrder</code> must <strong>not</strong> have an overlapping <code>rect</code>. Default is <code>0</code>.</p>
 
-	
 </ObjectMember>
 
 <ObjectMember name="bar_bg_c" id="bar-bar_bg_c" optional>
@@ -116,7 +103,6 @@ by commas, in the following format <code>[\{offset\}:\{color\}[,]]</code>.</p>
 <li>&quot;0:#ff0000,0.5:yellow,1:#00ff00&quot; (Gradient)</li>
 </ul>
 
-	
 </ObjectMember>
 
 <ObjectMember name="bar_border_c" id="bar-bar_border_c" optional>
@@ -128,7 +114,6 @@ by commas, in the following format <code>[\{offset\}:\{color\}[,]]</code>.</p>
 <li>&quot;#204cfe&quot; (Elgato blue)</li>
 </ul>
 
-	
 </ObjectMember>
 
 <ObjectMember name="bar_fill_c" id="bar-bar_fill_c" optional>
@@ -142,21 +127,18 @@ by commas, in the following format <code>[\{offset\}:\{color\}[,]]</code>.</p>
 <li>&quot;0:#ff0000,0.5:yellow,1:#00ff00&quot; (Gradient)</li>
 </ul>
 
-	
 </ObjectMember>
 
 <ObjectMember name="border_w" id="bar-border_w" optional>
 	<ObjectMember.Type>number</ObjectMember.Type>
 	<p>Width of the border around the bar, as a whole number. Default is <code>2</code>.</p>
 
-	
 </ObjectMember>
 
 <ObjectMember name="range" id="bar-range" optional>
 	<ObjectMember.Type><a href="#range">Range</a></ObjectMember.Type>
 	<p>Defines the range of the value the bar represents, e.g. 0-20, 0-100, etc.</p>
 
-	
 </ObjectMember>
 
 <ObjectMember name="subtype" id="bar-subtype" optional>
@@ -171,23 +153,18 @@ by commas, in the following format <code>[\{offset\}:\{color\}[,]]</code>.</p>
 <li>Groove (4)</li>
 </ul>
 
-	
 </ObjectMember>
 
 <ObjectMember name="value" id="bar-value" >
 	<ObjectMember.Type>number</ObjectMember.Type>
 	<p>Value used to determine how much of the bar is filled. Correlates with the item's <code>range</code> if specified in the layout's JSON definition; default range is <code>0..100</code>.</p>
 
-	
 </ObjectMember>
-
-
-
 
 ### GBar{#gbar}
 
-
 Bar layout item used to render a horizontal bar with an indicator represented as a triangle beneath the bar. The location of the indicator can be specified by setting the `value`.
+
 <p>
 	<strong>Properties</strong>
 </p>
@@ -203,14 +180,12 @@ format <code>[\{offset\}:\{color\}[,]]</code>.</p>
 <li>&quot;0:#ff0000,0.5:yellow,1:#00ff00&quot; (Gradient)</li>
 </ul>
 
-	
 </ObjectMember>
 
 <ObjectMember name="enabled" id="gbar-enabled" optional>
 	<ObjectMember.Type>boolean</ObjectMember.Type>
 	<p>Determines whether the item is enabled (i.e. visible); default is <code>true</code>.</p>
 
-	
 </ObjectMember>
 
 <ObjectMember name="key" id="gbar-key" >
@@ -218,7 +193,6 @@ format <code>[\{offset\}:\{color\}[,]]</code>.</p>
 	<p>Unique name used to identify the layout item. When calling <code>setFeedback</code> this value should be used as the key as part of the object that represents the feedback.</p>
 <p>Note: The <code>key</code> of the layout item cannot be changed at runtime.</p>
 
-	
 </ObjectMember>
 
 <ObjectMember name="opacity" id="gbar-opacity" optional>
@@ -226,7 +200,6 @@ format <code>[\{offset\}:\{color\}[,]]</code>.</p>
 	<p>Defines the opacity of the item being shown based on a single-decimal value ranging from <code>0..1</code>, e.g. <code>0.1</code>, <code>0.2</code>, etc. with <code>0</code> being invisible and <code>1</code> being fully visible.
 Default is <code>1</code>.</p>
 
-	
 </ObjectMember>
 
 <ObjectMember name="rect" id="gbar-rect" >
@@ -241,7 +214,6 @@ not be overlapping with other items. For items that may overlap, consider using 
 </ul>
 <p>Note: The <code>rect</code> of the layout item cannot be changed at runtime.</p>
 
-	
 </ObjectMember>
 
 <ObjectMember name="type" id="gbar-type" >
@@ -249,14 +221,12 @@ not be overlapping with other items. For items that may overlap, consider using 
 	<p>Type of layout item this instance represents, e.g. &quot;pixmap&quot;, &quot;bar&quot;, etc.</p>
 <p>Note: The <code>type</code> of the layout item cannot be changed at runtime.</p>
 
-	
 </ObjectMember>
 
 <ObjectMember name="zOrder" id="gbar-zorder" optional>
 	<ObjectMember.Type>number</ObjectMember.Type>
 	<p>Z-order of the item, used to layer items within a layout; must be between 0-700. Items with the same <code>zOrder</code> must <strong>not</strong> have an overlapping <code>rect</code>. Default is <code>0</code>.</p>
 
-	
 </ObjectMember>
 
 <ObjectMember name="bar_bg_c" id="gbar-bar_bg_c" optional>
@@ -270,7 +240,6 @@ by commas, in the following format <code>[\{offset\}:\{color\}[,]]</code>.</p>
 <li>&quot;0:#ff0000,0.5:yellow,1:#00ff00&quot; (Gradient)</li>
 </ul>
 
-	
 </ObjectMember>
 
 <ObjectMember name="bar_border_c" id="gbar-bar_border_c" optional>
@@ -282,7 +251,6 @@ by commas, in the following format <code>[\{offset\}:\{color\}[,]]</code>.</p>
 <li>&quot;#204cfe&quot; (Elgato blue)</li>
 </ul>
 
-	
 </ObjectMember>
 
 <ObjectMember name="bar_fill_c" id="gbar-bar_fill_c" optional>
@@ -296,21 +264,18 @@ by commas, in the following format <code>[\{offset\}:\{color\}[,]]</code>.</p>
 <li>&quot;0:#ff0000,0.5:yellow,1:#00ff00&quot; (Gradient)</li>
 </ul>
 
-	
 </ObjectMember>
 
 <ObjectMember name="border_w" id="gbar-border_w" optional>
 	<ObjectMember.Type>number</ObjectMember.Type>
 	<p>Width of the border around the bar, as a whole number. Default is <code>2</code>.</p>
 
-	
 </ObjectMember>
 
 <ObjectMember name="range" id="gbar-range" optional>
 	<ObjectMember.Type><a href="#range">Range</a></ObjectMember.Type>
 	<p>Defines the range of the value the bar represents, e.g. 0-20, 0-100, etc.</p>
 
-	
 </ObjectMember>
 
 <ObjectMember name="subtype" id="gbar-subtype" optional>
@@ -325,34 +290,24 @@ by commas, in the following format <code>[\{offset\}:\{color\}[,]]</code>.</p>
 <li>Groove (4)</li>
 </ul>
 
-	
 </ObjectMember>
 
 <ObjectMember name="value" id="gbar-value" >
 	<ObjectMember.Type>number</ObjectMember.Type>
 	<p>Value used to determine how much of the bar is filled. Correlates with the item's <code>range</code> if specified in the layout's JSON definition; default range is <code>0..100</code>.</p>
 
-	
 </ObjectMember>
 
 <ObjectMember name="bar_h" id="gbar-bar_h" optional>
 	<ObjectMember.Type>number</ObjectMember.Type>
 	<p>Height of the bar's indicator. Default is <code>10</code>.</p>
 
-	
 </ObjectMember>
-
-
-
-
-
-
-
 
 ### Pixmap{#pixmap}
 
-
 Image layout item used to render an image sourced from either a local file located under the plugin's folder, or base64 encoded `string`. The `value` defines the image.
+
 <p>
 	<strong>Properties</strong>
 </p>
@@ -368,14 +323,12 @@ format <code>[\{offset\}:\{color\}[,]]</code>.</p>
 <li>&quot;0:#ff0000,0.5:yellow,1:#00ff00&quot; (Gradient)</li>
 </ul>
 
-	
 </ObjectMember>
 
 <ObjectMember name="enabled" id="pixmap-enabled" optional>
 	<ObjectMember.Type>boolean</ObjectMember.Type>
 	<p>Determines whether the item is enabled (i.e. visible); default is <code>true</code>.</p>
 
-	
 </ObjectMember>
 
 <ObjectMember name="key" id="pixmap-key" >
@@ -383,7 +336,6 @@ format <code>[\{offset\}:\{color\}[,]]</code>.</p>
 	<p>Unique name used to identify the layout item. When calling <code>setFeedback</code> this value should be used as the key as part of the object that represents the feedback.</p>
 <p>Note: The <code>key</code> of the layout item cannot be changed at runtime.</p>
 
-	
 </ObjectMember>
 
 <ObjectMember name="opacity" id="pixmap-opacity" optional>
@@ -391,7 +343,6 @@ format <code>[\{offset\}:\{color\}[,]]</code>.</p>
 	<p>Defines the opacity of the item being shown based on a single-decimal value ranging from <code>0..1</code>, e.g. <code>0.1</code>, <code>0.2</code>, etc. with <code>0</code> being invisible and <code>1</code> being fully visible.
 Default is <code>1</code>.</p>
 
-	
 </ObjectMember>
 
 <ObjectMember name="rect" id="pixmap-rect" >
@@ -406,7 +357,6 @@ not be overlapping with other items. For items that may overlap, consider using 
 </ul>
 <p>Note: The <code>rect</code> of the layout item cannot be changed at runtime.</p>
 
-	
 </ObjectMember>
 
 <ObjectMember name="type" id="pixmap-type" >
@@ -414,14 +364,12 @@ not be overlapping with other items. For items that may overlap, consider using 
 	<p>Type of layout item this instance represents, e.g. &quot;pixmap&quot;, &quot;bar&quot;, etc.</p>
 <p>Note: The <code>type</code> of the layout item cannot be changed at runtime.</p>
 
-	
 </ObjectMember>
 
 <ObjectMember name="zOrder" id="pixmap-zorder" optional>
 	<ObjectMember.Type>number</ObjectMember.Type>
 	<p>Z-order of the item, used to layer items within a layout; must be between 0-700. Items with the same <code>zOrder</code> must <strong>not</strong> have an overlapping <code>rect</code>. Default is <code>0</code>.</p>
 
-	
 </ObjectMember>
 
 <ObjectMember name="value" id="pixmap-value" optional>
@@ -434,16 +382,12 @@ not be overlapping with other items. For items that may overlap, consider using 
 <li>&quot;data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MHB0IiBoZWlnaHQ9…&quot;</li>
 </ul>
 
-	
 </ObjectMember>
-
-
-
 
 ### Range{#range}
 
-
 Defines the range of the value the bar represents, e.g. 0-20, 0-100, etc.
+
 <p>
 	<strong>Properties</strong>
 </p>
@@ -452,25 +396,20 @@ Defines the range of the value the bar represents, e.g. 0-20, 0-100, etc.
 	<ObjectMember.Type>number</ObjectMember.Type>
 	<p>Minimum value of the bar.</p>
 
-	
 </ObjectMember>
 
 <ObjectMember name="max" id="range-max" >
 	<ObjectMember.Type>number</ObjectMember.Type>
 	<p>Maximum value of the bar.</p>
 
-	
 </ObjectMember>
 
-
-
-
 ### Text{#text}
-
 
 Text layout item used to render text within a layout. **Note**, when adding a text item to the layout's JSON definition, setting the `key` to the `"title"` keyword will enable the
 user to specify the font's
 settings via the property inspector, and will cause `setTitle` to update this item.
+
 <p>
 	<strong>Properties</strong>
 </p>
@@ -486,14 +425,12 @@ format <code>[\{offset\}:\{color\}[,]]</code>.</p>
 <li>&quot;0:#ff0000,0.5:yellow,1:#00ff00&quot; (Gradient)</li>
 </ul>
 
-	
 </ObjectMember>
 
 <ObjectMember name="enabled" id="text-enabled" optional>
 	<ObjectMember.Type>boolean</ObjectMember.Type>
 	<p>Determines whether the item is enabled (i.e. visible); default is <code>true</code>.</p>
 
-	
 </ObjectMember>
 
 <ObjectMember name="key" id="text-key" >
@@ -501,7 +438,6 @@ format <code>[\{offset\}:\{color\}[,]]</code>.</p>
 	<p>Unique name used to identify the layout item. When calling <code>setFeedback</code> this value should be used as the key as part of the object that represents the feedback.</p>
 <p>Note: The <code>key</code> of the layout item cannot be changed at runtime.</p>
 
-	
 </ObjectMember>
 
 <ObjectMember name="opacity" id="text-opacity" optional>
@@ -509,7 +445,6 @@ format <code>[\{offset\}:\{color\}[,]]</code>.</p>
 	<p>Defines the opacity of the item being shown based on a single-decimal value ranging from <code>0..1</code>, e.g. <code>0.1</code>, <code>0.2</code>, etc. with <code>0</code> being invisible and <code>1</code> being fully visible.
 Default is <code>1</code>.</p>
 
-	
 </ObjectMember>
 
 <ObjectMember name="rect" id="text-rect" >
@@ -524,7 +459,6 @@ not be overlapping with other items. For items that may overlap, consider using 
 </ul>
 <p>Note: The <code>rect</code> of the layout item cannot be changed at runtime.</p>
 
-	
 </ObjectMember>
 
 <ObjectMember name="type" id="text-type" >
@@ -532,14 +466,12 @@ not be overlapping with other items. For items that may overlap, consider using 
 	<p>Type of layout item this instance represents, e.g. &quot;pixmap&quot;, &quot;bar&quot;, etc.</p>
 <p>Note: The <code>type</code> of the layout item cannot be changed at runtime.</p>
 
-	
 </ObjectMember>
 
 <ObjectMember name="zOrder" id="text-zorder" optional>
 	<ObjectMember.Type>number</ObjectMember.Type>
 	<p>Z-order of the item, used to layer items within a layout; must be between 0-700. Items with the same <code>zOrder</code> must <strong>not</strong> have an overlapping <code>rect</code>. Default is <code>0</code>.</p>
 
-	
 </ObjectMember>
 
 <ObjectMember name="alignment" id="text-alignment" optional>
@@ -547,7 +479,6 @@ not be overlapping with other items. For items that may overlap, consider using 
 	<p>Alignment of the text. Default is <code>&quot;center&quot;</code>. <strong>Note</strong>, when the <code>key</code> of this layout item is set to <code>&quot;title&quot;</code> within the layout's JSON definition, these values will be ignored
 in favour of the user's preferred title settings, as set in property inspector.</p>
 
-	
 </ObjectMember>
 
 <ObjectMember name="color" id="text-color" optional>
@@ -560,16 +491,12 @@ JSON definition, these values will be ignored in favour of the user's preferred 
 <li>&quot;#204cfe&quot; (Elgato blue)</li>
 </ul>
 
-	
 </ObjectMember>
 
 <ObjectMember name="font" id="text-font" optional>
 	<ObjectMember.Type>object</ObjectMember.Type>
 	<p>Defines how the font should be rendered. <strong>Note</strong>, when the <code>key</code> of this layout item is set to <code>&quot;title&quot;</code> within the layout's JSON definition, these values will be ignored in
 favour of the user's preferred title settings, as set in property inspector.</p>
-
-	
-
 
 <p>
 	<strong>Properties</strong>
@@ -580,7 +507,6 @@ favour of the user's preferred title settings, as set in property inspector.</p>
 	<p>Size of the font, in pixels, represented as a whole number.</p>
 <p><strong>Note</strong>, when the <code>key</code> of this layout item is set to <code>&quot;title&quot;</code> within the layout's JSON definition, this value will be ignored in favour of the user's preferred title settings, as set in property inspector.</p>
 
-	
 </ObjectMember>
 
 <ObjectMember name="weight" id="text-font-weight" optional>
@@ -588,7 +514,6 @@ favour of the user's preferred title settings, as set in property inspector.</p>
 	<p>Weight of the font; value must be a whole <code>number</code> in the range of <code>100..1000</code>. <strong>Note</strong>, when the <code>key</code> of this layout item is set to <code>&quot;title&quot;</code> within the layout's JSON
 definition, this value will be ignored in favour of the user's preferred title settings, as set in property inspector.</p>
 
-	
 </ObjectMember>
 
 </ObjectMember>
@@ -602,12 +527,10 @@ definition, this value will be ignored in favour of the user's preferred title s
 <li>fade, applies a fade-gradient over the end of the text.</li>
 </ul>
 
-	
 </ObjectMember>
 
 <ObjectMember name="value" id="text-value" optional>
 	<ObjectMember.Type>string</ObjectMember.Type>
 	<p>Text to be displayed.</p>
 
-	
 </ObjectMember>
