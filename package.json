@@ -14,7 +14,8 @@
         "@changesets/cli": "^3.0.3",
         "@elgato/oxfmt-config": "workspace:^",
         "oxfmt": "^0.70.0",
-        "turbo": "^2.8.14"
+        "turbo": "^2.8.14",
+        "zod": "^3.25.76"
     },
     "packageManager": "pnpm@10.18.0"
 }
