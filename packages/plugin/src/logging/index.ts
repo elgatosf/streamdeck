@@ -30,4 +30,10 @@ export const logger = new Logger({
 	targets,
 });
 
-process.once("uncaughtException", (err) => logger.error("Process encountered uncaught exception", err));
+process.once("uncaughtException", (err) => {
+	try {
+		logger.error("Process encountered uncaught exception", err);
+	} catch {
+		// A failure to log must not throw from the handler, as Node.js would then terminate the process.
+	}
+});
