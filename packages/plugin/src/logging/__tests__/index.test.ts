@@ -109,4 +109,23 @@ describe("createLogger", () => {
 		expect(spyOnLogger).toHaveBeenCalledTimes(1);
 		expect(spyOnLogger).toHaveBeenCalledWith<[string, Error]>("Process encountered uncaught exception", err);
 	});
+
+	/**
+	 * Asserts the uncaught exception handler does not throw when the exception cannot be logged, as Node.js would
+	 * otherwise terminate the process.
+	 */
+	it("does not throw when an uncaught exception cannot be logged", async () => {
+		// Arrange.
+		const spyOnProcessOnce = vi.spyOn(process, "once");
+		const { logger } = await import("../index.js");
+		const spyOnLogger = vi.spyOn(logger, "error").mockImplementation(() => {
+			throw new Error("ENOSPC: no space left on device");
+		});
+
+		// Act, assert.
+		assert.isDefined(spyOnProcessOnce.mock.calls[0]);
+		const handler = spyOnProcessOnce.mock.calls[0][1];
+		expect(() => handler(new Error("Hello world"))).not.toThrow();
+		expect(spyOnLogger).toHaveBeenCalledTimes(1);
+	});
 });
