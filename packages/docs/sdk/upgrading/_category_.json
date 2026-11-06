@@ -1,0 +1,6 @@
+{
+    "label": "Upgrading",
+    "position": 5,
+    "collapsible": false,
+    "className": "menu__list--releases"
+}

@@ -4,7 +4,7 @@ import { join, relative } from "node:path";
 
 import { afterAll, beforeAll, describe, expect, test } from "vitest";
 
-import { findMarkdownFiles } from "../find-markdown-files.js";
+import { findMarkdownFiles } from "../../find-markdown-files.js";
 
 const FIXTURES_DIR = join(import.meta.dirname, "fixtures");
 
@@ -78,23 +78,23 @@ describe("findMarkdownFiles", () => {
 		});
 
 		/**
-		 * Asserts the pattern is resolved from the cwd, and not the current working directory of the process.
+		 * Asserts the pattern is resolved from baseDir, and not the current working directory of the process.
 		 */
-		test("pattern is relative to cwd", async () => {
+		test("pattern is relative to baseDir", async () => {
 			const fromParent = await findMarkdownFiles("fixtures/meta.md", import.meta.dirname);
 
 			expect(fromParent).toEqual(fixtures("meta.md"));
 		});
 
 		/**
-		 * Asserts a relative cwd is resolved from the current working directory of the process.
+		 * Asserts a relative baseDir is resolved from the current working directory of the process.
 		 */
-		test("relative cwd", async () => {
+		test("relative baseDir", async () => {
 			expect(await findMarkdownFiles("meta.md", relative(process.cwd(), FIXTURES_DIR))).toEqual(fixtures("meta.md"));
 		});
 
 		/**
-		 * Asserts an absolute pattern is matched, regardless of the cwd.
+		 * Asserts an absolute pattern is matched, regardless of baseDir.
 		 */
 		test("absolute pattern", async () => {
 			const pattern = join(FIXTURES_DIR, "meta.md").replaceAll("\\", "/");
@@ -103,11 +103,11 @@ describe("findMarkdownFiles", () => {
 		});
 
 		/**
-		 * Asserts a pattern without any matching files throws, including the resolved cwd within the message.
+		 * Asserts a pattern without any matching files throws, including the resolved baseDir within the message.
 		 */
 		test("no matching files throws", async () => {
 			await expect(findMarkdownFiles("does-not-exist/*.md", FIXTURES_DIR)).rejects.toThrow(
-				`No markdown files found matching: does-not-exist/*.md (cwd: ${FIXTURES_DIR})`,
+				`No markdown files found matching: does-not-exist/*.md (baseDir: ${FIXTURES_DIR})`,
 			);
 		});
 	});
@@ -117,41 +117,41 @@ describe("findMarkdownFiles", () => {
 	 * fixtures (e.g. empty directories are not tracked by git).
 	 */
 	describe("directories", () => {
-		let cwd: string;
+		let baseDir: string;
 
 		beforeAll(() => {
-			cwd = mkdtempSync(join(tmpdir(), "md-tools-find-markdown-files-"));
+			baseDir = mkdtempSync(join(tmpdir(), "md-tools-find-markdown-files-"));
 
-			mkdirSync(join(cwd, "docs", "nested"), { recursive: true });
-			mkdirSync(join(cwd, "folder.md"));
-			mkdirSync(join(cwd, "node_modules", "pkg"), { recursive: true });
+			mkdirSync(join(baseDir, "docs", "nested"), { recursive: true });
+			mkdirSync(join(baseDir, "folder.md"));
+			mkdirSync(join(baseDir, "node_modules", "pkg"), { recursive: true });
 
-			writeFileSync(join(cwd, "README.md"), "# Root");
-			writeFileSync(join(cwd, "docs", "guide.md"), "# Guide");
-			writeFileSync(join(cwd, "docs", "nested", "deep.md"), "# Deep");
-			writeFileSync(join(cwd, "node_modules", "pkg", "README.md"), "# Dependency");
+			writeFileSync(join(baseDir, "README.md"), "# Root");
+			writeFileSync(join(baseDir, "docs", "guide.md"), "# Guide");
+			writeFileSync(join(baseDir, "docs", "nested", "deep.md"), "# Deep");
+			writeFileSync(join(baseDir, "node_modules", "pkg", "README.md"), "# Dependency");
 		});
 
 		afterAll(() => {
-			rmSync(cwd, { force: true, recursive: true });
+			rmSync(baseDir, { force: true, recursive: true });
 		});
 
 		/**
 		 * Asserts directories matching the pattern are not returned.
 		 */
 		test("only files are matched", async () => {
-			expect(await findMarkdownFiles("*.md", cwd)).toEqual([join(cwd, "README.md")]);
+			expect(await findMarkdownFiles("*.md", baseDir)).toEqual([join(baseDir, "README.md")]);
 		});
 
 		/**
 		 * Asserts a globstar matches files within nested directories.
 		 */
 		test("globstar", async () => {
-			expect(await findMarkdownFiles("**/*.md", cwd)).toEqual([
-				join(cwd, "README.md"),
-				join(cwd, "docs", "guide.md"),
-				join(cwd, "docs", "nested", "deep.md"),
-				join(cwd, "node_modules", "pkg", "README.md"),
+			expect(await findMarkdownFiles("**/*.md", baseDir)).toEqual([
+				join(baseDir, "README.md"),
+				join(baseDir, "docs", "guide.md"),
+				join(baseDir, "docs", "nested", "deep.md"),
+				join(baseDir, "node_modules", "pkg", "README.md"),
 			]);
 		});
 
@@ -159,10 +159,10 @@ describe("findMarkdownFiles", () => {
 		 * Asserts dependency markdown is included when the glob explicitly enters node_modules.
 		 */
 		test("node_modules is included when matched", async () => {
-			const dependencyReadme = join(cwd, "node_modules", "pkg", "README.md");
+			const dependencyReadme = join(baseDir, "node_modules", "pkg", "README.md");
 
-			expect(await findMarkdownFiles("node_modules/**/*.md", cwd)).toEqual([dependencyReadme]);
-			expect(await findMarkdownFiles("node_modules/pkg/README.md", cwd)).toEqual([dependencyReadme]);
+			expect(await findMarkdownFiles("node_modules/**/*.md", baseDir)).toEqual([dependencyReadme]);
+			expect(await findMarkdownFiles("node_modules/pkg/README.md", baseDir)).toEqual([dependencyReadme]);
 		});
 
 		/**

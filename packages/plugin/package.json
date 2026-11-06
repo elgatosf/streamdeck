@@ -25,7 +25,9 @@
         "url": "git+https://github.com/elgatosf/streamdeck.git"
     },
     "files": [
-        "./dist/**/*.{d.ts,js}"
+        "./dist/**/*.{d.ts,js}",
+        "./docs",
+        "./AGENTS.md"
     ],
     "type": "module",
     "main": "./dist/index.js",
@@ -38,7 +40,7 @@
         "test": "vitest --run --typecheck --reporter verbose",
         "test:coverage": "vitest run --coverage",
         "test:watch": "vitest --typecheck",
-        "prepack": "cp ../../README.md . && cp ../../LICENSE ."
+        "prepack": "cp ../../README.md . && cp ../../LICENSE . && rm -rf docs && cp -R ../docs/dist/sdk docs"
     },
     "dependencies": {
         "@elgato/utils": "workspace:*",

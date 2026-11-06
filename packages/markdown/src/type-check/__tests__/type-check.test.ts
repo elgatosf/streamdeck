@@ -3,6 +3,7 @@ import { pathToFileURL } from "node:url";
 
 import { describe, expect, test } from "vitest";
 
+import { readMarkdownFiles } from "../../read-markdown-files.js";
 import type { CodeBlockDiagnostic } from "../code-block-diagnostic.js";
 import { typeCheck } from "../type-check.js";
 
@@ -13,10 +14,9 @@ const FIXTURES_DIR = join(import.meta.dirname, "fixtures");
  * @param source Glob pattern, relative to the fixtures directory.
  * @returns The diagnostics.
  */
-function check(source: string): Promise<CodeBlockDiagnostic[]> {
-	return typeCheck({
-		cwd: FIXTURES_DIR,
-		src: source,
+async function check(source: string): Promise<CodeBlockDiagnostic[]> {
+	return typeCheck(await readMarkdownFiles(source, FIXTURES_DIR), {
+		codeBlockDir: FIXTURES_DIR,
 		tsconfigFile: "tsconfig.json",
 	});
 }

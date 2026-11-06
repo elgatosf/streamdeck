@@ -1,26 +1,17 @@
-import { readFile } from "node:fs/promises";
-import { extname, resolve } from "node:path";
-
-import type { Code, Nodes, Root } from "mdast";
-import remarkMdx from "remark-mdx";
-import remarkParse from "remark-parse";
-import { unified } from "unified";
+import type { Code, Nodes } from "mdast";
 import type { Position } from "unist";
 
-/**
- * Reads all fenced code blocks within the markdown file; indented code blocks are ignored. Files with an `.mdx`
- * extension are parsed as MDX, so code blocks within JSX elements are found.
- * @param file Path to the markdown file.
- * @returns The fenced code blocks, in the order they appear within the file.
- * @throws When an MDX file cannot be parsed.
- */
-export async function readCodeBlocks(file: string): Promise<CodeBlock[]> {
-	const path = resolve(file);
+import type { MarkdownFile } from "../markdown-file.js";
 
-	// Normalize line endings so code is consistent regardless of how the file was saved, or checked out.
-	const markdown = (await readFile(path, { encoding: "utf8" })).replaceAll("\r\n", "\n");
+/**
+ * Reads all fenced code blocks from the file's shared syntax tree; indented code blocks are ignored. Code blocks
+ * within MDX JSX elements are included.
+ * @param file Markdown file held in memory.
+ * @returns The fenced code blocks, in the order they appear within the file.
+ */
+export function readCodeBlocks(file: MarkdownFile): CodeBlock[] {
+	const { markdown, path, tree } = file;
 	const lines = markdown.split("\n");
-	const tree = parse(path, markdown);
 	const entries: CodeBlock[] = [];
 
 	const visit = (node: Nodes): void => {
@@ -40,27 +31,6 @@ export async function readCodeBlocks(file: string): Promise<CodeBlock[]> {
 
 	visit(tree);
 	return entries;
-}
-
-/**
- * Parses the markdown; files with an `.mdx` extension are parsed as MDX.
- * @param path Path to the markdown file.
- * @param markdown Markdown to parse.
- * @returns The syntax tree.
- * @throws When an MDX file cannot be parsed.
- */
-function parse(path: string, markdown: string): Root {
-	if (extname(path).toLowerCase() !== ".mdx") {
-		return unified().use(remarkParse).parse(markdown);
-	}
-
-	try {
-		return unified().use(remarkParse).use(remarkMdx).parse(markdown);
-	} catch (error) {
-		throw new Error(`Failed to parse MDX file: ${path}: ${error instanceof Error ? error.message : String(error)}`, {
-			cause: error,
-		});
-	}
 }
 
 /**

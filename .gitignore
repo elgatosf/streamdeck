@@ -18,6 +18,9 @@ publish-plan.json
 /packages/*/LICENSE
 /packages/plugin/README.md
 
+# @elgato/streamdeck
+/packages/plugin/docs/
+
 # @elgato/cli
 /packages/cli/docs/
 /packages/cli/.cli.cache
