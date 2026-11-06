@@ -1,41 +1,32 @@
 /**
- * Checks SDK and CLI documentation, and copies it into packages with cross-package links rewritten for publishing.
+ * Checks SDK and CLI documentation, and builds a copy of each section with cross-section links rewritten for publishing.
  *
- * Usage: node scripts/docs.mts check
- *        node scripts/docs.mts pack [cli|sdk]
+ * Usage: node src/index.ts check
+ *        node src/index.ts build
  */
 import { cp, rm } from "node:fs/promises";
 import { basename, dirname, join, relative, resolve, sep } from "node:path";
 
-import { checkLinks, type Link, readMarkdownFiles, typeCheck } from "@elgato/markdown";
+import { checkLinks, type Link, type MarkdownFile, readMarkdownFiles, typeCheck } from "@elgato/markdown";
 
-const root = resolve(import.meta.dirname, "..");
-const docsDir = join(root, "docs");
-const sections = new Map([
-	["cli", "cli"],
-	["sdk", "plugin"],
-]);
+const docsDir = resolve(import.meta.dirname, "..");
+const root = resolve(docsDir, "../..");
+const distDir = join(docsDir, "dist");
+const sections = ["cli", "sdk"];
 
-const [command, section, ...extra] = process.argv.slice(2);
+const [command, ...extra] = process.argv.slice(2);
 if (extra.length > 0) {
 	usageError();
 }
 
 switch (command) {
 	case "check":
-		if (section !== undefined) {
-			usageError();
-		}
 		await checkDocs();
 		break;
-	case "pack":
-		if (section !== undefined && !sections.has(section)) {
-			usageError();
-		}
-		for (const [name, packageName] of sections) {
-			if (section === undefined || section === name) {
-				await packDocs(name, packageName);
-			}
+	case "build":
+		await rm(distDir, { force: true, recursive: true });
+		for (const section of sections) {
+			await buildDocs(section);
 		}
 		break;
 	default:
@@ -44,13 +35,23 @@ switch (command) {
 
 /** Reports invalid command-line arguments without a stack trace. */
 function usageError(): never {
-	console.error("Usage: node scripts/docs.mts check | pack [cli|sdk]");
+	console.error("Usage: node src/index.ts check | build");
 	process.exit(1);
+}
+
+/**
+ * Reads the markdown files of a documentation section.
+ * @param section Documentation section.
+ * @param pattern Glob pattern of files to read.
+ * @returns The markdown files.
+ */
+function readSection(section: string, pattern: string): Promise<MarkdownFile[]> {
+	return readMarkdownFiles(pattern, join(docsDir, section));
 }
 
 /** Checks documentation links and SDK TypeScript examples. */
 async function checkDocs(): Promise<void> {
-	const files = await readMarkdownFiles("**/*.mdx", docsDir);
+	const files = (await Promise.all(sections.map((section) => readSection(section, "**/*.mdx")))).flat();
 	const problems = await checkLinks(files, {
 		// npmjs.com rejects automated requests.
 		ignore: ["https://www.npmjs.com/"],
@@ -82,20 +83,18 @@ async function checkDocs(): Promise<void> {
 }
 
 /**
- * Copies documentation and assets into a package, rewriting links to documentation outside that section.
+ * Builds a documentation section into `dist`, rewriting links to documentation outside that section.
  * @param section Documentation section.
- * @param packageName Workspace package directory.
  */
-async function packDocs(section: string, packageName: string): Promise<void> {
+async function buildDocs(section: string): Promise<void> {
 	const src = join(docsDir, section);
-	const dest = join(root, "packages", packageName, "docs");
-	const files = await readMarkdownFiles("**/*", src);
+	const dest = join(distDir, section);
+	const files = await readSection(section, "**/*");
 
 	for (const file of files) {
 		file.rewriteLinks((link) => toSiteUrl(link, src));
 	}
 
-	await rm(dest, { force: true, recursive: true });
 	// Copy assets only; the markdown is written from memory below.
 	const markdownPaths = new Set(files.map((file) => file.path));
 	await cp(src, dest, { filter: (path) => !markdownPaths.has(path), recursive: true });
@@ -104,13 +103,13 @@ async function packDocs(section: string, packageName: string): Promise<void> {
 		await file.write(join(dest, relative(src, file.path)));
 	}
 
-	console.log(`Packed ${section} documentation into ${relative(root, dest)}.`);
+	console.log(`Built ${section} documentation into ${relative(docsDir, dest)}.`);
 }
 
 /**
  * Gets the docs.elgato.com URL of a relative link targeting another documentation section.
  * @param link Link to rewrite.
- * @param src Documentation section being copied.
+ * @param src Documentation section being built.
  * @returns The URL, or `undefined` when the link should remain as is.
  */
 function toSiteUrl(link: Link, src: string): string | undefined {
@@ -126,7 +125,7 @@ function toSiteUrl(link: Link, src: string): string | undefined {
 	}
 
 	const [folder = "", ...segments] = relative(docsDir, target).split(sep);
-	if (!sections.has(folder)) {
+	if (!sections.includes(folder)) {
 		throw new Error(`Unable to determine the URL of "${link.url}" in ${link.file}:${link.position.start.line}`);
 	}
 

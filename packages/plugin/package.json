@@ -40,7 +40,7 @@
         "test": "vitest --run --typecheck --reporter verbose",
         "test:coverage": "vitest run --coverage",
         "test:watch": "vitest --typecheck",
-        "prepack": "cp ../../README.md . && cp ../../LICENSE . && node ../../scripts/docs.mts pack sdk"
+        "prepack": "cp ../../README.md . && cp ../../LICENSE . && rm -rf docs && cp -R ../docs/dist/sdk docs"
     },
     "dependencies": {
         "@elgato/utils": "workspace:*",

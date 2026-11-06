@@ -6,6 +6,14 @@
             "dependsOn": ["^build"],
             "outputs": ["bin/**", "dist/**", "*.sdPlugin/bin/**"]
         },
+        "@elgato/cli#build": {
+            "dependsOn": ["^build", "@elgato/docs#build"],
+            "outputs": ["bin/**", "dist/**"]
+        },
+        "@elgato/streamdeck#build": {
+            "dependsOn": ["^build", "@elgato/docs#build"],
+            "outputs": ["dist/**"]
+        },
         "@elgato/schemas#build": {
             "dependsOn": ["^build"],
             "outputs": ["dist/**", "streamdeck/**"]

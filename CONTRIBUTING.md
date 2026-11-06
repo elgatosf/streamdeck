@@ -137,9 +137,9 @@ This project uses ESLint and Oxfmt to maintain consistent code style.
 
 ## Documentation
 
-The SDK documentation lives in `docs/sdk`, and the CLI documentation in `docs/cli`; both are published with their packages.
+The SDK documentation lives in `packages/docs/sdk`, and the CLI documentation in `packages/docs/cli`; both are published with their packages. The private `@elgato/docs` package also holds the tooling that checks and builds the documentation.
 
-Partials prefixed with an underscore and suffixed `.g.mdx`, such as the manifest and WebSocket references, are a snapshot generated from the SDK's type declarations by the documentation site's tooling; they are not edited by hand. The runtime versions table in `docs/sdk/introduction/plugin-environment.mdx` is updated with each Stream Deck release.
+Partials prefixed with an underscore and suffixed `.g.mdx`, such as the manifest and WebSocket references, are a snapshot generated from the SDK's type declarations by the documentation site's tooling; they are not edited by hand. The runtime versions table in `packages/docs/sdk/introduction/plugin-environment.mdx` is updated with each Stream Deck release.
 
 Links are checked, including anchors and whether external URLs respond, and TypeScript code blocks in the SDK documentation are type checked against the SDK:
 
@@ -147,8 +147,6 @@ Links are checked, including anchors and whether external URLs respond, and Type
 pnpm docs:check
 ```
 
-Links between the SDK and CLI documentation are relative, e.g. `../../cli/intro.mdx`; links to pages that only exist on docs.elgato.com use the full URL. When a package is packed, its documentation is copied into its `docs` folder, and links to documentation outside that folder are rewritten to docs.elgato.com.
-
-Checking and packaging are centralized in `scripts/docs.mts`. To prepare both packages' documentation without packing them, run `pnpm docs:pack`.
+Links between the SDK and CLI documentation are relative, e.g. `../../cli/intro.mdx`; links to pages that only exist on docs.elgato.com use the full URL. Building `@elgato/docs` writes a copy of each section to `packages/docs/dist`, with links to documentation outside that section rewritten to docs.elgato.com. The SDK and CLI builds depend on it in `turbo.json` so it runs first, and each package copies its section into its own `docs` folder when packed.
 
 Code blocks that are intentionally incomplete, for example a fragment that omits its imports, opt out with `nocheck` after the language, e.g. ` ```ts nocheck `.
