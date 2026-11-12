@@ -3,12 +3,9 @@ import { dirname, extname, resolve } from "node:path";
 
 import type { Root } from "mdast";
 
-import { checkLinks, type CheckLinksOptions, type LinkProblem } from "./links/check-links.js";
 import type { Link } from "./links/read-links.js";
 import { rewriteLinks } from "./links/rewrite-links.js";
 import { parseMarkdown } from "./parse-markdown.js";
-import type { CodeBlockDiagnostic } from "./type-check/code-block-diagnostic.js";
-import { typeCheck, type TypeCheckOptions } from "./type-check/type-check.js";
 
 /**
  * A markdown file held in memory. Checks share its syntax tree; editing the content invalidates the tree, which is
@@ -50,37 +47,11 @@ export class MarkdownFile {
 	}
 
 	/**
-	 * Checks this file's links. Use the batch function to share loaded targets and HTTP responses across files.
-	 * @param options Link checking options.
-	 * @returns The link problems.
-	 */
-	public checkLinks(options: CheckLinksOptions = {}): Promise<LinkProblem[]> {
-		return checkLinks([this], options);
-	}
-
-	/**
-	 * Formats the current content in memory using the caller's formatter and configuration.
-	 * @param formatter Formats the markdown, with the source path available to select the parser.
-	 */
-	public async format(formatter: (markdown: string, path: string) => Promise<string> | string): Promise<void> {
-		this.update(await formatter(this.#markdown, this.path));
-	}
-
-	/**
 	 * Rewrites links in memory without changing the source file on disk.
 	 * @param rewrite Returns the new URL, or `undefined` to leave the link unchanged.
 	 */
 	public rewriteLinks(rewrite: (link: Link) => string | undefined): void {
 		this.update(rewriteLinks(this, rewrite));
-	}
-
-	/**
-	 * Type checks this file's TypeScript code blocks. Use the batch function to check files in one TypeScript program.
-	 * @param options Type checking options.
-	 * @returns The diagnostics.
-	 */
-	public typeCheck(options: TypeCheckOptions = {}): CodeBlockDiagnostic[] {
-		return typeCheck([this], options);
 	}
 
 	/**

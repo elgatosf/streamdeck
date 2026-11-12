@@ -150,7 +150,7 @@ for (const file of files) {
 
 ## Type Checking
 
-`typeCheck(files, options)` checks fenced TypeScript code blocks together in one TypeScript program, returning diagnostics linked to the source files. `file.typeCheck(options)` checks a single file.
+`typeCheck(files, options)` checks fenced TypeScript code blocks together in one TypeScript program, returning diagnostics linked to the source files.
 
 ```ts
 const diagnostics = typeCheck(files, {
@@ -192,7 +192,7 @@ The function throws if a required tsconfig cannot be read or is invalid, or edit
 
 ## Link Checking
 
-`checkLinks(files, options)` checks links using the files already in memory. Linked Markdown files and imported partials outside the supplied set are loaded on demand, once per check. HTTP responses and target anchors are also shared across the batch. `file.checkLinks(options)` checks a single file.
+`checkLinks(files, options)` checks links using the files already in memory. Linked Markdown files and imported partials outside the supplied set are loaded on demand, once per check. HTTP responses and target anchors are also shared across the batch.
 
 Relative links must resolve to a file, and when they target an anchor, the anchor must exist within that file: a heading (by slug or custom `{#id}`), a JSX element's `id`, or either of those within an MDX file imported as a partial. HTTP(S) links are requested, and must not respond with an error status; a rate limited response (`429`) is not treated as an error. Loopback addresses, e.g. `http://localhost:23654/`, are never requested.
 
@@ -213,24 +213,9 @@ for (const problem of problems) {
 
 Each `LinkProblem` includes the `file`, `line`, `column`, and `link` of the link, its `url`, and a `message` describing the problem. Positions refer to the current in-memory content; check before rewriting if diagnostics should refer to the original source.
 
-## Rewriting, Formatting, and Output
+## Rewriting and Output
 
-`file.rewriteLinks(callback)` updates link URLs in memory. The callback receives each `Link` (its `file`, `position`, `type`, and `url`) and returns the new URL, or `undefined` to leave it unchanged. The new URL replaces the destination as written, so original escapes and character references are not preserved. For a non-mutating operation, `rewriteLinks(file, callback)` returns the rewritten string instead. `readLinks(file)` reads the current links without rewriting them.
-
-`file.format(formatter)` accepts a synchronous or asynchronous formatter, keeping formatter dependencies and configuration with the caller. For example, with the workspace's Oxfmt dependency:
-
-```ts
-import { format } from "oxfmt";
-
-await file.format(async (markdown, path) => {
-    const result = await format(path, markdown, { useTabs: false });
-    if (result.errors.length > 0) {
-        throw new Error(result.errors.map((error) => error.message).join("\n"));
-    }
-    return result.code;
-});
-await file.write("dist/docs/intro.mdx");
-```
+`file.rewriteLinks(callback)` updates link URLs in memory. The callback receives each `Link` (its `file`, `position`, `type`, and `url`) and returns the new URL, or `undefined` to leave it unchanged. The new URL replaces the destination as written, so original escapes and character references are not preserved. For a non-mutating operation, `rewriteLinks(file, callback)` returns the rewritten string instead.
 
 `file.markdown` exposes the current content. `file.write(destination)` creates parent directories and writes that content; omitting the destination overwrites the source. Writing elsewhere does not change `file.path`, so relative links and diagnostics remain based on the source location. Copy non-Markdown assets separately when packaging documentation.
 
