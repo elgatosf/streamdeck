@@ -1,8 +1,5 @@
 /**
  * Checks SDK and CLI documentation, and builds a copy of each section with cross-section links rewritten for publishing.
- *
- * Usage: node src/index.ts check
- *        node src/index.ts build
  */
 import { cp, rm } from "node:fs/promises";
 import { basename, dirname, join, relative, resolve, sep } from "node:path";
