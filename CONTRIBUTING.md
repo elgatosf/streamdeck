@@ -137,15 +137,8 @@ This project uses ESLint and Oxfmt to maintain consistent code style.
 
 ## Documentation
 
-The SDK documentation lives in `packages/docs/sdk`, and the CLI documentation in `packages/docs/cli`; both are published with their packages.
+The SDK and CLI documentation lives in `packages/docs`, and is published with each package.
 
-- Partials suffixed `.g.mdx` are generated from the SDK's type declarations; they are not edited by hand.
-- Links between the SDK and CLI documentation are relative, e.g. `../../cli/intro.mdx`; links to pages that only exist on docs.elgato.com use the full URL.
-- TypeScript code blocks are type checked against the SDK; incomplete fragments opt out with `nocheck` after the language, e.g. ` ```ts nocheck `.
-- Run `pnpm build` before packing `@elgato/streamdeck` or `@elgato/cli`, as their documentation is copied from `packages/docs/dist`.
-
-Check links and code blocks with:
-
-```
-pnpm docs:check
-```
+- Partials suffixed `.g.mdx` are generated; they are not edited by hand.
+- TypeScript code blocks are type checked; incomplete fragments opt out with `nocheck`, e.g. ` ```ts nocheck `.
+- Check links and code blocks with `pnpm docs:check`.

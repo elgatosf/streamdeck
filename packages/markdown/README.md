@@ -12,7 +12,7 @@ Tools for working with Markdown files.
 
 - Generating documentation from TypeScript types and JSDoc.
 - Replacing named sections in Markdown files.
-- Reading, checking, and rewriting links in Markdown and MDX.
+- Checking and rewriting links in Markdown and MDX.
 - Type-checking fenced TypeScript code blocks in Markdown and MDX.
 
 ## Setup
@@ -120,104 +120,52 @@ await format({
 - Only top-level markers are recognized; markers in code blocks, lists, block quotes, and paragraphs are ignored.
 - Unknown IDs, unmatched markers, nested sections, and read/write errors reject. Validation errors occur before the file is written.
 
-## Read, Check, and Write
+## Check and rewrite Markdown
 
-Read files once, check their links and TypeScript examples, then rewrite and output them. Each `MarkdownFile` holds its source path, content, and syntax tree in memory. Checks reuse that tree; edits invalidate it, and it is parsed again only if needed. Source files are unchanged until explicitly written.
+Read files once, then check and rewrite them in memory; nothing is written until `write` is called:
 
 ```ts
 import { join, relative, resolve } from "node:path";
 
 import { checkLinks, readMarkdownFiles, typeCheck } from "@elgato/markdown";
 
-const source = resolve("docs");
-const files = await readMarkdownFiles("**/*.{md,mdx}", source);
-const linkProblems = await checkLinks(files, { external: false });
-const typeDiagnostics = typeCheck(files, { tsconfigFile: "tsconfig.json" });
+const src = resolve("docs");
+const files = await readMarkdownFiles("**/*.{md,mdx}", src);
 
-if (linkProblems.length > 0 || typeDiagnostics.length > 0) {
-    throw new Error("Documentation checks failed");
-}
+const problems = await checkLinks(files);
+const diagnostics = typeCheck(files);
 
 for (const file of files) {
-    file.rewriteLinks((link) => {
-        return link.url.startsWith("../cli/") ? `https://example.com/${link.url.slice(3)}` : undefined;
-    });
-    await file.write(join("dist/docs", relative(source, file.path)));
+    // Return the new URL, or undefined to leave the link unchanged.
+    file.rewriteLinks((link) =>
+        link.url.startsWith("../api/") ? `https://example.com/${link.url.slice(3)}` : undefined,
+    );
+    await file.write(join("dist", relative(src, file.path)));
 }
 ```
 
-`readMarkdownFiles(pattern, baseDir)` matches `.md` and `.mdx` files using Node.js' built-in `glob`, sorted by path. `baseDir` is the directory the glob is resolved from and defaults to the current working directory. It throws if no files match, a file cannot be read, or an MDX file cannot be parsed. Use `readMarkdown(path)` for one file, or `new MarkdownFile(path, content)` for content already in memory.
+- `readMarkdownFiles` throws if no files match, or an MDX file cannot be parsed.
+- Problems and diagnostics include the Markdown file, 1-based line and column, a file URL, and a message.
 
-## Type Checking
+### Type checking
 
-`typeCheck(files, options)` checks fenced TypeScript code blocks together in one TypeScript program, returning diagnostics linked to the source files.
+| Option         | Description                                                                                    |
+| -------------- | ---------------------------------------------------------------------------------------------- |
+| `codeBlockDir` | Directory used to resolve the tsconfig and imports; defaults to the current working directory. |
+| `tsconfigFile` | Tsconfig path relative to `codeBlockDir`; defaults to `tsconfig.json`.                         |
 
-```ts
-const diagnostics = typeCheck(files, {
-    codeBlockDir: process.cwd(),
-    tsconfigFile: "tsconfig.json",
-});
+- Checks fences labeled `ts`, `typescript`, `tsx`, `mts`, or `cts` (case-insensitive), including those inside MDX JSX; skips fences marked `nocheck`.
+- Checks each block as a separate module in `codeBlockDir`; include required imports. If `rootDir` is restricted, set `codeBlockDir` inside it.
 
-for (const diagnostic of diagnostics) {
-    console.error(`${diagnostic.link}: TS${diagnostic.code} ${diagnostic.message}`);
-}
-
-if (diagnostics.length > 0) {
-    process.exitCode = 1;
-}
-```
-
-### Type-Checked Code Blocks
-
-Fenced code blocks labeled `ts`, `typescript`, `tsx`, `mts`, or `cts` are type-checked; language labels are case-insensitive. JavaScript, unlabeled, and indented code blocks are ignored, as are blocks with `nocheck` in their fence metadata. MDX code blocks inside JSX elements are included.
-
-Each block is checked as a separate module located in `codeBlockDir`, independently of the Markdown file's location. Imports and module settings are resolved from that directory using the compiler options in the specified tsconfig. If `rootDir` is restricted, set `codeBlockDir` inside it or choose a tsconfig whose `rootDir` includes it.
-
-| Option         | Description                                                                                 |
-| -------------- | ------------------------------------------------------------------------------------------- |
-| `codeBlockDir` | Directory used to resolve the tsconfig and code block imports. Defaults to `process.cwd()`. |
-| `tsconfigFile` | Tsconfig path relative to `codeBlockDir`. Defaults to `tsconfig.json`.                      |
-
-### Diagnostics
-
-Each `CodeBlockDiagnostic` includes:
-
-- `category` and `code` from TypeScript.
-- `file`, the absolute source path of the Markdown file.
-- `line` and `column`, 1-based positions within the current content.
-- `link`, a file URL with the diagnostic position.
-- `message`, the TypeScript diagnostic message.
-
-The function throws if a required tsconfig cannot be read or is invalid, or edited MDX cannot be parsed.
-
-## Link Checking
-
-`checkLinks(files, options)` checks links using the files already in memory. Linked Markdown files and imported partials outside the supplied set are loaded on demand, once per check. HTTP responses and target anchors are also shared across the batch.
-
-Relative links must resolve to a file, and when they target an anchor, the anchor must exist within that file: a heading (by slug or custom `{#id}`), a JSX element's `id`, or either of those within an MDX file imported as a partial. HTTP(S) links are requested, and must not respond with an error status; a rate limited response (`429`) is not treated as an error. Loopback addresses, e.g. `http://localhost:23654/`, are never requested.
-
-```ts
-const problems = await checkLinks(files, {
-    ignore: ["https://www.npmjs.com/"],
-});
-
-for (const problem of problems) {
-    console.log(`${problem.link}: ${problem.url}: ${problem.message}`);
-}
-```
+### Link checking
 
 | Option     | Description                                                                                  |
 | ---------- | -------------------------------------------------------------------------------------------- |
-| `external` | Whether HTTP(S) links are requested. Defaults to `true`.                                     |
+| `external` | Whether HTTP(S) links are requested; defaults to `true`.                                     |
 | `ignore`   | Prefixes of HTTP(S) links that are not requested, e.g. sites that reject automated requests. |
 
-Each `LinkProblem` includes the `file`, `line`, `column`, and `link` of the link, its `url`, and a `message` describing the problem. Positions refer to the current in-memory content; check before rewriting if diagnostics should refer to the original source.
-
-## Rewriting and Output
-
-`file.rewriteLinks(callback)` updates link URLs in memory. The callback receives each `Link` (its `file`, `position`, `type`, and `url`) and returns the new URL, or `undefined` to leave it unchanged. The new URL replaces the destination as written, so original escapes and character references are not preserved. For a non-mutating operation, `rewriteLinks(file, callback)` returns the rewritten string instead.
-
-`file.markdown` exposes the current content. `file.write(destination)` creates parent directories and writes that content; omitting the destination overwrites the source. Writing elsewhere does not change `file.path`, so relative links and diagnostics remain based on the source location. Copy non-Markdown assets separately when packaging documentation.
+- Relative links must resolve to a file; anchors must match a heading slug, a custom `{#id}`, a JSX `id`, or one of those in an imported MDX partial.
+- HTTP(S) links must not respond with an error status; `429` is tolerated, and loopback addresses are not requested.
 
 ## Extending
 
