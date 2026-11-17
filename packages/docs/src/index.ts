@@ -1,29 +1,44 @@
 /**
- * Checks SDK and CLI documentation, and builds a copy of each section with cross-section links rewritten for publishing.
+ * Checks SDK and CLI documentation, and builds each section into the package it is published with, rewriting
+ * cross-section links.
  */
 import { cp, rm } from "node:fs/promises";
 import { basename, dirname, join, relative, resolve, sep } from "node:path";
 
-import { checkLinks, type Link, type MarkdownFile, readMarkdownFiles, typeCheck } from "@elgato/markdown";
+import { checkLinks, type Link, readMarkdownFiles, typeCheck } from "@elgato/markdown";
 
-const docsDir = resolve(import.meta.dirname, "..");
-const root = resolve(docsDir, "../..");
-const distDir = join(docsDir, "dist");
-const sections = ["cli", "sdk"];
+const packageDir = resolve(import.meta.dirname, "..");
+const root = resolve(packageDir, "../..");
+const docsDir = join(root, "docs");
 
-const [command, ...extra] = process.argv.slice(2);
+/** Documentation sections, mapped to the directory they are built into. */
+const sections: Readonly<Record<string, string>> = {
+	cli: join(root, "packages/cli/docs"),
+	sdk: join(root, "packages/plugin/docs"),
+};
+
+const [command, section, ...extra] = process.argv.slice(2);
 if (extra.length > 0) {
 	usageError();
 }
 
 switch (command) {
 	case "check":
+		if (section !== undefined) {
+			usageError();
+		}
+
 		await checkDocs();
 		break;
 	case "build":
-		await rm(distDir, { force: true, recursive: true });
-		for (const section of sections) {
-			await buildDocs(section);
+		if (section !== undefined && !Object.hasOwn(sections, section)) {
+			usageError();
+		}
+
+		for (const [name, dest] of Object.entries(sections)) {
+			if (section === undefined || section === name) {
+				await buildDocs(name, dest);
+			}
 		}
 		break;
 	default:
@@ -32,23 +47,13 @@ switch (command) {
 
 /** Reports invalid command-line arguments without a stack trace. */
 function usageError(): never {
-	console.error("Usage: node src/index.ts check | build");
+	console.error(`Usage: node src/index.ts check | build [${Object.keys(sections).join(" | ")}]`);
 	process.exit(1);
-}
-
-/**
- * Reads the markdown files of a documentation section.
- * @param section Documentation section.
- * @param pattern Glob pattern of files to read.
- * @returns The markdown files.
- */
-function readSection(section: string, pattern: string): Promise<MarkdownFile[]> {
-	return readMarkdownFiles(pattern, join(docsDir, section));
 }
 
 /** Checks documentation links and SDK TypeScript examples. */
 async function checkDocs(): Promise<void> {
-	const files = (await Promise.all(sections.map((section) => readSection(section, "**/*.mdx")))).flat();
+	const files = await readMarkdownFiles("**/*.mdx", docsDir);
 	const problems = await checkLinks(files, {
 		// npmjs.com rejects automated requests.
 		ignore: ["https://www.npmjs.com/"],
@@ -62,9 +67,9 @@ async function checkDocs(): Promise<void> {
 		(file) => file.path.startsWith(join(docsDir, "sdk") + sep) && !basename(file.path).startsWith("_"),
 	);
 	const diagnostics = typeCheck(sdkFiles, {
-		// Virtual snippets must be within the SDK's rootDir (src); its package self-reference resolves to source.
-		codeBlockDir: join(root, "packages/plugin/src"),
-		tsconfigFile: join(root, "packages/plugin/tsconfig.json"),
+		// Virtual snippets must be within the rootDir (src); their imports resolve from this package's dependencies.
+		codeBlockDir: join(packageDir, "src"),
+		tsconfigFile: join(packageDir, "tsconfig.json"),
 	});
 	for (const diagnostic of diagnostics) {
 		console.error(`${diagnostic.link}: TS${diagnostic.code} ${diagnostic.message}`);
@@ -80,13 +85,13 @@ async function checkDocs(): Promise<void> {
 }
 
 /**
- * Builds a documentation section into `dist`, rewriting links to documentation outside that section.
+ * Builds a documentation section, rewriting links to documentation outside that section.
  * @param section Documentation section.
+ * @param dest Directory the section is built into.
  */
-async function buildDocs(section: string): Promise<void> {
+async function buildDocs(section: string, dest: string): Promise<void> {
 	const src = join(docsDir, section);
-	const dest = join(distDir, section);
-	const files = await readSection(section, "**/*");
+	const files = await readMarkdownFiles("**/*", src);
 
 	for (const file of files) {
 		file.rewriteLinks((link) => toSiteUrl(link, src));
@@ -94,13 +99,14 @@ async function buildDocs(section: string): Promise<void> {
 
 	// Copy assets only; the markdown is written from memory below.
 	const markdownPaths = new Set(files.map((file) => file.path));
+	await rm(dest, { force: true, recursive: true });
 	await cp(src, dest, { filter: (path) => !markdownPaths.has(path), recursive: true });
 
 	for (const file of files) {
 		await file.write(join(dest, relative(src, file.path)));
 	}
 
-	console.log(`Built ${section} documentation into ${relative(docsDir, dest)}.`);
+	console.log(`Built ${section} documentation into ${relative(root, dest)}.`);
 }
 
 /**
@@ -122,7 +128,7 @@ function toSiteUrl(link: Link, src: string): string | undefined {
 	}
 
 	const [folder = "", ...segments] = relative(docsDir, target).split(sep);
-	if (!sections.includes(folder)) {
+	if (!Object.hasOwn(sections, folder)) {
 		throw new Error(`Unable to determine the URL of "${link.url}" in ${link.file}:${link.position.start.line}`);
 	}
 

@@ -3,7 +3,7 @@
     "scripts": {
         "build": "turbo run build",
         "dev": "turbo run dev",
-        "docs:check": "pnpm --filter @elgato/docs run check",
+        "docs:check": "turbo run check --filter=@elgato/docs",
         "fmt": "oxfmt",
         "fmt:check": "oxfmt --check",
         "lint": "turbo run lint",
@@ -15,8 +15,7 @@
         "@changesets/cli": "^3.0.3",
         "@elgato/oxfmt-config": "workspace:^",
         "oxfmt": "^0.70.0",
-        "turbo": "^2.8.14",
-        "zod": "^3.25.76"
+        "turbo": "^2.8.14"
     },
     "packageManager": "pnpm@10.18.0"
 }

@@ -137,7 +137,7 @@ This project uses ESLint and Oxfmt to maintain consistent code style.
 
 ## Documentation
 
-The SDK and CLI documentation lives in `packages/docs`, and is published with each package.
+The SDK and CLI documentation lives in `docs`, and is published with each package; `packages/docs` contains the scripts that check and build it.
 
 - Partials suffixed `.g.mdx` are generated; they are not edited by hand.
 - TypeScript code blocks are type checked; incomplete fragments opt out with `nocheck`, e.g. ` ```ts nocheck `.
