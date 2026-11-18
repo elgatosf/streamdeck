@@ -1,0 +1,258 @@
+### GetGlobalSettings{#getglobalsettings}
+
+Gets the global settings associated with the plugin. Causes `didReceiveGlobalSettings` to be emitted.
+
+```ts
+type GetGlobalSettings = {
+	context: string;
+	event: "getGlobalSettings";
+	id?: string;
+};
+```
+
+<ObjectMember name="context">
+	<ObjectMember.Type>string</ObjectMember.Type>
+	The plugin's identifier, as provided by Stream Deck.
+</ObjectMember>
+
+<ObjectMember name="event">
+	<ObjectMember.Type>"getGlobalSettings"</ObjectMember.Type>
+	Name of the command.
+</ObjectMember>
+
+<ObjectMember name="id" optional>
+	<ObjectMember.Type>string</ObjectMember.Type>
+	Optional identifier that can be used to identify the response to this request.
+</ObjectMember>
+
+### GetResources{#getresources}
+
+Gets the resources (files) associated with the action; these resources are embedded into the action
+when it is exported, either individually, or as part of a profile.
+
+Available from Stream Deck 7.1.
+
+```ts
+type GetResources = {
+	action: string;
+	context: string;
+	event: "getResources";
+	id?: string;
+};
+```
+
+<ObjectMember name="action">
+	<ObjectMember.Type>string</ObjectMember.Type>
+	Identifies the action type, as specified by the UUID within the manifest.
+</ObjectMember>
+
+<ObjectMember name="context">
+	<ObjectMember.Type>string</ObjectMember.Type>
+	Defines the context of the command, e.g. which action instance the command is intended for.
+</ObjectMember>
+
+<ObjectMember name="event">
+	<ObjectMember.Type>"getResources"</ObjectMember.Type>
+	Name of the command, used to identify the request.
+</ObjectMember>
+
+<ObjectMember name="id" optional>
+	<ObjectMember.Type>string</ObjectMember.Type>
+	Optional identifier that can be used to identify the response to this request.
+</ObjectMember>
+
+### GetSettings{#getsettings}
+
+Gets the settings associated with an instance of an action. Causes `didReceiveSettings` to be emitted.
+
+```ts
+type GetSettings = {
+	action: string;
+	context: string;
+	event: "getSettings";
+	id?: string;
+};
+```
+
+<ObjectMember name="action">
+	<ObjectMember.Type>string</ObjectMember.Type>
+	Identifies the action type, as specified by the UUID within the manifest.
+</ObjectMember>
+
+<ObjectMember name="context">
+	<ObjectMember.Type>string</ObjectMember.Type>
+	The action instance identifier.
+</ObjectMember>
+
+<ObjectMember name="event">
+	<ObjectMember.Type>"getSettings"</ObjectMember.Type>
+	Name of the command.
+</ObjectMember>
+
+<ObjectMember name="id" optional>
+	<ObjectMember.Type>string</ObjectMember.Type>
+	Optional identifier that can be used to identify the response to this request.
+</ObjectMember>
+
+### OpenUrl{#openurl}
+
+Opens the URL in the user's default browser.
+
+```ts
+type OpenUrl = {
+	event: "openUrl";
+	payload: {
+		url: string;
+	};
+};
+```
+
+<ObjectMember name="event">
+	<ObjectMember.Type>"openUrl"</ObjectMember.Type>
+	Name of the command.
+</ObjectMember>
+
+<ObjectMember name="payload" >
+	<ObjectMember.Type>object</ObjectMember.Type>
+	
+Additional information supplied as part of the command.
+
+<ObjectMember name="url">
+	<ObjectMember.Type>string</ObjectMember.Type>
+	URL to open.
+</ObjectMember>
+
+</ObjectMember>
+
+### SendToPlugin{#sendtoplugin}
+
+Sends a message to the plugin.
+
+```ts
+type SendToPlugin = {
+	action: string;
+	context: string;
+	event: "sendToPlugin";
+	payload: JsonValue;
+};
+```
+
+<ObjectMember name="action">
+	<ObjectMember.Type>string</ObjectMember.Type>
+	Identifies the action type, as specified by the UUID within the manifest.
+</ObjectMember>
+
+<ObjectMember name="context">
+	<ObjectMember.Type>string</ObjectMember.Type>
+	The action instance identifier.
+</ObjectMember>
+
+<ObjectMember name="event">
+	<ObjectMember.Type>"sendToPlugin"</ObjectMember.Type>
+	Name of the command.
+</ObjectMember>
+
+<ObjectMember name="payload">
+	<ObjectMember.Type>JsonValue</ObjectMember.Type>
+	Payload to send.
+</ObjectMember>
+
+### SetGlobalSettings{#setglobalsettings}
+
+Sets the global settings associated with the plugin, and notifies the plugin by emitting `didReceiveGlobalSettings`.
+
+```ts
+type SetGlobalSettings = {
+	context: string;
+	event: "setGlobalSettings";
+	payload: JsonObject;
+};
+```
+
+<ObjectMember name="context">
+	<ObjectMember.Type>string</ObjectMember.Type>
+	The plugin's identifier, as provided by Stream Deck.
+</ObjectMember>
+
+<ObjectMember name="event">
+	<ObjectMember.Type>"setGlobalSettings"</ObjectMember.Type>
+	Name of the command.
+</ObjectMember>
+
+<ObjectMember name="payload">
+	<ObjectMember.Type>JsonObject</ObjectMember.Type>
+	Global settings to save.
+</ObjectMember>
+
+### SetResources{#setresources}
+
+Sets the resources (files) associated with the action; these resources are embedded into the action
+when it is exported, either individually, or as part of a profile.
+
+Available from Stream Deck 7.1.
+
+```ts
+type SetResources = {
+	action: string;
+	context: string;
+	event: "setResources";
+	payload: {
+		[key: string]: string;
+	};
+};
+```
+
+<ObjectMember name="action">
+	<ObjectMember.Type>string</ObjectMember.Type>
+	Identifies the action type, as specified by the UUID within the manifest.
+</ObjectMember>
+
+<ObjectMember name="context">
+	<ObjectMember.Type>string</ObjectMember.Type>
+	Defines the context of the command, e.g. which action instance the command is intended for.
+</ObjectMember>
+
+<ObjectMember name="event">
+	<ObjectMember.Type>"setResources"</ObjectMember.Type>
+	Name of the command, used to identify the request.
+</ObjectMember>
+
+<ObjectMember name="payload" >
+	<ObjectMember.Type>Resources</ObjectMember.Type>
+	
+Resources (files) associated with the action.
+
+</ObjectMember>
+
+### SetSettings{#setsettings}
+
+Sets the settings associated with an action instance, and notifies the plugin by emitting `didReceiveSettings`.
+
+```ts
+type SetSettings = {
+	action: string;
+	context: string;
+	event: "setSettings";
+	payload: JsonObject;
+};
+```
+
+<ObjectMember name="action">
+	<ObjectMember.Type>string</ObjectMember.Type>
+	Identifies the action type, as specified by the UUID within the manifest.
+</ObjectMember>
+
+<ObjectMember name="context">
+	<ObjectMember.Type>string</ObjectMember.Type>
+	The action instance identifier.
+</ObjectMember>
+
+<ObjectMember name="event">
+	<ObjectMember.Type>"setSettings"</ObjectMember.Type>
+	Name of the command.
+</ObjectMember>
+
+<ObjectMember name="payload">
+	<ObjectMember.Type>JsonObject</ObjectMember.Type>
+	Action settings to save.
+</ObjectMember>

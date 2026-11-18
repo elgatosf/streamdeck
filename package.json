@@ -3,6 +3,7 @@
     "scripts": {
         "build": "turbo run build",
         "dev": "turbo run dev",
+        "docs:check": "turbo run check --filter=@elgato/docs",
         "fmt": "oxfmt",
         "fmt:check": "oxfmt --check",
         "lint": "turbo run lint",

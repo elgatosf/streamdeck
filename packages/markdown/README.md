@@ -12,6 +12,7 @@ Tools for working with Markdown files.
 
 - Generating documentation from TypeScript types and JSDoc.
 - Replacing named sections in Markdown files.
+- Checking and rewriting links in Markdown and MDX.
 - Type-checking fenced TypeScript code blocks in Markdown and MDX.
 
 ## Setup
@@ -119,41 +120,53 @@ await format({
 - Only top-level markers are recognized; markers in code blocks, lists, block quotes, and paragraphs are ignored.
 - Unknown IDs, unmatched markers, nested sections, and read/write errors reject. Validation errors occur before the file is written.
 
-## Type-check code blocks
+## Check and rewrite Markdown
 
-Check Markdown files against a tsconfig and report diagnostics:
+Read files once, then check and rewrite them in memory; nothing is written until `write` is called:
 
 ```ts
-import { typeCheck } from "@elgato/markdown";
+import { join, relative, resolve } from "node:path";
 
-const diagnostics = await typeCheck({
-    src: "docs/**/*.md",
-});
+import { checkLinks, readMarkdownFiles, typeCheck } from "@elgato/markdown";
 
-for (const diagnostic of diagnostics) {
-    console.error(`${diagnostic.link}: TS${diagnostic.code} ${diagnostic.message}`);
-}
+const src = resolve("docs");
+const files = await readMarkdownFiles("**/*.{md,mdx}", src);
 
-if (diagnostics.length > 0) {
-    process.exitCode = 1;
+const problems = await checkLinks(files);
+const diagnostics = typeCheck(files);
+
+for (const file of files) {
+    // Return the new URL, or undefined to leave the link unchanged.
+    file.rewriteLinks((link) =>
+        link.url.startsWith("../api/") ? `https://example.com/${link.url.slice(3)}` : undefined,
+    );
+    await file.write(join("dist", relative(src, file.path)));
 }
 ```
 
-### Options
+- `readMarkdownFiles` throws if no files match, or an MDX file cannot be parsed.
+- Problems and diagnostics include the Markdown file, 1-based line and column, a file URL, and a message.
+
+### Type checking
 
 | Option         | Description                                                                                    |
 | -------------- | ---------------------------------------------------------------------------------------------- |
-| `src`          | Required glob, e.g. `docs/**/*.md` or `docs/**/*.mdx`.                                         |
-| `cwd`          | Base directory for the glob, tsconfig, and imports; defaults to the current working directory. |
-| `tsconfigFile` | Tsconfig path relative to `cwd`; defaults to `tsconfig.json`.                                  |
+| `codeBlockDir` | Directory used to resolve the tsconfig and imports; defaults to the current working directory. |
+| `tsconfigFile` | Tsconfig path relative to `codeBlockDir`; defaults to `tsconfig.json`.                         |
 
-- Checks fences labeled `ts`, `typescript`, `tsx`, `mts`, or `cts` (case-insensitive); ignores JavaScript, unlabeled, and indented blocks.
-- Supports MDX, including code blocks inside JSX.
-- Checks each block as a separate module; include required imports. Generated property and enum snippets may be partial declarations.
-- Blocks are checked as files in `cwd`. If `rootDir` is restricted, set `cwd` inside it or choose a tsconfig whose `rootDir` includes it.
-- Returns TypeScript category, code, message, Markdown file, 1-based line and column, and a file URL in each diagnostic.
-- Throws for invalid tsconfig, no matching files, or invalid MDX.
+- Checks fences labeled `ts`, `typescript`, `tsx`, `mts`, or `cts` (case-insensitive), including those inside MDX JSX; skips fences marked `nocheck`.
+- Checks each block as a separate module in `codeBlockDir`; include required imports. If `rootDir` is restricted, set `codeBlockDir` inside it.
+
+### Link checking
+
+| Option     | Description                                                                                  |
+| ---------- | -------------------------------------------------------------------------------------------- |
+| `external` | Whether HTTP(S) links are requested; defaults to `true`.                                     |
+| `ignore`   | Prefixes of HTTP(S) links that are not requested, e.g. sites that reject automated requests. |
+
+- Relative links must resolve to a file; anchors must match a heading slug, a custom `{#id}`, a JSX `id`, or one of those in an imported MDX partial.
+- HTTP(S) links must not respond with an error status; `429` is tolerated, and loopback addresses are not requested.
 
 ## Extending
 
-Discovery produces a model independent of ts-morph. To add a format, implement a generator, add it to `DocumentationFormat`, and register it in [generate-markdown.ts](./src/docs/generate-markdown.ts).
+Discovery produces a model independent of ts-morph. To add a format, implement a generator, add it to `DocumentationFormat`, and register it in [generate-markdown.ts](./src/docs-generators/generate-markdown.ts).

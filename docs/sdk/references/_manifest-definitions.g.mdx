@@ -1,0 +1,774 @@
+### Manifest{#manifest}
+
+Defines the plugin and available actions, and all information associated with them, including the plugin's entry point, all iconography, action default behavior, etc.
+
+<p>
+	<strong>Properties</strong>
+</p>
+
+<ObjectMember name="Actions" id="manifest-actions" >
+	<ObjectMember.Type><a href="#action">Action</a>[]</ObjectMember.Type>
+	<p>Collection of actions provided by the plugin, and all of their information; this can include actions that are available to users via the actions list, and actions that are
+hidden to the user but available to pre-defined profiles distributed with the plugin (<code>Manifest.Actions.VisibleInActionsList</code>).</p>
+
+</ObjectMember>
+
+<ObjectMember name="ApplicationsToMonitor" id="manifest-applicationstomonitor" optional>
+	<ObjectMember.Type><a href="#applicationmonitoring">ApplicationMonitoring</a></ObjectMember.Type>
+	<p>Applications to monitor on Mac and Windows; upon a monitored application being launched or terminated, Stream Deck will notify the plugin.</p>
+<p><strong>Also see:</strong></p>
+<ul>
+<li><code>streamDeck.system.onApplicationDidLaunch(...)</code></li>
+<li><code>streamDeck.system.onApplicationDidTerminate(...)</code></li>
+</ul>
+
+</ObjectMember>
+
+<ObjectMember name="Author" id="manifest-author" >
+	<ObjectMember.Type>string</ObjectMember.Type>
+	<p>Author's name that will be displayed on the plugin's product page on the Marketplace, e.g. &quot;Elgato&quot;.</p>
+
+</ObjectMember>
+
+<ObjectMember name="Category" id="manifest-category" optional>
+	<ObjectMember.Type>string</ObjectMember.Type>
+	<p>Defines the actions list group, providing a natural grouping of the plugin's actions with the Stream Deck application's action list.</p>
+<p>Note: <code>Category</code> should be distinctive and synonymous with your plugin, and it is therefore recommended that this be the same value as the plugin's <code>Name</code> field. When <code>undefined</code>, the
+actions will be available under the &quot;Custom&quot; group.</p>
+
+</ObjectMember>
+
+<ObjectMember name="CategoryIcon" id="manifest-categoryicon" optional>
+	<ObjectMember.Type>string</ObjectMember.Type>
+	<p>Path to the image, with the <strong>file extension omitted</strong>, that will be displayed next to the action list group within the Stream Deck application. The icon should accurately represent
+the plugin, and enable users to quickly identify the plugin.</p>
+<p>Image must be:</p>
+<ul>
+<li>PNG or SVG format.</li>
+<li>Provided in two sizes, 28 × 28 px and 56 × 56 px (@2x).</li>
+<li>Monochromatic, with foreground color of #FFFFFF and a transparent background.</li>
+</ul>
+<p><strong>Examples</strong>:</p>
+<ul>
+<li>assets/category-icon</li>
+<li>imgs/category</li>
+</ul>
+
+</ObjectMember>
+
+<ObjectMember name="CodePath" id="manifest-codepath" >
+	<ObjectMember.Type>string</ObjectMember.Type>
+	<p>Path to the plugin's main entry point; this is executed when the Stream Deck application starts the plugin.</p>
+<p><strong>Examples</strong>:</p>
+<ul>
+<li>index.js</li>
+<li>Counter</li>
+<li>Counter.exe</li>
+</ul>
+
+</ObjectMember>
+
+<ObjectMember name="CodePathMac" id="manifest-codepathmac" optional>
+	<ObjectMember.Type>string</ObjectMember.Type>
+	<p>Path to the plugin's entry point specific to macOS; this is executed when the Stream Deck application starts the plugin on macOS.</p>
+<p><strong>Examples:</strong></p>
+<ul>
+<li>index.js</li>
+<li>Counter</li>
+</ul>
+
+</ObjectMember>
+
+<ObjectMember name="CodePathWin" id="manifest-codepathwin" optional>
+	<ObjectMember.Type>string</ObjectMember.Type>
+	<p>Path to the plugin's entry point specific to Windows; this is executed when the Stream Deck application starts the plugin on Windows.</p>
+<p><strong>Examples:</strong></p>
+<ul>
+<li>index.js</li>
+<li>Counter.exe</li>
+</ul>
+
+</ObjectMember>
+
+<ObjectMember name="DefaultWindowSize" id="manifest-defaultwindowsize" optional>
+	<ObjectMember.Type>[number, number]</ObjectMember.Type>
+	<p>Size of a window (<code>[width, height]</code>) opened when calling <code>window.open()</code> from the property inspector. Default value is <code>[500, 650]</code>.</p>
+
+</ObjectMember>
+
+<ObjectMember name="Description" id="manifest-description" >
+	<ObjectMember.Type>string</ObjectMember.Type>
+	<p>Description of the plugin, and the functionality it provides, that will be displayed on the plugin's product page on the Marketplace.</p>
+
+</ObjectMember>
+
+<ObjectMember name="Icon" id="manifest-icon" >
+	<ObjectMember.Type>string</ObjectMember.Type>
+	<p>Path to the image, with the <strong>file extension omitted</strong>, that will be displayed within Stream Deck's preferences.</p>
+<p>Image must be:</p>
+<ul>
+<li>PNG format.</li>
+<li>Provided in two sizes, 256 × 256 px and 512 × 512 px (@2x).</li>
+</ul>
+<p><strong>Examples:</strong></p>
+<ul>
+<li>assets/plugin-icon</li>
+<li>imgs/plugin</li>
+</ul>
+
+</ObjectMember>
+
+<ObjectMember name="Name" id="manifest-name" >
+	<ObjectMember.Type>string</ObjectMember.Type>
+	<p>Name of the plugin, e.g. &quot;Wave Link&quot;, &quot;Camera Hub&quot;, &quot;Control Center&quot;, etc.</p>
+
+</ObjectMember>
+
+<ObjectMember name="Nodejs" id="manifest-nodejs" optional>
+	<ObjectMember.Type><a href="#nodejs">Nodejs</a></ObjectMember.Type>
+	<p>Configuration options for Node.js based plugins.</p>
+<p>Note: All Node.js plugins are executed with the following command-line arguments:</p>
+<ul>
+<li><a href="https://nodejs.org/api/cli.html#--no-addons"><code>--no-addons</code></a> (Stream Deck 6.4 only)</li>
+<li><a href="https://nodejs.org/api/cli.html#--enable-source-maps"><code>--enable-source-maps</code></a></li>
+<li><a href="https://nodejs.org/api/cli.html#--no-global-search-paths"><code>--no-global-search-paths</code></a></li>
+</ul>
+
+</ObjectMember>
+
+<ObjectMember name="OS" id="manifest-os" >
+	<ObjectMember.Type>[<a href="#os">OS</a>, <a href="#os">OS</a>?]</ObjectMember.Type>
+	<p>Collection of operating systems, and their minimum required versions, that the plugin supports.</p>
+
+</ObjectMember>
+
+<ObjectMember name="Profiles" id="manifest-profiles" optional>
+	<ObjectMember.Type><a href="#profile">Profile</a>[]</ObjectMember.Type>
+	<p>Collection of pre-defined profiles that are distributed with this plugin. Upon the plugin switching to the profile, the user will be prompted to install the profiles.</p>
+<p>Note: Plugins may only switch to profiles distributed with the plugin, as defined within the manifest, and cannot access user-defined profiles.</p>
+<p><strong>Also see:</strong>
+<code>streamDeck.profiles.switchToProfile(...)</code></p>
+
+</ObjectMember>
+
+<ObjectMember name="PropertyInspectorPath" id="manifest-propertyinspectorpath" optional>
+	<ObjectMember.Type>`${string}.htm`, `${string}.html`</ObjectMember.Type>
+	<p>Optional path to the HTML file that represents the property inspector for all actions; this is displayed to the user in the Stream Deck application when they add an action,
+allowing them to configure the action's settings.</p>
+<p>Note: Path should be relative to the root of the plugin's folder, with no leading slash.</p>
+<p><strong>Examples:</strong></p>
+<ul>
+<li>mute.html</li>
+<li>actions/join-voice-chat/settings.html</li>
+</ul>
+<p><strong>Also see:</strong></p>
+<ul>
+<li><code>streamDeck.ui.onSendToPlugin(...)</code></li>
+</ul>
+
+</ObjectMember>
+
+<ObjectMember name="SDKVersion" id="manifest-sdkversion" >
+	<ObjectMember.Type>2, 3</ObjectMember.Type>
+	<p>Preferred SDK version (version 3 is recommended).</p>
+
+</ObjectMember>
+
+<ObjectMember name="Software" id="manifest-software" >
+	<ObjectMember.Type><a href="#software">Software</a></ObjectMember.Type>
+	<p>Determines the Stream Deck software requirements for this plugin.</p>
+
+</ObjectMember>
+
+<ObjectMember name="SupportURL" id="manifest-supporturl" optional>
+	<ObjectMember.Type>string</ObjectMember.Type>
+	<p>Link to the plugin's support website.</p>
+<p><strong>Examples</strong>:</p>
+<ul>
+<li>https://help.corsair.com/</li>
+<li>https://help.elgato.com/</li>
+</ul>
+<p>Available from Stream Deck 6.9.</p>
+
+</ObjectMember>
+
+<ObjectMember name="URL" id="manifest-url" optional>
+	<ObjectMember.Type>string</ObjectMember.Type>
+	<p>Link to the plugin's website.</p>
+<p><strong>Examples</strong>:</p>
+<ul>
+<li>https://elgato.com</li>
+<li>https://corsair.com</li>
+</ul>
+
+</ObjectMember>
+
+<ObjectMember name="UUID" id="manifest-uuid" >
+	<ObjectMember.Type>string</ObjectMember.Type>
+	<p>Unique identifier of the plugin, represented in reverse-DNS format.</p>
+<p><strong>Allowed characters:</strong></p>
+<ul>
+<li>Lowercase alphanumeric characters (a-z, 0-9)</li>
+<li>Hyphens (-)</li>
+<li>Periods (.)</li>
+</ul>
+<p><strong>Examples:</strong></p>
+<ul>
+<li>com.elgato.wavelink</li>
+<li>com.elgato.discord</li>
+<li>tv.twitch</li>
+</ul>
+
+</ObjectMember>
+
+<ObjectMember name="Version" id="manifest-version" >
+	<ObjectMember.Type>string</ObjectMember.Type>
+	<p>Version of the plugin, in the format <code>\{major\}.\{minor\}.\{patch\}.\{build\}</code>.</p>
+
+</ObjectMember>
+
+### Action{#action}
+
+Provides information about an action provided by the plugin.
+
+<p>
+	<strong>Properties</strong>
+</p>
+
+<ObjectMember name="Controllers" id="action-controllers" optional>
+	<ObjectMember.Type>[("Encoder", "Keypad", "Neo"), ("Encoder", "Keypad", "Neo")?, ("Encoder", "Keypad", "Neo")?]</ObjectMember.Type>
+	<p>Defines the controller type the action is applicable to.</p>
+<ul>
+<li><strong>Keypad</strong> refers to a standard action on a Stream Deck device, e.g. 1 of the 15 buttons on the Stream Deck MK.2</li>
+<li><strong>Encoder</strong> refers to a dial / touchscreen on the Stream Deck +.</li>
+<li><strong>Neo</strong> refers to the infobar found on Stream Deck Neo (available from Stream Deck 7.6).</li>
+</ul>
+
+</ObjectMember>
+
+<ObjectMember name="DisableAutomaticStates" id="action-disableautomaticstates" optional>
+	<ObjectMember.Type>boolean</ObjectMember.Type>
+	<p>Determines whether the state of the action should automatically toggle when the user presses the action; only applies to actions that have more than one state defined. Default is
+<code>false</code>.</p>
+
+</ObjectMember>
+
+<ObjectMember name="DisableCaching" id="action-disablecaching" optional>
+	<ObjectMember.Type>boolean</ObjectMember.Type>
+	<p>Determines whether Stream Deck should cache images associated with the plugin, and its actions. Default is <code>false</code>.</p>
+
+</ObjectMember>
+
+<ObjectMember name="Encoder" id="action-encoder" optional>
+	<ObjectMember.Type><a href="#encoder">Encoder</a></ObjectMember.Type>
+	<p>Provides information about how the action functions as part of an <code>Encoder</code> (dial / touchscreen).</p>
+
+</ObjectMember>
+
+<ObjectMember name="Icon" id="action-icon" >
+	<ObjectMember.Type>string</ObjectMember.Type>
+	<p>Path to the image, with the <strong>file extension omitted</strong>, that will be displayed next to the action in the Stream Deck application's action list.</p>
+<p>Image must be:</p>
+<ul>
+<li>PNG or SVG format.</li>
+<li>Provided in two sizes, 20 × 20 px and 40 × 40 px (@2x).</li>
+<li>Monochromatic, with foreground color of #FFFFFF and a transparent background.</li>
+</ul>
+<p><strong>Examples:</strong></p>
+<ul>
+<li>assets/counter</li>
+<li>imgs/actions/mute</li>
+</ul>
+
+</ObjectMember>
+
+<ObjectMember name="Name" id="action-name" >
+	<ObjectMember.Type>string</ObjectMember.Type>
+	<p>Name of the action; this is displayed to the user in the actions list, and is used throughout the Stream Deck application to visually identify the action.</p>
+
+</ObjectMember>
+
+<ObjectMember name="OS" id="action-os" optional>
+	<ObjectMember.Type>("mac", "windows")[]</ObjectMember.Type>
+	<p>Operating system that the action supports.</p>
+
+</ObjectMember>
+
+<ObjectMember name="PropertyInspectorPath" id="action-propertyinspectorpath" optional>
+	<ObjectMember.Type>`${string}.htm`, `${string}.html`</ObjectMember.Type>
+	<p>Optional path to the HTML file that represents the property inspector for this action; this is displayed to the user in the Stream Deck application when they add the
+action, allowing them to configure the action's settings. When <code>undefined</code>, the manifest's top-level <code>PropertyInspectorPath</code> is used, otherwise none.</p>
+<p>Note: Path should be relative to the root of the plugin's folder, with no leading slash.</p>
+<p><strong>Examples:</strong></p>
+<ul>
+<li>mute.html</li>
+<li>actions/join-voice-chat/settings.html</li>
+</ul>
+
+</ObjectMember>
+
+<ObjectMember name="States" id="action-states" >
+	<ObjectMember.Type><a href="#state">State</a>[]</ObjectMember.Type>
+	<p>States the action can be in. When two states are defined the action will act as a toggle, with users being able to select their preferred iconography for each state.</p>
+<p>Note: Automatic toggling of the state on action activation can be disabled by setting <code>DisableAutomaticStates</code> to <code>true</code>.</p>
+
+</ObjectMember>
+
+<ObjectMember name="SupportedInKeyLogicActions" id="action-supportedinkeylogicactions" optional>
+	<ObjectMember.Type>boolean</ObjectMember.Type>
+	<p>Determines whether the action is available to users when they are creating key logic actions. Default is <code>true</code>.</p>
+<p>Available from Stream Deck 7.0.</p>
+
+</ObjectMember>
+
+<ObjectMember name="SupportedInMultiActions" id="action-supportedinmultiactions" optional>
+	<ObjectMember.Type>boolean</ObjectMember.Type>
+	<p>Determines whether the action is available to users when they are creating multi-actions. Default is <code>true</code>.</p>
+
+</ObjectMember>
+
+<ObjectMember name="SupportURL" id="action-supporturl" optional>
+	<ObjectMember.Type>string</ObjectMember.Type>
+	<p>Link to the actions's support website.</p>
+<p><strong>Examples</strong>:</p>
+<ul>
+<li>https://help.corsair.com/</li>
+<li>https://help.elgato.com/</li>
+</ul>
+<p>Available from Stream Deck 6.9.</p>
+
+</ObjectMember>
+
+<ObjectMember name="Tooltip" id="action-tooltip" optional>
+	<ObjectMember.Type>string</ObjectMember.Type>
+	<p>Tooltip shown to the user when they hover over the action within the actions list in the Stream Deck application.</p>
+
+</ObjectMember>
+
+<ObjectMember name="UUID" id="action-uuid" >
+	<ObjectMember.Type>string</ObjectMember.Type>
+	<p>Unique identifier of the action, represented in reverse-DNS format. This value is supplied by Stream Deck when events are emitted that relate to the action enabling you
+to identify the source of the event.</p>
+<p><strong>Allowed characters:</strong></p>
+<ul>
+<li>Lowercase alphanumeric characters (a-z, 0-9)</li>
+<li>Hyphens (-)</li>
+<li>Periods (.)</li>
+</ul>
+<p>Note: <code>UUID</code> must be unique, and should be prefixed with the plugin's UUID.</p>
+<p><strong>Examples:</strong></p>
+<ul>
+<li>com.elgato.wavelink.toggle-mute</li>
+<li>com.elgato.discord.join-voice</li>
+<li>tv.twitch.go-live</li>
+</ul>
+
+</ObjectMember>
+
+<ObjectMember name="UserTitleEnabled" id="action-usertitleenabled" optional>
+	<ObjectMember.Type>boolean</ObjectMember.Type>
+	<p>Determines whether the title field is available to the user when viewing the action's property inspector. Setting this to <code>false</code> will disable the user from specifying a
+title, thus allowing the plugin to have exclusive access to the title. Default is <code>true</code>, i.e. the title field is enabled.</p>
+
+</ObjectMember>
+
+<ObjectMember name="VisibleInActionsList" id="action-visibleinactionslist" optional>
+	<ObjectMember.Type>boolean</ObjectMember.Type>
+	<p>Determines whether the action is available to users via the actions list in the Stream Deck application. Setting this to <code>false</code> allows for the action to be used as
+part of pre-defined profiles distributed with the plugins, whilst not being available to users. Default is <code>true</code>.</p>
+
+</ObjectMember>
+
+### ApplicationMonitoring{#applicationmonitoring}
+
+Applications to monitor on Mac and Windows; upon a monitored application being launched or terminated, Stream Deck will notify the plugin.
+
+<p>
+	<strong>Properties</strong>
+</p>
+
+<ObjectMember name="mac" id="applicationmonitoring-mac" optional>
+	<ObjectMember.Type>string[]</ObjectMember.Type>
+	<p>Collection of applications to monitor on macOS.</p>
+<p><strong>Examples:</strong></p>
+<ul>
+<li>com.apple.mail</li>
+</ul>
+
+</ObjectMember>
+
+<ObjectMember name="windows" id="applicationmonitoring-windows" optional>
+	<ObjectMember.Type>string[]</ObjectMember.Type>
+	<p>Collection of applications to monitor on Windows.</p>
+<p><strong>Examples:</strong></p>
+<ul>
+<li>Notepad.exe</li>
+</ul>
+
+</ObjectMember>
+
+### Encoder{#encoder}
+
+Provides information about how the action functions as part of an `Encoder` (dial / touchscreen).
+
+<p>
+	<strong>Properties</strong>
+</p>
+
+<ObjectMember name="Icon" id="encoder-icon" optional>
+	<ObjectMember.Type>string</ObjectMember.Type>
+	<p>Path to the image, with the <strong>file extension omitted</strong>, that will be displayed in the Stream Deck application in the circular canvas that represents the dial of the
+action.</p>
+<p>Image must be:</p>
+<ul>
+<li>PNG or SVG format.</li>
+<li>Provided in two sizes, 72 × 72 px and 144 × 144 px (@2x).</li>
+</ul>
+<p>Note: Can be overridden by the user in the Stream Deck application.</p>
+<p><strong>Examples:</strong></p>
+<ul>
+<li>assets/actions/mute/encoder-icon</li>
+<li>imgs/join-voice-chat-encoder</li>
+</ul>
+
+</ObjectMember>
+
+<ObjectMember name="StackColor" id="encoder-stackcolor" optional>
+	<ObjectMember.Type>string</ObjectMember.Type>
+	<p>Background color to display in the Stream Deck application when the action is part of a dial stack, and is the current action. Represented as a hexadecimal value.</p>
+<p><strong>Examples:</strong></p>
+<ul>
+<li>#D60270</li>
+<li>#F1F1F1</li>
+<li>#0038A8</li>
+</ul>
+
+</ObjectMember>
+
+<ObjectMember name="TriggerDescription" id="encoder-triggerdescription" optional>
+	<ObjectMember.Type><a href="#triggerdescriptions">TriggerDescriptions</a></ObjectMember.Type>
+	<p>Descriptions that define the interaction of the action when it is associated with a dial / touchscreen on the Stream Deck +. This information is shown to the user.</p>
+<p><strong>Examples:</strong></p>
+<ul>
+<li>&quot;Adjust volume&quot;</li>
+<li>&quot;Play / Pause&quot;</li>
+</ul>
+
+</ObjectMember>
+
+<ObjectMember name="background" id="encoder-background" optional>
+	<ObjectMember.Type>string</ObjectMember.Type>
+	<p>Path to the image, with the <strong>file extension omitted</strong>, that will be displayed on the touchscreen behind the action's layout.</p>
+<p>Image must be:</p>
+<ul>
+<li>PNG or SVG format.</li>
+<li>Provided in two sizes, 200 × 100 px and 400 × 200 px (@2x).</li>
+</ul>
+<p>Note: Can be overridden by the user in the Stream Deck application.</p>
+<p><strong>Examples:</strong></p>
+<ul>
+<li>assets/backgrounds/main</li>
+<li>imgs/bright-blue-bg</li>
+</ul>
+
+</ObjectMember>
+
+<ObjectMember name="layout" id="encoder-layout" optional>
+	<ObjectMember.Type>`${string}.json`, "$A0", "$A1", "$B1", "$B2", "$C1", "$X1"</ObjectMember.Type>
+	<p>Name of a pre-defined layout, or the path to a JSON file that details a custom layout and its components, to be rendered on the action's touchscreen canvas.</p>
+<p><strong>Pre-defined Layouts:</strong></p>
+<ul>
+<li><code>$X1</code>, layout with the title at the top and the icon beneath it in the center.</li>
+<li><code>$A0</code>, layout with the title at the top and a full-width image canvas beneath it in the center.</li>
+<li><code>$A1</code>, layout with the title at the top, the icon on the left, and text value on the right.</li>
+<li><code>$B1</code>, layout with the title at the top, the icon on the left, and a text value on the right with a progress bar beneath it.</li>
+<li><code>$B2</code>, layout with the title at the top, the icon on the left, and a text value on the right with a gradient progress bar beneath it.</li>
+<li><code>$C1</code>, layout with the title at the top, and two rows that display an icon on the left and progress bar on the right (i.e. a double progress bar layout).</li>
+</ul>
+<p><strong>Examples:</strong></p>
+<ul>
+<li>$A1</li>
+<li>layouts/my-custom-layout.json</li>
+</ul>
+
+</ObjectMember>
+
+### Nodejs{#nodejs}
+
+Configuration options for Node.js based plugins.
+
+<p>
+	<strong>Properties</strong>
+</p>
+
+<ObjectMember name="Debug" id="nodejs-debug" optional>
+	<ObjectMember.Type>string</ObjectMember.Type>
+	<p>Command-line arguments supplied to the plugin when run in debug mode. Optionally, the pre-defined values <code>&quot;enabled&quot;</code> and <code>&quot;break&quot;</code> run the plugin with a debugger enabled
+with <a href="https://nodejs.org/api/cli.html#--inspecthostport"><code>--inspect</code></a> and <a href="https://nodejs.org/api/cli.html#--inspect-brkhostport"><code>--inspect-brk</code></a> respectively.</p>
+<p>Note: <code>&quot;enabled&quot;</code> and <code>&quot;break&quot;</code> will automatically be assigned an available <code>PORT</code> by Stream Deck.  Alternatively, if you wish to debug on a pre-defined port, this value can be
+a set of <a href="https://nodejs.org/api/cli.html">command-line arguments</a>.</p>
+<p><strong>Examples:</strong></p>
+<ul>
+<li><code>&quot;enabled&quot;</code> results in <code>--inspect=127.0.0.1:\{PORT\}</code></li>
+<li><code>&quot;break&quot;</code> results in <code>--inspect-brk=127.0.0.1:\{PORT\}</code></li>
+<li><code>&quot;--inspect=127.0.0.1:12345&quot;</code> runs a local debugger on port <code>12345</code>.</li>
+</ul>
+
+</ObjectMember>
+
+<ObjectMember name="GenerateProfilerOutput" id="nodejs-generateprofileroutput" optional>
+	<ObjectMember.Type>boolean</ObjectMember.Type>
+	<p>Determines whether to generate a profiler output for the plugin; <a href="https://nodejs.org/en/docs/guides/simple-profiling">read more</a>.</p>
+
+</ObjectMember>
+
+<ObjectMember name="Version" id="nodejs-version" >
+	<ObjectMember.Type>"20", "24"</ObjectMember.Type>
+	<p>Version of Node.js to use.</p>
+
+</ObjectMember>
+
+### OS{#os}
+
+Operating system that the plugin supports, and the minimum required version needed to run the plugin.
+
+<p>
+	<strong>Properties</strong>
+</p>
+
+<ObjectMember name="MinimumVersion" id="os-minimumversion" >
+	<ObjectMember.Type>string</ObjectMember.Type>
+	<p>Minimum version required of the operating system to run the plugin.</p>
+
+</ObjectMember>
+
+<ObjectMember name="Platform" id="os-platform" >
+	<ObjectMember.Type>"mac", "windows"</ObjectMember.Type>
+	<p>Operating system supported by the plugin.</p>
+
+</ObjectMember>
+
+### Profile{#profile}
+
+Provides information for pre-defined profile distributed with this plugin.
+
+<p>
+	<strong>Properties</strong>
+</p>
+
+<ObjectMember name="AutoInstall" id="profile-autoinstall" optional>
+	<ObjectMember.Type>boolean</ObjectMember.Type>
+	<p>Determines whether the profile should be automatically installed when the plugin is installed. When <code>false</code>, the profile will be installed the first time
+the plugin attempts to switch to it. Default is <code>true</code>.</p>
+<p>Available from Stream Deck 6.6.</p>
+
+</ObjectMember>
+
+<ObjectMember name="DeviceType" id="profile-devicetype" >
+	<ObjectMember.Type>0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13</ObjectMember.Type>
+	<p>Type of device the profile is intended for, for example Stream Deck +, Stream Deck Pedal, etc.</p>
+<p><strong>Devices</strong></p>
+<ul>
+<li>Stream Deck (0)</li>
+<li>Stream Deck Mini (1)</li>
+<li>Stream Deck XL (2)</li>
+<li>Stream Deck Mobile (3)</li>
+<li>Corsair GKeys (4)</li>
+<li>Stream Deck Pedal (5)</li>
+<li>Corsair Voyager (6)</li>
+<li>Stream Deck + (7)</li>
+<li>SCUF Controller (8)</li>
+<li>Stream Deck Neo (9)</li>
+<li>Stream Deck Studio (10)</li>
+<li>Virtual Stream Deck (11)</li>
+<li>Galleon 100 SD (12)</li>
+<li>Stream Deck + XL (13)</li>
+</ul>
+
+</ObjectMember>
+
+<ObjectMember name="DontAutoSwitchWhenInstalled" id="profile-dontautoswitchwheninstalled" optional>
+	<ObjectMember.Type>boolean</ObjectMember.Type>
+	<p>Determines whether the Stream Deck application should automatically switch to the profile when it is first installed. Default value is <code>false</code>.</p>
+
+</ObjectMember>
+
+<ObjectMember name="Name" id="profile-name" >
+	<ObjectMember.Type>string</ObjectMember.Type>
+	<p>Path to the <code>.streamDeckProfile</code>, with the <strong>file extension omitted</strong>, that contains the profiles layout and action settings.</p>
+<p><strong>Examples:</strong></p>
+<ul>
+<li>assets/main-profile</li>
+<li>profiles/super-cool-profile</li>
+</ul>
+
+</ObjectMember>
+
+<ObjectMember name="Readonly" id="profile-readonly" optional>
+	<ObjectMember.Type>boolean</ObjectMember.Type>
+	<p>Determines whether the profile is read-only, or if the user is able to customize it within the Stream Deck application. Default value is <code>false</code>.</p>
+
+</ObjectMember>
+
+### Software{#software}
+
+Determines the Stream Deck software requirements for this plugin.
+
+<p>
+	<strong>Properties</strong>
+</p>
+
+<ObjectMember name="MinimumVersion" id="software-minimumversion" >
+	<ObjectMember.Type>"6.4", "6.5", "6.6", "6.7", "6.8", "6.9", "7.0", "7.1", "7.2", "7.3", "7.4", "7.5", "7.6"</ObjectMember.Type>
+	<p>Minimum version of the Stream Deck application required for this plugin to run.</p>
+
+</ObjectMember>
+
+### State{#state}
+
+States the action can be in. When two states are defined the action will act as a toggle, with users being able to select their preferred iconography for each state.
+
+Note: Automatic toggling of the state on action activation can be disabled by setting `DisableAutomaticStates` to `true`.
+
+<p>
+	<strong>Properties</strong>
+</p>
+
+<ObjectMember name="FontFamily" id="state-fontfamily" optional>
+	<ObjectMember.Type>string</ObjectMember.Type>
+	<p>Default font-family to be used when rendering the title of this state.</p>
+<p>Note: Can be overridden by the user in the Stream Deck application.</p>
+
+</ObjectMember>
+
+<ObjectMember name="FontSize" id="state-fontsize" optional>
+	<ObjectMember.Type>number</ObjectMember.Type>
+	<p>Default font-size to be used when rendering the title of this state.</p>
+<p>Note: Can be overridden by the user in the Stream Deck application.</p>
+
+</ObjectMember>
+
+<ObjectMember name="FontStyle" id="state-fontstyle" optional>
+	<ObjectMember.Type>"", "Bold Italic", "Bold", "Italic", "Regular"</ObjectMember.Type>
+	<p>Default font-style to be used when rendering the title of this state.</p>
+<p>Note: Can be overridden by the user in the Stream Deck application.</p>
+
+</ObjectMember>
+
+<ObjectMember name="FontUnderline" id="state-fontunderline" optional>
+	<ObjectMember.Type>boolean</ObjectMember.Type>
+	<p>Determines whether the title associated with this state is underlined by default.</p>
+<p>Note: Can be overridden by the user in the Stream Deck application.</p>
+
+</ObjectMember>
+
+<ObjectMember name="Image" id="state-image" >
+	<ObjectMember.Type>string</ObjectMember.Type>
+	<p>Path to the image, with the <strong>file extension omitted</strong>, that will be displayed on the Stream Deck when this action's state is active.</p>
+<p>Image must be:</p>
+<ul>
+<li>GIF, PNG or SVG format.</li>
+<li>Provided in two sizes, 72 × 72 px and 144 × 144 px (@2x).</li>
+</ul>
+<p>Note: Can be overridden by the user in the Stream Deck application.</p>
+<p><strong>Examples:</strong></p>
+<ul>
+<li>assets/counter-key</li>
+<li>assets/icons/mute</li>
+</ul>
+
+</ObjectMember>
+
+<ObjectMember name="MultiActionImage" id="state-multiactionimage" optional>
+	<ObjectMember.Type>string</ObjectMember.Type>
+	<p>Path to the image, with the <strong>file extension omitted</strong>, that will be displayed when the action is being viewed as part of a multi-action.</p>
+<p>Image must be:</p>
+<ul>
+<li>PNG or SVG format.</li>
+<li>Provided in two sizes, 72 × 72 px and 144 × 144 px (@2x).</li>
+</ul>
+<p>Note: Can be overridden by the user in the Stream Deck application.</p>
+<p><strong>Examples:</strong></p>
+<ul>
+<li>assets/counter-key</li>
+<li>assets/icons/mute</li>
+</ul>
+
+</ObjectMember>
+
+<ObjectMember name="Name" id="state-name" optional>
+	<ObjectMember.Type>string</ObjectMember.Type>
+	<p>Name of the state; when multiple states are defined this value is shown to the user when the action is being added to a multi-action. The user is then able to specify which
+state they would like to activate as part of the multi-action.</p>
+
+</ObjectMember>
+
+<ObjectMember name="ShowTitle" id="state-showtitle" optional>
+	<ObjectMember.Type>boolean</ObjectMember.Type>
+	<p>Determines whether the title should be shown.</p>
+<p>Note: Can be overridden by the user in the Stream Deck application.</p>
+
+</ObjectMember>
+
+<ObjectMember name="Title" id="state-title" optional>
+	<ObjectMember.Type>string</ObjectMember.Type>
+	<p>Default title to be shown when the action is added to the Stream Deck.</p>
+
+</ObjectMember>
+
+<ObjectMember name="TitleAlignment" id="state-titlealignment" optional>
+	<ObjectMember.Type>"bottom", "middle", "top"</ObjectMember.Type>
+	<p>Default title alignment to be used when rendering the title of this state.</p>
+<p>Note: Can be overridden by the user in the Stream Deck application.</p>
+
+</ObjectMember>
+
+<ObjectMember name="TitleColor" id="state-titlecolor" optional>
+	<ObjectMember.Type>string</ObjectMember.Type>
+	<p>Default title color to be used when rendering the title of this state, represented a hexadecimal value.</p>
+<p>Note: Can be overridden by the user in the Stream Deck application.</p>
+<p><strong>Examples:</strong></p>
+<ul>
+<li>#5BCEFA</li>
+<li>#F5A9B8</li>
+<li>#FFFFFF</li>
+</ul>
+
+</ObjectMember>
+
+### TriggerDescriptions{#triggerdescriptions}
+
+Descriptions that define the interaction of the action when it is associated with a dial / touchscreen on the Stream Deck +. This information is shown to the user.
+
+**Examples:**
+
+- "Adjust volume"
+- "Play / Pause"
+
+<p>
+	<strong>Properties</strong>
+</p>
+
+<ObjectMember name="LongTouch" id="triggerdescriptions-longtouch" optional>
+	<ObjectMember.Type>string</ObjectMember.Type>
+	<p>Touchscreen &quot;long-touch&quot; interaction behavior description.</p>
+
+</ObjectMember>
+
+<ObjectMember name="Push" id="triggerdescriptions-push" optional>
+	<ObjectMember.Type>string</ObjectMember.Type>
+	<p>Dial &quot;push&quot; (press) interaction behavior description.</p>
+
+</ObjectMember>
+
+<ObjectMember name="Rotate" id="triggerdescriptions-rotate" optional>
+	<ObjectMember.Type>string</ObjectMember.Type>
+	<p>Dial rotation interaction behavior description.</p>
+
+</ObjectMember>
+
+<ObjectMember name="Touch" id="triggerdescriptions-touch" optional>
+	<ObjectMember.Type>string</ObjectMember.Type>
+	<p>Touchscreen &quot;touch&quot; interaction behavior description.</p>
+
+</ObjectMember>

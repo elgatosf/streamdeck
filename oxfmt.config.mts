@@ -9,6 +9,6 @@ export default defineConfig({
 		...ignorePatterns,
 
 		// Ignore test fixtures as they intentionally have unexpected formats
-		"packages/md-tools/src/type-check/__tests__/fixtures/",
+		"packages/markdown/src/type-check/__tests__/fixtures/",
 	],
 });

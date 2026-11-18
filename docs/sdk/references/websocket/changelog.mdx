@@ -1,0 +1,114 @@
+---
+sidebar_position: 3
+sidebar_label: Changes
+title: Web Socket API Changes
+---
+
+import StreamDeck6_4_0 from "../_changes/6.4.0.mdx";
+import StreamDeck6_5_0 from "../_changes/6.5.0.mdx";
+import StreamDeck6_6_0 from "../_changes/6.6.0.mdx";
+import StreamDeck6_7_0 from "../_changes/6.7.0.mdx";
+import StreamDeck6_9_0 from "../_changes/6.9.0.mdx";
+import StreamDeck7_0_0 from "../_changes/7.0.0.mdx";
+import StreamDeck7_1_0 from "../_changes/7.1.0.mdx";
+import StreamDeck7_6_0 from "../_changes/7.6.0.mdx";
+
+Learn more about changes related to building Stream Deck plugins using the Web Socket API.
+
+## Stream Deck
+
+<StreamDeck7_6_0 websocket />
+<StreamDeck7_1_0 websocket />
+<StreamDeck7_0_0 websocket />
+<StreamDeck6_9_0 websocket />
+<StreamDeck6_7_0 websocket />
+<StreamDeck6_6_0 websocket />
+<StreamDeck6_5_0 websocket />
+<StreamDeck6_4_0 websocket />
+
+### v6.1.0{#stream-deck-6-1-0}
+
+- Add `dialDown` event for Stream Deck + encoders.
+- Add `dialUp` event for Stream Deck + encoders.
+- Deprecated `dialPress` event for Stream Deck + encoders.
+
+### v6.0.0{#stream-deck-6-0-0}
+
+- Add support for Stream Deck +.
+- Add `UserTitleEnabled` property to the manifest.
+- Add `Encoder` to the manifest for Stream Deck + devices.
+- Add `TriggerDescription` to the manifest for Stream Deck + devices.
+- Add `Layouts` for Stream Deck + displays.
+- Add `setFeedback` event for Stream Deck + displays.
+- Add `setFeedbackLayout` event for Stream Deck + displays.
+- Add `touchTap` event for Stream Deck + displays.
+- Add `dialPress` event for Stream Deck + encoders.
+- Add `dialRotate` event for Stream Deck + encoders.
+- Update `willAppear` and `willDisappear` events to include the `controller` property.
+
+## Archive
+
+<details>
+<summary>
+### Stream Deck v5
+</summary>
+
+**v5.3.0**
+
+- Add support for Corsair Voyager.
+
+**v5.2.0**
+
+- Add support for Stream Deck Pedal.
+
+**v5.0.0**
+
+- Add support for SVG icons.
+- Update property inspector to receive `didReceiveGlobalSettings` when `setGlobalSettings` is called from the plugin.
+- Update information parameter to include operating system information.
+
+</details>
+
+<details>
+<summary>
+### Stream Deck v4
+</summary>
+
+**v4.8.0**
+
+- You can now specify in the `setImage` event on which state the image should be set. This change only applies to actions with two states. If no state is specified, the image is set to both states.
+- You can now specify in the `setTitle` event on which state the title should be set. This change only applies to actions with two states. If no state is specified, the title is set to both states.
+
+**v4.7.0**
+
+- Add support for Corsair G Keys.
+
+**v4.6.0**
+
+- Update `switchToProfile` command to work with editable pre-configured profile.
+
+**v4.5.1**
+
+- Update `setImage` command to accept SVG images.
+
+**v4.3.3**
+
+- Add `DontAutoSwitchWhenInstalled` option in the `manifest.json`; when `true`, Stream Deck will not automatically switch to the pre-configured profile that was installed.
+
+**v4.3.0**
+
+- Add support for Stream Deck XL.
+- Add support for Stream Deck Mobile.
+- Add `systemDidWakeUp` event when computer wakes from sleep.
+- Update image rendering to always prefer user defined images.
+- Update `deviceDidConnect` event to include device name.
+
+**v4.2.0**
+
+- Update `willAppear` and `willDisappear` events to be sent inside Multi-Actions.
+- Update `switchToProfile` command to temporarily disable Smart Profile switching.
+- Update `switchToProfile` command to prompt the user to install the profile, if it is not installed.
+- Update Smart Profile switching so that it is disabled whilst Stream Deck is open.
+- Update information parameter to include plugin version.
+
+</details>

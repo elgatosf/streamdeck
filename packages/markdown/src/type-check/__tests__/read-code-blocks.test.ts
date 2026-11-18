@@ -2,6 +2,7 @@ import { join, relative } from "node:path";
 
 import { beforeAll, describe, expect, test } from "vitest";
 
+import { readMarkdown } from "../../read-markdown.js";
 import { type CodeBlock, readCodeBlocks } from "../read-code-blocks.js";
 
 const FIXTURES_DIR = join(import.meta.dirname, "fixtures");
@@ -11,8 +12,8 @@ const FIXTURES_DIR = join(import.meta.dirname, "fixtures");
  * @param fileName Name of the markdown fixture.
  * @returns The code blocks.
  */
-function read(fileName: string): Promise<CodeBlock[]> {
-	return readCodeBlocks(join(FIXTURES_DIR, fileName));
+async function read(fileName: string): Promise<CodeBlock[]> {
+	return readCodeBlocks(await readMarkdown(join(FIXTURES_DIR, fileName)));
 }
 
 /**
@@ -64,7 +65,9 @@ describe("readCodeBlocks", () => {
 	 * Asserts a relative file path is resolved from the current working directory of the process.
 	 */
 	test("relative file path", async () => {
-		const [entry] = await readCodeBlocks(relative(process.cwd(), join(FIXTURES_DIR, "semantic-error.md")));
+		const [entry] = readCodeBlocks(
+			await readMarkdown(relative(process.cwd(), join(FIXTURES_DIR, "semantic-error.md"))),
+		);
 
 		expect(entry?.file).toBe(join(FIXTURES_DIR, "semantic-error.md"));
 	});

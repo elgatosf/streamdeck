@@ -18,6 +18,7 @@ Thank you for your interest in contributing to the Stream Deck SDK! We welcome c
 - [Code Style](#code-style)
     - [Linting](#linting)
     - [Style Guidelines](#style-guidelines)
+- [Documentation](#documentation)
 
 ## Code of Conduct
 
@@ -133,3 +134,11 @@ This project uses ESLint and Oxfmt to maintain consistent code style.
 - Write clear, self-documenting code with meaningful variable and function names.
 - Add JSDoc comments for public APIs.
 - Keep functions focused and concise.
+
+## Documentation
+
+The SDK and CLI documentation lives in `docs`, and is published with each package; `packages/docs` contains the scripts that check and build it.
+
+- Partials suffixed `.g.mdx` are generated; they are not edited by hand.
+- TypeScript code blocks are type checked; incomplete fragments opt out with `nocheck`, e.g. ` ```ts nocheck `.
+- Check links and code blocks with `pnpm docs:check`.

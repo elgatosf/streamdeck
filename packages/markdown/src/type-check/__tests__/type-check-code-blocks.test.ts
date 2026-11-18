@@ -3,6 +3,7 @@ import { pathToFileURL } from "node:url";
 
 import { describe, expect, test } from "vitest";
 
+import { readMarkdown } from "../../read-markdown.js";
 import type { CodeBlockDiagnostic } from "../code-block-diagnostic.js";
 import { readCodeBlocks } from "../read-code-blocks.js";
 import { typeCheckCodeBlocks } from "../type-check-code-blocks.js";
@@ -17,8 +18,8 @@ const FIXTURES_DIR = join(import.meta.dirname, "fixtures");
  */
 async function check(fileName: string, tsconfigFile = "tsconfig.json"): Promise<CodeBlockDiagnostic[]> {
 	return typeCheckCodeBlocks({
-		codeBlocks: await readCodeBlocks(join(FIXTURES_DIR, fileName)),
-		cwd: FIXTURES_DIR,
+		codeBlockDir: FIXTURES_DIR,
+		codeBlocks: readCodeBlocks(await readMarkdown(join(FIXTURES_DIR, fileName))),
 		tsconfigFile,
 	});
 }
@@ -54,9 +55,9 @@ describe("typeCheckCodeBlocks", () => {
 		});
 
 		/**
-		 * Asserts valid code blocks have no diagnostics, imports are resolved relative to cwd, and each code block is its own module.
+		 * Asserts valid code blocks have no diagnostics, imports are resolved relative to codeBlockDir, and each code block is its own module.
 		 */
-		test("valid code blocks, imports resolved relative to cwd, and each code block is its own module", async () => {
+		test("valid code blocks, imports resolved relative to codeBlockDir, and each code block is its own module", async () => {
 			expect(await check("valid.md")).toEqual([]);
 		});
 	});
@@ -118,14 +119,14 @@ describe("typeCheckCodeBlocks", () => {
 		test("code blocks from multiple files are linked to their own file", async () => {
 			// Arrange.
 			const entries = [
-				...(await readCodeBlocks(join(FIXTURES_DIR, "semantic-error.md"))),
-				...(await readCodeBlocks(join(FIXTURES_DIR, "multiple-errors.md"))),
+				...readCodeBlocks(await readMarkdown(join(FIXTURES_DIR, "semantic-error.md"))),
+				...readCodeBlocks(await readMarkdown(join(FIXTURES_DIR, "multiple-errors.md"))),
 			];
 
 			// Act.
 			const diagnostics = typeCheckCodeBlocks({
+				codeBlockDir: FIXTURES_DIR,
 				codeBlocks: entries,
-				cwd: FIXTURES_DIR,
 				tsconfigFile: "tsconfig.json",
 			});
 

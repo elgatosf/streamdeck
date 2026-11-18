@@ -1,0 +1,20 @@
+### v7.1.0{#stream-deck-7-1-0}
+
+{/* prettier-ignore-start */}
+
+<ul>
+	{props.websocket ? (
+		<>
+			<li>Added support for <Link to="/streamdeck/sdk/references/websocket/plugin#setresources">embedding resources</Link> within actions.</li>
+		</>
+	) : (
+		<>
+			<li>Added support for <Link to="/streamdeck/sdk/guides/resources">embedding resources</Link> within actions.</li>
+		</>
+	)}
+    <li>Added support for Node.js 24, configurable within the [manifest](../manifest.mdx#nodejs-version).</li>
+    <li>Added in-app developer tools that track the current property inspector.</li>
+    <li>Fixed device type mapping for Stream Deck Scissor Keys and Corsair keyboards.</li>
+</ul>
+
+{/* prettier-ignore-end */}

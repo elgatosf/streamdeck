@@ -1,0 +1,30 @@
+### v6.9.0{#stream-deck-6-9-0}
+
+{/* prettier-ignore */}
+<ul>
+	<li>
+		<span>Added `SupportURL` option to the manifest:</span>
+		<ul>
+			<li>When specified, users will see a help button above the property inspector of the selected action.</li>
+			<li>Specifying a `SupportURL` at the [root level](../../references/manifest.mdx#manifest-supporturl) (plugin) will apply to all actions.</li>
+			<li>Specifying a `SupportURL` at the [action level](../../references/manifest.mdx#action-supporturl) will override the plugin `SupportURL`.</li>
+			<li>`SupportURL` values are optional, but recommended.</li>
+		</ul>
+	</li>
+	<li>Added device type for Stream Deck Studio.</li>
+	<li>Improved parsing of URLs when receiving deep-link messages, to support empty segments.</li>
+	<li>Resolved an issue whereby updating a layout item's `zOrder` to the same value would result in an error.</li>
+	<li>Updated Node.js runtime to v20.19.0.</li>
+	<li>Updated Chromium to v122.0.6261.171.</li>
+</ul>
+
+<Danger title="Property inspector event changes">
+	As part of the upgrade to Chromium 122, the `beforeunload` event is no longer emitted within the property inspector
+	when the property inspector disappears.
+</Danger>
+
+<Tip title="Quality of life improvement">
+	Stream Deck now will appear in the Dock on macOS when the main configuration window is active.
+</Tip>
+
+{/* prettier-ignore-end */}

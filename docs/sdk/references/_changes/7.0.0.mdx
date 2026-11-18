@@ -1,0 +1,15 @@
+### v7.0.0{#stream-deck-7-0-0}
+
+- {props.websocket ? (<>Added <code>deviceDidChange</code> event.</>) : (<>Added <code>streamDeck.devices.onDeviceDidChange</code> event.</>)}
+  - Occurs when a devices' metadata or size changes.
+  - {props.websocket ? (<><Link to="../websocket/plugin#devicedidchange">Learn more</Link></>) : (<><Link to="../guides/devices#changing">Learn more</Link></>)} about listening to device changes.
+- Added support for passive deep-link messages using the `?streamdeck=hidden` query parameter.
+  - Passive deep-links messages will not bring Stream Deck to the foreground.
+  - [Learn more](../../guides/deep-linking.mdx#active-vs-passive) about active vs passive deep-link message.
+- Added `SupportedInKeyLogicActions` property to actions within the manifest.
+  - When `false`, the action will not be usable within Key Logic actions.
+  - Optional property; default is `true`.
+- Added device type for Virtual Stream Deck (11).
+- Updated device `size` to reflect the visual size of the device.
+  - Previously always 8 x 8 for Stream Deck Mobile and Virtual Stream Deck.
+- Fixed an issue whereby linked plugins would not run on first launch after installing Stream Deck.

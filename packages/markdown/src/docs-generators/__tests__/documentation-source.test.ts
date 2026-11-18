@@ -73,7 +73,16 @@ export interface Detail {
 	 * Asserts the public API exposes the reusable source, not a one-off generation function.
 	 */
 	test("exposes the reusable source API", () => {
-		expect(Object.keys(markdown).sort()).toEqual(["createDocumentationSource", "format", "typeCheck"]);
+		expect(Object.keys(markdown).sort()).toEqual([
+			"MarkdownFile",
+			"checkLinks",
+			"createDocumentationSource",
+			"format",
+			"readMarkdown",
+			"readMarkdownFiles",
+			"rewriteLinks",
+			"typeCheck",
+		]);
 		expectTypeOf<DocumentationOptions["format"]>().toEqualTypeOf<"flat" | "table">();
 		expectTypeOf<DocumentationSource["generate"]>().returns.toEqualTypeOf<Promise<string>>();
 	});

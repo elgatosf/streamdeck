@@ -1,0 +1,54 @@
+---
+sidebar_position: 1
+title: Plugin
+---
+
+import Commands from "./_plugin-commands.g.mdx";
+import Events from "./_plugin-events.g.mdx";
+import RegistrationInfo from "./_registration-info.g.mdx";
+
+Stream Deck provides an API for distributing plugins as native console apps, for example those written in C++, C#, etc, with communication being handled by a dedicated WebSocket connection.
+
+<Warning>
+	Creating native plugins is an advanced technique, and is not recommended. Instead, consider using the Stream Deck SDK
+	with [Node.js native addons](https://nodejs.org/api/n-api.html#node-api).
+</Warning>
+
+## Registration
+
+In order to establish a connection with Stream Deck, your plugin must first register itself using a unique identifier. The information required to establish the connection is provided as a command line parameter, along with:
+
+| Parameter                          | Description                                                                                                                                            |
+| ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `-port`                            | The port the WebSocket is running on.                                                                                                                  |
+| `-info`                            | A serialized JSON string that contains information about Stream Deck, Stream Deck devices, and your plugin. See [RegistrationInfo](#registrationinfo). |
+| `-pluginUUID`                      | Your plugin's unique registration identifier.                                                                                                          |
+| <code>&#x2011;registerEvent</code> | Name of the registration event.                                                                                                                        |
+
+Upon startup, your plugin must connect to the WebSocket on the specified `-port`, and send a registration message as a JSON serialized string in the following format:
+
+```ts title="Registration event type"
+type RegisterEvent = {
+	event: string; // -registerEvent parameter
+	uuid: string; // -pluginUUID parameter
+};
+```
+
+<RegistrationInfo />
+
+## Events
+
+Plugins can receive the following events from Stream Deck via their WebSocket connection.
+
+<Warning>
+	The `context` of an action is not guaranteed to persist across app cycles and therefore should not be used as a
+	long-term identifier externally.
+</Warning>
+
+<Events />
+
+## Commands
+
+Plugins can send the following commands to Stream Deck via their WebSocket connection.
+
+<Commands />

@@ -1,0 +1,50 @@
+---
+sidebar_position: 2
+title: Layouts
+---
+
+import TypeScriptDeclaration from "./_layout-declaration.g.mdx";
+import Definitions from "./_layout-definitions.g.mdx";
+
+Layouts are customizable interfaces used by the touch strip found on Stream Deck +, and the Infobar found on Stream Deck Neo. Layouts are defined as JSON files distributed with your plugin, and can be updated programmatically whilst your plugin is running.
+
+## Device Sizes
+
+The canvas size of a layout varies depending on the device it will be rendered on, these sizes are:
+
+- Stream Deck + — <Dimensions height="100" width="200" />
+- Stream Deck + XL — <Dimensions height="100" width="200" />
+- Stream Deck Neo Infobar — <Dimensions height="50" width="232" />
+
+<Info>
+	In the context of Stream Deck + (Classic | XL) , the layout's canvas is a portion of the touch strip associated with a
+	corresponding dial. Plugins cannot render across the entire touch strip.
+</Info>
+
+## JSON Schema
+
+A JSON schema is available for layout JSON files, providing intellisense and validation, and is available at the following URL:
+
+```text title="JSON schema URL"
+https://schemas.elgato.com/streamdeck/plugins/layout.json
+```
+
+You can reference this URL using the `$schema` property within your layout JSON file:
+
+```json title="Layout JSON file" {2}
+{
+	"$schema": "https://schemas.elgato.com/streamdeck/plugins/layout.json",
+	"id": "CustomLayout",
+	"items": [
+		// ...
+	]
+}
+```
+
+## TypeScript Declaration
+
+<TypeScriptDeclaration />
+
+## Definitions
+
+<Definitions />
