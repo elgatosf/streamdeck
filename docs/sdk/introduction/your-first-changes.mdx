@@ -242,15 +242,12 @@ Attaching to your Stream Deck plugin in VS Code can be achieved with the followi
 
 1. In VS Code, open the "Quick Open" panel (`Ctrl+P` / `Cmd+P`)
 2. Enter `> Debug: Attach to Node Process`, and press `Return`.
-3. Select the `node20` process.
+3. Select the `node24` process.
 
-<Image
-	src="../assets/attach-to-node-process.png"
-	alt="VS Code attach to node process window, listing the node20 process"
-/>
+<Image src="../assets/attach-to-node-process.png" alt="VS Code attach to node process window" />
 
 <Tip>
 	By default, Stream Deck will automatically assign an available port to the [Node.js inspect
-	flag](https://nodejs.org/docs/latest-v20.x/api/cli.html#--inspecthostport) to avoid conflicts. This behavior can be
+	flag](https://nodejs.org/docs/latest-v24.x/api/cli.html#--inspecthostport) to avoid conflicts. This behavior can be
 	overridden in the manifest's `Nodejs.Debug` property.
 </Tip>
