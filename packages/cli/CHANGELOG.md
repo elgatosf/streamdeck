@@ -1,5 +1,11 @@
 # Change Log
 
+## 1.10.5
+
+### Patch Changes
+
+- fc61fbb: Ship the CLI documentation with the package, in `docs/`, alongside an `AGENTS.md` that points agents to it.
+
 ## 1.10.4
 
 ### Patch Changes

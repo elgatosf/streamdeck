@@ -1,6 +1,6 @@
 {
     "name": "@streamdeck/core",
-    "version": "0.0.0",
+    "version": "0.1.0",
     "description": "Internal types and enumerations for the Stream Deck plugin WebSocket protocol, used by the Stream Deck SDK.",
     "keywords": [
         "elgato"

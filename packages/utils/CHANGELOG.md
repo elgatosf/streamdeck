@@ -1,5 +1,27 @@
 # Change Log
 
+## 0.7.0
+
+### Minor Changes
+
+- 4ba022b: **Breaking:** Removed untyped event names from `EventEmitter`; only events defined in the event map, plus `newListener` and `removeListener`, can be listened to.
+- 4ba022b: **Breaking:** `EventEmitter.emit` no longer accepts `newListener` or `removeListener`; these are now only emitted internally when listeners are added or removed.
+- 4ba022b: **Breaking:** Removed `EventArgUnion` type in favour of new `NewListenerArgs` and `RemoveListenerArgs`.
+
+### Patch Changes
+
+- 4ba022b: Fixed `EventEmitter` behavior when listeners are added, removed, or throw during an emit:
+
+    - Removing a listener during an emit no longer skips the next listener.
+    - Listeners added during an emit are not called until the next emit.
+    - `once` listeners can no longer be invoked twice from within a `removeListener` handler.
+    - `removeAllListeners` no longer loops indefinitely when a `removeListener` handler adds listeners.
+    - `listenerCount` and `listeners` no longer include listeners pending removal.
+    - Abort handlers are now unregistered from the `signal` when a listener is removed by other means, preventing long-lived signals from retaining the emitter.
+
+- 4ba022b: Fixed `EventEmitter.disposableOn` to only remove the listener it registered (previously all matching listeners were removed).
+- 4ba022b: Added optional `options` parameter, supporting `once` and `signal`, to `addListener`, `disposableOn`, `on`, `once`, `prependListener`, and `prependOnceListener` within `EventEmitter`. Listeners removed by aborting `signal` do not emit `removeListener`.
+
 ## 0.6.2
 
 ### Patch Changes

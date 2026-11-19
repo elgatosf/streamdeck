@@ -1,5 +1,21 @@
 # Change Log
 
+## 3.0.5
+
+### Patch Changes
+
+- 9d9636e: Updated Stream Deck app API types and enums (e.g. `DeviceType`, `Target`, `RegistrationInfo`) to be sourced from the new `@streamdeck/core` package. These types remain exported from `@elgato/streamdeck`, and its public API is unchanged.
+- 4ce109a: Ship the SDK documentation with the package, in `docs/`, alongside an `AGENTS.md` that points agents to it.
+- Updated dependencies [9d9636e]
+- Updated dependencies [4ba022b]
+- Updated dependencies [4ba022b]
+- Updated dependencies [4ba022b]
+- Updated dependencies [4ba022b]
+- Updated dependencies [4ba022b]
+- Updated dependencies [4ba022b]
+    - @streamdeck/core@0.1.0
+    - @elgato/utils@0.7.0
+
 ## 3.0.4
 
 ### Patch Changes

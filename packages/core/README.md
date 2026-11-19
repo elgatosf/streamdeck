@@ -1,6 +1,6 @@
 # @streamdeck/core
 
-Types and enums used to create Stream Deck plugins.
+Internal types and enumerations for the Stream Deck plugin WebSocket protocol, used by the Stream Deck SDK.
 
 > [!IMPORTANT]
 > Most plugin authors should use [`@elgato/streamdeck`](../plugin/), the official Node.js SDK for creating Stream Deck plugins. It re-exports the commonly used types and enums from this package, and provides the functionality required to connect to, and communicate with, Stream Deck. Use `@streamdeck/core` directly only when you require the protocol types in isolation, e.g. when building tooling.
