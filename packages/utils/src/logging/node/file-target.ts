@@ -35,7 +35,7 @@ export class FileTarget implements LogTarget {
 	constructor(options: FileTargetOptions) {
 		this.#options = options;
 		this.#filePath = this.getLogFilePath();
-		this.tryReIndex();
+		this.reIndex();
 	}
 
 	/**
@@ -59,8 +59,7 @@ export class FileTarget implements LogTarget {
 		this.#size += msg.length;
 
 		if (this.#size >= this.#options.maxSize) {
-			// When re-indexing fails, the next attempt happens once another `maxSize` has been written.
-			this.tryReIndex();
+			this.reIndex();
 			this.#size = 0;
 		}
 	}
@@ -171,18 +170,6 @@ export class FileTarget implements LogTarget {
 					// The data has been written, and the file descriptor cannot be used again.
 				}
 			}
-		}
-	}
-
-	/**
-	 * Re-indexes the log files (see {@link FileTarget.reIndex}); a failure, for example when a log file is held
-	 * open by another process, is ignored, and log entries continue to be appended to the current log file.
-	 */
-	private tryReIndex(): void {
-		try {
-			this.reIndex();
-		} catch {
-			// Logging must never fail because the log files could not be rotated.
 		}
 	}
 }

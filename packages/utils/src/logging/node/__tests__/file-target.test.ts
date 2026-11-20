@@ -188,56 +188,6 @@ describe("FileTarget", () => {
 				"warn 2 log entries were dropped because the log file could not be written.\ninfo Three\n",
 			);
 		});
-
-		/**
-		 * Asserts constructing a {@link FileTarget} does not throw when the log files cannot be re-indexed.
-		 */
-		it("does not throw when re-indexing fails on construction", () => {
-			// Arrange.
-			vi.spyOn(fs, "existsSync").mockReturnValue(true);
-			vi.spyOn(fs, "readdirSync").mockReturnValue([mockDirent("com.elgato.test.0.log")]);
-			vi.mocked(fs.renameSync).mockImplementationOnce(() => {
-				throw fsError("EBUSY");
-			});
-			vi.spyOn(fs, "openSync").mockReturnValue(13);
-
-			// Act.
-			const fileTarget = new FileTarget(options);
-			fileTarget.write(entry("Hello world"));
-
-			// Assert.
-			expect(fs.writeSync).toHaveBeenCalledWith(13, "info Hello world\n");
-		});
-
-		/**
-		 * Asserts {@link FileTarget.write} does not throw when re-indexing fails after the entry was written, and
-		 * only retries once the maximum size has been written again.
-		 */
-		it("does not throw when re-indexing fails after the entry was written", () => {
-			// Arrange.
-			vi.spyOn(fs, "existsSync").mockReturnValue(true);
-			vi.spyOn(fs, "readdirSync").mockReturnValue([mockDirent("com.elgato.test.0.log")]);
-			vi.spyOn(fs, "openSync").mockReturnValue(13);
-
-			const fileTarget = new FileTarget({ ...options, format: (): string => "x".repeat(10), maxSize: 20 });
-			vi.mocked(fs.readdirSync).mockClear();
-			vi.mocked(fs.renameSync).mockImplementationOnce(() => {
-				throw fsError("EBUSY");
-			});
-
-			// Act, assert.
-			fileTarget.write(entry("One"));
-			expect(() => fileTarget.write(entry("Two"))).not.toThrow(); // Size exceeded; re-indexing fails.
-			expect(fs.readdirSync).toHaveBeenCalledTimes(1);
-
-			expect(() => fileTarget.write(entry("Three"))).not.toThrow(); // Size not yet exceeded again.
-			expect(fs.readdirSync).toHaveBeenCalledTimes(1);
-
-			expect(() => fileTarget.write(entry("Four"))).not.toThrow(); // Size exceeded again; retried.
-			expect(fs.readdirSync).toHaveBeenCalledTimes(2);
-
-			expect(fs.writeSync).toHaveBeenCalledTimes(4);
-		});
 	});
 
 	describe("Re-indexing", () => {
