@@ -15,9 +15,7 @@ env:
   EXCLUDE_DOCS: --filter=!@elgato/docs --filter=!@elgato/markdown
 
 jobs:
-  Docs:
-    name: Documentation pre-check
-
+  Documentation:
     runs-on: windows-latest
     timeout-minutes: 10
 
@@ -53,7 +51,6 @@ jobs:
         run: pnpm run docs:check
 
   Build:
-    needs: Docs
     strategy:
       matrix:
         node_version: [24, 26]
