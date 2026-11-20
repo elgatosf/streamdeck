@@ -7,7 +7,7 @@
         "watch": "rollup -c -w --watch.onEnd=\"streamdeck restart com.elgato.hello-world\""
     },
     "dependencies": {
-        "@elgato/streamdeck": "^3.0.5"
+        "@elgato/streamdeck": "^3.0.6"
     },
     "devDependencies": {
         "@elgato/cli": "^1.10.5",

@@ -36,7 +36,7 @@ importers:
   examples/cat-keys:
     dependencies:
       '@elgato/streamdeck':
-        specifier: ^3.0.5
+        specifier: ^3.0.6
         version: link:../../packages/plugin
     devDependencies:
       '@elgato/cli':
@@ -73,7 +73,7 @@ importers:
   examples/counter:
     dependencies:
       '@elgato/streamdeck':
-        specifier: ^3.0.5
+        specifier: ^3.0.6
         version: link:../../packages/plugin
     devDependencies:
       '@elgato/cli':
@@ -95,7 +95,7 @@ importers:
   examples/hello-world:
     dependencies:
       '@elgato/streamdeck':
-        specifier: ^3.0.5
+        specifier: ^3.0.6
         version: link:../../packages/plugin
     devDependencies:
       '@elgato/cli':
@@ -132,7 +132,7 @@ importers:
   examples/image-resizer:
     dependencies:
       '@elgato/streamdeck':
-        specifier: ^3.0.5
+        specifier: ^3.0.6
         version: link:../../packages/plugin
       sharp:
         specifier: ^0.34.5
@@ -175,7 +175,7 @@ importers:
   examples/layouts:
     dependencies:
       '@elgato/streamdeck':
-        specifier: ^3.0.5
+        specifier: ^3.0.6
         version: link:../../packages/plugin
     devDependencies:
       '@elgato/cli':
@@ -212,7 +212,7 @@ importers:
   examples/lights-out:
     dependencies:
       '@elgato/streamdeck':
-        specifier: ^3.0.5
+        specifier: ^3.0.6
         version: link:../../packages/plugin
     devDependencies:
       '@elgato/cli':
@@ -249,7 +249,7 @@ importers:
   examples/product-viewer:
     dependencies:
       '@elgato/streamdeck':
-        specifier: ^3.0.5
+        specifier: ^3.0.6
         version: link:../../packages/plugin
       '@elgato/utils':
         specifier: ^0.7.0

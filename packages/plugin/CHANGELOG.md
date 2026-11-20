@@ -1,5 +1,11 @@
 # Change Log
 
+## 3.0.6
+
+### Patch Changes
+
+- 95c0459: Use Node.js 24 in the SDK documentation's example manifests and debugging instructions.
+
 ## 3.0.5
 
 ### Patch Changes

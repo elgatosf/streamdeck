@@ -7,7 +7,7 @@
         "watch": "rolldown -c rolldown.config.ts -w"
     },
     "dependencies": {
-        "@elgato/streamdeck": "^3.0.5"
+        "@elgato/streamdeck": "^3.0.6"
     },
     "devDependencies": {
         "@elgato/cli": "^1.10.5",
