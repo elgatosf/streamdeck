@@ -46,11 +46,11 @@ jobs:
       - name: "🖌️ Lint"
         run: pnpm turbo run lint $DOCS
 
-      - name: "📚 Check documentation"
-        run: pnpm run docs:check
-
       - name: "🧪 Test"
         run: pnpm turbo run test $DOCS
+
+      - name: "📚 Check documentation"
+        run: pnpm run docs:check
 
   Build:
     needs: Docs
