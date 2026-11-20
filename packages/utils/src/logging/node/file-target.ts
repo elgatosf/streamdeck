@@ -24,6 +24,11 @@ export class FileTarget implements LogTarget {
 	#size = 0;
 
 	/**
+	 * Number of log entries that could not be written, and have not yet been reported in the log file.
+	 */
+	#dropped = 0;
+
+	/**
 	 * Initializes a new instance of the {@link FileTarget} class.
 	 * @param options Options that defines how logs should be written to the local file system.
 	 */
@@ -34,23 +39,44 @@ export class FileTarget implements LogTarget {
 	}
 
 	/**
-	 * @inheritdoc
+	 * Writes the log entry to the log file. A log entry that cannot be written, for example because the disk is
+	 * full or the file is read-only, is dropped rather than thrown to the caller; the number of dropped entries
+	 * is written to the log file once writing succeeds again.
+	 * @param entry The log entry to write.
 	 */
 	public write(entry: LogEntry): void {
-		const fd = fs.openSync(this.#filePath, "a");
-
-		try {
-			const msg = this.#options.format(entry);
-			fs.writeSync(fd, msg + "\n");
-			this.#size += msg.length;
-		} finally {
-			fs.closeSync(fd);
+		let msg = this.#options.format(entry);
+		if (this.#dropped > 0) {
+			msg = `${this.#options.format(this.getDroppedEntry())}\n${msg}`;
 		}
+
+		if (!this.tryAppend(msg + "\n")) {
+			this.#dropped++;
+			return;
+		}
+
+		this.#dropped = 0;
+		this.#size += msg.length;
 
 		if (this.#size >= this.#options.maxSize) {
 			this.reIndex();
 			this.#size = 0;
 		}
+	}
+
+	/**
+	 * Gets the log entry that reports the number of log entries that were dropped.
+	 * @returns The log entry.
+	 */
+	private getDroppedEntry(): LogEntry {
+		const count = this.#dropped;
+		return {
+			data: [
+				`${count} log ${count === 1 ? "entry was" : "entries were"} dropped because the log file could not be written.`,
+			],
+			level: "warn",
+			scope: "",
+		};
 	}
 
 	/**
@@ -119,6 +145,30 @@ export class FileTarget implements LogTarget {
 				fs.rmSync(log.path);
 			} else {
 				fs.renameSync(log.path, this.getLogFilePath(i + 1));
+			}
+		}
+	}
+
+	/**
+	 * Appends the data to the log file.
+	 * @param data Data to append.
+	 * @returns `true` when the data was written; otherwise `false`.
+	 */
+	private tryAppend(data: string): boolean {
+		let fd: number | undefined;
+		try {
+			fd = fs.openSync(this.#filePath, "a");
+			fs.writeSync(fd, data);
+			return true;
+		} catch {
+			return false;
+		} finally {
+			if (fd !== undefined) {
+				try {
+					fs.closeSync(fd);
+				} catch {
+					// The data has been written, and the file descriptor cannot be used again.
+				}
 			}
 		}
 	}
