@@ -10,7 +10,46 @@ defaults:
   run:
     shell: bash
 
+env:
+  DOCS: --filter=@elgato/docs --filter=@elgato/markdown
+  EXCLUDE_DOCS: --filter=!@elgato/docs --filter=!@elgato/markdown
+
 jobs:
+  Documentation:
+    runs-on: windows-latest
+    timeout-minutes: 10
+
+    permissions:
+      contents: read
+
+    steps:
+      - name: "📥 Checkout"
+        uses: actions/checkout@v6
+
+      - name: "📦 Setup pnpm"
+        uses: pnpm/action-setup@v4
+
+      - name: "🗃️ Setup Node"
+        uses: actions/setup-node@v6
+        with:
+          node-version: 26
+          cache: "pnpm"
+
+      - name: "📐 Install dependencies"
+        run: pnpm install --frozen-lockfile
+
+      - name: "🏗️ Build"
+        run: pnpm turbo run build $DOCS
+
+      - name: "🖌️ Lint"
+        run: pnpm turbo run lint $DOCS
+
+      - name: "🧪 Test"
+        run: pnpm turbo run test $DOCS
+
+      - name: "📚 Check documentation"
+        run: pnpm run docs:check
+
   Build:
     strategy:
       matrix:
@@ -40,15 +79,10 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: "🏗️ Build"
-        run: pnpm run build
+        run: pnpm turbo run build $EXCLUDE_DOCS
 
       - name: "🖌️ Lint"
-        run: pnpm run lint
-
-      # Requests external links once, as sites rate limit the concurrent requests from the matrix.
-      - name: "📚 Check documentation"
-        if: matrix.os == 'macos-latest' && matrix.node_version == 24
-        run: pnpm run docs:check
+        run: pnpm turbo run lint $EXCLUDE_DOCS
 
       - name: "🧪 Test"
-        run: pnpm run test
+        run: pnpm turbo run test $EXCLUDE_DOCS
