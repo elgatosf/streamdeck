@@ -234,6 +234,7 @@ async function renderTemplate(destination: string, pluginInfo: PluginInfo): Prom
 		template.copy(`${TEMPLATE_PLUGIN_UUID}.sdPlugin/manifest.json.ejs`, `${pluginInfo.uuid}.sdPlugin/manifest.json`),
 		template.copy("src"),
 		template.copy("_.gitignore", ".gitignore"),
+		template.copy("AGENTS.md"),
 		template.copy("package.json.ejs"),
 		template.copy("rollup.config.mjs.ejs"),
 		template.copy("tsconfig.json.ejs"),
