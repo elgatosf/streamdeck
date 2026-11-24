@@ -2,4 +2,4 @@
 "@elgato/cli": patch
 ---
 
-Scaffold an `AGENTS.md` with `streamdeck create` that points agents to the SDK and CLI documentation shipped in `node_modules`.
+Added an `AGENTS.md` to the template created with `streamdeck create` to assist with accessing documentation included in the `@elgato/streamdeck` and `@elgato/cli` packages.
