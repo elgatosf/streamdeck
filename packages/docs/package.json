@@ -6,14 +6,17 @@
     "scripts": {
         "build": "node src/index.ts build",
         "check": "node src/index.ts check",
-        "lint": "tsc"
+        "lint": "eslint --max-warnings 0",
+        "type:check": "tsc"
     },
     "devDependencies": {
+        "@elgato/eslint-config": "^0.3.2",
         "@elgato/markdown": "workspace:^",
         "@elgato/streamdeck": "workspace:^",
         "@elgato/tsconfig": "workspace:^",
         "@elgato/utils": "workspace:^",
         "@types/node": "^24.12.0",
+        "eslint": "^9.39.4",
         "typescript": "^5.9.3",
         "zod": "^4.6.7"
     },
